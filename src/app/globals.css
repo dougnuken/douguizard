@@ -2,21 +2,35 @@
 
 @theme {
   /* ===== Colors ===== */
-  --color-bg-deep: #050407;
-  --color-bg-mid: #0a0814;
-  --color-bg-soft: #12101e;
-  --color-ink: #f5f3ff;
-  --color-ink-muted: #9b95b8;
-  --color-ink-dim: #6b6585;
-  --color-accent: #8b7fff;
-  --color-accent-warm: #ff8b5e;
-  --color-accent-cool: #5eb8ff;
-  --color-line: rgba(245, 243, 255, 0.08);
+  /* Backgrounds — pure dark with subtle warmth */
+  --color-bg-deep: #050507;
+  --color-bg-mid: #0a0a0f;
+  --color-bg-soft: #12121a;
+  --color-bg-glass: rgba(20, 20, 28, 0.5);
 
-  /* ===== Fonts (we use next/font, see layout.tsx) ===== */
-  --font-display: var(--font-instrument-serif);
-  --font-body: var(--font-space-grotesk);
-  --font-mono: var(--font-jetbrains-mono);
+  /* Ink — off-white inspired by Prisma's E1E0CC, adapted to cooler space vibe */
+  --color-ink: #ebe9e0;
+  --color-ink-strong: #f8f7f0;
+  --color-ink-muted: #8b8a85;
+  --color-ink-dim: #5a5a55;
+
+  /* Accents — restrained, cosmic */
+  --color-accent: #b8a4ff;        /* soft cosmic violet */
+  --color-accent-warm: #ffa07a;   /* warm star peach */
+  --color-accent-cool: #7fc5ff;   /* cool nebula blue */
+
+  /* Lines & borders */
+  --color-line: rgba(235, 233, 224, 0.06);
+  --color-line-strong: rgba(235, 233, 224, 0.12);
+
+  /* Neumorphism shadow tokens */
+  --neu-light: rgba(235, 233, 224, 0.04);
+  --neu-dark: rgba(0, 0, 0, 0.5);
+
+  /* ===== Fonts ===== */
+  --font-display: var(--font-geist);
+  --font-body: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
 
   /* ===== Animation easings ===== */
   --ease-quart-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -33,7 +47,7 @@
   html, body {
     background: var(--color-bg-deep);
     color: var(--color-ink);
-    font-family: var(--font-body), sans-serif;
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -43,7 +57,6 @@
     cursor: none;
   }
 
-  /* Hide cursor when in mobile/touch */
   @media (hover: none) and (pointer: coarse) {
     body { cursor: auto; }
   }
@@ -52,12 +65,78 @@
     background: var(--color-accent);
     color: var(--color-bg-deep);
   }
+
+  /* Heading defaults — sci-fi tracking */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
 }
 
 @layer utilities {
-  .font-display { font-family: var(--font-display), serif; }
+  .font-display { font-family: var(--font-display), sans-serif; }
   .font-body { font-family: var(--font-body), sans-serif; }
   .font-mono { font-family: var(--font-mono), monospace; }
+
+  /* ===== Neumorphism surfaces ===== */
+  .neu-surface {
+    background: linear-gradient(
+      135deg,
+      rgba(20, 20, 28, 0.6) 0%,
+      rgba(10, 10, 15, 0.4) 100%
+    );
+    border: 1px solid var(--color-line);
+    box-shadow:
+      inset 1px 1px 0 0 var(--neu-light),
+      inset -1px -1px 0 0 rgba(0, 0, 0, 0.2),
+      0 8px 24px -8px var(--neu-dark);
+    backdrop-filter: blur(12px);
+  }
+
+  .neu-surface-soft {
+    background: linear-gradient(
+      135deg,
+      rgba(18, 18, 26, 0.4) 0%,
+      rgba(8, 8, 14, 0.3) 100%
+    );
+    border: 1px solid var(--color-line);
+    box-shadow: inset 0 1px 0 0 var(--neu-light);
+  }
+
+  .neu-surface-pressed {
+    background: rgba(5, 5, 7, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow:
+      inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+      inset -1px -1px 1px var(--neu-light);
+  }
+
+  .neu-button {
+    background: linear-gradient(
+      180deg,
+      rgba(30, 30, 42, 0.7) 0%,
+      rgba(15, 15, 22, 0.6) 100%
+    );
+    border: 1px solid var(--color-line-strong);
+    box-shadow:
+      inset 0 1px 0 0 rgba(235, 233, 224, 0.08),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.3),
+      0 4px 16px -4px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .neu-button:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(40, 40, 56, 0.8) 0%,
+      rgba(20, 20, 30, 0.7) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 rgba(235, 233, 224, 0.12),
+      0 6px 20px -4px rgba(0, 0, 0, 0.5),
+      0 0 24px -8px var(--color-accent);
+  }
 
   /* Grain overlay shared utility */
   .grain-overlay {
@@ -65,7 +144,7 @@
     inset: 0;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.06;
+    opacity: 0.05;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
@@ -96,19 +175,22 @@
   .animate-scroll-pulse {
     animation: scroll-pulse 2s ease-in-out infinite;
   }
-}
 
-/* Lenis smooth scroll required class */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
+  /* Star twinkle */
+  @keyframes star-twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  .animate-star-twinkle {
+    animation: star-twinkle 3s ease-in-out infinite;
+  }
+
+  /* Slow float */
+  @keyframes slow-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .animate-slow-float {
+    animation: slow-float 6s ease-in-out infinite;
+  }
 }

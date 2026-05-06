@@ -1,39 +1,32 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-geist",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://douguizard.com"),
   title: {
-    default: "Doug Vargas — Senior Product Designer × AI",
-    template: "%s · Doug Vargas",
+    default: "Douguizard — Doug Vargas · Senior Product Designer × AI",
+    template: "%s · Douguizard",
   },
   description:
     "Senior Product Designer & Design Systems Architect. 12+ years shipping digital products for banks, marketplaces, and consumer apps. Now bridging classical product craft with AI-native workflows.",
   keywords: [
     "Doug Vargas",
+    "Douguizard",
     "Product Designer",
     "Design Systems",
     "AI Product Design",
@@ -47,14 +40,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://douguizard.com",
-    title: "Doug Vargas — Senior Product Designer × AI",
+    title: "Douguizard — Senior Product Designer × AI",
     description:
       "Senior Product Designer crafting the next generation of digital experiences with AI.",
     siteName: "douguizard",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Doug Vargas — Senior Product Designer × AI",
+    title: "Douguizard — Senior Product Designer × AI",
     description:
       "Senior Product Designer crafting the next generation of digital experiences with AI.",
   },
@@ -75,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${geist.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

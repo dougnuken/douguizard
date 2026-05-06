@@ -12,117 +12,154 @@ interface Capability {
 
 const capabilities: Capability[] = [
   {
-    num: "01 / 04",
-    title: { plain: "Design", accent: "Product", order: "after" },
+    num: "01",
+    title: { plain: "Product", accent: "Design", order: "after" },
     desc: "End-to-end product thinking — from research and journeys to UI craft and prototypes that ship. Mobile, web, dashboards, marketplaces.",
     tags: ["UX Strategy", "Wireframes", "Prototyping", "UI Design"],
   },
   {
-    num: "02 / 04",
-    title: { plain: "Systems", accent: "Design", order: "after" },
+    num: "02",
+    title: { plain: "Design", accent: "Systems", order: "after" },
     desc: "Building, scaling, and maintaining design libraries used by hundreds of designers and engineers. Tokens, components, governance.",
     tags: ["Tokens", "Components", "Governance", "Documentation"],
   },
   {
-    num: "03 / 04",
+    num: "03",
     title: { plain: "AI ", accent: "× Interface", order: "before" },
     desc: "Designing with and for generative systems. Prompt-driven UX, conversational interfaces, AI agent flows, and ethical guardrails.",
     tags: ["Prompt Design", "Generative UI", "Agent Flows", "LLM UX"],
   },
   {
-    num: "04 / 04",
-    title: { plain: " & Craft", accent: "Mentorship", order: "before" },
-    desc: "Workshops, design crits, and 1:1 mentorship. Helping teams sharpen visual craft, systems thinking, and AI fluency.",
-    tags: ["Workshops", "Design Crits", "1:1", "Speaking"],
+    num: "04",
+    title: { plain: "Tech", accent: "Leadership", order: "after" },
+    desc: "Leading design systems orgs across cross-functional engineering teams. Mentorship, design ops, and shipping at platform scale.",
+    tags: ["Mentorship", "Design Ops", "Cross-platform", "Strategy"],
   },
 ];
 
-function CapCard({ cap, index }: { cap: Capability; index: number }) {
-  const [pos, setPos] = useState({ x: 50, y: 50 });
-
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setPos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  };
+export default function Capabilities() {
+  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <motion.div
-      className="bg-[var(--color-bg-deep)] p-12 relative overflow-hidden cursor-default group"
-      data-cursor="hover"
-      onMouseMove={handleMove}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+    <section
+      id="capabilities"
+      className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]"
     >
-      {/* Hover spotlight */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle at ${pos.x}% ${pos.y}%, rgba(139, 127, 255, 0.08), transparent 60%)`,
-        }}
-      />
+      <div className="max-w-[1280px] mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
+        >
+          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
+          / 03 — Capabilities
+        </motion.div>
 
-      <div className="relative z-10">
-        <div className="font-mono text-[11px] text-[var(--color-ink-dim)] tracking-[0.2em] mb-8">
-          {cap.num}
-        </div>
-        <h3 className="font-display text-4xl tracking-tight mb-4 leading-[1.1]">
-          {cap.title.order === "before" ? (
-            <>
-              <span className="italic text-[var(--color-accent)]">{cap.title.accent}</span>
-              {cap.title.plain}
-            </>
-          ) : (
-            <>
-              {cap.title.plain}{" "}
-              <span className="italic text-[var(--color-accent)]">{cap.title.accent}</span>
-            </>
-          )}
-        </h3>
-        <p className="text-sm leading-[1.6] text-[var(--color-ink-muted)] max-w-[380px]">
-          {cap.desc}
-        </p>
-        <div className="flex flex-wrap gap-2 mt-6">
-          {cap.tags.map((tag) => (
-            <span
-              key={tag}
-              className="font-mono text-[10px] tracking-[0.15em] uppercase text-[var(--color-ink-muted)] border border-[var(--color-line)] px-2.5 py-1.5 rounded-full"
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display font-light text-[clamp(40px,6vw,84px)] leading-[0.95] tracking-[-0.05em] mb-16 md:mb-24 max-w-3xl"
+        >
+          Four ways<br />
+          <span className="text-[var(--color-accent)]">I work</span>
+          <span className="text-[var(--color-ink-dim)]">.</span>
+        </motion.h2>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {capabilities.map((cap, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.7,
+                delay: (i % 2) * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              className="neu-surface rounded-2xl md:rounded-3xl p-7 md:p-10 group relative overflow-hidden cursor-default"
+              style={{
+                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                ...(hovered === i && {
+                  borderColor: "var(--color-line-strong)",
+                }),
+              }}
             >
-              {tag}
-            </span>
+              {/* Spotlight glow on hover */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none rounded-2xl md:rounded-3xl"
+                animate={{
+                  opacity: hovered === i ? 1 : 0,
+                }}
+                transition={{ duration: 0.5 }}
+                style={{
+                  background:
+                    "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.06) 0%, transparent 60%)",
+                }}
+              />
+
+              {/* Number */}
+              <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-6 flex items-center gap-3">
+                <span>{cap.num}</span>
+                <span className="flex-1 h-px bg-[var(--color-line)]" />
+                <motion.span
+                  animate={{
+                    color:
+                      hovered === i
+                        ? "var(--color-accent)"
+                        : "var(--color-ink-dim)",
+                  }}
+                >
+                  /04
+                </motion.span>
+              </div>
+
+              {/* Title */}
+              <h3 className="font-display text-[clamp(28px,3.5vw,48px)] font-light tracking-[-0.04em] leading-[1.05] mb-5">
+                {cap.title.order === "before" ? (
+                  <>
+                    {cap.title.plain}
+                    <span className="text-[var(--color-accent)]">
+                      {cap.title.accent}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    {cap.title.plain}{" "}
+                    <span className="text-[var(--color-accent)]">
+                      {cap.title.accent}
+                    </span>
+                  </>
+                )}
+              </h3>
+
+              {/* Description */}
+              <p className="text-[14px] leading-[1.55] text-[var(--color-ink-muted)] mb-6 max-w-[420px]">
+                {cap.desc}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {cap.tags.map((tag, ti) => (
+                  <span
+                    key={ti}
+                    className="font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)] neu-surface-pressed"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-export default function Capabilities() {
-  return (
-    <section className="relative z-[2] px-12 pt-[120px] pb-[200px] bg-[var(--color-bg-deep)] border-t border-[var(--color-line)]">
-      <motion.div
-        className="max-w-[1200px] mx-auto mb-20 flex justify-between items-baseline"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <span className="font-mono text-[11px] tracking-[0.25em] text-[var(--color-ink-muted)]">
-          / 01 — Capabilities
-        </span>
-        <h2 className="font-display text-[clamp(40px,6vw,88px)] tracking-[-0.03em] leading-[0.95]">
-          What I <span className="italic text-[var(--color-accent)]">do</span>
-        </h2>
-      </motion.div>
-
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-        {capabilities.map((cap, i) => (
-          <CapCard key={cap.num} cap={cap} index={i} />
-        ))}
       </div>
     </section>
   );

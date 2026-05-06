@@ -1,137 +1,106 @@
-"use client";
+ "use client";
 
-import { motion } from "framer-motion";
-
-const heroLines = [
-  { text: "Designing", italic: false },
-  { text: "human products", italic: true, prefix: "" },
-  { text: "for an AI era", italic: true, hasC: true },
-];
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import LiveStatusBadge from "@/components/LiveStatusBadge";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+function LettersPullUp({
+  text,
+  showAsterisk = false,
+  delay = 0,
+}: {
+  text: string;
+  showAsterisk?: boolean;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "0px" });
+  const letters = text.split("");
+
+  return (
+    <span ref={ref} className="inline-flex">
+      {letters.map((letter, i) => (
+        <motion.span
+          key={i}
+          initial={{ y: 80, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.9, delay: delay + i * 0.05, ease }}
+          className="inline-block relative"
+        >
+          {letter}
+          {showAsterisk && i === letters.length - 1 ? (
+            <motion.span
+              className="absolute top-[0.18em] -right-[0.42em] text-[0.32em] text-[var(--color-accent)]"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: delay + letters.length * 0.05 + 0.2, duration: 0.5 }}
+            >
+              *
+            </motion.span>
+          ) : null}
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
 export default function Hero() {
   return (
-    <section className="relative min-h-screen z-[2] px-12 flex flex-col justify-center" id="hero">
-      <div className="max-w-[1400px] mx-auto w-full relative z-[3]">
-        {/* Meta line */}
-        <motion.div
-          className="flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)] mb-16 flex-wrap"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-warm)] animate-pulse-dot shadow-[0_0_12px_var(--color-accent-warm)]" />
-          <span>Available for selected projects · 2026</span>
-          <span className="text-[var(--color-ink-dim)] ml-auto">
-            Barranquilla, Colombia · UTC-5
-          </span>
-        </motion.div>
+    <section id="hero" className="relative min-h-screen w-full z-[3] flex flex-col">
+      <div className="flex-1" />
 
-        {/* Headline */}
-        <h1 className="font-display text-[clamp(64px,11vw,180px)] leading-[0.92] tracking-[-0.04em]">
-          {/* Line 1 */}
-          <span className="block overflow-hidden">
-            <motion.span
-              className="inline-block"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, delay: 0.8, ease }}
-            >
-              Designing
-            </motion.span>
-          </span>
-
-          {/* Line 2 */}
-          <span className="block overflow-hidden">
-            <motion.span
-              className="inline-block"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, delay: 0.92, ease }}
-            >
-              <span className="italic text-[var(--color-accent)]">human</span> products
-            </motion.span>
-          </span>
-
-          {/* Line 3 */}
-          <span className="block overflow-hidden">
-            <motion.span
-              className="inline-block"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, delay: 1.04, ease }}
-            >
-              for an <span className="italic text-[var(--color-accent)]">AI</span> era
-              <sup className="text-[0.45em] italic text-[var(--color-ink-muted)] tracking-tight">©</sup>
-            </motion.span>
-          </span>
-        </h1>
-
-        {/* Bottom info grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mt-20 items-end">
-          {[
-            {
-              label: "/01 — The role",
-              text: (
-                <>
-                  Senior Product Designer × Design Systems Architect.
-                  Currently shaping{" "}
-                  <a
-                    href="https://ux.mercadolibre.com"
-                    target="_blank"
-                    rel="noopener"
-                    data-cursor="hover"
-                    className="text-[var(--color-accent)] no-underline border-b border-[rgba(139,127,255,0.3)] hover:border-[var(--color-accent)] transition-colors"
-                  >
-                    Andes — Mercadolibre
-                  </a>
-                  &apos;s component library across LATAM.
-                </>
-              ),
-            },
-            {
-              label: "/02 — The practice",
-              text: "Twelve years translating ambiguity into interfaces — from banking dashboards to e-commerce systems used by millions.",
-            },
-            {
-              label: "/03 — The edge",
-              text: "Bridging classical product craft with AI-native workflows: prompt design, generative UI, and intelligent systems.",
-            },
-          ].map((info, i) => (
+      <div className="relative z-10 px-6 md:px-12 pb-10 md:pb-16">
+        <div className="grid grid-cols-12 gap-6 items-end">
+          <div className="col-span-12 lg:col-span-8 flex flex-col gap-4 md:gap-5">
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.4 + i * 0.12, ease }}
+              transition={{ duration: 0.8, delay: 0.2, ease }}
             >
-              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-3">
-                {info.label}
-              </div>
-              <p className="text-sm leading-[1.55] text-[var(--color-ink)] max-w-[340px]">
-                {info.text}
-              </p>
+              <LiveStatusBadge>Available 2026</LiveStatusBadge>
             </motion.div>
-          ))}
+
+            <h1 className="font-display font-medium leading-[0.82] tracking-[-0.07em] text-[20vw] md:text-[15vw] lg:text-[13vw] xl:text-[12vw] text-[var(--color-ink)]">
+              <LettersPullUp text="Douguizard" showAsterisk delay={0.4} />
+            </h1>
+          </div>
+
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-5 pb-2 md:pb-4">
+            <motion.p
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, delay: 1.5, ease }}
+              className="text-[13px] md:text-sm text-[var(--color-ink-muted)] leading-[1.55] max-w-[320px]"
+            >
+              Senior Product Designer x Design Systems Architect. Twelve years translating ambiguity into interfaces, currently shaping{" "}
+              {"Andes Mercadolibre's component library across LATAM."}
+            </motion.p>
+
+            <motion.a
+              href="#contact"
+              data-cursor="hover"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, delay: 1.7, ease }}
+              whileHover={{ x: 4 }}
+              className="group inline-flex items-center gap-3 self-start rounded-full py-1.5 pl-6 pr-1.5 text-sm font-medium text-[var(--color-bg-deep)] no-underline w-fit transition-all"
+              style={{ background: "var(--color-ink)", boxShadow: "0 4px 16px -4px rgba(235,233,224,0.3), inset 0 1px 0 0 rgba(255,255,255,0.6)" }}
+            >
+              {"Let's talk"}
+              <span
+                className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-110"
+                style={{ background: "var(--color-bg-deep)", color: "var(--color-ink)" }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                  <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </motion.a>
+          </div>
         </div>
       </div>
-
-      {/* Scroll hint */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.3em] text-[var(--color-ink-dim)] uppercase flex flex-col items-center gap-3"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 2 }}
-      >
-        Scroll
-        <span
-          className="w-px h-8 animate-scroll-pulse"
-          style={{
-            background:
-              "linear-gradient(180deg, var(--color-ink-dim), transparent)",
-          }}
-        />
-      </motion.div>
     </section>
   );
 }
