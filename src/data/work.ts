@@ -8,11 +8,11 @@ export interface CaseStudy {
   duration: string;
   team: string;
   category: string;
-  // Cover gradient
+  /** Cover gradient — used as fallback if no image */
   colors: [string, string];
-  // Hero
+  /** Path to thumbnail in /public/work/ — undefined uses gradient */
+  thumbnail?: string;        // ← ESTA LÍNEA debe existir
   tagline: string;
-  // Sections
   challenge: string;
   approach: string[];
   outcome: {
@@ -20,7 +20,6 @@ export interface CaseStudy {
     description: string;
     metrics?: { value: string; label: string }[];
   };
-  // Optional details
   technologies?: string[];
   externalLink?: { label: string; href: string };
 }

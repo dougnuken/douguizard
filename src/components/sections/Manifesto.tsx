@@ -63,7 +63,6 @@ export default function Manifesto() {
       className="relative z-[3] py-[160px] md:py-[220px] px-6 md:px-12"
     >
       <div className="max-w-[1280px] mx-auto">
-        {/* Section label */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -75,9 +74,7 @@ export default function Manifesto() {
           / 02 — Working principles
         </motion.div>
 
-        {/* Two-column layout: title + text */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-20 items-start">
-          {/* Title column with neumorphism background mark */}
           <div className="lg:sticky lg:top-[120px]">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -87,14 +84,13 @@ export default function Manifesto() {
               className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em]"
             >
               How I<br />
-              <span className="text-[var(--color-accent)] italic">approach</span>
+              <span className="text-[var(--color-accent)]">approach</span>
               <br />
               the work.
             </motion.h2>
 
-            {/* Decorative neumorphic block underneath */}
             <motion.div
-              className="mt-12 neu-surface-soft rounded-2xl p-6 hidden lg:block max-w-[280px]"
+              className="mt-12 glass rounded-2xl p-6 hidden lg:block max-w-[280px]"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -109,9 +105,7 @@ export default function Manifesto() {
             </motion.div>
           </div>
 
-          {/* Manifesto paragraph — large body text with scroll-reveal */}
           <div className="relative">
-            {/* Quote mark decoration */}
             <div
               className="absolute -top-12 -left-2 font-display text-[120px] leading-none text-[var(--color-line-strong)] pointer-events-none select-none"
               aria-hidden
@@ -134,7 +128,6 @@ export default function Manifesto() {
               })}
             </p>
 
-            {/* Signature line */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}

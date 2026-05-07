@@ -4,18 +4,10 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 interface InterstellarShaderProps {
-  /** Speed multiplier. Default 1 */
   speed?: number;
-  /** Opacity of the effect. Default 1 */
   opacity?: number;
 }
 
-/**
- * Interstellar fragment shader — concentric expanding color lines.
- * Adapted from a community shader to use douguizard's cosmic palette
- * (peach, violet, cool blue) instead of pure RGB.
- * Mouse-reactive: lines pulse toward cursor position.
- */
 export default function InterstellarShader({
   speed = 1,
   opacity = 1,
@@ -48,10 +40,7 @@ export default function InterstellarShader({
       void main() {
         gl_Position = vec4(position, 1.0);
       }
-    `;
-
-    // Adapted shader with cosmic palette (peach, violet, blue)
-    const fragmentShader = `
+    `;    const fragmentShader = `
       precision highp float;
       uniform vec2 resolution;
       uniform float time;
@@ -60,22 +49,17 @@ export default function InterstellarShader({
       void main(void) {
         vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
 
-        // Mouse pull — subtle distortion toward cursor
-        vec2 mouseOffset = (mouse * 2.0 - 1.0) * 0.15;
+        vec2 mouseOffset = (mouse * 2.0 - 1.0) * 0.12;
         uv -= mouseOffset;
 
-        float t = time * 0.05;
-        float lineWidth = 0.0025;
+        float t = time * 0.04;
+        float lineWidth = 0.0028;
 
         vec3 color = vec3(0.0);
 
-        // Three channels with custom palette colors
-        // Channel 0 = peach (#ffa07a)
-        // Channel 1 = violet (#b8a4ff)
-        // Channel 2 = cool blue (#7fc5ff)
-        vec3 peach = vec3(1.0, 0.627, 0.478);
-        vec3 violet = vec3(0.722, 0.643, 1.0);
-        vec3 blue = vec3(0.498, 0.773, 1.0);
+        vec3 lightViolet = vec3(0.769, 0.710, 0.992);
+        vec3 mainViolet  = vec3(0.655, 0.545, 0.980);
+        vec3 deepViolet  = vec3(0.486, 0.373, 0.839);
 
         for(int j = 0; j < 3; j++){
           float channel = 0.0;
@@ -84,20 +68,18 @@ export default function InterstellarShader({
               abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0
               - length(uv) + mod(uv.x + uv.y, 0.2));
           }
-          if (j == 0) color += peach * channel;
-          else if (j == 1) color += violet * channel;
-          else color += blue * channel;
+          if (j == 0) color += lightViolet * channel;
+          else if (j == 1) color += mainViolet * channel;
+          else color += deepViolet * channel;
         }
 
-        // Soft vignette to push edges into darkness
-        float vignette = 1.0 - length(uv) * 0.35;
+        float vignette = 1.0 - length(uv) * 0.4;
         color *= vignette;
 
         gl_FragColor = vec4(color, 1.0);
       }
     `;
 
-    // Initialize scene
     refs.camera = new THREE.Camera();
     refs.camera.position.z = 1;
     refs.scene = new THREE.Scene();
@@ -125,7 +107,6 @@ export default function InterstellarShader({
     });
     refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Mouse tracking
     let mouseX = 0.5;
     let mouseY = 0.5;
     let targetMouseX = 0.5;
@@ -136,7 +117,6 @@ export default function InterstellarShader({
       targetMouseY = 1 - e.clientY / window.innerHeight;
     };
 
-    // Handle resize
     const handleResize = () => {
       if (!refs.renderer || !refs.uniforms) return;
       const width = window.innerWidth;
@@ -149,8 +129,6 @@ export default function InterstellarShader({
     handleResize();
     window.addEventListener("resize", handleResize, false);
     window.addEventListener("mousemove", handleMouseMove);
-
-    // Animation loop
     const animate = () => {
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
@@ -181,7 +159,7 @@ export default function InterstellarShader({
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none w-full h-full"
-      style={{ opacity, background: "#050507" }}
+      style={{ opacity, background: "#15112d" }}
     />
   );
 }

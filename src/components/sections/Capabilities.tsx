@@ -37,6 +37,8 @@ const capabilities: Capability[] = [
   },
 ];
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 export default function Capabilities() {
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -46,12 +48,11 @@ export default function Capabilities() {
       className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]"
     >
       <div className="max-w-[1280px] mx-auto">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease }}
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
@@ -62,7 +63,7 @@ export default function Capabilities() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, ease }}
           className="font-display font-light text-[clamp(40px,6vw,84px)] leading-[0.95] tracking-[-0.05em] mb-16 md:mb-24 max-w-3xl"
         >
           Four ways<br />
@@ -70,7 +71,6 @@ export default function Capabilities() {
           <span className="text-[var(--color-ink-dim)]">.</span>
         </motion.h2>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {capabilities.map((cap, i) => (
             <motion.div
@@ -81,33 +81,25 @@ export default function Capabilities() {
               transition={{
                 duration: 0.7,
                 delay: (i % 2) * 0.1,
-                ease: [0.16, 1, 0.3, 1],
+                ease,
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              className="neu-surface rounded-2xl md:rounded-3xl p-7 md:p-10 group relative overflow-hidden cursor-default"
-              style={{
-                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-                ...(hovered === i && {
-                  borderColor: "var(--color-line-strong)",
-                }),
-              }}
+              className="glass rounded-2xl md:rounded-3xl p-7 md:p-10 group relative overflow-hidden cursor-default transition-all duration-500"
             >
               {/* Spotlight glow on hover */}
               <motion.div
                 className="absolute inset-0 pointer-events-none rounded-2xl md:rounded-3xl"
-                animate={{
-                  opacity: hovered === i ? 1 : 0,
-                }}
+                animate={{ opacity: hovered === i ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
                 style={{
                   background:
-                    "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.06) 0%, transparent 60%)",
+                    "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.12) 0%, transparent 60%)",
                 }}
               />
 
-              {/* Number */}
-              <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-6 flex items-center gap-3">
+              {/* Number row */}
+              <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-6 flex items-center gap-3 relative z-10">
                 <span>{cap.num}</span>
                 <span className="flex-1 h-px bg-[var(--color-line)]" />
                 <motion.span
@@ -123,7 +115,7 @@ export default function Capabilities() {
               </div>
 
               {/* Title */}
-              <h3 className="font-display text-[clamp(28px,3.5vw,48px)] font-light tracking-[-0.04em] leading-[1.05] mb-5">
+              <h3 className="relative z-10 font-display text-[clamp(28px,3.5vw,48px)] font-light tracking-[-0.04em] leading-[1.05] mb-5">
                 {cap.title.order === "before" ? (
                   <>
                     {cap.title.plain}
@@ -142,16 +134,16 @@ export default function Capabilities() {
               </h3>
 
               {/* Description */}
-              <p className="text-[14px] leading-[1.55] text-[var(--color-ink-muted)] mb-6 max-w-[420px]">
+              <p className="relative z-10 text-[14px] leading-[1.55] text-[var(--color-ink-muted)] mb-6 max-w-[420px]">
                 {cap.desc}
               </p>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2">
+              {/* Tags — using glass-pressed style */}
+              <div className="relative z-10 flex flex-wrap gap-2">
                 {cap.tags.map((tag, ti) => (
                   <span
                     key={ti}
-                    className="font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)] neu-surface-pressed"
+                    className="glass-pressed font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
                   >
                     {tag}
                   </span>
