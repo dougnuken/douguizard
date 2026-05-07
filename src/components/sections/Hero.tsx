@@ -1,103 +1,185 @@
- "use client";
+"use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import LiveStatusBadge from "@/components/LiveStatusBadge";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-function LettersPullUp({
-  text,
-  showAsterisk = false,
-  delay = 0,
-}: {
-  text: string;
-  showAsterisk?: boolean;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "0px" });
-  const letters = text.split("");
+const ctaPrimaryClass = "group inline-flex items-center gap-3 rounded-full py-1.5 pl-6 pr-1.5 text-sm font-medium no-underline transition-all";
 
+const ctaPrimaryStyle = {
+  background: "var(--color-ink-strong)",
+  color: "var(--color-bg-deep)",
+  boxShadow: "0 4px 16px -4px rgba(255,255,255,0.2), inset 0 1px 0 0 rgba(255,255,255,0.6)",
+};
+
+const ctaSecondaryClass = "glass-button inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium no-underline text-[var(--color-ink)]";
+
+const headlineClass = "font-display font-light text-[clamp(48px,9vw,140px)] leading-[0.92] tracking-[-0.045em] text-gradient-cosmic";
+
+interface Company {
+  initials: string;
+  name: string;
+  role: string;
+  period: string;
+}
+
+const companies: Company[] = [
+  {
+    initials: "ML",
+    name: "Mercadolibre",
+    role: "Andes Design System · Tech Lead",
+    period: "2024 — Present",
+  },
+  {
+    initials: "AD",
+    name: "Aval Digital Labs",
+    role: "Senior Product Designer · DS Gatekeeper",
+    period: "2018 — 2024",
+  },
+  {
+    initials: "GL",
+    name: "Globant",
+    role: "Senior Product Designer · Royal Caribbean",
+    period: "2017 — 2018",
+  },
+  {
+    initials: "QV",
+    name: "Qrvey",
+    role: "Lead UI Designer · Analytics Platform",
+    period: "2017 — 2018",
+  },
+  {
+    initials: "IW",
+    name: "Ideaware",
+    role: "Senior UX/UI Designer",
+    period: "2016 — 2017",
+  },
+];
+
+function CtaPrimary() {
+  const innerStyle = { background: "var(--color-bg-deep)", color: "var(--color-ink-strong)" };
   return (
-    <span ref={ref} className="inline-flex">
-      {letters.map((letter, i) => (
-        <motion.span
-          key={i}
-          initial={{ y: 80, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.9, delay: delay + i * 0.05, ease }}
-          className="inline-block relative"
-        >
-          {letter}
-          {showAsterisk && i === letters.length - 1 ? (
-            <motion.span
-              className="absolute top-[0.18em] -right-[0.42em] text-[0.32em] text-[var(--color-accent)]"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: delay + letters.length * 0.05 + 0.2, duration: 0.5 }}
-            >
-              *
-            </motion.span>
-          ) : null}
-        </motion.span>
-      ))}
-    </span>
+    <a href="#contact" data-cursor="hover" className={ctaPrimaryClass} style={ctaPrimaryStyle}>
+      {"Let's talk"}
+      <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-110" style={innerStyle}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    </a>
   );
 }
 
+function CtaSecondary() {
+  return (
+    <a href="#work" data-cursor="hover" className={ctaSecondaryClass}>
+      View work
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 3v8M3 7l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </a>
+  );
+}
+function LiveWorkCard() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % companies.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const current = companies[index];
+
+  const cardClass = "glass rounded-3xl p-6 w-full max-w-[360px] relative overflow-hidden";
+  const initialsBoxClass = "relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 flex items-center justify-center";
+  const initialsBoxStyle = {
+    background: "linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(167,139,250,0.02) 100%)",
+    border: "1px solid var(--color-line-strong)",
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, delay: 1.8, ease }} className={cardClass}>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2 font-mono text-[9px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)]">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full rounded-full animate-pulse-glow" style={{ background: "var(--color-accent)" }} />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-accent)" }} />
+          </span>
+          Where I&apos;ve worked
+        </div>
+        <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--color-ink-dim)]">
+          {String(index + 1).padStart(2, "0")} / {String(companies.length).padStart(2, "0")}
+        </span>
+      </div>
+
+      <motion.div key={current.initials + "-box"} initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, ease }} className={initialsBoxClass} style={initialsBoxStyle}>
+        <span className="font-display text-[clamp(56px,8vw,84px)] font-light tracking-[-0.05em] text-[var(--color-ink-strong)]">
+          {current.initials}
+        </span>
+        <div className="absolute bottom-2 right-3 font-mono text-[8px] tracking-[0.2em] uppercase text-[var(--color-ink-dim)]">
+          {current.period}
+        </div>
+      </motion.div>
+
+      <motion.div key={current.initials + "-text"} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease }}>
+        <div className="font-display text-xl text-[var(--color-ink-strong)] tracking-tight leading-tight mb-1.5">
+          {current.name}
+        </div>
+        <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)] leading-[1.5]">
+          {current.role}
+        </div>
+      </motion.div>
+
+      <div className="flex gap-1 mt-5">
+        {companies.map((_, i) => (
+          <span key={i} className="h-0.5 flex-1 rounded-full transition-all duration-500" style={{ background: i === index ? "var(--color-accent)" : "var(--color-line-strong)" }} />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 export default function Hero() {
   return (
     <section id="hero" className="relative min-h-screen w-full z-[3] flex flex-col">
       <div className="flex-1" />
 
-      <div className="relative z-10 px-6 md:px-12 pb-10 md:pb-16">
-        <div className="grid grid-cols-12 gap-6 items-end">
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-4 md:gap-5">
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease }}
-            >
+      <div className="relative z-10 px-6 md:px-12 pb-12 md:pb-20">
+        <div className="grid grid-cols-12 gap-8 items-end max-w-[1400px] mx-auto">
+          <div className="col-span-12 lg:col-span-8 flex flex-col gap-7 md:gap-8">
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease }}>
               <LiveStatusBadge>Available 2026</LiveStatusBadge>
             </motion.div>
 
-            <h1 className="font-display font-medium leading-[0.82] tracking-[-0.07em] text-[20vw] md:text-[15vw] lg:text-[13vw] xl:text-[12vw] text-[var(--color-ink)]">
-              <LettersPullUp text="Douguizard" showAsterisk delay={0.4} />
-            </h1>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, delay: 0.5, ease }} className={headlineClass} style={{ maxWidth: "12ch" }}>
+              Designing the human side of an AI era.
+              <span className="text-[var(--color-accent)] font-normal text-[0.4em] align-super ml-2">TM</span>
+            </motion.h1>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 1.3, ease }} className="flex items-center gap-4 flex-wrap">
+              <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+                ───
+              </span>
+              <span className="font-display italic text-base text-[var(--color-ink-strong)]">
+                Doug Vargas
+              </span>
+              <span className="text-[var(--color-ink-dim)]">·</span>
+              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)]">
+                Senior Product Designer × Mercadolibre Andes
+              </span>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 1.5, ease }} className="flex items-center gap-3 flex-wrap">
+              <CtaPrimary />
+              <CtaSecondary />
+            </motion.div>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-5 pb-2 md:pb-4">
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 1.5, ease }}
-              className="text-[13px] md:text-sm text-[var(--color-ink-muted)] leading-[1.55] max-w-[320px]"
-            >
-              Senior Product Designer x Design Systems Architect. Twelve years translating ambiguity into interfaces, currently shaping{" "}
-              {"Andes Mercadolibre's component library across LATAM."}
-            </motion.p>
-
-            <motion.a
-              href="#contact"
-              data-cursor="hover"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 1.7, ease }}
-              whileHover={{ x: 4 }}
-              className="group inline-flex items-center gap-3 self-start rounded-full py-1.5 pl-6 pr-1.5 text-sm font-medium text-[var(--color-bg-deep)] no-underline w-fit transition-all"
-              style={{ background: "var(--color-ink)", boxShadow: "0 4px 16px -4px rgba(235,233,224,0.3), inset 0 1px 0 0 rgba(255,255,255,0.6)" }}
-            >
-              {"Let's talk"}
-              <span
-                className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-110"
-                style={{ background: "var(--color-bg-deep)", color: "var(--color-ink)" }}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-                  <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </motion.a>
+          <div className="col-span-12 lg:col-span-4 flex justify-end">
+            <LiveWorkCard />
           </div>
         </div>
       </div>

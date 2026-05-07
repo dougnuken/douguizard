@@ -39,21 +39,44 @@ const capabilities: Capability[] = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+const haloAtmosphereStyle = {
+  background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(167,139,250,0.5) 0%, rgba(125,90,200,0.25) 30%, rgba(125,90,200,0.08) 55%, transparent 80%)",
+  filter: "blur(60px)",
+};
+
+const haloMidStyle = {
+  background: "radial-gradient(circle at 50% 50%, rgba(196,181,253,0.7) 0%, rgba(167,139,250,0.4) 25%, rgba(167,139,250,0.1) 50%, transparent 75%)",
+  filter: "blur(40px)",
+};
+
+const haloCoreStyle = {
+  background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5) 0%, rgba(196,181,253,0.6) 20%, rgba(167,139,250,0.2) 50%, transparent 75%)",
+  filter: "blur(20px)",
+};
+
 export default function Capabilities() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <section
       id="capabilities"
-      className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]"
+      className="relative z-[3] px-6 md:px-12 pt-[60px] md:pt-[80px] pb-[120px] md:pb-[160px] overflow-hidden"
     >
-      <div className="max-w-[1280px] mx-auto">
+      <div className="absolute inset-0 flex items-start justify-center pointer-events-none" style={{ paddingTop: "120px" }}>
+        <div className="relative w-full max-w-[900px] aspect-square">
+          <div className="absolute inset-0 animate-nebula-drift" style={haloAtmosphereStyle} />
+          <div className="absolute inset-[10%]" style={haloMidStyle} />
+          <div className="absolute inset-[25%] animate-pulse-soft" style={haloCoreStyle} />
+        </div>
+      </div>
+
+      <div className="relative z-[2] max-w-[1280px] mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8, ease }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
+          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-8 md:mb-12 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
           / 03 — Capabilities
@@ -87,58 +110,45 @@ export default function Capabilities() {
               onMouseLeave={() => setHovered(null)}
               className="glass rounded-2xl md:rounded-3xl p-7 md:p-10 group relative overflow-hidden cursor-default transition-all duration-500"
             >
-              {/* Spotlight glow on hover */}
               <motion.div
                 className="absolute inset-0 pointer-events-none rounded-2xl md:rounded-3xl"
                 animate={{ opacity: hovered === i ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
                 style={{
-                  background:
-                    "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.12) 0%, transparent 60%)",
+                  background: "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.12) 0%, transparent 60%)",
                 }}
               />
 
-              {/* Number row */}
               <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-6 flex items-center gap-3 relative z-10">
                 <span>{cap.num}</span>
                 <span className="flex-1 h-px bg-[var(--color-line)]" />
                 <motion.span
                   animate={{
-                    color:
-                      hovered === i
-                        ? "var(--color-accent)"
-                        : "var(--color-ink-dim)",
+                    color: hovered === i ? "var(--color-accent)" : "var(--color-ink-dim)",
                   }}
                 >
                   /04
                 </motion.span>
               </div>
 
-              {/* Title */}
               <h3 className="relative z-10 font-display text-[clamp(28px,3.5vw,48px)] font-light tracking-[-0.04em] leading-[1.05] mb-5">
                 {cap.title.order === "before" ? (
                   <>
                     {cap.title.plain}
-                    <span className="text-[var(--color-accent)]">
-                      {cap.title.accent}
-                    </span>
+                    <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
                   </>
                 ) : (
                   <>
                     {cap.title.plain}{" "}
-                    <span className="text-[var(--color-accent)]">
-                      {cap.title.accent}
-                    </span>
+                    <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
                   </>
                 )}
               </h3>
 
-              {/* Description */}
               <p className="relative z-10 text-[14px] leading-[1.55] text-[var(--color-ink-muted)] mb-6 max-w-[420px]">
                 {cap.desc}
               </p>
 
-              {/* Tags — using glass-pressed style */}
               <div className="relative z-10 flex flex-wrap gap-2">
                 {cap.tags.map((tag, ti) => (
                   <span

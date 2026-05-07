@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 const items = [
   "Product Design",
@@ -12,55 +12,42 @@ const items = [
 ];
 
 export default function Marquee() {
-  // Duplicate the items so the marquee loops seamlessly
   const tracks = [...items, ...items];
 
-  return (
-    <div className="relative z-[3] py-10 md:py-14 px-6 md:px-12">
-      <div className="max-w-[1280px] mx-auto">
-        {/* Glass container */}
-        <div
-          className="relative overflow-hidden rounded-2xl py-5 border border-white/[0.06]"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(20,20,28,0.5) 0%, rgba(10,10,15,0.3) 100%)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            boxShadow:
-              "inset 1px 1px 0 0 rgba(235,233,224,0.04), inset -1px -1px 0 0 rgba(0,0,0,0.2), 0 8px 32px -8px rgba(0,0,0,0.4)",
-          }}
-        >
-          {/* Edge fades */}
-          <div
-            className="absolute left-0 top-0 h-full w-24 z-10 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(8,8,14,0.9) 0%, transparent 100%)",
-            }}
-          />
-          <div
-            className="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(270deg, rgba(8,8,14,0.9) 0%, transparent 100%)",
-            }}
-          />
+  const containerStyle = {
+    background: "linear-gradient(135deg, rgba(240,238,230,0.04) 0%, rgba(240,238,230,0.01) 100%)",
+    backdropFilter: "blur(20px) saturate(120%)",
+    WebkitBackdropFilter: "blur(20px) saturate(120%)",
+    borderTop: "1px solid var(--color-line)",
+    borderBottom: "1px solid var(--color-line)",
+    boxShadow: "inset 1px 0 0 0 rgba(240,238,230,0.04), inset -1px 0 0 0 rgba(0,0,0,0.15), 0 8px 32px -8px rgba(0,0,0,0.4)",
+  };
 
-          {/* Marquee track */}
-          <div className="whitespace-nowrap overflow-hidden">
-            <div className="inline-flex gap-12 md:gap-16 animate-marquee">
-              {tracks.map((item, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-12 md:gap-16 shrink-0 font-mono text-[11px] md:text-[12px] tracking-[0.3em] uppercase text-[var(--color-ink-muted)]"
-                >
-                  {item}
-                  <span className="text-[var(--color-accent)] opacity-50 text-[8px]">
-                    ✦
-                  </span>
-                </span>
-              ))}
-            </div>
+  const fadeLeftStyle = {
+    background: "linear-gradient(90deg, rgba(21,17,45,0.85) 0%, transparent 100%)",
+  };
+
+  const fadeRightStyle = {
+    background: "linear-gradient(270deg, rgba(21,17,45,0.85) 0%, transparent 100%)",
+  };
+
+  return (
+    <div className="relative z-[3] py-8 md:py-12 w-full">
+      <div className="relative w-full overflow-hidden py-4 md:py-5" style={containerStyle}>
+        <div className="absolute left-0 top-0 h-full w-16 md:w-32 z-10 pointer-events-none" style={fadeLeftStyle} />
+        <div className="absolute right-0 top-0 h-full w-16 md:w-32 z-10 pointer-events-none" style={fadeRightStyle} />
+
+        <div className="whitespace-nowrap overflow-hidden">
+          <div className="inline-flex gap-8 md:gap-16 animate-marquee">
+            {tracks.map((item, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-8 md:gap-16 shrink-0 font-mono text-[10px] md:text-[12px] tracking-[0.25em] md:tracking-[0.3em] uppercase text-[var(--color-ink-muted)]"
+              >
+                {item}
+                <span className="text-[var(--color-accent)] opacity-50 text-[7px] md:text-[8px]">✦</span>
+              </span>
+            ))}
           </div>
         </div>
       </div>

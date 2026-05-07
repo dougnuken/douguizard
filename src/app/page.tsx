@@ -7,14 +7,15 @@ import CustomCursor from "@/components/CustomCursor";
 import SmoothScrollProvider from "@/components/SmoothScroll";
 import Navigation from "@/components/sections/Navigation";
 import Hero from "@/components/sections/Hero";
+import Intro from "@/components/sections/Intro";
 import Marquee from "@/components/sections/Marquee";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
-import Portfolio from "@/components/sections/Portfolio";
+import WorkTimeline from "@/components/sections/WorkTimeline";
+import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
 import Stats from "@/components/sections/Stats";
 import Footer from "@/components/sections/Footer";
 
-// 3D scene loaded client-side only (Three.js needs window/canvas)
 const Scene3D = dynamic(() => import("@/components/three/Scene3D"), {
   ssr: false,
 });
@@ -33,11 +34,13 @@ export default function Home() {
 
       <main className="relative">
         <Hero />
+        <Intro />
         <Marquee />
         <Manifesto />
         <Capabilities />
-        <Portfolio />
+        <WorkTimeline />
         <Stats />
+        <TestimonialsCarousel />
         <Footer />
       </main>
     </SmoothScrollProvider>
