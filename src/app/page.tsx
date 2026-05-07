@@ -11,6 +11,7 @@ import Intro from "@/components/sections/Intro";
 import Marquee from "@/components/sections/Marquee";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
+import ToolsMarquee from "@/components/sections/ToolsMarquee";
 import WorkTimeline from "@/components/sections/WorkTimeline";
 import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
 import Stats from "@/components/sections/Stats";
@@ -38,6 +39,7 @@ export default function Home() {
         <Marquee />
         <Manifesto />
         <Capabilities />
+        <ToolsMarquee />
         <WorkTimeline />
         <Stats />
         <TestimonialsCarousel />

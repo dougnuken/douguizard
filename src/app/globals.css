@@ -344,6 +344,7 @@
     to { transform: translateX(-50%); }
   }
   .animate-marquee { animation: marquee 40s linear infinite; }
+  .animate-marquee-slow { animation: marquee 60s linear infinite; }
 
   @keyframes scroll-pulse {
     0%, 100% { transform: scaleY(1); transform-origin: top; }
