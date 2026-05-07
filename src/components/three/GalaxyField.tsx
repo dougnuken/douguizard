@@ -40,7 +40,11 @@ export default function InterstellarShader({
       void main() {
         gl_Position = vec4(position, 1.0);
       }
-    `;    const fragmentShader = `
+    `;
+
+    // Fragment now outputs alpha based on luminance — black background = transparent,
+    // bright violet rays = visible. This lets the dark body show through.
+    const fragmentShader = `
       precision highp float;
       uniform vec2 resolution;
       uniform float time;
@@ -53,7 +57,7 @@ export default function InterstellarShader({
         uv -= mouseOffset;
 
         float t = time * 0.04;
-        float lineWidth = 0.0028;
+        float lineWidth = 0.0022;
 
         vec3 color = vec3(0.0);
 
@@ -76,7 +80,10 @@ export default function InterstellarShader({
         float vignette = 1.0 - length(uv) * 0.4;
         color *= vignette;
 
-        gl_FragColor = vec4(color, 1.0);
+        // Alpha = luminance, so dark areas become transparent and only the violet rays render
+        float alpha = clamp(max(max(color.r, color.g), color.b), 0.0, 1.0);
+
+        gl_FragColor = vec4(color, alpha);
       }
     `;
 
@@ -95,6 +102,9 @@ export default function InterstellarShader({
       uniforms: refs.uniforms,
       vertexShader,
       fragmentShader,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -104,8 +114,11 @@ export default function InterstellarShader({
       canvas,
       antialias: true,
       powerPreference: "high-performance",
+      alpha: true,
+      premultipliedAlpha: false,
     });
     refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    refs.renderer.setClearColor(0x000000, 0);
 
     let mouseX = 0.5;
     let mouseY = 0.5;
@@ -129,6 +142,7 @@ export default function InterstellarShader({
     handleResize();
     window.addEventListener("resize", handleResize, false);
     window.addEventListener("mousemove", handleMouseMove);
+
     const animate = () => {
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
@@ -159,7 +173,7 @@ export default function InterstellarShader({
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none w-full h-full"
-      style={{ opacity, background: "#15112d" }}
+      style={{ opacity, background: "transparent" }}
     />
   );
 }

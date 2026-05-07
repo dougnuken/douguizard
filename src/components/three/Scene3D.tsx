@@ -13,23 +13,26 @@ export default function Scene3D() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Nebula bloom layer — softened so the dark body shows through
   const nebulaStyle = {
     background: `
-      radial-gradient(ellipse 65% 45% at 15% 25%, rgba(167, 139, 250, 0.42) 0%, transparent 65%),
-      radial-gradient(ellipse 55% 40% at 85% 75%, rgba(125, 90, 200, 0.38) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 35% at 70% 20%, rgba(196, 181, 253, 0.25) 0%, transparent 65%),
-      radial-gradient(ellipse 45% 30% at 30% 80%, rgba(149, 110, 230, 0.32) 0%, transparent 60%)
+      radial-gradient(ellipse 65% 45% at 15% 25%, rgba(167, 139, 250, 0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 40% at 85% 75%, rgba(125, 90, 200, 0.15) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 35% at 70% 20%, rgba(196, 181, 253, 0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 45% 30% at 30% 80%, rgba(149, 110, 230, 0.12) 0%, transparent 60%)
     `,
     transform: `translateY(${scrollY * 0.1}px)`,
     willChange: "transform",
   };
 
+  // Interstellar ring — lower opacity so it reads as a distant glow
   const shaderWrapperStyle = {
-    opacity: 0.4,
+    opacity: 0.18,
   };
 
+  // Vignette — push the edges to pure black for cinematic framing
   const vignetteStyle = {
-    background: "radial-gradient(ellipse at center, transparent 65%, rgba(21, 17, 45, 0.45) 100%)",
+    background: "radial-gradient(ellipse at center, transparent 50%, rgba(7, 6, 15, 0.85) 100%)",
   };
 
   return (
@@ -38,14 +41,14 @@ export default function Scene3D() {
 
       <DecorativeStars scrollY={scrollY} />
 
-      {/* Paper Shaders layer — entre estrellas y aro interstellar */}
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ opacity: 0.35 }}>
+      {/* Paper Shaders layer — between stars and interstellar ring, very subtle now */}
+      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ opacity: 0.12 }}>
         <MeshGradient
           className="w-full h-full absolute inset-0"
-          colors={["#15112d", "#7d5ac8", "#a78bfa", "#c4b5fd"]}
+          colors={["#07060f", "#3d2a6b", "#5d3da8", "#7d5ac8"]}
           speed={0.4}
         />
-        <div className="w-full h-full absolute inset-0 mix-blend-screen opacity-50">
+        <div className="w-full h-full absolute inset-0 mix-blend-screen opacity-30">
           <DotOrbit
             colorBack="#00000000"
             color1="#a78bfa"

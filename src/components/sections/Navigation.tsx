@@ -37,45 +37,35 @@ function NavLink(props: { item: NavItem; isActive: boolean }) {
         >
           <svg viewBox="0 0 100 16" preserveAspectRatio="none" width="100%" height="100%">
             <defs>
-              {/* Outer soft halo — wide, very faint */}
               <linearGradient id="halo-soft" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="rgba(167,139,250,0)" />
                 <stop offset="50%" stopColor="rgba(167,139,250,0.55)" />
                 <stop offset="100%" stopColor="rgba(167,139,250,0)" />
               </linearGradient>
 
-              {/* Mid halo — accent violet */}
               <linearGradient id="halo-mid" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="10%" stopColor="rgba(196,181,253,0)" />
                 <stop offset="50%" stopColor="rgba(196,181,253,0.95)" />
                 <stop offset="90%" stopColor="rgba(196,181,253,0)" />
               </linearGradient>
 
-              {/* Bright core — almost white center */}
               <linearGradient id="halo-core" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="30%" stopColor="rgba(255,255,255,0)" />
                 <stop offset="50%" stopColor="rgba(255,255,255,1)" />
                 <stop offset="70%" stopColor="rgba(255,255,255,0)" />
               </linearGradient>
 
-              {/* Heavy blur for outer halo */}
               <filter id="halo-blur-soft" x="-50%" y="-200%" width="200%" height="500%">
                 <feGaussianBlur stdDeviation="3.5" />
               </filter>
 
-              {/* Medium blur for mid layer */}
               <filter id="halo-blur-mid" x="-50%" y="-200%" width="200%" height="500%">
                 <feGaussianBlur stdDeviation="1.2" />
               </filter>
             </defs>
 
-            {/* Layer 1 — soft wide halo, blurred */}
             <ellipse cx="50" cy="6" rx="48" ry="2.5" fill="url(#halo-soft)" filter="url(#halo-blur-soft)" />
-
-            {/* Layer 2 — mid violet line, slight blur */}
             <rect x="0" y="5.4" width="100" height="1.2" fill="url(#halo-mid)" filter="url(#halo-blur-mid)" />
-
-            {/* Layer 3 — sharp bright core hairline */}
             <rect x="0" y="5.7" width="100" height="0.5" fill="url(#halo-core)" />
           </svg>
         </motion.span>
@@ -163,7 +153,6 @@ export default function Navigation() {
     transition: "padding 0.4s var(--ease-quart-out)",
   };
 
-  // Solid dark dock so the shiny border doesn't bleed through the fill
   const dockClass = "rounded-full px-2.5 py-1 flex items-center gap-1";
   const dockStyle = {
     background: "rgba(15, 11, 38, 0.92)",
@@ -196,9 +185,9 @@ export default function Navigation() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 h-[280px] z-[38] pointer-events-none" style={bloomWideStyle} />
-      <div className="fixed top-0 left-0 right-0 h-[220px] z-[39] pointer-events-none" style={bloomCenterStyle} />
-      <div className="fixed top-0 left-0 right-0 h-[140px] z-[40] pointer-events-none" style={bloomCoreStyle} />
+      <div className="fixed top-0 left-0 right-0 h-[280px] z-[38] pointer-events-none overflow-hidden" style={bloomWideStyle} />
+      <div className="fixed top-0 left-0 right-0 h-[220px] z-[39] pointer-events-none overflow-hidden" style={bloomCenterStyle} />
+      <div className="fixed top-0 left-0 right-0 h-[140px] z-[40] pointer-events-none overflow-hidden" style={bloomCoreStyle} />
 
       <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left" style={progressBarStyle} />
 
@@ -223,10 +212,9 @@ export default function Navigation() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.7, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden md:block fixed top-5 left-1/2 -translate-x-1/2 z-50"
+        className="hidden md:block fixed top-5 left-1/2 -translate-x-1/2 z-50 max-w-[calc(100vw-32px)]"
         style={navWrapperStyle}
       >
-        {/* Shiny rotating border around the entire dock */}
         <ShinyBorder borderRadius="9999px" duration={4}>
           <div className={dockClass} style={dockStyle}>
             {navItems.map((item, i) => {

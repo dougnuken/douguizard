@@ -32,13 +32,13 @@ export default function Marquee() {
   };
 
   return (
-    <div className="relative z-[3] py-8 md:py-12 w-full">
-      <div className="relative w-full overflow-hidden py-4 md:py-5" style={containerStyle}>
+    <div className="relative z-[3] py-8 md:py-12 w-full max-w-full overflow-hidden">
+      <div className="relative w-full max-w-full overflow-hidden py-4 md:py-5" style={containerStyle}>
         <div className="absolute left-0 top-0 h-full w-16 md:w-32 z-10 pointer-events-none" style={fadeLeftStyle} />
         <div className="absolute right-0 top-0 h-full w-16 md:w-32 z-10 pointer-events-none" style={fadeRightStyle} />
 
         <div className="whitespace-nowrap overflow-hidden">
-          <div className="inline-flex gap-8 md:gap-16 animate-marquee">
+          <div className="inline-flex gap-8 md:gap-16 animate-marquee will-change-transform">
             {tracks.map((item, i) => (
               <span
                 key={i}
