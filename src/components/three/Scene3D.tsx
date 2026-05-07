@@ -50,9 +50,7 @@ export default function Scene3D() {
         />
         <div className="w-full h-full absolute inset-0 mix-blend-screen opacity-30">
           <DotOrbit
-            colorBack="#00000000"
-            color1="#a78bfa"
-            color2="#c4b5fd"
+            colors={["#a78bfa", "#c4b5fd"]}
             speed={0.6}
             size={1.2}
           />
