@@ -16,8 +16,7 @@ export interface Education {
 
 export const experiences: Experience[] = [
   {
-    period: "2024 — Now",
-    isCurrent: true,
+    period: "2024 — Jan 2026",
     company: { plain: "· Andes", accent: "Mercadolibre" },
     role: "Tech Lead · Product Design Systems",
     description:

@@ -9,26 +9,29 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@paper-design/shaders": "^0.0.76",
+    "@paper-design/shaders-react": "^0.0.76",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.0",
+    "lenis": "^1.1.18",
     "next": "^16.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "framer-motion": "^11.18.0",
-    "three": "^0.170.0",
-    "@react-three/fiber": "^9.0.0",
-    "@react-three/drei": "^10.0.0",
-    "lenis": "^1.1.18",
-    "clsx": "^2.1.1"
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.170.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.170.0",
-    "typescript": "^5.7.0",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/postcss": "^4.0.0",
-    "postcss": "^8.5.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^16.2.0"
+    "eslint-config-next": "^16.2.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0"
   }
 }

@@ -3,18 +3,9 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import LiveStatusBadge from "@/components/LiveStatusBadge";
+import { LiquidMetalShader } from "@/components/ui/LiquidMetalShader";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-
-const ctaPrimaryClass = "group inline-flex items-center gap-3 rounded-full py-1.5 pl-6 pr-1.5 text-sm font-medium no-underline transition-all";
-
-const ctaPrimaryStyle = {
-  background: "var(--color-ink-strong)",
-  color: "var(--color-bg-deep)",
-  boxShadow: "0 4px 16px -4px rgba(255,255,255,0.2), inset 0 1px 0 0 rgba(255,255,255,0.6)",
-};
-
-const ctaSecondaryClass = "glass-button inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium no-underline text-[var(--color-ink)]";
 
 const headlineClass = "font-display font-light text-[clamp(48px,9vw,140px)] leading-[0.92] tracking-[-0.045em] text-gradient-cosmic";
 
@@ -30,7 +21,7 @@ const companies: Company[] = [
     initials: "ML",
     name: "Mercadolibre",
     role: "Andes Design System · Tech Lead",
-    period: "2024 — Present",
+    period: "2024 — 2026",
   },
   {
     initials: "AD",
@@ -60,10 +51,29 @@ const companies: Company[] = [
 
 function CtaPrimary() {
   const innerStyle = { background: "var(--color-bg-deep)", color: "var(--color-ink-strong)" };
+
+  const wrapperClass = "group relative inline-flex items-center gap-3 overflow-hidden rounded-full py-1.5 pl-6 pr-1.5 text-sm font-medium no-underline transition-all";
+
+  const wrapperStyle = {
+    background: "var(--color-ink-strong)",
+    color: "var(--color-bg-deep)",
+    boxShadow: "0 4px 16px -4px rgba(255,255,255,0.2), inset 0 1px 0 0 rgba(255,255,255,0.6)",
+  };
+
   return (
-    <a href="#contact" data-cursor="hover" className={ctaPrimaryClass} style={ctaPrimaryStyle}>
-      {"Let's talk"}
-      <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-110" style={innerStyle}>
+    <a href="#contact" data-cursor="hover" className={wrapperClass} style={wrapperStyle}>
+      {/* Liquid metal shader as a subtle base layer, below content */}
+      <span className="absolute inset-0 z-0 opacity-30 mix-blend-overlay">
+        <LiquidMetalShader
+          speed={0.6}
+          scale={6}
+          shiftRed={-0.1}
+          shiftBlue={0.3}
+        />
+      </span>
+
+      <span className="relative z-10">{"Let's talk"}</span>
+      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-110" style={innerStyle}>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -73,15 +83,24 @@ function CtaPrimary() {
 }
 
 function CtaSecondary() {
+  const wrapperClass = "glass-button group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-medium no-underline text-[var(--color-ink)]";
+
   return (
-    <a href="#work" data-cursor="hover" className={ctaSecondaryClass}>
-      View work
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <a href="#work" data-cursor="hover" className={wrapperClass}>
+      {/* Diagonal shimmer sweep — runs once on hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-full"
+      />
+
+      <span className="relative z-10">View work</span>
+      <svg className="relative z-10" width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 3v8M3 7l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </a>
   );
 }
+
 function LiveWorkCard() {
   const [index, setIndex] = useState(0);
 
@@ -142,6 +161,7 @@ function LiveWorkCard() {
     </motion.div>
   );
 }
+
 export default function Hero() {
   return (
     <section id="hero" className="relative min-h-screen w-full z-[3] flex flex-col">

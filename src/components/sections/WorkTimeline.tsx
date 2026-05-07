@@ -15,12 +15,11 @@ interface ExperienceItem {
 
 const experience: ExperienceItem[] = [
   {
-    period: "2024 — Present",
+    period: "2024 — Jan 2026",
     company: "Mercadolibre",
     role: "Technical Lead — Andes Design System",
     description: "Advanced leadership at Andes. Building and maintaining components and the design library, establishing new foundational definitions, and collaborating cross-platform with engineering teams across LATAM.",
     location: "Remote · LATAM",
-    current: true,
   },
   {
     period: "2018 — 2024",

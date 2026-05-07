@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import InterstellarShader from "./GalaxyField";
+import { MeshGradient, DotOrbit } from "@paper-design/shaders-react";
 
 export default function Scene3D() {
   const [scrollY, setScrollY] = useState(0);
@@ -37,11 +38,29 @@ export default function Scene3D() {
 
       <DecorativeStars scrollY={scrollY} />
 
-      <div className="fixed inset-0 z-[1] pointer-events-none" style={shaderWrapperStyle}>
+      {/* Paper Shaders layer — entre estrellas y aro interstellar */}
+      <div className="fixed inset-0 z-[1] pointer-events-none" style={{ opacity: 0.35 }}>
+        <MeshGradient
+          className="w-full h-full absolute inset-0"
+          colors={["#15112d", "#7d5ac8", "#a78bfa", "#c4b5fd"]}
+          speed={0.4}
+        />
+        <div className="w-full h-full absolute inset-0 mix-blend-screen opacity-50">
+          <DotOrbit
+            colorBack="#00000000"
+            color1="#a78bfa"
+            color2="#c4b5fd"
+            speed={0.6}
+            size={1.2}
+          />
+        </div>
+      </div>
+
+      <div className="fixed inset-0 z-[2] pointer-events-none" style={shaderWrapperStyle}>
         <InterstellarShader speed={0.7} opacity={1} />
       </div>
 
-      <div className="fixed inset-0 z-[2] pointer-events-none" style={vignetteStyle} />
+      <div className="fixed inset-0 z-[3] pointer-events-none" style={vignetteStyle} />
     </>
   );
 }

@@ -36,15 +36,32 @@
     box-sizing: border-box;
   }
 
-  html, body {
+  html {
+    /* Lock viewport: no horizontal scroll, no overscroll bounce */
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    /* Disable iOS Safari double-tap zoom and pinch zoom */
+    touch-action: pan-y;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Prevent layout shift from scrollbar appearing/disappearing */
+    scrollbar-gutter: stable;
+  }
+
+  body {
     color: var(--color-ink);
     font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Mirror html overflow rules — belt-and-suspenders for mobile webviews */
     overflow-x: hidden;
-  }
-
-  body {
+    overscroll-behavior: none;
+    /* Lock width to viewport so fixed children can't push the page wider */
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
     cursor: none;
     background:
       radial-gradient(ellipse 90% 60% at 20% 0%, rgba(125, 80, 200, 0.4) 0%, transparent 55%),
@@ -54,10 +71,35 @@
       linear-gradient(180deg, #15112d 0%, #1c1742 50%, #15112d 100%);
     background-attachment: fixed;
     min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Prevent images, videos, canvases, SVGs from overflowing their containers */
+  img, video, canvas, svg, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Force long words/URLs to wrap rather than push the layout wider */
+  h1, h2, h3, h4, h5, h6, p, span, a, li {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   @media (hover: none) and (pointer: coarse) {
     body { cursor: auto; }
+
+    /* Disable browser-driven zoom gestures on touch devices */
+    html, body {
+      touch-action: pan-y;
+      -webkit-user-select: none;
+    }
+
+    /* Re-enable selection on actual content */
+    p, h1, h2, h3, h4, h5, h6, span, a, li, input, textarea {
+      -webkit-user-select: text;
+      user-select: text;
+    }
   }
 
   ::selection {
