@@ -155,13 +155,23 @@ export default function Navigation() {
 
   const dockClass = "rounded-full px-2.5 py-1 flex items-center gap-1";
   const dockStyle = {
-    background: "rgba(15, 11, 38, 0.92)",
+    background: "rgba(7, 6, 15, 0.92)",
     backdropFilter: "blur(24px) saturate(180%)",
     WebkitBackdropFilter: "blur(24px) saturate(180%)",
     boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 32px -8px rgba(0,0,0,0.4)",
     transition: "all 0.4s var(--ease-quart-out)",
   };
 
+  // Mobile glass top bar — wraps logo and hamburger so content has readable backing
+  const mobileTopBarStyle = {
+    background: "rgba(7, 6, 15, 0.65)",
+    backdropFilter: "blur(20px) saturate(180%)",
+    WebkitBackdropFilter: "blur(20px) saturate(180%)",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+    boxShadow: "0 4px 20px -8px rgba(0, 0, 0, 0.4)",
+  };
+
+  // Bloom layers — desktop only (mobile gets a clean glass top bar instead)
   const bloomCenterStyle = {
     background: "radial-gradient(ellipse 50% 100% at 50% 0%, rgba(196,181,253,0.85) 0%, rgba(167,139,250,0.55) 18%, rgba(167,139,250,0.25) 40%, rgba(167,139,250,0.08) 65%, transparent 85%)",
     filter: "blur(20px)",
@@ -178,24 +188,31 @@ export default function Navigation() {
   };
 
   const mobileOverlayStyle = {
-    background: "rgba(15, 11, 38, 0.98)",
+    background: "rgba(7, 6, 15, 0.98)",
     backdropFilter: "blur(24px) saturate(180%)",
     WebkitBackdropFilter: "blur(24px) saturate(180%)",
   };
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 h-[280px] z-[38] pointer-events-none overflow-hidden" style={bloomWideStyle} />
-      <div className="fixed top-0 left-0 right-0 h-[220px] z-[39] pointer-events-none overflow-hidden" style={bloomCenterStyle} />
-      <div className="fixed top-0 left-0 right-0 h-[140px] z-[40] pointer-events-none overflow-hidden" style={bloomCoreStyle} />
+      {/* Bloom decoration — desktop only, hidden on mobile to prevent the cropped-edge look */}
+      <div className="hidden md:block fixed top-0 left-0 right-0 h-[280px] z-[38] pointer-events-none overflow-hidden" style={bloomWideStyle} />
+      <div className="hidden md:block fixed top-0 left-0 right-0 h-[220px] z-[39] pointer-events-none overflow-hidden" style={bloomCenterStyle} />
+      <div className="hidden md:block fixed top-0 left-0 right-0 h-[140px] z-[40] pointer-events-none overflow-hidden" style={bloomCoreStyle} />
 
       <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left" style={progressBarStyle} />
+
+      {/* Mobile glass top bar — full-width container backing logo + hamburger */}
+      <div
+        className="md:hidden fixed top-0 left-0 right-0 h-[64px] z-[45] pointer-events-none"
+        style={mobileTopBarStyle}
+      />
 
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-6 left-6 md:top-8 md:left-12 z-[55] flex items-center gap-2"
+        className="fixed top-5 left-5 md:top-8 md:left-12 z-[55] flex items-center gap-2"
       >
         <span className="font-display text-lg md:text-xl font-medium tracking-[-0.02em] text-[var(--color-ink-strong)]">
           Douguizard
@@ -231,7 +248,7 @@ export default function Navigation() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="md:hidden fixed top-5 right-5 z-[60] w-11 h-11 rounded-full glass-nav flex items-center justify-center cursor-pointer"
+        className="md:hidden fixed top-3.5 right-5 z-[60] w-11 h-11 rounded-full glass-nav flex items-center justify-center cursor-pointer"
         aria-label="Toggle menu"
       >
         <div className="w-5 h-5 flex flex-col items-center justify-center gap-1">
