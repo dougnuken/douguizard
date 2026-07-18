@@ -88,7 +88,7 @@ function ExperienceRow(props: { item: ExperienceItem; index: number }) {
 
       <div className="col-span-12 md:col-span-9 flex flex-col gap-3">
         <div className="flex items-baseline gap-3 flex-wrap">
-          <h3 className="font-display text-2xl md:text-3xl font-light tracking-[-0.03em] text-[var(--color-ink-strong)] group-hover:text-[var(--color-accent)] transition-colors duration-500">
+          <h3 className="font-display text-2xl md:text-3xl font-medium tracking-[-0.02em] text-[var(--color-ink-strong)] group-hover:text-[var(--color-accent)] transition-colors duration-500">
             {item.company}
           </h3>
           <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-dim)]">
@@ -152,7 +152,7 @@ export default function WorkTimeline() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.9, ease }}
-            className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em]"
+            className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em]"
           >
             Twelve years,<br />
             <span className="text-[var(--color-accent)]">five chapters.</span>
@@ -188,7 +188,7 @@ export default function WorkTimeline() {
               <span className="w-8 h-px bg-[var(--color-line-strong)]" />
               / Education
             </div>
-            <h3 className="font-display text-[clamp(28px,4vw,48px)] font-light leading-[1.05] tracking-[-0.04em]">
+            <h3 className="font-display text-[clamp(28px,4vw,48px)] font-medium leading-[1.05] tracking-[-0.02em]">
               Always<br />
               <span className="text-[var(--color-accent)]">learning.</span>
             </h3>

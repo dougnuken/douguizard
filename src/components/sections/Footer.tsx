@@ -39,7 +39,7 @@ export default function Footer() {
     >
       <div className="max-w-[1280px] mx-auto">
         <motion.h2
-          className="font-display font-light text-[clamp(56px,11vw,180px)] leading-[0.92] tracking-[-0.06em] mb-16 md:mb-24"
+          className="font-medium text-[clamp(56px,11vw,180px)] leading-[0.92] tracking-[-0.02em] mb-16 md:mb-24"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -57,9 +57,9 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease }}
-            className="glass rounded-2xl p-6 md:p-8"
+            className="glass-strong rounded-2xl p-6 md:p-8"
           >
-            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-5 font-normal">
+            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] mb-5 font-normal">
               / The signal
             </h4>
             <p className="text-sm text-[var(--color-ink-muted)] leading-[1.55] max-w-xs">
@@ -72,9 +72,9 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1, ease }}
-            className="glass rounded-2xl p-6 md:p-8"
+            className="glass-strong rounded-2xl p-6 md:p-8"
           >
-            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-5 font-normal">
+            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] mb-5 font-normal">
               / Direct
             </h4>
             <a href="mailto:hello@douguizard.com" data-cursor="hover" className={linkClass}>
@@ -90,9 +90,9 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2, ease }}
-            className="glass rounded-2xl p-6 md:p-8"
+            className="glass-strong rounded-2xl p-6 md:p-8"
           >
-            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-5 font-normal">
+            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] mb-5 font-normal">
               / Elsewhere
             </h4>
             {elsewhereLinks.map((link) => (
@@ -105,9 +105,9 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.3, ease }}
-            className="glass rounded-2xl p-6 md:p-8"
+            className="glass-strong rounded-2xl p-6 md:p-8"
           >
-            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-5 font-normal">
+            <h4 className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] mb-5 font-normal">
               / Documents
             </h4>
             <a href="/cv" data-cursor="hover" className={linkClass}>

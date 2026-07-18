@@ -13,11 +13,11 @@ function AnimatedHeadline() {
   // Each segment can have its own className for accent / weight / size
   const segments: { text: string; className?: string }[] = [
     { text: "Designing " },
-    { text: "human ", className: "text-[var(--color-accent)] font-light italic" },
+    { text: "human ", className: "text-[var(--color-accent)] font-medium italic" },
     { text: "products" },
     { text: "\n" },
     { text: "for an " },
-    { text: "AI ", className: "text-[var(--color-accent-warm)] font-light italic" },
+    { text: "AI ", className: "text-[var(--color-accent-warm)] font-medium italic" },
     { text: "era", className: "relative" },
   ];
 
@@ -35,7 +35,7 @@ function AnimatedHeadline() {
   return (
     <h2
       ref={ref}
-      className="font-display font-light leading-[0.92] tracking-[-0.05em] text-[clamp(48px,9vw,140px)]"
+      className="font-display font-medium leading-[0.92] tracking-[-0.02em] text-[clamp(48px,9vw,140px)]"
     >
       {segments.map((seg, segIdx) => {
         if (seg.text === "\n") return <br key={`br-${segIdx}`} />;
@@ -128,7 +128,7 @@ export default function Intro() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.7, delay: i * 0.1, ease }}
-              className="neu-surface-soft rounded-2xl p-6 md:p-8 group"
+              className="bg-[var(--color-bg-soft)] border border-[var(--color-line)] rounded-2xl p-6 md:p-8 group transition-colors duration-300 hover:border-[var(--color-line-strong)]"
             >
               <div className="flex items-start justify-between mb-4">
                 <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">

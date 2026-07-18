@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import BlurText from "@/components/text/BlurText";
 
 const manifestoText =
   "I design products at the boundary between {craft} and [computation] — where typography meets intent, where systems become language, and where AI stops being a feature and starts being a collaborator. After twelve years inside banks, marketplaces, and cruise lines, I've learned that good interfaces are not drawn — they are negotiated.";
@@ -35,9 +36,9 @@ function Word({
   const opacity = useTransform(progress, range, [0.18, 1]);
   const className =
     word.type === "accent"
-      ? "text-[var(--color-accent)] font-light"
+      ? "text-[var(--color-accent)] font-normal"
       : word.type === "warm"
-        ? "text-[var(--color-accent-warm)] font-light"
+        ? "text-[var(--color-accent-warm)] font-normal"
         : "";
 
   return (
@@ -76,18 +77,15 @@ export default function Manifesto() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-20 items-start">
           <div className="lg:sticky lg:top-[120px]">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em]"
+            <BlurText
+              as="h2"
+              className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em]"
             >
               How I<br />
               <span className="text-[var(--color-accent)]">approach</span>
               <br />
               the work.
-            </motion.h2>
+            </BlurText>
 
             <motion.div
               className="mt-12 glass rounded-2xl p-6 hidden lg:block max-w-[280px]"
@@ -113,7 +111,7 @@ export default function Manifesto() {
               &ldquo;
             </div>
 
-            <p className="relative font-display font-light text-[clamp(22px,2.6vw,38px)] leading-[1.35] tracking-[-0.02em]">
+            <p className="relative font-display font-normal text-[clamp(22px,2.6vw,38px)] leading-[1.35] tracking-[-0.02em]">
               {words.map((w, i) => {
                 const start = i / words.length;
                 const end = (i + 1) / words.length;

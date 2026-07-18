@@ -15,20 +15,20 @@ export default function Marquee() {
   const tracks = [...items, ...items];
 
   const containerStyle = {
-    background: "linear-gradient(135deg, rgba(240,238,230,0.04) 0%, rgba(240,238,230,0.01) 100%)",
+    background: "var(--glass-surface)",
     backdropFilter: "blur(20px) saturate(120%)",
     WebkitBackdropFilter: "blur(20px) saturate(120%)",
     borderTop: "1px solid var(--color-line)",
     borderBottom: "1px solid var(--color-line)",
-    boxShadow: "inset 1px 0 0 0 rgba(240,238,230,0.04), inset -1px 0 0 0 rgba(0,0,0,0.15), 0 8px 32px -8px rgba(0,0,0,0.4)",
+    boxShadow: "inset 0 1px 0 0 var(--glass-highlight), 0 8px 32px -14px var(--glass-shadow)",
   };
 
   const fadeLeftStyle = {
-    background: "linear-gradient(90deg, rgba(21,17,45,0.85) 0%, transparent 100%)",
+    background: "linear-gradient(90deg, var(--color-bg-deep) 0%, transparent 100%)",
   };
 
   const fadeRightStyle = {
-    background: "linear-gradient(270deg, rgba(21,17,45,0.85) 0%, transparent 100%)",
+    background: "linear-gradient(270deg, var(--color-bg-deep) 0%, transparent 100%)",
   };
 
   return (

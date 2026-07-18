@@ -52,7 +52,7 @@ export default function TestimonialsCarousel() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.9, ease }}
-            className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em] max-w-3xl"
+            className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em] max-w-3xl"
           >
             Words from{" "}
             <span className="text-[var(--color-accent)]">teammates</span>.
@@ -69,7 +69,7 @@ export default function TestimonialsCarousel() {
               onClick={prev}
               data-cursor="hover"
               aria-label="Previous testimonial"
-              className="group flex h-12 w-12 items-center justify-center rounded-full neu-button transition-all"
+              className="group btn-round btn-round--outline"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path
@@ -86,7 +86,7 @@ export default function TestimonialsCarousel() {
               onClick={next}
               data-cursor="hover"
               aria-label="Next testimonial"
-              className="group flex h-12 w-12 items-center justify-center rounded-full neu-button transition-all"
+              className="group btn-round btn-round--outline"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path
@@ -103,18 +103,7 @@ export default function TestimonialsCarousel() {
         </div>
 
         {/* Glass card with testimonial */}
-        <div
-          className="relative rounded-3xl overflow-hidden p-8 md:p-14 lg:p-16 min-h-[380px] md:min-h-[420px] flex flex-col justify-between"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(20,20,28,0.5) 0%, rgba(10,10,15,0.3) 100%)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid var(--color-line)",
-            boxShadow:
-              "inset 1px 1px 0 0 rgba(235,233,224,0.04), inset -1px -1px 0 0 rgba(0,0,0,0.2), 0 16px 60px -16px rgba(0,0,0,0.5)",
-          }}
-        >
+        <div className="glass-strong relative rounded-3xl overflow-hidden p-8 md:p-14 lg:p-16 min-h-[380px] md:min-h-[420px] flex flex-col justify-between">
           {/* Giant decorative quote mark */}
           <div
             className="absolute top-0 left-6 md:left-10 font-display text-[180px] md:text-[280px] leading-none text-[var(--color-line-strong)] pointer-events-none select-none opacity-50"
@@ -134,7 +123,7 @@ export default function TestimonialsCarousel() {
               className="relative z-10 flex flex-col justify-between h-full gap-10"
             >
               {/* Quote */}
-              <p className="font-display font-light text-[clamp(20px,2.4vw,32px)] leading-[1.4] tracking-[-0.02em] text-[var(--color-ink)] max-w-3xl">
+              <p className="font-display font-normal text-[clamp(20px,2.4vw,32px)] leading-[1.4] tracking-[-0.02em] text-[var(--color-ink)] max-w-3xl">
                 {current.quote}
               </p>
 
@@ -145,7 +134,7 @@ export default function TestimonialsCarousel() {
                   className="flex h-14 w-14 items-center justify-center rounded-full font-mono text-sm tracking-[0.1em] text-[var(--color-ink)]"
                   style={{
                     background:
-                      "linear-gradient(135deg, rgba(184,164,255,0.2) 0%, rgba(127,197,255,0.1) 100%)",
+                      "color-mix(in srgb, var(--color-accent) 12%, var(--color-bg-soft))",
                     border: "1px solid var(--color-line-strong)",
                   }}
                 >

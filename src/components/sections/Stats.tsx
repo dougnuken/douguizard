@@ -69,11 +69,11 @@ export default function Stats() {
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
                 style={{
                   background:
-                    "radial-gradient(circle at 50% 0%, rgba(184,164,255,0.14) 0%, transparent 60%)",
+                    "radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--color-accent) 8%, transparent) 0%, transparent 60%)",
                 }}
               />
 
-              <div className="relative font-display text-[clamp(48px,7vw,96px)] font-light tracking-[-0.05em] leading-[0.9] mb-3">
+              <div className="relative font-display text-[clamp(48px,7vw,96px)] font-medium tracking-[-0.03em] leading-[0.9] mb-3 text-[var(--color-ink)]">
                 {stat.isInfinite ? (
                   <span className="text-[var(--color-accent)]">{stat.num}</span>
                 ) : (

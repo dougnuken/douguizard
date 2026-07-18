@@ -10,7 +10,7 @@ interface Tool {
   icon: ReactNode;
 }
 
-// All logos use currentColor so they pick up the white tint from the parent
+// All logos use currentColor so they pick up the ink tint from the parent
 const tools: Tool[] = [
   {
     name: "Figma",
@@ -131,11 +131,11 @@ export default function ToolsMarquee() {
   const tracks = [...tools, ...tools];
 
   const fadeLeftStyle = {
-    background: "linear-gradient(90deg, rgba(7,6,15,1) 0%, transparent 100%)",
+    background: "linear-gradient(90deg, var(--color-bg-deep) 0%, transparent 100%)",
   };
 
   const fadeRightStyle = {
-    background: "linear-gradient(270deg, rgba(7,6,15,1) 0%, transparent 100%)",
+    background: "linear-gradient(270deg, var(--color-bg-deep) 0%, transparent 100%)",
   };
 
   return (
@@ -158,7 +158,7 @@ export default function ToolsMarquee() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.9, ease }}
-          className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em] mb-12 md:mb-16 max-w-[18ch]"
+          className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em] mb-12 md:mb-16 max-w-[18ch]"
         >
           The tools that{" "}
           <span className="text-[var(--color-accent)]">shape my craft.</span>

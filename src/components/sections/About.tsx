@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
+import BlurText from "@/components/text/BlurText";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -44,15 +45,14 @@ export default function About() {
 
           {/* Header: statement + lead paragraph */}
           <div className="mb-16 grid grid-cols-1 gap-10 md:mb-24 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
-            <motion.h2
-              {...rise(30)}
-              transition={{ duration: 0.9, ease }}
-              className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em]"
+            <BlurText
+              as="h2"
+              className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em]"
             >
               The <span className="text-[var(--color-accent)]">human</span>
               <br />
               behind the systems.
-            </motion.h2>
+            </BlurText>
 
             <motion.p
               {...rise(20)}
@@ -97,14 +97,11 @@ export default function About() {
                 transition={{ duration: 0.8, delay: 0.16, ease }}
                 className="mt-2 flex flex-wrap items-center gap-x-8 gap-y-4"
               >
-                <Link
-                  href={site.cvPath}
-                  className="group inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-ink)] no-underline"
-                >
+                <Link href={site.cvPath} className="btn-pill btn-outline group">
                   Read the full CV
                   <svg
-                    width="20"
-                    height="20"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                     fill="none"
                     aria-hidden
@@ -113,8 +110,8 @@ export default function About() {
                   >
                     <path
                       d="M5 12h13M13 6l6 6-6 6"
-                      stroke="var(--color-accent)"
-                      strokeWidth="1.4"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />

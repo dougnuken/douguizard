@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import BlurText from "@/components/text/BlurText";
 
 interface Capability {
   num: string;
@@ -40,17 +41,17 @@ const capabilities: Capability[] = [
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const haloAtmosphereStyle = {
-  background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(167,139,250,0.5) 0%, rgba(125,90,200,0.25) 30%, rgba(125,90,200,0.08) 55%, transparent 80%)",
+  background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,246,238,0.7) 0%, rgba(238,235,227,0.35) 45%, transparent 80%)",
   filter: "blur(60px)",
 };
 
 const haloMidStyle = {
-  background: "radial-gradient(circle at 50% 50%, rgba(196,181,253,0.7) 0%, rgba(167,139,250,0.4) 25%, rgba(167,139,250,0.1) 50%, transparent 75%)",
+  background: "radial-gradient(circle at 50% 50%, rgba(255,250,244,0.8) 0%, rgba(255,42,0,0.04) 40%, transparent 75%)",
   filter: "blur(40px)",
 };
 
 const haloCoreStyle = {
-  background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5) 0%, rgba(196,181,253,0.6) 20%, rgba(167,139,250,0.2) 50%, transparent 75%)",
+  background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.9) 0%, rgba(255,42,0,0.06) 35%, transparent 72%)",
   filter: "blur(20px)",
 };
 
@@ -82,17 +83,14 @@ export default function Capabilities() {
           / 04 — Capabilities
         </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.9, ease }}
-          className="font-display font-light text-[clamp(40px,6vw,84px)] leading-[0.95] tracking-[-0.05em] mb-16 md:mb-24 max-w-3xl"
+        <BlurText
+          as="h2"
+          className="font-display font-medium text-[clamp(40px,6vw,84px)] leading-[0.95] tracking-[-0.02em] mb-16 md:mb-24 max-w-3xl"
         >
           Four ways<br />
           <span className="text-[var(--color-accent)]">I work</span>
           <span className="text-[var(--color-ink-dim)]">.</span>
-        </motion.h2>
+        </BlurText>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {capabilities.map((cap, i) => (
@@ -115,7 +113,7 @@ export default function Capabilities() {
                 animate={{ opacity: hovered === i ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
                 style={{
-                  background: "radial-gradient(circle at 30% 20%, rgba(184,164,255,0.12) 0%, transparent 60%)",
+                  background: "radial-gradient(circle at 30% 20%, rgba(255,42,0,0.06) 0%, transparent 60%)",
                 }}
               />
 
@@ -131,7 +129,7 @@ export default function Capabilities() {
                 </motion.span>
               </div>
 
-              <h3 className="relative z-10 font-display text-[clamp(28px,3.5vw,48px)] font-light tracking-[-0.04em] leading-[1.05] mb-5">
+              <h3 className="relative z-10 font-display text-[clamp(28px,3.5vw,48px)] font-medium tracking-[-0.02em] leading-[1.05] mb-5">
                 {cap.title.order === "before" ? (
                   <>
                     {cap.title.plain}
@@ -153,7 +151,7 @@ export default function Capabilities() {
                 {cap.tags.map((tag, ti) => (
                   <span
                     key={ti}
-                    className="glass-pressed font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
+                    className="glass-subtle font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
                   >
                     {tag}
                   </span>

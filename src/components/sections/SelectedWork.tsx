@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { useState } from "react";
 import { caseStudies, type CaseStudy } from "@/data/work";
+import BlurText from "@/components/text/BlurText";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -169,17 +170,14 @@ export default function SelectedWork() {
           </motion.div>
 
           <div className="mb-16 grid grid-cols-1 gap-10 md:mb-20 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, ease }}
-              className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em]"
+            <BlurText
+              as="h2"
+              className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.03em]"
             >
               Selected
               <br />
               <span className="text-[var(--color-accent)]">work.</span>
-            </motion.h2>
+            </BlurText>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
