@@ -43,7 +43,7 @@ export default function TestimonialsCarousel() {
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 06 — Trusted by
+          / 07 — Trusted by
         </motion.div>
 
         <div className="flex items-end justify-between mb-12 md:mb-16 flex-wrap gap-6">

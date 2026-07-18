@@ -9,6 +9,7 @@ import ToolsMarquee from "@/components/sections/ToolsMarquee";
 import WorkTimeline from "@/components/sections/WorkTimeline";
 import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
 import Stats from "@/components/sections/Stats";
+import About from "@/components/sections/About";
 import Footer from "@/components/sections/Footer";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
         <WorkTimeline />
         <Stats />
         <TestimonialsCarousel />
+        <About />
         <Footer />
       </main>
     </>

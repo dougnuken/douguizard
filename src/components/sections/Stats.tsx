@@ -47,7 +47,7 @@ export default function Stats() {
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 07 — By the numbers
+          / 06 — By the numbers
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
