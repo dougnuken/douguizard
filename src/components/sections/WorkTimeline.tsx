@@ -133,7 +133,7 @@ function EducationRow(props: { item: EducationItem; index: number }) {
 
 export default function WorkTimeline() {
   return (
-    <section id="work" className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
+    <section id="experience" className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
       <div className="relative z-[2] max-w-[1280px] mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -143,7 +143,7 @@ export default function WorkTimeline() {
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 04 — Experience
+          / 05 — Experience
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-20 mb-20 md:mb-28">

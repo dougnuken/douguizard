@@ -79,7 +79,7 @@ export default function Capabilities() {
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-8 md:mb-12 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 03 — Capabilities
+          / 04 — Capabilities
         </motion.div>
 
         <motion.h2

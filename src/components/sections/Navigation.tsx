@@ -11,8 +11,8 @@ interface NavItem {
 /**
  * Document order matters: the scroll-spy keeps the LAST section whose top has
  * been passed, so this array must mirror the order of the sections in the page.
- * `#work` (T3) and `#about` (T5) do not exist in the DOM yet — the spy skips
- * missing nodes instead of assuming a position.
+ * `#work` now exists (SelectedWork); `#about` (T5) does not exist in the DOM
+ * yet — the spy skips missing nodes instead of assuming a position.
  */
 const navItems: NavItem[] = [
   { label: "HOME", href: "#hero" },

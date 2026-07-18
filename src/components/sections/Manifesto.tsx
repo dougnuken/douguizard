@@ -71,7 +71,7 @@ export default function Manifesto() {
           className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-20 flex items-center gap-3"
         >
           <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 02 — Working principles
+          / 03 — Working principles
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-20 items-start">

@@ -2,6 +2,7 @@ import Navigation from "@/components/sections/Navigation";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
 import Marquee from "@/components/sections/Marquee";
+import SelectedWork from "@/components/sections/SelectedWork";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
 import ToolsMarquee from "@/components/sections/ToolsMarquee";
@@ -19,6 +20,7 @@ export default function Home() {
         <Hero />
         <Intro />
         <Marquee />
+        <SelectedWork />
         <Manifesto />
         <Capabilities />
         <ToolsMarquee />
