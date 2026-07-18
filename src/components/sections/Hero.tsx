@@ -18,14 +18,6 @@ function useRise(reduceMotion: boolean) {
   });
 }
 
-const ctaTransition = {
-  transition:
-    "background-color 200ms var(--ease-quart-out), color 200ms var(--ease-quart-out), border-color 200ms var(--ease-quart-out), transform 200ms var(--ease-quart-out)",
-};
-
-const ctaBase =
-  "inline-flex items-center rounded-[2px] px-7 py-3.5 text-sm font-medium no-underline hover:-translate-y-px";
-
 export default function Hero() {
   const reduceMotion = useReducedMotion() ?? false;
   const rise = useRise(reduceMotion);
@@ -57,20 +49,15 @@ export default function Hero() {
           {site.name} — {site.role}
         </motion.p>
 
-        <motion.div {...rise(0.21)} className="col-span-12 flex flex-wrap gap-3 pt-2">
-          <a
-            href="#contact"
-            className={`${ctaBase} bg-[var(--color-ink)] text-[#0A0A0A] hover:bg-[var(--color-ink-strong)]`}
-            style={ctaTransition}
-          >
+        <motion.div {...rise(0.21)} className="col-span-12 flex flex-wrap items-center gap-4 pt-4">
+          <a href="#contact" className="btn-pill btn-solid">
             Let&apos;s talk
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </a>
 
-          <a
-            href="#work"
-            className={`${ctaBase} border border-[var(--color-line-strong)] text-[var(--color-ink)] hover:border-[var(--color-ink)]`}
-            style={ctaTransition}
-          >
+          <a href="#work" className="btn-pill btn-glass">
             View work
           </a>
         </motion.div>

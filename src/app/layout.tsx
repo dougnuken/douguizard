@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 
 const geist = Geist({
@@ -16,11 +16,12 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
+// Expressive high-contrast serif for giant editorial display type.
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600", "700", "900"],
   style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -28,7 +29,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0A0A0A",
+  themeColor: "#FAF9F7",
 };
 
 export const metadata: Metadata = {
@@ -83,7 +84,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

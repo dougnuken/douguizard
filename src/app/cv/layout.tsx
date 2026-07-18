@@ -8,9 +8,9 @@ export const metadata = {
 
 export default function CvLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="theme-dark min-h-svh">
       <CustomCursor />
       {children}
-    </>
+    </div>
   );
 }

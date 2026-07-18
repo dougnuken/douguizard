@@ -113,7 +113,7 @@ export default function Navigation() {
         className="hairline-b fixed inset-x-0 top-0 z-[55] h-16 md:h-[72px]"
         style={{ background: "var(--color-bg-deep)" }}
       >
-        <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-6 md:px-12">
+        <div className="relative mx-auto flex h-full max-w-[1400px] items-center justify-between px-6 md:px-12">
           <a href="#hero" className="flex items-baseline gap-1 no-underline">
             <span className="font-display text-base font-medium tracking-[-0.02em] text-[var(--color-ink)] md:text-lg">
               Douguizard
@@ -126,24 +126,34 @@ export default function Navigation() {
             </span>
           </a>
 
-          <div className="hidden items-center gap-10 md:flex">
-            <nav aria-label="Main navigation" className="flex items-center gap-8">
-              {navItems.map((item) => (
-                <DesktopNavLink
-                  key={item.href}
-                  item={item}
-                  isActive={activeSection === sectionIdOf(item)}
-                  reduceMotion={reduceMotion}
-                />
-              ))}
-            </nav>
+          <nav
+            aria-label="Main navigation"
+            className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 md:flex"
+          >
+            {navItems.map((item) => (
+              <DesktopNavLink
+                key={item.href}
+                item={item}
+                isActive={activeSection === sectionIdOf(item)}
+                reduceMotion={reduceMotion}
+              />
+            ))}
+          </nav>
 
+          <div className="hidden items-center gap-5 md:flex">
             <span
               className="kicker hidden lg:block"
               style={{ color: "var(--color-ink-dim)" }}
             >
               BCN · UTC-5
             </span>
+            <a
+              href="#contact"
+              className="btn-pill btn-solid"
+              style={{ padding: "0.6rem 1.25rem", fontSize: "0.8125rem" }}
+            >
+              Let&apos;s talk
+            </a>
           </div>
 
           <button

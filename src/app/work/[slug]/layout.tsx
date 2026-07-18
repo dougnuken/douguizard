@@ -31,5 +31,5 @@ export default function WorkSlugLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <div className="theme-dark min-h-svh">{children}</div>;
 }
