@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#0A0A0A"/>
+  <text
+    x="26"
+    y="47"
+    fill="#FAFAF8"
+    font-family="system-ui, sans-serif"
+    font-size="38"
+    font-weight="700"
+    text-anchor="middle"
+  >D</text>
+  <text
+    x="51"
+    y="28"
+    fill="#FF3B1F"
+    font-family="system-ui, sans-serif"
+    font-size="20"
+    font-weight="700"
+    text-anchor="middle"
+  >*</text>
+</svg>
