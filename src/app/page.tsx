@@ -1,10 +1,3 @@
-"use client";
-
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import Loader from "@/components/Loader";
-import CustomCursor from "@/components/CustomCursor";
-import SmoothScrollProvider from "@/components/SmoothScroll";
 import Navigation from "@/components/sections/Navigation";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
@@ -17,20 +10,9 @@ import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
 import Stats from "@/components/sections/Stats";
 import Footer from "@/components/sections/Footer";
 
-const Scene3D = dynamic(() => import("@/components/three/Scene3D"), {
-  ssr: false,
-});
-
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
-
   return (
-    <SmoothScrollProvider>
-      <Loader onComplete={() => setLoaded(true)} />
-      <CustomCursor />
-      <Scene3D />
-      <div className="grain-overlay" />
-
+    <>
       <Navigation />
 
       <main className="relative">
@@ -45,6 +27,6 @@ export default function Home() {
         <TestimonialsCarousel />
         <Footer />
       </main>
-    </SmoothScrollProvider>
+    </>
   );
 }
