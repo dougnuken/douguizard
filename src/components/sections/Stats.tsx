@@ -37,7 +37,7 @@ function Counter({ to }: { to: number }) {
 
 export default function Stats() {
   return (
-    <section className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
+    <section id="stats" className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
       <div className="max-w-[1280px] mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

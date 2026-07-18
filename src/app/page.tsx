@@ -1,4 +1,5 @@
 import Navigation from "@/components/sections/Navigation";
+import SectionIndex from "@/components/SectionIndex";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
 import Marquee from "@/components/sections/Marquee";
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <>
       <Navigation />
+      <SectionIndex />
 
       <main className="relative">
         <Hero />

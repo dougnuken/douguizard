@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Geist, Geist_Mono, Sora } from "next/font/google";
 import "./globals.css";
 
 const geist = Geist({
@@ -16,12 +16,11 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Expressive high-contrast serif for giant editorial display type.
-const fraunces = Fraunces({
+// Stylized geometric sans — one family, wide weight range for hierarchy.
+const sora = Sora({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
-  style: ["normal", "italic"],
-  variable: "--font-fraunces",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-sora",
   display: "swap",
 });
 
@@ -84,7 +83,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${sora.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

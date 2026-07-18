@@ -35,11 +35,11 @@
   --glass-highlight: rgba(255, 255, 255, 0.90);
   --glass-shadow: rgba(10, 10, 10, 0.16);
 
-  /* Fonts — Fraunces (expressive serif display) + Geist (grotesk UI/body) */
-  --font-display: var(--font-fraunces);
-  --font-serif: var(--font-fraunces);
-  --font-body: var(--font-geist);
-  --font-sans: var(--font-geist);
+  /* Fonts — Sora (one stylized geometric sans, weight-driven hierarchy) + Geist Mono for kickers */
+  --font-display: var(--font-sora);
+  --font-serif: var(--font-sora);
+  --font-body: var(--font-sora);
+  --font-sans: var(--font-sora);
   --font-mono: var(--font-geist-mono);
 
   /* Fluid typographic scale */
