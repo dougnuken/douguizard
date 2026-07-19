@@ -1,15 +1,9 @@
 import SectionIndex from "@/components/SectionIndex";
 import HorizontalShell from "@/components/HorizontalShell";
 import Hero from "@/components/sections/Hero";
-import Intro from "@/components/sections/Intro";
-import Marquee from "@/components/sections/Marquee";
-import SelectedWork from "@/components/sections/SelectedWork";
-import Capabilities from "@/components/sections/Capabilities";
-import ToolsMarquee from "@/components/sections/ToolsMarquee";
-import WorkTimeline from "@/components/sections/WorkTimeline";
-import TestimonialsCarousel from "@/components/sections/TestimonialsCarousel";
-import Stats from "@/components/sections/Stats";
 import About from "@/components/sections/About";
+import Capabilities from "@/components/sections/Capabilities";
+import SelectedWork from "@/components/sections/SelectedWork";
 import Footer from "@/components/sections/Footer";
 
 export default function Home() {
@@ -33,17 +27,12 @@ export default function Home() {
 
       <SectionIndex />
 
+      {/* Five panels — present · about · what I do + tools · work + experience · contact */}
       <HorizontalShell>
         <Hero />
-        <Intro />
-        <Marquee />
-        <SelectedWork />
-        <Capabilities />
-        <ToolsMarquee />
-        <WorkTimeline />
-        <Stats />
-        <TestimonialsCarousel />
         <About />
+        <Capabilities />
+        <SelectedWork />
         <Footer />
       </HorizontalShell>
     </>

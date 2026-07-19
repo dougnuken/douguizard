@@ -77,6 +77,64 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
   );
 }
 
+/** Career history — merged from the former Experience section (period · company · role). */
+interface ExperienceItem {
+  period: string;
+  company: string;
+  role: string;
+}
+
+const experience: ExperienceItem[] = [
+  {
+    period: "2024 — Jan 2026",
+    company: "Mercadolibre",
+    role: "Technical Lead — Andes Design System",
+  },
+  {
+    period: "2018 — 2024",
+    company: "Aval Digital Labs",
+    role: "Senior Product Designer · Design System Gatekeeper",
+  },
+  {
+    period: "2017 — 2018",
+    company: "Globant",
+    role: "Senior Product Designer",
+  },
+  {
+    period: "2017 — 2018",
+    company: "Qrvey",
+    role: "Lead UI Designer",
+  },
+  {
+    period: "2016 — 2017",
+    company: "Ideaware",
+    role: "Senior UX/UI Designer",
+  },
+];
+
+/** Compact experience row aligned to the 12-col grid: period · company · role, one line each. */
+function ExperienceRow({ item, index }: { item: ExperienceItem; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, delay: index * 0.05, ease }}
+      className="hairline-t grid grid-cols-12 items-baseline gap-x-4 gap-y-1.5 py-5 md:py-6"
+    >
+      <span className="section-num col-span-4 self-baseline text-sm md:col-span-3 md:text-base">
+        {item.period}
+      </span>
+      <h4 className="col-span-8 font-display text-[clamp(1.15rem,2vw,1.6rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[var(--color-ink-strong)] md:col-span-4">
+        {item.company}
+      </h4>
+      <span className="kicker col-span-12 col-start-1 self-baseline text-[var(--color-ink-muted)] md:col-span-5 md:col-start-auto md:text-right">
+        {item.role}
+      </span>
+    </motion.div>
+  );
+}
+
 export default function SelectedWork() {
   return (
     <section id="work" className="relative px-6 py-[120px] md:px-12 md:py-[160px]">
@@ -92,7 +150,7 @@ export default function SelectedWork() {
               className="col-span-12 flex flex-col gap-10 md:col-span-3"
             >
               <p className="kicker flex items-center gap-2.5">
-                <Spark size={12} />/ 02 — Selected Work
+                <Spark size={12} />/ 03 — Selected Work
               </p>
 
               {/* Monochrome outline mark — fills the header column's negative space */}
@@ -131,6 +189,44 @@ export default function SelectedWork() {
             {caseStudies.map((study, i) => (
               <ProjectRow key={study.slug} study={study} index={i} />
             ))}
+          </div>
+
+          {/* ── Experience — compact career list merged from the former timeline ── */}
+          <div className="mt-24 md:mt-32">
+            <motion.p
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker flex items-center gap-3"
+            >
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              / Experience
+            </motion.p>
+
+            <div className="hairline-b mt-8 md:mt-10">
+              {experience.map((item, i) => (
+                <ExperienceRow
+                  key={`${item.company}-${item.period}`}
+                  item={item}
+                  index={i}
+                />
+              ))}
+            </div>
+
+            {/* Education folded to a single line — keeps the section lean */}
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
+              className="kicker mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[var(--color-ink-dim)]"
+            >
+              <span className="text-[var(--color-ink-muted)]">/ Education</span>
+              <span aria-hidden>—</span>
+              Professional Graphic Designer, Universidad Autónoma del Caribe
+              (2006 — 2009)
+            </motion.p>
           </div>
         </div>
       </MotionConfig>

@@ -53,7 +53,7 @@ export default function Footer() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
-              <Spark size={12} />/ 08 — Contact
+              <Spark size={12} />/ 04 — Contact
             </motion.p>
 
             {/* Two-tone statement — weight + tone carry the hierarchy (no red) */}

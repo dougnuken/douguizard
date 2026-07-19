@@ -11,14 +11,10 @@ interface SectionRef {
 /** Every scrollable section, in document order. Drives the right-rail index. */
 const SECTIONS: SectionRef[] = [
   { id: "hero", num: "00", label: "Home" },
-  { id: "intro", num: "01", label: "Manifesto" },
-  { id: "work", num: "02", label: "Work" },
-  { id: "capabilities", num: "03", label: "Capabilities" },
-  { id: "experience", num: "04", label: "Experience" },
-  { id: "stats", num: "05", label: "Numbers" },
-  { id: "testimonials", num: "06", label: "Trusted" },
-  { id: "about", num: "07", label: "About" },
-  { id: "contact", num: "08", label: "Contact" },
+  { id: "about", num: "01", label: "About" },
+  { id: "capabilities", num: "02", label: "Craft" },
+  { id: "work", num: "03", label: "Work" },
+  { id: "contact", num: "04", label: "Contact" },
 ];
 
 /** Sections whose panel renders on a dark background (see HorizontalShell). */

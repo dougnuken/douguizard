@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-// Dark full-bleed panels — only the dramatic bookends: 0 Hero and 10 Footer/Contact.
+// Dark full-bleed panels — only the dramatic bookends: 0 Hero and 4 Footer/Contact.
 // Everything in between stays on the light bone canvas (no choppy alternation).
-const DARK_PANELS = new Set([0, 10]);
+const DARK_PANELS = new Set([0, 4]);
 
 /**
  * Editorial Horizontal shell.

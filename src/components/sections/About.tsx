@@ -45,7 +45,7 @@ export default function About() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
-              <Spark size={12} />/ 07 — About
+              <Spark size={12} />/ 01 — About
             </motion.div>
 
             <BlurText

@@ -38,6 +38,38 @@ const capabilities: Capability[] = [
   },
 ];
 
+/** Daily kit — names pulled from the retired ToolsMarquee, shown as a static inline list. */
+const tools = [
+  "Figma",
+  "Sketch",
+  "Photoshop",
+  "Illustrator",
+  "After Effects",
+  "Notion",
+  "Webflow",
+  "Framer",
+  "GitHub",
+  "Cursor",
+  "Claude",
+  "ChatGPT",
+  "v0",
+  "Midjourney",
+];
+
+interface Proof {
+  num: string;
+  suffix?: string;
+  label: string;
+}
+
+/** Key figures pulled from the retired Stats section — proof of scale. */
+const proof: Proof[] = [
+  { num: "12", label: "Years in product design" },
+  { num: "18", label: "Countries Andes ships to" },
+  { num: "400", suffix: "+", label: "Designers on the system" },
+  { num: "2", suffix: "K+", label: "Engineers on the system" },
+];
+
 const ease = [0.16, 1, 0.3, 1] as const;
 
 /**
@@ -89,7 +121,7 @@ export default function Capabilities() {
               className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
               <Spark size={12} />
-              / 03 — Capabilities
+              / 02 — Capabilities
             </motion.div>
 
             <BlurText
@@ -156,6 +188,64 @@ export default function Capabilities() {
               </motion.div>
             ))}
           </div>
+
+          {/* Merged sub-block — TOOLS: static inline kit (was ToolsMarquee) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease }}
+            className="mt-20 md:mt-28"
+          >
+            <div className="kicker mb-5 flex items-center gap-3">
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ Tools — Daily kit
+            </div>
+            <ul className="hairline-t flex flex-wrap gap-x-6 gap-y-2.5 pt-6">
+              {tools.map((tool) => (
+                <li
+                  key={tool}
+                  className="font-mono text-[12px] tracking-[0.08em] text-[var(--color-ink-muted)] transition-colors duration-300 hover:text-[var(--color-ink)] md:text-[13px]"
+                >
+                  {tool}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Merged sub-block — PROOF: key figures (was Stats) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease }}
+            className="mt-16 md:mt-20"
+          >
+            <div className="kicker mb-6 flex items-center gap-3">
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ Proof — By the numbers
+            </div>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 md:gap-8">
+              {proof.map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.6, delay: i * 0.06, ease }}
+                  className="hairline-t flex flex-col gap-2 pt-5"
+                >
+                  <div className="font-display text-[clamp(40px,5vw,72px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--color-ink)]">
+                    {stat.num}
+                    {stat.suffix && (
+                      <span className="text-[var(--color-ink-dim)]">{stat.suffix}</span>
+                    )}
+                  </div>
+                  <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] leading-[1.6]">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </MotionConfig>
     </section>
