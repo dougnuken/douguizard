@@ -30,14 +30,17 @@ export default function SectionIndex() {
       (el): el is HTMLElement => el !== null,
     );
 
-    // A section is "active" while it crosses the vertical middle of the viewport.
+    // Observe within the horizontal scroller: a panel is "active" while it
+    // crosses the horizontal middle band of the shell (desktop). Falls back to
+    // the viewport if the shell is not present.
+    const scroller = document.querySelector<HTMLElement>("[data-hshell]");
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) setActive(entry.target.id);
         }
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+      { root: scroller ?? null, rootMargin: "0px -49% 0px -49%", threshold: 0 },
     );
 
     els.forEach((el) => observer.observe(el));
@@ -49,7 +52,11 @@ export default function SectionIndex() {
     const el = document.getElementById(id);
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    el.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      inline: "start",
+      block: "nearest",
+    });
   };
 
   return (
