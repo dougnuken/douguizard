@@ -20,7 +20,7 @@ export default function Home() {
         href="#hero"
         className="fixed left-6 top-6 z-[60] flex items-baseline gap-1 no-underline md:left-12 md:top-8"
       >
-        <span className="font-display text-lg font-semibold tracking-[-0.02em] text-[var(--color-ink)]">
+        <span className="font-display text-lg font-semibold tracking-[-0.02em] text-[var(--chrome-ink)] transition-colors duration-500">
           Douguizard
         </span>
         <span

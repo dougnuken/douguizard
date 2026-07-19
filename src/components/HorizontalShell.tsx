@@ -2,6 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+// Panels rendered on a dark full-bleed background (KINETIC alternation):
+// 0 Hero · 4 Capabilities · 7 Stats · 9 About · 10 Footer/Contact.
+const DARK_PANELS = new Set([0, 4, 7, 9, 10]);
+
 /**
  * Editorial Horizontal shell.
  * - Desktop (lg+): lays each child out as a full-viewport panel in a horizontal,
@@ -63,13 +67,13 @@ export default function HorizontalShell({
           : "flex flex-col"
       }
     >
-      {React.Children.map(children, (child) => (
+      {React.Children.map(children, (child, i) => (
         <div
           data-panel
           className={
-            isDesktop
+            (isDesktop
               ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-center overflow-y-auto pt-16 lg:pr-28"
-              : "relative"
+              : "relative") + (DARK_PANELS.has(i) ? " theme-dark" : "")
           }
         >
           {child}

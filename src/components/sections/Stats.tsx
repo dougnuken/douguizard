@@ -13,10 +13,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { num: 12, suffix: "+", label: "Years of practice" },
-  { num: 40, suffix: "M+", label: "Users impacted" },
-  { num: 9, label: "Companies shipped with" },
-  { num: "∞", label: "Components in production", isInfinite: true },
+  { num: 12, label: "Years in product design" },
+  { num: 18, label: "Countries Andes ships to" },
+  { num: 400, suffix: "+", label: "Designers on the system" },
+  { num: 2, suffix: "K+", label: "Engineers on the system" },
 ];
 
 function Counter({ to }: { to: number }) {

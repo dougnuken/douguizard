@@ -21,12 +21,22 @@ const SECTIONS: SectionRef[] = [
   { id: "contact", num: "08", label: "Contact" },
 ];
 
+/** Sections whose panel renders on a dark background (see HorizontalShell). */
+const DARK_IDS = new Set(["hero", "capabilities", "stats", "about", "contact"]);
+
 export default function SectionIndex() {
   const [active, setActive] = useState<string>("hero");
 
   useEffect(() => {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
       (el): el is HTMLElement => el !== null,
+    );
+
+    // Paint the correct chrome on first load before the observer fires
+    // (the first panel, hero, renders on a dark background).
+    document.documentElement.setAttribute(
+      "data-panel-theme",
+      DARK_IDS.has("hero") ? "dark" : "light",
     );
 
     // Observe within the horizontal scroller: a panel is "active" while it
@@ -36,7 +46,13 @@ export default function SectionIndex() {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+            document.documentElement.setAttribute(
+              "data-panel-theme",
+              DARK_IDS.has(entry.target.id) ? "dark" : "light",
+            );
+          }
         }
       },
       { root: scroller ?? null, rootMargin: "0px -49% 0px -49%", threshold: 0 },
@@ -86,7 +102,7 @@ export default function SectionIndex() {
               {s.label}
             </span>
             <span
-              className="absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+              className="absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--chrome-ink)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
               aria-hidden
             >
               {!isActive && s.label}
@@ -97,7 +113,9 @@ export default function SectionIndex() {
               className="h-px transition-all duration-500"
               style={{
                 width: isActive ? "2rem" : "1rem",
-                background: isActive ? "var(--color-accent)" : "var(--color-line-strong)",
+                background: isActive
+                  ? "var(--color-accent)"
+                  : "color-mix(in srgb, var(--chrome-ink) 35%, transparent)",
                 transitionTimingFunction: "var(--ease-quart-out)",
               }}
             />
@@ -106,7 +124,9 @@ export default function SectionIndex() {
             <span
               className="w-5 text-right font-mono text-[10px] tabular-nums transition-colors duration-300"
               style={{
-                color: isActive ? "var(--color-ink)" : "var(--color-ink-dim)",
+                color: isActive
+                  ? "var(--chrome-ink)"
+                  : "color-mix(in srgb, var(--chrome-ink) 45%, transparent)",
               }}
             >
               {s.num}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Sora } from "next/font/google";
+import { Geist, Geist_Mono, Archivo } from "next/font/google";
 import "./globals.css";
 
 const geist = Geist({
@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Stylized geometric sans — one family, wide weight range for hierarchy.
-const sora = Sora({
+// Neo-grotesque display/body — bold weights carry the KINETIC hierarchy.
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-sora",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -83,7 +83,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${sora.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${archivo.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

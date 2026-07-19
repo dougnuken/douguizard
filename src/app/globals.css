@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* editorial-light theme */
+/* editorial-light theme · kinetic (archivo + alternating panels) */
 
 @theme {
   /* ── Editorial Light — bone canvas, near-black ink, Ferrari-red accent ── */
@@ -35,11 +35,11 @@
   --glass-highlight: rgba(255, 255, 255, 0.90);
   --glass-shadow: rgba(10, 10, 10, 0.16);
 
-  /* Fonts — Sora (one stylized geometric sans, weight-driven hierarchy) + Geist Mono for kickers */
-  --font-display: var(--font-sora);
-  --font-serif: var(--font-sora);
-  --font-body: var(--font-sora);
-  --font-sans: var(--font-sora);
+  /* Fonts — Archivo (neo-grotesque, bold-weight hierarchy · KINETIC) + Geist Mono for kickers */
+  --font-display: var(--font-archivo);
+  --font-serif: var(--font-archivo);
+  --font-body: var(--font-archivo);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-geist-mono);
 
   /* Fluid typographic scale */
@@ -76,6 +76,10 @@
   background: var(--color-bg-deep);
   color: var(--color-ink);
 }
+
+/* Fixed chrome (brand mark + section index) inverts over dark panels */
+:root { --chrome-ink: #0A0A0A; }
+:root[data-panel-theme="dark"] { --chrome-ink: #FAF9F7; }
 
 @layer base {
   * {
