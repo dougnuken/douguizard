@@ -1,16 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  motion,
-  MotionConfig,
-  useMotionValue,
-  useSpring,
-  useReducedMotion,
-  AnimatePresence,
-  type MotionValue,
-} from "framer-motion";
-import { useState } from "react";
+import { motion, MotionConfig } from "framer-motion";
 import { caseStudies, type CaseStudy } from "@/data/work";
 import BlurText from "@/components/text/BlurText";
 
@@ -40,14 +31,7 @@ function RowArrow() {
 }
 
 /** Full-width work row aligned to the 12-col grid: num · title · category · year. */
-function ProjectRow(props: {
-  study: CaseStudy;
-  index: number;
-  onEnter: (i: number) => void;
-  onLeave: () => void;
-}) {
-  const { study, index, onEnter, onLeave } = props;
-
+function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -58,8 +42,6 @@ function ProjectRow(props: {
     >
       <Link
         href={`/work/${study.slug}`}
-        onMouseEnter={() => onEnter(index)}
-        onMouseLeave={onLeave}
         aria-label={`${study.project} — ${study.client}, ${study.category}, ${study.year}`}
         className="group grid grid-cols-12 items-center gap-x-4 gap-y-3 rounded-[2px] py-7 no-underline outline-none transition-transform duration-500 focus-visible:translate-x-2 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-8 focus-visible:ring-offset-[var(--color-bg-deep)] md:py-9 md:hover:translate-x-2"
         style={{ transitionTimingFunction: "var(--ease-quart-out)" }}
@@ -85,7 +67,7 @@ function ProjectRow(props: {
           <span className="kicker whitespace-nowrap text-[var(--color-ink-muted)]">
             {study.year}
           </span>
-          <span className="text-[var(--color-accent)]">
+          <span className="text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
             <RowArrow />
           </span>
         </div>
@@ -94,70 +76,9 @@ function ProjectRow(props: {
   );
 }
 
-/** Cursor-following project preview — desktop + fine-pointer only, decorative. */
-function HoverPreview(props: {
-  active: CaseStudy | null;
-  show: boolean;
-  springX: MotionValue<number>;
-  springY: MotionValue<number>;
-}) {
-  const { active, show, springX, springY } = props;
-
-  return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[40] hidden h-[220px] w-[320px] overflow-hidden rounded-[4px] lg:block"
-      style={{ x: springX, y: springY }}
-    >
-      <AnimatePresence>
-        {show && active && (
-          <motion.div
-            key={active.slug}
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.94 }}
-            transition={{ duration: 0.32, ease }}
-            className="absolute inset-0 flex flex-col justify-end p-5"
-            style={{
-              background: `linear-gradient(135deg, ${active.colors[0]}, ${active.colors[1]})`,
-            }}
-          >
-            <span className="font-display text-lg font-medium leading-tight tracking-[-0.02em] text-[#0A0A0A]">
-              {active.project}
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/70">
-              {active.client} · {active.year}
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
 export default function SelectedWork() {
-  const reduceMotion = useReducedMotion() ?? false;
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [show, setShow] = useState(false);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 260, damping: 30, mass: 0.6 });
-  const springY = useSpring(y, { stiffness: 260, damping: 30, mass: 0.6 });
-
-  const handleMove = (e: React.MouseEvent) => {
-    if (reduceMotion) return;
-    // Trail the card just below-right of the cursor.
-    x.set(e.clientX + 24);
-    y.set(e.clientY + 24);
-  };
-
-  const active = activeIndex !== null ? caseStudies[activeIndex] : null;
-
   return (
     <section id="work" className="relative px-6 py-[120px] md:px-12 md:py-[160px]">
-      {/* reducedMotion="user" collapses transform-based entrance motion for
-          visitors who opted out, while keeping opacity fades. */}
       <MotionConfig reducedMotion="user">
         <div className="mx-auto max-w-[1400px]">
           {/* Section header — canonical 12-col shape, introduced by a top hairline */}
@@ -178,7 +99,7 @@ export default function SelectedWork() {
             >
               Selected
               <br />
-              <span className="text-[var(--color-accent)]">work.</span>
+              work.
             </BlurText>
 
             <motion.p
@@ -195,34 +116,12 @@ export default function SelectedWork() {
           </div>
 
           {/* Work rows — full-width, fields aligned to the 12-col grid, hairline between */}
-          <div
-            className="hairline-b mt-16 md:mt-20"
-            onMouseMove={handleMove}
-            onMouseLeave={() => setShow(false)}
-          >
+          <div className="hairline-b mt-16 md:mt-20">
             {caseStudies.map((study, i) => (
-              <ProjectRow
-                key={study.slug}
-                study={study}
-                index={i}
-                onEnter={(idx) => {
-                  setActiveIndex(idx);
-                  setShow(true);
-                }}
-                onLeave={() => setShow(false)}
-              />
+              <ProjectRow key={study.slug} study={study} index={i} />
             ))}
           </div>
         </div>
-
-        {!reduceMotion && (
-          <HoverPreview
-            active={active}
-            show={show}
-            springX={springX}
-            springY={springY}
-          />
-        )}
       </MotionConfig>
     </section>
   );

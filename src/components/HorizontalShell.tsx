@@ -68,7 +68,7 @@ export default function HorizontalShell({
           data-panel
           className={
             isDesktop
-              ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-center overflow-y-auto"
+              ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-center overflow-y-auto pt-16 lg:pr-28"
               : "relative"
           }
         >
