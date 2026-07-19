@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-// Panels rendered on a dark full-bleed background (KINETIC alternation):
-// 0 Hero · 4 Capabilities · 7 Stats · 9 About · 10 Footer/Contact.
-const DARK_PANELS = new Set([0, 4, 7, 9, 10]);
+// Dark full-bleed panels — only the dramatic bookends: 0 Hero and 10 Footer/Contact.
+// Everything in between stays on the light bone canvas (no choppy alternation).
+const DARK_PANELS = new Set([0, 10]);
 
 /**
  * Editorial Horizontal shell.

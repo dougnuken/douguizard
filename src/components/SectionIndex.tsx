@@ -22,7 +22,7 @@ const SECTIONS: SectionRef[] = [
 ];
 
 /** Sections whose panel renders on a dark background (see HorizontalShell). */
-const DARK_IDS = new Set(["hero", "capabilities", "stats", "about", "contact"]);
+const DARK_IDS = new Set(["hero", "contact"]);
 
 export default function SectionIndex() {
   const [active, setActive] = useState<string>("hero");
