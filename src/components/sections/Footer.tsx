@@ -3,7 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
-import BackgroundPaths from "@/components/BackgroundPaths";
+import EtherealShadow from "@/components/EtherealShadow";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -33,8 +33,14 @@ export default function Footer() {
       id="contact"
       className="relative z-[3] overflow-hidden px-6 pt-[120px] pb-12 md:px-12"
     >
-      {/* Animated flowing paths — subtle cinematic background motion (matches Hero) */}
-      <BackgroundPaths className="text-[var(--color-ink-strong)] opacity-[0.16]" />
+      {/* Ethereal shadow — drifting smoke behind the contact bookend */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <EtherealShadow
+          color="rgba(255,255,255,0.18)"
+          animation={{ scale: 55, speed: 45 }}
+          noise={{ opacity: 0.2, scale: 1.1 }}
+        />
+      </div>
 
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
