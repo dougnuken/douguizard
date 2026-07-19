@@ -41,7 +41,8 @@ export default function Hero() {
           {...rise(0.07)}
           className="text-display-xl col-span-12 text-balance font-medium text-[var(--color-ink)] lg:col-span-10"
         >
-          Designing the <span style={{ color: "var(--color-accent)" }}>human</span> side
+          Designing the{" "}
+          <span className="font-extrabold text-[var(--color-ink-strong)]">human</span> side
           of an AI era
         </motion.h1>
 
