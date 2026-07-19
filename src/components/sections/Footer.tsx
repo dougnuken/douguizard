@@ -3,6 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
+import BackgroundPaths from "@/components/BackgroundPaths";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -32,6 +33,9 @@ export default function Footer() {
       id="contact"
       className="relative z-[3] overflow-hidden px-6 pt-[120px] pb-12 md:px-12"
     >
+      {/* Animated flowing paths — subtle cinematic background motion (matches Hero) */}
+      <BackgroundPaths className="text-[var(--color-ink-strong)] opacity-[0.16]" />
+
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
         aria-hidden
