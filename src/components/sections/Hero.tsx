@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
+import Spark from "@/components/Spark";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -25,15 +26,24 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-svh w-full flex-col justify-center px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-24"
+      className="relative flex min-h-svh w-full flex-col justify-center overflow-hidden px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-28"
     >
-      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-12 gap-y-8">
-        <motion.p {...rise(0)} className="kicker col-span-12 flex items-center gap-2.5">
-          <span
-            aria-hidden
-            className="inline-block h-1.5 w-1.5 rounded-full"
-            style={{ background: "var(--color-accent)" }}
-          />
+      {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden"
+      >
+        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[18vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
+          Douguizard
+        </span>
+      </div>
+
+      <div className="relative z-[1] mx-auto grid w-full max-w-[1400px] grid-cols-12 gap-y-8">
+        <motion.p
+          {...rise(0)}
+          className="kicker col-span-12 flex items-center gap-2.5"
+        >
+          <Spark size={13} />
           {site.availability.label}
         </motion.p>
 
@@ -42,19 +52,28 @@ export default function Hero() {
           className="text-display-xl col-span-12 text-balance font-medium text-[var(--color-ink)] lg:col-span-10"
         >
           Designing the{" "}
-          <span className="font-extrabold text-[var(--color-ink-strong)]">human</span> side
-          of an AI era
+          <span className="font-black text-[var(--color-ink-strong)]">human</span>{" "}
+          side of an AI era
         </motion.h1>
 
         <motion.p {...rise(0.14)} className="kicker col-span-12">
           {site.name} — {site.role}
         </motion.p>
 
-        <motion.div {...rise(0.21)} className="col-span-12 flex flex-wrap items-center gap-4 pt-4">
+        <motion.div
+          {...rise(0.21)}
+          className="col-span-12 flex flex-wrap items-center gap-4 pt-4"
+        >
           <a href="#contact" className="btn-pill btn-solid">
             Let&apos;s talk
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M5 12h13M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </a>
 
