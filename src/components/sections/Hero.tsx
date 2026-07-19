@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
 import TrueFocus from "@/components/TrueFocus";
+import BackgroundPaths from "@/components/BackgroundPaths";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -29,6 +30,9 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-svh w-full flex-col justify-center overflow-hidden px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-28"
     >
+      {/* Animated flowing paths — subtle cinematic background motion */}
+      <BackgroundPaths className="text-[var(--color-ink-strong)] opacity-[0.16]" />
+
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
         aria-hidden
