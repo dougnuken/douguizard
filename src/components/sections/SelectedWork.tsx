@@ -39,6 +39,7 @@ function RowArrow() {
   );
 }
 
+/** Full-width work row aligned to the 12-col grid: num · title · category · year. */
 function ProjectRow(props: {
   study: CaseStudy;
   index: number;
@@ -49,10 +50,10 @@ function ProjectRow(props: {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 22 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay: index * 0.06, ease }}
+      transition={{ duration: 0.6, delay: index * 0.06, ease }}
       className="hairline-t"
     >
       <Link
@@ -154,25 +155,26 @@ export default function SelectedWork() {
   const active = activeIndex !== null ? caseStudies[activeIndex] : null;
 
   return (
-    <section id="work" className="relative px-6 py-[140px] md:px-12 md:py-[180px]">
+    <section id="work" className="relative px-6 py-[120px] md:px-12 md:py-[160px]">
       {/* reducedMotion="user" collapses transform-based entrance motion for
           visitors who opted out, while keeping opacity fades. */}
       <MotionConfig reducedMotion="user">
-        <div className="mx-auto max-w-[1280px]">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease }}
-            className="mb-12 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--color-ink-muted)] md:mb-16"
-          >
-            <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 02 — Selected Work
-          </motion.div>
+        <div className="mx-auto max-w-[1400px]">
+          {/* Section header — canonical 12-col shape, introduced by a top hairline */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+            >
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 02 — Selected Work
+            </motion.div>
 
-          <div className="mb-16 grid grid-cols-1 gap-10 md:mb-20 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
             <BlurText
               as="h2"
-              className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.03em]"
+              className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               Selected
               <br />
@@ -180,11 +182,11 @@ export default function SelectedWork() {
             </BlurText>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.2, ease }}
-              className="max-w-[420px] self-end text-[14px] leading-[1.65] text-[var(--color-ink-muted)] md:text-[15px]"
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.1, ease }}
+              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
               A decade of systems, products, and teams — from LATAM&apos;s largest
               marketplace to national banks, cruise lines, and early-stage
@@ -192,8 +194,9 @@ export default function SelectedWork() {
             </motion.p>
           </div>
 
+          {/* Work rows — full-width, fields aligned to the 12-col grid, hairline between */}
           <div
-            className="hairline-b"
+            className="hairline-b mt-16 md:mt-20"
             onMouseMove={handleMove}
             onMouseLeave={() => setShow(false)}
           >

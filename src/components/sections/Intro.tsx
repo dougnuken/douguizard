@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, MotionConfig } from "framer-motion";
 import { useRef } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -20,17 +20,6 @@ function AnimatedHeadline() {
     { text: "AI ", className: "text-[var(--color-accent-warm)] font-medium italic" },
     { text: "era", className: "relative" },
   ];
-
-  // Build a flat array of letters with style metadata
-  let charIndex = 0;
-  const allChars: { char: string; segIndex: number; segClass?: string; isLastChar?: boolean }[] = [];
-  segments.forEach((seg, segIdx) => {
-    const chars = seg.text.split("");
-    chars.forEach((c) => {
-      allChars.push({ char: c, segIndex: segIdx, segClass: seg.className });
-      charIndex++;
-    });
-  });
 
   return (
     <h2
@@ -59,7 +48,7 @@ function AnimatedHeadline() {
                   }}
                   className="inline-block"
                 >
-                  {ch === " " ? "\u00A0" : ch}
+                  {ch === " " ? " " : ch}
                 </motion.span>
               );
             })}
@@ -81,70 +70,76 @@ function AnimatedHeadline() {
   );
 }
 
+const INFO = [
+  {
+    num: "/A",
+    title: "The role",
+    text: "Senior Product Designer × Design Systems Architect — currently leading components at Andes/Mercadolibre.",
+  },
+  {
+    num: "/B",
+    title: "The practice",
+    text: "Twelve years translating ambiguity into interfaces — banking dashboards to e-commerce systems used by millions.",
+  },
+  {
+    num: "/C",
+    title: "The edge",
+    text: "Bridging classical product craft with AI-native workflows: prompt design, generative UI, intelligent systems.",
+  },
+];
+
 export default function Intro() {
   return (
     <section
       id="intro"
-      className="relative z-[3] px-6 md:px-12 pt-[160px] pb-[140px] md:pt-[200px] md:pb-[180px]"
+      className="relative z-[3] px-6 md:px-12 py-[120px] md:py-[160px]"
     >
-      <div className="max-w-[1280px] mx-auto">
-        {/* Top label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-20 flex items-center gap-3"
-        >
-          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 01 — The Manifesto
-        </motion.div>
-
-        {/* The headline */}
-        <AnimatedHeadline />
-
-        {/* Subscript — three quick info columns with neumorphism cards */}
-        <div className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          {[
-            {
-              num: "/A",
-              title: "The role",
-              text: "Senior Product Designer × Design Systems Architect — currently leading components at Andes/Mercadolibre.",
-            },
-            {
-              num: "/B",
-              title: "The practice",
-              text: "Twelve years translating ambiguity into interfaces — banking dashboards to e-commerce systems used by millions.",
-            },
-            {
-              num: "/C",
-              title: "The edge",
-              text: "Bridging classical product craft with AI-native workflows: prompt design, generative UI, intelligent systems.",
-            },
-          ].map((card, i) => (
+      <MotionConfig reducedMotion="user">
+        <div className="mx-auto max-w-[1400px]">
+          {/* SECTION HEADER — top hairline, 12-col grid */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: i * 0.1, ease }}
-              className="bg-[var(--color-bg-soft)] border border-[var(--color-line)] rounded-2xl p-6 md:p-8 group transition-colors duration-300 hover:border-[var(--color-line-strong)]"
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <div className="flex items-start justify-between mb-4">
-                <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              / 01 — The Manifesto
+            </motion.div>
+
+            {/* The big statement line — h2 heading (spans full width) */}
+            <div className="col-span-12 md:mt-2">
+              <AnimatedHeadline />
+            </div>
+          </div>
+
+          {/* CONTENT — three info columns aligned to the 12-col (multiple-of-4) grid */}
+          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-12 md:mt-20 md:gap-8">
+            {INFO.map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: i * 0.06, ease }}
+                className="hairline-t flex flex-col gap-3 pt-6 lg:col-span-4"
+              >
+                <span className="section-num text-[clamp(26px,2.2vw,36px)] leading-none">
                   {card.num}
                 </span>
-                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)]">
+                <h3 className="font-display font-medium text-[clamp(20px,1.6vw,26px)] tracking-[-0.01em] text-[var(--color-ink)]">
                   {card.title}
-                </span>
-              </div>
-              <p className="text-[14px] md:text-[15px] leading-[1.55] text-[var(--color-ink)]">
-                {card.text}
-              </p>
-            </motion.div>
-          ))}
+                </h3>
+                <p className="text-[15px] leading-[1.6] text-[var(--color-ink-muted)]">
+                  {card.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </MotionConfig>
     </section>
   );
 }

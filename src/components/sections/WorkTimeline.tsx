@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -64,41 +64,44 @@ const education: EducationItem[] = [
   { year: "2006 — 2009", title: "Professional Graphic Designer", institution: "Universidad Autónoma del Caribe" },
 ];
 
+/** Full-width experience row aligned to the 12-col grid: period (3) + main (9). */
 function ExperienceRow(props: { item: ExperienceItem; index: number }) {
   const { item, index } = props;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.7, delay: index * 0.08, ease }}
-      className="grid grid-cols-12 gap-6 md:gap-10 py-8 md:py-10 border-t border-[var(--color-line)] group"
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.06, ease }}
+      className="hairline-t group grid grid-cols-1 gap-6 py-8 md:grid-cols-12 md:gap-8 md:py-10"
     >
-      <div className="col-span-12 md:col-span-3 flex items-start gap-3">
+      {/* Period — col-span-3 */}
+      <div className="col-span-12 flex items-start gap-3 md:col-span-3">
         {item.current && (
-          <span className="relative flex h-2 w-2 mt-2.5">
+          <span className="relative mt-2.5 flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full rounded-full animate-pulse-glow" style={{ background: "var(--color-accent)" }} />
             <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: "var(--color-accent)" }} />
           </span>
         )}
-        <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)] leading-[1.5]">
+        <span className="font-mono text-[11px] uppercase leading-[1.5] tracking-[0.18em] text-[var(--color-ink-muted)]">
           {item.period}
         </span>
       </div>
 
-      <div className="col-span-12 md:col-span-9 flex flex-col gap-3">
-        <div className="flex items-baseline gap-3 flex-wrap">
-          <h3 className="font-display text-2xl md:text-3xl font-medium tracking-[-0.02em] text-[var(--color-ink-strong)] group-hover:text-[var(--color-accent)] transition-colors duration-500">
+      {/* Company + role + description — col-span-9 */}
+      <div className="col-span-12 flex flex-col gap-3 md:col-span-9">
+        <div className="flex flex-wrap items-baseline gap-3">
+          <h3 className="font-display text-2xl font-medium tracking-[-0.02em] text-[var(--color-ink-strong)] transition-colors duration-500 group-hover:text-[var(--color-accent)] md:text-3xl">
             {item.company}
           </h3>
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-dim)]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink-dim)]">
             {item.location}
           </span>
         </div>
-        <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)]">
+        <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
           {item.role}
         </div>
-        <p className="text-[14px] md:text-[15px] leading-[1.6] text-[var(--color-ink-muted)] max-w-[640px]">
+        <p className="max-w-[640px] text-[14px] leading-[1.6] text-[var(--color-ink-muted)] md:text-[15px]">
           {item.description}
         </p>
       </div>
@@ -106,102 +109,112 @@ function ExperienceRow(props: { item: ExperienceItem; index: number }) {
   );
 }
 
-function EducationRow(props: { item: EducationItem; index: number }) {
+/** Editorial column item for the 4-col education grid: red year numeral + title + institution. */
+function EducationColumn(props: { item: EducationItem; index: number }) {
   const { item, index } = props;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.05, ease }}
-      className="flex items-baseline gap-6 py-4 border-t border-[var(--color-line)]"
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.06, ease }}
+      className="hairline-t flex flex-col gap-3 pt-6"
     >
-      <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-dim)] w-[110px] shrink-0">
+      <span className="section-num text-[clamp(18px,1.4vw,22px)] leading-none">
         {item.year}
       </span>
-      <div className="flex-1">
-        <div className="text-[14px] text-[var(--color-ink-strong)] mb-0.5">
-          {item.title}
-        </div>
-        <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)]">
-          {item.institution}
-        </div>
-      </div>
+      <h4 className="font-medium text-[clamp(20px,1.6vw,26px)] leading-[1.15] tracking-[-0.01em] text-[var(--color-ink-strong)]">
+        {item.title}
+      </h4>
+      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink-muted)]">
+        {item.institution}
+      </span>
     </motion.div>
   );
 }
 
 export default function WorkTimeline() {
   return (
-    <section id="experience" className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
-      <div className="relative z-[2] max-w-[1280px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
-        >
-          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 05 — Experience
-        </motion.div>
+    <section id="experience" className="relative z-[3] px-6 md:px-12 py-[120px] md:py-[160px]">
+      <MotionConfig reducedMotion="user">
+        <div className="relative z-[2] mx-auto max-w-[1400px]">
+          {/* ── Section header — 12-col grid ── */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+            >
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              / 05 — Experience
+            </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-20 mb-20 md:mb-28">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.9, ease }}
-            className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em]"
-          >
-            Twelve years,<br />
-            <span className="text-[var(--color-accent)]">five chapters.</span>
-          </motion.h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, ease }}
+              className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
+            >
+              Twelve years,<br />
+              <span className="text-[var(--color-accent)]">five chapters.</span>
+            </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.2, ease }}
-            className="text-[14px] md:text-[15px] leading-[1.65] text-[var(--color-ink-muted)] max-w-[420px] self-end"
-          >
-            From wireframing for early-stage startups in Barranquilla to leading design systems at LATAM&apos;s largest marketplace. Each chapter built on the last.
-          </motion.p>
-        </div>
-
-        <div className="mb-24">
-          {experience.map((item, i) => (
-            <ExperienceRow key={i} item={item} index={i} />
-          ))}
-          <div className="border-t border-[var(--color-line)]" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.9, ease }}
-          className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-20 pt-16 md:pt-20 border-t border-[var(--color-line-strong)]"
-        >
-          <div>
-            <div className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-4 flex items-center gap-3">
-              <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-              / Education
-            </div>
-            <h3 className="font-display text-[clamp(28px,4vw,48px)] font-medium leading-[1.05] tracking-[-0.02em]">
-              Always<br />
-              <span className="text-[var(--color-accent)]">learning.</span>
-            </h3>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.1, ease }}
+              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
+            >
+              From wireframing for early-stage startups in Barranquilla to leading design systems at LATAM&apos;s largest marketplace. Each chapter built on the last.
+            </motion.p>
           </div>
 
-          <div>
-            {education.map((item, i) => (
-              <EducationRow key={i} item={item} index={i} />
+          {/* ── Experience rows — full-width, 12-col aligned ── */}
+          <div className="mt-16 md:mt-20">
+            {experience.map((item, i) => (
+              <ExperienceRow key={i} item={item} index={i} />
             ))}
-            <div className="border-t border-[var(--color-line)]" />
+            <div className="hairline-t" />
           </div>
-        </motion.div>
-      </div>
+
+          {/* ── Education — heading block + 4-col row ── */}
+          <div className="mt-24 md:mt-28">
+            <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
+              <motion.div
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, ease }}
+                className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+              >
+                <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+                / Education
+              </motion.div>
+
+              <motion.h3
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease }}
+                className="col-span-12 font-display text-[clamp(28px,4vw,48px)] font-medium leading-[1.05] tracking-[-0.02em] md:col-span-9"
+              >
+                Always<br />
+                <span className="text-[var(--color-accent)]">learning.</span>
+              </motion.h3>
+            </div>
+
+            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:mt-16 md:gap-8">
+              {education.map((item, i) => (
+                <EducationColumn key={i} item={item} index={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </MotionConfig>
     </section>
   );
 }

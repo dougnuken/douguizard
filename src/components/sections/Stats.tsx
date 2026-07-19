@@ -1,7 +1,9 @@
 "use client";
 
-import { motion, useInView, animate } from "framer-motion";
+import { MotionConfig, motion, useInView, animate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 interface Stat {
   num: number | string;
@@ -37,64 +39,59 @@ function Counter({ to }: { to: number }) {
 
 export default function Stats() {
   return (
-    <section id="stats" className="relative z-[3] px-6 md:px-12 py-[140px] md:py-[180px]">
-      <div className="max-w-[1280px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8 }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
-        >
-          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 06 — By the numbers
-        </motion.div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-          {stats.map((stat, i) => (
+    <section
+      id="stats"
+      className="relative z-[3] px-6 md:px-12 py-[120px] md:py-[160px]"
+    >
+      <MotionConfig reducedMotion="user">
+        <div className="mx-auto max-w-[1400px]">
+          {/* Section header — hairline-introduced, 12-col grid */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{
-                duration: 0.7,
-                delay: i * 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="glass rounded-2xl p-6 md:p-8 group hover:border-[var(--color-line-strong)] transition-all duration-500 relative overflow-hidden"
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
-                style={{
-                  background:
-                    "radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--color-accent) 8%, transparent) 0%, transparent 60%)",
-                }}
-              />
-
-              <div className="relative font-display text-[clamp(48px,7vw,96px)] font-medium tracking-[-0.03em] leading-[0.9] mb-3 text-[var(--color-ink)]">
-                {stat.isInfinite ? (
-                  <span className="text-[var(--color-accent)]">{stat.num}</span>
-                ) : (
-                  <>
-                    <Counter to={stat.num as number} />
-                    {stat.suffix && (
-                      <span className="text-[var(--color-accent)]">
-                        {stat.suffix}
-                      </span>
-                    )}
-                  </>
-                )}
-              </div>
-
-              <div className="relative font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] leading-[1.6]">
-                {stat.label}
-              </div>
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 06 — By the numbers
             </motion.div>
-          ))}
+          </div>
+
+          {/* Content — one stat numeral per column at lg */}
+          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:mt-20 md:gap-8">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: i * 0.06, ease }}
+                className="group hairline-t flex flex-col gap-3 pt-6 transition-colors duration-500 hover:border-[var(--color-line-strong)]"
+              >
+                <div className="font-display text-[clamp(48px,7vw,96px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--color-ink)]">
+                  {stat.isInfinite ? (
+                    <span className="text-[var(--color-accent)]">{stat.num}</span>
+                  ) : (
+                    <>
+                      <Counter to={stat.num as number} />
+                      {stat.suffix && (
+                        <span className="text-[var(--color-accent)]">
+                          {stat.suffix}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] leading-[1.6]">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </MotionConfig>
     </section>
   );
 }

@@ -20,34 +20,36 @@ const facts: Fact[] = [
   { label: "Languages", value: "Spanish (native) · English" },
 ];
 
-function rise(y = 24) {
+/** Short rise + fade. Collapses to a plain fade under MotionConfig reducedMotion. */
+function rise(y = 24, delay = 0, duration = 0.6) {
   return {
     initial: { opacity: 0, y },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-60px" },
+    transition: { duration, delay, ease },
   };
 }
 
 export default function About() {
   return (
-    <section id="about" className="relative px-6 py-[140px] md:px-12 md:py-[180px]">
+    <section id="about" className="relative px-6 py-[120px] md:px-12 md:py-[160px]">
       <MotionConfig reducedMotion="user">
-        <div className="mx-auto max-w-[1280px]">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease }}
-            className="mb-12 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--color-ink-muted)] md:mb-16"
-          >
-            <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 08 — About
-          </motion.div>
+        <div className="mx-auto max-w-[1400px]">
+          {/* Section header — hairline-introduced, 12-col grid */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+            >
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 08 — About
+            </motion.div>
 
-          {/* Header: statement + lead paragraph */}
-          <div className="mb-16 grid grid-cols-1 gap-10 md:mb-24 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
             <BlurText
               as="h2"
-              className="font-display text-[clamp(40px,6vw,84px)] font-medium leading-[0.95] tracking-[-0.02em]"
+              className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               The <span className="text-[var(--color-accent)]">human</span>
               <br />
@@ -55,9 +57,11 @@ export default function About() {
             </BlurText>
 
             <motion.p
-              {...rise(20)}
-              transition={{ duration: 0.9, delay: 0.15, ease }}
-              className="max-w-[440px] self-end text-[15px] leading-[1.65] text-[var(--color-ink-muted)] md:text-base"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.1, ease }}
+              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
               I&apos;m a product designer from {site.location.split(",")[0]}. Over
               twelve years I&apos;ve moved from agency work to analytics platforms,
@@ -66,12 +70,12 @@ export default function About() {
             </motion.p>
           </div>
 
-          {/* Body: narrative + facts */}
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
-            <div className="flex flex-col gap-6">
+          {/* Content — bio narrative (cols 1–8) + facts spec-sheet (cols 10–12) */}
+          <div className="mt-16 grid grid-cols-1 gap-6 md:mt-20 md:grid-cols-12 md:gap-8">
+            {/* Bio narrative */}
+            <div className="col-span-12 flex flex-col gap-6 md:col-span-8">
               <motion.p
-                {...rise(24)}
-                transition={{ duration: 0.8, ease }}
+                {...rise(24, 0, 0.7)}
                 className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink)]"
               >
                 What&apos;s kept me here isn&apos;t any single screen — it&apos;s the
@@ -82,8 +86,7 @@ export default function About() {
               </motion.p>
 
               <motion.p
-                {...rise(24)}
-                transition={{ duration: 0.8, delay: 0.08, ease }}
+                {...rise(24, 0.08, 0.7)}
                 className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink-muted)]"
               >
                 Now I&apos;m most interested in what happens when that scaffolding
@@ -93,8 +96,7 @@ export default function About() {
               </motion.p>
 
               <motion.div
-                {...rise(20)}
-                transition={{ duration: 0.8, delay: 0.16, ease }}
+                {...rise(20, 0.16, 0.7)}
                 className="mt-2 flex flex-wrap items-center gap-x-8 gap-y-4"
               >
                 <Link href={site.cvPath} className="btn-pill btn-outline group">
@@ -136,16 +138,15 @@ export default function About() {
 
             {/* Facts spec sheet */}
             <motion.dl
-              {...rise(24)}
-              transition={{ duration: 0.9, delay: 0.1, ease }}
-              className="hairline-b self-start"
+              {...rise(24, 0.12, 0.7)}
+              className="hairline-b col-span-12 self-start md:col-span-3 md:col-start-10"
             >
               {facts.map((f) => (
                 <div
                   key={f.label}
-                  className="hairline-t grid grid-cols-[100px_1fr] gap-4 py-4 md:grid-cols-[120px_1fr]"
+                  className="hairline-t flex flex-col gap-1 py-4"
                 >
-                  <dt className="kicker pt-0.5">{f.label}</dt>
+                  <dt className="kicker">{f.label}</dt>
                   <dd className="text-[14px] leading-[1.5] text-[var(--color-ink)]">
                     {f.value}
                   </dd>

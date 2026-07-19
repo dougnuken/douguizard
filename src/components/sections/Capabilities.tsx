@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, MotionConfig } from "framer-motion";
 import BlurText from "@/components/text/BlurText";
 
 interface Capability {
@@ -40,127 +39,90 @@ const capabilities: Capability[] = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const haloAtmosphereStyle = {
-  background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,246,238,0.7) 0%, rgba(238,235,227,0.35) 45%, transparent 80%)",
-  filter: "blur(60px)",
-};
-
-const haloMidStyle = {
-  background: "radial-gradient(circle at 50% 50%, rgba(255,250,244,0.8) 0%, rgba(255,42,0,0.04) 40%, transparent 75%)",
-  filter: "blur(40px)",
-};
-
-const haloCoreStyle = {
-  background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.9) 0%, rgba(255,42,0,0.06) 35%, transparent 72%)",
-  filter: "blur(20px)",
-};
-
 export default function Capabilities() {
-  const [hovered, setHovered] = useState<number | null>(null);
-
   return (
     <section
       id="capabilities"
-      className="relative z-[3] px-6 md:px-12 pt-[60px] md:pt-[80px] pb-[120px] md:pb-[160px] overflow-hidden"
+      className="relative px-6 md:px-12 py-[120px] md:py-[160px]"
     >
-      <div className="absolute inset-0 flex items-start justify-center pointer-events-none" style={{ paddingTop: "120px" }}>
-        <div className="relative w-full max-w-[900px] aspect-square">
-          <div className="absolute inset-0 animate-nebula-drift" style={haloAtmosphereStyle} />
-          <div className="absolute inset-[10%]" style={haloMidStyle} />
-          <div className="absolute inset-[25%] animate-pulse-soft" style={haloCoreStyle} />
-        </div>
-      </div>
-
-      <div className="relative z-[2] max-w-[1280px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-8 md:mb-12 flex items-center gap-3"
-        >
-          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
-          / 04 — Capabilities
-        </motion.div>
-
-        <BlurText
-          as="h2"
-          className="font-display font-medium text-[clamp(40px,6vw,84px)] leading-[0.95] tracking-[-0.02em] mb-16 md:mb-24 max-w-3xl"
-        >
-          Four ways<br />
-          <span className="text-[var(--color-accent)]">I work</span>
-          <span className="text-[var(--color-ink-dim)]">.</span>
-        </BlurText>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {capabilities.map((cap, i) => (
+      <MotionConfig reducedMotion="user">
+        <div className="mx-auto max-w-[1400px]">
+          {/* Section header — 12-col editorial grid introduced by a top hairline */}
+          <div className="hairline-t grid grid-cols-1 gap-6 pt-8 md:grid-cols-12 md:gap-8">
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{
-                duration: 0.7,
-                delay: (i % 2) * 0.1,
-                ease,
-              }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className="glass rounded-2xl md:rounded-3xl p-7 md:p-10 group relative overflow-hidden cursor-default transition-all duration-500"
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none rounded-2xl md:rounded-3xl"
-                animate={{ opacity: hovered === i ? 1 : 0 }}
-                transition={{ duration: 0.5 }}
-                style={{
-                  background: "radial-gradient(circle at 30% 20%, rgba(255,42,0,0.06) 0%, transparent 60%)",
-                }}
-              />
-
-              <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-6 flex items-center gap-3 relative z-10">
-                <span>{cap.num}</span>
-                <span className="flex-1 h-px bg-[var(--color-line)]" />
-                <motion.span
-                  animate={{
-                    color: hovered === i ? "var(--color-accent)" : "var(--color-ink-dim)",
-                  }}
-                >
-                  /04
-                </motion.span>
-              </div>
-
-              <h3 className="relative z-10 font-display text-[clamp(28px,3.5vw,48px)] font-medium tracking-[-0.02em] leading-[1.05] mb-5">
-                {cap.title.order === "before" ? (
-                  <>
-                    {cap.title.plain}
-                    <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
-                  </>
-                ) : (
-                  <>
-                    {cap.title.plain}{" "}
-                    <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
-                  </>
-                )}
-              </h3>
-
-              <p className="relative z-10 text-[14px] leading-[1.55] text-[var(--color-ink-muted)] mb-6 max-w-[420px]">
-                {cap.desc}
-              </p>
-
-              <div className="relative z-10 flex flex-wrap gap-2">
-                {cap.tags.map((tag, ti) => (
-                  <span
-                    key={ti}
-                    className="glass-subtle font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              / 04 — Capabilities
             </motion.div>
-          ))}
+
+            <BlurText
+              as="h2"
+              className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
+            >
+              Four ways<br />
+              <span className="text-[var(--color-accent)]">I work</span>
+              <span className="text-[var(--color-ink-dim)]">.</span>
+            </BlurText>
+          </div>
+
+          {/* Content — one capability per column on a 4-col grid */}
+          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:mt-20 md:gap-8">
+            {capabilities.map((cap, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: i * 0.06, ease }}
+                className="group hairline-t flex flex-col gap-3 pt-6"
+              >
+                <div className="flex items-baseline justify-between">
+                  <span className="section-num text-[clamp(28px,2.4vw,38px)] leading-none">
+                    {cap.num}
+                  </span>
+                  <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                    /04
+                  </span>
+                </div>
+
+                <h3 className="font-display text-[clamp(20px,1.6vw,26px)] font-medium tracking-[-0.01em] leading-[1.15] text-[var(--color-ink)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                  {cap.title.order === "before" ? (
+                    <>
+                      {cap.title.plain}
+                      <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
+                    </>
+                  ) : (
+                    <>
+                      {cap.title.plain}{" "}
+                      <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
+                    </>
+                  )}
+                </h3>
+
+                <p className="text-[14px] leading-[1.55] text-[var(--color-ink-muted)]">
+                  {cap.desc}
+                </p>
+
+                <div className="mt-1 flex flex-wrap gap-2">
+                  {cap.tags.map((tag, ti) => (
+                    <span
+                      key={ti}
+                      className="glass-subtle font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </MotionConfig>
     </section>
   );
 }
