@@ -2,6 +2,7 @@
 
 import { motion, useInView, MotionConfig } from "framer-motion";
 import { useRef } from "react";
+import Spark from "@/components/Spark";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -10,15 +11,17 @@ function AnimatedHeadline() {
   const ref = useRef<HTMLHeadingElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-  // Each segment can have its own className for accent / weight / size
+  // Two-tone hierarchy (KINETIC white-then-gray): strong-ink lead clause,
+  // muted continuation. Emphasis carried by weight, never red — the single
+  // Spark in the kicker is this section's only red mark.
   const segments: { text: string; className?: string }[] = [
-    { text: "Designing " },
-    { text: "human ", className: "text-[var(--color-accent)] font-medium italic" },
-    { text: "products" },
+    { text: "Designing ", className: "text-[var(--color-ink)]" },
+    { text: "human ", className: "text-[var(--color-ink-strong)] font-black" },
+    { text: "products", className: "text-[var(--color-ink)]" },
     { text: "\n" },
-    { text: "for an " },
-    { text: "AI ", className: "text-[var(--color-accent-warm)] font-medium italic" },
-    { text: "era", className: "relative" },
+    { text: "for an ", className: "text-[var(--color-ink-muted)]" },
+    { text: "AI ", className: "text-[var(--color-ink-muted)] font-bold italic" },
+    { text: "era", className: "text-[var(--color-ink-muted)] relative" },
   ];
 
   return (
@@ -103,10 +106,25 @@ export default function Intro() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease }}
-              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+              className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              <Spark size={12} />
               / 01 — The Manifesto
+            </motion.div>
+
+            {/* Geometric figure — monochrome concentric rings occupying the
+                header's negative space (photo substitute). Decorative only. */}
+            <motion.div
+              aria-hidden
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.8, ease }}
+              className="col-span-12 hidden items-start justify-end md:col-span-9 md:flex"
+            >
+              <div className="relative aspect-square w-[68px] rounded-full border border-[var(--color-line-strong)]">
+                <div className="absolute inset-[9px] rounded-full border border-[var(--color-line)]" />
+              </div>
             </motion.div>
 
             {/* The big statement line — h2 heading (spans full width) */}

@@ -2,6 +2,7 @@
 
 import { motion, MotionConfig } from "framer-motion";
 import BlurText from "@/components/text/BlurText";
+import Spark from "@/components/Spark";
 
 interface Capability {
   num: string;
@@ -39,6 +40,37 @@ const capabilities: Capability[] = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+/**
+ * Monochrome geometric mark — a small B&W photo substitute, one per column.
+ * Purely decorative: token-driven outlines, no color, aria-hidden.
+ */
+function ColumnMark({ index }: { index: number }) {
+  const base = "shrink-0 border-[var(--color-line-strong)]";
+  switch (index) {
+    case 0: // outline circle
+      return (
+        <span aria-hidden className={`${base} block aspect-square w-7 rounded-full border`} />
+      );
+    case 1: // concentric rings
+      return (
+        <span
+          aria-hidden
+          className={`${base} flex aspect-square w-7 items-center justify-center rounded-full border`}
+        >
+          <span className="aspect-square w-2.5 rounded-full border border-[var(--color-line-strong)]" />
+        </span>
+      );
+    case 2: // corner tick (top-right bracket)
+      return (
+        <span aria-hidden className={`${base} block aspect-square w-7 border-t border-r`} />
+      );
+    default: // rotated square (diamond)
+      return (
+        <span aria-hidden className={`${base} block aspect-square w-6 rotate-45 border`} />
+      );
+  }
+}
+
 export default function Capabilities() {
   return (
     <section
@@ -54,9 +86,9 @@ export default function Capabilities() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease }}
-              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+              className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              <Spark size={12} />
               / 03 — Capabilities
             </motion.div>
 
@@ -64,8 +96,8 @@ export default function Capabilities() {
               as="h2"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
-              Four ways<br />
-              <span className="text-[var(--color-accent)]">I work</span>
+              <span className="font-bold text-[var(--color-ink)]">Four ways</span><br />
+              <span className="text-[var(--color-ink-muted)]">I work</span>
               <span className="text-[var(--color-ink-dim)]">.</span>
             </BlurText>
           </div>
@@ -81,25 +113,28 @@ export default function Capabilities() {
                 transition={{ duration: 0.6, delay: i * 0.06, ease }}
                 className="group hairline-t flex flex-col gap-3 pt-6"
               >
-                <div className="flex items-baseline justify-between">
-                  <span className="section-num text-[clamp(28px,2.4vw,38px)] leading-none">
-                    {cap.num}
-                  </span>
-                  <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
-                    /04
-                  </span>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-baseline gap-2">
+                    <span className="section-num text-[clamp(28px,2.4vw,38px)] leading-none">
+                      {cap.num}
+                    </span>
+                    <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                      /04
+                    </span>
+                  </div>
+                  <ColumnMark index={i} />
                 </div>
 
                 <h3 className="font-display text-[clamp(20px,1.6vw,26px)] font-medium tracking-[-0.01em] leading-[1.15] text-[var(--color-ink)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
                   {cap.title.order === "before" ? (
                     <>
                       {cap.title.plain}
-                      <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
+                      <span className="text-[var(--color-ink-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">{cap.title.accent}</span>
                     </>
                   ) : (
                     <>
                       {cap.title.plain}{" "}
-                      <span className="text-[var(--color-accent)]">{cap.title.accent}</span>
+                      <span className="text-[var(--color-ink-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">{cap.title.accent}</span>
                     </>
                   )}
                 </h3>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { caseStudies, type CaseStudy } from "@/data/work";
 import BlurText from "@/components/text/BlurText";
+import Spark from "@/components/Spark";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -88,9 +89,17 @@ export default function SelectedWork() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease }}
-              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+              className="col-span-12 flex flex-col gap-10 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 02 — Selected Work
+              <p className="kicker flex items-center gap-2.5">
+                <Spark size={12} />/ 02 — Selected Work
+              </p>
+
+              {/* Monochrome outline mark — fills the header column's negative space */}
+              <div
+                aria-hidden
+                className="mt-auto hidden aspect-square w-16 rounded-full border border-[var(--color-line-strong)] md:block"
+              />
             </motion.div>
 
             <BlurText
@@ -109,9 +118,11 @@ export default function SelectedWork() {
               transition={{ duration: 0.7, delay: 0.1, ease }}
               className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
-              A decade of systems, products, and teams — from LATAM&apos;s largest
-              marketplace to national banks, cruise lines, and early-stage
-              startups. Five that shaped how I work.
+              <span className="font-medium text-[var(--color-ink)]">
+                A decade of systems, products, and teams —
+              </span>{" "}
+              from LATAM&apos;s largest marketplace to national banks, cruise
+              lines, and early-stage startups. Five that shaped how I work.
             </motion.p>
           </div>
 

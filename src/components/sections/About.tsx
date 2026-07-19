@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import BlurText from "@/components/text/BlurText";
+import Spark from "@/components/Spark";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -42,16 +43,16 @@ export default function About() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease }}
-              className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
+              className="kicker col-span-12 flex items-center gap-2.5 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 07 — About
+              <Spark size={12} />/ 07 — About
             </motion.div>
 
             <BlurText
               as="h2"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
-              The <span className="text-[var(--color-accent)]">human</span>
+              The <span className="font-black text-[var(--color-ink-strong)]">human</span>
               <br />
               behind the systems.
             </BlurText>
@@ -76,13 +77,15 @@ export default function About() {
             <div className="col-span-12 flex flex-col gap-6 md:col-span-8">
               <motion.p
                 {...rise(24, 0, 0.7)}
-                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink)]"
+                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink-muted)]"
               >
-                What&apos;s kept me here isn&apos;t any single screen — it&apos;s the
-                systems underneath. The tokens, the governance, the shared language
-                that lets hundreds of designers and thousands of engineers ship as
-                one product. I care about the unglamorous scaffolding that makes
-                good design repeatable.
+                <span className="font-bold text-[var(--color-ink)]">
+                  What&apos;s kept me here isn&apos;t any single screen — it&apos;s the
+                  systems underneath.
+                </span>{" "}
+                The tokens, the governance, the shared language that lets hundreds of
+                designers and thousands of engineers ship as one product. I care about
+                the unglamorous scaffolding that makes good design repeatable.
               </motion.p>
 
               <motion.p
@@ -136,23 +139,35 @@ export default function About() {
               </motion.div>
             </div>
 
-            {/* Facts spec sheet */}
-            <motion.dl
+            {/* Facts spec sheet + concentric-rings figure */}
+            <motion.div
               {...rise(24, 0.12, 0.7)}
-              className="hairline-b col-span-12 self-start md:col-span-3 md:col-start-10"
+              className="col-span-12 flex flex-col gap-10 self-start md:col-span-3 md:col-start-10"
             >
-              {facts.map((f) => (
-                <div
-                  key={f.label}
-                  className="hairline-t flex flex-col gap-1 py-4"
-                >
-                  <dt className="kicker">{f.label}</dt>
-                  <dd className="text-[14px] leading-[1.5] text-[var(--color-ink)]">
-                    {f.value}
-                  </dd>
-                </div>
-              ))}
-            </motion.dl>
+              {/* Concentric rings — monochrome geometric figure (B&W photo substitute) */}
+              <div
+                aria-hidden
+                className="relative hidden aspect-square w-full max-w-[200px] items-center justify-center md:flex"
+              >
+                <div className="absolute inset-0 rounded-full border border-[var(--color-line-strong)]" />
+                <div className="absolute inset-[26%] rounded-full border border-[var(--color-line)]" />
+                <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-ink-dim)]" />
+              </div>
+
+              <dl className="hairline-b">
+                {facts.map((f) => (
+                  <div
+                    key={f.label}
+                    className="hairline-t flex flex-col gap-1 py-4"
+                  >
+                    <dt className="kicker">{f.label}</dt>
+                    <dd className="text-[14px] leading-[1.5] text-[var(--color-ink)]">
+                      {f.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.div>
           </div>
         </div>
       </MotionConfig>
