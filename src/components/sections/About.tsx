@@ -16,7 +16,7 @@ interface Fact {
 const facts: Fact[] = [
   { label: "Based", value: `${site.location} · ${site.timezone}` },
   { label: "Currently", value: "Tech Lead, Andes Design System · Mercadolibre" },
-  { label: "Focus", value: "Design systems · AI-native product design" },
+  { label: "Focus", value: "Design engineering · AI-native product" },
   { label: "Availability", value: "Open to select work · 2026" },
   { label: "Languages", value: "Spanish (native) · English" },
 ];
@@ -64,10 +64,10 @@ export default function About() {
               transition={{ duration: 0.7, delay: 0.1, ease }}
               className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
-              I&apos;m a product designer from {site.location.split(",")[0]}. Over
-              twelve years I&apos;ve moved from agency work to analytics platforms,
-              cruise-line apps, and national banking — and, most recently, to Andes,
-              the design system that powers Mercadolibre across eighteen countries.
+              I&apos;m a product designer from {site.location.split(",")[0]} — now
+              working as a design engineer. Twelve years from agencies to analytics
+              platforms, cruise-line apps and national banking, most recently leading
+              Andes, the design system behind Mercadolibre across eighteen countries.
             </motion.p>
           </div>
 
@@ -92,10 +92,10 @@ export default function About() {
                 {...rise(24, 0.08, 0.7)}
                 className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink-muted)]"
               >
-                Now I&apos;m most interested in what happens when that scaffolding
-                meets AI — designing with generative tools and LLMs as collaborators,
-                without letting the human on the other side of the screen disappear.
-                That&apos;s the work I want to do next.
+                This past year I&apos;ve gone AI-native — my day-to-day now runs on
+                Claude Code, Cursor and Gemini. So I&apos;ve stopped drawing a line
+                between design and engineering: I prototype in code, ship real
+                interfaces, and let the system and the AI carry the repetitive weight.
               </motion.p>
 
               <motion.div

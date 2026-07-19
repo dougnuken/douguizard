@@ -26,9 +26,9 @@ const capabilities: Capability[] = [
   },
   {
     num: "03",
-    title: { plain: "AI ", accent: "× Interface", order: "before" },
-    desc: "Designing with and for generative systems. Prompt-driven UX, conversational interfaces, AI agent flows, and ethical guardrails.",
-    tags: ["Prompt Design", "Generative UI", "Agent Flows", "LLM UX"],
+    title: { plain: "AI-native", accent: "Build", order: "after" },
+    desc: "Design and engineering in one motion — prototyping in code with AI in the loop: generative UI, LLM-driven flows, and real shipped interfaces. Claude Code, Cursor, Gemini.",
+    tags: ["Code Prototyping", "Generative UI", "LLM UX", "Ship"],
   },
   {
     num: "04",
@@ -50,7 +50,8 @@ const tools = [
   "Framer",
   "GitHub",
   "Cursor",
-  "Claude",
+  "Claude Code",
+  "Gemini",
   "ChatGPT",
   "v0",
   "Midjourney",

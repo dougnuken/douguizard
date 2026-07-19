@@ -72,7 +72,7 @@ export default function HorizontalShell({
           data-panel
           className={
             (isDesktop
-              ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-center overflow-y-auto pt-16 lg:pr-28"
+              ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-start overflow-y-auto pt-16 lg:pr-28"
               : "relative") + (DARK_PANELS.has(i) ? " theme-dark" : "")
           }
         >

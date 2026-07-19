@@ -12,7 +12,7 @@ const social: SocialLink[] = [
 export const site = {
   name: "Doug Vargas",
   brand: "Douguizard",
-  role: "Senior Product Designer × Design Systems",
+  role: "Product Designer → Design Engineer",
   email: "hello@douguizard.com",
   /** Display form. Use `phoneHref` for the `tel:` link. */
   phone: "+57 300.351.8299",

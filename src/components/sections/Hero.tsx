@@ -31,9 +31,9 @@ export default function Hero() {
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden"
+        className="pointer-events-none absolute bottom-0 left-1/2 w-screen -translate-x-1/2 select-none overflow-hidden"
       >
-        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[18vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
+        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[19vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
           Douguizard
         </span>
       </div>
