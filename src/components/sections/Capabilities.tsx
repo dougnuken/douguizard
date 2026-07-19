@@ -57,7 +57,7 @@ export default function Capabilities() {
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
               <span className="h-px w-8 bg-[var(--color-line-strong)]" />
-              / 04 — Capabilities
+              / 03 — Capabilities
             </motion.div>
 
             <BlurText

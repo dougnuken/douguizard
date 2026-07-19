@@ -44,7 +44,7 @@ export default function TestimonialsCarousel() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 07 — Trusted by
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 06 — Trusted by
             </motion.div>
 
             <motion.h2

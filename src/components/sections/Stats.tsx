@@ -54,7 +54,7 @@ export default function Stats() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 06 — By the numbers
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 05 — By the numbers
             </motion.div>
           </div>
 

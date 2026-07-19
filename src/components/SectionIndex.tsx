@@ -13,13 +13,12 @@ const SECTIONS: SectionRef[] = [
   { id: "hero", num: "00", label: "Home" },
   { id: "intro", num: "01", label: "Manifesto" },
   { id: "work", num: "02", label: "Work" },
-  { id: "manifesto", num: "03", label: "Principles" },
-  { id: "capabilities", num: "04", label: "Capabilities" },
-  { id: "experience", num: "05", label: "Experience" },
-  { id: "stats", num: "06", label: "Numbers" },
-  { id: "testimonials", num: "07", label: "Trusted" },
-  { id: "about", num: "08", label: "About" },
-  { id: "contact", num: "09", label: "Contact" },
+  { id: "capabilities", num: "03", label: "Capabilities" },
+  { id: "experience", num: "04", label: "Experience" },
+  { id: "stats", num: "05", label: "Numbers" },
+  { id: "testimonials", num: "06", label: "Trusted" },
+  { id: "about", num: "07", label: "About" },
+  { id: "contact", num: "08", label: "Contact" },
 ];
 
 export default function SectionIndex() {

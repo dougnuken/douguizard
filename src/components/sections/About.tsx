@@ -44,7 +44,7 @@ export default function About() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 08 — About
+              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 07 — About
             </motion.div>
 
             <BlurText
