@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
+import TrueFocus from "@/components/TrueFocus";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -56,7 +57,14 @@ export default function Hero() {
           side of an AI era
         </motion.h1>
 
-        <motion.p {...rise(0.14)} className="kicker col-span-12">
+        <motion.div {...rise(0.12)} className="col-span-12 pt-1">
+          <TrueFocus
+            sentence="Design Build Ship"
+            className="justify-start font-display text-[clamp(24px,3.2vw,48px)] font-medium tracking-[-0.02em] text-[var(--color-ink)]"
+          />
+        </motion.div>
+
+        <motion.p {...rise(0.16)} className="kicker col-span-12">
           {site.name} — {site.role}
         </motion.p>
 
