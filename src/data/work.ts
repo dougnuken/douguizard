@@ -11,7 +11,7 @@ export interface CaseStudy {
   /** Cover gradient — used as fallback if no image */
   colors: [string, string];
   /** Path to thumbnail in /public/work/ — undefined uses gradient */
-  thumbnail?: string;        // ← ESTA LÍNEA debe existir
+  thumbnail?: string;
   tagline: string;
   challenge: string;
   approach: string[];
@@ -26,13 +26,55 @@ export interface CaseStudy {
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "mercadolibre-andes",
+    slug: "naowee-suid",
     num: "/01",
+    client: "Naowee",
+    project: "Naowee — Sports Sector Platform",
+    year: "2026 — Now",
+    role: "Head of Product",
+    duration: "Ongoing",
+    team: "Product, design & engineering",
+    category: "GovTech × Sports × AI-native",
+    colors: ["#00c2b8", "#0a84ff"],
+    tagline:
+      "Digitizing how a country runs its sport — a modular platform built design-and-engineering in one motion, with AI in the loop end to end.",
+    challenge:
+      "Colombia's sports sector still runs on paper, spreadsheets, and disconnected tools — inspection and control, event registration, venue management, incentives, athlete records, and live scoring all live in silos. Naowee set out to unify them into a single coherent platform — SUID, a shared sports information system — that ministries, sports bodies, and organizers actually want to use.",
+    approach: [
+      "Set **product direction and roadmap** as Head of Product across a suite of modules — inspection & control (IVC), Events, Venues, Incentives, Convocatorias, and live Digitación (scoring).",
+      "Built a **single design system** (naowee-*) that keeps every module visually and behaviorally consistent — tokens, 38+ components, canonical shells and multi-step wizards.",
+      "Ran the entire build **AI-native** — prototyping in code with Claude Code, Cursor, and Gemini, so flows go from idea to working screen in hours, not sprints.",
+      "Shipped **guided product tours** per user story, so analysts and clients can verify requirements step by step against the running product.",
+      "Designed for **real operators** — multi-role access, partial drafts, bulk uploads, and reporting tuned to how sports organizations actually work.",
+    ],
+    outcome: {
+      headline: "One system for an entire sector.",
+      description:
+        "Naowee is becoming the operating layer for sport in Colombia — replacing fragmented tools with a single, consistent, AI-native platform that scales across ministries, organizations, and events.",
+      metrics: [
+        { value: "9+", label: "Modules" },
+        { value: "38+", label: "System components" },
+        { value: "12+", label: "Operational roles" },
+        { value: "AI", label: "Native workflow" },
+      ],
+    },
+    technologies: [
+      "Product Strategy",
+      "Design Systems",
+      "Claude Code",
+      "Cursor",
+      "Gemini",
+      "Generative UI",
+    ],
+  },
+  {
+    slug: "mercadolibre-andes",
+    num: "/02",
     client: "Mercadolibre",
     project: "Andes Design System",
-    year: "2024 — Now",
+    year: "2024 — 2026",
     role: "Tech Lead · Design Systems",
-    duration: "Ongoing",
+    duration: "~2 years",
     team: "30+ designers, 100+ engineers",
     category: "Design Systems × E-commerce",
     colors: ["#7e6dff", "#5eb8ff"],
@@ -69,7 +111,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "banco-de-occidente",
-    num: "/02",
+    num: "/03",
     client: "Aval Digital Labs",
     project: "Banco de Occidente",
     year: "2018 — 2024",
@@ -104,7 +146,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "royal-caribbean",
-    num: "/03",
+    num: "/04",
     client: "Globant · Medellín",
     project: "Royal Caribbean Cruises",
     year: "2017 — 2018",
@@ -133,7 +175,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "qrvey",
-    num: "/04",
+    num: "/05",
     client: "Qrvey",
     project: "Embedded Analytics Platform",
     year: "2017 — 2018",
@@ -162,7 +204,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "ideaware",
-    num: "/05",
+    num: "/06",
     client: "Ideaware co",
     project: "Multi-client UX Design",
     year: "2016 — 2017",

@@ -5,6 +5,7 @@ import { motion, MotionConfig } from "framer-motion";
 import { caseStudies, type CaseStudy } from "@/data/work";
 import BlurText from "@/components/text/BlurText";
 import Spark from "@/components/Spark";
+import { PulseCircle } from "@/components/figures/GeoFigures";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -86,6 +87,11 @@ interface ExperienceItem {
 
 const experience: ExperienceItem[] = [
   {
+    period: "Jan 2026 — Now",
+    company: "Naowee",
+    role: "Head of Product — AI-native sports platform",
+  },
+  {
     period: "2024 — Jan 2026",
     company: "Mercadolibre",
     role: "Technical Lead — Andes Design System",
@@ -153,11 +159,8 @@ export default function SelectedWork() {
                 <Spark size={12} />/ 03 — Selected Work
               </p>
 
-              {/* Monochrome outline mark — fills the header column's negative space */}
-              <div
-                aria-hidden
-                className="mt-auto hidden aspect-square w-16 rounded-full border border-[var(--color-line-strong)] md:block"
-              />
+              {/* Animated outline mark — fills the header column's negative space */}
+              <PulseCircle className="mt-auto hidden aspect-square w-16 md:block" />
             </motion.div>
 
             <BlurText

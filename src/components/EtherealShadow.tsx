@@ -1,178 +1,127 @@
 "use client";
 
-import React, { useRef, useId, useEffect, CSSProperties } from "react";
-import {
-  animate,
-  useMotionValue,
-  useReducedMotion,
-  type AnimationPlaybackControls,
-} from "framer-motion";
+import { useId } from "react";
+import { useReducedMotion } from "framer-motion";
 
-interface AnimationConfig {
-  scale: number;
-  speed: number;
-}
-interface NoiseConfig {
-  opacity: number;
-  scale: number;
-}
 interface EtherealShadowProps {
-  color?: string;
-  animation?: AnimationConfig;
-  noise?: NoiseConfig;
-  sizing?: "fill" | "stretch";
-  style?: CSSProperties;
   className?: string;
+  /** Smoke tint — light on a dark panel. Any CSS color. */
+  color?: string;
+  /** Overall layer opacity. */
+  opacity?: number;
+  /** Displacement churn amount. */
+  scale?: number;
 }
 
-function mapRange(
-  value: number,
-  fromLow: number,
-  fromHigh: number,
-  toLow: number,
-  toHigh: number,
-): number {
-  if (fromLow === fromHigh) return toLow;
-  const p = (value - fromLow) / (fromHigh - fromLow);
-  return toLow + p * (toHigh - toLow);
-}
-
-const useInstanceId = (): string => {
-  const id = useId();
-  return `ethereal-${id.replace(/:/g, "")}`;
-};
-
-/** Inline fractal-noise (no external asset). */
-const NOISE_URI =
-  "data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
-
-/** Organic blob mask, CSS-generated (replaces the external framer PNG). */
+/** Soft radial falloff — cloud sits to the right, melting into the panel. */
 const MASK =
-  "radial-gradient(65% 60% at 30% 38%, #000 0%, transparent 72%), radial-gradient(55% 70% at 72% 58%, #000 0%, transparent 70%), radial-gradient(70% 55% at 48% 82%, #000 0%, transparent 74%)";
+  "radial-gradient(95% 95% at 74% 44%, #000 0%, rgba(0,0,0,0.42) 44%, transparent 78%)";
 
 /**
- * Ethereal Shadow (after kokonutd) — a soft masked field warped by animated
- * feTurbulence + feDisplacementMap for a drifting smoke/shadow. Self-contained:
- * no external images. Decorative; motion-safe.
+ * Ethereal Shadow — self-contained drifting smoke built entirely from animated
+ * SVG feTurbulence (no external images). fractalNoise → wispy alpha → flooded
+ * with `color` → churned by an animated displacement field, then softened.
+ * Motion-safe: prefers-reduced-motion renders a still cloud.
  */
 export default function EtherealShadow({
-  color = "rgba(255,255,255,0.3)",
-  animation,
-  noise,
-  sizing = "fill",
-  style,
   className,
+  color = "#d4d4d4",
+  opacity = 0.8,
+  scale = 60,
 }: EtherealShadowProps) {
-  const id = useInstanceId();
+  const raw = useId();
+  const id = `es-${raw.replace(/:/g, "")}`;
   const reduce = useReducedMotion() ?? false;
-  const animationEnabled = !!animation && animation.scale > 0 && !reduce;
-
-  const feColorMatrixRef = useRef<SVGFEColorMatrixElement>(null);
-  const hueRotate = useMotionValue(180);
-  const hueAnim = useRef<AnimationPlaybackControls | null>(null);
-
-  const displacementScale = animation ? mapRange(animation.scale, 1, 100, 20, 100) : 0;
-  const animationDuration = animation ? mapRange(animation.speed, 1, 100, 1000, 50) : 1;
-
-  useEffect(() => {
-    if (!feColorMatrixRef.current || !animationEnabled) return;
-    hueAnim.current?.stop();
-    hueRotate.set(0);
-    hueAnim.current = animate(hueRotate, 360, {
-      duration: animationDuration / 25,
-      repeat: Number.POSITIVE_INFINITY,
-      repeatType: "loop",
-      ease: "linear",
-      onUpdate: (v: number) =>
-        feColorMatrixRef.current?.setAttribute("values", String(v)),
-    });
-    return () => hueAnim.current?.stop();
-  }, [animationEnabled, animationDuration, hueRotate]);
-
-  const maskSize = sizing === "stretch" ? "100% 100%" : "cover";
 
   return (
     <div
       aria-hidden
       className={className}
-      style={{ overflow: "hidden", position: "relative", width: "100%", height: "100%", ...style }}
+      style={{ maskImage: MASK, WebkitMaskImage: MASK, opacity }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: -displacementScale,
-          filter: animationEnabled ? `url(#${id}) blur(4px)` : "blur(8px)",
-        }}
+      <svg
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden
       >
-        {animationEnabled && animation && (
-          <svg style={{ position: "absolute" }} aria-hidden>
-            <defs>
-              <filter id={id}>
-                <feTurbulence
-                  result="undulation"
-                  numOctaves="2"
-                  baseFrequency={`${mapRange(animation.scale, 0, 100, 0.001, 0.0005)},${mapRange(animation.scale, 0, 100, 0.004, 0.002)}`}
-                  seed="0"
-                  type="turbulence"
+        <defs>
+          <filter
+            id={id}
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            colorInterpolationFilters="sRGB"
+          >
+            {/* Base cloud — large soft billows */}
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.006 0.01"
+              numOctaves={3}
+              seed={7}
+              stitchTiles="stitch"
+              result="turb"
+            >
+              {!reduce && (
+                <animate
+                  attributeName="baseFrequency"
+                  dur="46s"
+                  values="0.006 0.01;0.009 0.007;0.006 0.01"
+                  repeatCount="indefinite"
+                  calcMode="spline"
+                  keyTimes="0;0.5;1"
+                  keySplines="0.4 0 0.6 1;0.4 0 0.6 1"
                 />
-                <feColorMatrix
-                  ref={feColorMatrixRef}
-                  in="undulation"
-                  type="hueRotate"
-                  values="180"
-                />
-                <feColorMatrix
-                  in="dist"
-                  result="circulation"
-                  type="matrix"
-                  values="4 0 0 0 1  4 0 0 0 1  4 0 0 0 1  1 0 0 0 0"
-                />
-                <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="circulation"
-                  scale={displacementScale}
-                  result="dist"
-                />
-                <feDisplacementMap
-                  in="dist"
-                  in2="undulation"
-                  scale={displacementScale}
-                  result="output"
-                />
-              </filter>
-            </defs>
-          </svg>
-        )}
-        <div
-          style={{
-            backgroundColor: color,
-            maskImage: MASK,
-            WebkitMaskImage: MASK,
-            maskSize,
-            WebkitMaskSize: maskSize,
-            maskRepeat: "no-repeat",
-            WebkitMaskRepeat: "no-repeat",
-            maskPosition: "center",
-            WebkitMaskPosition: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      </div>
+              )}
+            </feTurbulence>
 
-      {noise && noise.opacity > 0 && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `url("${NOISE_URI}")`,
-            backgroundSize: noise.scale * 160,
-            backgroundRepeat: "repeat",
-            opacity: noise.opacity / 2,
-            mixBlendMode: "overlay",
-          }}
-        />
-      )}
+            {/* Slow warp field that drives the drift */}
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.005"
+              numOctaves={2}
+              seed={4}
+              result="warp"
+            >
+              {!reduce && (
+                <animate
+                  attributeName="baseFrequency"
+                  dur="33s"
+                  values="0.005;0.008;0.005"
+                  repeatCount="indefinite"
+                />
+              )}
+            </feTurbulence>
+
+            <feDisplacementMap
+              in="turb"
+              in2="warp"
+              scale={reduce ? 0 : scale}
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="disp"
+            />
+
+            {/* Noise luminance → wispy alpha (low-contrast, translucent haze) */}
+            <feColorMatrix
+              in="disp"
+              type="matrix"
+              values="0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0 0
+                      0.6 0 0 0 -0.2"
+              result="alpha"
+            />
+
+            {/* Flood the wisps with the smoke color */}
+            <feFlood floodColor={color} result="tint" />
+            <feComposite in="tint" in2="alpha" operator="in" result="smoke" />
+            <feGaussianBlur in="smoke" stdDeviation="3.2" />
+          </filter>
+        </defs>
+
+        <rect x="0" y="0" width="100%" height="100%" filter={`url(#${id})`} />
+      </svg>
     </div>
   );
 }

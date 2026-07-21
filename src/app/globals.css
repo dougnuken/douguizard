@@ -413,4 +413,43 @@
     from { transform: translateY(0px); }
     to { transform: translateY(-2000px); }
   }
+
+  /* ── Geometric figure motion ── ambient, slow, transform/opacity only.
+     Applied to inline-SVG figure parts. Fully disabled under reduced motion. */
+  @keyframes geo-spin { to { transform: rotate(360deg); } }
+  @keyframes geo-spin-rev { to { transform: rotate(-360deg); } }
+  @keyframes geo-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.72; }
+    50% { transform: scale(1.06); opacity: 1; }
+  }
+  @keyframes geo-diamond {
+    0%, 100% { transform: rotate(45deg) scale(1); }
+    50% { transform: rotate(135deg) scale(1.06); }
+  }
+
+  /* Elements spinning/scaling about their own center */
+  .geo-spin, .geo-spin-slow, .geo-spin-rev, .geo-breathe, .geo-diamond {
+    transform-box: fill-box;
+    transform-origin: center;
+    will-change: transform;
+  }
+  /* Dots orbiting the figure's viewBox center */
+  .geo-orbit, .geo-orbit-rev {
+    transform-box: view-box;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .geo-spin { animation: geo-spin 46s linear infinite; }
+  .geo-spin-slow { animation: geo-spin 64s linear infinite; }
+  .geo-spin-rev { animation: geo-spin-rev 54s linear infinite; }
+  .geo-breathe { animation: geo-breathe 6.5s ease-in-out infinite; }
+  .geo-diamond { animation: geo-diamond 24s ease-in-out infinite; }
+  .geo-orbit { animation: geo-spin 16s linear infinite; }
+  .geo-orbit-rev { animation: geo-spin-rev 22s linear infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .geo-spin, .geo-spin-slow, .geo-spin-rev, .geo-breathe,
+    .geo-diamond, .geo-orbit, .geo-orbit-rev { animation: none; }
+  }
 }

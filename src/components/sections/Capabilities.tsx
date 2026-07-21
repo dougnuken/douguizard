@@ -3,6 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import BlurText from "@/components/text/BlurText";
 import Spark from "@/components/Spark";
+import { ColumnMark } from "@/components/figures/GeoFigures";
 
 interface Capability {
   num: string;
@@ -72,37 +73,6 @@ const proof: Proof[] = [
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
-
-/**
- * Monochrome geometric mark — a small B&W photo substitute, one per column.
- * Purely decorative: token-driven outlines, no color, aria-hidden.
- */
-function ColumnMark({ index }: { index: number }) {
-  const base = "shrink-0 border-[var(--color-line-strong)]";
-  switch (index) {
-    case 0: // outline circle
-      return (
-        <span aria-hidden className={`${base} block aspect-square w-7 rounded-full border`} />
-      );
-    case 1: // concentric rings
-      return (
-        <span
-          aria-hidden
-          className={`${base} flex aspect-square w-7 items-center justify-center rounded-full border`}
-        >
-          <span className="aspect-square w-2.5 rounded-full border border-[var(--color-line-strong)]" />
-        </span>
-      );
-    case 2: // corner tick (top-right bracket)
-      return (
-        <span aria-hidden className={`${base} block aspect-square w-7 border-t border-r`} />
-      );
-    default: // rotated square (diamond)
-      return (
-        <span aria-hidden className={`${base} block aspect-square w-6 rotate-45 border`} />
-      );
-  }
-}
 
 export default function Capabilities() {
   return (

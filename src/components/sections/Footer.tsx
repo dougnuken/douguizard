@@ -3,7 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
-import EtherealShadow from "@/components/EtherealShadow";
+import { OrbitRings } from "@/components/figures/GeoFigures";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -31,21 +31,12 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="relative z-[3] overflow-hidden px-6 pt-[120px] pb-12 md:px-12"
+      className="relative z-[3] overflow-hidden px-6 pt-20 pb-20 md:px-12 lg:pt-12 lg:pb-24"
     >
-      {/* Ethereal shadow — drifting smoke behind the contact bookend */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <EtherealShadow
-          color="rgba(255,255,255,0.18)"
-          animation={{ scale: 55, speed: 45 }}
-          noise={{ opacity: 0.2, scale: 1.1 }}
-        />
-      </div>
-
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-16 select-none overflow-hidden md:bottom-20"
+        className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden"
       >
         <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[20vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
           Let&apos;s talk
@@ -82,16 +73,12 @@ export default function Footer() {
               </span>
             </motion.h2>
 
-            {/* Geometric figure — monochrome concentric rings fill the negative space */}
+            {/* Geometric figure — animated concentric rings fill the negative space */}
             <div
               aria-hidden
               className="col-span-12 hidden items-center justify-end md:col-span-3 md:flex"
             >
-              <div className="relative aspect-square w-[clamp(96px,10vw,168px)]">
-                <div className="absolute inset-0 rounded-full border border-[var(--color-line-strong)]" />
-                <div className="absolute inset-[20%] rounded-full border border-[var(--color-line)]" />
-                <div className="absolute inset-[42%] rounded-full border border-[var(--color-line)]" />
-              </div>
+              <OrbitRings className="aspect-square w-[clamp(96px,10vw,168px)]" />
             </div>
           </div>
 
@@ -119,13 +106,10 @@ export default function Footer() {
                 />
               </svg>
             </a>
-            <a href={site.cvPath} data-cursor="hover" className="btn-pill btn-glass">
-              View CV
-            </a>
           </motion.div>
 
           {/* Four hairline-topped editorial columns */}
-          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 md:mt-24">
+          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 md:mt-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -139,7 +123,7 @@ export default function Footer() {
               {/* Two-tone paragraph — lead in ink, continuation in muted */}
               <p className="max-w-xs text-[14px] leading-[1.55]">
                 <span className="text-[var(--color-ink)]">
-                  I take on selected freelance and consulting engagements alongside my role at Mercadolibre.
+                  I take on selected freelance and consulting engagements alongside leading product at Naowee.
                 </span>{" "}
                 <span className="text-[var(--color-ink-muted)]">
                   Especially keen on AI-native product work and design systems at scale.
@@ -184,27 +168,10 @@ export default function Footer() {
               ))}
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.24, ease }}
-              className="hairline-t pt-6"
-            >
-              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
-                / Documents
-              </h4>
-              <a href={site.cvPath} data-cursor="hover" className={linkClass}>
-                View CV
-              </a>
-              <a href={site.cvPath} data-cursor="hover" className={linkClass}>
-                Download PDF
-              </a>
-            </motion.div>
           </div>
 
           {/* Legal row */}
-          <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-[var(--color-line)] pt-8 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--color-ink-dim)] md:mt-20 md:flex-row">
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[var(--color-line)] pt-8 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--color-ink-dim)] md:mt-14 md:flex-row">
             <span>© 2026 Doug Vargas — All rights reserved</span>
             <span>
               Crafted in Barranquilla ·{" "}

@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import BlurText from "@/components/text/BlurText";
 import Spark from "@/components/Spark";
+import { OrbitRings } from "@/components/figures/GeoFigures";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -15,10 +15,10 @@ interface Fact {
 
 const facts: Fact[] = [
   { label: "Based", value: `${site.location} · ${site.timezone}` },
-  { label: "Currently", value: "Tech Lead, Andes Design System · Mercadolibre" },
+  { label: "Currently", value: "Head of Product · Naowee" },
   { label: "Focus", value: "Design engineering · AI-native product" },
   { label: "Availability", value: "Open to select work · 2026" },
-  { label: "Languages", value: "Spanish (native) · English" },
+  { label: "Languages", value: "Spanish (native) · English (B1)" },
 ];
 
 /** Short rise + fade. Collapses to a plain fade under MotionConfig reducedMotion. */
@@ -102,27 +102,6 @@ export default function About() {
                 {...rise(20, 0.16, 0.7)}
                 className="mt-2 flex flex-wrap items-center gap-x-8 gap-y-4"
               >
-                <Link href={site.cvPath} className="btn-pill btn-outline group">
-                  Read the full CV
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden
-                    className="transition-transform duration-500 group-hover:translate-x-1"
-                    style={{ transitionTimingFunction: "var(--ease-quart-out)" }}
-                  >
-                    <path
-                      d="M5 12h13M13 6l6 6-6 6"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
-
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                   {site.social.map((s) => (
                     <a
@@ -144,15 +123,8 @@ export default function About() {
               {...rise(24, 0.12, 0.7)}
               className="col-span-12 flex flex-col gap-10 self-start md:col-span-3 md:col-start-10"
             >
-              {/* Concentric rings — monochrome geometric figure (B&W photo substitute) */}
-              <div
-                aria-hidden
-                className="relative hidden aspect-square w-full max-w-[200px] items-center justify-center md:flex"
-              >
-                <div className="absolute inset-0 rounded-full border border-[var(--color-line-strong)]" />
-                <div className="absolute inset-[26%] rounded-full border border-[var(--color-line)]" />
-                <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-ink-dim)]" />
-              </div>
+              {/* Concentric rings — animated monochrome geometric figure */}
+              <OrbitRings className="hidden aspect-square w-full max-w-[200px] md:block" />
 
               <dl className="hairline-b">
                 {facts.map((f) => (

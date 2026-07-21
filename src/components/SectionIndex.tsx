@@ -27,35 +27,59 @@ export default function SectionIndex() {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
       (el): el is HTMLElement => el !== null,
     );
+    if (!els.length) return;
 
-    // Paint the correct chrome on first load before the observer fires
-    // (the first panel, hero, renders on a dark background).
-    document.documentElement.setAttribute(
-      "data-panel-theme",
-      DARK_IDS.has("hero") ? "dark" : "light",
-    );
-
-    // Observe within the horizontal scroller: a panel is "active" while it
-    // crosses the horizontal middle band of the shell (desktop). Falls back to
-    // the viewport if the shell is not present.
     const scroller = document.querySelector<HTMLElement>("[data-hshell]");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-            document.documentElement.setAttribute(
-              "data-panel-theme",
-              DARK_IDS.has(entry.target.id) ? "dark" : "light",
-            );
-          }
-        }
-      },
-      { root: scroller ?? null, rootMargin: "0px -49% 0px -49%", threshold: 0 },
-    );
+    let raf = 0;
+    let current = "";
 
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    const apply = (id: string) => {
+      if (id === current) return;
+      current = id;
+      setActive(id);
+      document.documentElement.setAttribute(
+        "data-panel-theme",
+        DARK_IDS.has(id) ? "dark" : "light",
+      );
+    };
+
+    // The active panel is the one whose centre sits closest to the viewport
+    // centre. This works for both the desktop horizontal shell (X varies) and
+    // the mobile vertical stack (Y varies) — no fragile initial-observer race.
+    const compute = () => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      let bestId = els[0].id;
+      let best = Infinity;
+      for (const el of els) {
+        const r = el.getBoundingClientRect();
+        const dx = r.left + r.width / 2 - cx;
+        const dy = r.top + r.height / 2 - cy;
+        const d = dx * dx + dy * dy;
+        if (d < best) {
+          best = d;
+          bestId = el.id;
+        }
+      }
+      apply(bestId);
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
+
+    compute(); // deterministic initial state (Home at rest)
+    requestAnimationFrame(compute); // re-check once layout settles
+    window.addEventListener("scroll", onScroll, { passive: true });
+    scroller?.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      scroller?.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   const handleJump = (e: React.MouseEvent, id: string) => {

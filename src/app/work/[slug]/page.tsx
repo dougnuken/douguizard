@@ -1,13 +1,16 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import { getCaseStudy, getNextCaseStudy } from "@/data/work";
 import Spark from "@/components/Spark";
+import RevealText from "@/components/text/RevealText";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+/** Container-level fade + rise, on scroll into view. For eyebrows and groups. */
 function FadeIn({
   children,
   delay = 0,
@@ -47,6 +50,14 @@ function renderBold(text: string) {
 export default function CaseStudyPage() {
   const params = useParams<{ slug: string }>();
   const study = getCaseStudy(params.slug);
+
+  // Detail pages are a normal vertical document. Clear any chrome-theme state
+  // left on <html> by the home shell and start at the top, so scroll is never
+  // locked when arriving via client-side navigation from the horizontal home.
+  useEffect(() => {
+    document.documentElement.removeAttribute("data-panel-theme");
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!study) {
     notFound();
@@ -136,25 +147,23 @@ export default function CaseStudyPage() {
 
       {/* ============ Project meta strip ============ */}
       <section className="relative z-[2] px-6 md:px-12 py-12 bg-[var(--color-bg-deep)] border-y border-[var(--color-line)]">
-        <FadeIn>
-          <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Role", value: study.role },
-              { label: "Duration", value: study.duration },
-              { label: "Team", value: study.team },
-              { label: "Year", value: study.year },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-2">
-                  / {item.label}
-                </div>
-                <div className="text-[var(--color-ink)] text-[15px] leading-[1.4]">
-                  {item.value}
-                </div>
+        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { label: "Role", value: study.role },
+            { label: "Duration", value: study.duration },
+            { label: "Team", value: study.team },
+            { label: "Year", value: study.year },
+          ].map((item, i) => (
+            <FadeIn key={item.label} delay={i * 0.06}>
+              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-2">
+                / {item.label}
               </div>
-            ))}
-          </div>
-        </FadeIn>
+              <div className="text-[var(--color-ink)] text-[15px] leading-[1.4]">
+                {item.value}
+              </div>
+            </FadeIn>
+          ))}
+        </div>
       </section>
 
       {/* ============ The Challenge ============ */}
@@ -167,45 +176,63 @@ export default function CaseStudyPage() {
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <h3 className="font-display text-[clamp(28px,3vw,42px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink)]">
-              {study.challenge}
-            </h3>
-          </FadeIn>
+          <RevealText
+            as="h3"
+            variant="mask"
+            delay={0.1}
+            className="font-display text-[clamp(28px,3vw,42px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink)]"
+          >
+            {study.challenge}
+          </RevealText>
         </div>
       </section>
 
       {/* ============ Approach (numbered list) ============ */}
       <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
         <div className="max-w-[1100px] mx-auto">
-          <FadeIn>
-            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12 mb-16 items-baseline">
+          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12 mb-16 items-baseline">
+            <FadeIn>
               <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)]">
                 <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
                 The approach
               </div>
-              <h3 className="font-display font-medium text-[clamp(36px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-[var(--color-ink)]">
-                How we{" "}
-                <span className="font-black text-[var(--color-ink-strong)]">
-                  shipped
-                </span>{" "}
-                it
-              </h3>
-            </div>
-          </FadeIn>
+            </FadeIn>
+            <RevealText
+              as="h3"
+              variant="mask"
+              className="font-display font-medium text-[clamp(36px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-[var(--color-ink)]"
+            >
+              How we{" "}
+              <span className="font-black text-[var(--color-ink-strong)]">
+                shipped
+              </span>{" "}
+              it
+            </RevealText>
+          </div>
 
           <div className="space-y-px bg-[var(--color-line)] border-y border-[var(--color-line)]">
             {study.approach.map((step, i) => (
-              <FadeIn key={i} delay={i * 0.06}>
-                <div className="grid grid-cols-[60px_1fr] md:grid-cols-[120px_1fr] gap-6 md:gap-12 px-6 py-10 bg-[var(--color-bg-mid)] hover:bg-[var(--color-bg-soft)] transition-colors duration-500">
-                  <div className="section-num text-[clamp(40px,5vw,64px)] leading-none">
-                    {String(i + 1).padStart(2, "0")}
-                  </div>
-                  <p className="text-[clamp(16px,1.4vw,20px)] leading-[1.55] text-[var(--color-ink)] pt-2">
-                    {renderBold(step)}
-                  </p>
-                </div>
-              </FadeIn>
+              <div
+                key={i}
+                className="grid grid-cols-[60px_1fr] md:grid-cols-[120px_1fr] gap-6 md:gap-12 px-6 py-10 bg-[var(--color-bg-mid)] hover:bg-[var(--color-bg-soft)] transition-colors duration-500"
+              >
+                <RevealText
+                  as="div"
+                  variant="mask"
+                  delay={i * 0.04}
+                  className="section-num text-[clamp(40px,5vw,64px)] leading-none"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </RevealText>
+                <RevealText
+                  as="p"
+                  variant="fade"
+                  delay={i * 0.04 + 0.06}
+                  className="text-[clamp(16px,1.4vw,20px)] leading-[1.55] text-[var(--color-ink)] pt-2"
+                >
+                  {renderBold(step)}
+                </RevealText>
+              </div>
             ))}
           </div>
         </div>
@@ -222,32 +249,44 @@ export default function CaseStudyPage() {
           </FadeIn>
 
           <div>
-            <FadeIn>
-              <h3 className="font-display text-[clamp(36px,6vw,72px)] leading-[0.95] tracking-[-0.03em]">
-                <span className="font-black text-[var(--color-ink-strong)]">
-                  {study.outcome.headline}
-                </span>
-              </h3>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <p className="text-lg text-[var(--color-ink-muted)] leading-[1.6] max-w-[680px] mb-16 mt-8">
-                {study.outcome.description}
-              </p>
-            </FadeIn>
+            <RevealText
+              as="h3"
+              variant="mask"
+              className="font-display font-black text-[clamp(36px,6vw,72px)] leading-[0.95] tracking-[-0.03em] text-[var(--color-ink-strong)]"
+            >
+              {study.outcome.headline}
+            </RevealText>
+
+            <RevealText
+              as="p"
+              variant="fade"
+              delay={0.1}
+              className="text-lg text-[var(--color-ink-muted)] leading-[1.6] max-w-[680px] mb-16 mt-8"
+            >
+              {study.outcome.description}
+            </RevealText>
 
             {study.outcome.metrics && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-[var(--color-line)]">
                 {study.outcome.metrics.map((m, i) => (
-                  <FadeIn key={i} delay={0.2 + i * 0.08}>
-                    <div>
-                      <div className="font-display font-black text-[clamp(40px,5vw,72px)] leading-none tracking-[-0.04em] mb-2 text-[var(--color-ink-strong)]">
-                        {m.value}
-                      </div>
-                      <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)]">
-                        {m.label}
-                      </div>
-                    </div>
-                  </FadeIn>
+                  <div key={i}>
+                    <RevealText
+                      as="div"
+                      variant="mask"
+                      delay={0.15 + i * 0.08}
+                      className="font-display font-black text-[clamp(40px,5vw,72px)] leading-none tracking-[-0.04em] mb-2 text-[var(--color-ink-strong)]"
+                    >
+                      {m.value}
+                    </RevealText>
+                    <RevealText
+                      as="div"
+                      variant="fade"
+                      delay={0.22 + i * 0.08}
+                      className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)]"
+                    >
+                      {m.label}
+                    </RevealText>
+                  </div>
                 ))}
               </div>
             )}
