@@ -1,127 +1,93 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { useMemo, type ElementType } from "react";
+import type { ElementType } from "react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-export interface TextSegment {
-  /** Segment text. Use "\n" for an explicit line break. */
-  text: string;
-  /** Optional classes for this segment (accent colour, italic, weight). */
-  className?: string;
-}
-
-type Node =
-  | { kind: "break"; key: string }
-  | { kind: "space"; key: string }
-  | { kind: "unit"; content: string; className?: string; key: string };
-
 interface SplitTextProps {
-  segments: TextSegment[];
-  /** Reveal granularity. */
-  by?: "words" | "chars";
-  /** Per-unit stagger (seconds). Sensible default depends on `by`. */
-  stagger?: number;
-  /** Delay before the first unit (seconds). */
-  delay?: number;
-  /** Per-unit duration (seconds). */
-  duration?: number;
-  /**
-   * When to play. "mount" fires on first paint — correct for above-the-fold
-   * content like the hero, where an IntersectionObserver is unreliable.
-   * "inView" waits until the block scrolls into view (default).
-   */
-  trigger?: "mount" | "inView";
+  text: string;
+  tag?: ElementType;
   className?: string;
-  /** Element rendered as the container. */
-  as?: "h1" | "h2" | "h3" | "p" | "span";
+  /** ms between each unit's start (stagger step). */
+  delay?: number;
+  /** seconds per unit. */
+  duration?: number;
+  /** "chars" cascades letter-by-letter; "words" reveals whole words. */
+  splitType?: "chars" | "words";
+  from?: { opacity?: number; y?: number };
+  to?: { opacity?: number; y?: number };
+  /** Words rendered with `emphasizeClassName` (e.g. the bold hero word). */
+  emphasize?: string[];
+  emphasizeClassName?: string;
+  /** Seconds before the cascade begins (sequence after other hero elements). */
+  startDelay?: number;
 }
 
 /**
- * Editorial entrance reveal. Each word (or char) rises + fades in with a short
- * stagger once the block scrolls into view. Collapses to a plain fade under
- * prefers-reduced-motion. Preserves explicit "\n" breaks, keeps breakable
- * spaces (so long headlines still wrap), and per-segment styling for accents.
+ * SplitText (framer replica of the React Bits/GSAP component) — splits text into
+ * words, then chars, and cascades each with a staggered rise + fade. No GSAP
+ * dependency; reuses the app's framer-motion. Preserves per-word emphasis and
+ * stays accessible (the whole string is exposed via aria-label; fragments are
+ * aria-hidden). Motion-safe: reduced motion collapses to a single fade.
  */
 export default function SplitText({
-  segments,
-  by = "words",
-  stagger,
-  delay = 0,
-  duration = 0.7,
-  trigger = "inView",
+  text,
+  tag = "p",
   className = "",
-  as = "span",
+  delay = 30,
+  duration = 0.7,
+  splitType = "chars",
+  from = { opacity: 0, y: 40 },
+  to = { opacity: 1, y: 0 },
+  emphasize = [],
+  emphasizeClassName = "",
+  startDelay = 0,
 }: SplitTextProps) {
-  const Tag = as as ElementType;
-  const reduceMotion = useReducedMotion() ?? false;
-  const step = stagger ?? (by === "chars" ? 0.025 : 0.06);
+  const reduce = useReducedMotion() ?? false;
+  const Tag = tag;
 
-  const nodes = useMemo<Node[]>(() => {
-    const out: Node[] = [];
-    segments.forEach((seg, si) => {
-      if (seg.text === "\n") {
-        out.push({ kind: "break", key: `br-${si}` });
-        return;
-      }
-      if (by === "chars") {
-        seg.text.split("").forEach((c, ci) => {
-          out.push({
-            kind: "unit",
-            content: c === " " ? " " : c,
-            className: seg.className,
-            key: `c-${si}-${ci}`,
-          });
-        });
-        return;
-      }
-      // Split on whitespace, keep the words, emit breakable spaces between them
-      // so the container can still wrap naturally at any point.
-      seg.text.split(/(\s+)/).forEach((part, pi) => {
-        if (part.length === 0) return;
-        if (/^\s+$/.test(part)) {
-          out.push({ kind: "space", key: `s-${si}-${pi}` });
-        } else {
-          out.push({
-            kind: "unit",
-            content: part,
-            className: seg.className,
-            key: `w-${si}-${pi}`,
-          });
-        }
-      });
-    });
-    return out;
-  }, [segments, by]);
-
+  const words = text.split(" ");
+  const emph = new Set(emphasize.map((w) => w.toLowerCase()));
   let unitIndex = 0;
+
+  const initial = reduce ? { opacity: 0 } : { opacity: from.opacity ?? 0, y: from.y ?? 40 };
+  const animate = reduce ? { opacity: 1 } : { opacity: to.opacity ?? 1, y: to.y ?? 0 };
+
   return (
-    <Tag className={className}>
-      {nodes.map((n) => {
-        if (n.kind === "break") return <br key={n.key} />;
-        if (n.kind === "space") return " ";
-        const i = unitIndex++;
+    <Tag className={className} aria-label={text}>
+      {words.map((word, wi) => {
+        const key = word.replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
+        const isEmph = emph.has(key);
+        const units = splitType === "chars" ? Array.from(word) : [word];
         return (
-          <motion.span
-            key={n.key}
-            className={`inline-block ${n.className ?? ""}`}
-            style={{ willChange: "transform, opacity" }}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 44 }}
-            {...(trigger === "mount"
-              ? { animate: { opacity: 1, y: 0 } }
-              : {
-                  whileInView: { opacity: 1, y: 0 },
-                  viewport: { once: true, margin: "-80px" },
-                })}
-            transition={{
-              duration: reduceMotion ? 0.3 : duration,
-              delay: reduceMotion ? 0 : delay + i * step,
-              ease: EASE,
-            }}
-          >
-            {n.content}
-          </motion.span>
+          <Fragment key={wi}>
+            <span
+              aria-hidden
+              className={`inline-block whitespace-nowrap ${isEmph ? emphasizeClassName : ""}`}
+            >
+              {units.map((unit, ui) => {
+                const i = unitIndex++;
+                return (
+                  <motion.span
+                    key={ui}
+                    className="inline-block will-change-transform"
+                    initial={initial}
+                    animate={animate}
+                    transition={{
+                      duration: reduce ? 0.3 : duration,
+                      delay: reduce ? 0 : startDelay + i * (delay / 1000),
+                      ease: EASE,
+                    }}
+                  >
+                    {unit === " " ? " " : unit}
+                  </motion.span>
+                );
+              })}
+            </span>
+            {wi < words.length - 1 ? " " : null}
+          </Fragment>
         );
       })}
     </Tag>

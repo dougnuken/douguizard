@@ -5,6 +5,7 @@ import { site } from "@/data/site";
 import Spark from "@/components/Spark";
 import TrueFocus from "@/components/TrueFocus";
 import BackgroundPaths from "@/components/BackgroundPaths";
+import SplitText from "@/components/text/SplitText";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -52,14 +53,17 @@ export default function Hero() {
           {site.availability.label}
         </motion.p>
 
-        <motion.h1
-          {...rise(0.07)}
+        <SplitText
+          tag="h1"
+          text="Designing the human side of an AI era"
+          emphasize={["human"]}
+          emphasizeClassName="font-black text-[var(--color-ink-strong)]"
           className="text-display-xl col-span-12 text-balance font-medium text-[var(--color-ink)] lg:col-span-10"
-        >
-          Designing the{" "}
-          <span className="font-black text-[var(--color-ink-strong)]">human</span>{" "}
-          side of an AI era
-        </motion.h1>
+          splitType="chars"
+          delay={26}
+          duration={0.7}
+          startDelay={0.12}
+        />
 
         <motion.div {...rise(0.12)} className="col-span-12 pt-1">
           <TrueFocus

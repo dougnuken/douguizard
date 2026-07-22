@@ -2,7 +2,7 @@
 
 import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
-import BlurText from "@/components/text/BlurText";
+import RevealText from "@/components/text/RevealText";
 import Spark from "@/components/Spark";
 import { OrbitRings } from "@/components/figures/GeoFigures";
 
@@ -48,14 +48,15 @@ export default function About() {
               <Spark size={12} />/ 01 — About
             </motion.div>
 
-            <BlurText
+            <RevealText
               as="h2"
+              variant="mask"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               The <span className="font-black text-[var(--color-ink-strong)]">human</span>
               <br />
               behind the systems.
-            </BlurText>
+            </RevealText>
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}

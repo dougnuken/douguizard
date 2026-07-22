@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, MotionConfig } from "framer-motion";
-import BlurText from "@/components/text/BlurText";
+import RevealText from "@/components/text/RevealText";
 import Spark from "@/components/Spark";
 import { ColumnMark } from "@/components/figures/GeoFigures";
 
@@ -95,14 +95,15 @@ export default function Capabilities() {
               / 02 — Capabilities
             </motion.div>
 
-            <BlurText
+            <RevealText
               as="h2"
+              variant="mask"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               <span className="font-bold text-[var(--color-ink)]">Four ways</span><br />
               <span className="text-[var(--color-ink-muted)]">I work</span>
               <span className="text-[var(--color-ink-dim)]">.</span>
-            </BlurText>
+            </RevealText>
           </div>
 
           {/* Content — one capability per column on a 4-col grid */}

@@ -1,3 +1,12 @@
+export interface Kpi {
+  /** Headline figure — "40%", "18", "2K+", "Hours". */
+  value: string;
+  /** What it measures. */
+  label: string;
+  /** Optional small context chip — "vs. before", "not sprints", "beat goal". */
+  delta?: string;
+}
+
 export interface CaseStudy {
   slug: string;
   num: string;
@@ -12,14 +21,16 @@ export interface CaseStudy {
   colors: [string, string];
   /** Path to thumbnail in /public/work/ — undefined uses gradient */
   thumbnail?: string;
+  /** One-line hero tagline. */
   tagline: string;
-  challenge: string;
-  approach: string[];
-  outcome: {
-    headline: string;
-    description: string;
-    metrics?: { value: string; label: string }[];
-  };
+  /** One punchy, results-first sentence — the market hook. */
+  impact: string;
+  /** Problem + approach, in brief. Keep it to 1–2 sentences. */
+  context: string;
+  /** 3–4 short bullets of what I actually did. **bold** supported. */
+  contributions: string[];
+  /** 3–5 metric cards. Draft figures — confirm real numbers per project. */
+  kpis: Kpi[];
   technologies?: string[];
   externalLink?: { label: string; href: string };
 }
@@ -38,26 +49,22 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#00c2b8", "#0a84ff"],
     tagline:
       "Digitizing how a country runs its sport — a modular platform built design-and-engineering in one motion, with AI in the loop end to end.",
-    challenge:
-      "Colombia's sports sector still runs on paper, spreadsheets, and disconnected tools — inspection and control, event registration, venue management, incentives, athlete records, and live scoring all live in silos. Naowee set out to unify them into a single coherent platform — SUID, a shared sports information system — that ministries, sports bodies, and organizers actually want to use.",
-    approach: [
-      "Set **product direction and roadmap** as Head of Product across a suite of modules — inspection & control (IVC), Events, Venues, Incentives, Convocatorias, and live Digitación (scoring).",
-      "Built a **single design system** (naowee-*) that keeps every module visually and behaviorally consistent — tokens, 38+ components, canonical shells and multi-step wizards.",
-      "Ran the entire build **AI-native** — prototyping in code with Claude Code, Cursor, and Gemini, so flows go from idea to working screen in hours, not sprints.",
-      "Shipped **guided product tours** per user story, so analysts and clients can verify requirements step by step against the running product.",
-      "Designed for **real operators** — multi-role access, partial drafts, bulk uploads, and reporting tuned to how sports organizations actually work.",
+    impact:
+      "One AI-native platform now stands in for a stack of disconnected tools — shipped at a pace a classic design-to-dev handoff can't match.",
+    context:
+      "Colombia's sports sector ran on paper, spreadsheets, and siloed systems. As Head of Product I set the direction and built SUID end to end — a single design system, AI in the loop, and real operators in mind.",
+    contributions: [
+      "**Product direction** across 9+ modules — inspection & control, events, venues, incentives, convocatorias and live scoring.",
+      "**One design system** (naowee-*) — 38+ components, canonical shells and wizards keeping every module consistent.",
+      "**AI-native build** — prototyping in code with Claude Code, Cursor and Gemini: idea to working screen in hours.",
+      "**Guided tours per user story** so analysts sign off requirements against the running product.",
     ],
-    outcome: {
-      headline: "One system for an entire sector.",
-      description:
-        "Naowee is becoming the operating layer for sport in Colombia — replacing fragmented tools with a single, consistent, AI-native platform that scales across ministries, organizations, and events.",
-      metrics: [
-        { value: "9+", label: "Modules" },
-        { value: "38+", label: "System components" },
-        { value: "12+", label: "Operational roles" },
-        { value: "AI", label: "Native workflow" },
-      ],
-    },
+    kpis: [
+      { value: "9+", label: "Modules unified", delta: "one platform" },
+      { value: "38+", label: "System components", delta: "one language" },
+      { value: "Hours", label: "Idea → working screen", delta: "not sprints" },
+      { value: "12+", label: "Operator roles modeled" },
+    ],
     technologies: [
       "Product Strategy",
       "Design Systems",
@@ -80,26 +87,21 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#7e6dff", "#5eb8ff"],
     tagline:
       "Architecting the design system that powers LATAM's largest e-commerce platform.",
-    challenge:
-      "Mercadolibre operates across 18 countries with thousands of designers and engineers shipping product daily. Maintaining consistency, accessibility, and performance across iOS, Android, and Web — while keeping the system flexible enough to support rapid product innovation — required rethinking governance, foundations, and tooling.",
-    approach: [
-      "Established **foundational definitions** (tokens, spacing, type, motion) that govern every product surface across the company.",
-      "Built and shipped a **cross-platform component library** maintained simultaneously for iOS, Android, and Web with parity guarantees.",
-      "Created **AI-assisted design audit workflows** — using LLMs to scan Figma files for system compliance and surface drift before it ships.",
-      "Partnered cross-functionally with engineering org-wide to align component APIs, reducing rework cycles by ~40%.",
-      "Introduced **prompt-driven generative UI exploration** as a sanctioned R&D track inside the systems practice.",
+    impact:
+      "The single source of truth for Mercadolibre's product — powering experiences for hundreds of millions of people across 18 countries.",
+    context:
+      "Thousands of designers and engineers ship daily across iOS, Android and Web. I owned the foundations, governance and tooling that keep it all one product — and brought AI into the systems practice.",
+    contributions: [
+      "**Foundations & governance** — tokens, type, motion and component APIs adopted org-wide.",
+      "**Cross-platform parity** — one library maintained for iOS, Android and Web.",
+      "**AI-assisted audits** — LLM workflows that catch system drift in Figma before it ships.",
     ],
-    outcome: {
-      headline: "A living system that ships every day.",
-      description:
-        "Andes is now the single source of truth for Mercadolibre's product surfaces — used by 400+ designers and 2,000+ engineers building experiences for hundreds of millions of users across LATAM.",
-      metrics: [
-        { value: "18", label: "Countries" },
-        { value: "400+", label: "Designers" },
-        { value: "2K+", label: "Engineers" },
-        { value: "3", label: "Platforms" },
-      ],
-    },
+    kpis: [
+      { value: "~40%", label: "Fewer rework cycles", delta: "vs. before" },
+      { value: "400+", label: "Designers on the system" },
+      { value: "2K+", label: "Engineers on the system" },
+      { value: "18", label: "Countries shipped to" },
+    ],
     technologies: [
       "Figma",
       "Design Tokens",
@@ -122,25 +124,21 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#ff8b5e", "#ff5e9f"],
     tagline:
       "Redesigning digital banking for one of Colombia's largest banks — and building the system that keeps it consistent.",
-    challenge:
-      "Banco de Occidente serves millions of customers through web and mobile banking. The product was fragmented across many squads working independently, leading to inconsistent UX, accessibility gaps, and slow shipping cycles. We needed a design system that could scale governance without slowing teams down.",
-    approach: [
-      "Took ownership as official **Design System Gatekeeper** — the role that approves additions, deprecations, and patterns across all squads.",
-      "Ran **monthly workshops, design crits, and 1:1 mentorship** sessions to spread system literacy across the org.",
-      "Designed and shipped redesigns of **core banking flows** — transfers, payments, account management — for both mobile and web.",
-      "Established **review rituals** that caught accessibility and consistency issues before development handoff.",
-      "Mentored junior and mid-level designers, growing the digital banking design org's craft level.",
+    impact:
+      "From fragmented squads to one coherent banking product — shipping faster, with accessibility passing on the first audit.",
+    context:
+      "As official Design System Gatekeeper for a top Colombian bank, I approved patterns across 12+ squads and redesigned core flows — transfers, payments, account management — for web and mobile.",
+    contributions: [
+      "**Design System Gatekeeper** — governed additions, deprecations and patterns across every squad.",
+      "**Core flow redesigns** — transfers, payments and account management, web + mobile.",
+      "**System literacy** — monthly crits, workshops and 1:1 mentorship across the org.",
     ],
-    outcome: {
-      headline: "From fragmented to coherent at bank scale.",
-      description:
-        "Over six years, the design system became the spine of Banco de Occidente's digital banking. Squads ship faster, accessibility audits pass first time, and customer-facing UX is recognizably one product.",
-      metrics: [
-        { value: "12+", label: "Product squads" },
-        { value: "6yr", label: "Tenure" },
-        { value: "M+", label: "Customers reached" },
-      ],
-    },
+    kpis: [
+      { value: "12+", label: "Squads aligned" },
+      { value: "6 yr", label: "As DS gatekeeper" },
+      { value: "M+", label: "Customers reached" },
+      { value: "1st-pass", label: "Accessibility audits", delta: "no rework" },
+    ],
     technologies: ["Figma", "Sketch", "Design Tokens", "Prototyping", "Mentorship"],
     externalLink: { label: "Visit adldigitallab.com", href: "https://www.adldigitallab.com" },
   },
@@ -157,19 +155,20 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#5eb8ff", "#7e6dff"],
     tagline:
       "Designing onboard guest experiences for Royal Caribbean's fleets across Caribbean and Mediterranean routes.",
-    challenge:
-      "Cruise passengers spend a week or more on a ship — they need an app that handles booking, daily activities, dining, excursions, account management, and on-ship navigation. The challenge was building an interface that worked for guests of all ages and tech literacy levels, with intermittent connectivity at sea.",
-    approach: [
-      "Designed **mobile booking flows** for guests reserving cruises across multiple destinations and stateroom types.",
-      "Built the **onboard guest experience** — daily schedules, dining reservations, excursion booking, account balance — all working with intermittent ship Wi-Fi.",
-      "Collaborated with **US-based product and engineering teams** at Royal Caribbean HQ; led design sessions remotely.",
-      "Iterated on flows for **guests of varied digital literacy** — from younger passengers to retirees on their first smartphone.",
+    impact:
+      "Onboard guest experiences that follow passengers from booking to disembarkation — resilient to life at sea.",
+    context:
+      "Cruise guests spend a week aboard with patchy connectivity. I designed the booking and onboard experience — schedules, dining, excursions, balances — for guests of every age and comfort level.",
+    contributions: [
+      "**Mobile booking flows** across destinations and stateroom types.",
+      "**Onboard experience** — schedules, dining, excursions and balances that work with intermittent Wi-Fi.",
+      "**Remote collaboration** with US product and engineering at Royal Caribbean HQ.",
     ],
-    outcome: {
-      headline: "An app that follows guests from booking to disembarkation.",
-      description:
-        "The mobile experiences shipped to passengers across Royal Caribbean's Caribbean and Mediterranean fleets, supporting the full guest journey from initial booking to onboard daily life.",
-    },
+    kpis: [
+      { value: "2", label: "Fleets & regions", delta: "Caribbean + Med" },
+      { value: "End-to-end", label: "Guest journey" },
+      { value: "Offline", label: "Resilient at sea" },
+    ],
     technologies: ["Sketch", "iOS", "Android", "Prototyping", "Cross-cultural collaboration"],
     externalLink: { label: "Visit globant.com", href: "https://www.globant.com" },
   },
@@ -186,19 +185,20 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#a8ff5e", "#5eb8ff"],
     tagline:
       "Crafting the visual language for an embedded analytics platform serving SaaS clients.",
-    challenge:
-      "Qrvey gives SaaS companies a way to embed analytics directly inside their own products. The dashboard, charts, and configuration UI had to feel native inside any host product — meaning visual neutrality, deep customization, and rock-solid information hierarchy across hundreds of chart types.",
-    approach: [
-      "Owned the **visual language** for the entire dashboard product — components, charts, configuration UIs, and data exploration patterns.",
-      "Designed **flexible chart systems** that worked across line, bar, scatter, heatmap, and dozens of other visualizations.",
-      "Prototyped **UX/UI improvements** that shipped to production for the platform's enterprise clients.",
-      "Balanced **brand-neutral defaults** with deep theming hooks so each host product could brand the analytics natively.",
+    impact:
+      "A brand-neutral analytics language that embeds natively inside any host SaaS product.",
+    context:
+      "Qrvey lets SaaS companies embed analytics in their own products. I owned the visual language — dashboards, charts and configuration — built to disappear into any host.",
+    contributions: [
+      "**Visual language** for the whole dashboard product.",
+      "**Flexible chart systems** across dozens of visualization types.",
+      "**Brand-neutral defaults** with deep theming hooks for each host.",
     ],
-    outcome: {
-      headline: "Analytics that disappears into any product.",
-      description:
-        "The visual language became the foundation for Qrvey's enterprise SaaS deployments — clean, neutral, and adaptable across every host context.",
-    },
+    kpis: [
+      { value: "Dozens", label: "Chart types", delta: "one system" },
+      { value: "Enterprise", label: "SaaS deployments" },
+      { value: "Native", label: "Embed in any host" },
+    ],
     technologies: ["Sketch", "Charts.js", "Data Viz", "Component Libraries"],
     externalLink: { label: "Visit qrvey.com", href: "https://www.qrvey.com" },
   },
@@ -215,19 +215,20 @@ export const caseStudies: CaseStudy[] = [
     colors: ["#ff5e9f", "#ff8b5e"],
     tagline:
       "Designing wireframes, UI kits, and prototypes for international clients across web and mobile.",
-    challenge:
-      "Ideaware operates as a remote-first agency serving clients across the US and LATAM. Each engagement required quickly understanding a new product domain, stakeholder dynamics, and brand language — and producing design output that could be handed cleanly to development.",
-    approach: [
-      "Produced **wireframes and UI kits** for diverse client projects — fintech, consumer apps, marketplaces, B2B tools.",
-      "Built **high-fidelity prototypes** for stakeholder validation and developer handoff.",
-      "Adapted communication style across **time zones and cultures** to keep distributed projects on track.",
-      "Established **reusable design patterns** I could apply across engagements while still customizing each per client.",
+    impact:
+      "Product design across fintech, marketplaces and B2B — the multi-domain fluency that later made systems work feel natural.",
+    context:
+      "A remote-first agency serving US and LATAM clients. Each engagement meant learning a new domain fast and shipping clean, developer-ready design.",
+    contributions: [
+      "**Wireframes & UI kits** across fintech, consumer and B2B products.",
+      "**High-fidelity prototypes** for stakeholder validation and developer handoff.",
+      "**Reusable patterns** applied and tailored per client.",
     ],
-    outcome: {
-      headline: "A wide-angle view of how product design adapts across contexts.",
-      description:
-        "The multi-client experience built fluency in switching between domains — a foundation that later made design systems work feel natural at scale.",
-    },
+    kpis: [
+      { value: "Multi", label: "Domains shipped", delta: "fintech → B2B" },
+      { value: "US + LATAM", label: "Distributed clients" },
+      { value: "Dev-ready", label: "Handoff quality" },
+    ],
     technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
     externalLink: { label: "Visit ideaware.co", href: "https://www.ideaware.co" },
   },

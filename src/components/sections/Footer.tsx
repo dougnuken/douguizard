@@ -4,6 +4,7 @@ import { motion, MotionConfig } from "framer-motion";
 import { site } from "@/data/site";
 import Spark from "@/components/Spark";
 import { OrbitRings } from "@/components/figures/GeoFigures";
+import RevealText from "@/components/text/RevealText";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -57,12 +58,10 @@ export default function Footer() {
               <Spark size={12} />/ 04 — Contact
             </motion.p>
 
-            {/* Two-tone statement — weight + tone carry the hierarchy (no red) */}
-            <motion.h2
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, ease }}
+            {/* Two-tone statement — mask line-reveal, replays on panel entry */}
+            <RevealText
+              as="h2"
+              variant="mask"
               className="col-span-12 text-balance font-display text-[clamp(44px,7vw,112px)] leading-[0.9] tracking-[-0.03em] md:col-span-6"
             >
               <span className="font-black text-[var(--color-ink)]">
@@ -71,7 +70,7 @@ export default function Footer() {
               <span className="font-medium text-[var(--color-ink-muted)]">
                 Got something worth building?
               </span>
-            </motion.h2>
+            </RevealText>
 
             {/* Geometric figure — animated concentric rings fill the negative space */}
             <div

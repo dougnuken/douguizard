@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 import { caseStudies, type CaseStudy } from "@/data/work";
-import BlurText from "@/components/text/BlurText";
+import RevealText from "@/components/text/RevealText";
 import Spark from "@/components/Spark";
 import { PulseCircle } from "@/components/figures/GeoFigures";
 
@@ -163,14 +163,15 @@ export default function SelectedWork() {
               <PulseCircle className="mt-auto hidden aspect-square w-16 md:block" />
             </motion.div>
 
-            <BlurText
+            <RevealText
               as="h2"
+              variant="mask"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               Selected
               <br />
               work.
-            </BlurText>
+            </RevealText>
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
-import { getCaseStudy, getNextCaseStudy } from "@/data/work";
+import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 
@@ -47,6 +47,52 @@ function renderBold(text: string) {
   });
 }
 
+/** Section eyebrow — hairline tick + mono label, sticky on desktop. */
+function Eyebrow({ children, sticky = false }: { children: React.ReactNode; sticky?: boolean }) {
+  return (
+    <FadeIn>
+      <div
+        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] ${
+          sticky ? "md:sticky md:top-32" : ""
+        }`}
+      >
+        <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
+        {children}
+      </div>
+    </FadeIn>
+  );
+}
+
+/** Single KPI — big figure (mask reveal), label, optional accent delta chip. */
+function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
+  return (
+    <div className="flex flex-col">
+      <RevealText
+        as="div"
+        variant="mask"
+        delay={index * 0.07}
+        className="font-display font-black text-[clamp(30px,3.2vw,46px)] leading-[1.02] tracking-[-0.03em] text-[var(--color-ink-strong)]"
+      >
+        {kpi.value}
+      </RevealText>
+      <RevealText
+        as="div"
+        variant="fade"
+        delay={index * 0.07 + 0.08}
+        className="mt-2 font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)] leading-[1.5]"
+      >
+        {kpi.label}
+      </RevealText>
+      {kpi.delta && (
+        <span className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-[var(--color-accent)]">
+          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]" />
+          {kpi.delta}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export default function CaseStudyPage() {
   const params = useParams<{ slug: string }>();
   const study = getCaseStudy(params.slug);
@@ -56,6 +102,9 @@ export default function CaseStudyPage() {
   // locked when arriving via client-side navigation from the horizontal home.
   useEffect(() => {
     document.documentElement.removeAttribute("data-panel-theme");
+    // Defensive: clear any leaked scroll-lock so the detail page always scrolls.
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
     window.scrollTo(0, 0);
   }, []);
 
@@ -92,9 +141,8 @@ export default function CaseStudyPage() {
       </motion.header>
 
       {/* ============ HERO ============ */}
-      <section className="relative min-h-screen flex flex-col justify-end px-6 md:px-12 pb-24 pt-40 md:pt-48 overflow-hidden bg-[var(--color-bg-deep)]">
+      <section className="relative min-h-[78vh] flex flex-col justify-end px-6 md:px-12 pb-20 pt-36 md:pt-40 overflow-hidden bg-[var(--color-bg-deep)]">
         <div className="max-w-[1400px] mx-auto w-full relative z-10">
-          {/* Meta — the one Spark lives here */}
           <motion.div
             className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)] mb-12 flex-wrap"
             initial={{ opacity: 0, y: 20 }}
@@ -109,7 +157,6 @@ export default function CaseStudyPage() {
             <span>{study.year}</span>
           </motion.div>
 
-          {/* Client — the one red label kicker */}
           <motion.h2
             className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--color-accent)] mb-6"
             initial={{ opacity: 0, x: -20 }}
@@ -119,7 +166,6 @@ export default function CaseStudyPage() {
             {study.client}
           </motion.h2>
 
-          {/* Project name (huge · upright · weight-driven) */}
           <h1 className="font-display font-black text-[clamp(56px,11vw,180px)] leading-[0.9] tracking-[-0.04em] text-[var(--color-ink-strong)] mb-12 max-w-[1100px]">
             <span className="block overflow-hidden">
               <motion.span
@@ -133,7 +179,6 @@ export default function CaseStudyPage() {
             </span>
           </h1>
 
-          {/* Tagline */}
           <motion.p
             className="font-display text-[clamp(20px,2vw,28px)] text-[var(--color-ink)] max-w-[720px] leading-[1.4] tracking-tight"
             initial={{ opacity: 0, y: 20 }}
@@ -166,61 +211,56 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
-      {/* ============ The Challenge ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--color-bg-deep)]">
-        <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
-          <FadeIn>
-            <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] md:sticky md:top-32">
-              <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
-              The challenge
-            </div>
-          </FadeIn>
+      {/* ============ Impact + KPIs (the market-facing star) ============ */}
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+        <div className="max-w-[1100px] mx-auto">
+          <Eyebrow>The impact</Eyebrow>
 
           <RevealText
-            as="h3"
+            as="p"
             variant="mask"
-            delay={0.1}
-            className="font-display text-[clamp(28px,3vw,42px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink)]"
+            className="mt-8 font-display font-medium text-[clamp(28px,4vw,54px)] leading-[1.14] tracking-[-0.025em] text-[var(--color-ink)] max-w-[960px]"
           >
-            {study.challenge}
+            {study.impact}
+          </RevealText>
+
+          <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-12 border-t border-[var(--color-line)] pt-12 md:grid-cols-4">
+            {study.kpis.map((kpi, i) => (
+              <KpiCard key={kpi.label} kpi={kpi} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ Context ============ */}
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+        <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
+          <Eyebrow sticky>Context</Eyebrow>
+          <RevealText
+            as="p"
+            variant="fade"
+            className="font-display text-[clamp(20px,2.4vw,30px)] leading-[1.4] tracking-[-0.01em] text-[var(--color-ink)] max-w-[780px]"
+          >
+            {study.context}
           </RevealText>
         </div>
       </section>
 
-      {/* ============ Approach (numbered list) ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12 mb-16 items-baseline">
-            <FadeIn>
-              <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)]">
-                <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
-                The approach
-              </div>
-            </FadeIn>
-            <RevealText
-              as="h3"
-              variant="mask"
-              className="font-display font-medium text-[clamp(36px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-[var(--color-ink)]"
-            >
-              How we{" "}
-              <span className="font-black text-[var(--color-ink-strong)]">
-                shipped
-              </span>{" "}
-              it
-            </RevealText>
-          </div>
-
-          <div className="space-y-px bg-[var(--color-line)] border-y border-[var(--color-line)]">
-            {study.approach.map((step, i) => (
+      {/* ============ What I did ============ */}
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+        <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
+          <Eyebrow sticky>What I did</Eyebrow>
+          <div className="border-y border-[var(--color-line)]">
+            {study.contributions.map((c, i) => (
               <div
                 key={i}
-                className="grid grid-cols-[60px_1fr] md:grid-cols-[120px_1fr] gap-6 md:gap-12 px-6 py-10 bg-[var(--color-bg-mid)] hover:bg-[var(--color-bg-soft)] transition-colors duration-500"
+                className="grid grid-cols-[48px_1fr] gap-5 md:gap-8 border-b border-[var(--color-line)] py-6 last:border-b-0 md:py-7"
               >
                 <RevealText
                   as="div"
                   variant="mask"
                   delay={i * 0.04}
-                  className="section-num text-[clamp(40px,5vw,64px)] leading-none"
+                  className="section-num text-[clamp(22px,2.2vw,32px)] leading-none"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </RevealText>
@@ -228,9 +268,9 @@ export default function CaseStudyPage() {
                   as="p"
                   variant="fade"
                   delay={i * 0.04 + 0.06}
-                  className="text-[clamp(16px,1.4vw,20px)] leading-[1.55] text-[var(--color-ink)] pt-2"
+                  className="text-[clamp(15px,1.35vw,19px)] leading-[1.55] text-[var(--color-ink)]"
                 >
-                  {renderBold(step)}
+                  {renderBold(c)}
                 </RevealText>
               </div>
             ))}
@@ -238,65 +278,9 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
-      {/* ============ Outcome + metrics ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--color-bg-soft)]">
-        <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
-          <FadeIn>
-            <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] md:sticky md:top-32">
-              <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
-              The outcome
-            </div>
-          </FadeIn>
-
-          <div>
-            <RevealText
-              as="h3"
-              variant="mask"
-              className="font-display font-black text-[clamp(36px,6vw,72px)] leading-[0.95] tracking-[-0.03em] text-[var(--color-ink-strong)]"
-            >
-              {study.outcome.headline}
-            </RevealText>
-
-            <RevealText
-              as="p"
-              variant="fade"
-              delay={0.1}
-              className="text-lg text-[var(--color-ink-muted)] leading-[1.6] max-w-[680px] mb-16 mt-8"
-            >
-              {study.outcome.description}
-            </RevealText>
-
-            {study.outcome.metrics && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-[var(--color-line)]">
-                {study.outcome.metrics.map((m, i) => (
-                  <div key={i}>
-                    <RevealText
-                      as="div"
-                      variant="mask"
-                      delay={0.15 + i * 0.08}
-                      className="font-display font-black text-[clamp(40px,5vw,72px)] leading-none tracking-[-0.04em] mb-2 text-[var(--color-ink-strong)]"
-                    >
-                      {m.value}
-                    </RevealText>
-                    <RevealText
-                      as="div"
-                      variant="fade"
-                      delay={0.22 + i * 0.08}
-                      className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)]"
-                    >
-                      {m.label}
-                    </RevealText>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* ============ Technologies + external link ============ */}
       {(study.technologies || study.externalLink) && (
-        <section className="relative z-[2] px-6 md:px-12 py-24 bg-[var(--color-bg-deep)] border-t border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-24 bg-[var(--color-bg-soft)] border-t border-[var(--color-line)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
             {study.technologies && (
               <FadeIn>
