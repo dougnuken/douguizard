@@ -25,6 +25,14 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+// Variable Fraunces (continuous weight axis) — used only by the interactive
+// TextPressure wordmark so font-variation-settings can interpolate smoothly.
+const frauncesVF = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces-vf",
+  display: "swap",
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -84,7 +92,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} ${frauncesVF.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

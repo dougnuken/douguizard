@@ -2,6 +2,9 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
+import SplitText from "@/components/text/SplitText";
+import ShinyText from "@/components/text/ShinyText";
+import TextPressure from "@/components/text/TextPressure";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -25,7 +28,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-svh w-full flex-col justify-center px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-24"
+      className="relative flex min-h-svh w-full flex-col justify-between px-6 pt-24 pb-10 md:px-12 md:pt-28 md:pb-12"
     >
       <div className="mx-auto grid w-full max-w-[1400px] grid-cols-12 gap-y-8">
         <motion.p {...rise(0)} className="kicker col-span-12 flex items-center gap-2.5">
@@ -34,16 +37,21 @@ export default function Hero() {
             className="inline-block h-1.5 w-1.5 rounded-full"
             style={{ background: "var(--color-accent)" }}
           />
-          {site.availability.label}
+          <ShinyText>{site.availability.label}</ShinyText>
         </motion.p>
 
-        <motion.h1
-          {...rise(0.07)}
-          className="text-display-xl col-span-12 text-balance font-medium text-[var(--color-ink)] lg:col-span-10"
-        >
-          Designing the <span style={{ color: "var(--color-accent)" }}>human</span> side
-          of an AI era
-        </motion.h1>
+        <SplitText
+          as="h1"
+          by="words"
+          trigger="mount"
+          delay={0.12}
+          className="text-display-xl col-span-12 font-medium text-[var(--color-ink)] lg:col-span-10"
+          segments={[
+            { text: "Designing the " },
+            { text: "human", className: "text-[var(--color-accent)]" },
+            { text: " side of an AI era" },
+          ]}
+        />
 
         <motion.p {...rise(0.14)} className="kicker col-span-12">
           {site.name} — {site.role}
@@ -62,6 +70,13 @@ export default function Hero() {
           </a>
         </motion.div>
       </div>
+
+      <motion.div
+        {...rise(0.3)}
+        className="mx-auto mt-10 w-full max-w-[1400px] border-t border-[var(--color-line)] pt-6 md:pt-8"
+      >
+        <TextPressure text={site.brand} />
+      </motion.div>
     </section>
   );
 }

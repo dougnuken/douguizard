@@ -310,6 +310,38 @@
     color: transparent;
   }
 
+  /* Subtle accent shimmer sweeping across muted text (used by <ShinyText>). */
+  .shiny-text {
+    background: linear-gradient(
+      110deg,
+      var(--color-ink-muted) 0%,
+      var(--color-ink-muted) 42%,
+      var(--color-accent) 50%,
+      var(--color-ink-muted) 58%,
+      var(--color-ink-muted) 100%
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shiny-sweep 5s linear infinite;
+  }
+
+  @keyframes shiny-sweep {
+    from { background-position: 180% 0; }
+    to { background-position: -80% 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shiny-text {
+      animation: none;
+      background: none;
+      -webkit-text-fill-color: currentColor;
+      color: var(--color-ink-muted);
+    }
+  }
+
   /* ── Cosmic layers — unchanged, consumed only by .theme-dark /cv route ── */
   .cosmic-parallax-container {
     position: absolute;
