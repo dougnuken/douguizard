@@ -8,7 +8,7 @@ import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 import MockupGallery from "@/components/work/MockupGallery";
-import { BrowserGallery } from "@/components/work/BrowserFrame";
+import { BrowserGallery, BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -211,6 +211,12 @@ export default function CaseStudyPage() {
   // to the phone mockup: that is what every case shipped with before this field
   // existed, so olbo — whose data says nothing — renders exactly as it did.
   const galleryKind = study.galleryKind ?? "phone";
+
+  // The walkthrough follows the gallery unless the case says otherwise: a clip
+  // of the same product belongs in the same frame as its stills. naowee gets a
+  // browser window from its `galleryKind: "browser"` alone, and olbo — which
+  // declares neither field — stays on the handset.
+  const videoKind = study.videoKind ?? galleryKind;
 
   return (
     <MotionConfig reducedMotion="user">
@@ -586,11 +592,54 @@ export default function CaseStudyPage() {
                       : ""
                   }
                 >
-                  {/* Two columns on desktop: the phone is only ~400px wide, so
+                  {videoKind === "browser" ? (
+                    /* Landscape capture (16:10, 1920×1200). It cannot go in the
+                       400px column the phone uses — at that width a desktop UI
+                       stops being legible — so the window runs the full measure
+                       of the section and the caption sits underneath it, in the
+                       eyebrow-left / prose-right rhythm the page reads in. */
+                    <>
+                      <BrowserVideo
+                        mp4Src={video.mp4}
+                        webmSrc={video.webm}
+                        poster={videoPoster}
+                        width={video.width}
+                        height={video.height}
+                        label={video.label}
+                        // Chrome bar names the module, the way the gallery's
+                        // frames do. `label` stays the accessible name.
+                        chromeLabel={browserLabel(video.mp4)}
+                        // Caption moves below the window rather than into the
+                        // frame's own figcaption, so it can be set at prose
+                        // size instead of the 13.5px gallery caption.
+                        // The capture is a single pass through the app, not a
+                        // cycle: it opens on one screen and ends on another, so
+                        // looping would read as a glitch. It plays once, and the
+                        // control below it is how you replay — and how anyone
+                        // can stop it, which is what WCAG 2.2.2 asks of a 12s
+                        // autoplay.
+                        loop={false}
+                      />
+
+                      <FadeIn>
+                        <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
+                          <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] lg:pt-2">
+                            / Walkthrough — no sound
+                          </div>
+                          {video.caption && (
+                            <p className="max-w-[62ch] text-[17px] leading-[1.6] text-[var(--color-ink)] md:text-[19px]">
+                              {video.caption}
+                            </p>
+                          )}
+                        </div>
+                      </FadeIn>
+                    </>
+                  ) : (
+                  /* Two columns on desktop: the phone is only ~400px wide, so
                       left-aligning it alone left two thirds of the canvas empty.
                       The label and caption move beside it — the same phone-left,
                       prose-right rhythm the rest of the page reads in. Stacks
-                      back to one column on mobile. */}
+                      back to one column on mobile. */
                   <div className="grid grid-cols-1 gap-8 lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-16">
                     <DeviceVideo
                       mp4Src={video.mp4}
@@ -622,6 +671,7 @@ export default function CaseStudyPage() {
                       </div>
                     </FadeIn>
                   </div>
+                  )}
                 </div>
               )}
 

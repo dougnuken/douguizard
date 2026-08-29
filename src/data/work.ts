@@ -61,6 +61,15 @@ export interface CaseStudy {
    * instead. Omitted means "phone" — the original behaviour, so olbo is unchanged.
    */
   galleryKind?: "phone" | "browser";
+  /**
+   * Which frame `video` renders in. Omitted, it follows `galleryKind` — a clip
+   * of the same product almost always belongs in the same frame as its stills,
+   * so naowee's browser gallery gives its walkthrough a browser window for free
+   * and olbo, which declares neither field, keeps the handset it always had.
+   * Set it only when a case genuinely mixes the two (a mobile clip of a desktop
+   * platform, or the reverse).
+   */
+  videoKind?: "phone" | "browser";
   /** Extra destinations beyond externalLink — live app, source, writeups. */
   links?: { label: string; href: string }[];
   /** Who did what — authorship and collaborators, in one paragraph. */
@@ -286,6 +295,20 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     galleryKind: "browser",
+    // `videoKind` is left to follow `galleryKind`: the walkthrough is a capture
+    // of the same desktop platform the stills below it show, so it belongs in
+    // the same browser window.
+    video: {
+      webm: "/work/naowee/recorrido-ivc.webm",
+      mp4: "/work/naowee/recorrido-ivc.mp4",
+      poster: "/work/naowee/recorrido-ivc-poster.jpg",
+      label:
+        "IVC: a coordinator assigns an overdue filing to a professional",
+      caption:
+        "A coordinator clears an overdue filing: pick the professional — the picker flags who is already overloaded — confirm, and the queue counters recompute in place, 6 pending down to 5, 3 assigned up to 4.",
+      width: 1920,
+      height: 1200,
+    },
     gallery: [
       {
         src: "/work/naowee/ivc-bandeja.png",
@@ -318,9 +341,9 @@ export const caseStudies: CaseStudy[] = [
         caption: "A single venue: photos, documents and coordinates.",
       },
     ],
-    links: [
-      { label: "Demo hub", href: "https://naowee-tech.github.io/naowee-demos-hub/" },
-    ],
+    // No public link: the demo hub is an internal catalogue of prototypes, and
+    // pointing at it frames this work as demos rather than as the platform the
+    // screens and the walkthrough already show. The work speaks for itself.
     credits:
       "Head of Product at Naowee: I set direction across the platform's business modules and build the prototypes that define them — product decisions, design system and working code. I work alongside business analysts, a designer I lead, and the engineering teams that take each module to production.",
     technologies: [
