@@ -55,6 +55,12 @@ export interface CaseStudy {
   };
   /** Screenshots from /public/work/<slug>/ — alt is required, caption optional. */
   gallery?: { src: string; alt: string; caption?: string }[];
+  /**
+   * Which device frame `gallery` renders in. Mobile products ("phone") get the
+   * handset mockup; desktop web platforms ("browser") need a browser chrome
+   * instead. Omitted means "phone" — the original behaviour, so olbo is unchanged.
+   */
+  galleryKind?: "phone" | "browser";
   /** Extra destinations beyond externalLink — live app, source, writeups. */
   links?: { label: string; href: string }[];
   /** Who did what — authorship and collaborators, in one paragraph. */
@@ -224,6 +230,7 @@ export const caseStudies: CaseStudy[] = [
     team: "Product, design & engineering",
     category: "GovTech × Sports × AI-native",
     colors: ["#00c2b8", "#0a84ff"],
+    kind: "client",
     tagline:
       "Digitizing how a country runs its sport — a modular platform built design-and-engineering in one motion, with AI in the loop end to end.",
     impact:
@@ -231,17 +238,91 @@ export const caseStudies: CaseStudy[] = [
     context:
       "Colombia's sports sector ran on paper, spreadsheets, and siloed systems. As Head of Product I set the direction and built SUID end to end — a single design system, AI in the loop, and real operators in mind.",
     contributions: [
-      "**Product direction** across 9+ modules — inspection & control, events, venues, incentives, convocatorias and live scoring.",
-      "**One design system** (naowee-*) — 38+ components, canonical shells and wizards keeping every module consistent.",
-      "**AI-native build** — prototyping in code with Claude Code, Cursor and Gemini: idea to working screen in hours.",
-      "**Guided tours per user story** so analysts sign off requirements against the running product.",
+      "**Product direction across 8 business modules** — inspection and control over ~1,200 sports organizations and their 30 regulatory procedures, plus events, venues, incentives, convocatorias and live scoring.",
+      "**One design system, and I build in it** — 38+ naowee-* components, a canonical shell and a single wizard recipe holding 130+ screens to one language.",
+      "**Modeled the sector's real hierarchy** — committees → federations → leagues → clubs → athletes, with cascading approval and the federation's double validation; events enter by .xlsx template with partial load and row-numbered errors.",
+      "**Working prototypes instead of specs** — built in code with Claude Code, Cursor and Gemini, then walked story by story through guided tours so analysts sign off against the running product.",
     ],
     kpis: [
-      { value: "9+", label: "Modules unified", delta: "one platform" },
-      { value: "38+", label: "System components", delta: "one language" },
+      { value: "30", label: "Procedures digitized", delta: "Word, email and GESDOC before" },
+      { value: "~1,200", label: "Sports organizations in scope" },
+      { value: "130+", label: "Screens shipped", delta: "across 8 business modules" },
       { value: "Hours", label: "Idea → working screen", delta: "not sprints" },
-      { value: "12+", label: "Operator roles modeled" },
     ],
+    process: [
+      {
+        phase: "01",
+        title: "The sector ran on files, not systems",
+        body: "I joined as a product designer and spent the first weeks reading how the sector actually works. Colombia's Ministry of Sport supervises around 1,200 sports organizations through 30 regulatory procedures — recognition, inspection, sanctions — and every one of them moved through a Word template, an email thread and a document manager called GESDOC. Events ran on loose spreadsheets passed between people. Nothing was a system; everything was a file. Before drawing a single screen I mapped 45+ states and 15 roles across the inspection flow, because the states were the product. The interface was going to be the easy part.",
+      },
+      {
+        phase: "02",
+        title: "The problem wasn't the screens",
+        body: "Once modules started multiplying the real failure showed up: eight business modules, each with its own buttons, its own tables, its own idea of a wizard. Analysts couldn't tell whether something was a rule or a rendering accident. So I stopped drawing screens and built the language — one design system, 38+ components, a canonical shell, one wizard recipe, one badge semantics map. The rule I hold myself and everyone else to: no custom component, ever; if the system lacks something, you extend the system. 130+ screens later that is what keeps eight modules reading as one product.",
+      },
+      {
+        phase: "03",
+        title: "Athletes and events, modeled by building them",
+        body: "The two domains that looked simplest were the hardest. Athlete registration isn't a form: Colombian sport is a chain — committees, federations, leagues, clubs, athletes — where each level approves the one below, a federation needs both the Ministry and its committee to sign off, and an approved athlete inherits the club's league and federation. Events aren't a form either. Everything enters by template: download the .xlsx, fill it, upload it; valid rows load even when others fail, and failures come back listed by row number. Results, medal tables and rankings land the same way, across 83 parameterized sports. I designed both by building them — running prototypes in code, AI in the loop.",
+      },
+      {
+        phase: "04",
+        title: "The prototype is what gets signed",
+        body: "Today I set product direction and I build. A module starts as a working prototype, not a document: real roles, real states, clickable. On top of it I ship a guided tour that walks an analyst through one user story at a time — the task, why it exists, and a spotlight on where to click — across screens and across roles. Business signs off against the product running, not against a spec everyone will read differently in two months. Engineering receives something already resolved, and my acceptance review is whether the built version is identical to the demo. The design system is the contract; the demo is how we sign it.",
+      },
+    ],
+    decisions: [
+      {
+        title: "One system, or eight dialects",
+        body: "Eight business modules, each with its own deadline and its own pressure to just ship. I could have let each build its own components and reconciled later. Instead every module builds from the same 38+ components and extends them through an override pattern rather than forking. It costs time at the start of each module and pays back on every review: when something looks wrong, it is a bug, not a preference.",
+      },
+      {
+        title: "The demo is the requirement, not the document",
+        body: "Specs get approved and then read differently by everyone who touches them. So what business signs is a working prototype with real roles and states, walked through one user story at a time. Disagreement surfaces while it is still cheap, and engineering gets a resolved target instead of an interpretation. It only works because I build the prototype myself — a doc-to-mockup-to-dev chain is too slow to argue with.",
+      },
+      {
+        title: "The hierarchy is the product, not a lookup table",
+        body: "A flat athlete table would have shipped months earlier. But Colombian sport is a chain of approvals: a federation needs both the Ministry and its committee, a league needs its federation, a club needs its league, an athlete needs a club — and nobody can approve while their own status is still pending. I modeled the chain, including the athlete with no club, because reporting medals by league only means something if the links are real.",
+      },
+    ],
+    galleryKind: "browser",
+    gallery: [
+      {
+        src: "/work/naowee/ivc-bandeja.png",
+        alt: "The IVC coordinator's assignment queue: counters reading 6 in referral, 3 assigned and 3 in validation, above a table of 25 procedures listing each filing number, the sports organization and its NIT, days remaining, status and assigned professional.",
+        caption: "The coordinator's queue: every procedure with a deadline and an owner.",
+      },
+      {
+        src: "/work/naowee/ivc-workspace-tramite.png",
+        alt: "The professional's workspace on procedure IVC-2026-005: 18 days left on the deadline beside a checklist of 7 documents, each citing the article of Decreto 1387/1970 it answers, with validate, reject or observe available per document.",
+        caption: "Each document checked against the article it has to answer.",
+      },
+      {
+        src: "/work/naowee/project-panel-admin.png",
+        alt: "The convocatorias administrator panel: 1 of 7 calls open, 33 applications, 10 at the documentary stage and 30.5 million COP in active investment, over lists of recent applications and currently active calls.",
+        caption: "Investment calls, applications and stages in a single panel.",
+      },
+      {
+        src: "/work/naowee/project-revision-area-tecnica.png",
+        alt: "Technical-area review of application RAD-2026-003: an assigned-area notice with its SLA, an architectural checklist where every item cites its article of Resolución 933 and is marked compliant or unverified, progress at 4 of 6, and a panel of the uploaded documents.",
+        caption: "One of eight technical areas, reviewed article by article.",
+      },
+      {
+        src: "/work/naowee/escenarios-mapa.png",
+        alt: "The georeferenced sports-venue registry: a choropleth of Colombia shaded by department, with filters for region, venue type, status and CAR, beside a ranking of departments and an intensity legend.",
+        caption: "The country's sports venues, department by department.",
+      },
+      {
+        src: "/work/naowee/escenarios-perfil-escenario.png",
+        alt: "The profile of the venue Centro deportivo Norte, carrying a CAR badge: a photo carousel above tabs for general information, documentation and history, showing department, municipality, cadastral registration and coordinates.",
+        caption: "A single venue: photos, documents and coordinates.",
+      },
+    ],
+    links: [
+      { label: "Demo hub", href: "https://naowee-tech.github.io/naowee-demos-hub/" },
+    ],
+    credits:
+      "Head of Product at Naowee: I set direction across the platform's business modules and build the prototypes that define them — product decisions, design system and working code. I work alongside business analysts, a designer I lead, and the engineering teams that take each module to production.",
     technologies: [
       "Product Strategy",
       "Design Systems",

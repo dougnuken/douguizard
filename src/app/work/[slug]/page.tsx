@@ -8,9 +8,33 @@ import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 import MockupGallery from "@/components/work/MockupGallery";
+import { BrowserGallery } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+/**
+ * Address-bar text for a desktop screen, derived from its own file path.
+ *
+ * Screenshots live at `/work/<slug>/<module>-<screen>.png`, so the leading
+ * segment of the filename is the sub-product the screen belongs to. That is
+ * worth surfacing: a browser gallery can hold screens from several systems
+ * (Naowee's runs IVC, Project and Escenarios back to back) and the captions
+ * describe what a screen *does*, never which product it is part of. Without
+ * this the six screens read as one app.
+ *
+ * It is a label, not a URL — no domain is claimed, and every part of it comes
+ * from the path itself, so nothing is hardcoded to one case. Returns
+ * `undefined` when the path yields nothing, and the frame renders bare chrome.
+ */
+function browserLabel(src: string): string | undefined {
+  const parts = src.split("/").filter(Boolean);
+  const product = parts.at(-2);
+  const moduleName = parts.at(-1)?.replace(/\.\w+$/, "").split("-")[0];
+  if (!product) return moduleName;
+  if (!moduleName || moduleName === product) return product;
+  return `${product} · ${moduleName}`;
+}
 
 /** Container-level fade + rise, on scroll into view. For eyebrows and groups. */
 function FadeIn({
@@ -179,6 +203,14 @@ export default function CaseStudyPage() {
   const videoPoster = study.video?.poster ?? study.gallery?.[0]?.src;
   const video = videoPoster && study.video ? study.video : undefined;
   const hasGallery = Boolean(study.gallery && study.gallery.length > 0);
+
+  // Which frame the screens render in. The data layer declares it per case
+  // (`galleryKind`), because only the case knows whether its product is a phone
+  // or a desktop platform — no filename or aspect-ratio heuristic can tell a
+  // tall screenshot of a web app from a handset capture. Absent, it falls back
+  // to the phone mockup: that is what every case shipped with before this field
+  // existed, so olbo — whose data says nothing — renders exactly as it did.
+  const galleryKind = study.galleryKind ?? "phone";
 
   return (
     <MotionConfig reducedMotion="user">
@@ -536,7 +568,8 @@ export default function CaseStudyPage() {
       {/* ============ The product — device gallery (optional) ===============
           Placed straight after the decisions so the screens read as evidence
           for the argument just made, not as decoration at the end. Wider
-          container than the prose sections so four phones get real room. */}
+          container than the prose sections so four phones — or a full-bleed
+          browser window — get real room. */}
       {(hasGallery || video) && (
         <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
           <div className="max-w-[1400px] mx-auto">
@@ -592,19 +625,44 @@ export default function CaseStudyPage() {
                 </div>
               )}
 
-              {study.gallery && study.gallery.length > 0 && (
-                <MockupGallery
-                  ariaLabel={`${study.project} — product screens`}
-                  hint="Swipe →"
-                  items={study.gallery.map((g, i) => ({
-                    id: g.src,
-                    src: g.src,
-                    alt: g.alt,
-                    caption: g.caption,
-                    eyebrow: String(i + 1).padStart(2, "0"),
-                  }))}
-                />
-              )}
+              {study.gallery &&
+                study.gallery.length > 0 &&
+                (galleryKind === "browser" ? (
+                  /* Desktop platform: a browser window, not a handset. The
+                     captures are 16:10 at 2880×1800 — one is 2160×1350, which
+                     shares the ratio, so the grid does not move and the frame's
+                     defaults cover both. */
+                  <BrowserGallery
+                    ariaLabel={`${study.project} — product screens`}
+                    /* Two full-bleed leaders instead of the component's default
+                       of one. The screens arrive in same-product pairs, and a
+                       single leader would offset the grid so each row straddled
+                       two different systems — inviting a comparison that does
+                       not exist. Two leaders leave the remainder to pair inside
+                       its own product. */
+                    featureCount={2}
+                    items={study.gallery.map((g, i) => ({
+                      id: g.src,
+                      src: g.src,
+                      alt: g.alt,
+                      caption: g.caption,
+                      eyebrow: String(i + 1).padStart(2, "0"),
+                      label: browserLabel(g.src),
+                    }))}
+                  />
+                ) : (
+                  <MockupGallery
+                    ariaLabel={`${study.project} — product screens`}
+                    hint="Swipe →"
+                    items={study.gallery.map((g, i) => ({
+                      id: g.src,
+                      src: g.src,
+                      alt: g.alt,
+                      caption: g.caption,
+                      eyebrow: String(i + 1).padStart(2, "0"),
+                    }))}
+                  />
+                ))}
             </div>
           </div>
         </section>
