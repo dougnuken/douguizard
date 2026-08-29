@@ -91,7 +91,11 @@
   html {
     overflow-x: hidden;
     overflow-y: auto;
-    overscroll-behavior: none;
+    /* NOTE: `overscroll-behavior: none` here (and on body) silently broke wheel
+       scrolling on every /work/[slug] route. `overflow-x: hidden` makes body a
+       scroll container with no overflow of its own, so the wheel needs to chain
+       up to the viewport — which `none` forbids. Home and /cv hid the bug by
+       scrolling programmatically (HorizontalShell's wheel handler, Lenis). */
     touch-action: pan-y;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -112,7 +116,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    overscroll-behavior: none;
     width: 100%;
     max-width: 100vw;
     position: relative;
