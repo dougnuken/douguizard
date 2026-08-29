@@ -8,6 +8,7 @@ import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 import MockupGallery from "@/components/work/MockupGallery";
+import DeviceVideo from "@/components/work/DeviceVideo";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -91,6 +92,30 @@ function EyebrowHeading({
   );
 }
 
+/**
+ * Micro-label that separates a model-powered capability from product depth.
+ * Deliberately quiet: same mono/uppercase register as every other label on the
+ * page, with the accent reserved for the AI ones — the dot is the only extra
+ * mark, and it is the same dot the decisions and KPI deltas already use.
+ * Renders nothing when a feature declares no `kind`, so nothing is mislabelled.
+ */
+function FeatureKind({ kind }: { kind?: "ai" | "product" }) {
+  if (!kind) return null;
+  const isAi = kind === "ai";
+  return (
+    <div
+      className={`flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] uppercase ${
+        isAi ? "text-[var(--color-accent)]" : "text-[var(--color-ink-dim)]"
+      }`}
+    >
+      {isAi && (
+        <span aria-hidden className="h-1 w-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
+      )}
+      {isAi ? "AI" : "Product"}
+    </div>
+  );
+}
+
 /** Single KPI — big figure (mask reveal), label, optional accent delta chip. */
 function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
   return (
@@ -146,6 +171,14 @@ export default function CaseStudyPage() {
   // top, repeating the same URL in the colophon is noise. Client cases have no
   // `links`, so their "Live link" block is untouched.
   const showExternalLink = Boolean(study.externalLink) && !study.links?.length;
+
+  // A poster is what keeps the clip from being a blank box before it decodes,
+  // so it is a precondition for rendering the video at all. `video.poster` is
+  // optional in the data, so fall back to the first screenshot of the same
+  // product; with neither, the video block simply does not render.
+  const videoPoster = study.video?.poster ?? study.gallery?.[0]?.src;
+  const video = videoPoster && study.video ? study.video : undefined;
+  const hasGallery = Boolean(study.gallery && study.gallery.length > 0);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -437,26 +470,141 @@ export default function CaseStudyPage() {
         </section>
       )}
 
+      {/* ============ Capabilities — what the product can do (optional) =====
+          Sits between the decisions and the screens: first why the calls were
+          made, then what the thing actually does, then what it looks like doing
+          it. Shares the mid band with "The product" so the two read as one
+          block of evidence, cut off from the prose above by the band change. */}
+      {study.features && study.features.length > 0 && (
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-t border-[var(--color-line)]">
+          <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
+            <EyebrowHeading sticky>What it can do</EyebrowHeading>
+            <div>
+              {study.featuresIntro && (
+                <RevealText
+                  as="p"
+                  variant="fade"
+                  className="max-w-[780px] font-display text-[clamp(19px,1.9vw,26px)] leading-[1.4] tracking-[-0.01em] text-[var(--color-ink)]"
+                >
+                  {study.featuresIntro}
+                </RevealText>
+              )}
+
+              {/* Two-up on desktop with real rules between the cells: the grid
+                  carries no gap, the padding does the spacing, so the hairlines
+                  meet instead of floating. Collapses to a single column. */}
+              <ul
+                className={`m-0 grid list-none grid-cols-1 border-t border-[var(--color-line)] p-0 md:grid-cols-2 ${
+                  study.featuresIntro ? "mt-12 md:mt-16" : ""
+                }`}
+              >
+                {study.features.map((f, i) => {
+                  const d = Math.min(i * 0.05, 0.25);
+                  return (
+                    <li
+                      key={f.title}
+                      className="border-b border-[var(--color-line)] py-8 md:py-10 md:odd:border-r md:odd:pr-10 md:odd:last:border-r-0 md:even:pl-10"
+                    >
+                      <FeatureKind kind={f.kind} />
+                      <RevealText
+                        as="h3"
+                        variant="mask"
+                        delay={d}
+                        className={`font-display font-medium text-[clamp(19px,1.8vw,25px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink-strong)] ${
+                          f.kind ? "mt-3" : ""
+                        }`}
+                      >
+                        {f.title}
+                      </RevealText>
+                      <RevealText
+                        as="p"
+                        variant="fade"
+                        delay={d + 0.06}
+                        className="mt-3.5 max-w-[540px] text-[clamp(14.5px,1.2vw,17px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                      >
+                        {renderBold(f.body)}
+                      </RevealText>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ============ The product — device gallery (optional) ===============
           Placed straight after the decisions so the screens read as evidence
           for the argument just made, not as decoration at the end. Wider
           container than the prose sections so four phones get real room. */}
-      {study.gallery && study.gallery.length > 0 && (
+      {(hasGallery || video) && (
         <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
           <div className="max-w-[1400px] mx-auto">
             <EyebrowHeading>The product</EyebrowHeading>
             <div className="mt-12 md:mt-16">
-              <MockupGallery
-                ariaLabel={`${study.project} — product screens`}
-                hint="Swipe →"
-                items={study.gallery.map((g, i) => ({
-                  id: g.src,
-                  src: g.src,
-                  alt: g.alt,
-                  caption: g.caption,
-                  eyebrow: String(i + 1).padStart(2, "0"),
-                }))}
-              />
+              {/* Moving image first: it wins the attention, and the stills below
+                  are then something to stop on. A rule separates the two so the
+                  clip is not mistaken for a fifth screenshot. */}
+              {video && videoPoster && (
+                <div
+                  className={
+                    hasGallery
+                      ? "mb-14 border-b border-[var(--color-line)] pb-14 md:mb-16 md:pb-16"
+                      : ""
+                  }
+                >
+                  {/* Two columns on desktop: the phone is only ~400px wide, so
+                      left-aligning it alone left two thirds of the canvas empty.
+                      The label and caption move beside it — the same phone-left,
+                      prose-right rhythm the rest of the page reads in. Stacks
+                      back to one column on mobile. */}
+                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-16">
+                    <DeviceVideo
+                      mp4Src={video.mp4}
+                      webmSrc={video.webm}
+                      poster={videoPoster}
+                      width={video.width}
+                      height={video.height}
+                      label={video.label}
+                      // Caption moves to the right column so it is not trapped
+                      // in a 400px measure; the video keeps `label` for a11y.
+                      // The capture is a single pass through the app, not a cycle:
+                      // it opens on one screen and ends on another, so looping
+                      // would read as a glitch. It plays once, and the control
+                      // below it is how you replay — and how anyone can stop it,
+                      // which is what WCAG 2.2.2 asks of a 12s autoplay.
+                      loop={false}
+                    />
+
+                    <FadeIn>
+                      <div className="lg:pt-2">
+                        <div className="mb-6 font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+                          / Walkthrough — no sound
+                        </div>
+                        {video.caption && (
+                          <p className="max-w-[46ch] text-[17px] leading-[1.6] text-[var(--color-ink)] md:text-[19px]">
+                            {video.caption}
+                          </p>
+                        )}
+                      </div>
+                    </FadeIn>
+                  </div>
+                </div>
+              )}
+
+              {study.gallery && study.gallery.length > 0 && (
+                <MockupGallery
+                  ariaLabel={`${study.project} — product screens`}
+                  hint="Swipe →"
+                  items={study.gallery.map((g, i) => ({
+                    id: g.src,
+                    src: g.src,
+                    alt: g.alt,
+                    caption: g.caption,
+                    eyebrow: String(i + 1).padStart(2, "0"),
+                  }))}
+                />
+              )}
             </div>
           </div>
         </section>

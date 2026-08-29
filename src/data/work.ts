@@ -39,6 +39,20 @@ export interface CaseStudy {
   process?: { phase: string; title: string; body: string }[];
   /** The calls worth defending — each one a choice and its reasoning. */
   decisions?: { title: string; body: string }[];
+  /** Lead-in paragraph that frames the capability list below it. */
+  featuresIntro?: string;
+  /** Standout capabilities — `kind` separates AI-powered ones from product depth. */
+  features?: { title: string; body: string; kind?: "ai" | "product" }[];
+  /** Silent screen recording from /public/work/<slug>/ — `label` is the accessible name, dimensions reserve the box. */
+  video?: {
+    webm?: string;
+    mp4: string;
+    poster?: string;
+    caption?: string;
+    label: string;
+    width: number;
+    height: number;
+  };
   /** Screenshots from /public/work/<slug>/ — alt is required, caption optional. */
   gallery?: { src: string; alt: string; caption?: string }[];
   /** Extra destinations beyond externalLink — live app, source, writeups. */
@@ -67,7 +81,7 @@ export const caseStudies: CaseStudy[] = [
     context:
       "Budgeting apps answer \"how much is left\" — the anxious question. I built olbo for my own household: a local-first PWA in Colombian pesos whose core is a traffic light that reads spending pace against the day of the month.",
     contributions: [
-      "**Product direction and interface** — 24 views, from the traffic-light dashboard to voice, photo-receipt and bank-SMS capture.",
+      "**Product direction and interface** — 24 views, from the traffic-light dashboard to AI capture that reads a photographed receipt, a spoken sentence or a PDF statement.",
       "**Pure domain layer** — the budget math carries no DOM, no database and no clock of its own; 634 tests run in Node in 292ms.",
       "**Zero dependencies** — vanilla ES modules the browser runs as written: no bundler, no framework, no build step.",
       "**Verifiable privacy** — a strict CSP limits the app to itself plus api.anthropic.com, so the local-first promise is readable in the header.",
@@ -114,6 +128,53 @@ export const caseStudies: CaseStudy[] = [
         body: "Local-first is a claim everyone makes. I made this one verifiable: a strict Content-Security-Policy allows scripts and styles only from the app itself and limits connect-src to 'self' plus api.anthropic.com. Nothing else can leave the device, and anyone can read the header to confirm it. It cost me every inline style — including inside SVGs — and it was the right price.",
       },
     ],
+    featuresIntro:
+      "Capture is where finance apps die. If recording an expense takes effort nobody records it, and with no data there is no pace to read and no traffic light — so olbo takes the expense however it arrives: a photo, a sentence said out loud, a bank text, a whole statement.",
+    features: [
+      {
+        title: "Photograph the receipt",
+        body: "Point the camera at a receipt and Claude reads back the total in whole pesos, the merchant, and a category taken from your own list — into a review card you confirm before anything is saved. It runs on your own Anthropic key, kept on the device, shown masked and excluded from backups.",
+        kind: "ai",
+      },
+      {
+        title: "Say the expense out loud",
+        body: "Hold the mic and speak: \"cincuenta mil en el mercado\". Colombian Spanish recognition on the device, then Claude with the tool call forced, so the answer is always a structured movement — amount, type, merchant, category, account — not free prose. It reports its own confidence; below 0.7 the card flags itself for review.",
+        kind: "ai",
+      },
+      {
+        title: "Paste the bank's text message",
+        body: "Bank alerts follow a template, so this one deliberately uses no model: an exact parser reads both of the bank's formats — one writes 50,000.00, the other $100.000 — offline, instantly, free, with no way to hallucinate an amount. An iOS Shortcut hands the message straight to the app.",
+        // Deliberately not tagged "ai": the copy's whole point is that a parser
+        // beats a model here. An AI label next to it would contradict the text.
+        kind: "product",
+      },
+      {
+        title: "Read the whole card statement",
+        body: "Hand it a PDF statement and it comes back as structured data: closing and due dates, the rate converted from annual to monthly, total, balance, and every installment purchase with its remaining term. The file is decrypted and rendered on the phone, and the CSP allows no destination but api.anthropic.com.",
+        kind: "ai",
+      },
+      {
+        title: "A conscience that talks back",
+        body: "The advisor sees your real numbers and answers in blunt Colombian Spanish — a short remark on each expense you record, and a full-screen room where you can ask. It is handed each product's installment factors, so it computes what a purchase really costs in interest, and says so when a rate is missing.",
+        kind: "product",
+      },
+      {
+        title: "The wallet: what you owe, what you're owed",
+        body: "Cards, loans and utility bills sit in one portfolio, sortable by what falls due next instead of by name. Person-to-person loans run both directions — money you lent and money you owe — with payments logged against the balance, a progress bar, and interest estimated per month and per year.",
+        kind: "product",
+      },
+    ],
+    video: {
+      webm: "/work/olbo/captura-gasto.webm",
+      mp4: "/work/olbo/captura-gasto.mp4",
+      poster: "/work/olbo/captura-gasto-poster.jpg",
+      label:
+        "Screen recording of olbo: an expense of 120.000 Colombian pesos typed on the app's own keypad, categorized and saved, then the dashboard and the movements list recalculating.",
+      caption:
+        "The floor every capture path lands on: 120.000 pesos in four taps, the balance counting down, and the pace recalculated before the sheet finishes closing.",
+      width: 786,
+      height: 1704,
+    },
     gallery: [
       {
         src: "/work/olbo/semaforo-verde.png",
