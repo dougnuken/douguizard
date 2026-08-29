@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
+import MockupGallery from "@/components/work/MockupGallery";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -63,6 +64,33 @@ function Eyebrow({ children, sticky = false }: { children: React.ReactNode; stic
   );
 }
 
+/**
+ * Same visual language as `Eyebrow`, but a real `<h2>`.
+ * Used by the optional narrative sections so the document keeps a genuine
+ * heading outline (h1 project → h2 section → h3 phase/decision) without
+ * introducing a second, louder header style.
+ */
+function EyebrowHeading({
+  children,
+  sticky = false,
+}: {
+  children: React.ReactNode;
+  sticky?: boolean;
+}) {
+  return (
+    <FadeIn>
+      <h2
+        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] ${
+          sticky ? "md:sticky md:top-32" : ""
+        }`}
+      >
+        <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
+        {children}
+      </h2>
+    </FadeIn>
+  );
+}
+
 /** Single KPI — big figure (mask reveal), label, optional accent delta chip. */
 function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
   return (
@@ -113,6 +141,11 @@ export default function CaseStudyPage() {
   }
 
   const next = getNextCaseStudy(study.slug);
+
+  // `links` supersedes `externalLink`: when a case lists its destinations up
+  // top, repeating the same URL in the colophon is noise. Client cases have no
+  // `links`, so their "Live link" block is untouched.
+  const showExternalLink = Boolean(study.externalLink) && !study.links?.length;
 
   return (
     <MotionConfig reducedMotion="user">
@@ -211,6 +244,47 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
+      {/* ============ Open it — prominent destinations (optional) ============
+          Sits directly under the meta strip so a live product is one click away
+          before the reader commits to the long read. Only cases that ship
+          something public carry `links`. */}
+      {study.links && study.links.length > 0 && (
+        <section className="relative z-[2] px-6 md:px-12 py-10 bg-[var(--color-bg-deep)] border-b border-[var(--color-line)]">
+          {/* Same 4-col grid as the meta strip above, so the label and the
+              links land on the columns the reader's eye already learned. */}
+          <div className="max-w-[1400px] mx-auto grid grid-cols-1 gap-6 md:grid-cols-4 md:items-baseline md:gap-8">
+            <FadeIn>
+              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+                / Open it
+              </div>
+            </FadeIn>
+            <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4 md:col-span-3">
+              {study.links.map((l, i) => (
+                <FadeIn key={l.href} delay={i * 0.06}>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-baseline gap-2.5 font-display text-[clamp(20px,2vw,28px)] leading-none text-[var(--color-ink)] no-underline border-b border-[var(--color-line-strong)] pb-1 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
+                  >
+                    {i === 0 && (
+                      <span
+                        aria-hidden
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]"
+                      />
+                    )}
+                    {l.label}
+                    <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1">
+                      →
+                    </span>
+                  </a>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ============ Impact + KPIs (the market-facing star) ============ */}
       <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
         <div className="max-w-[1100px] mx-auto">
@@ -278,8 +352,118 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
+      {/* ============ Process — how the work actually happened (optional) ====
+          After "What I did" (the what) comes the narrative (the how). */}
+      {study.process && study.process.length > 0 && (
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+          <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
+            <EyebrowHeading sticky>How it happened</EyebrowHeading>
+            <ol className="m-0 list-none p-0 border-t border-[var(--color-line)]">
+              {study.process.map((p, i) => (
+                <li
+                  key={p.phase}
+                  className="grid grid-cols-1 gap-4 border-b border-[var(--color-line)] py-8 md:grid-cols-[64px_1fr] md:gap-8 md:py-11"
+                >
+                  <RevealText
+                    as="div"
+                    variant="mask"
+                    delay={i * 0.04}
+                    className="section-num text-[clamp(24px,2.5vw,36px)] leading-none"
+                  >
+                    {p.phase}
+                  </RevealText>
+                  <div>
+                    <RevealText
+                      as="h3"
+                      variant="mask"
+                      delay={i * 0.04 + 0.05}
+                      className="font-display font-medium text-[clamp(21px,2.1vw,30px)] leading-[1.2] tracking-[-0.02em] text-[var(--color-ink-strong)]"
+                    >
+                      {p.title}
+                    </RevealText>
+                    <RevealText
+                      as="p"
+                      variant="fade"
+                      delay={i * 0.04 + 0.1}
+                      className="mt-4 max-w-[680px] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                    >
+                      {renderBold(p.body)}
+                    </RevealText>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* ============ Decisions — the calls worth defending (optional) ====== */}
+      {study.decisions && study.decisions.length > 0 && (
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+          <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
+            <EyebrowHeading sticky>Decisions I&apos;d defend</EyebrowHeading>
+            <ul className="m-0 list-none p-0 border-t border-[var(--color-line)]">
+              {study.decisions.map((d, i) => (
+                <li
+                  key={d.title}
+                  className="border-b border-[var(--color-line)] py-8 md:py-11"
+                >
+                  <div className="flex items-baseline gap-3.5">
+                    <span
+                      aria-hidden
+                      className="h-1.5 w-1.5 shrink-0 translate-y-[-0.35em] rounded-full bg-[var(--color-accent)]"
+                    />
+                    <RevealText
+                      as="h3"
+                      variant="mask"
+                      delay={i * 0.05}
+                      className="font-display font-medium text-[clamp(20px,2vw,28px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink-strong)]"
+                    >
+                      {d.title}
+                    </RevealText>
+                  </div>
+                  <RevealText
+                    as="p"
+                    variant="fade"
+                    delay={i * 0.05 + 0.08}
+                    className="mt-4 max-w-[680px] pl-[1.4rem] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                  >
+                    {renderBold(d.body)}
+                  </RevealText>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* ============ The product — device gallery (optional) ===============
+          Placed straight after the decisions so the screens read as evidence
+          for the argument just made, not as decoration at the end. Wider
+          container than the prose sections so four phones get real room. */}
+      {study.gallery && study.gallery.length > 0 && (
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+          <div className="max-w-[1400px] mx-auto">
+            <EyebrowHeading>The product</EyebrowHeading>
+            <div className="mt-12 md:mt-16">
+              <MockupGallery
+                ariaLabel={`${study.project} — product screens`}
+                hint="Swipe →"
+                items={study.gallery.map((g, i) => ({
+                  id: g.src,
+                  src: g.src,
+                  alt: g.alt,
+                  caption: g.caption,
+                  eyebrow: String(i + 1).padStart(2, "0"),
+                }))}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ============ Technologies + external link ============ */}
-      {(study.technologies || study.externalLink) && (
+      {(study.technologies || showExternalLink || study.credits) && (
         <section className="relative z-[2] px-6 md:px-12 py-24 bg-[var(--color-bg-soft)] border-t border-[var(--color-line)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
             {study.technologies && (
@@ -300,7 +484,7 @@ export default function CaseStudyPage() {
               </FadeIn>
             )}
 
-            {study.externalLink && (
+            {showExternalLink && study.externalLink && (
               <FadeIn delay={0.1}>
                 <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-4">
                   / Live link
@@ -316,6 +500,20 @@ export default function CaseStudyPage() {
               </FadeIn>
             )}
           </div>
+
+          {/* Authorship note — closes the colophon, same band, no extra section. */}
+          {study.credits && (
+            <div className="max-w-[1100px] mx-auto mt-14 border-t border-[var(--color-line)] pt-10">
+              <FadeIn>
+                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-4">
+                  / Authorship
+                </div>
+                <p className="max-w-[760px] text-[15px] leading-[1.65] text-[var(--color-ink-muted)]">
+                  {renderBold(study.credits)}
+                </p>
+              </FadeIn>
+            </div>
+          )}
         </section>
       )}
 

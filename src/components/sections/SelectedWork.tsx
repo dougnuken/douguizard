@@ -184,7 +184,8 @@ export default function SelectedWork() {
                 A decade of systems, products, and teams —
               </span>{" "}
               from LATAM&apos;s largest marketplace to national banks, cruise
-              lines, and early-stage startups. Five that shaped how I work.
+              lines, and early-stage startups — plus one product I designed,
+              built and shipped on my own. Seven that shaped how I work.
             </motion.p>
           </div>
 
