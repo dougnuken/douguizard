@@ -90,15 +90,16 @@ export default function RevealText({
     );
   }
 
-  // "mask" — slide up from behind an overflow clip. The pb/-mb pair gives
-  // descenders room so nothing is clipped at rest.
+  // "mask" — slide up from behind an overflow clip. The py/-my pair gives
+  // ascenders AND descenders room, so display type set at leading < 1 (the
+  // hero h1 runs at 0.92) is not clipped top or bottom at rest.
   const hidden = reduce ? { opacity: 0 } : { y: "115%" };
   const visible = reduce ? { opacity: 1 } : { y: 0 };
   return (
     <Tag className={className}>
       <span
         ref={ref as never}
-        className="block overflow-hidden pb-[0.14em] -mb-[0.14em]"
+        className="block overflow-hidden py-[0.16em] -my-[0.16em]"
       >
         <motion.span
           className="inline-block will-change-transform"

@@ -1,4 +1,23 @@
-@import "tailwindcss";
+/* Automatic source detection would also scan `docs/specs/*.md`, whose code
+   blocks are full of class names this app never renders. Scanning is scoped
+   to the app's own source instead. */
+@import "tailwindcss" source(none);
+@source "../**/*.{ts,tsx}";
+
+/* The default palette, shadow and blur scales are unused: this system has one
+   ink, one paper and one signal. Dropping them keeps the shipped CSS small. */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+  --perspective-*: initial;
+  --animate-*: initial;
+  --ease-*: initial;
+}
 
 /* ────────────────────────────────────────────────────────────────────────────
    Tailwind v4 wiring. Utilities must resolve to RUNTIME variables so a

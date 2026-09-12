@@ -4,7 +4,6 @@ import { motion, MotionConfig } from "framer-motion";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import { getCaseMeta, getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
-import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 import MockupGallery from "@/components/work/MockupGallery";
 import { BrowserGallery, BrowserVideo } from "@/components/work/BrowserFrame";
@@ -219,7 +218,6 @@ export default function CaseStudyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease }}
           >
-            <Spark size={12} />
             <span>Case study {study.num}</span>
             <span className="text-[var(--ink-dim)]">·</span>
             <span>{study.category}</span>

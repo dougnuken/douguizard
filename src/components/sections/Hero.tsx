@@ -1,102 +1,104 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import { site } from "@/data/site";
-import Spark from "@/components/Spark";
-import TrueFocus from "@/components/TrueFocus";
-import BackgroundPaths from "@/components/BackgroundPaths";
-import SplitText from "@/components/text/SplitText";
+import { sections } from "@/data/sections";
+import { getCaseStudy } from "@/data/work";
+import { currentExperience, getExperience, getWordmarks } from "@/lib/career";
+import RevealText from "@/components/text/RevealText";
+import LinkedInMark from "@/components/icons/LinkedInMark";
 
-const ease = [0.16, 1, 0.3, 1] as const;
+const panel = sections[0];
+const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+const current = currentExperience();
 
-/** Short rise + fade. Collapses to a plain fade under prefers-reduced-motion. */
-function useRise(reduceMotion: boolean) {
-  return (delay: number) => ({
-    initial: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: {
-      duration: reduceMotion ? 0.2 : 0.5,
-      delay: reduceMotion ? 0 : delay,
-      ease,
-    },
-  });
-}
+/**
+ * The sub-paragraph is composed, never typed: the first sentence comes from
+ * the current role, the last from the Andes case's own figures, so no number
+ * on this page can drift from the data behind it.
+ */
+const andes = getCaseStudy("mercadolibre-andes");
+const andesEmployer = getExperience("mercadolibre");
+const countries = andes?.kpis.find((k) => k.label === "Countries shipped to")?.value ?? "";
+const andesScale = (andes?.team ?? "").replace(", ", " and ");
+
+const SUB = `${current.role} at ${current.company.name}. I set direction across the platform and build the prototypes that define it. Before that, Andes at ${andesEmployer.company.name} — the design system behind ${countries} countries, ${andesScale}.`;
 
 export default function Hero() {
-  const reduceMotion = useReducedMotion() ?? false;
-  const rise = useRise(reduceMotion);
-
   return (
     <section
-      id="hero"
-      className="relative flex min-h-svh w-full flex-col justify-center overflow-hidden px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-28"
+      id={panel.id}
+      aria-labelledby="home-title"
+      className="relative mx-auto flex w-full max-w-[1400px] flex-col gap-7 overflow-hidden px-6 py-16 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-center lg:py-20"
     >
-      {/* Animated flowing paths — subtle cinematic background motion */}
-      <BackgroundPaths className="text-[var(--ink)] opacity-[0.16]" />
+      <span aria-hidden className="glow-corner" />
 
-      {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-1/2 w-screen -translate-x-1/2 select-none overflow-hidden"
-      >
-        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[19vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--ink)] opacity-[0.05]">
-          Douguizard
-        </span>
-      </div>
+      <div className="relative z-[1] flex flex-col gap-7">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="kicker">Product × Systems × Code</p>
+          <span aria-hidden className="hidden h-3 w-px bg-[var(--line-strong)] sm:block" />
+          <p className="kicker text-[var(--ink-dim)]">{site.availability.label}</p>
+        </div>
 
-      <div className="relative z-[1] mx-auto grid w-full max-w-[1400px] grid-cols-12 gap-y-8">
-        <motion.p
-          {...rise(0)}
-          className="kicker col-span-12 flex items-center gap-2.5"
+        <h1
+          id="home-title"
+          className="max-w-[22ch] font-display text-[length:var(--step-display)] font-extrabold leading-[0.92] tracking-[-0.035em] text-[var(--ink)]"
         >
-          <Spark size={13} />
-          {site.availability.label}
-        </motion.p>
+          <RevealText as="span" variant="mask" className="block">
+            I direct the product,
+          </RevealText>
+          <RevealText as="span" variant="mask" delay={0.08} className="block">
+            then I build it.
+          </RevealText>
+        </h1>
 
-        <SplitText
-          tag="h1"
-          text="Designing the human side of an AI era"
-          emphasize={["human"]}
-          emphasizeClassName="font-black text-[var(--ink)]"
-          className="text-display-xl col-span-12 text-balance font-medium text-[var(--ink)] lg:col-span-10"
-          splitType="chars"
-          delay={26}
-          duration={0.7}
-          startDelay={0.12}
-        />
-
-        <motion.div {...rise(0.12)} className="col-span-12 pt-1">
-          <TrueFocus
-            sentence="Design Build Ship"
-            className="justify-start font-display text-[clamp(24px,3.2vw,48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
-          />
-        </motion.div>
-
-        <motion.p {...rise(0.16)} className="kicker col-span-12">
+        <RevealText as="p" variant="fade" delay={0.12} className="kicker">
           {site.name} — {site.headline}
-        </motion.p>
+        </RevealText>
 
-        <motion.div
-          {...rise(0.21)}
-          className="col-span-12 flex flex-wrap items-center gap-4 pt-4"
+        <RevealText
+          as="p"
+          variant="fade"
+          delay={0.18}
+          className="max-w-[58ch] text-[length:var(--step-lead)] font-normal leading-[1.45] tracking-[-0.01em] text-[var(--ink-muted)]"
         >
-          <a href="#contact" className="btn-pill btn-solid">
-            Let&apos;s talk
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path
-                d="M5 12h13M13 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
+          {SUB}
+        </RevealText>
 
-          <a href="#work" className="btn-pill btn-glass">
-            View work
+        <RevealText
+          as="div"
+          variant="fade"
+          delay={0.24}
+          className="flex flex-col gap-3 sm:flex-row sm:items-center"
+        >
+          <a
+            href={linkedin.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-pill btn-pill--solid btn-pill--signal justify-center"
+          >
+            <LinkedInMark />
+            LinkedIn
           </a>
-        </motion.div>
+          <Link href={`#${sections[1].id}`} className="btn-pill justify-center">
+            See work
+            <span aria-hidden>→</span>
+          </Link>
+        </RevealText>
+
+        <section aria-labelledby="wordmarks-label" className="hairline-t mt-4 pt-6">
+          <h2 id="wordmarks-label" className="sr-only">
+            Where I&apos;ve worked
+          </h2>
+          <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
+            {getWordmarks().map((w) => (
+              <li
+                key={w}
+                className="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--ink-dim)]"
+              >
+                {w}
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </section>
   );
