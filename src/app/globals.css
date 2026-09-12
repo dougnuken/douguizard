@@ -73,6 +73,16 @@
 
 /* ── Fluid type scale, easings, durations ────────────────────────────────── */
 :root {
+  /* The hero only. One step above `--step-display`, because the headline there
+     is the single largest thing on the site and a page title should not be able
+     to match it by accident.
+
+     It is the one type size that answers to viewport HEIGHT as well as width.
+     The hero is a fixed-height panel carrying a three-line headline plus five
+     more blocks, so on a short laptop a width-only clamp overflows and pushes
+     the calls to action off the panel. `min()` lets the width term win on a
+     tall screen and the height term take over on a short one. */
+  --step-display-xl: clamp(3.25rem, min(8.4vw, 12vh), 9rem);
   --step-display: clamp(3rem, 1rem + 7vw, 8rem);
   --step-title: clamp(2rem, 1rem + 3.6vw, 4rem);
   --step-lead: clamp(1.25rem, 1rem + 1.1vw, 1.75rem);
@@ -539,6 +549,7 @@
        whole document rescales from these five lines. Overriding per class
        loses to the utility on the element and the sheet silently stays at
        screen size — which is how a two-page CV becomes five. */
+    --step-display-xl: 19pt;
     --step-display: 19pt;
     --step-title: 19pt;
     --step-lead: 10.5pt;

@@ -60,7 +60,11 @@ export default function RevealText({
         className={className}
         style={{
           ...timing,
-          opacity: shown ? 1 : 0,
+          // Reduced motion means the settled state, immediately — not a faster
+          // reveal. Gating opacity on `shown` here left twelve paragraphs at
+          // zero for anyone whose observer had not fired yet, which turns a
+          // motion preference into missing content.
+          opacity: reduce || shown ? 1 : 0,
           transform: reduce || shown ? "none" : "translateY(22px)",
         }}
       >
@@ -79,7 +83,7 @@ export default function RevealText({
           className="inline-block will-change-transform"
           style={{
             ...timing,
-            opacity: reduce ? (shown ? 1 : 0) : 1,
+            opacity: reduce || shown ? 1 : 1,
             transform: reduce || shown ? "none" : "translateY(115%)",
           }}
         >

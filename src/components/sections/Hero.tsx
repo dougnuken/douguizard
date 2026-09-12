@@ -5,6 +5,7 @@ import { getCaseStudy } from "@/data/work";
 import { currentExperience, getExperience, getWordmarks } from "@/lib/career";
 import RevealText from "@/components/text/RevealText";
 import LinkedInMark from "@/components/icons/LinkedInMark";
+import FocusWords from "@/components/FocusWords";
 
 const panel = sections[0];
 const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
@@ -22,43 +23,75 @@ const andesScale = (andes?.team ?? "").replace(", ", " and ");
 
 const SUB = `${current.role} at ${current.company.name}. I set direction across the platform and build the prototypes that define it. Before that, Andes at ${andesEmployer.company.name} — the design system behind ${countries} countries, ${andesScale}.`;
 
+/**
+ * The hero.
+ *
+ * Composition, hierarchy and weight come from the original: an oversized
+ * headline whose one bold word carries the claim, the Design/Build/Ship focus
+ * device under it, the wordmark sunk into the floor as texture, and content
+ * that sits low on the page rather than floating in the middle of it.
+ *
+ * What is new is what it says next — the role, the scale of the work behind it,
+ * and two ways to act on that. The old hero asserted a posture and stopped; this
+ * one backs the posture with a sentence a recruiter can check.
+ *
+ * What did not survive the move is the red and the perpetual motion. The accent
+ * appears once, on the brackets that mark the focused word, which is the one
+ * job this theme reserves it for.
+ */
 export default function Hero() {
   return (
     <section
       id={panel.id}
       aria-labelledby="home-title"
-      className="relative mx-auto flex w-full max-w-[1400px] flex-col gap-7 overflow-hidden px-6 py-16 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-center lg:py-20"
+      /* The compact rule is keyed to viewport HEIGHT, not width: a 1440x720
+         laptop is as wide as a 1440x900 one and has 180px less to work with,
+         which is exactly where the employer strip fell off the bottom. */
+      className="relative mx-auto flex w-full max-w-[1400px] flex-col justify-center overflow-hidden px-6 py-14 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-end lg:pb-14 lg:pt-10 [@media(max-height:780px)]:lg:pb-7 [@media(max-height:780px)]:lg:pt-6"
     >
-      <span aria-hidden className="glow-corner" />
-
-      <div className="relative z-[1] flex flex-col gap-7">
+      <div className="relative z-[1] flex flex-col gap-5 [@media(max-height:780px)]:gap-3">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <p className="kicker">Product × Systems × Code</p>
           <span aria-hidden className="hidden h-3 w-px bg-[var(--line-strong)] sm:block" />
           <p className="kicker text-[var(--ink-dim)]">{site.availability.label}</p>
         </div>
 
+        {/* One bold word inside a light line is the whole hierarchy: the eye lands
+            on "human" before it reads anything, which is the point being made. */}
         <h1
           id="home-title"
-          className="max-w-[22ch] font-display text-[length:var(--step-display)] font-extrabold leading-[0.92] tracking-[-0.035em] text-[var(--ink)]"
+          className="max-w-[16ch] text-balance font-display text-[length:var(--step-display-xl)] font-medium leading-[0.9] tracking-[-0.04em] text-[var(--ink)]"
         >
           <RevealText as="span" variant="mask" className="block">
-            I direct the product,
+            Designing the
           </RevealText>
-          <RevealText as="span" variant="mask" delay={0.08} className="block">
-            then I build it.
+          <RevealText as="span" variant="mask" delay={0.07} className="block">
+            <strong className="font-extrabold">human</strong> side
+          </RevealText>
+          <RevealText as="span" variant="mask" delay={0.14} className="block">
+            of an AI era
           </RevealText>
         </h1>
 
-        <RevealText as="p" variant="fade" delay={0.12} className="kicker">
+        <RevealText as="div" variant="fade" delay={0.2} className="pt-1">
+          <FocusWords
+            sentence="Design Build Ship"
+            className="justify-start font-display text-[clamp(22px,min(3.2vw,4.6vh),48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
+          />
+        </RevealText>
+
+        <RevealText as="p" variant="fade" delay={0.26} className="kicker">
           {site.name} — {site.headline}
         </RevealText>
 
         <RevealText
           as="p"
           variant="fade"
-          delay={0.18}
-          className="max-w-[58ch] text-[length:var(--step-lead)] font-normal leading-[1.45] tracking-[-0.01em] text-[var(--ink-muted)]"
+          delay={0.3}
+          /* Body size, not lead size. At lead the three lines were tall enough
+             to push the employer strip off the bottom of a short laptop, and the
+             headline above it already owns the scale. */
+          className="max-w-[86ch] text-[length:var(--step-body)] font-normal leading-[1.55] text-[var(--ink-muted)]"
         >
           {SUB}
         </RevealText>
@@ -66,7 +99,7 @@ export default function Hero() {
         <RevealText
           as="div"
           variant="fade"
-          delay={0.24}
+          delay={0.36}
           className="flex flex-col gap-3 sm:flex-row sm:items-center"
         >
           <a
@@ -84,7 +117,7 @@ export default function Hero() {
           </Link>
         </RevealText>
 
-        <section aria-labelledby="wordmarks-label" className="hairline-t mt-4 pt-6">
+        <section aria-labelledby="wordmarks-label" className="hairline-t mt-2 pt-5">
           <h2 id="wordmarks-label" className="sr-only">
             Where I&apos;ve worked
           </h2>
