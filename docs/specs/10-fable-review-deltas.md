@@ -50,6 +50,23 @@ Fecha: 2026-09-12. Este archivo manda sobre cualquier spec cuando se contradicen
 - `portal-dashboard` contiene nombres mock del producto ("Jose Manuel", "Valeria Betancurt" y un teléfono) que ya estaban públicos en Behance desde 2022 y no son créditos de terceros. Se publican tal cual; ⚠️ CONFIRMAR DOUG si prefiere difuminarlos (el manifest lo marca en `flags.mock-ui-names`).
 - Dimensiones `width`/`height` explícitas por ítem desde el `manifest.json` (el modelo `gallery[]` no las tiene: añadir `width?`/`height?` opcionales a `CaseStudy.gallery[]` y usarlas cuando existan; los casos phone/browser siguen con sus constantes).
 
+## F. EN COLA — Archive de conceptos (⚠️ NO es alcance de Build A, B1 ni B2)
+
+Doug entregó capturas de dos conceptos propios de 2023 y pidió meterlos **como pendientes, sin prioridad**. Nadie los construye hasta que se cierre la fase 1 y el QA pase. Queda escrito aquí para que no se pierda.
+
+**Assets ya preparados** en `scratchpad/concepts/` (WebP q88, listos para copiar a `public/work/<slug>/`):
+
+| Concepto | Archivos | Fuente | Densidad | Estado |
+|---|---|---|---|---|
+| **MakeAppet** — app iOS de adopción de mascotas | `makeappet-01..05.webp` | 390×844 | **1x** | ⚠️ Insuficiente. Se vería borroso dentro del marco de teléfono, que rinde a ~400 px CSS. Pedir reexportación a 3x antes de publicar. |
+| **Chub** — app iOS de alquiler de autos, dark mode | `chub-01..04.webp` | 780×1688 | 2x | Usable. |
+
+**Forma que debe tomar** (decisión de Fable, revisable):
+- **No** son casos con página de detalle. El copy del índice dice "Seven that shaped how I work", y siete es el número de casos reales; los conceptos no compiten con Naowee ni con Banco de Occidente.
+- Van en un bloque **Archive** al pie del panel Work: rejilla compacta, etiqueta mono `Concept · 2023`, un par de pantallas por pieza, sin enlace a detalle. Un nuevo tipo en el modelo (`kind: "concept"`) o una lista aparte en `src/data/concepts.ts` — lo segundo evita que los conceptos entren en `caseStudies` y descuadren `getNextCaseStudy`, la numeración `/01../07` y el conteo del copy. **Preferir `concepts.ts`.**
+- ⚠️ **Marca de terceros**: las pantallas de Chub muestran un render de un Tesla Model 3 y el nombre del modelo. Es trabajo propio de Doug, público en Behance desde 2023, pero la marca no es suya. Decisión de Doug antes de publicar: dejarlo, recortar el nombre, o usar solo las pantallas de mapa y climatización, que no llevan marca.
+- MakeAppet no se publica a 1x. O llega a 3x, o entra solo Chub.
+
 ## D. Reglas de proceso para los agentes de build
 
 1. Rama `redesign/bn-editorial`. Commits por workstream (`feat(tokens): …`, `feat(data): …`, `feat(home): …`), mensajes convencionales, **nunca push, nunca main**.
