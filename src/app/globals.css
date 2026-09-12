@@ -332,6 +332,77 @@
       transform: translateY(0);
     }
   }
+  /* ── `/cv` structure. Marker classes the print sheet keys off, plus the
+        three treatments the route needs that no utility already covers. ──── */
+  .cv-h2 {
+    margin-block-end: 1.25rem;
+    padding-block-end: 0.75rem;
+    border-block-end: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* Dense columns of grouped lines on wide screens; one flow otherwise. */
+  @media (min-width: 768px) {
+    .cv-columns {
+      column-count: 2;
+      column-gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cv-columns {
+      column-count: 3;
+    }
+  }
+
+  /* The single glow on the route, quieter than the home one and anchored to
+     the masthead's top-right. It is NOT clipped by the header box — clipping a
+     radial gradient mid-falloff draws a rectangle — so the falloff is masked
+     to nothing before it reaches the first job entry. */
+  .cv-glow {
+    inset-block: -8rem auto;
+    /* `vmax` is the viewport's LONG side, so on a 375 × 812 phone a 12vmax
+       bleed is 97 px and the element hangs past the right edge. Clamped
+       against `vw`, the bleed stays inside the viewport at every width. */
+    inset-inline-end: calc(-1 * min(12vmax, 4vw));
+    inline-size: 44vmax;
+    block-size: 44vmax;
+    opacity: 0.4;
+    /* `closest-side` (not the default `farthest-corner`) puts the transparent
+       stop ON the box edge, so the falloff finishes before the element does
+       and no rectangle is drawn — the home glow can rely on hanging off-screen
+       for that, a glow anchored to a 1,100 px column cannot. */
+    background: radial-gradient(
+      closest-side circle at 50% 50%,
+      var(--glow) 0%,
+      color-mix(in srgb, var(--signal-deep) 60%, transparent) 44%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+  }
+
+  /* `--signal-deep` is a dark navy and stays dark in the light theme, which
+     turns the mid stop into a grey smudge on paper. Light gets the soft blue. */
+  :root[data-theme="light"] .cv-glow {
+    opacity: 0.5;
+    background: radial-gradient(
+      closest-side circle at 50% 50%,
+      var(--glow) 0%,
+      color-mix(in srgb, var(--signal-soft) 20%, transparent) 46%,
+      transparent 100%
+    );
+  }
+
+  /* Rendered in the markup, revealed only by the print stylesheet. */
+  .cv-print-only {
+    display: none;
+  }
 }
 
 @layer components {

@@ -1,34 +1,36 @@
-import { site } from "@/data/site";
-
-const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+import CvExperience from "@/components/cv/CvExperience";
+import CvHeader from "@/components/cv/CvHeader";
+import CvSidebar from "@/components/cv/CvSidebar";
+import CvSkills from "@/components/cv/CvSkills";
 
 /**
- * Placeholder. The cosmic clone of the old home that used to live here is
- * gone; the real CV — built from `cv.ts`, printable, with "Download PDF" —
- * is Build B's job (`docs/specs/05-cv-page.md`).
+ * The CV, rendered from `cv.ts` + `site.ts`. A server component end to end —
+ * the only client code on the route is `PrintButton`. No WebGL, no scroll
+ * hijack, no cursor: the page has to survive a printer and a text browser.
  */
 export default function CvPage() {
   return (
     <main
       id="main"
       tabIndex={-1}
-      className="mx-auto flex w-full max-w-[68ch] flex-col gap-6 px-6 pb-24 pt-28 md:px-12"
+      className="mx-auto w-full max-w-[1100px] px-6 pb-28 pt-24 md:px-12 md:pt-28 print:px-0 print:pb-0 print:pt-0"
     >
-      <h1 className="font-display text-[length:var(--step-title)] font-semibold leading-[1.04] tracking-[-0.025em] text-[var(--ink)]">
-        {site.name}
-      </h1>
-      <p className="kicker">{site.headline}</p>
-      <p className="text-[length:var(--step-lead)] leading-[1.45] tracking-[-0.01em] text-[var(--ink-muted)]">
-        {site.summary}
-      </p>
-      <a
-        href={linkedin.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-pill w-fit"
-      >
-        {linkedin.label}
-      </a>
+      <CvHeader />
+
+      <div className="cv-grid mt-4 grid grid-cols-1 gap-x-16 gap-y-0 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0">
+          <CvExperience />
+        </div>
+        <CvSidebar />
+      </div>
+
+      {/*
+        Skills and Tools close the document at full measure rather than inside
+        the left column: the sidebar has run out by then, and a dense three-up
+        block reads better than two narrow ones beside 3,000 px of empty rail.
+        Print collapses everything to one flow, so `05 §6` is unaffected.
+      */}
+      <CvSkills />
     </main>
   );
 }
