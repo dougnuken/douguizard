@@ -20,7 +20,7 @@ function join(items: string[]) {
 
 export default function CvSkills() {
   return (
-    <div className="mt-14 flex flex-col gap-12">
+    <div className="cv-skills-block mt-14 flex flex-col gap-12">
       <section aria-labelledby="cv-skills">
         <h2 id="cv-skills" className="cv-h2">
           Skills

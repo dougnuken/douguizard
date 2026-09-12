@@ -16,7 +16,7 @@ const dot = <span aria-hidden="true">·</span>;
  */
 export default function CvHeader() {
   return (
-    <header className="relative isolate pb-10">
+    <header className="cv-header-pad relative isolate pb-10">
       <div className="glow-corner cv-glow print:hidden" aria-hidden="true" />
 
       <div className="relative z-[1] flex flex-col gap-5">
@@ -69,7 +69,7 @@ export default function CvHeader() {
           <span className="cv-print-only">{linkedinLabel}</span>
         </address>
 
-        <p className="cv-summary hairline-t max-w-[70ch] pt-6 text-[length:var(--step-body)] leading-[1.65] text-pretty text-[var(--ink-muted)]">
+        <p className="cv-summary cv-summary-lead hairline-t max-w-[70ch] pt-6 text-[length:var(--step-body)] leading-[1.65] text-pretty text-[var(--ink-muted)]">
           {site.summaryLong}
         </p>
       </div>

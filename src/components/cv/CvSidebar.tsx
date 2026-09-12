@@ -2,9 +2,19 @@ import { certifications, education, languages } from "@/data/cv";
 import { testimonials } from "@/data/testimonials";
 import { formatPoint } from "@/lib/career";
 
-function Block({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Block({
+  id,
+  title,
+  className,
+  children,
+}: {
+  id: string;
+  title: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section aria-labelledby={id} className="cv-block break-inside-avoid">
+    <section aria-labelledby={id} className={`cv-block break-inside-avoid ${className ?? ""}`}>
       <h2 id={id} className="cv-h2">
         {title}
       </h2>
@@ -73,7 +83,7 @@ export default function CvSidebar() {
         </ul>
       </Block>
 
-      <Block id="cv-references" title="References">
+      <Block id="cv-references" title="References" className="cv-block--refs">
         {testimonials.map((t) => (
           <figure key={t.id} className="cv-ref flex flex-col gap-2">
             <blockquote className="text-[length:var(--step-small)] leading-[1.55] text-pretty text-[var(--ink-muted)]">

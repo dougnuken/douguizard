@@ -47,7 +47,7 @@ function Entry({ e }: { e: Experience }) {
           {title}
         </h3>
 
-        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <p className="cv-role-line flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <span className="cv-role text-[length:var(--step-body)] font-medium text-[var(--ink)]">
             {e.role}
           </span>
