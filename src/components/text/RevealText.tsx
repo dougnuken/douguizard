@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import type { ElementType, ReactNode } from "react";
+import type { CSSProperties, ElementType, ReactNode } from "react";
+import { useInView, usePrefersReducedMotion } from "./useInView";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 interface RevealTextProps {
   children: ReactNode;
@@ -16,20 +15,24 @@ interface RevealTextProps {
    * "fade" — text fades and rises (body copy).
    */
   variant?: "mask" | "fade";
+  /** Seconds. */
   delay?: number;
+  /** Seconds. Defaults to 0.9 for "mask", 0.7 for "fade". */
   duration?: number;
 }
 
 /**
- * Reveal-on-scroll text driven by a self-owned IntersectionObserver (root =
- * viewport). Reliable in both the horizontal shell and normal detail pages —
- * unlike framer's whileInView, which mis-fires for off-screen panels.
+ * Reveal-on-scroll text, driven by `useInView` and animated in plain CSS.
  *
- * Fail-safe by design: it reveals as soon as any part of the element enters the
- * viewport (threshold 0), reveals immediately if it's already on screen at
- * mount, and once revealed it never hides again — so content can never get
- * stuck invisible. "mask" reproduces the case-study slide-up; "fade" is the
- * gentler rise for body copy. Motion-safe. Transform/opacity only.
+ * There is no animation library behind this: the whole effect is one
+ * `transition` on `transform` and `opacity`, which are the only two properties
+ * the compositor can animate without touching layout. That also makes it usable
+ * from anywhere — the case template and the device frames all reveal through
+ * this component, so the page has exactly one reveal, not five that drift.
+ *
+ * Reduced motion is honoured explicitly rather than left to the global
+ * `@media` rule: under `prefers-reduced-motion` the element never carries a
+ * transform at all, so there is nothing to snap back from.
  */
 export default function RevealText({
   children,
@@ -39,76 +42,49 @@ export default function RevealText({
   delay = 0,
   duration,
 }: RevealTextProps) {
-  const reduce = useReducedMotion() ?? false;
-  const ref = useRef<HTMLElement | null>(null);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") {
-      setShown(true);
-      return;
-    }
-    let io: IntersectionObserver | null = null;
-    const reveal = () => {
-      setShown(true);
-      io?.disconnect();
-      io = null;
-    };
-    io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) reveal();
-      },
-      { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0 },
-    );
-    io.observe(el);
-    // Reveal immediately if it's already within/above the viewport at mount.
-    const r = el.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    if (r.top < vh && r.bottom > 0) reveal();
-    return () => io?.disconnect();
-  }, []);
-
+  const reduce = usePrefersReducedMotion();
+  const [ref, shown] = useInView<HTMLElement>();
   const Tag = as;
 
+  const timing: CSSProperties = {
+    transitionProperty: "opacity, transform",
+    transitionDuration: `${duration ?? (variant === "fade" ? 0.7 : 0.9)}s`,
+    transitionDelay: `${delay}s`,
+    transitionTimingFunction: EASE,
+  };
+
   if (variant === "fade") {
-    const MTag =
-      (motion as unknown as Record<string, ElementType>)[
-        typeof as === "string" ? as : "div"
-      ] ?? motion.div;
-    const hidden = reduce ? { opacity: 0 } : { opacity: 0, y: 22 };
     return (
-      <MTag
+      <Tag
         ref={ref as never}
         className={className}
-        initial={hidden}
-        animate={shown ? { opacity: 1, y: 0 } : hidden}
-        transition={{ duration: duration ?? 0.7, delay, ease: EASE }}
+        style={{
+          ...timing,
+          opacity: shown ? 1 : 0,
+          transform: reduce || shown ? "none" : "translateY(22px)",
+        }}
       >
         {children}
-      </MTag>
+      </Tag>
     );
   }
 
   // "mask" — slide up from behind an overflow clip. The py/-my pair gives
   // ascenders AND descenders room, so display type set at leading < 1 (the
   // hero h1 runs at 0.92) is not clipped top or bottom at rest.
-  const hidden = reduce ? { opacity: 0 } : { y: "115%" };
-  const visible = reduce ? { opacity: 1 } : { y: 0 };
   return (
     <Tag className={className}>
-      <span
-        ref={ref as never}
-        className="block overflow-hidden py-[0.16em] -my-[0.16em]"
-      >
-        <motion.span
+      <span ref={ref as never} className="block overflow-hidden py-[0.16em] -my-[0.16em]">
+        <span
           className="inline-block will-change-transform"
-          initial={hidden}
-          animate={shown ? visible : hidden}
-          transition={{ duration: duration ?? 0.9, delay, ease: EASE }}
+          style={{
+            ...timing,
+            opacity: reduce ? (shown ? 1 : 0) : 1,
+            transform: reduce || shown ? "none" : "translateY(115%)",
+          }}
         >
           {children}
-        </motion.span>
+        </span>
       </span>
     </Tag>
   );

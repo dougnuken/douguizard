@@ -1,23 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import type { CSSProperties, ReactNode } from "react";
+import { useInView, usePrefersReducedMotion } from "@/components/text/useInView";
+import { PhoneFrame, DEVICE_SOURCE } from "./PhoneFrame";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-/**
- * Intrinsic pixel size of the product captures we ship today
- * (iPhone 393×852 logical, taken at @3x).
- * Exported so galleries and pages can reuse it without re-measuring.
- */
-export const DEVICE_SOURCE = { width: 1179, height: 2556 } as const;
-
-/** Concentric frame geometry — outer radius minus bezel = inner radius. */
-const BEZEL_PX = 8;
-const OUTER_RADIUS_PX = 46;
-const INNER_RADIUS_PX = OUTER_RADIUS_PX - BEZEL_PX;
+export { DEVICE_SOURCE };
 
 export interface DeviceMockupProps {
   /** Public path of the screenshot, e.g. `/work/olbo/semaforo-verde.png`. */
@@ -50,13 +39,12 @@ export interface DeviceMockupProps {
 }
 
 /**
- * Editorial phone frame.
+ * A product screenshot in the flat phone frame.
  *
- * Everything is expressed with `var(--color-*)` tokens, so the same component
- * reads correctly in both appearances, because it is built from the
- * light base theme: the bezel is mixed from `--ink` over `--paper`,
- * and the halo behind the device is `--ink` at ~9% — a soft light bloom on
- * dark, a soft shadow-ish bloom on bone.
+ * The frame itself is `PhoneFrame`; this adds the reveal, the hover lift, the
+ * image and the caption. The lift is 2px and carries no shadow — a surface that
+ * travels far and casts light reads as a card, and these are meant to read as
+ * screens.
  */
 export default function DeviceMockup({
   src,
@@ -71,81 +59,52 @@ export default function DeviceMockup({
   delay = 0,
   animate = true,
   interactive = true,
-  className = "",
-  frameClassName = "",
+  className,
+  frameClassName,
   style,
 }: DeviceMockupProps) {
-  const reduce = useReducedMotion() ?? false;
+  const reduce = usePrefersReducedMotion();
+  const [ref, inView] = useInView<HTMLElement>();
   const motionOn = animate && !reduce;
   const hoverOn = interactive && !reduce;
   const hasCaption = Boolean(eyebrow || caption);
+  const shown = inView || !motionOn;
 
   return (
-    <motion.figure
-      // twMerge so a consumer's `max-w-*` / spacing beats the defaults.
-      className={twMerge("m-0 flex w-full max-w-[420px] flex-col", className)}
-      style={style}
-      initial={motionOn ? { opacity: 0, y: 28 } : undefined}
-      whileInView={motionOn ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true, margin: "-80px" }}
-      whileHover={hoverOn ? { y: -6 } : undefined}
-      transition={{ duration: 0.9, delay, ease: EASE }}
+    <figure
+      ref={ref as never}
+      className={twMerge("group m-0 flex w-full max-w-[420px] flex-col", className)}
+      style={{
+        ...style,
+        opacity: shown ? 1 : 0,
+        transform: shown ? undefined : "translateY(28px)",
+        transitionProperty: "opacity, transform",
+        transitionDuration: "0.9s",
+        transitionDelay: `${delay}s`,
+        transitionTimingFunction: "var(--ease-out)",
+      }}
     >
-      {/* isolate → the halo's negative z stays inside this box */}
-      <div className="relative isolate">
-        {/* Ambient halo. Token-driven so it inverts with the theme. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 blur-2xl"
-          style={{
-            background:
-              "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
-          }}
+      <PhoneFrame
+        frameClassName={frameClassName}
+        className={hoverOn ? "transition-transform duration-300 group-hover:-translate-y-0.5" : undefined}
+        style={hoverOn ? { transitionTimingFunction: "var(--ease-out)" } : undefined}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          sizes={sizes}
+          priority={priority}
+          loading={priority ? undefined : loading}
+          draggable={false}
+          className="block h-auto w-full select-none"
         />
-
-        {/* Bezel */}
-        <div
-          className={twMerge("relative border", frameClassName)}
-          style={{
-            borderRadius: `${OUTER_RADIUS_PX}px`,
-            padding: `${BEZEL_PX}px`,
-            borderColor: "var(--line-strong)",
-            background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
-            boxShadow:
-              "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
-          }}
-        >
-          {/* Screen */}
-          <div
-            className="relative overflow-hidden"
-            style={{
-              borderRadius: `${INNER_RADIUS_PX}px`,
-              background: "var(--paper-raised)",
-              boxShadow:
-                "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
-            }}
-          >
-            <Image
-              src={src}
-              alt={alt}
-              width={width}
-              height={height}
-              sizes={sizes}
-              priority={priority}
-              loading={priority ? undefined : loading}
-              draggable={false}
-              className="block h-auto w-full select-none"
-            />
-          </div>
-        </div>
-      </div>
+      </PhoneFrame>
 
       {hasCaption && (
         <figcaption className="mt-5">
-          {eyebrow && (
-            <span className="kicker block">{eyebrow}</span>
-          )}
+          {eyebrow && <span className="kicker block">{eyebrow}</span>}
           {caption && (
             <span
               className={`block text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
@@ -157,6 +116,6 @@ export default function DeviceMockup({
           )}
         </figcaption>
       )}
-    </motion.figure>
+    </figure>
   );
 }

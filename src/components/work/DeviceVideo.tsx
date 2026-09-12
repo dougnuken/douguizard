@@ -1,95 +1,13 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { twMerge } from "tailwind-merge";
+import type { CSSProperties, ReactNode } from "react";
+import { useInView, usePrefersReducedMotion } from "@/components/text/useInView";
+import { PhoneFrame, DEVICE_VIDEO_SOURCE } from "./PhoneFrame";
+import { PosterButton, VideoControlRow, useSilentVideo } from "./videoChrome";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-/**
- * Intrinsic pixel size of the walkthrough captures we ship today
- * (iPhone 393×852 logical, grabbed at @2x → 786×1704).
- * Same 0.4613 aspect ratio as `DEVICE_SOURCE` in `DeviceMockup`, so a clip and a
- * screenshot sit in visually identical frames.
- */
-export const DEVICE_VIDEO_SOURCE = { width: 786, height: 1704 } as const;
-
-/**
- * Concentric frame geometry — outer radius minus bezel = inner radius.
- * These three numbers and the two `style` blocks in `PhoneFrame` are a verbatim
- * mirror of `DeviceMockup.tsx`: that component renders `next/image` directly and
- * exposes no `children`/slot, so there is no way to reuse its frame without
- * editing it. Keep the two in sync — or, better, lift `PhoneFrame` into its own
- * module and have `DeviceMockup` consume it the next time that file is in scope.
- */
-const BEZEL_PX = 8;
-const OUTER_RADIUS_PX = 46;
-const INNER_RADIUS_PX = OUTER_RADIUS_PX - BEZEL_PX;
-
-/**
- * The bare editorial phone frame: ambient halo + bezel + clipped screen.
- * Token-driven end to end (`var(--color-*)`), so it reads correctly on the light
- * light and dark appearances alike.
- */
-export function PhoneFrame({
-  children,
-  className = "",
-  frameClassName = "",
-}: {
-  children: ReactNode;
-  className?: string;
-  frameClassName?: string;
-}) {
-  return (
-    /* isolate → the halo's negative z stays inside this box */
-    <div className={twMerge("relative isolate", className)}>
-      {/* Ambient halo. Token-driven so it inverts with the theme. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 blur-2xl"
-        style={{
-          background:
-            "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
-        }}
-      />
-
-      {/* Bezel */}
-      <div
-        className={twMerge("relative border", frameClassName)}
-        style={{
-          borderRadius: `${OUTER_RADIUS_PX}px`,
-          padding: `${BEZEL_PX}px`,
-          borderColor: "var(--line-strong)",
-          background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
-          boxShadow:
-            "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
-        }}
-      >
-        {/* Screen */}
-        <div
-          className="relative overflow-hidden"
-          style={{
-            borderRadius: `${INNER_RADIUS_PX}px`,
-            background: "var(--paper-raised)",
-            boxShadow:
-              "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
-          }}
-        >
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
+export { DEVICE_VIDEO_SOURCE };
 
 export interface DeviceVideoProps {
   /** Public path of the WebM/VP9 source, e.g. `/work/olbo/captura-gasto.webm`. Offered first. */
@@ -128,44 +46,19 @@ export interface DeviceVideoProps {
   /** Extra classes on the frame itself (e.g. a width cap). */
   frameClassName?: string;
   style?: CSSProperties;
-  /** Control labels. Spanish-first, matching the rest of the case copy. */
   playLabel?: string;
   pauseLabel?: string;
 }
 
-function PlayIcon() {
-  return (
-    <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden focusable="false">
-      <path d="M1 1.2v9.6a.6.6 0 0 0 .92.5l7.6-4.8a.6.6 0 0 0 0-1L1.92.7A.6.6 0 0 0 1 1.2Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden focusable="false">
-      <rect x="1" y="1" width="3" height="10" rx="0.6" fill="currentColor" />
-      <rect x="7" y="1" width="3" height="10" rx="0.6" fill="currentColor" />
-    </svg>
-  );
-}
-
 /**
- * A silent product walkthrough inside the same editorial phone frame the
- * screenshots use, so a clip and a still can sit side by side in one section.
+ * A silent product walkthrough inside the same phone frame the screenshots use,
+ * so a clip and a still can sit side by side in one section and read as the
+ * same object.
  *
- * Motion policy:
- * - Default: muted autoplay, looping, but only while the frame is on screen.
- * - `prefers-reduced-motion: reduce`: **nothing moves on its own**. The poster
- *   stands still behind a real `<button>`, the reveal animation is dropped, and
- *   when the viewer chooses to play, the clip runs once instead of looping.
- * - Either way there is always a keyboard-reachable play/pause control, which is
- *   what WCAG 2.2.2 asks of anything that autoplays for more than five seconds.
- *
- * Autoplay is driven from an effect rather than trusted to the attribute alone:
- * `useReducedMotion()` is unknown during SSR, so the attribute is withheld until
- * after mount (no hydration mismatch, and no flash of motion for a viewer who
- * asked for none), and `play()` is then called explicitly.
+ * The frame comes from `PhoneFrame` and the playback policy from
+ * `useSilentVideo`, which is also what the browser walkthrough uses — the two
+ * cannot drift. Reveal is a CSS transition on `transform`/`opacity` behind an
+ * IntersectionObserver; there is no animation library in this file.
  */
 export default function DeviceVideo({
   webmSrc,
@@ -184,154 +77,62 @@ export default function DeviceVideo({
   showControls = true,
   animate = true,
   delay = 0,
-  className = "",
-  frameClassName = "",
+  className,
+  frameClassName,
   style,
-  playLabel = "Reproducir",
-  pauseLabel = "Pausar",
+  playLabel = "Play",
+  pauseLabel = "Pause",
 }: DeviceVideoProps) {
-  const reduce = useReducedMotion() ?? false;
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  /** The viewer pressed pause: never resume behind their back. */
-  const userPausedRef = useRef(false);
-  const [mounted, setMounted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
+  const reduceGlobal = usePrefersReducedMotion();
+  const [revealRef, shown] = useInView<HTMLElement>();
+  const { ref, reduce, autoAllowed, isPlaying, hasStarted, toggle, onPlay, onPause } =
+    useSilentVideo(playWhenVisible);
 
-  const descriptionId = useId();
-  const hasCaption = Boolean(eyebrow || caption);
-  const motionOn = animate && !reduce;
-  /** Autoplay is only ever allowed after mount, and never under reduced motion. */
-  const autoAllowed = mounted && !reduce;
-
-  useEffect(() => setMounted(true), []);
-
-  const tryPlay = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const attempt = video.play();
-    // Blocked autoplay (iOS low-power, strict policies) is not an error here —
-    // the poster stays up and the play button remains the way in.
-    if (attempt && typeof attempt.catch === "function") attempt.catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (!autoAllowed) {
-      video.pause();
-      return;
-    }
-    if (!playWhenVisible || typeof IntersectionObserver === "undefined") {
-      tryPlay();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        if (entry.isIntersecting) {
-          if (!userPausedRef.current) tryPlay();
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, [autoAllowed, playWhenVisible, tryPlay]);
-
-  const toggle = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      userPausedRef.current = false;
-      tryPlay();
-    } else {
-      userPausedRef.current = true;
-      video.pause();
-    }
-  }, [tryPlay]);
-
-  const focusRing =
-    "focus-visible:[outline:2px_solid_var(--ink)] focus-visible:[outline-offset:3px]";
+  const animating = animate && !reduceGlobal;
+  const descriptionId = description ? `${mp4Src.replace(/\W+/g, "-")}-desc` : undefined;
 
   return (
-    <motion.figure
-      // twMerge so a consumer's `max-w-*` / spacing beats the defaults.
-      className={twMerge("m-0 flex w-full max-w-[420px] flex-col", className)}
-      style={style}
-      initial={motionOn ? { opacity: 0, y: 28 } : undefined}
-      whileInView={motionOn ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, delay, ease: EASE }}
+    <figure
+      ref={revealRef as never}
+      className={twMerge("m-0", className)}
+      style={{
+        ...style,
+        opacity: animating ? (shown ? 1 : 0) : 1,
+        transform: animating ? (shown ? "translateY(0)" : "translateY(18px)") : undefined,
+        transitionProperty: animating ? "opacity, transform" : undefined,
+        transitionDuration: animating ? "0.75s" : undefined,
+        transitionDelay: animating ? `${delay}s` : undefined,
+        transitionTimingFunction: "var(--ease-out)",
+      }}
     >
       <PhoneFrame frameClassName={frameClassName}>
         <video
-          ref={videoRef}
+          ref={ref}
+          className="block h-auto w-full"
           width={width}
           height={height}
           poster={poster}
-          preload={preload}
-          // Attribute present for the browser's own autoplay pass; the effect
-          // above is what actually guarantees (and gates) playback.
-          autoPlay={autoAllowed}
-          loop={loop && !reduce}
           muted
           playsInline
+          preload={preload}
+          /* Looping is a motion decision, so it follows the preference too. */
+          loop={loop && !reduce}
+          autoPlay={autoAllowed}
           controls={nativeControls}
-          disablePictureInPicture
           aria-label={label}
-          aria-describedby={description ? descriptionId : undefined}
-          onPlay={() => {
-            setIsPlaying(true);
-            setHasStarted(true);
-          }}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
-          className="block h-auto w-full select-none"
-          // Explicit ratio alongside width/height: the box is reserved before a
-          // single byte of video arrives, so the clip cannot shift the layout.
-          style={{ aspectRatio: `${width} / ${height}`, background: "var(--paper-raised)" }}
+          aria-describedby={descriptionId}
+          onPlay={onPlay}
+          onPause={onPause}
         >
           {webmSrc && <source src={webmSrc} type="video/webm" />}
           <source src={mp4Src} type="video/mp4" />
+          {/* Last resort: the poster, with the clip's own description as its alt. */}
+          <Image src={poster} alt={label} width={width} height={height} className="block h-auto w-full" />
         </video>
 
-        {/* Poster-state affordance: the only control under reduced motion, and
-            the recovery path anywhere autoplay was refused. */}
-        {!hasStarted && (
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label={`${playLabel}: ${label}`}
-            className={`absolute inset-0 grid place-items-center ${focusRing}`}
-            style={{
-              background:
-                "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--ink) 18%, transparent) 0%, transparent 100%)",
-            }}
-          >
-            <span
-              className="grid h-14 w-14 place-items-center rounded-full border backdrop-blur-sm transition-transform duration-300 hover:scale-105"
-              style={{
-                borderColor: "var(--line)",
-                background: "var(--paper-raised)",
-                color: "var(--ink)",
-                boxShadow: "0 10px 40px -16px var(--line)",
-                transitionTimingFunction: "var(--ease-out)",
-              }}
-            >
-              {/* optical centering of the triangle */}
-              <span className="ml-[2px] flex">
-                <PlayIcon />
-              </span>
-            </span>
-          </button>
-        )}
+        {/* The way in whenever nothing is moving: reduced motion, a refused
+            autoplay, or simply before the first play. */}
+        {!hasStarted && !isPlaying && <PosterButton onClick={toggle} label={playLabel} />}
       </PhoneFrame>
 
       {description && (
@@ -341,38 +142,20 @@ export default function DeviceVideo({
       )}
 
       {showControls && (
-        <div className="mt-4 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={toggle}
-            aria-pressed={isPlaying}
-            className={`kicker inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-200 ${focusRing}`}
-            style={{
-              borderColor: "var(--line-strong)",
-              color: "var(--ink)",
-              transitionTimingFunction: "var(--ease-out)",
-            }}
-          >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-            {isPlaying ? pauseLabel : playLabel}
-          </button>
-        </div>
+        <VideoControlRow
+          isPlaying={isPlaying}
+          onToggle={toggle}
+          playLabel={playLabel}
+          pauseLabel={pauseLabel}
+        />
       )}
 
-      {hasCaption && (
-        <figcaption className={showControls ? "mt-3" : "mt-5"}>
-          {eyebrow && <span className="kicker block">{eyebrow}</span>}
-          {caption && (
-            <span
-              className={`block text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
-                eyebrow ? "mt-2" : ""
-              }`}
-            >
-              {caption}
-            </span>
-          )}
+      {(eyebrow || caption) && (
+        <figcaption className="mt-4 flex gap-3 text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">
+          {eyebrow && <span className="kicker shrink-0 pt-[3px]">{eyebrow}</span>}
+          {caption && <span>{caption}</span>}
         </figcaption>
       )}
-    </motion.figure>
+    </figure>
   );
 }

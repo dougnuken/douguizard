@@ -67,14 +67,22 @@ export interface CaseStudy {
     width: number;
     height: number;
   };
-  /** Screenshots from /public/work/<slug>/ — alt is required, caption optional. */
-  gallery?: { src: string; alt: string; caption?: string }[];
+  /**
+   * Screenshots from /public/work/<slug>/ — alt is required, caption optional.
+   * `width`/`height` are the intrinsic pixels of that file; only "plain"
+   * galleries need them, because their items each have their own aspect ratio
+   * instead of sharing the frame's.
+   */
+  gallery?: { src: string; alt: string; caption?: string; width?: number; height?: number }[];
   /**
    * Which device frame `gallery` renders in. Mobile products ("phone") get the
    * handset mockup; desktop web platforms ("browser") need a browser chrome
-   * instead. Omitted means "phone" — the original behaviour, so olbo is unchanged.
+   * instead. "plain" is for captures that already contain their own device or
+   * are diagrams — a presentation artboard inside a browser window renders a
+   * browser holding a tablet holding the product. Omitted means "phone" — the
+   * original behaviour, so olbo is unchanged.
    */
-  galleryKind?: "phone" | "browser";
+  galleryKind?: "phone" | "browser" | "plain";
   /**
    * Which frame `video` renders in. Omitted, it follows `galleryKind` — a clip
    * of the same product almost always belongs in the same frame as its stills,

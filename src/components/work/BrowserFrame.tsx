@@ -1,19 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
+import { useInView, usePrefersReducedMotion } from "@/components/text/useInView";
+import { PosterButton, VideoControlRow, useSilentVideo } from "./videoChrome";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 /**
  * Intrinsic pixel size of the desktop captures we ship today
@@ -26,12 +19,11 @@ export const BROWSER_SOURCE = { width: 2880, height: 1800 } as const;
 
 /**
  * Concentric frame geometry — outer radius minus bezel = inner radius, the same
- * rule `DeviceMockup` follows. The numbers are much smaller than the phone's
- * (46/8/38) on purpose: a 46px corner on a 1300px-wide window reads as a toy,
- * while a real desktop window sits around 10–14px.
+ * rule `PhoneFrame` follows, and now the same 12px outer corner, so a phone and
+ * a browser on the same page read as one family of drawn objects.
  */
-const BEZEL_PX = 6;
-const OUTER_RADIUS_PX = 18;
+const BEZEL_PX = 4;
+const OUTER_RADIUS_PX = 12;
 const INNER_RADIUS_PX = OUTER_RADIUS_PX - BEZEL_PX;
 
 /** Window-chrome treatment. `none` yields a bare, screen-only frame. */
@@ -69,7 +61,11 @@ export interface BrowserFrameProps {
   animate?: boolean;
   /** Sober hover lift. Default `true`; always off under reduced motion. */
   interactive?: boolean;
-  /** Ambient bloom behind the window. Default `true`. */
+  /**
+   * @deprecated No-op. The window is drawn, not lit: the ambient bloom it
+   * used to switch was removed with the rest of the invented light sources.
+   * Kept so existing call sites keep compiling; delete on the next sweep.
+   */
   halo?: boolean;
   className?: string;
   /** Extra classes on the frame itself (e.g. a width cap). */
@@ -91,7 +87,11 @@ export interface BrowserWindowProps {
   chrome?: BrowserChrome;
   /** Text for the address-bar slot. Omit and the bar collapses to chrome alone. */
   label?: string;
-  /** Ambient bloom behind the window. Default `true`. */
+  /**
+   * @deprecated No-op. The window is drawn, not lit: the ambient bloom it
+   * used to switch was removed with the rest of the invented light sources.
+   * Kept so existing call sites keep compiling; delete on the next sweep.
+   */
   halo?: boolean;
   className?: string;
   /** Extra classes on the frame itself (e.g. a width cap). */
@@ -99,93 +99,52 @@ export interface BrowserWindowProps {
 }
 
 /**
- * The bare editorial browser window — ambient halo + bezel + chrome bar +
- * clipped screen — with the screen itself left as a slot.
+ * The bare browser window — bezel, chrome bar, clipped screen — with the screen
+ * itself left as a slot.
  *
  * This is the single definition of the frame's materials. `BrowserFrame` fills
- * it with a screenshot and `BrowserVideo` with a clip, so the bezel geometry,
- * the shadow recipe and the bloom can never drift apart between the two.
+ * it with a screenshot and `BrowserVideo` with a clip, so the geometry can never
+ * drift between the two.
  *
- * Same materials as the phone frame, so the two never read as different
- * families: 1px `--line-strong` border, a bezel mixed from `--ink`
- * over `--paper`, the same inset-highlight + two-layer shadow recipe,
- * and the same `--ink`-at-9% ambient bloom. Everything is expressed with
- * theme tokens, so it inverts with the global appearance.
+ * Drawn, not lit. The gradient bezel, the inset highlight, the two-layer shadow
+ * and the ambient bloom are all gone: each one invented a light source, and this
+ * theme has one ink, one paper and no lighting. What remains is the same 1px
+ * `--line-strong` outline and 12px corner as `PhoneFrame`, so a phone and a
+ * browser read as one family of objects.
  *
- * The traffic lights are deliberately monochrome. Red/amber/green dots are the
- * single loudest tell of a stock mockup, and on this theme the one saturated
- * colour (`--ink`) is spent on argument, not on window decoration.
+ * The traffic lights are outlines rather than fills, and monochrome. Red/amber/
+ * green dots are the single loudest tell of a stock mockup.
  */
 export function BrowserWindow({
   children,
   chrome = "dots",
   label,
-  halo = true,
   className = "",
   frameClassName = "",
 }: BrowserWindowProps) {
   const hasChrome = chrome !== "none";
 
   return (
-    /* isolate → the bloom's negative z stays inside this box */
-    <div className={twMerge("relative isolate", className)}>
-      {halo && (
-        /* Flatter and lower than the phone's halo, so it grounds the window
-           like a cast shadow instead of ringing it like a glow. */
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -inset-x-6 -inset-y-5 -z-10 blur-2xl"
-          style={{
-            background:
-              "radial-gradient(64% 42% at 50% 58%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
-          }}
-        />
-      )}
-
-      {/* Bezel — identical material to DeviceMockup, smaller radius */}
+    <div className={twMerge("relative", className)}>
       <div
-        className={twMerge("relative border", frameClassName)}
-        style={{
-          borderRadius: `${OUTER_RADIUS_PX}px`,
-          padding: `${BEZEL_PX}px`,
-          borderColor: "var(--line-strong)",
-          background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
-          boxShadow:
-            "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
-        }}
+        className={twMerge("relative border border-[var(--line-strong)] bg-[var(--paper)]", frameClassName)}
+        style={{ borderRadius: `${OUTER_RADIUS_PX}px`, padding: `${BEZEL_PX}px` }}
       >
         {/* Window — clips the chrome bar and the screen into one object */}
         <div
-          className="relative overflow-hidden"
-          style={{
-            borderRadius: `${INNER_RADIUS_PX}px`,
-            background: "var(--paper-raised)",
-            boxShadow:
-              "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
-          }}
+          className="relative overflow-hidden bg-[var(--paper-raised)]"
+          style={{ borderRadius: `${INNER_RADIUS_PX}px` }}
         >
           {hasChrome && (
             <div
               aria-hidden
-              className="relative flex h-[28px] items-center px-3 md:h-[34px] md:px-4"
-              style={{
-                background:
-                  "color-mix(in srgb, var(--ink) 4%, var(--paper))",
-                borderBottom:
-                  "1px solid color-mix(in srgb, var(--ink) 10%, transparent)",
-              }}
+              className="relative flex h-[28px] items-center border-b border-[var(--line)] bg-[var(--paper)] px-3 md:h-[34px] md:px-4"
             >
-              {/* Traffic lights, monochrome and quiet */}
               <div className="flex shrink-0 items-center gap-[6px]">
                 {[0, 1, 2].map((i) => (
                   <span
                     key={i}
-                    className="block size-[6px] rounded-full md:size-[7px]"
-                    style={{
-                      background:
-                        "color-mix(in srgb, var(--ink) 22%, transparent)",
-                    }}
+                    className="block size-[6px] rounded-full border border-[var(--line-strong)] md:size-[7px]"
                   />
                 ))}
               </div>
@@ -193,17 +152,9 @@ export function BrowserWindow({
               {label && (
                 /* Address slot. Absolutely centred so it stays optically
                    centred in the window regardless of the dots' width. */
-                <div
-                  className="absolute left-1/2 max-w-[min(62%,440px)] -translate-x-1/2 rounded-full px-3 py-[3px]"
-                  style={{
-                    background:
-                      "color-mix(in srgb, var(--ink) 5%, transparent)",
-                    boxShadow:
-                      "inset 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent)",
-                  }}
-                >
+                <div className="absolute left-1/2 max-w-[min(62%,440px)] -translate-x-1/2 rounded-full border border-[var(--line)] px-3 py-[3px]">
                   <span
-                    className="kicker block truncate"
+                    className="kicker block truncate text-[var(--ink-dim)]"
                     // Inline so it always beats `.kicker`'s own font-size —
                     // both live in Tailwind's utilities layer, where a class
                     // override would depend on emit order.
@@ -224,9 +175,9 @@ export function BrowserWindow({
 }
 
 /**
- * Editorial browser window holding a screenshot — the desktop sibling of
- * `DeviceMockup`. The frame itself is `BrowserWindow`; this adds the reveal,
- * the hover lift, the image and the caption.
+ * Browser window holding a screenshot — the desktop sibling of `DeviceMockup`.
+ * The frame itself is `BrowserWindow`; this adds the reveal, the hover lift,
+ * the image and the caption.
  */
 export default function BrowserFrame({
   src,
@@ -243,30 +194,38 @@ export default function BrowserFrame({
   delay = 0,
   animate = true,
   interactive = true,
-  halo = true,
   className = "",
   frameClassName = "",
   style,
 }: BrowserFrameProps) {
-  const reduce = useReducedMotion() ?? false;
+  const reduce = usePrefersReducedMotion();
+  const [revealRef, shown] = useInView<HTMLElement>();
   const motionOn = animate && !reduce;
   const hoverOn = interactive && !reduce;
   const hasCaption = Boolean(eyebrow || caption);
 
   return (
-    <motion.figure
+    <figure
+      ref={revealRef as never}
       // twMerge so a consumer's `max-w-*` / spacing beats the defaults.
-      className={twMerge("m-0 flex w-full flex-col", className)}
-      style={style}
-      initial={motionOn ? { opacity: 0, y: 24 } : undefined}
-      whileInView={motionOn ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true, margin: "-80px" }}
-      // Shallower than the phone's -6: the window is a heavier object, and a
-      // big surface travelling far reads as a card, not as a lift.
-      whileHover={hoverOn ? { y: -4 } : undefined}
-      transition={{ duration: 0.9, delay, ease: EASE }}
+      className={twMerge(
+        "m-0 flex w-full flex-col",
+        // Shallower than the phone's -6: the window is a heavier object, and a
+        // big surface travelling far reads as a card, not as a lift.
+        hoverOn && "transition-transform duration-500 hover:-translate-y-1",
+        className,
+      )}
+      style={{
+        ...style,
+        opacity: motionOn ? (shown ? 1 : 0) : 1,
+        transform: motionOn && !shown ? "translateY(24px)" : undefined,
+        transitionProperty: motionOn ? "opacity, transform" : undefined,
+        transitionDuration: motionOn ? "0.9s" : undefined,
+        transitionDelay: motionOn ? `${delay}s` : undefined,
+        transitionTimingFunction: EASE,
+      }}
     >
-      <BrowserWindow chrome={chrome} label={label} halo={halo} frameClassName={frameClassName}>
+      <BrowserWindow chrome={chrome} label={label} frameClassName={frameClassName}>
         <Image
           src={src}
           alt={alt}
@@ -296,7 +255,7 @@ export default function BrowserFrame({
           )}
         </figcaption>
       )}
-    </motion.figure>
+    </figure>
   );
 }
 
@@ -343,7 +302,11 @@ export interface BrowserVideoProps {
   animate?: boolean;
   /** Stagger offset in seconds when several frames animate together. */
   delay?: number;
-  /** Ambient bloom behind the window. Default `true`. */
+  /**
+   * @deprecated No-op. The window is drawn, not lit: the ambient bloom it
+   * used to switch was removed with the rest of the invented light sources.
+   * Kept so existing call sites keep compiling; delete on the next sweep.
+   */
   halo?: boolean;
   className?: string;
   /** Extra classes on the frame itself (e.g. a width cap). */
@@ -354,42 +317,14 @@ export interface BrowserVideoProps {
   pauseLabel?: string;
 }
 
-function PlayIcon() {
-  return (
-    <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden focusable="false">
-      <path d="M1 1.2v9.6a.6.6 0 0 0 .92.5l7.6-4.8a.6.6 0 0 0 0-1L1.92.7A.6.6 0 0 0 1 1.2Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden focusable="false">
-      <rect x="1" y="1" width="3" height="10" rx="0.6" fill="currentColor" />
-      <rect x="7" y="1" width="3" height="10" rx="0.6" fill="currentColor" />
-    </svg>
-  );
-}
-
 /**
  * A silent product walkthrough inside the same browser window the desktop
  * screenshots use — the landscape counterpart to `DeviceVideo`, which frames
  * the same kind of clip in a handset.
  *
- * The frame comes from `BrowserWindow`, so the bezel, the shadow and the bloom
- * are literally the same code the stills render in. Only the playback policy
- * lives here, and it is a deliberate mirror of `DeviceVideo`'s:
- * - Default: muted autoplay, but only while the frame is on screen.
- * - `prefers-reduced-motion: reduce`: **nothing moves on its own**. The poster
- *   stands still behind a real `<button>`, the reveal animation is dropped, and
- *   when the viewer chooses to play, the clip runs once instead of looping.
- * - Either way there is always a keyboard-reachable play/pause control, which is
- *   what WCAG 2.2.2 asks of anything that autoplays for more than five seconds.
- *
- * Autoplay is driven from an effect rather than trusted to the attribute alone:
- * `useReducedMotion()` is unknown during SSR, so the attribute is withheld until
- * after mount (no hydration mismatch, and no flash of motion for a viewer who
- * asked for none), and `play()` is then called explicitly.
+ * The frame comes from `BrowserWindow` and the playback policy from
+ * `useSilentVideo`, which `DeviceVideo` also uses, so the phone and the browser
+ * walkthroughs cannot drift apart in either look or behaviour.
  */
 export function BrowserVideo({
   webmSrc,
@@ -410,99 +345,44 @@ export function BrowserVideo({
   showControls = true,
   animate = true,
   delay = 0,
-  halo = true,
   className = "",
   frameClassName = "",
   style,
-  playLabel = "Reproducir",
-  pauseLabel = "Pausar",
+  playLabel = "Play",
+  pauseLabel = "Pause",
 }: BrowserVideoProps) {
-  const reduce = useReducedMotion() ?? false;
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  /** The viewer pressed pause: never resume behind their back. */
-  const userPausedRef = useRef(false);
-  const [mounted, setMounted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [revealRef, shown] = useInView<HTMLElement>();
+  const {
+    ref: videoRef,
+    reduce,
+    autoAllowed,
+    isPlaying,
+    hasStarted,
+    toggle,
+    onPlay,
+    onPause,
+  } = useSilentVideo(playWhenVisible);
 
   const descriptionId = useId();
   const hasCaption = Boolean(eyebrow || caption);
   const motionOn = animate && !reduce;
-  /** Autoplay is only ever allowed after mount, and never under reduced motion. */
-  const autoAllowed = mounted && !reduce;
-
-  useEffect(() => setMounted(true), []);
-
-  const tryPlay = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const attempt = video.play();
-    // Blocked autoplay (iOS low-power, strict policies) is not an error here —
-    // the poster stays up and the play button remains the way in.
-    if (attempt && typeof attempt.catch === "function") attempt.catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (!autoAllowed) {
-      video.pause();
-      return;
-    }
-    if (!playWhenVisible || typeof IntersectionObserver === "undefined") {
-      tryPlay();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        if (entry.isIntersecting) {
-          if (!userPausedRef.current) tryPlay();
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, [autoAllowed, playWhenVisible, tryPlay]);
-
-  const toggle = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      userPausedRef.current = false;
-      tryPlay();
-    } else {
-      userPausedRef.current = true;
-      video.pause();
-    }
-  }, [tryPlay]);
-
-  const focusRing =
-    "focus-visible:[outline:2px_solid_var(--ink)] focus-visible:[outline-offset:3px]";
 
   return (
-    <motion.figure
+    <figure
+      ref={revealRef as never}
       // twMerge so a consumer's `max-w-*` / spacing beats the defaults.
       className={twMerge("m-0 flex w-full flex-col", className)}
-      style={style}
-      initial={motionOn ? { opacity: 0, y: 24 } : undefined}
-      whileInView={motionOn ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, delay, ease: EASE }}
+      style={{
+        ...style,
+        opacity: motionOn ? (shown ? 1 : 0) : 1,
+        transform: motionOn && !shown ? "translateY(24px)" : undefined,
+        transitionProperty: motionOn ? "opacity, transform" : undefined,
+        transitionDuration: motionOn ? "0.9s" : undefined,
+        transitionDelay: motionOn ? `${delay}s` : undefined,
+        transitionTimingFunction: EASE,
+      }}
     >
-      <BrowserWindow
-        chrome={chrome}
-        label={chromeLabel}
-        halo={halo}
-        frameClassName={frameClassName}
-      >
+      <BrowserWindow chrome={chrome} label={chromeLabel} frameClassName={frameClassName}>
         {/* Own stacking context so the poster button covers the clip only —
             never the chrome bar above it. */}
         <div className="relative">
@@ -522,12 +402,9 @@ export function BrowserVideo({
             disablePictureInPicture
             aria-label={label}
             aria-describedby={description ? descriptionId : undefined}
-            onPlay={() => {
-              setIsPlaying(true);
-              setHasStarted(true);
-            }}
-            onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
+            onPlay={onPlay}
+            onPause={onPause}
+            onEnded={onPause}
             className="block h-auto w-full select-none"
             // Explicit ratio alongside width/height: the box is reserved before a
             // single byte of video arrives, so the clip cannot shift the layout.
@@ -539,34 +416,7 @@ export function BrowserVideo({
 
           {/* Poster-state affordance: the only control under reduced motion, and
               the recovery path anywhere autoplay was refused. */}
-          {!hasStarted && (
-            <button
-              type="button"
-              onClick={toggle}
-              aria-label={`${playLabel}: ${label}`}
-              className={`absolute inset-0 grid place-items-center ${focusRing}`}
-              style={{
-                background:
-                  "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--ink) 18%, transparent) 0%, transparent 100%)",
-              }}
-            >
-              <span
-                className="grid h-14 w-14 place-items-center rounded-full border backdrop-blur-sm transition-transform duration-300 hover:scale-105"
-                style={{
-                  borderColor: "var(--line)",
-                  background: "var(--paper-raised)",
-                  color: "var(--ink)",
-                  boxShadow: "0 10px 40px -16px var(--line)",
-                  transitionTimingFunction: "var(--ease-out)",
-                }}
-              >
-                {/* optical centering of the triangle */}
-                <span className="ml-[2px] flex">
-                  <PlayIcon />
-                </span>
-              </span>
-            </button>
-          )}
+          {!hasStarted && <PosterButton onClick={toggle} label={`${playLabel}: ${label}`} />}
         </div>
       </BrowserWindow>
 
@@ -577,22 +427,12 @@ export function BrowserVideo({
       )}
 
       {showControls && (
-        <div className="mt-4 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={toggle}
-            aria-pressed={isPlaying}
-            className={`kicker inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-200 ${focusRing}`}
-            style={{
-              borderColor: "var(--line-strong)",
-              color: "var(--ink)",
-              transitionTimingFunction: "var(--ease-out)",
-            }}
-          >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-            {isPlaying ? pauseLabel : playLabel}
-          </button>
-        </div>
+        <VideoControlRow
+          isPlaying={isPlaying}
+          onToggle={toggle}
+          playLabel={playLabel}
+          pauseLabel={pauseLabel}
+        />
       )}
 
       {hasCaption && (
@@ -611,7 +451,7 @@ export function BrowserVideo({
           )}
         </figcaption>
       )}
-    </motion.figure>
+    </figure>
   );
 }
 
