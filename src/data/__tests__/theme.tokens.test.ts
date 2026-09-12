@@ -25,7 +25,7 @@ describe("theme tokens", () => {
   });
 
   it("carries no retired utility families", () => {
-    for (const dead of [".glass", ".cosmic-", ".btn-accent", ".btn-outline", ".theme-dark"]) {
+    for (const dead of [".glass", ".cosmic-", ".btn-accent", ".btn-outline", "theme-dark"]) {
       expect(css.includes(dead), dead).toBe(false);
     }
   });

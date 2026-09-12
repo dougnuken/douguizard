@@ -53,7 +53,7 @@ export interface DeviceMockupProps {
  * Editorial phone frame.
  *
  * Everything is expressed with `var(--color-*)` tokens, so the same component
- * reads correctly on the dark case-study routes (`.theme-dark`) and on the
+ * reads correctly in both appearances, because it is built from the
  * light base theme: the bezel is mixed from `--ink` over `--paper`,
  * and the halo behind the device is `--ink` at ~9% — a soft light bloom on
  * dark, a soft shadow-ish bloom on bone.

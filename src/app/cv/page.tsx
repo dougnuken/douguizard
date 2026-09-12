@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
 import CustomCursor from "@/components/CustomCursor";
 import SmoothScrollProvider from "@/components/SmoothScroll";
-import Navigation from "@/components/sections/Navigation";
+
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
 import Marquee from "@/components/sections/Marquee";
@@ -30,7 +30,7 @@ export default function Home() {
       <Scene3D />
       <div className="grain-overlay" />
 
-      <Navigation />
+
 
       <main className="relative">
         <Hero />

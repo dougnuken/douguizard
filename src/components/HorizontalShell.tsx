@@ -1,18 +1,29 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
-// Dark full-bleed panels — only the dramatic bookends: 0 Hero and 4 Footer/Contact.
-// Everything in between stays on the light bone canvas (no choppy alternation).
-const DARK_PANELS = new Set([0, 4]);
+const SHELL_CLASS = [
+  "flex flex-col",
+  "lg:h-svh lg:w-screen lg:flex-row lg:snap-x lg:snap-mandatory",
+  "lg:overflow-x-auto lg:overflow-y-hidden",
+  "lg:[overscroll-behavior-y:contain]",
+  "lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden",
+  "focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
+].join(" ");
+
+const PANEL_CLASS = [
+  "relative outline-none",
+  "pt-14 lg:pt-16",
+  "lg:flex lg:h-svh lg:w-screen lg:shrink-0 lg:snap-start lg:flex-col lg:overflow-y-auto lg:pr-24",
+].join(" ");
 
 /**
- * Editorial Horizontal shell.
- * - Desktop (lg+): lays each child out as a full-viewport panel in a horizontal,
- *   snap-based scroller. Vertical wheel is mapped to horizontal scrolling; native
- *   trackpad horizontal gestures pass through. Tall panels scroll vertically inside.
- * - Mobile (<lg): falls back to a normal vertical stack.
- * The scroller carries `data-hshell` so SectionIndex can observe/drive it.
+ * Editorial horizontal shell.
+ *
+ * The desktop/mobile decision lives entirely in class names, so the server HTML
+ * is already horizontal at ≥ 1024 and nothing re-lays-out after hydration.
+ * Vertical wheel maps to horizontal scroll; native horizontal gestures and tall
+ * panels pass through. Arrow keys, PageUp/PageDown, Home and End move panels.
  */
 export default function HorizontalShell({
   children,
@@ -20,34 +31,21 @@ export default function HorizontalShell({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  // Map vertical wheel → horizontal scroll (desktop only).
   useEffect(() => {
     const el = ref.current;
-    if (!el || !isDesktop) return;
+    if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
-      // Let native horizontal-intent gestures (trackpad) pass through untouched.
+      // Intrinsic desktop test: no horizontal overflow means the mobile stack.
+      if (el.scrollWidth <= el.clientWidth) return;
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      // If the hovered panel can still scroll vertically, let it (tall panels).
-      const panel = (e.target as HTMLElement)?.closest<HTMLElement>(
-        "[data-panel]",
-      );
+      const panel = (e.target as HTMLElement)?.closest<HTMLElement>("[data-panel]");
       if (panel) {
-        const canScrollDown =
-          e.deltaY > 0 &&
-          panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1;
-        const canScrollUp = e.deltaY < 0 && panel.scrollTop > 0;
-        if (canScrollDown || canScrollUp) return;
+        const down =
+          e.deltaY > 0 && panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1;
+        const up = e.deltaY < 0 && panel.scrollTop > 0;
+        if (down || up) return;
       }
       e.preventDefault();
       el.scrollLeft += e.deltaY;
@@ -55,27 +53,64 @@ export default function HorizontalShell({
 
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [isDesktop]);
+  }, []);
+
+  const go = (index: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const count = el.children.length;
+    const clamped = Math.min(Math.max(index, 0), count - 1);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollTo({
+      left: clamped * el.clientWidth,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el || el.scrollWidth <= el.clientWidth) return;
+    // Derived, never stored, so a resize can't desynchronise it.
+    const current = Math.round(el.scrollLeft / el.clientWidth);
+
+    switch (e.key) {
+      case "ArrowRight":
+      case "PageDown":
+        e.preventDefault();
+        go(current + 1);
+        break;
+      case "ArrowLeft":
+      case "PageUp":
+        e.preventDefault();
+        go(current - 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        go(0);
+        break;
+      case "End":
+        e.preventDefault();
+        go(el.children.length - 1);
+        break;
+      default:
+        // ArrowUp / ArrowDown are deliberately not intercepted: they scroll
+        // inside a tall panel.
+        break;
+    }
+  };
 
   return (
     <div
       ref={ref}
       data-hshell
-      className={
-        isDesktop
-          ? "flex h-svh w-screen snap-x snap-mandatory overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          : "flex flex-col"
-      }
+      tabIndex={0}
+      role="group"
+      aria-label="Sections — use the arrow keys to move between panels"
+      onKeyDown={onKeyDown}
+      className={SHELL_CLASS}
     >
-      {React.Children.map(children, (child, i) => (
-        <div
-          data-panel
-          className={
-            (isDesktop
-              ? "relative flex h-svh w-screen shrink-0 snap-start flex-col justify-start overflow-y-auto pt-16 lg:pr-28"
-              : "relative") + (DARK_PANELS.has(i) ? " theme-dark" : "")
-          }
-        >
+      {React.Children.map(children, (child) => (
+        <div data-panel tabIndex={-1} className={PANEL_CLASS}>
           {child}
         </div>
       ))}

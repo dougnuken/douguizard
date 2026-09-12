@@ -110,7 +110,7 @@ export interface BrowserWindowProps {
  * families: 1px `--line-strong` border, a bezel mixed from `--ink`
  * over `--paper`, the same inset-highlight + two-layer shadow recipe,
  * and the same `--ink`-at-9% ambient bloom. Everything is expressed with
- * `var(--color-*)`, so it inverts correctly inside `.theme-dark` subtrees.
+ * theme tokens, so it inverts with the global appearance.
  *
  * The traffic lights are deliberately monochrome. Red/amber/green dots are the
  * single loudest tell of a stock mockup, and on this theme the one saturated

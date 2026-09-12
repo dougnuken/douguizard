@@ -1,32 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-interface SectionRef {
-  id: string;
-  num: string;
-  label: string;
-}
-
-/** Every scrollable section, in document order. Drives the right-rail index. */
-const SECTIONS: SectionRef[] = [
-  { id: "hero", num: "00", label: "Home" },
-  { id: "about", num: "01", label: "About" },
-  { id: "capabilities", num: "02", label: "Craft" },
-  { id: "work", num: "03", label: "Work" },
-  { id: "contact", num: "04", label: "Contact" },
-];
-
-/** Sections whose panel renders on a dark background (see HorizontalShell). */
-const DARK_IDS = new Set(["hero", "contact"]);
+import { sections } from "@/data/sections";
+import { setActiveSection } from "@/lib/activeSection";
 
 export default function SectionIndex() {
-  const [active, setActive] = useState<string>("hero");
+  const [active, setActive] = useState<string>(sections[0].id);
 
   useEffect(() => {
-    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      (el): el is HTMLElement => el !== null,
-    );
+    const els = sections
+      .map((s) => document.getElementById(s.id))
+      .filter((el): el is HTMLElement => el !== null);
     if (!els.length) return;
 
     const scroller = document.querySelector<HTMLElement>("[data-hshell]");
@@ -37,15 +21,12 @@ export default function SectionIndex() {
       if (id === current) return;
       current = id;
       setActive(id);
-      document.documentElement.setAttribute(
-        "data-panel-theme",
-        DARK_IDS.has(id) ? "dark" : "light",
-      );
+      setActiveSection(id);
     };
 
     // The active panel is the one whose centre sits closest to the viewport
-    // centre. This works for both the desktop horizontal shell (X varies) and
-    // the mobile vertical stack (Y varies) — no fragile initial-observer race.
+    // centre. Correct for both the desktop horizontal shell (X varies) and the
+    // mobile vertical stack (Y varies) — no fragile initial-observer race.
     const compute = () => {
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
@@ -69,8 +50,8 @@ export default function SectionIndex() {
       raf = requestAnimationFrame(compute);
     };
 
-    compute(); // deterministic initial state (Home at rest)
-    requestAnimationFrame(compute); // re-check once layout settles
+    compute();
+    requestAnimationFrame(compute);
     window.addEventListener("scroll", onScroll, { passive: true });
     scroller?.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -92,6 +73,9 @@ export default function SectionIndex() {
       inline: "start",
       block: "nearest",
     });
+    // Focusing the panel keeps the following Tab presses inside the panel the
+    // user just chose — this is what makes the rail usable with a reader.
+    (el.closest("[data-panel]") as HTMLElement | null)?.focus({ preventScroll: true });
   };
 
   return (
@@ -99,7 +83,7 @@ export default function SectionIndex() {
       aria-label="Section index"
       className="fixed right-6 top-1/2 z-[45] hidden -translate-y-1/2 flex-col items-end gap-4 lg:flex"
     >
-      {SECTIONS.map((s) => {
+      {sections.map((s) => {
         const isActive = active === s.id;
         return (
           <a
@@ -108,46 +92,40 @@ export default function SectionIndex() {
             onClick={(e) => handleJump(e, s.id)}
             aria-current={isActive ? "true" : undefined}
             aria-label={`${s.label} — section ${s.num}`}
-            className="group relative flex items-center justify-end gap-3 py-0.5 outline-none"
+            className="group relative flex min-h-11 items-center justify-end gap-3 py-2 outline-none"
           >
-            {/* Label — visible when active or hovered/focused, doesn't shift layout */}
             <span
-              className="pointer-events-none absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity duration-300"
-              style={{
-                color: isActive ? "var(--ink)" : "var(--ink-muted)",
-                opacity: isActive ? 1 : 0,
-                transitionTimingFunction: "var(--ease-out)",
-              }}
+              aria-hidden
+              className={`pointer-events-none absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink)] transition-opacity duration-300 ${
+                isActive
+                  ? "opacity-100"
+                  : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+              }`}
+              style={{ transitionTimingFunction: "var(--ease-out)" }}
             >
               {s.label}
             </span>
-            <span
-              className="absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-              aria-hidden
-            >
-              {!isActive && s.label}
+
+            {/* Rail: a fixed 2rem rule scaled on X — never a width animation,
+                so nothing reflows. The only permitted signal use here. */}
+            <span aria-hidden className="block w-8 shrink-0">
+              <span
+                className={`block h-px origin-right transition-transform duration-500 ${
+                  isActive
+                    ? "scale-x-100 bg-[var(--signal)]"
+                    : "scale-x-50 bg-[color-mix(in_srgb,var(--ink)_30%,transparent)] group-hover:scale-x-75 group-hover:bg-[var(--ink)] group-focus-visible:scale-x-75 group-focus-visible:bg-[var(--ink)]"
+                }`}
+                style={{ transitionTimingFunction: "var(--ease-out)" }}
+              />
             </span>
 
-            {/* Rail line — grows and turns accent on active */}
             <span
-              className="h-px transition-all duration-500"
-              style={{
-                width: isActive ? "2rem" : "1rem",
-                background: isActive
-                  ? "var(--ink)"
-                  : "color-mix(in srgb, var(--ink) 35%, transparent)",
-                transitionTimingFunction: "var(--ease-out)",
-              }}
-            />
-
-            {/* Numeral */}
-            <span
-              className="w-5 text-right font-mono text-[10px] tabular-nums transition-colors duration-300"
-              style={{
-                color: isActive
-                  ? "var(--ink)"
-                  : "color-mix(in srgb, var(--ink) 45%, transparent)",
-              }}
+              aria-hidden
+              className={`w-5 text-right font-mono text-[10px] tabular-nums transition-colors duration-300 ${
+                isActive
+                  ? "text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] group-hover:text-[var(--ink)]"
+              }`}
             >
               {s.num}
             </span>

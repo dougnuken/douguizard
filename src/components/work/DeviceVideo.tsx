@@ -37,7 +37,7 @@ const INNER_RADIUS_PX = OUTER_RADIUS_PX - BEZEL_PX;
 /**
  * The bare editorial phone frame: ambient halo + bezel + clipped screen.
  * Token-driven end to end (`var(--color-*)`), so it reads correctly on the light
- * base theme and on `.theme-dark` subtrees alike.
+ * light and dark appearances alike.
  */
 export function PhoneFrame({
   children,

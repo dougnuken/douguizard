@@ -3,6 +3,7 @@ import { Archivo, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import themeColors from "./theme-colors.json";
 import { site } from "@/data/site";
+import SiteHeader from "@/components/SiteHeader";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -81,7 +82,13 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }

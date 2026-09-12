@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
@@ -174,17 +173,6 @@ export default function CaseStudyPage() {
   const params = useParams<{ slug: string }>();
   const study = getCaseStudy(params.slug);
 
-  // Detail pages are a normal vertical document. Clear any chrome-theme state
-  // left on <html> by the home shell and start at the top, so scroll is never
-  // locked when arriving via client-side navigation from the horizontal home.
-  useEffect(() => {
-    document.documentElement.removeAttribute("data-panel-theme");
-    // Defensive: clear any leaked scroll-lock so the detail page always scrolls.
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-    window.scrollTo(0, 0);
-  }, []);
-
   if (!study) {
     notFound();
   }
@@ -222,30 +210,6 @@ export default function CaseStudyPage() {
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* ============ Top bar — light glass, ink text ============ */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-xl bg-[var(--paper-raised)] hairline-b px-6 md:px-12 py-4 flex justify-between items-center"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease }}
-      >
-        <Link
-          href="/"
-          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] transition-colors"
-        >
-          ← All work
-        </Link>
-        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] hidden md:block">
-          {study.num} · {study.project}
-        </div>
-        <Link
-          href="/#work"
-          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink)] no-underline hover:text-[var(--ink)] transition-colors"
-        >
-          Doug × Vargas
-        </Link>
-      </motion.header>
-
       {/* ============ HERO ============ */}
       <section className="relative min-h-[78vh] flex flex-col justify-end px-6 md:px-12 pb-20 pt-36 md:pt-40 overflow-hidden bg-[var(--paper)]">
         <div className="max-w-[1400px] mx-auto w-full relative z-10">

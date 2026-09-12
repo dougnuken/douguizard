@@ -41,6 +41,15 @@ Fecha: 2026-09-12. Este archivo manda sobre cualquier spec cuando se contradicen
 - **Build B (rutas + assets):** specs 05, 04, 08 + datos del caso Banco de Occidente (07 §g) con los recortes desde `scratchpad/behance/` + Mercadolibre (07 §h) + correcciones olbo/Naowee (07 §i) + reemplazo de KPIs vagos (07 §i, RC/Qrvey/Ideaware).
 - **QA:** spec 09 completo, reporte en `scratchpad/report-qa.md`.
 
+## E. Galería de Banco de Occidente (para Build B)
+
+- Los 9 recortes ya existen a resolución nativa en `scratchpad/bdo-crops/*.png` (+ `manifest.json` con cajas y notas, + `contact-sheet.jpg`). Build B los convierte a WebP (q 82) en `public/work/banco-de-occidente/` con los mismos nombres del 07 §g y NO vuelve a recortar.
+- **Todos traen su propio bezel** (tablet con manos, tablet, iPhone) o son diagramas/boards sobre fondo lavanda `rgb(239,242,252)`. Meterlos en `BrowserFrame` sería un navegador con una tablet adentro. Por eso `CaseStudy.galleryKind` gana un tercer valor: **`"plain"`** → `CaseProduct` renderiza cada ítem como `next/image` dentro de una tarjeta plana (`border: 1px solid var(--line-strong)`, `border-radius: 12px`, `overflow: hidden`, fondo `var(--paper-raised)`), a su ratio natural, en grid `md:grid-cols-2` con `gap: 24px`, caption mono debajo. Sin chrome de navegador, sin marco de teléfono. `videoKind` sigue igual (BdO no tiene video).
+- Ratios distintos por ítem (0.92 a 2.16): en el grid de 2 columnas cada tarjeta ocupa su celda con `align-self: start`; no forzar `aspect-ratio`. `illustrated-icons` (823 px de ancho) va con `sizes="(min-width:768px) 50vw, 100vw"` como los demás: a media columna queda nítido.
+- Orden: el del 07 §g (portal-dashboard primero). `priorityFirst: false`.
+- `portal-dashboard` contiene nombres mock del producto ("Jose Manuel", "Valeria Betancurt" y un teléfono) que ya estaban públicos en Behance desde 2022 y no son créditos de terceros. Se publican tal cual; ⚠️ CONFIRMAR DOUG si prefiere difuminarlos (el manifest lo marca en `flags.mock-ui-names`).
+- Dimensiones `width`/`height` explícitas por ítem desde el `manifest.json` (el modelo `gallery[]` no las tiene: añadir `width?`/`height?` opcionales a `CaseStudy.gallery[]` y usarlas cuando existan; los casos phone/browser siguen con sus constantes).
+
 ## D. Reglas de proceso para los agentes de build
 
 1. Rama `redesign/bn-editorial`. Commits por workstream (`feat(tokens): …`, `feat(data): …`, `feat(home): …`), mensajes convencionales, **nunca push, nunca main**.
