@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { caseStudies, getCaseMeta, getCaseStudy, type CaseStudy } from "@/data/work";
+import { caseStudies, getCaseMeta, type CaseStudy } from "@/data/work";
 
 describe("getCaseMeta", () => {
   it("derives client, role and year from the experience for a client case", () => {
