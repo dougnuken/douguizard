@@ -114,15 +114,15 @@ export default function SectionIndex() {
             <span
               className="pointer-events-none absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] transition-opacity duration-300"
               style={{
-                color: isActive ? "var(--color-accent)" : "var(--color-ink-muted)",
+                color: isActive ? "var(--ink)" : "var(--ink-muted)",
                 opacity: isActive ? 1 : 0,
-                transitionTimingFunction: "var(--ease-quart-out)",
+                transitionTimingFunction: "var(--ease-out)",
               }}
             >
               {s.label}
             </span>
             <span
-              className="absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--chrome-ink)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+              className="absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
               aria-hidden
             >
               {!isActive && s.label}
@@ -134,9 +134,9 @@ export default function SectionIndex() {
               style={{
                 width: isActive ? "2rem" : "1rem",
                 background: isActive
-                  ? "var(--color-accent)"
-                  : "color-mix(in srgb, var(--chrome-ink) 35%, transparent)",
-                transitionTimingFunction: "var(--ease-quart-out)",
+                  ? "var(--ink)"
+                  : "color-mix(in srgb, var(--ink) 35%, transparent)",
+                transitionTimingFunction: "var(--ease-out)",
               }}
             />
 
@@ -145,8 +145,8 @@ export default function SectionIndex() {
               className="w-5 text-right font-mono text-[10px] tabular-nums transition-colors duration-300"
               style={{
                 color: isActive
-                  ? "var(--chrome-ink)"
-                  : "color-mix(in srgb, var(--chrome-ink) 45%, transparent)",
+                  ? "var(--ink)"
+                  : "color-mix(in srgb, var(--ink) 45%, transparent)",
               }}
             >
               {s.num}

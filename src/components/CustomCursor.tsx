@@ -66,7 +66,7 @@ export default function CustomCursor() {
           height: 12,
           x: "-50%",
           y: "-50%",
-          background: "var(--color-accent)",
+          background: "var(--ink)",
           mixBlendMode: "difference",
         }}
         animate={{
@@ -84,7 +84,7 @@ export default function CustomCursor() {
           x: "-50%",
           y: "-50%",
           borderColor: isHovering
-            ? "var(--color-accent)"
+            ? "var(--ink)"
             : "rgba(245, 243, 255, 0.4)",
         }}
         animate={{

@@ -64,7 +64,7 @@ function renderBold(text: string) {
   return parts.map((p, i) => {
     if (p.startsWith("**") && p.endsWith("**")) {
       return (
-        <strong key={i} className="font-bold text-[var(--color-ink)]">
+        <strong key={i} className="font-bold text-[var(--ink)]">
           {p.slice(2, -2)}
         </strong>
       );
@@ -78,11 +78,11 @@ function Eyebrow({ children, sticky = false }: { children: React.ReactNode; stic
   return (
     <FadeIn>
       <div
-        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] ${
+        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-muted)] ${
           sticky ? "md:sticky md:top-32" : ""
         }`}
       >
-        <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
+        <span className="inline-block w-6 h-px bg-[var(--ink)] mr-3 align-middle" />
         {children}
       </div>
     </FadeIn>
@@ -105,11 +105,11 @@ function EyebrowHeading({
   return (
     <FadeIn>
       <h2
-        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] ${
+        className={`font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-muted)] ${
           sticky ? "md:sticky md:top-32" : ""
         }`}
       >
-        <span className="inline-block w-6 h-px bg-[var(--color-ink)] mr-3 align-middle" />
+        <span className="inline-block w-6 h-px bg-[var(--ink)] mr-3 align-middle" />
         {children}
       </h2>
     </FadeIn>
@@ -129,11 +129,11 @@ function FeatureKind({ kind }: { kind?: "ai" | "product" }) {
   return (
     <div
       className={`flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] uppercase ${
-        isAi ? "text-[var(--color-accent)]" : "text-[var(--color-ink-dim)]"
+        isAi ? "text-[var(--ink)]" : "text-[var(--ink-dim)]"
       }`}
     >
       {isAi && (
-        <span aria-hidden className="h-1 w-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
+        <span aria-hidden className="h-1 w-1 shrink-0 rounded-full bg-[var(--ink)]" />
       )}
       {isAi ? "AI" : "Product"}
     </div>
@@ -148,7 +148,7 @@ function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
         as="div"
         variant="mask"
         delay={index * 0.07}
-        className="font-display font-black text-[clamp(30px,3.2vw,46px)] leading-[1.02] tracking-[-0.03em] text-[var(--color-ink-strong)]"
+        className="font-display font-black text-[clamp(30px,3.2vw,46px)] leading-[1.02] tracking-[-0.03em] text-[var(--ink)]"
       >
         {kpi.value}
       </RevealText>
@@ -156,13 +156,13 @@ function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
         as="div"
         variant="fade"
         delay={index * 0.07 + 0.08}
-        className="mt-2 font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-muted)] leading-[1.5]"
+        className="mt-2 font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--ink-muted)] leading-[1.5]"
       >
         {kpi.label}
       </RevealText>
       {kpi.delta && (
-        <span className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-[var(--color-accent)]">
-          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]" />
+        <span className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-[var(--ink)]">
+          <span className="h-1 w-1 rounded-full bg-[var(--ink)]" />
           {kpi.delta}
         </span>
       )}
@@ -224,47 +224,47 @@ export default function CaseStudyPage() {
     <MotionConfig reducedMotion="user">
       {/* ============ Top bar — light glass, ink text ============ */}
       <motion.header
-        className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-xl bg-[var(--color-bg-glass)] hairline-b px-6 md:px-12 py-4 flex justify-between items-center"
+        className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-xl bg-[var(--paper-raised)] hairline-b px-6 md:px-12 py-4 flex justify-between items-center"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease }}
       >
         <Link
           href="/"
-          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)] no-underline hover:text-[var(--color-accent)] transition-colors"
+          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] transition-colors"
         >
           ← All work
         </Link>
-        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)] hidden md:block">
+        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] hidden md:block">
           {study.num} · {study.project}
         </div>
         <Link
           href="/#work"
-          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink)] no-underline hover:text-[var(--color-accent)] transition-colors"
+          className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink)] no-underline hover:text-[var(--ink)] transition-colors"
         >
           Doug × Vargas
         </Link>
       </motion.header>
 
       {/* ============ HERO ============ */}
-      <section className="relative min-h-[78vh] flex flex-col justify-end px-6 md:px-12 pb-20 pt-36 md:pt-40 overflow-hidden bg-[var(--color-bg-deep)]">
+      <section className="relative min-h-[78vh] flex flex-col justify-end px-6 md:px-12 pb-20 pt-36 md:pt-40 overflow-hidden bg-[var(--paper)]">
         <div className="max-w-[1400px] mx-auto w-full relative z-10">
           <motion.div
-            className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--color-ink-muted)] mb-12 flex-wrap"
+            className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-12 flex-wrap"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease }}
           >
             <Spark size={12} />
             <span>Case study {study.num}</span>
-            <span className="text-[var(--color-ink-dim)]">·</span>
+            <span className="text-[var(--ink-dim)]">·</span>
             <span>{study.category}</span>
-            <span className="text-[var(--color-ink-dim)]">·</span>
+            <span className="text-[var(--ink-dim)]">·</span>
             <span>{meta.year}</span>
           </motion.div>
 
           <motion.h2
-            className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--color-accent)] mb-6"
+            className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--ink)] mb-6"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease }}
@@ -272,7 +272,7 @@ export default function CaseStudyPage() {
             {meta.client}
           </motion.h2>
 
-          <h1 className="font-display font-black text-[clamp(56px,11vw,180px)] leading-[0.9] tracking-[-0.04em] text-[var(--color-ink-strong)] mb-12 max-w-[1100px]">
+          <h1 className="font-display font-black text-[clamp(56px,11vw,180px)] leading-[0.9] tracking-[-0.04em] text-[var(--ink)] mb-12 max-w-[1100px]">
             <span className="block overflow-hidden">
               <motion.span
                 className="inline-block"
@@ -286,7 +286,7 @@ export default function CaseStudyPage() {
           </h1>
 
           <motion.p
-            className="font-display text-[clamp(20px,2vw,28px)] text-[var(--color-ink)] max-w-[720px] leading-[1.4] tracking-tight"
+            className="font-display text-[clamp(20px,2vw,28px)] text-[var(--ink)] max-w-[720px] leading-[1.4] tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1.0, ease }}
@@ -297,7 +297,7 @@ export default function CaseStudyPage() {
       </section>
 
       {/* ============ Project meta strip ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-12 bg-[var(--color-bg-deep)] border-y border-[var(--color-line)]">
+      <section className="relative z-[2] px-6 md:px-12 py-12 bg-[var(--paper)] border-y border-[var(--line)]">
         <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
             { label: "Role", value: meta.role },
@@ -306,10 +306,10 @@ export default function CaseStudyPage() {
             { label: "Year", value: meta.year },
           ].map((item, i) => (
             <FadeIn key={item.label} delay={i * 0.06}>
-              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-2">
+              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)] mb-2">
                 / {item.label}
               </div>
-              <div className="text-[var(--color-ink)] text-[15px] leading-[1.4]">
+              <div className="text-[var(--ink)] text-[15px] leading-[1.4]">
                 {item.value}
               </div>
             </FadeIn>
@@ -322,12 +322,12 @@ export default function CaseStudyPage() {
           before the reader commits to the long read. Only cases that ship
           something public carry `links`. */}
       {study.links && study.links.length > 0 && (
-        <section className="relative z-[2] px-6 md:px-12 py-10 bg-[var(--color-bg-deep)] border-b border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-10 bg-[var(--paper)] border-b border-[var(--line)]">
           {/* Same 4-col grid as the meta strip above, so the label and the
               links land on the columns the reader's eye already learned. */}
           <div className="max-w-[1400px] mx-auto grid grid-cols-1 gap-6 md:grid-cols-4 md:items-baseline md:gap-8">
             <FadeIn>
-              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+              <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)]">
                 / Open it
               </div>
             </FadeIn>
@@ -338,12 +338,12 @@ export default function CaseStudyPage() {
                     href={l.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-baseline gap-2.5 font-display text-[clamp(20px,2vw,28px)] leading-none text-[var(--color-ink)] no-underline border-b border-[var(--color-line-strong)] pb-1 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
+                    className="group inline-flex items-baseline gap-2.5 font-display text-[clamp(20px,2vw,28px)] leading-none text-[var(--ink)] no-underline border-b border-[var(--line-strong)] pb-1 hover:text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
                   >
                     {i === 0 && (
                       <span
                         aria-hidden
-                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--ink)]"
                       />
                     )}
                     {l.label}
@@ -359,19 +359,19 @@ export default function CaseStudyPage() {
       )}
 
       {/* ============ Impact + KPIs (the market-facing star) ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)]">
         <div className="max-w-[1100px] mx-auto">
           <Eyebrow>The impact</Eyebrow>
 
           <RevealText
             as="p"
             variant="mask"
-            className="mt-8 font-display font-medium text-[clamp(28px,4vw,54px)] leading-[1.14] tracking-[-0.025em] text-[var(--color-ink)] max-w-[960px]"
+            className="mt-8 font-display font-medium text-[clamp(28px,4vw,54px)] leading-[1.14] tracking-[-0.025em] text-[var(--ink)] max-w-[960px]"
           >
             {study.impact}
           </RevealText>
 
-          <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-12 border-t border-[var(--color-line)] pt-12 md:grid-cols-4">
+          <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-12 border-t border-[var(--line)] pt-12 md:grid-cols-4">
             {study.kpis.map((kpi, i) => (
               <KpiCard key={kpi.label} kpi={kpi} index={i} />
             ))}
@@ -380,13 +380,13 @@ export default function CaseStudyPage() {
       </section>
 
       {/* ============ Context ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)] border-y border-[var(--line)]">
         <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
           <Eyebrow sticky>Context</Eyebrow>
           <RevealText
             as="p"
             variant="fade"
-            className="font-display text-[clamp(20px,2.4vw,30px)] leading-[1.4] tracking-[-0.01em] text-[var(--color-ink)] max-w-[780px]"
+            className="font-display text-[clamp(20px,2.4vw,30px)] leading-[1.4] tracking-[-0.01em] text-[var(--ink)] max-w-[780px]"
           >
             {study.context}
           </RevealText>
@@ -394,14 +394,14 @@ export default function CaseStudyPage() {
       </section>
 
       {/* ============ What I did ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+      <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)]">
         <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
           <Eyebrow sticky>What I did</Eyebrow>
-          <div className="border-y border-[var(--color-line)]">
+          <div className="border-y border-[var(--line)]">
             {study.contributions.map((c, i) => (
               <div
                 key={i}
-                className="grid grid-cols-[48px_1fr] gap-5 md:gap-8 border-b border-[var(--color-line)] py-6 last:border-b-0 md:py-7"
+                className="grid grid-cols-[48px_1fr] gap-5 md:gap-8 border-b border-[var(--line)] py-6 last:border-b-0 md:py-7"
               >
                 <RevealText
                   as="div"
@@ -415,7 +415,7 @@ export default function CaseStudyPage() {
                   as="p"
                   variant="fade"
                   delay={i * 0.04 + 0.06}
-                  className="text-[clamp(15px,1.35vw,19px)] leading-[1.55] text-[var(--color-ink)]"
+                  className="text-[clamp(15px,1.35vw,19px)] leading-[1.55] text-[var(--ink)]"
                 >
                   {renderBold(c)}
                 </RevealText>
@@ -428,14 +428,14 @@ export default function CaseStudyPage() {
       {/* ============ Process — how the work actually happened (optional) ====
           After "What I did" (the what) comes the narrative (the how). */}
       {study.process && study.process.length > 0 && (
-        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)] border-y border-[var(--line)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
             <EyebrowHeading sticky>How it happened</EyebrowHeading>
-            <ol className="m-0 list-none p-0 border-t border-[var(--color-line)]">
+            <ol className="m-0 list-none p-0 border-t border-[var(--line)]">
               {study.process.map((p, i) => (
                 <li
                   key={p.phase}
-                  className="grid grid-cols-1 gap-4 border-b border-[var(--color-line)] py-8 md:grid-cols-[64px_1fr] md:gap-8 md:py-11"
+                  className="grid grid-cols-1 gap-4 border-b border-[var(--line)] py-8 md:grid-cols-[64px_1fr] md:gap-8 md:py-11"
                 >
                   <RevealText
                     as="div"
@@ -450,7 +450,7 @@ export default function CaseStudyPage() {
                       as="h3"
                       variant="mask"
                       delay={i * 0.04 + 0.05}
-                      className="font-display font-medium text-[clamp(21px,2.1vw,30px)] leading-[1.2] tracking-[-0.02em] text-[var(--color-ink-strong)]"
+                      className="font-display font-medium text-[clamp(21px,2.1vw,30px)] leading-[1.2] tracking-[-0.02em] text-[var(--ink)]"
                     >
                       {p.title}
                     </RevealText>
@@ -458,7 +458,7 @@ export default function CaseStudyPage() {
                       as="p"
                       variant="fade"
                       delay={i * 0.04 + 0.1}
-                      className="mt-4 max-w-[680px] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                      className="mt-4 max-w-[680px] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--ink-muted)]"
                     >
                       {renderBold(p.body)}
                     </RevealText>
@@ -472,25 +472,25 @@ export default function CaseStudyPage() {
 
       {/* ============ Decisions — the calls worth defending (optional) ====== */}
       {study.decisions && study.decisions.length > 0 && (
-        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-deep)]">
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
             <EyebrowHeading sticky>Decisions I&apos;d defend</EyebrowHeading>
-            <ul className="m-0 list-none p-0 border-t border-[var(--color-line)]">
+            <ul className="m-0 list-none p-0 border-t border-[var(--line)]">
               {study.decisions.map((d, i) => (
                 <li
                   key={d.title}
-                  className="border-b border-[var(--color-line)] py-8 md:py-11"
+                  className="border-b border-[var(--line)] py-8 md:py-11"
                 >
                   <div className="flex items-baseline gap-3.5">
                     <span
                       aria-hidden
-                      className="h-1.5 w-1.5 shrink-0 translate-y-[-0.35em] rounded-full bg-[var(--color-accent)]"
+                      className="h-1.5 w-1.5 shrink-0 translate-y-[-0.35em] rounded-full bg-[var(--ink)]"
                     />
                     <RevealText
                       as="h3"
                       variant="mask"
                       delay={i * 0.05}
-                      className="font-display font-medium text-[clamp(20px,2vw,28px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink-strong)]"
+                      className="font-display font-medium text-[clamp(20px,2vw,28px)] leading-[1.25] tracking-[-0.02em] text-[var(--ink)]"
                     >
                       {d.title}
                     </RevealText>
@@ -499,7 +499,7 @@ export default function CaseStudyPage() {
                     as="p"
                     variant="fade"
                     delay={i * 0.05 + 0.08}
-                    className="mt-4 max-w-[680px] pl-[1.4rem] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                    className="mt-4 max-w-[680px] pl-[1.4rem] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--ink-muted)]"
                   >
                     {renderBold(d.body)}
                   </RevealText>
@@ -516,7 +516,7 @@ export default function CaseStudyPage() {
           it. Shares the mid band with "The product" so the two read as one
           block of evidence, cut off from the prose above by the band change. */}
       {study.features && study.features.length > 0 && (
-        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-t border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)] border-t border-[var(--line)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] gap-12">
             <EyebrowHeading sticky>What it can do</EyebrowHeading>
             <div>
@@ -524,7 +524,7 @@ export default function CaseStudyPage() {
                 <RevealText
                   as="p"
                   variant="fade"
-                  className="max-w-[780px] font-display text-[clamp(19px,1.9vw,26px)] leading-[1.4] tracking-[-0.01em] text-[var(--color-ink)]"
+                  className="max-w-[780px] font-display text-[clamp(19px,1.9vw,26px)] leading-[1.4] tracking-[-0.01em] text-[var(--ink)]"
                 >
                   {study.featuresIntro}
                 </RevealText>
@@ -534,7 +534,7 @@ export default function CaseStudyPage() {
                   carries no gap, the padding does the spacing, so the hairlines
                   meet instead of floating. Collapses to a single column. */}
               <ul
-                className={`m-0 grid list-none grid-cols-1 border-t border-[var(--color-line)] p-0 md:grid-cols-2 ${
+                className={`m-0 grid list-none grid-cols-1 border-t border-[var(--line)] p-0 md:grid-cols-2 ${
                   study.featuresIntro ? "mt-12 md:mt-16" : ""
                 }`}
               >
@@ -543,14 +543,14 @@ export default function CaseStudyPage() {
                   return (
                     <li
                       key={f.title}
-                      className="border-b border-[var(--color-line)] py-8 md:py-10 md:odd:border-r md:odd:pr-10 md:odd:last:border-r-0 md:even:pl-10"
+                      className="border-b border-[var(--line)] py-8 md:py-10 md:odd:border-r md:odd:pr-10 md:odd:last:border-r-0 md:even:pl-10"
                     >
                       <FeatureKind kind={f.kind} />
                       <RevealText
                         as="h3"
                         variant="mask"
                         delay={d}
-                        className={`font-display font-medium text-[clamp(19px,1.8vw,25px)] leading-[1.25] tracking-[-0.02em] text-[var(--color-ink-strong)] ${
+                        className={`font-display font-medium text-[clamp(19px,1.8vw,25px)] leading-[1.25] tracking-[-0.02em] text-[var(--ink)] ${
                           f.kind ? "mt-3" : ""
                         }`}
                       >
@@ -560,7 +560,7 @@ export default function CaseStudyPage() {
                         as="p"
                         variant="fade"
                         delay={d + 0.06}
-                        className="mt-3.5 max-w-[540px] text-[clamp(14.5px,1.2vw,17px)] leading-[1.65] text-[var(--color-ink-muted)]"
+                        className="mt-3.5 max-w-[540px] text-[clamp(14.5px,1.2vw,17px)] leading-[1.65] text-[var(--ink-muted)]"
                       >
                         {renderBold(f.body)}
                       </RevealText>
@@ -579,7 +579,7 @@ export default function CaseStudyPage() {
           container than the prose sections so four phones — or a full-bleed
           browser window — get real room. */}
       {(hasGallery || video) && (
-        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--color-bg-mid)] border-y border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-28 md:py-32 bg-[var(--paper)] border-y border-[var(--line)]">
           <div className="max-w-[1400px] mx-auto">
             <EyebrowHeading>The product</EyebrowHeading>
             <div className="mt-12 md:mt-16">
@@ -590,7 +590,7 @@ export default function CaseStudyPage() {
                 <div
                   className={
                     hasGallery
-                      ? "mb-14 border-b border-[var(--color-line)] pb-14 md:mb-16 md:pb-16"
+                      ? "mb-14 border-b border-[var(--line)] pb-14 md:mb-16 md:pb-16"
                       : ""
                   }
                 >
@@ -625,11 +625,11 @@ export default function CaseStudyPage() {
 
                       <FadeIn>
                         <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
-                          <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] lg:pt-2">
+                          <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)] lg:pt-2">
                             / Walkthrough — no sound
                           </div>
                           {video.caption && (
-                            <p className="max-w-[62ch] text-[17px] leading-[1.6] text-[var(--color-ink)] md:text-[19px]">
+                            <p className="max-w-[62ch] text-[17px] leading-[1.6] text-[var(--ink)] md:text-[19px]">
                               {video.caption}
                             </p>
                           )}
@@ -662,11 +662,11 @@ export default function CaseStudyPage() {
 
                     <FadeIn>
                       <div className="lg:pt-2">
-                        <div className="mb-6 font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)]">
+                        <div className="mb-6 font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)]">
                           / Walkthrough — no sound
                         </div>
                         {video.caption && (
-                          <p className="max-w-[46ch] text-[17px] leading-[1.6] text-[var(--color-ink)] md:text-[19px]">
+                          <p className="max-w-[46ch] text-[17px] leading-[1.6] text-[var(--ink)] md:text-[19px]">
                             {video.caption}
                           </p>
                         )}
@@ -722,18 +722,18 @@ export default function CaseStudyPage() {
 
       {/* ============ Technologies + external link ============ */}
       {(study.technologies || showExternalLink || study.credits) && (
-        <section className="relative z-[2] px-6 md:px-12 py-24 bg-[var(--color-bg-soft)] border-t border-[var(--color-line)]">
+        <section className="relative z-[2] px-6 md:px-12 py-24 bg-[var(--paper-raised)] border-t border-[var(--line)]">
           <div className="max-w-[1100px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
             {study.technologies && (
               <FadeIn>
-                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-4">
+                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)] mb-4">
                   / Tools & Methods
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {study.technologies.map((t) => (
                     <span
                       key={t}
-                      className="font-mono text-[11px] tracking-[0.15em] uppercase text-[var(--color-ink)] px-4 py-2 border border-[var(--color-line)] rounded-full"
+                      className="font-mono text-[11px] tracking-[0.15em] uppercase text-[var(--ink)] px-4 py-2 border border-[var(--line)] rounded-full"
                     >
                       {t}
                     </span>
@@ -744,14 +744,14 @@ export default function CaseStudyPage() {
 
             {showExternalLink && study.externalLink && (
               <FadeIn delay={0.1}>
-                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-4">
+                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)] mb-4">
                   / Live link
                 </div>
                 <a
                   href={study.externalLink.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-display text-2xl text-[var(--color-ink)] no-underline border-b border-[var(--color-line-strong)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] inline-block transition-colors"
+                  className="font-display text-2xl text-[var(--ink)] no-underline border-b border-[var(--line-strong)] hover:text-[var(--ink)] hover:border-[var(--ink)] inline-block transition-colors"
                 >
                   {study.externalLink.label} →
                 </a>
@@ -761,12 +761,12 @@ export default function CaseStudyPage() {
 
           {/* Authorship note — closes the colophon, same band, no extra section. */}
           {study.credits && (
-            <div className="max-w-[1100px] mx-auto mt-14 border-t border-[var(--color-line)] pt-10">
+            <div className="max-w-[1100px] mx-auto mt-14 border-t border-[var(--line)] pt-10">
               <FadeIn>
-                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-4">
+                <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)] mb-4">
                   / Authorship
                 </div>
-                <p className="max-w-[760px] text-[15px] leading-[1.65] text-[var(--color-ink-muted)]">
+                <p className="max-w-[760px] text-[15px] leading-[1.65] text-[var(--ink-muted)]">
                   {renderBold(study.credits)}
                 </p>
               </FadeIn>
@@ -776,26 +776,26 @@ export default function CaseStudyPage() {
       )}
 
       {/* ============ Next project ============ */}
-      <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--color-bg-mid)] border-t border-[var(--color-line)]">
+      <section className="relative z-[2] px-6 md:px-12 py-32 bg-[var(--paper)] border-t border-[var(--line)]">
         <div className="max-w-[1100px] mx-auto">
           <FadeIn>
-            <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-muted)] mb-8">
+            <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-muted)] mb-8">
               / Next case study
             </div>
           </FadeIn>
 
           <Link href={`/work/${next.slug}`} className="block group no-underline text-inherit">
             <FadeIn>
-              <div className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--color-accent)] mb-6 group-hover:translate-x-2 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+              <div className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--ink)] mb-6 group-hover:translate-x-2 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
                 {getCaseMeta(next.slug).client}
               </div>
-              <h2 className="font-display font-black text-[clamp(56px,11vw,160px)] leading-[0.9] tracking-[-0.04em] text-[var(--color-ink)] mb-8 group-hover:text-[var(--color-accent)] transition-colors duration-500">
+              <h2 className="font-display font-black text-[clamp(56px,11vw,160px)] leading-[0.9] tracking-[-0.04em] text-[var(--ink)] mb-8 group-hover:text-[var(--ink)] transition-colors duration-500">
                 {next.project}
                 <span className="inline-block group-hover:translate-x-4 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
                   {" "}→
                 </span>
               </h2>
-              <p className="text-lg text-[var(--color-ink-muted)] max-w-[720px] leading-[1.5]">
+              <p className="text-lg text-[var(--ink-muted)] max-w-[720px] leading-[1.5]">
                 {next.tagline}
               </p>
             </FadeIn>
@@ -804,11 +804,11 @@ export default function CaseStudyPage() {
       </section>
 
       {/* ============ Footer ============ */}
-      <footer className="relative z-[2] px-6 md:px-12 py-16 bg-[var(--color-bg-deep)] border-t border-[var(--color-line)]">
-        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-[11px] tracking-[0.15em] uppercase text-[var(--color-ink-dim)]">
+      <footer className="relative z-[2] px-6 md:px-12 py-16 bg-[var(--paper)] border-t border-[var(--line)]">
+        <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-[11px] tracking-[0.15em] uppercase text-[var(--ink-dim)]">
           <Link
             href="/"
-            className="text-[var(--color-ink)] no-underline hover:text-[var(--color-accent)] transition-colors"
+            className="text-[var(--ink)] no-underline hover:text-[var(--ink)] transition-colors"
           >
             ← Back to all work
           </Link>

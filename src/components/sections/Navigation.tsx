@@ -29,10 +29,10 @@ function DesktopNavLink(props: { item: NavItem; isActive: boolean; reduceMotion:
   return (
     <a
       href={item.href}
-      className="kicker relative py-2 no-underline transition-colors duration-200 hover:text-[var(--color-ink)]"
+      className="kicker relative py-2 no-underline transition-colors duration-200 hover:text-[var(--ink)]"
       style={{
-        color: isActive ? "var(--color-ink)" : "var(--color-ink-muted)",
-        transitionTimingFunction: "var(--ease-quart-out)",
+        color: isActive ? "var(--ink)" : "var(--ink-muted)",
+        transitionTimingFunction: "var(--ease-out)",
       }}
     >
       {item.label}
@@ -40,7 +40,7 @@ function DesktopNavLink(props: { item: NavItem; isActive: boolean; reduceMotion:
         <motion.span
           layoutId="nav-underline"
           className="absolute inset-x-0 -bottom-px block h-px"
-          style={{ background: "var(--color-accent)" }}
+          style={{ background: "var(--ink)" }}
           transition={
             reduceMotion
               ? { duration: 0 }
@@ -61,8 +61,8 @@ function MobileNavLink(props: { item: NavItem; isActive: boolean; onClose: () =>
       onClick={onClose}
       className="hairline-b text-display block py-6 no-underline transition-colors duration-200"
       style={{
-        color: isActive ? "var(--color-ink)" : "var(--color-ink-muted)",
-        transitionTimingFunction: "var(--ease-quart-out)",
+        color: isActive ? "var(--ink)" : "var(--ink-muted)",
+        transitionTimingFunction: "var(--ease-out)",
       }}
     >
       {item.label}
@@ -106,21 +106,21 @@ export default function Navigation() {
     <>
       <motion.div
         className="fixed inset-x-0 top-0 z-[60] h-px origin-left"
-        style={{ scaleX: scrollYProgress, background: "var(--color-accent)" }}
+        style={{ scaleX: scrollYProgress, background: "var(--ink)" }}
       />
 
       <header
         className="hairline-b fixed inset-x-0 top-0 z-[55] h-16 md:h-[72px]"
-        style={{ background: "var(--color-bg-deep)" }}
+        style={{ background: "var(--paper)" }}
       >
         <div className="relative mx-auto flex h-full max-w-[1400px] items-center justify-between px-6 md:px-12">
           <a href="#hero" className="flex items-baseline gap-1 no-underline">
-            <span className="font-display text-base font-medium tracking-[-0.02em] text-[var(--color-ink)] md:text-lg">
+            <span className="font-display text-base font-medium tracking-[-0.02em] text-[var(--ink)] md:text-lg">
               Douguizard
             </span>
             <span
               className="font-display text-base leading-none font-light md:text-lg"
-              style={{ color: "var(--color-accent)" }}
+              style={{ color: "var(--ink)" }}
             >
               *
             </span>
@@ -143,7 +143,7 @@ export default function Navigation() {
           <div className="hidden items-center gap-5 md:flex">
             <span
               className="kicker hidden lg:block"
-              style={{ color: "var(--color-ink-dim)" }}
+              style={{ color: "var(--ink-dim)" }}
             >
               BCN · UTC-5
             </span>
@@ -167,12 +167,12 @@ export default function Navigation() {
               <motion.span
                 animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 3 : 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.2 }}
-                className="block h-px w-5 origin-center bg-[var(--color-ink)]"
+                className="block h-px w-5 origin-center bg-[var(--ink)]"
               />
               <motion.span
                 animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -3 : 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.2 }}
-                className="block h-px w-5 origin-center bg-[var(--color-ink)]"
+                className="block h-px w-5 origin-center bg-[var(--ink)]"
               />
             </span>
           </button>
@@ -187,7 +187,7 @@ export default function Navigation() {
             exit={{ opacity: 0 }}
             transition={{ duration: reduceMotion ? 0 : 0.2 }}
             className="fixed inset-0 z-50 md:hidden"
-            style={{ background: "var(--color-bg-deep)" }}
+            style={{ background: "var(--paper)" }}
           >
             <nav
               aria-label="Mobile navigation"
@@ -204,7 +204,7 @@ export default function Navigation() {
                 ))}
               </div>
 
-              <span className="kicker" style={{ color: "var(--color-ink-dim)" }}>
+              <span className="kicker" style={{ color: "var(--ink-dim)" }}>
                 BCN · UTC-5
               </span>
             </nav>

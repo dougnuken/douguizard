@@ -17,13 +17,13 @@ function AnimatedHeadline() {
   // muted continuation. Emphasis carried by weight, never red — the single
   // Spark in the kicker is this section's only red mark.
   const segments: { text: string; className?: string }[] = [
-    { text: "Designing ", className: "text-[var(--color-ink)]" },
-    { text: "human ", className: "text-[var(--color-ink-strong)] font-black" },
-    { text: "products", className: "text-[var(--color-ink)]" },
+    { text: "Designing ", className: "text-[var(--ink)]" },
+    { text: "human ", className: "text-[var(--ink)] font-black" },
+    { text: "products", className: "text-[var(--ink)]" },
     { text: "\n" },
-    { text: "for an ", className: "text-[var(--color-ink-muted)]" },
-    { text: "AI ", className: "text-[var(--color-ink-muted)] font-bold italic" },
-    { text: "era", className: "text-[var(--color-ink-muted)] relative" },
+    { text: "for an ", className: "text-[var(--ink-muted)]" },
+    { text: "AI ", className: "text-[var(--ink-muted)] font-bold italic" },
+    { text: "era", className: "text-[var(--ink-muted)] relative" },
   ];
 
   return (
@@ -60,7 +60,7 @@ function AnimatedHeadline() {
             {/* Add © superscript after "era" */}
             {segIdx === segments.length - 1 && (
               <motion.span
-                className="text-[0.25em] align-super ml-1 text-[var(--color-ink-muted)]"
+                className="text-[0.25em] align-super ml-1 text-[var(--ink-muted)]"
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : {}}
                 transition={{ delay: 1.4, duration: 0.6 }}
@@ -124,8 +124,8 @@ export default function Intro() {
               transition={{ duration: 0.8, ease }}
               className="col-span-12 hidden items-start justify-end md:col-span-9 md:flex"
             >
-              <div className="relative aspect-square w-[68px] rounded-full border border-[var(--color-line-strong)]">
-                <div className="absolute inset-[9px] rounded-full border border-[var(--color-line)]" />
+              <div className="relative aspect-square w-[68px] rounded-full border border-[var(--line-strong)]">
+                <div className="absolute inset-[9px] rounded-full border border-[var(--line)]" />
               </div>
             </motion.div>
 
@@ -149,10 +149,10 @@ export default function Intro() {
                 <span className="section-num text-[clamp(26px,2.2vw,36px)] leading-none">
                   {card.num}
                 </span>
-                <h3 className="font-display font-medium text-[clamp(20px,1.6vw,26px)] tracking-[-0.01em] text-[var(--color-ink)]">
+                <h3 className="font-display font-medium text-[clamp(20px,1.6vw,26px)] tracking-[-0.01em] text-[var(--ink)]">
                   {card.title}
                 </h3>
-                <p className="text-[15px] leading-[1.6] text-[var(--color-ink-muted)]">
+                <p className="text-[15px] leading-[1.6] text-[var(--ink-muted)]">
                   {card.text}
                 </p>
               </motion.div>

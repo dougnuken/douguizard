@@ -54,7 +54,7 @@ export default function Stats() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 05 — By the numbers
+              <span className="h-px w-8 bg-[var(--line-strong)]" />/ 05 — By the numbers
             </motion.div>
           </div>
 
@@ -67,16 +67,16 @@ export default function Stats() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, delay: i * 0.06, ease }}
-                className="group hairline-t flex flex-col gap-3 pt-6 transition-colors duration-500 hover:border-[var(--color-line-strong)]"
+                className="group hairline-t flex flex-col gap-3 pt-6 transition-colors duration-500 hover:border-[var(--line-strong)]"
               >
-                <div className="font-display text-[clamp(48px,7vw,96px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--color-ink)]">
+                <div className="font-display text-[clamp(48px,7vw,96px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--ink)]">
                   {stat.isInfinite ? (
-                    <span className="text-[var(--color-accent)]">{stat.num}</span>
+                    <span className="text-[var(--ink)]">{stat.num}</span>
                   ) : (
                     <>
                       <Counter to={stat.num as number} />
                       {stat.suffix && (
-                        <span className="text-[var(--color-accent)]">
+                        <span className="text-[var(--ink)]">
                           {stat.suffix}
                         </span>
                       )}
@@ -84,7 +84,7 @@ export default function Stats() {
                   )}
                 </div>
 
-                <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] leading-[1.6]">
+                <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--ink-muted)] leading-[1.6]">
                   {stat.label}
                 </div>
               </motion.div>

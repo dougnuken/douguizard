@@ -10,7 +10,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 /** Editorial link — hairline rhythm, nudges + warms to accent on hover. */
 const linkClass =
-  "block text-[15px] leading-[1.5] text-[var(--color-ink)] no-underline mb-2.5 transition-all duration-300 hover:text-[var(--color-accent)] hover:translate-x-1";
+  "block text-[15px] leading-[1.5] text-[var(--ink)] no-underline mb-2.5 transition-all duration-300 hover:text-[var(--ink)] hover:translate-x-1";
 
 const elsewhereLinks = site.social;
 
@@ -39,7 +39,7 @@ export default function Footer() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden"
       >
-        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[20vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
+        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[20vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--ink)] opacity-[0.05]">
           Let&apos;s talk
         </span>
       </div>
@@ -64,10 +64,10 @@ export default function Footer() {
               variant="mask"
               className="col-span-12 text-balance font-display text-[clamp(44px,7vw,112px)] leading-[0.9] tracking-[-0.03em] md:col-span-6"
             >
-              <span className="font-black text-[var(--color-ink)]">
+              <span className="font-black text-[var(--ink)]">
                 Let&apos;s talk.
               </span>{" "}
-              <span className="font-medium text-[var(--color-ink-muted)]">
+              <span className="font-medium text-[var(--ink-muted)]">
                 Got something worth building?
               </span>
             </RevealText>
@@ -116,15 +116,15 @@ export default function Footer() {
               transition={{ duration: 0.6, ease }}
               className="hairline-t pt-6"
             >
-              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
+              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                 / The signal
               </h4>
               {/* Two-tone paragraph — lead in ink, continuation in muted */}
               <p className="max-w-xs text-[14px] leading-[1.55]">
-                <span className="text-[var(--color-ink)]">
+                <span className="text-[var(--ink)]">
                   I take on selected freelance and consulting engagements alongside leading product at Naowee.
                 </span>{" "}
-                <span className="text-[var(--color-ink-muted)]">
+                <span className="text-[var(--ink-muted)]">
                   Especially keen on AI-native product work and design systems at scale.
                 </span>
               </p>
@@ -137,7 +137,7 @@ export default function Footer() {
               transition={{ duration: 0.6, delay: 0.08, ease }}
               className="hairline-t pt-6"
             >
-              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
+              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                 / Direct
               </h4>
               <a
@@ -159,7 +159,7 @@ export default function Footer() {
               transition={{ duration: 0.6, delay: 0.16, ease }}
               className="hairline-t pt-6"
             >
-              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
+              <h4 className="mb-5 font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                 / Elsewhere
               </h4>
               {elsewhereLinks.map((link) => (
@@ -170,11 +170,11 @@ export default function Footer() {
           </div>
 
           {/* Legal row */}
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[var(--color-line)] pt-8 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--color-ink-dim)] md:mt-14 md:flex-row">
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[var(--line)] pt-8 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)] md:mt-14 md:flex-row">
             <span>© 2026 Doug Vargas — All rights reserved</span>
             <span>
               Crafted in Barranquilla ·{" "}
-              <span className="text-[var(--color-accent)]">●</span> Online
+              <span className="text-[var(--ink)]">●</span> Online
             </span>
           </div>
         </div>

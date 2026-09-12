@@ -44,7 +44,7 @@ export default function TestimonialsCarousel() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 06 — Trusted by
+              <span className="h-px w-8 bg-[var(--line-strong)]" />/ 06 — Trusted by
             </motion.div>
 
             <motion.h2
@@ -55,7 +55,7 @@ export default function TestimonialsCarousel() {
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
               Words from{" "}
-              <span className="text-[var(--color-accent)]">teammates</span>.
+              <span className="text-[var(--ink)]">teammates</span>.
             </motion.h2>
 
             {/* Prev / next arrows fill the header's third column */}
@@ -79,7 +79,7 @@ export default function TestimonialsCarousel() {
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-[var(--color-ink-muted)] group-hover:text-[var(--color-ink)] transition-colors"
+                    className="text-[var(--ink-muted)] group-hover:text-[var(--ink)] transition-colors"
                   />
                 </svg>
               </button>
@@ -96,7 +96,7 @@ export default function TestimonialsCarousel() {
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-[var(--color-ink-muted)] group-hover:text-[var(--color-ink)] transition-colors"
+                    className="text-[var(--ink-muted)] group-hover:text-[var(--ink)] transition-colors"
                   />
                 </svg>
               </button>
@@ -115,7 +115,7 @@ export default function TestimonialsCarousel() {
             <div className="glass-strong relative overflow-hidden rounded-3xl p-8 md:p-14 lg:p-16 min-h-[380px] md:min-h-[420px] flex flex-col justify-center">
               {/* Giant decorative quote mark */}
               <div
-                className="absolute top-0 left-6 md:left-10 font-display text-[180px] md:text-[280px] leading-none text-[var(--color-line-strong)] pointer-events-none select-none opacity-50"
+                className="absolute top-0 left-6 md:left-10 font-display text-[180px] md:text-[280px] leading-none text-[var(--line-strong)] pointer-events-none select-none opacity-50"
                 aria-hidden
                 style={{ transform: "translateY(-12%)" }}
               >
@@ -132,29 +132,29 @@ export default function TestimonialsCarousel() {
                   className="relative z-10 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-8"
                 >
                   {/* Quote — spans the left 3 big columns */}
-                  <p className="col-span-12 self-center font-display font-normal text-[clamp(20px,2.4vw,32px)] leading-[1.4] tracking-[-0.02em] text-[var(--color-ink)] md:col-span-9">
+                  <p className="col-span-12 self-center font-display font-normal text-[clamp(20px,2.4vw,32px)] leading-[1.4] tracking-[-0.02em] text-[var(--ink)] md:col-span-9">
                     {current.quote}
                   </p>
 
                   {/* Attribution — avatar + name + meta in the right column */}
-                  <div className="col-span-12 flex flex-col gap-5 md:col-span-3 md:self-center md:border-l md:border-[var(--color-line)] md:pl-8">
+                  <div className="col-span-12 flex flex-col gap-5 md:col-span-3 md:self-center md:border-l md:border-[var(--line)] md:pl-8">
                     {/* Avatar with initials */}
                     <div
-                      className="flex h-14 w-14 items-center justify-center rounded-full font-mono text-sm tracking-[0.1em] text-[var(--color-ink)]"
+                      className="flex h-14 w-14 items-center justify-center rounded-full font-mono text-sm tracking-[0.1em] text-[var(--ink)]"
                       style={{
                         background:
-                          "color-mix(in srgb, var(--color-accent) 12%, var(--color-bg-soft))",
-                        border: "1px solid var(--color-line-strong)",
+                          "color-mix(in srgb, var(--ink) 12%, var(--paper-raised))",
+                        border: "1px solid var(--line-strong)",
                       }}
                     >
                       {current.author.initials}
                     </div>
 
                     <div>
-                      <div className="font-display text-lg text-[var(--color-ink)] tracking-tight">
+                      <div className="font-display text-lg text-[var(--ink)] tracking-tight">
                         {current.author.name}
                       </div>
-                      <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] mt-1">
+                      <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--ink-muted)] mt-1">
                         {current.author.role} · {current.author.company}
                       </div>
                     </div>
@@ -162,10 +162,10 @@ export default function TestimonialsCarousel() {
                     {/* Project meta */}
                     {current.context && (
                       <div>
-                        <div className="font-mono text-[9px] tracking-[0.22em] uppercase text-[var(--color-ink-dim)] mb-1">
+                        <div className="font-mono text-[9px] tracking-[0.22em] uppercase text-[var(--ink-dim)] mb-1">
                           Project
                         </div>
-                        <div className="text-[12px] text-[var(--color-ink-muted)]">
+                        <div className="text-[12px] text-[var(--ink-muted)]">
                           {current.context}
                         </div>
                       </div>
@@ -188,8 +188,8 @@ export default function TestimonialsCarousel() {
                     width: currentIndex === i ? "32px" : "8px",
                     background:
                       currentIndex === i
-                        ? "var(--color-accent)"
-                        : "var(--color-line-strong)",
+                        ? "var(--ink)"
+                        : "var(--line-strong)",
                   }}
                 />
               ))}

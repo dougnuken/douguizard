@@ -10,9 +10,9 @@
  * centre consistently; visual size comes from the `className`/width.
  */
 
-const LINE_STRONG = "var(--color-line-strong)";
-const LINE = "var(--color-line)";
-const DOT = "var(--color-ink-dim)";
+const LINE_STRONG = "var(--line-strong)";
+const LINE = "var(--line)";
+const DOT = "var(--ink-dim)";
 
 /** Four small column marks for Capabilities — one per capability card. */
 export function ColumnMark({ index }: { index: number }) {

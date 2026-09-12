@@ -120,7 +120,7 @@ export default function TextPressure({
         ref={titleRef}
         role="img"
         aria-label={text}
-        className="flex w-full justify-between uppercase text-[var(--color-ink)]"
+        className="flex w-full justify-between uppercase text-[var(--ink)]"
         style={{
           fontFamily: "var(--font-fraunces-vf), Georgia, serif",
           fontSize,

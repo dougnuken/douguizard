@@ -34,13 +34,13 @@ export default function Loader({ onComplete }: LoaderProps) {
     <AnimatePresence>
       {!isHidden && (
         <motion.div
-          className="fixed inset-0 bg-[var(--color-bg-deep)] z-[10000] flex flex-col items-center justify-center"
+          className="fixed inset-0 bg-[var(--paper)] z-[10000] flex flex-col items-center justify-center"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
-            className="font-mono text-[11px] tracking-[0.3em] text-[var(--color-ink-muted)] uppercase mb-6"
+            className="font-mono text-[11px] tracking-[0.3em] text-[var(--ink-muted)] uppercase mb-6"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -53,7 +53,7 @@ export default function Loader({ onComplete }: LoaderProps) {
               className="h-full origin-left"
               style={{
                 background:
-                  "linear-gradient(90deg, var(--color-accent), var(--color-accent-cool))",
+                  "linear-gradient(90deg, var(--ink), var(--ink))",
                 width: `${progress}%`,
               }}
               transition={{ duration: 0.3 }}
@@ -61,7 +61,7 @@ export default function Loader({ onComplete }: LoaderProps) {
           </div>
 
           <motion.div
-            className="font-mono text-[11px] text-[var(--color-ink)] mt-4 tracking-[0.2em]"
+            className="font-mono text-[11px] text-[var(--ink)] mt-4 tracking-[0.2em]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}

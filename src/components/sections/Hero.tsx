@@ -32,14 +32,14 @@ export default function Hero() {
       className="relative flex min-h-svh w-full flex-col justify-center overflow-hidden px-6 pt-24 pb-20 md:justify-end md:px-12 md:pt-28 md:pb-28"
     >
       {/* Animated flowing paths — subtle cinematic background motion */}
-      <BackgroundPaths className="text-[var(--color-ink-strong)] opacity-[0.16]" />
+      <BackgroundPaths className="text-[var(--ink)] opacity-[0.16]" />
 
       {/* Giant clipped wordmark — KINETIC signature, sits behind as texture */}
       <div
         aria-hidden
         className="pointer-events-none absolute bottom-0 left-1/2 w-screen -translate-x-1/2 select-none overflow-hidden"
       >
-        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[19vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--color-ink-strong)] opacity-[0.05]">
+        <span className="block translate-y-[0.14em] whitespace-nowrap font-display text-[19vw] font-black leading-[0.72] tracking-[-0.05em] text-[var(--ink)] opacity-[0.05]">
           Douguizard
         </span>
       </div>
@@ -57,8 +57,8 @@ export default function Hero() {
           tag="h1"
           text="Designing the human side of an AI era"
           emphasize={["human"]}
-          emphasizeClassName="font-black text-[var(--color-ink-strong)]"
-          className="text-display-xl col-span-12 text-balance font-medium text-[var(--color-ink)] lg:col-span-10"
+          emphasizeClassName="font-black text-[var(--ink)]"
+          className="text-display-xl col-span-12 text-balance font-medium text-[var(--ink)] lg:col-span-10"
           splitType="chars"
           delay={26}
           duration={0.7}
@@ -68,7 +68,7 @@ export default function Hero() {
         <motion.div {...rise(0.12)} className="col-span-12 pt-1">
           <TrueFocus
             sentence="Design Build Ship"
-            className="justify-start font-display text-[clamp(24px,3.2vw,48px)] font-medium tracking-[-0.02em] text-[var(--color-ink)]"
+            className="justify-start font-display text-[clamp(24px,3.2vw,48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
           />
         </motion.div>
 

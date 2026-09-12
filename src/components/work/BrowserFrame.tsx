@@ -107,14 +107,14 @@ export interface BrowserWindowProps {
  * the shadow recipe and the bloom can never drift apart between the two.
  *
  * Same materials as the phone frame, so the two never read as different
- * families: 1px `--color-line-strong` border, a bezel mixed from `--color-ink`
- * over `--color-bg-deep`, the same inset-highlight + two-layer shadow recipe,
- * and the same `--color-ink`-at-9% ambient bloom. Everything is expressed with
+ * families: 1px `--line-strong` border, a bezel mixed from `--ink`
+ * over `--paper`, the same inset-highlight + two-layer shadow recipe,
+ * and the same `--ink`-at-9% ambient bloom. Everything is expressed with
  * `var(--color-*)`, so it inverts correctly inside `.theme-dark` subtrees.
  *
  * The traffic lights are deliberately monochrome. Red/amber/green dots are the
  * single loudest tell of a stock mockup, and on this theme the one saturated
- * colour (`--color-accent`) is spent on argument, not on window decoration.
+ * colour (`--ink`) is spent on argument, not on window decoration.
  */
 export function BrowserWindow({
   children,
@@ -137,7 +137,7 @@ export function BrowserWindow({
           className="pointer-events-none absolute -inset-x-6 -inset-y-5 -z-10 blur-2xl"
           style={{
             background:
-              "radial-gradient(64% 42% at 50% 58%, color-mix(in srgb, var(--color-ink) 9%, transparent) 0%, transparent 100%)",
+              "radial-gradient(64% 42% at 50% 58%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
           }}
         />
       )}
@@ -148,11 +148,11 @@ export function BrowserWindow({
         style={{
           borderRadius: `${OUTER_RADIUS_PX}px`,
           padding: `${BEZEL_PX}px`,
-          borderColor: "var(--color-line-strong)",
+          borderColor: "var(--line-strong)",
           background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--color-ink) 13%, var(--color-bg-deep)) 0%, color-mix(in srgb, var(--color-ink) 6%, var(--color-bg-deep)) 55%, color-mix(in srgb, var(--color-ink) 9%, var(--color-bg-deep)) 100%)",
+            "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
           boxShadow:
-            "inset 0 1px 0 0 var(--glass-highlight), 0 2px 6px -3px var(--glass-shadow), 0 30px 60px -34px var(--glass-shadow)",
+            "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
         }}
       >
         {/* Window — clips the chrome bar and the screen into one object */}
@@ -160,9 +160,9 @@ export function BrowserWindow({
           className="relative overflow-hidden"
           style={{
             borderRadius: `${INNER_RADIUS_PX}px`,
-            background: "var(--color-bg-soft)",
+            background: "var(--paper-raised)",
             boxShadow:
-              "inset 0 0 0 1px color-mix(in srgb, var(--color-ink) 12%, transparent)",
+              "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
           }}
         >
           {hasChrome && (
@@ -171,9 +171,9 @@ export function BrowserWindow({
               className="relative flex h-[28px] items-center px-3 md:h-[34px] md:px-4"
               style={{
                 background:
-                  "color-mix(in srgb, var(--color-ink) 4%, var(--color-bg-deep))",
+                  "color-mix(in srgb, var(--ink) 4%, var(--paper))",
                 borderBottom:
-                  "1px solid color-mix(in srgb, var(--color-ink) 10%, transparent)",
+                  "1px solid color-mix(in srgb, var(--ink) 10%, transparent)",
               }}
             >
               {/* Traffic lights, monochrome and quiet */}
@@ -184,7 +184,7 @@ export function BrowserWindow({
                     className="block size-[6px] rounded-full md:size-[7px]"
                     style={{
                       background:
-                        "color-mix(in srgb, var(--color-ink) 22%, transparent)",
+                        "color-mix(in srgb, var(--ink) 22%, transparent)",
                     }}
                   />
                 ))}
@@ -197,9 +197,9 @@ export function BrowserWindow({
                   className="absolute left-1/2 max-w-[min(62%,440px)] -translate-x-1/2 rounded-full px-3 py-[3px]"
                   style={{
                     background:
-                      "color-mix(in srgb, var(--color-ink) 5%, transparent)",
+                      "color-mix(in srgb, var(--ink) 5%, transparent)",
                     boxShadow:
-                      "inset 0 0 0 1px color-mix(in srgb, var(--color-ink) 8%, transparent)",
+                      "inset 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent)",
                   }}
                 >
                   <span
@@ -287,7 +287,7 @@ export default function BrowserFrame({
             <span
               // Measure cap: the frame runs to ~1320px, and a caption that wide
               // is unreadable. The phone frame needs no cap — it is 420px.
-              className={`block max-w-[68ch] text-[13.5px] leading-[1.5] text-[var(--color-ink-muted)] ${
+              className={`block max-w-[68ch] text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
                 eyebrow ? "mt-2" : ""
               }`}
             >
@@ -485,7 +485,7 @@ export function BrowserVideo({
   }, [tryPlay]);
 
   const focusRing =
-    "focus-visible:[outline:2px_solid_var(--color-accent)] focus-visible:[outline-offset:3px]";
+    "focus-visible:[outline:2px_solid_var(--ink)] focus-visible:[outline-offset:3px]";
 
   return (
     <motion.figure
@@ -531,7 +531,7 @@ export function BrowserVideo({
             className="block h-auto w-full select-none"
             // Explicit ratio alongside width/height: the box is reserved before a
             // single byte of video arrives, so the clip cannot shift the layout.
-            style={{ aspectRatio: `${width} / ${height}`, background: "var(--color-bg-soft)" }}
+            style={{ aspectRatio: `${width} / ${height}`, background: "var(--paper-raised)" }}
           >
             {webmSrc && <source src={webmSrc} type="video/webm" />}
             <source src={mp4Src} type="video/mp4" />
@@ -547,17 +547,17 @@ export function BrowserVideo({
               className={`absolute inset-0 grid place-items-center ${focusRing}`}
               style={{
                 background:
-                  "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--color-ink) 18%, transparent) 0%, transparent 100%)",
+                  "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--ink) 18%, transparent) 0%, transparent 100%)",
               }}
             >
               <span
                 className="grid h-14 w-14 place-items-center rounded-full border backdrop-blur-sm transition-transform duration-300 hover:scale-105"
                 style={{
-                  borderColor: "var(--glass-border)",
-                  background: "var(--glass-surface-strong)",
-                  color: "var(--color-ink)",
-                  boxShadow: "0 10px 40px -16px var(--glass-shadow)",
-                  transitionTimingFunction: "var(--ease-quart-out)",
+                  borderColor: "var(--line)",
+                  background: "var(--paper-raised)",
+                  color: "var(--ink)",
+                  boxShadow: "0 10px 40px -16px var(--line)",
+                  transitionTimingFunction: "var(--ease-out)",
                 }}
               >
                 {/* optical centering of the triangle */}
@@ -584,9 +584,9 @@ export function BrowserVideo({
             aria-pressed={isPlaying}
             className={`kicker inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-200 ${focusRing}`}
             style={{
-              borderColor: "var(--color-line-strong)",
-              color: "var(--color-ink)",
-              transitionTimingFunction: "var(--ease-quart-out)",
+              borderColor: "var(--line-strong)",
+              color: "var(--ink)",
+              transitionTimingFunction: "var(--ease-out)",
             }}
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -602,7 +602,7 @@ export function BrowserVideo({
             <span
               // Measure cap: the frame runs full-bleed, and a caption that wide
               // is unreadable.
-              className={`block max-w-[68ch] text-[13.5px] leading-[1.5] text-[var(--color-ink-muted)] ${
+              className={`block max-w-[68ch] text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
                 eyebrow ? "mt-2" : ""
               }`}
             >

@@ -41,9 +41,9 @@ export default function PortfolioCarousel() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8, ease }}
-          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--color-ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
+          className="font-mono text-[11px] tracking-[0.28em] uppercase text-[var(--ink-muted)] mb-12 md:mb-16 flex items-center gap-3"
         >
-          <span className="w-8 h-px bg-[var(--color-line-strong)]" />
+          <span className="w-8 h-px bg-[var(--line-strong)]" />
           / 04 — Selected Work
         </motion.div>
 
@@ -57,7 +57,7 @@ export default function PortfolioCarousel() {
             className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em] max-w-3xl"
           >
             {yearsOfExperience()} years,{" "}
-            <span className="text-[var(--color-accent)]">shipping</span>{" "}
+            <span className="text-[var(--ink)]">shipping</span>{" "}
             at scale.
           </motion.h2>
 
@@ -82,7 +82,7 @@ export default function PortfolioCarousel() {
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-[var(--color-ink-muted)] group-hover:text-[var(--color-ink)] transition-colors"
+                  className="text-[var(--ink-muted)] group-hover:text-[var(--ink)] transition-colors"
                 />
               </svg>
             </button>
@@ -99,7 +99,7 @@ export default function PortfolioCarousel() {
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-[var(--color-ink-muted)] group-hover:text-[var(--color-ink)] transition-colors"
+                  className="text-[var(--ink-muted)] group-hover:text-[var(--ink)] transition-colors"
                 />
               </svg>
             </button>
@@ -139,7 +139,7 @@ export default function PortfolioCarousel() {
                   <motion.div
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.4, ease }}
-                    className="relative overflow-hidden rounded-2xl border border-[var(--color-line)] aspect-[4/5] mb-5"
+                    className="relative overflow-hidden rounded-2xl border border-[var(--line)] aspect-[4/5] mb-5"
                     style={{
                       background:
                         "linear-gradient(135deg, rgba(20,20,28,0.5) 0%, rgba(10,10,15,0.3) 100%)",
@@ -149,7 +149,7 @@ export default function PortfolioCarousel() {
                     }}
                   >
                     {/* Thumbnail or gradient fallback */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-bg-glass)]">
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(--paper-raised)]">
                       <span className="font-display italic text-3xl text-white/90">
                         {getCaseMeta(study.slug).client}
                       </span>
@@ -179,7 +179,7 @@ export default function PortfolioCarousel() {
                     </div>
 
                     {/* Hover arrow */}
-                    <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-ink)] text-[var(--color-bg-deep)]">
+                    <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--paper)]">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path
                           d="M3 7h8M7 3l4 4-4 4"
@@ -194,10 +194,10 @@ export default function PortfolioCarousel() {
 
                   {/* Card meta below image */}
                   <div className="px-1">
-                    <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-dim)] mb-2">
+                    <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--ink-dim)] mb-2">
                       {getCaseMeta(study.slug).role}
                     </div>
-                    <div className="text-[14px] text-[var(--color-ink-muted)] leading-snug">
+                    <div className="text-[14px] text-[var(--ink-muted)] leading-snug">
                       {study.tagline}
                     </div>
                   </div>
@@ -220,8 +220,8 @@ export default function PortfolioCarousel() {
                 width: currentIndex === i ? "32px" : "8px",
                 background:
                   currentIndex === i
-                    ? "var(--color-accent)"
-                    : "var(--color-line-strong)",
+                    ? "var(--ink)"
+                    : "var(--line-strong)",
               }}
             />
           ))}

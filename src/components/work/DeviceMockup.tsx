@@ -54,8 +54,8 @@ export interface DeviceMockupProps {
  *
  * Everything is expressed with `var(--color-*)` tokens, so the same component
  * reads correctly on the dark case-study routes (`.theme-dark`) and on the
- * light base theme: the bezel is mixed from `--color-ink` over `--color-bg-deep`,
- * and the halo behind the device is `--color-ink` at ~9% — a soft light bloom on
+ * light base theme: the bezel is mixed from `--ink` over `--paper`,
+ * and the halo behind the device is `--ink` at ~9% — a soft light bloom on
  * dark, a soft shadow-ish bloom on bone.
  */
 export default function DeviceMockup({
@@ -99,7 +99,7 @@ export default function DeviceMockup({
           className="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 blur-2xl"
           style={{
             background:
-              "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--color-ink) 9%, transparent) 0%, transparent 100%)",
+              "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
           }}
         />
 
@@ -109,11 +109,11 @@ export default function DeviceMockup({
           style={{
             borderRadius: `${OUTER_RADIUS_PX}px`,
             padding: `${BEZEL_PX}px`,
-            borderColor: "var(--color-line-strong)",
+            borderColor: "var(--line-strong)",
             background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--color-ink) 13%, var(--color-bg-deep)) 0%, color-mix(in srgb, var(--color-ink) 6%, var(--color-bg-deep)) 55%, color-mix(in srgb, var(--color-ink) 9%, var(--color-bg-deep)) 100%)",
+              "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
             boxShadow:
-              "inset 0 1px 0 0 var(--glass-highlight), 0 2px 6px -3px var(--glass-shadow), 0 30px 60px -34px var(--glass-shadow)",
+              "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
           }}
         >
           {/* Screen */}
@@ -121,9 +121,9 @@ export default function DeviceMockup({
             className="relative overflow-hidden"
             style={{
               borderRadius: `${INNER_RADIUS_PX}px`,
-              background: "var(--color-bg-soft)",
+              background: "var(--paper-raised)",
               boxShadow:
-                "inset 0 0 0 1px color-mix(in srgb, var(--color-ink) 12%, transparent)",
+                "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
             }}
           >
             <Image
@@ -148,7 +148,7 @@ export default function DeviceMockup({
           )}
           {caption && (
             <span
-              className={`block text-[13.5px] leading-[1.5] text-[var(--color-ink-muted)] ${
+              className={`block text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
                 eyebrow ? "mt-2" : ""
               }`}
             >

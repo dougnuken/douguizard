@@ -15,20 +15,20 @@ export default function Marquee() {
   const tracks = [...items, ...items];
 
   const containerStyle = {
-    background: "var(--glass-surface)",
+    background: "var(--paper-raised)",
     backdropFilter: "blur(20px) saturate(120%)",
     WebkitBackdropFilter: "blur(20px) saturate(120%)",
-    borderTop: "1px solid var(--color-line)",
-    borderBottom: "1px solid var(--color-line)",
-    boxShadow: "inset 0 1px 0 0 var(--glass-highlight), 0 8px 32px -14px var(--glass-shadow)",
+    borderTop: "1px solid var(--line)",
+    borderBottom: "1px solid var(--line)",
+    boxShadow: "inset 0 1px 0 0 var(--line), 0 8px 32px -14px var(--line)",
   };
 
   const fadeLeftStyle = {
-    background: "linear-gradient(90deg, var(--color-bg-deep) 0%, transparent 100%)",
+    background: "linear-gradient(90deg, var(--paper) 0%, transparent 100%)",
   };
 
   const fadeRightStyle = {
-    background: "linear-gradient(270deg, var(--color-bg-deep) 0%, transparent 100%)",
+    background: "linear-gradient(270deg, var(--paper) 0%, transparent 100%)",
   };
 
   return (
@@ -42,10 +42,10 @@ export default function Marquee() {
             {tracks.map((item, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-8 md:gap-16 shrink-0 font-mono text-[10px] md:text-[12px] tracking-[0.25em] md:tracking-[0.3em] uppercase text-[var(--color-ink-muted)]"
+                className="inline-flex items-center gap-8 md:gap-16 shrink-0 font-mono text-[10px] md:text-[12px] tracking-[0.25em] md:tracking-[0.3em] uppercase text-[var(--ink-muted)]"
               >
                 {item}
-                <span className="text-[var(--color-accent)] opacity-50 text-[7px] md:text-[8px]">✦</span>
+                <span className="text-[var(--ink)] opacity-50 text-[7px] md:text-[8px]">✦</span>
               </span>
             ))}
           </div>

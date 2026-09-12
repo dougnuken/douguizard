@@ -1,0 +1,5 @@
+{
+  "comment": "Mirrors --paper in globals.css. Kept out of TypeScript so no hex literal lives in src/**/*.ts(x); data.themeColors.test.ts asserts the two stay in sync.",
+  "dark": "#101010",
+  "light": "#FAFAF8"
+}

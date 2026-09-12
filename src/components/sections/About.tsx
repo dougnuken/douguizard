@@ -53,7 +53,7 @@ export default function About() {
               variant="mask"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
-              The <span className="font-black text-[var(--color-ink-strong)]">human</span>
+              The <span className="font-black text-[var(--ink)]">human</span>
               <br />
               behind the systems.
             </RevealText>
@@ -63,7 +63,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, delay: 0.1, ease }}
-              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
+              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--ink-muted)] md:col-span-3"
             >
               I&apos;m a product designer from {site.location.city} — now
               working as a design engineer. Years from agencies to analytics
@@ -78,9 +78,9 @@ export default function About() {
             <div className="col-span-12 flex flex-col gap-6 md:col-span-8">
               <motion.p
                 {...rise(24, 0, 0.7)}
-                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink-muted)]"
+                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--ink-muted)]"
               >
-                <span className="font-bold text-[var(--color-ink)]">
+                <span className="font-bold text-[var(--ink)]">
                   What&apos;s kept me here isn&apos;t any single screen — it&apos;s the
                   systems underneath.
                 </span>{" "}
@@ -91,7 +91,7 @@ export default function About() {
 
               <motion.p
                 {...rise(24, 0.08, 0.7)}
-                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--color-ink-muted)]"
+                className="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] tracking-[-0.01em] text-[var(--ink-muted)]"
               >
                 This past year I&apos;ve gone AI-native — my day-to-day now runs on
                 Claude Code, Cursor and Gemini. So I&apos;ve stopped drawing a line
@@ -110,7 +110,7 @@ export default function About() {
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-ink-muted)] no-underline transition-colors duration-300 hover:text-[var(--color-ink)]"
+                      className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)] no-underline transition-colors duration-300 hover:text-[var(--ink)]"
                     >
                       {s.label}
                     </a>
@@ -134,7 +134,7 @@ export default function About() {
                     className="hairline-t flex flex-col gap-1 py-4"
                   >
                     <dt className="kicker">{f.label}</dt>
-                    <dd className="text-[14px] leading-[1.5] text-[var(--color-ink)]">
+                    <dd className="text-[14px] leading-[1.5] text-[var(--ink)]">
                       {f.value}
                     </dd>
                   </div>

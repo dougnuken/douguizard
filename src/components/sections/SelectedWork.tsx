@@ -21,7 +21,7 @@ function RowArrow() {
       fill="none"
       aria-hidden
       className="shrink-0 opacity-50 transition-[transform,opacity] duration-500 md:-translate-x-1 md:opacity-0 md:group-hover:translate-x-0 md:group-hover:opacity-100 md:group-focus-visible:translate-x-0 md:group-focus-visible:opacity-100"
-      style={{ transitionTimingFunction: "var(--ease-quart-out)" }}
+      style={{ transitionTimingFunction: "var(--ease-out)" }}
     >
       <path
         d="M5 12h13M13 6l6 6-6 6"
@@ -47,31 +47,31 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
       <Link
         href={`/work/${study.slug}`}
         aria-label={`${study.project} — ${getCaseMeta(study.slug).client}, ${study.category}, ${getCaseMeta(study.slug).year}`}
-        className="group grid grid-cols-12 items-center gap-x-4 gap-y-3 rounded-[2px] py-7 no-underline outline-none transition-transform duration-500 focus-visible:translate-x-2 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-8 focus-visible:ring-offset-[var(--color-bg-deep)] md:py-9 md:hover:translate-x-2"
-        style={{ transitionTimingFunction: "var(--ease-quart-out)" }}
+        className="group grid grid-cols-12 items-center gap-x-4 gap-y-3 rounded-[2px] py-7 no-underline outline-none transition-transform duration-500 focus-visible:translate-x-2 focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-8 focus-visible:ring-offset-[var(--paper)] md:py-9 md:hover:translate-x-2"
+        style={{ transitionTimingFunction: "var(--ease-out)" }}
       >
         <span className="section-num col-span-2 text-lg md:col-span-1 md:text-xl">
           {study.num}
         </span>
 
         <div className="col-span-10 flex flex-col gap-1.5 md:col-span-6">
-          <h3 className="font-display text-[clamp(1.7rem,4.4vw,2.9rem)] font-medium leading-[1.02] tracking-[-0.035em] text-[var(--color-ink)] transition-colors duration-500 group-hover:text-[var(--color-accent)] group-focus-visible:text-[var(--color-accent)]">
+          <h3 className="font-display text-[clamp(1.7rem,4.4vw,2.9rem)] font-medium leading-[1.02] tracking-[-0.035em] text-[var(--ink)] transition-colors duration-500 group-hover:text-[var(--ink)] group-focus-visible:text-[var(--ink)]">
             {study.project}
           </h3>
-          <span className="kicker text-[var(--color-ink-muted)]">
+          <span className="kicker text-[var(--ink-muted)]">
             {getCaseMeta(study.slug).client}
           </span>
         </div>
 
-        <span className="kicker col-span-6 col-start-3 self-center text-[var(--color-ink-dim)] md:col-span-3 md:col-start-auto">
+        <span className="kicker col-span-6 col-start-3 self-center text-[var(--ink-dim)] md:col-span-3 md:col-start-auto">
           {study.category}
         </span>
 
         <div className="col-span-4 col-start-9 flex items-center justify-end gap-3 self-center md:col-span-2 md:col-start-auto">
-          <span className="kicker whitespace-nowrap text-[var(--color-ink-muted)]">
+          <span className="kicker whitespace-nowrap text-[var(--ink-muted)]">
             {getCaseMeta(study.slug).year}
           </span>
-          <span className="text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
+          <span className="text-[var(--ink)] group-hover:text-[var(--ink)]">
             <RowArrow />
           </span>
         </div>
@@ -108,10 +108,10 @@ function ExperienceRow({ item, index }: { item: ExperienceItem; index: number })
       <span className="section-num col-span-4 self-baseline text-sm md:col-span-3 md:text-base">
         {item.period}
       </span>
-      <h4 className="col-span-8 font-display text-[clamp(1.15rem,2vw,1.6rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[var(--color-ink-strong)] md:col-span-4">
+      <h4 className="col-span-8 font-display text-[clamp(1.15rem,2vw,1.6rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[var(--ink)] md:col-span-4">
         {item.company}
       </h4>
-      <span className="kicker col-span-12 col-start-1 self-baseline text-[var(--color-ink-muted)] md:col-span-5 md:col-start-auto md:text-right">
+      <span className="kicker col-span-12 col-start-1 self-baseline text-[var(--ink-muted)] md:col-span-5 md:col-start-auto md:text-right">
         {item.role}
       </span>
     </motion.div>
@@ -155,9 +155,9 @@ export default function SelectedWork() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, delay: 0.1, ease }}
-              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
+              className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--ink-muted)] md:col-span-3"
             >
-              <span className="font-medium text-[var(--color-ink)]">
+              <span className="font-medium text-[var(--ink)]">
                 {yearsOfExperience()} years of systems, products and teams —
               </span>{" "}
               from LATAM&apos;s largest marketplace to national banks, cruise
@@ -182,7 +182,7 @@ export default function SelectedWork() {
               transition={{ duration: 0.6, ease }}
               className="kicker flex items-center gap-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />
+              <span className="h-px w-8 bg-[var(--line-strong)]" />
               / Experience
             </motion.p>
 
@@ -202,9 +202,9 @@ export default function SelectedWork() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: 0.1, ease }}
-              className="kicker mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[var(--color-ink-dim)]"
+              className="kicker mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[var(--ink-dim)]"
             >
-              <span className="text-[var(--color-ink-muted)]">/ Education</span>
+              <span className="text-[var(--ink-muted)]">/ Education</span>
               <span aria-hidden>—</span>
               {education[0].program}, {education[0].institution} (
               {education[0].start.year} — {education[0].end?.year})

@@ -57,7 +57,7 @@ export function PhoneFrame({
         className="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-10 blur-2xl"
         style={{
           background:
-            "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--color-ink) 9%, transparent) 0%, transparent 100%)",
+            "radial-gradient(58% 48% at 50% 46%, color-mix(in srgb, var(--ink) 9%, transparent) 0%, transparent 100%)",
         }}
       />
 
@@ -67,11 +67,11 @@ export function PhoneFrame({
         style={{
           borderRadius: `${OUTER_RADIUS_PX}px`,
           padding: `${BEZEL_PX}px`,
-          borderColor: "var(--color-line-strong)",
+          borderColor: "var(--line-strong)",
           background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--color-ink) 13%, var(--color-bg-deep)) 0%, color-mix(in srgb, var(--color-ink) 6%, var(--color-bg-deep)) 55%, color-mix(in srgb, var(--color-ink) 9%, var(--color-bg-deep)) 100%)",
+            "linear-gradient(180deg, color-mix(in srgb, var(--ink) 13%, var(--paper)) 0%, color-mix(in srgb, var(--ink) 6%, var(--paper)) 55%, color-mix(in srgb, var(--ink) 9%, var(--paper)) 100%)",
           boxShadow:
-            "inset 0 1px 0 0 var(--glass-highlight), 0 2px 6px -3px var(--glass-shadow), 0 30px 60px -34px var(--glass-shadow)",
+            "inset 0 1px 0 0 var(--line), 0 2px 6px -3px var(--line), 0 30px 60px -34px var(--line)",
         }}
       >
         {/* Screen */}
@@ -79,9 +79,9 @@ export function PhoneFrame({
           className="relative overflow-hidden"
           style={{
             borderRadius: `${INNER_RADIUS_PX}px`,
-            background: "var(--color-bg-soft)",
+            background: "var(--paper-raised)",
             boxShadow:
-              "inset 0 0 0 1px color-mix(in srgb, var(--color-ink) 12%, transparent)",
+              "inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent)",
           }}
         >
           {children}
@@ -258,7 +258,7 @@ export default function DeviceVideo({
   }, [tryPlay]);
 
   const focusRing =
-    "focus-visible:[outline:2px_solid_var(--color-accent)] focus-visible:[outline-offset:3px]";
+    "focus-visible:[outline:2px_solid_var(--ink)] focus-visible:[outline-offset:3px]";
 
   return (
     <motion.figure
@@ -296,7 +296,7 @@ export default function DeviceVideo({
           className="block h-auto w-full select-none"
           // Explicit ratio alongside width/height: the box is reserved before a
           // single byte of video arrives, so the clip cannot shift the layout.
-          style={{ aspectRatio: `${width} / ${height}`, background: "var(--color-bg-soft)" }}
+          style={{ aspectRatio: `${width} / ${height}`, background: "var(--paper-raised)" }}
         >
           {webmSrc && <source src={webmSrc} type="video/webm" />}
           <source src={mp4Src} type="video/mp4" />
@@ -312,17 +312,17 @@ export default function DeviceVideo({
             className={`absolute inset-0 grid place-items-center ${focusRing}`}
             style={{
               background:
-                "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--color-ink) 18%, transparent) 0%, transparent 100%)",
+                "radial-gradient(60% 40% at 50% 50%, color-mix(in srgb, var(--ink) 18%, transparent) 0%, transparent 100%)",
             }}
           >
             <span
               className="grid h-14 w-14 place-items-center rounded-full border backdrop-blur-sm transition-transform duration-300 hover:scale-105"
               style={{
-                borderColor: "var(--glass-border)",
-                background: "var(--glass-surface-strong)",
-                color: "var(--color-ink)",
-                boxShadow: "0 10px 40px -16px var(--glass-shadow)",
-                transitionTimingFunction: "var(--ease-quart-out)",
+                borderColor: "var(--line)",
+                background: "var(--paper-raised)",
+                color: "var(--ink)",
+                boxShadow: "0 10px 40px -16px var(--line)",
+                transitionTimingFunction: "var(--ease-out)",
               }}
             >
               {/* optical centering of the triangle */}
@@ -348,9 +348,9 @@ export default function DeviceVideo({
             aria-pressed={isPlaying}
             className={`kicker inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors duration-200 ${focusRing}`}
             style={{
-              borderColor: "var(--color-line-strong)",
-              color: "var(--color-ink)",
-              transitionTimingFunction: "var(--ease-quart-out)",
+              borderColor: "var(--line-strong)",
+              color: "var(--ink)",
+              transitionTimingFunction: "var(--ease-out)",
             }}
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -364,7 +364,7 @@ export default function DeviceVideo({
           {eyebrow && <span className="kicker block">{eyebrow}</span>}
           {caption && (
             <span
-              className={`block text-[13.5px] leading-[1.5] text-[var(--color-ink-muted)] ${
+              className={`block text-[13.5px] leading-[1.5] text-[var(--ink-muted)] ${
                 eyebrow ? "mt-2" : ""
               }`}
             >

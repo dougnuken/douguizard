@@ -100,9 +100,9 @@ export default function Capabilities() {
               variant="mask"
               className="col-span-12 font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em] md:col-span-6"
             >
-              <span className="font-bold text-[var(--color-ink)]">Four ways</span><br />
-              <span className="text-[var(--color-ink-muted)]">I work</span>
-              <span className="text-[var(--color-ink-dim)]">.</span>
+              <span className="font-bold text-[var(--ink)]">Four ways</span><br />
+              <span className="text-[var(--ink-muted)]">I work</span>
+              <span className="text-[var(--ink-dim)]">.</span>
             </RevealText>
           </div>
 
@@ -122,28 +122,28 @@ export default function Capabilities() {
                     <span className="section-num text-[clamp(28px,2.4vw,38px)] leading-none">
                       {cap.num}
                     </span>
-                    <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                    <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-dim)] transition-colors duration-300 group-hover:text-[var(--ink)]">
                       /04
                     </span>
                   </div>
                   <ColumnMark index={i} />
                 </div>
 
-                <h3 className="font-display text-[clamp(20px,1.6vw,26px)] font-medium tracking-[-0.01em] leading-[1.15] text-[var(--color-ink)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                <h3 className="font-display text-[clamp(20px,1.6vw,26px)] font-medium tracking-[-0.01em] leading-[1.15] text-[var(--ink)] transition-colors duration-300 group-hover:text-[var(--ink)]">
                   {cap.title.order === "before" ? (
                     <>
                       {cap.title.plain}
-                      <span className="text-[var(--color-ink-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">{cap.title.accent}</span>
+                      <span className="text-[var(--ink-muted)] transition-colors duration-300 group-hover:text-[var(--ink)]">{cap.title.accent}</span>
                     </>
                   ) : (
                     <>
                       {cap.title.plain}{" "}
-                      <span className="text-[var(--color-ink-muted)] transition-colors duration-300 group-hover:text-[var(--color-accent)]">{cap.title.accent}</span>
+                      <span className="text-[var(--ink-muted)] transition-colors duration-300 group-hover:text-[var(--ink)]">{cap.title.accent}</span>
                     </>
                   )}
                 </h3>
 
-                <p className="text-[14px] leading-[1.55] text-[var(--color-ink-muted)]">
+                <p className="text-[14px] leading-[1.55] text-[var(--ink-muted)]">
                   {cap.desc}
                 </p>
 
@@ -151,7 +151,7 @@ export default function Capabilities() {
                   {cap.tags.map((tag, ti) => (
                     <span
                       key={ti}
-                      className="glass-subtle font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--color-ink-muted)]"
+                      className="glass-subtle font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-full text-[var(--ink-muted)]"
                     >
                       {tag}
                     </span>
@@ -170,13 +170,13 @@ export default function Capabilities() {
             className="mt-20 md:mt-28"
           >
             <div className="kicker mb-5 flex items-center gap-3">
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ Tools — Daily kit
+              <span className="h-px w-8 bg-[var(--line-strong)]" />/ Tools — Daily kit
             </div>
             <ul className="hairline-t flex flex-wrap gap-x-6 gap-y-2.5 pt-6">
               {tools.map((tool) => (
                 <li
                   key={tool}
-                  className="font-mono text-[12px] tracking-[0.08em] text-[var(--color-ink-muted)] transition-colors duration-300 hover:text-[var(--color-ink)] md:text-[13px]"
+                  className="font-mono text-[12px] tracking-[0.08em] text-[var(--ink-muted)] transition-colors duration-300 hover:text-[var(--ink)] md:text-[13px]"
                 >
                   {tool}
                 </li>
@@ -193,7 +193,7 @@ export default function Capabilities() {
             className="mt-16 md:mt-20"
           >
             <div className="kicker mb-6 flex items-center gap-3">
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ Proof — By the numbers
+              <span className="h-px w-8 bg-[var(--line-strong)]" />/ Proof — By the numbers
             </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 md:gap-8">
               {proof.map((stat, i) => (
@@ -205,13 +205,13 @@ export default function Capabilities() {
                   transition={{ duration: 0.6, delay: i * 0.06, ease }}
                   className="hairline-t flex flex-col gap-2 pt-5"
                 >
-                  <div className="font-display text-[clamp(40px,5vw,72px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--color-ink)]">
+                  <div className="font-display text-[clamp(40px,5vw,72px)] font-medium tracking-[-0.03em] leading-[0.9] text-[var(--ink)]">
                     {stat.num}
                     {stat.suffix && (
-                      <span className="text-[var(--color-ink-dim)]">{stat.suffix}</span>
+                      <span className="text-[var(--ink-dim)]">{stat.suffix}</span>
                     )}
                   </div>
-                  <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-muted)] leading-[1.6]">
+                  <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--ink-muted)] leading-[1.6]">
                     {stat.label}
                   </div>
                 </motion.div>

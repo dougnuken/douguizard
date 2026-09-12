@@ -21,7 +21,7 @@ export default function Spark({
       <path
         d="M12 0c.4 6.2 5.4 11.2 11.6 11.6v.8C17.4 12.8 12.4 17.8 12 24h-.8C10.8 17.8 5.8 12.8-.4 12.4v-.8C5.8 11.2 10.8 6.2 11.2 0h.8Z"
         transform="translate(0.4 0)"
-        fill="var(--color-accent)"
+        fill="var(--ink)"
       />
     </svg>
   );

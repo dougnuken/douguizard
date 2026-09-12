@@ -38,9 +38,9 @@ function Word({
   const opacity = useTransform(progress, range, [0.18, 1]);
   const className =
     word.type === "accent"
-      ? "text-[var(--color-accent)] font-normal"
+      ? "text-[var(--ink)] font-normal"
       : word.type === "warm"
-        ? "text-[var(--color-accent-warm)] font-normal"
+        ? "text-[var(--ink)] font-normal"
         : "";
 
   return (
@@ -76,7 +76,7 @@ export default function Manifesto() {
               transition={{ duration: 0.6, ease }}
               className="kicker col-span-12 flex items-center gap-3 md:col-span-3"
             >
-              <span className="h-px w-8 bg-[var(--color-line-strong)]" />/ 03 — Working
+              <span className="h-px w-8 bg-[var(--line-strong)]" />/ 03 — Working
               principles
             </motion.div>
           </div>
@@ -89,7 +89,7 @@ export default function Manifesto() {
                 className="font-display text-[clamp(40px,5.5vw,76px)] font-medium leading-[0.98] tracking-[-0.02em]"
               >
                 How I<br />
-                <span className="text-[var(--color-accent)]">approach</span>
+                <span className="text-[var(--ink)]">approach</span>
                 <br />
                 the work.
               </BlurText>
@@ -101,10 +101,10 @@ export default function Manifesto() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.7, delay: 0.2, ease }}
               >
-                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
+                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                   Note
                 </div>
-                <p className="text-[12px] leading-[1.6] text-[var(--color-ink-muted)]">
+                <p className="text-[12px] leading-[1.6] text-[var(--ink-muted)]">
                   The work is the manifesto. Everything else is wallpaper.
                 </p>
               </motion.div>
@@ -112,7 +112,7 @@ export default function Manifesto() {
 
             <div className="relative md:col-span-7 md:col-start-6">
               <div
-                className="pointer-events-none absolute -left-2 -top-12 select-none font-display text-[120px] leading-none text-[var(--color-line-strong)]"
+                className="pointer-events-none absolute -left-2 -top-12 select-none font-display text-[120px] leading-none text-[var(--line-strong)]"
                 aria-hidden
               >
                 &ldquo;
@@ -138,13 +138,13 @@ export default function Manifesto() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.8, delay: 0.5, ease }}
-                className="mt-10 flex items-center gap-3 border-t border-[var(--color-line)] pt-6"
+                className="mt-10 flex items-center gap-3 border-t border-[var(--line)] pt-6"
               >
-                <span className="font-display text-2xl italic text-[var(--color-ink)]">
+                <span className="font-display text-2xl italic text-[var(--ink)]">
                   Doug
                 </span>
-                <span className="h-px flex-1 bg-[var(--color-line)]" />
-                <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-ink-dim)]">
+                <span className="h-px flex-1 bg-[var(--line)]" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                   Barranquilla, 2026
                 </span>
               </motion.div>

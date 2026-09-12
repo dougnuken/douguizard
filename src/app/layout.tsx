@@ -1,35 +1,41 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Archivo } from "next/font/google";
+import { Archivo, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import themeColors from "./theme-colors.json";
 import { site } from "@/data/site";
 
-const geist = Geist({
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-geist",
+  weight: ["400", "600", "800"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
   variable: "--font-geist-mono",
   display: "swap",
 });
 
-// Neo-grotesque display/body — bold weights carry the KINETIC hierarchy.
-const archivo = Archivo({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-archivo",
-  display: "swap",
-});
+/**
+ * Resolution order: stored choice → `prefers-color-scheme: light` → dark.
+ * Runs before the first paint, so a stored light theme never shows a dark frame.
+ */
+const THEME_INIT = `(function(){try{
+var s=localStorage.getItem("dg-theme");
+var t=(s==="light"||s==="dark")?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
+var r=document.documentElement;r.setAttribute("data-theme",t);r.style.colorScheme=t;
+}catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");r.style.colorScheme="dark";}})();`;
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#FAF9F7",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: themeColors.dark },
+    { media: "(prefers-color-scheme: light)", color: themeColors.light },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -39,25 +45,17 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.seo.description,
-  keywords: [
-    "Doug Vargas",
-    "Douguizard",
-    "Product Designer",
-    "Design Systems",
-    "AI Product Design",
-    "UX Designer Colombia",
-    "Mercadolibre Designer",
-    "Andes Design System",
-  ],
-  authors: [{ name: "Doug Vargas" }],
-  creator: "Doug Vargas",
+  keywords: site.seo.keywords,
+  applicationName: site.brand,
+  authors: [{ name: site.name, url: "https://douguizard.com" }],
+  creator: site.name,
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://douguizard.com",
+    siteName: site.brand,
     title: `${site.name} — ${site.headline}`,
     description: site.seo.description,
-    siteName: "douguizard",
   },
   twitter: {
     card: "summary_large_image",
@@ -67,11 +65,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
 };
 
@@ -81,9 +75,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${archivo.variable}`}
+      className={`${archivo.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body>{children}</body>
     </html>
   );
