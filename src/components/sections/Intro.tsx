@@ -3,6 +3,8 @@
 import { motion, useInView, MotionConfig } from "framer-motion";
 import { useRef } from "react";
 import Spark from "@/components/Spark";
+import { site } from "@/data/site";
+import { yearsOfExperience } from "@/lib/career";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -77,12 +79,12 @@ const INFO = [
   {
     num: "/A",
     title: "The role",
-    text: "Senior Product Designer × Design Systems Architect — currently leading components at Andes/Mercadolibre.",
+    text: site.headline,
   },
   {
     num: "/B",
     title: "The practice",
-    text: "Twelve years translating ambiguity into interfaces — banking dashboards to e-commerce systems used by millions.",
+    text: `${yearsOfExperience()} years translating ambiguity into interfaces — banking dashboards to e-commerce systems used by millions.`,
   },
   {
     num: "/C",

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
-import { getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
+import { getCaseMeta, getCaseStudy, getNextCaseStudy, type Kpi } from "@/data/work";
 import Spark from "@/components/Spark";
 import RevealText from "@/components/text/RevealText";
 import MockupGallery from "@/components/work/MockupGallery";
@@ -189,6 +189,8 @@ export default function CaseStudyPage() {
     notFound();
   }
 
+  const meta = getCaseMeta(study.slug);
+
   const next = getNextCaseStudy(study.slug);
 
   // `links` supersedes `externalLink`: when a case lists its destinations up
@@ -258,7 +260,7 @@ export default function CaseStudyPage() {
             <span className="text-[var(--color-ink-dim)]">·</span>
             <span>{study.category}</span>
             <span className="text-[var(--color-ink-dim)]">·</span>
-            <span>{study.year}</span>
+            <span>{meta.year}</span>
           </motion.div>
 
           <motion.h2
@@ -267,7 +269,7 @@ export default function CaseStudyPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease }}
           >
-            {study.client}
+            {meta.client}
           </motion.h2>
 
           <h1 className="font-display font-black text-[clamp(56px,11vw,180px)] leading-[0.9] tracking-[-0.04em] text-[var(--color-ink-strong)] mb-12 max-w-[1100px]">
@@ -298,10 +300,10 @@ export default function CaseStudyPage() {
       <section className="relative z-[2] px-6 md:px-12 py-12 bg-[var(--color-bg-deep)] border-y border-[var(--color-line)]">
         <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { label: "Role", value: study.role },
-            { label: "Duration", value: study.duration },
+            { label: "Role", value: meta.role },
+            { label: "Duration", value: meta.duration },
             { label: "Team", value: study.team },
-            { label: "Year", value: study.year },
+            { label: "Year", value: meta.year },
           ].map((item, i) => (
             <FadeIn key={item.label} delay={i * 0.06}>
               <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-ink-dim)] mb-2">
@@ -785,7 +787,7 @@ export default function CaseStudyPage() {
           <Link href={`/work/${next.slug}`} className="block group no-underline text-inherit">
             <FadeIn>
               <div className="font-mono text-sm tracking-[0.3em] uppercase text-[var(--color-accent)] mb-6 group-hover:translate-x-2 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                {next.client}
+                {getCaseMeta(next.slug).client}
               </div>
               <h2 className="font-display font-black text-[clamp(56px,11vw,160px)] leading-[0.9] tracking-[-0.04em] text-[var(--color-ink)] mb-8 group-hover:text-[var(--color-accent)] transition-colors duration-500">
                 {next.project}

@@ -73,7 +73,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.p {...rise(0.16)} className="kicker col-span-12">
-          {site.name} — {site.role}
+          {site.name} — {site.headline}
         </motion.p>
 
         <motion.div

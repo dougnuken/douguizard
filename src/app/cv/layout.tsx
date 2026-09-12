@@ -1,9 +1,16 @@
 import CustomCursor from "@/components/CustomCursor";
+import { site } from "@/data/site";
+import { experiences } from "@/data/cv";
+import { yearsOfExperience } from "@/lib/career";
+
+const companies = experiences
+  .filter((e) => e.era !== "earlier")
+  .map((e) => e.company.name)
+  .join(", ");
 
 export const metadata = {
-  title: "CV — Senior Product Designer × AI",
-  description:
-    "Curriculum Vitae of Doug Vargas. 12+ years of product design experience across Mercadolibre, Aval Digital Labs, Globant, Qrvey, and Ideaware.",
+  title: `CV — ${site.headline}`,
+  description: `Curriculum vitae of ${site.name}. ${yearsOfExperience()} years of product design and design engineering across ${companies}.`,
 };
 
 export default function CvLayout({ children }: { children: React.ReactNode }) {

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Archivo } from "next/font/google";
 import "./globals.css";
+import { site } from "@/data/site";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -34,11 +35,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://douguizard.com"),
   title: {
-    default: "Douguizard — Doug Vargas · Senior Product Designer × AI",
-    template: "%s · Douguizard",
+    default: `${site.name} — ${site.headline}`,
+    template: `%s · ${site.name}`,
   },
-  description:
-    "Senior Product Designer & Design Systems Architect. 12+ years shipping digital products for banks, marketplaces, and consumer apps. Now bridging classical product craft with AI-native workflows.",
+  description: site.seo.description,
   keywords: [
     "Doug Vargas",
     "Douguizard",
@@ -55,16 +55,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://douguizard.com",
-    title: "Douguizard — Senior Product Designer × AI",
-    description:
-      "Senior Product Designer crafting the next generation of digital experiences with AI.",
+    title: `${site.name} — ${site.headline}`,
+    description: site.seo.description,
     siteName: "douguizard",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Douguizard — Senior Product Designer × AI",
-    description:
-      "Senior Product Designer crafting the next generation of digital experiences with AI.",
+    title: `${site.name} — ${site.headline}`,
+    description: site.seo.description,
   },
   robots: {
     index: true,

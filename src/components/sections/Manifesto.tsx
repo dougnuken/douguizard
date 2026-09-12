@@ -7,7 +7,7 @@ import BlurText from "@/components/text/BlurText";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const manifestoText =
-  "I design products at the boundary between {craft} and [computation] — where typography meets intent, where systems become language, and where AI stops being a feature and starts being a collaborator. After twelve years inside banks, marketplaces, and cruise lines, I've learned that good interfaces are not drawn — they are negotiated.";
+  "I design products at the boundary between {craft} and [computation] — where typography meets intent, where systems become language, and where AI stops being a feature and starts being a collaborator. After years inside banks, marketplaces, and cruise lines, I've learned that good interfaces are not drawn — they are negotiated.";
 
 interface WordToken {
   text: string;

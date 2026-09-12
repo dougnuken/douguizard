@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { caseStudies, getCaseStudy } from "@/data/work";
+import { caseStudies, getCaseMeta, getCaseStudy } from "@/data/work";
 
 // Pre-render all case studies at build time
 export async function generateStaticParams() {
@@ -16,13 +16,14 @@ export async function generateMetadata({
   const study = getCaseStudy(slug);
   if (!study) return { title: "Case Study Not Found" };
 
+  const meta = getCaseMeta(study.slug);
+  const title =
+    study.project === meta.client ? study.project : `${study.project} — ${meta.client}`;
+
   return {
-    title: `${study.project} — ${study.client}`,
+    title,
     description: study.tagline,
-    openGraph: {
-      title: `${study.project} — ${study.client}`,
-      description: study.tagline,
-    },
+    openGraph: { title, description: study.tagline },
   };
 }
 

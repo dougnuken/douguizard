@@ -3,8 +3,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { yearsOfExperience } from "@/lib/career";
 import { useState, useRef } from "react";
-import { caseStudies } from "@/data/work";
+import { caseStudies, getCaseMeta } from "@/data/work";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -55,7 +56,7 @@ export default function PortfolioCarousel() {
             transition={{ duration: 0.9, ease }}
             className="font-display text-[clamp(40px,6vw,84px)] font-light leading-[0.95] tracking-[-0.05em] max-w-3xl"
           >
-            Twelve years,{" "}
+            {yearsOfExperience()} years,{" "}
             <span className="text-[var(--color-accent)]">shipping</span>{" "}
             at scale.
           </motion.h2>
@@ -148,28 +149,11 @@ export default function PortfolioCarousel() {
                     }}
                   >
                     {/* Thumbnail or gradient fallback */}
-                    {study.thumbnail ? (
-                      <Image
-                        src={study.thumbnail}
-                        alt={study.project}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background: `linear-gradient(135deg, ${study.colors[0]}, ${study.colors[1]})`,
-                        }}
-                      >
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="font-display italic text-3xl text-white/90">
-                            {study.client}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-bg-glass)]">
+                      <span className="font-display italic text-3xl text-white/90">
+                        {getCaseMeta(study.slug).client}
+                      </span>
+                    </div>
 
                     {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -181,7 +165,7 @@ export default function PortfolioCarousel() {
 
                     {/* Year top-right */}
                     <div className="absolute top-4 right-4 font-mono text-[10px] tracking-[0.2em] uppercase text-white/70">
-                      {study.year.split(" ")[0]}
+                      {getCaseMeta(study.slug).year.split(" ")[0]}
                     </div>
 
                     {/* Bottom info */}
@@ -190,7 +174,7 @@ export default function PortfolioCarousel() {
                         {study.category}
                       </div>
                       <div className="font-display text-2xl font-light text-white leading-tight tracking-tight">
-                        {study.client}
+                        {getCaseMeta(study.slug).client}
                       </div>
                     </div>
 
@@ -211,7 +195,7 @@ export default function PortfolioCarousel() {
                   {/* Card meta below image */}
                   <div className="px-1">
                     <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-dim)] mb-2">
-                      {study.role}
+                      {getCaseMeta(study.slug).role}
                     </div>
                     <div className="text-[14px] text-[var(--color-ink-muted)] leading-snug">
                       {study.tagline}

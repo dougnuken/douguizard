@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
-import { caseStudies, type CaseStudy } from "@/data/work";
+import { caseStudies, getCaseMeta, type CaseStudy } from "@/data/work";
+import { education, experiences } from "@/data/cv";
+import { formatPeriod, yearsOfExperience } from "@/lib/career";
 import RevealText from "@/components/text/RevealText";
 import Spark from "@/components/Spark";
 import { PulseCircle } from "@/components/figures/GeoFigures";
@@ -44,7 +46,7 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
     >
       <Link
         href={`/work/${study.slug}`}
-        aria-label={`${study.project} — ${study.client}, ${study.category}, ${study.year}`}
+        aria-label={`${study.project} — ${getCaseMeta(study.slug).client}, ${study.category}, ${getCaseMeta(study.slug).year}`}
         className="group grid grid-cols-12 items-center gap-x-4 gap-y-3 rounded-[2px] py-7 no-underline outline-none transition-transform duration-500 focus-visible:translate-x-2 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-8 focus-visible:ring-offset-[var(--color-bg-deep)] md:py-9 md:hover:translate-x-2"
         style={{ transitionTimingFunction: "var(--ease-quart-out)" }}
       >
@@ -57,7 +59,7 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
             {study.project}
           </h3>
           <span className="kicker text-[var(--color-ink-muted)]">
-            {study.client}
+            {getCaseMeta(study.slug).client}
           </span>
         </div>
 
@@ -67,7 +69,7 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
 
         <div className="col-span-4 col-start-9 flex items-center justify-end gap-3 self-center md:col-span-2 md:col-start-auto">
           <span className="kicker whitespace-nowrap text-[var(--color-ink-muted)]">
-            {study.year}
+            {getCaseMeta(study.slug).year}
           </span>
           <span className="text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
             <RowArrow />
@@ -78,45 +80,20 @@ function ProjectRow({ study, index }: { study: CaseStudy; index: number }) {
   );
 }
 
-/** Career history — merged from the former Experience section (period · company · role). */
+/** Career history — one source of truth: `cv.experiences`. */
 interface ExperienceItem {
   period: string;
   company: string;
   role: string;
 }
 
-const experience: ExperienceItem[] = [
-  {
-    period: "Jan 2026 — Now",
-    company: "Naowee",
-    role: "Head of Product — AI-native sports platform",
-  },
-  {
-    period: "2024 — Jan 2026",
-    company: "Mercadolibre",
-    role: "Technical Lead — Andes Design System",
-  },
-  {
-    period: "2018 — 2024",
-    company: "Aval Digital Labs",
-    role: "Senior Product Designer · Design System Gatekeeper",
-  },
-  {
-    period: "2017 — 2018",
-    company: "Globant",
-    role: "Senior Product Designer",
-  },
-  {
-    period: "2017 — 2018",
-    company: "Qrvey",
-    role: "Lead UI Designer",
-  },
-  {
-    period: "2016 — 2017",
-    company: "Ideaware",
-    role: "Senior UX/UI Designer",
-  },
-];
+const experience: ExperienceItem[] = experiences
+  .filter((e) => e.era !== "earlier")
+  .map((e) => ({
+    period: formatPeriod(e),
+    company: e.company.name,
+    role: e.roleShort ?? e.role,
+  }));
 
 /** Compact experience row aligned to the 12-col grid: period · company · role, one line each. */
 function ExperienceRow({ item, index }: { item: ExperienceItem; index: number }) {
@@ -181,11 +158,11 @@ export default function SelectedWork() {
               className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
               <span className="font-medium text-[var(--color-ink)]">
-                A decade of systems, products, and teams —
+                {yearsOfExperience()} years of systems, products and teams —
               </span>{" "}
               from LATAM&apos;s largest marketplace to national banks, cruise
-              lines, and early-stage startups — plus one product I designed,
-              built and shipped on my own. Seven that shaped how I work.
+              lines and early-stage startups, plus one product I designed, built
+              and shipped on my own. Seven that shaped how I work.
             </motion.p>
           </div>
 
@@ -229,8 +206,8 @@ export default function SelectedWork() {
             >
               <span className="text-[var(--color-ink-muted)]">/ Education</span>
               <span aria-hidden>—</span>
-              Professional Graphic Designer, Universidad Autónoma del Caribe
-              (2006 — 2009)
+              {education[0].program}, {education[0].institution} (
+              {education[0].start.year} — {education[0].end?.year})
             </motion.p>
           </div>
         </div>

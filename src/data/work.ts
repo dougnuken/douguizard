@@ -1,3 +1,6 @@
+import { type ExperienceId } from "@/data/cv";
+import { formatLocation, formatPeriod, getExperience } from "@/lib/career";
+
 export interface Kpi {
   /** Headline figure — "40%", "18", "2K+", "Hours". */
   value: string;
@@ -10,17 +13,28 @@ export interface Kpi {
 export interface CaseStudy {
   slug: string;
   num: string;
-  client: string;
   project: string;
-  year: string;
-  role: string;
-  duration: string;
-  team: string;
   category: string;
-  /** Cover gradient — used as fallback if no image */
-  colors: [string, string];
-  /** Path to thumbnail in /public/work/ — undefined uses gradient */
-  thumbnail?: string;
+  /**
+   * Links the case to its employer in `cv.ts`. Client, role and period are
+   * derived from it — see `getCaseMeta`. Omitted only for `kind: "personal"`.
+   */
+  experienceId?: ExperienceId;
+  /** Only when the role INSIDE the case differs from the CV role. */
+  roleOverride?: string;
+  /** Only for a case with no experience behind it. */
+  yearOverride?: string;
+  /** Renders the case testimonial slot. */
+  testimonialId?: string;
+  /**
+   * The work is client-confidential: no gallery, no screenshots. The index row
+   * and the case page show "Case study available on request" instead.
+   */
+  nda?: boolean;
+  /** Describes the case, not the employment. */
+  team: string;
+  /** Optional; derived from the experience when absent. */
+  duration?: string;
   /** One-line hero tagline. */
   tagline: string;
   /** One punchy, results-first sentence — the market hook. */
@@ -80,14 +94,12 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "olbo",
     num: "/01",
-    client: "Personal Product",
     project: "olbo",
-    year: "2026",
-    role: "Design Engineer — end to end",
+    category: "Personal Product × Design Engineering",
+    roleOverride: "Design Engineer — end to end",
+    yearOverride: "2026",
     duration: "Weeks — still shipping",
     team: "Solo — design, engineering, shipping",
-    category: "Personal Product × Design Engineering",
-    colors: ["#A98CFF", "#2B2169"],
     kind: "personal",
     tagline:
       "A personal finance PWA that asks whether you're on pace, not what's left — zero dependencies, 634 tests, shipped.",
@@ -105,7 +117,9 @@ export const caseStudies: CaseStudy[] = [
       { value: "634", label: "Tests passing", delta: "in 292ms" },
       { value: "0", label: "Dependencies", delta: "no bundler, no framework" },
       { value: "62", label: "JS modules", delta: "across 24 views" },
-      { value: "1:2.5", label: "Test-to-code ratio", delta: "6,305 lines of tests" },
+      // Verified 2026-09-12 in the olbo repo: 6,410 lines of test vs 16,265 of
+      // code = 1:2.5. The delta is rounded down so it cannot be over-read.
+      { value: "1:2.5", label: "Test-to-code ratio", delta: "6,400 lines of tests" },
     ],
     process: [
       {
@@ -231,14 +245,11 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "naowee-suid",
     num: "/02",
-    client: "Naowee",
+    experienceId: "naowee",
     project: "Naowee — Sports Sector Platform",
-    year: "2026 — Now",
-    role: "Head of Product",
+    category: "GovTech × Sports × AI-native",
     duration: "Ongoing",
     team: "Product, design & engineering",
-    category: "GovTech × Sports × AI-native",
-    colors: ["#00c2b8", "#0a84ff"],
     kind: "client",
     tagline:
       "Digitizing how a country runs its sport — a modular platform built design-and-engineering in one motion, with AI in the loop end to end.",
@@ -256,7 +267,7 @@ export const caseStudies: CaseStudy[] = [
       { value: "30", label: "Procedures digitized", delta: "Word, email and GESDOC before" },
       { value: "~1,200", label: "Sports organizations in scope" },
       { value: "130+", label: "Screens shipped", delta: "across 8 business modules" },
-      { value: "Hours", label: "Idea → working screen", delta: "not sprints" },
+      { value: "8", label: "Business modules", delta: "of 13 total" },
     ],
     process: [
       {
@@ -358,31 +369,37 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "mercadolibre-andes",
     num: "/03",
-    client: "Mercadolibre",
+    experienceId: "mercadolibre",
     project: "Andes Design System",
-    year: "2024 — 2026",
-    role: "Tech Lead · Design Systems",
-    duration: "~2 years",
-    team: "30+ designers, 100+ engineers",
     category: "Design Systems × E-commerce",
-    colors: ["#7e6dff", "#5eb8ff"],
+    duration: "~2 years",
+    team: "400+ designers, 2,000+ engineers",
+    kind: "client",
+    // No gallery, no video, no screenshots: the screens are Mercadolibre's.
+    nda: true,
     tagline:
-      "Architecting the design system that powers LATAM's largest e-commerce platform.",
+      "Technical lead on the design system behind Mercadolibre, across 18 countries.",
     impact:
-      "The single source of truth for Mercadolibre's product — powering experiences for hundreds of millions of people across 18 countries.",
+      "One library, maintained for iOS, Android and Web, that 400+ designers and 2,000+ engineers build the same product out of.",
     context:
-      "Thousands of designers and engineers ship daily across iOS, Android and Web. I owned the foundations, governance and tooling that keep it all one product — and brought AI into the systems practice.",
+      "Andes is the source of truth for Mercadolibre's commerce, fintech and shipping products. I owned foundations and component definitions, kept the three platforms in parity, and brought AI into how the system audits itself.",
     contributions: [
-      "**Foundations & governance** — tokens, type, motion and component APIs adopted org-wide.",
-      "**Cross-platform parity** — one library maintained for iOS, Android and Web.",
-      "**AI-assisted audits** — LLM workflows that catch system drift in Figma before it ships.",
+      "**Foundational definitions** — tokens, spacing, type and motion, agreed once and governing the product suite.",
+      "**Cross-platform parity** — one component API, shipped the same on iOS, Android and Web, worked out directly with the engineering teams that build it.",
+      "**Component maintenance at scale** — additions, deprecations and migrations across a library hundreds of designers open every day.",
+      "**AI inside the systems practice** — prompt-driven audits that catch drift in Figma before it reaches a release.",
     ],
+    // "~40% fewer rework cycles" is REMOVED: no source behind it. Its
+    // qualitative replacement lives in `context` ("the three platforms in
+    // parity"). Reinstate a number only against a real measurement.
     kpis: [
-      { value: "~40%", label: "Fewer rework cycles", delta: "vs. before" },
       { value: "400+", label: "Designers on the system" },
       { value: "2K+", label: "Engineers on the system" },
       { value: "18", label: "Countries shipped to" },
+      { value: "3", label: "Platforms in parity", delta: "iOS, Android, Web" },
     ],
+    credits:
+      "Technical lead on Andes, working across the design and engineering organizations that build on it.",
     technologies: [
       "Figma",
       "Design Tokens",
@@ -395,14 +412,14 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "banco-de-occidente",
     num: "/04",
-    client: "Aval Digital Labs",
+    // Full rewrite from the Behance piece (07 §g) is Build B's job.
+    experienceId: "aval",
+    testimonialId: "francesca",
     project: "Banco de Occidente",
-    year: "2018 — 2024",
-    role: "Senior Product Designer · DS Gatekeeper",
+    category: "Banking × Design Systems",
     duration: "6 years",
     team: "12+ product squads",
-    category: "Banking × Design Systems",
-    colors: ["#ff8b5e", "#ff5e9f"],
+    kind: "client",
     tagline:
       "Redesigning digital banking for one of Colombia's largest banks — and building the system that keeps it consistent.",
     impact:
@@ -426,14 +443,13 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "royal-caribbean",
     num: "/05",
-    client: "Globant · Medellín",
+    experienceId: "globant",
+    testimonialId: "nicolas",
     project: "Royal Caribbean Cruises",
-    year: "2017 — 2018",
-    role: "Senior Product Designer",
+    category: "Travel × Mobile",
     duration: "1 year",
     team: "Cross-functional US + LATAM",
-    category: "Travel × Mobile",
-    colors: ["#5eb8ff", "#7e6dff"],
+    kind: "client",
     tagline:
       "Designing onboard guest experiences for Royal Caribbean's fleets across Caribbean and Mediterranean routes.",
     impact:
@@ -456,14 +472,13 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "qrvey",
     num: "/06",
-    client: "Qrvey",
+    experienceId: "qrvey",
+    testimonialId: "arman",
     project: "Embedded Analytics Platform",
-    year: "2017 — 2018",
-    role: "Lead UI Designer",
+    category: "SaaS × Data Visualization",
     duration: "1 year",
     team: "Product + Engineering",
-    category: "SaaS × Data Visualization",
-    colors: ["#a8ff5e", "#5eb8ff"],
+    kind: "client",
     tagline:
       "Crafting the visual language for an embedded analytics platform serving SaaS clients.",
     impact:
@@ -476,8 +491,10 @@ export const caseStudies: CaseStudy[] = [
       "**Brand-neutral defaults** with deep theming hooks for each host.",
     ],
     kpis: [
-      { value: "Dozens", label: "Chart types", delta: "one system" },
-      { value: "Enterprise", label: "SaaS deployments" },
+      // Vague figures ("Dozens", "Enterprise") replaced with honest
+      // qualitative values — nothing behind the counts.
+      { value: "Charts", label: "The visual language", delta: "one system, many types" },
+      { value: "Embedded", label: "Inside the host product" },
       { value: "Native", label: "Embed in any host" },
     ],
     technologies: ["Sketch", "Charts.js", "Data Viz", "Component Libraries"],
@@ -486,14 +503,12 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "ideaware",
     num: "/07",
-    client: "Ideaware co",
+    experienceId: "ideaware",
     project: "Multi-client UX Design",
-    year: "2016 — 2017",
-    role: "Senior UX/UI Designer",
+    category: "Agency × Multi-client",
     duration: "1 year",
     team: "Distributed agency",
-    category: "Agency × Multi-client",
-    colors: ["#ff5e9f", "#ff8b5e"],
+    kind: "client",
     tagline:
       "Designing wireframes, UI kits, and prototypes for international clients across web and mobile.",
     impact:
@@ -506,7 +521,7 @@ export const caseStudies: CaseStudy[] = [
       "**Reusable patterns** applied and tailored per client.",
     ],
     kpis: [
-      { value: "Multi", label: "Domains shipped", delta: "fintech → B2B" },
+      { value: "Agency", label: "A new domain each engagement" },
       { value: "US + LATAM", label: "Distributed clients" },
       { value: "Dev-ready", label: "Handoff quality" },
     ],
@@ -522,4 +537,58 @@ export function getCaseStudy(slug: string): CaseStudy | undefined {
 export function getNextCaseStudy(slug: string): CaseStudy {
   const idx = caseStudies.findIndex((c) => c.slug === slug);
   return caseStudies[(idx + 1) % caseStudies.length];
+}
+
+export interface CaseMeta {
+  client: string;
+  role: string;
+  /** Formatted span: "Nov 2018 — 2024". */
+  year: string;
+  /** The same string, named for a timeline context. */
+  period: string;
+  team: string;
+  duration: string;
+  location?: string;
+}
+
+/**
+ * Client, role and period for a case, derived from the employer in `cv.ts`.
+ * Lives here rather than in `career.ts` so the import direction stays
+ * `career.ts → cv.ts` and `work.ts → cv.ts + career.ts` — no cycle.
+ *
+ * Throws on an unknown slug, and on a personal case missing its overrides:
+ * a typo must fail the build, not render blank.
+ */
+export function getCaseMeta(slug: string): CaseMeta {
+  const c = getCaseStudy(slug);
+  if (!c) throw new Error(`Unknown case study slug: "${slug}".`);
+
+  if (!c.experienceId) {
+    if (!c.roleOverride || !c.yearOverride || !c.duration) {
+      throw new Error(
+        `Case "${slug}" has no experienceId, so it must declare roleOverride, yearOverride and duration.`,
+      );
+    }
+    return {
+      client: "Personal product",
+      role: c.roleOverride,
+      year: c.yearOverride,
+      period: c.yearOverride,
+      team: c.team,
+      duration: c.duration,
+    };
+  }
+
+  const exp = getExperience(c.experienceId);
+  const period = c.yearOverride ?? formatPeriod(exp);
+
+  return {
+    client: exp.client ?? exp.company.name,
+    role: c.roleOverride ?? exp.role,
+    year: period,
+    period,
+    team: c.team,
+    duration: c.duration ?? period,
+    location: formatLocation(exp),
+  };
 }

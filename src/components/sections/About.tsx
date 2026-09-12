@@ -14,10 +14,10 @@ interface Fact {
 }
 
 const facts: Fact[] = [
-  { label: "Based", value: `${site.location} · ${site.timezone}` },
-  { label: "Currently", value: "Head of Product · Naowee" },
+  { label: "Based", value: `${site.location.city}, ${site.location.country} · ${site.location.timezone}` },
+  { label: "Currently", value: site.availability.label },
   { label: "Focus", value: "Design engineering · AI-native product" },
-  { label: "Availability", value: "Open to select work · 2026" },
+  { label: "Open to", value: site.availability.note ?? "" },
   { label: "Languages", value: "Spanish (native) · English (B1)" },
 ];
 
@@ -65,8 +65,8 @@ export default function About() {
               transition={{ duration: 0.7, delay: 0.1, ease }}
               className="col-span-12 self-end text-[15px] leading-[1.6] text-[var(--color-ink-muted)] md:col-span-3"
             >
-              I&apos;m a product designer from {site.location.split(",")[0]} — now
-              working as a design engineer. Twelve years from agencies to analytics
+              I&apos;m a product designer from {site.location.city} — now
+              working as a design engineer. Years from agencies to analytics
               platforms, cruise-line apps and national banking, most recently leading
               Andes, the design system behind Mercadolibre across eighteen countries.
             </motion.p>
