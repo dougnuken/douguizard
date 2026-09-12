@@ -4,6 +4,7 @@ import "./globals.css";
 import themeColors from "./theme-colors.json";
 import { site } from "@/data/site";
 import SiteHeader from "@/components/SiteHeader";
+import { personJsonLd } from "@/lib/personJsonLd";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -50,24 +51,49 @@ export const metadata: Metadata = {
   applicationName: site.brand,
   authors: [{ name: site.name, url: "https://douguizard.com" }],
   creator: site.name,
+  publisher: site.name,
+  alternates: { canonical: "/" },
   openGraph: {
-    type: "website",
+    type: "profile",
     locale: "en_US",
     url: "https://douguizard.com",
     siteName: site.brand,
     title: `${site.name} — ${site.headline}`,
     description: site.seo.description,
+    firstName: "Doug",
+    lastName: "Vargas",
+    username: "douguizard",
+    images: [
+      {
+        // ⚠️ Build B generates public/og.png (08-assets.md). The reference is
+        // fixed here so the contract cannot drift.
+        url: site.seo.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `${site.name} — ${site.headline}`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.headline}`,
     description: site.seo.description,
+    images: [site.seo.ogImage],
+    // No handle: Doug has no X account on record.
+    // ⚠️ CONFIRMAR DOUG — add only if one exists.
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  category: "design",
+  // ⚠️ CONFIRMAR DOUG — Search Console verification token, if Doug has one.
 };
 
 export default function RootLayout({
@@ -88,6 +114,10 @@ export default function RootLayout({
         </a>
         <SiteHeader />
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}
+        />
       </body>
     </html>
   );
