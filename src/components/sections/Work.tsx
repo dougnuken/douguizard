@@ -40,12 +40,15 @@ const compact = caseStudies.filter((c) => !VIGNETTES[c.slug]);
 
 function MetaLine({ study }: { study: CaseStudy }) {
   const meta = getCaseMeta(study.slug);
-  // A case whose project and client are the same word says it once.
-  const parts = [
-    study.project === meta.client ? null : meta.client,
-    meta.year,
-    study.category,
-  ].filter(Boolean);
+  // Two ways this line can stutter, both suppressed here rather than in the
+  // data: a case whose project and client are the same word ("Qrvey · Qrvey"),
+  // and a personal one, whose client is the literal "Personal product" and
+  // whose category already opens with it.
+  const clientIsRedundant =
+    study.project === meta.client ||
+    (study.kind === "personal" && study.category.toLowerCase().startsWith(meta.client.toLowerCase()));
+
+  const parts = [clientIsRedundant ? null : meta.client, meta.year, study.category].filter(Boolean);
   return (
     <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
       {parts.join(" · ")}

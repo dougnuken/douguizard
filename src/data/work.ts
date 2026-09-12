@@ -420,7 +420,6 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "banco-de-occidente",
     num: "/04",
-    // Full rewrite from the Behance piece (07 §g) is Build B's job.
     experienceId: "aval",
     testimonialId: "francesca",
     project: "Banco de Occidente",
@@ -429,24 +428,156 @@ export const caseStudies: CaseStudy[] = [
     team: "12+ product squads",
     kind: "client",
     tagline:
-      "Redesigning digital banking for one of Colombia's largest banks — and building the system that keeps it consistent.",
+      "The transactional portal for one of Colombia's largest banks, and Velocity — the design system that kept it consistent across twelve squads.",
     impact:
-      "From fragmented squads to one coherent banking product — shipping faster, with accessibility passing on the first audit.",
+      "An outdated, overloaded banking portal rebuilt as one light, legible product — and a documented design system that made the next screen cheaper than the last.",
     context:
-      "As official Design System Gatekeeper for a top Colombian bank, I approved patterns across 12+ squads and redesigned core flows — transfers, payments, account management — for web and mobile.",
+      "Banco de Occidente's digital banking was visually dense and hard to move through, and every squad solved the same problems differently. I redesigned the transactional portal and built Velocity, the bank's design system, as the official gatekeeper of what went into it.",
     contributions: [
-      "**Design System Gatekeeper** — governed additions, deprecations and patterns across every squad.",
-      "**Core flow redesigns** — transfers, payments and account management, web + mobile.",
-      "**System literacy** — monthly crits, workshops and 1:1 mentorship across the org.",
+      "**Redesigned the transactional portal** — login and registration, accounts and cards, transfers, payments and product blocking, for desktop, tablet and mobile.",
+      "**Built Velocity, the bank's design system** — documentation, foundations, atoms, molecules and organisms, on atomic-design principles so the front end could mirror the structure.",
+      "**Design System Gatekeeper** — approved additions, deprecations and patterns across 12+ product squads, and ran the workshops and crits that taught the system.",
+      "**Drew the illustrated icon set** — 15 mini-illustrations that give the whole product a recognizable character instead of a generic glyph library.",
     ],
     kpis: [
-      { value: "12+", label: "Squads aligned" },
-      { value: "6 yr", label: "As DS gatekeeper" },
-      { value: "M+", label: "Customers reached" },
-      { value: "1st-pass", label: "Accessibility audits", delta: "no rework" },
+      // Doug's own figure, consistent across cv.ts and the published piece.
+      { value: "12+", label: "Product squads aligned", delta: "one system" },
+      // Derived from the Aval experience (Nov 2018 — 2024), not typed.
+      { value: "6 yr", label: "As design system gatekeeper" },
+      // Counted off the published system grid: 23 named tiles across five
+      // columns. "20+" is deliberately conservative so it cannot be over-read.
+      { value: "20+", label: "Documented system areas", delta: "foundations → organisms" },
+      // The "Illustrated Icons" section of the piece: three rows of five.
+      { value: "15", label: "Illustrated icons", delta: "drawn for the system" },
+      // ⚠️ CONFIRMAR DOUG — "millions of customers" was a KPI here ("M+") with
+      // no source behind it, so it is out. Reinstate only against a real figure.
     ],
-    technologies: ["Figma", "Sketch", "Design Tokens", "Prototyping", "Mentorship"],
-    externalLink: { label: "Visit adldigitallab.com", href: "https://www.adldigitallab.com" },
+    process: [
+      {
+        phase: "01",
+        title: "Discovery, then research",
+        body: "To build the thing you have to understand the business first. We ran discovery with the client and the stakeholders, then competitive and user research — days spent on the business model, the requirements, and who was actually going to use this.",
+      },
+      {
+        phase: "02",
+        title: "Flows before screens",
+        body: "We mapped the system's behaviour for each use case before drawing anything: login and registration, payments, enabling and disabling services, transfers, sending and requesting, blocking a product. Six flows, with their exceptions and their error states, because in banking the exception is the product.",
+      },
+      {
+        phase: "03",
+        title: "Interactive wireframes, tested on people",
+        body: "Every stage went to an interactive prototype before it went to visual design. It let the team and the client see how the product would actually work, and it let us run user testing without paying for a full build first. The registration flow went through several rounds on the back of that feedback.",
+      },
+      {
+        phase: "04",
+        title: "A system, not a set of screens",
+        body: "Large products cannot scale without one. Velocity documents foundations, atoms, molecules and organisms so designers across digital products, marketing and engineering stay in sync. I followed atomic design deliberately, because the same structure survives the handoff into the front end.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Atomic design, because the front end thinks that way too",
+        body: "A design system can be organized any number of ways. I chose atoms, molecules and organisms because that structure survives the crossing into code — engineers were building components at the same granularity, so documentation and implementation could share one vocabulary instead of translating.",
+      },
+      {
+        title: "Two layers of navigation, and no more",
+        body: "The old portal buried people in nested page trees. I replaced navigation depth with a popup system: page, then a blurred background, then the component, then the popup. Two layers is enough for every banking task in the product, and nobody gets lost in something two layers deep.",
+      },
+      {
+        title: "Identical across devices, not merely similar",
+        body: "The brief asked for a similar experience on desktop, tablet and mobile. We targeted identical instead. Every desktop capability survives to the phone with the same names in the same order, because a customer who learns the portal on a laptop should not have to relearn it on the bus.",
+      },
+    ],
+    // Every capture is a presentation artboard that already contains its own
+    // tablet, phone or isometric board, so they render as flat cards: a browser
+    // window around a tablet would be a frame inside a frame.
+    galleryKind: "plain",
+    gallery: [
+      {
+        src: "/work/banco-de-occidente/portal-dashboard.webp",
+        width: 1150,
+        height: 920,
+        alt: "The Banco de Occidente transactional portal on a tablet: a left sidebar with the customer's name and benefit tier, cards for a Mastercard and a savings account with their balances, a favourite-transactions row, a month calendar and a spending chart.",
+        caption: "The portal home: products, favourite transactions and the month at a glance.",
+      },
+      {
+        src: "/work/banco-de-occidente/login-registration.webp",
+        width: 1238,
+        height: 836,
+        alt: "The portal's login screen on a tablet: a cookie notice across the top, a promotional panel on the left, and a sign-in card asking for document type, document number and password, with links to recover a password and to register.",
+        caption: "Login and registration, stripped of anything that could distract mid-task.",
+      },
+      {
+        src: "/work/banco-de-occidente/user-flow-login-otp.webp",
+        width: 1319,
+        height: 714,
+        alt: "The registration and one-time-password flow diagrammed as boxes and arrows: register, enter document type and ID, send a one-time password, enter it or request another by SMS, accept the data-processing agreement, then either a successful login or a validation failure.",
+        caption: "One of six flows mapped before any screen existed, exceptions included.",
+      },
+      {
+        src: "/work/banco-de-occidente/design-system-grid.webp",
+        width: 1211,
+        height: 561,
+        alt: "The Velocity design system index, five columns wide: Documentation, Foundations, Atoms, Molecules and Organisms, listing basics, naming rules, writing principles, grids, spacing, colours, typography, buttons, inputs, controls, icons, fields, dropdowns, lists, tables, headers, forms, modals, date picker and tab navigation.",
+        caption: "Velocity, indexed the way the front end is built.",
+      },
+      {
+        src: "/work/banco-de-occidente/design-system-foundations.webp",
+        width: 1360,
+        height: 1480,
+        alt: "Design system foundation boards laid out in perspective: a colour scale from light to dark blue with neutral and gold secondaries, a type scale from hero down to caption, a spacing scale, and sheets of button and form-field states.",
+        caption: "Foundations: colour, type, spacing and every state of every control.",
+      },
+      {
+        src: "/work/banco-de-occidente/illustrated-icons.webp",
+        width: 823,
+        height: 497,
+        alt: "Fifteen illustrated icons in blue and green line art: a statement, a credit score, a certificate, a scheduled document, a location pin, stacked coins, a piggy bank, a phone payment, a phone message, a phone with a plus, a protected phone, a phone with a fingerprint, a failed transaction, a house, and a browser window.",
+        caption: "Fifteen icons drawn for the system, not licensed into it.",
+      },
+      {
+        src: "/work/banco-de-occidente/products-and-cards.webp",
+        width: 1238,
+        height: 836,
+        alt: "The accounts section of the portal on a tablet: a savings account card showing available, redeemable and current balances, a filterable movements table listing purchases and transfers with amounts, and a success toast confirming a chequebook has been blocked.",
+        caption: "Accounts and cards: balances, movements and the confirmation that the block worked.",
+      },
+      {
+        src: "/work/banco-de-occidente/popups-system.webp",
+        width: 1074,
+        height: 561,
+        alt: "The popup system drawn as four stacked planes in perspective, labelled from the back: the page, a blurred background, the component, and the popup itself.",
+        caption: "Depth instead of nesting: two layers cover every task in the product.",
+      },
+      {
+        src: "/work/banco-de-occidente/responsive-mobile.webp",
+        width: 1042,
+        height: 988,
+        alt: "Two iPhone screens side by side: a Mastercard Black detail with minimum payment, total payment and due date above a Pay button, and the movements tab listing card purchases with dates, instalment counts and amounts.",
+        caption: "The same portal on a phone — every desktop capability, in the same order.",
+      },
+    ],
+    links: [
+      // ⚠️ CONFIRMAR DOUG — the URL returns HTTP 200, but a headless load stops
+      // at Figma's loading screen, which proves the URL resolves and nothing
+      // more. Open it in a private window before shipping; drop the entry if it
+      // asks a logged-out visitor to sign in.
+      {
+        label: "Interactive prototype (Figma)",
+        href: "https://www.figma.com/proto/0r3LsQkQBzD8BM6Qr9hRgI/BDO-Web-Page?page-id=239%3A20692&node-id=239%3A20693",
+      },
+      {
+        label: "Case on Behance",
+        href: "https://www.behance.net/gallery/143620441/UI-Portal-Bancario-Banco-de-Occidente",
+      },
+    ],
+    // No individual is named. The published piece lists five other people in a
+    // Roles table; none of them appear anywhere in this repo.
+    credits:
+      "Design system, art direction and UI design: mine. Product ownership and UX research sat with the bank's and the lab's teams. Published by **Aval Digital Labs**, Colombia, 2022.",
+    technologies: ["Figma", "Sketch", "Atomic design", "Design tokens", "InVision", "Prototyping"],
+    // `externalLink` removed: adldigitallab.com is the employer's corporate site
+    // and adds nothing to the work. The two `links` above are the destinations.
   },
   {
     slug: "royal-caribbean",
