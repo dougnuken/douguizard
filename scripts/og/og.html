@@ -1,0 +1,119 @@
+<!doctype html>
+<!--
+  The Open Graph card, 1200 × 630. Committed so the artwork is reproducible,
+  never rendered by the app. Regenerate with Chrome headless (Playwright is
+  not installed on this machine):
+
+    node scripts/og/shot-og.mjs
+
+  which is the equivalent of:
+
+    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+      --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 \
+      --screenshot=public/og.png --default-background-color=00000000 \
+      "file://$PWD/scripts/og/og.html"
+
+  Fonts are the system stack on purpose: the card must render identically with
+  no network, and Archivo/Geist are not installed locally. The proportions —
+  ground, margin, kicker, name, headline, glow, domain — follow 08-assets.md §6.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Doug Vargas — OG card</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body { width: 1200px; height: 630px; }
+
+      body {
+        position: relative;
+        overflow: hidden;
+        background: #101010;
+        color: #f2f1ee;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* The `.glow-corner` of the site, bottom-right, at 45%. */
+      .glow {
+        position: absolute;
+        inset-block-end: -340px;
+        inset-inline-end: -280px;
+        width: 1180px;
+        height: 1180px;
+        opacity: 0.45;
+        background: radial-gradient(
+          closest-side circle at 50% 50%,
+          rgba(96, 116, 255, 0.9) 0%,
+          rgba(58, 60, 140, 0.62) 42%,
+          rgba(45, 44, 89, 0) 100%
+        );
+      }
+
+      .frame {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        padding: 64px;
+      }
+
+      .kicker {
+        font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #8a8985;
+      }
+
+      .name {
+        font-size: 96px;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1;
+        color: #f2f1ee;
+      }
+
+      .headline {
+        margin-block-start: 18px;
+        font-size: 40px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        color: #a3a29e;
+      }
+
+      .rule {
+        width: 96px;
+        height: 1px;
+        margin-block-end: 26px;
+        background: #f2f1ee;
+        opacity: 0.35;
+      }
+
+      .domain {
+        font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        color: #8a8985;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+    <div class="frame">
+      <p class="kicker">Product &times; Systems &times; Code</p>
+      <div>
+        <div class="rule"></div>
+        <h1 class="name">Doug Vargas</h1>
+        <p class="headline">Head of Product &middot; Design Engineer</p>
+      </div>
+      <p class="domain">douguizard.com</p>
+    </div>
+  </body>
+</html>

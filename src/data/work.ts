@@ -214,22 +214,22 @@ export const caseStudies: CaseStudy[] = [
     },
     gallery: [
       {
-        src: "/work/olbo/semaforo-verde.png",
+        src: "/work/olbo/semaforo-verde.webp",
         alt: "olbo dashboard with the traffic light in green — spending pace is at or under the share of the month elapsed.",
         caption: "Green: the pace matches the calendar.",
       },
       {
-        src: "/work/olbo/semaforo-alerta.png",
+        src: "/work/olbo/semaforo-alerta.webp",
         alt: "olbo dashboard with the traffic light in alert — the same pocket read against an earlier day of the month turns the color to a warning.",
         caption: "The same amount, earlier in the month, reads as alert.",
       },
       {
-        src: "/work/olbo/registrar.png",
+        src: "/work/olbo/registrar.webp",
         alt: "olbo expense capture screen — entering a movement in whole Colombian pesos in a few taps.",
         caption: "Capture in whole pesos, in seconds.",
       },
       {
-        src: "/work/olbo/movimientos.png",
+        src: "/work/olbo/movimientos.webp",
         alt: "olbo movements list — recorded expenses grouped and categorized, stored locally in IndexedDB.",
         caption: "Movements, categorized and kept on the device.",
       },
@@ -330,32 +330,32 @@ export const caseStudies: CaseStudy[] = [
     },
     gallery: [
       {
-        src: "/work/naowee/ivc-bandeja.png",
+        src: "/work/naowee/ivc-bandeja.webp",
         alt: "The IVC coordinator's assignment queue: counters reading 6 in referral, 3 assigned and 3 in validation, above a table of 25 procedures listing each filing number, the sports organization and its NIT, days remaining, status and assigned professional.",
         caption: "The coordinator's queue: every procedure with a deadline and an owner.",
       },
       {
-        src: "/work/naowee/ivc-workspace-tramite.png",
+        src: "/work/naowee/ivc-workspace-tramite.webp",
         alt: "The professional's workspace on procedure IVC-2026-005: 18 days left on the deadline beside a checklist of 7 documents, each citing the article of Decreto 1387/1970 it answers, with validate, reject or observe available per document.",
         caption: "Each document checked against the article it has to answer.",
       },
       {
-        src: "/work/naowee/project-panel-admin.png",
+        src: "/work/naowee/project-panel-admin.webp",
         alt: "The convocatorias administrator panel: 1 of 7 calls open, 33 applications, 10 at the documentary stage and 30.5 million COP in active investment, over lists of recent applications and currently active calls.",
         caption: "Investment calls, applications and stages in a single panel.",
       },
       {
-        src: "/work/naowee/project-revision-area-tecnica.png",
+        src: "/work/naowee/project-revision-area-tecnica.webp",
         alt: "Technical-area review of application RAD-2026-003: an assigned-area notice with its SLA, an architectural checklist where every item cites its article of Resolución 933 and is marked compliant or unverified, progress at 4 of 6, and a panel of the uploaded documents.",
         caption: "One of eight technical areas, reviewed article by article.",
       },
       {
-        src: "/work/naowee/escenarios-mapa.png",
+        src: "/work/naowee/escenarios-mapa.webp",
         alt: "The georeferenced sports-venue registry: a choropleth of Colombia shaded by department, with filters for region, venue type, status and CAR, beside a ranking of departments and an intensity legend.",
         caption: "The country's sports venues, department by department.",
       },
       {
-        src: "/work/naowee/escenarios-perfil-escenario.png",
+        src: "/work/naowee/escenarios-perfil-escenario.webp",
         alt: "The profile of the venue Centro deportivo Norte, carrying a CAR badge: a photo carousel above tabs for general information, documentation and history, showing department, municipality, cadastral registration and coordinates.",
         caption: "A single venue: photos, documents and coordinates.",
       },
