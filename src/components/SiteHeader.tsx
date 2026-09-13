@@ -123,7 +123,7 @@ export default function SiteHeader() {
           </Link>
         </nav>
 
-        <div className={`flex items-center gap-2 ${isHome ? "lg:ml-8" : "ml-auto lg:ml-8"}`}>
+        <div className="ml-auto flex items-center gap-2 lg:ml-8">
           {/* Icon-only on a phone. The word costs ~60px the wordmark needs —
               it was what truncated the brand to "Dou…" at 320 — and LinkedIn is
               still spelled out in the hero and in the mobile menu. */}

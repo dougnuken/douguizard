@@ -49,7 +49,7 @@ export default function Hero() {
          which is exactly where the employer strip fell off the bottom. */
       className="relative mx-auto flex w-full max-w-[1400px] flex-col justify-center overflow-hidden px-6 py-14 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-end lg:pb-14 lg:pt-10 [@media(max-height:780px)]:lg:pb-7 [@media(max-height:780px)]:lg:pt-6"
     >
-      <div className="relative z-[1] flex flex-col gap-5 [@media(max-height:780px)]:gap-3">
+      <div className="relative z-[1] flex flex-col gap-7 lg:gap-5 [@media(max-height:780px)]:gap-3">
         {/* One bold word inside a light line is the whole hierarchy: the eye lands
             on "human" before it reads anything, which is the point being made. */}
         <h1
@@ -67,7 +67,7 @@ export default function Hero() {
           </RevealText>
         </h1>
 
-        <RevealText as="div" variant="fade" delay={0.2} className="pt-1">
+        <RevealText as="div" variant="fade" delay={0.2} className="py-2 lg:py-1">
           <FocusWords
             sentence="Design Build Ship"
             className="justify-start font-display text-[clamp(22px,min(3.2vw,4.6vh),48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
