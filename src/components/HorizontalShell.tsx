@@ -12,9 +12,12 @@ const SHELL_CLASS = [
 ].join(" ");
 
 const PANEL_CLASS = [
-  "relative outline-none",
+  "relative",
   "pt-14 lg:pt-16",
   "lg:flex lg:h-svh lg:w-screen lg:shrink-0 lg:snap-start lg:flex-col lg:overflow-y-auto lg:pr-24",
+  // Inset, because the panel is its own scroll container: an outset ring would
+  // be clipped by the very overflow that makes the panel focusable.
+  "focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
 ].join(" ");
 
 /**
@@ -27,8 +30,15 @@ const PANEL_CLASS = [
  */
 export default function HorizontalShell({
   children,
+  labels = [],
 }: {
   children: React.ReactNode;
+  /**
+   * One accessible name per panel, in child order. Each panel is a focusable
+   * scroll container, and a scroll container a screen reader can land on needs
+   * a name to announce.
+   */
+  labels?: string[];
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -109,8 +119,17 @@ export default function HorizontalShell({
       onKeyDown={onKeyDown}
       className={SHELL_CLASS}
     >
-      {React.Children.map(children, (child) => (
-        <div data-panel tabIndex={-1} className={PANEL_CLASS}>
+      {React.Children.map(children, (child, i) => (
+        /* tabIndex 0, not -1: a panel taller than the viewport scrolls, and a
+           scrollable region that only the mouse wheel can reach is unusable by
+           keyboard (WCAG 2.1.1). "How I work" runs 1125px in a 900px window. */
+        <div
+          data-panel
+          tabIndex={0}
+          role="group"
+          aria-label={labels[i]}
+          className={PANEL_CLASS}
+        >
           {child}
         </div>
       ))}

@@ -52,12 +52,32 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="mx-auto flex h-full w-full max-w-[1400px] items-center gap-4 px-6 md:px-12">
-        <Link
-          href="/"
-          className="min-w-0 truncate font-display text-[17px] font-semibold tracking-[-0.02em] text-[var(--ink)] no-underline"
-        >
-          {site.brand}
-        </Link>
+        <div className="flex shrink-0 items-center gap-2.5">
+          <Link
+            href="/"
+            className="shrink-0 font-display text-[17px] font-semibold tracking-[-0.02em] text-[var(--ink)] no-underline"
+          >
+            {site.brand}
+          </Link>
+
+          {/* Status, not decoration. `title` carries what the word actually
+              offers, so the badge is never a claim on its own. */}
+          {/* Below `sm` the header has no room for the word, so the dot carries
+              the status alone — hence the accessible name on the wrapper. */}
+          <span
+            title={site.availability.note}
+            className="inline-flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <span aria-hidden className="status-dot" />
+            {/* Below `sm` the header has no room for the word, so it goes to the
+                screen-reader layer rather than out of the document: `aria-label`
+                on a span with no role is prohibited, and the dot alone says
+                nothing. */}
+            <span className="kicker kicker-ok sr-only sm:not-sr-only sm:inline">
+              {site.availability.badge}
+            </span>
+          </span>
+        </div>
 
         <nav
           aria-label="Sections"
@@ -87,14 +107,18 @@ export default function SiteHeader() {
         </nav>
 
         <div className={`flex items-center gap-2 ${isHome ? "lg:ml-8" : "ml-auto lg:ml-8"}`}>
+          {/* Icon-only on a phone. The word costs ~60px the wordmark needs —
+              it was what truncated the brand to "Dou…" at 320 — and LinkedIn is
+              still spelled out in the hero and in the mobile menu. */}
           <a
             href={linkedin.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-pill h-10 min-h-10 px-4 text-[13px]"
+            aria-label={linkedin.label}
+            className="btn-pill h-10 min-h-10 px-3 text-[13px] sm:px-4"
           >
             <LinkedInMark />
-            LinkedIn
+            <span className="hidden sm:inline">{linkedin.label}</span>
           </a>
           <ThemeToggle />
           <button

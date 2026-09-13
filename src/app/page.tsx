@@ -1,3 +1,4 @@
+import { sections } from "@/data/sections";
 import SectionIndex from "@/components/SectionIndex";
 import HorizontalShell from "@/components/HorizontalShell";
 import Hero from "@/components/sections/Hero";
@@ -17,7 +18,7 @@ export default function Home() {
   return (
     <main id="main" tabIndex={-1}>
       <SectionIndex />
-      <HorizontalShell>
+      <HorizontalShell labels={sections.map((s) => s.label)}>
         <Hero />
         <Work />
         <Craft />

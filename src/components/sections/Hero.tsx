@@ -50,12 +50,6 @@ export default function Hero() {
       className="relative mx-auto flex w-full max-w-[1400px] flex-col justify-center overflow-hidden px-6 py-14 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-end lg:pb-14 lg:pt-10 [@media(max-height:780px)]:lg:pb-7 [@media(max-height:780px)]:lg:pt-6"
     >
       <div className="relative z-[1] flex flex-col gap-5 [@media(max-height:780px)]:gap-3">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <p className="kicker">Product × Systems × Code</p>
-          <span aria-hidden className="hidden h-3 w-px bg-[var(--line-strong)] sm:block" />
-          <p className="kicker text-[var(--ink-dim)]">{site.availability.label}</p>
-        </div>
-
         {/* One bold word inside a light line is the whole hierarchy: the eye lands
             on "human" before it reads anything, which is the point being made. */}
         <h1
@@ -66,7 +60,7 @@ export default function Hero() {
             Designing the
           </RevealText>
           <RevealText as="span" variant="mask" delay={0.07} className="block">
-            <strong className="font-extrabold">human</strong> side
+            <strong className="font-extrabold text-[1.12em] leading-[0.8]">human</strong> side
           </RevealText>
           <RevealText as="span" variant="mask" delay={0.14} className="block">
             of an AI era
@@ -78,10 +72,6 @@ export default function Hero() {
             sentence="Design Build Ship"
             className="justify-start font-display text-[clamp(22px,min(3.2vw,4.6vh),48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
           />
-        </RevealText>
-
-        <RevealText as="p" variant="fade" delay={0.26} className="kicker">
-          {site.name} — {site.headline}
         </RevealText>
 
         <RevealText

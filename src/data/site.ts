@@ -23,6 +23,8 @@ export interface Site {
   availability: {
     status: "employed" | "open" | "available";
     label: string;
+    /** One word for the header badge. What `note` offers, in the shortest form. */
+    badge: string;
     note?: string;
   };
   social: SocialLink[];
@@ -70,6 +72,10 @@ export const site: Site = {
   availability: {
     status: "employed",
     label: "Head of Product at Naowee",
+    // Employed AND available: the badge is about the consulting in `note`, not
+    // about looking for a job. `note` is the badge's own tooltip, so the header
+    // can never claim more than this line says.
+    badge: "Available",
     note: "Selected consulting on design systems and AI-native product",
   },
   social,
