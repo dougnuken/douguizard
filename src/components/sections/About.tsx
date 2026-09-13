@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { sections } from "@/data/sections";
 import { site } from "@/data/site";
@@ -140,18 +141,33 @@ export default function About() {
         </Link>
       </div>
 
-      <dl className="hairline-t grid h-fit grid-cols-2 gap-x-6 gap-y-5 pt-6 lg:grid-cols-1 lg:border-t-0 lg:pt-0">
-        {FACT_ROWS.map((f) => (
-          <div key={f.label} className="flex flex-col gap-1.5">
-            <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--ink-dim)]">
-              {f.label}
-            </dt>
-            <dd className="text-[var(--step-small)] leading-[1.5] text-[var(--ink)]">
-              {f.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <div className="flex h-fit flex-col gap-8">
+        {/* The rail was empty above the facts, and the panel is the one place on
+            the site that speaks in the first person. No rounded corner and no
+            frame: the photograph is already ink on paper, which is the whole
+            palette. */}
+        <Image
+          src="/portrait/doug-portrait-900.webp"
+          alt={`${site.name}, photographed in black and white against a dark background.`}
+          width={900}
+          height={1130}
+          sizes="(min-width: 1024px) 340px, (min-width: 640px) 50vw, 100vw"
+          className="w-full max-w-[280px] object-cover lg:max-w-none"
+        />
+
+        <dl className="hairline-t grid grid-cols-2 gap-x-6 gap-y-5 pt-6 lg:grid-cols-1">
+          {FACT_ROWS.map((f) => (
+            <div key={f.label} className="flex flex-col gap-1.5">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--ink-dim)]">
+                {f.label}
+              </dt>
+              <dd className="text-[var(--step-small)] leading-[1.5] text-[var(--ink)]">
+                {f.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </section>
   );
 }

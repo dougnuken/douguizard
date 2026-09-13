@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
@@ -53,11 +54,27 @@ export default function SiteHeader() {
     <header className="site-header">
       <div className="mx-auto flex h-full w-full max-w-[1400px] items-center gap-4 px-6 md:px-12">
         <div className="flex shrink-0 items-center gap-2.5">
+          {/* The one circle in a system with no rounded corners, and a face is
+              the reason it gets one. `aria-hidden`: the link beside it already
+              says whose site this is, and a second announcement of the same
+              name is noise. */}
           <Link
             href="/"
-            className="shrink-0 font-display text-[17px] font-semibold tracking-[-0.02em] text-[var(--ink)] no-underline"
+            className="flex shrink-0 items-center gap-2.5 no-underline"
+            aria-label={`${site.brand} — home`}
           >
-            {site.brand}
+            <Image
+              src="/portrait/doug-avatar-256.webp"
+              alt=""
+              aria-hidden
+              width={256}
+              height={256}
+              priority
+              className="h-7 w-7 shrink-0 rounded-full object-cover"
+            />
+            <span className="font-display text-[17px] font-semibold tracking-[-0.02em] text-[var(--ink)]">
+              {site.brand}
+            </span>
           </Link>
 
           {/* Status, not decoration. `title` carries what the word actually
