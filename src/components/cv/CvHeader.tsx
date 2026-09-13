@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import Image from "next/image";
 import PrintButton from "@/components/cv/PrintButton";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 import { site } from "@/data/site";
@@ -29,13 +30,28 @@ export default function CvHeader() {
 
       <div className="relative z-[1] flex flex-col gap-5">
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-          <div className="flex min-w-0 flex-col gap-2">
-            <h1 className="cv-name font-display text-[length:var(--step-title)] font-bold leading-[1.02] tracking-[-0.03em] text-[var(--ink)]">
-              {site.name}
-            </h1>
-            <p className="cv-headline text-[length:var(--step-lead)] leading-[1.3] tracking-[-0.01em] text-[var(--ink-muted)]">
-              {site.headline}
-            </p>
+          {/* Circular, as on the reference sheet, and the one round corner in
+              the document. It survives print: a CV that arrives as a PDF is
+              read on a screen, and a face at the top of it is the difference
+              between a record and a person. */}
+          <div className="flex min-w-0 items-end gap-6">
+            <Image
+              src="/portrait/doug-avatar-256.webp"
+              alt=""
+              aria-hidden
+              width={256}
+              height={256}
+              priority
+              className="cv-portrait h-[92px] w-[92px] shrink-0 rounded-full object-cover"
+            />
+            <div className="flex min-w-0 flex-col gap-2">
+              <h1 className="cv-name font-display text-[length:var(--step-title)] font-bold leading-[1.02] tracking-[-0.03em] text-[var(--ink)]">
+                {site.name}
+              </h1>
+              <p className="cv-headline text-[length:var(--step-lead)] leading-[1.3] tracking-[-0.01em] text-[var(--ink-muted)]">
+                {site.headline}
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden max-sm:w-full max-sm:[&>*]:flex-1">

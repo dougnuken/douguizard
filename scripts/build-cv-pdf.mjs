@@ -86,16 +86,18 @@ const s = (m, p) => send(m, p, sessionId);
 await s("Page.enable");
 await s("Runtime.enable");
 
-// A CV is printed and emailed. It goes out on paper, in the light theme, with
-// motion off — the same document a reduced-motion visitor already sees.
+// This file is emailed and read on a screen, so it is the dark document, and
+// motion is off — the same frame a reduced-motion visitor already sees. The
+// print stylesheet forces the dark tokens regardless, but emulating dark here
+// keeps anything theme-dependent honest before the sheet rules apply.
 await s("Emulation.setEmulatedMedia", {
   features: [
-    { name: "prefers-color-scheme", value: "light" },
+    { name: "prefers-color-scheme", value: "dark" },
     { name: "prefers-reduced-motion", value: "reduce" },
   ],
 });
 await s("Page.addScriptToEvaluateOnNewDocument", {
-  source: `try{localStorage.setItem("dg-theme","light")}catch(e){}`,
+  source: `try{localStorage.setItem("dg-theme","dark")}catch(e){}`,
 });
 
 await s("Page.navigate", { url: `${BASE}/cv` });
@@ -116,7 +118,10 @@ if (!fingerprint) {
 }
 
 const { result } = await s("Page.printToPDF", {
-  printBackground: false,
+  // The whole design is background: the surface, the purple wash and the
+  // grain. With this off the sheet prints as bare type on white, which is
+  // exactly how the last one came out.
+  printBackground: true,
   preferCSSPageSize: true,
   paperWidth: PAPER.width,
   paperHeight: PAPER.height,

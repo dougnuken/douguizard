@@ -14,27 +14,35 @@ export const metadata = { other: { "cv-fingerprint": cvFingerprint() } };
  */
 export default function CvPage() {
   return (
-    <main
-      id="main"
-      tabIndex={-1}
-      className="mx-auto w-full max-w-[1100px] px-6 pb-28 pt-24 md:px-12 md:pt-28 print:px-0 print:pb-0 print:pt-0"
-    >
-      <CvHeader />
+    <>
+      {/* Print only — see the `@media print` block. They live outside `#main`
+          so they sit outside its padding and can reach every edge of the
+          sheet, and they are fixed, so Chrome repeats them on every page. */}
+      <div aria-hidden className="cv-print-surface hidden" />
+      <div aria-hidden className="cv-print-grain hidden" />
 
-      <div className="cv-grid mt-4 grid grid-cols-1 gap-x-16 gap-y-0 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="min-w-0">
-          <CvExperience />
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-[1100px] px-6 pb-28 pt-24 md:px-12 md:pt-28 print:px-0 print:pb-0 print:pt-0"
+      >
+        <CvHeader />
+
+        <div className="cv-grid mt-4 grid grid-cols-1 gap-x-16 gap-y-0 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="min-w-0">
+            <CvExperience />
+          </div>
+          <CvSidebar />
         </div>
-        <CvSidebar />
-      </div>
 
-      {/*
-        Skills and Tools close the document at full measure rather than inside
-        the left column: the sidebar has run out by then, and a dense three-up
-        block reads better than two narrow ones beside 3,000 px of empty rail.
-        Print collapses everything to one flow, so `05 §6` is unaffected.
-      */}
-      <CvSkills />
-    </main>
+        {/*
+          Skills and Tools close the document at full measure rather than inside
+          the left column: the sidebar has run out by then, and a dense three-up
+          block reads better than two narrow ones beside 3,000 px of empty rail.
+          Print collapses everything to one flow, so `05 §6` is unaffected.
+        */}
+        <CvSkills />
+      </main>
+    </>
   );
 }

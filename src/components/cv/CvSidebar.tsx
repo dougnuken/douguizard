@@ -1,5 +1,4 @@
 import { certifications, education, languages } from "@/data/cv";
-import { testimonials } from "@/data/testimonials";
 import { formatPoint } from "@/lib/career";
 
 function Block({
@@ -24,14 +23,18 @@ function Block({
 }
 
 /**
- * Education, certifications, languages and references. A real `<aside>` on
- * desktop; below `lg` it drops under the skills and lays its four blocks out
- * two-up so the column of air on the right does not become a column of nothing.
+ * Education, certifications and languages. A real `<aside>` on desktop; below
+ * `lg` it drops under the skills and lays its blocks out two-up so the column
+ * of air on the right does not become a column of nothing.
+ *
+ * The three testimonials used to close it. They are gone at Doug's request:
+ * a CV is his own account of his work, and the quotes live on the case pages
+ * where the reader can see what they are about.
  */
 export default function CvSidebar() {
   return (
     <aside
-      aria-label="Education, certifications and references"
+      aria-label="Education, certifications and languages"
       className="cv-sidebar mt-14 grid grid-cols-1 content-start gap-x-10 gap-y-12 self-start sm:grid-cols-2 lg:mt-0 lg:grid-cols-1"
     >
       <Block id="cv-education" title="Education">
@@ -83,20 +86,6 @@ export default function CvSidebar() {
         </ul>
       </Block>
 
-      <Block id="cv-references" title="References" className="cv-block--refs">
-        {testimonials.map((t) => (
-          <figure key={t.id} className="cv-ref flex flex-col gap-2">
-            <blockquote className="text-[length:var(--step-small)] leading-[1.55] text-pretty text-[var(--ink-muted)]">
-              {t.quote}
-            </blockquote>
-            <figcaption className="cv-meta font-mono text-[11px] leading-[1.6] tracking-[0.04em] text-[var(--ink-dim)]">
-              <span className="text-[var(--ink)]">{t.author.name}</span>
-              {" — "}
-              {t.author.role}, {t.author.company}
-            </figcaption>
-          </figure>
-        ))}
-      </Block>
     </aside>
   );
 }

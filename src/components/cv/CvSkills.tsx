@@ -1,4 +1,5 @@
 import { skills, tools } from "@/data/cv";
+import ToolMarks from "@/components/cv/ToolMarks";
 
 /**
  * A comma-joined mono line per group, not chips: thirty pills is visual noise
@@ -45,7 +46,11 @@ export default function CvSkills() {
         <h2 id="cv-tools" className="cv-h2">
           Tools
         </h2>
-        <div className="cv-columns">
+        {/* The three whose marks can be drawn faithfully, above the full list.
+            A logo says "I live in this" in a way a comma-separated name does
+            not, and three is enough to say it. */}
+        <ToolMarks />
+        <div className="cv-columns mt-4">
           {tools.map((group) => (
             <Group key={group.id} label={group.label}>
               {join(group.items)}
