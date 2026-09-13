@@ -360,9 +360,16 @@ export const caseStudies: CaseStudy[] = [
         caption: "A single venue: photos, documents and coordinates.",
       },
     ],
-    // No public link: the demo hub is an internal catalogue of prototypes, and
-    // pointing at it frames this work as demos rather than as the platform the
-    // screens and the walkthrough already show. The work speaks for itself.
+    // Both are public GitHub Pages, and Doug wants them reachable from the
+    // case: the design system is the artefact the contribution list claims
+    // ("38+ naowee-* components"), so a reader can go and count them.
+    links: [
+      {
+        label: "Design system",
+        href: "https://naowee-tech.github.io/design-naowee-design-system/",
+      },
+      { label: "Demos hub", href: "https://naowee-tech.github.io/design-naowee-demos-hub/" },
+    ],
     credits:
       "Head of Product at Naowee: I set direction across the platform's business modules and build the prototypes that define them — product decisions, design system and working code. I work alongside business analysts, a designer I lead, and the engineering teams that take each module to production.",
     technologies: [
