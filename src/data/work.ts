@@ -49,8 +49,13 @@ export interface CaseStudy {
   kpis?: Kpi[];
   technologies?: string[];
   externalLink?: { label: string; href: string };
-  /** Client engagement or self-initiated product — drives framing and index labels. */
-  kind?: "client" | "personal";
+  /**
+   * Client engagement, self-initiated product, or a side project taken on
+   * outside a job — drives framing and which group the index lists it under.
+   */
+  kind?: "client" | "personal" | "side";
+  /** What the meta strip calls the client when there is no experience behind it. */
+  clientOverride?: string;
   /** Numbered narrative of how the work happened, phase by phase. */
   process?: { phase: string; title: string; body: string }[];
   /** The calls worth defending — each one a choice and its reasoning. */
@@ -718,6 +723,117 @@ export const caseStudies: CaseStudy[] = [
     technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
     externalLink: { label: "Visit ideaware.co", href: "https://www.ideaware.co" },
   },
+  {
+    slug: "chub",
+    num: "/08",
+    project: "Chub",
+    category: "iOS × Mobility",
+    kind: "side",
+    clientOverride: "Freelance side project",
+    roleOverride: "Product designer — end to end",
+    yearOverride: "2018",
+    duration: "2018",
+    team: "Me and the dev team, through handoff",
+    // ⚠️ CONFIRMAR DOUG — Doug calls it "Chupp"; the splash screen's wordmark
+    // reads CHUB. Going with the artwork, since that is what a reader sees.
+    tagline:
+      "Book a car by the minute, see what it costs before you commit, and control the cabin once you are in it.",
+    impact:
+      "A booking flow that answers the two questions a rental app usually hides — what this car is, and what this trip will cost — before you agree to either.",
+    // ⚠️ CONFIRMAR DOUG — Doug described it as "an app for requesting services,
+    // Uber-style", but no screen has a driver: pricing is per minute, the
+    // vehicle sheet leads with range and acceleration, and one screen is the
+    // car's own dashboard. Written as what the screens show.
+    context:
+      "A side project taken on in 2018, alongside the day job. Chub books a car rather than a ride: you pick a vehicle, see its range and what it charges per minute, and the app becomes the cabin's controls once the trip starts. I designed it from scratch and worked alongside the dev team through handoff.",
+    contributions: [
+      "**The vehicle sheet leads with the decision** — range, acceleration, seats and the per-minute rate on one card, above the button. What a driver needs to choose is not buried behind it.",
+      "**The route screen prices the trip before it starts** — pickup, destination, an estimated duration and a fare range, with the card on file already shown, so the last screen holds no surprises.",
+      "**The app becomes the car** — once the trip is running the same product turns into a cabin panel: climate, ventilated seats, inside and outside temperature, and the speed.",
+      "**Dark by default, one accent** — a violet that only marks what is live: the active route, the selected vehicle, the primary action.",
+    ],
+    gallery: [
+      {
+        src: "/work/chub/onboarding.webp",
+        alt: "Chub's first run screen: the wordmark over a car rendered on a glowing ring, the line \"Choose a Vehicle and trip with style\", and Get started above a Skip link.",
+        caption: "First run: what the product is, in one screen.",
+      },
+      {
+        src: "/work/chub/vehicle.webp",
+        alt: "A vehicle sheet over the map: the model name with its rating, a spec row for acceleration, range and seats, its pick-up address and distance, the saved card, a per-minute price, and a Book Car button.",
+        caption: "Range, rate and distance before the button, not after it.",
+      },
+      {
+        src: "/work/chub/route.webp",
+        alt: "The route drawn across a dark map with a distance marker, and a panel below carrying the pick-up and destination, the service class, a fare range, the estimated trip time, the saved card and a Need Assistance button.",
+        caption: "The trip priced and timed before it starts.",
+      },
+      {
+        src: "/work/chub/cabin.webp",
+        alt: "The in-car panel: chips for air conditioning and ventilated seats, inside and outside temperature, a circular gauge reading 65 km/h with the gear selector around it, and a line saying the air conditioning is on.",
+        caption: "Under way, the app is the cabin.",
+      },
+    ],
+    galleryKind: "phone",
+    technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
+    credits:
+      "Product design end to end — flows, interface and the handoff. Built by a development team I worked alongside. The project ended at handoff; it was never released.",
+  },
+  {
+    slug: "makeappet",
+    num: "/09",
+    project: "MakeAppet",
+    category: "iOS × Pet adoption",
+    kind: "side",
+    clientOverride: "Freelance side project",
+    roleOverride: "Product designer — end to end",
+    yearOverride: "2018",
+    duration: "2018",
+    team: "Me and the dev team, through handoff",
+    tagline:
+      "Swipe to meet a dog or a cat near you — the pattern people already know, pointed at adoption instead of dating.",
+    impact:
+      "Adoption borrowed the one interaction everybody already knows how to use, and put a shelter's donation ask where the attention already was.",
+    context:
+      "A side project from 2018, alongside the day job. MakeAppet applies the swipe-to-match pattern to finding a pet nearby: browse by species, swipe through what is close, and open a full profile before deciding. I designed it from scratch and worked alongside the dev team through handoff.",
+    contributions: [
+      "**The card carries the decision, the profile carries the detail** — name, age and distance on the card; breed, weight, sex and a written description one tap deeper. Nobody adopts from a photograph alone.",
+      "**Two ways in, not one** — a swipe stack for browsing and a filtered grid by species and distance, because half of the people arriving already know whether they want a cat.",
+      "**The shelter ask sits in the browse screen** — a donation panel between the search and the results, where the attention already is, instead of behind a menu nobody opens.",
+      "**The match screen hands over a first line** — the moment of a match is also the moment of not knowing what to say, so the screen offers the opener rather than an empty field.",
+    ],
+    gallery: [
+      {
+        src: "/work/makeappet/welcome.webp",
+        alt: "The welcome screen: a grid of photographs of dogs and their owners behind a paw mark, the line \"Connect and uncover the ideal pets that match your preferences in your area\", and an Explore button.",
+        caption: "The premise, before any account is asked for.",
+      },
+      {
+        src: "/work/makeappet/swipe.webp",
+        alt: "The swipe screen: For you and Nearby tabs above a full-bleed photo card of a dog with its name, age and distance, and round dismiss and like buttons below it.",
+        caption: "The pattern everyone already knows, unchanged.",
+      },
+      {
+        src: "/work/makeappet/profile.webp",
+        alt: "A pet profile: a large photograph, the name and distance, a four-cell grid of age, breed, sex and weight, a written description, and a primary Bark me button beside a favourite button.",
+        caption: "Breed, age, weight and a description — the part a photo cannot carry.",
+      },
+      {
+        src: "/work/makeappet/browse.webp",
+        alt: "The browse screen: a location and a search field with filters, a violet panel asking for a donation on behalf of shelters, then an Adoption section with species tabs and a grid of nearby pets.",
+        caption: "Browse by species, with the shelters' ask in the flow.",
+      },
+      {
+        src: "/work/makeappet/match.webp",
+        alt: "The match screen: a Congratulations heading with an It's a Match ribbon, the two matched pets either side of a heart, a suggested opening line, and a Say woof button above a Not now link.",
+        caption: "A match, and something to say.",
+      },
+    ],
+    galleryKind: "phone",
+    technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
+    credits:
+      "Product design end to end — flows, interface and the handoff. Built by a development team I worked alongside. The project ended at handoff; it was never released.",
+  },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
@@ -760,7 +876,7 @@ export function getCaseMeta(slug: string): CaseMeta {
       );
     }
     return {
-      client: "Personal product",
+      client: c.clientOverride ?? "Personal product",
       role: c.roleOverride,
       year: c.yearOverride,
       period: c.yearOverride,

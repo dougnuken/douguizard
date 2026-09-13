@@ -22,7 +22,10 @@ describe("cv + work integrity", () => {
       if (c.experienceId) {
         expect(experiences.some((e) => e.id === c.experienceId), c.slug).toBe(true);
       } else {
-        expect(c.kind, c.slug).toBe("personal");
+        // No employer behind it, so it has to be one of the two kinds that
+        // does not have one: Doug's own product, or work taken on outside a
+        // job. Anything else is a case that lost its `experienceId`.
+        expect(["personal", "side"], c.slug).toContain(c.kind);
       }
     }
   });
@@ -111,6 +114,14 @@ describe("cv + work integrity", () => {
       "royal-caribbean",
       "qrvey",
       "ideaware",
+      "chub",
+      "makeappet",
     ]);
+  });
+
+  it("the /NN on each case matches its position", () => {
+    caseStudies.forEach((c, i) => {
+      expect(c.num, c.slug).toBe(`/${String(i + 1).padStart(2, "0")}`);
+    });
   });
 });

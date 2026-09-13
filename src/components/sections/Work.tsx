@@ -36,7 +36,9 @@ const VIGNETTES: Record<string, { Component: ComponentType<VignetteProps>; capti
 const NDA_LABEL = "Case study available on request";
 
 const featured = caseStudies.filter((c) => VIGNETTES[c.slug]);
-const compact = caseStudies.filter((c) => !VIGNETTES[c.slug]);
+const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c.kind !== "side");
+/** Their own group: work taken on outside a job, not a shorter version of it. */
+const side = caseStudies.filter((c) => c.kind === "side");
 
 function MetaLine({ study }: { study: CaseStudy }) {
   const meta = getCaseMeta(study.slug);
@@ -159,7 +161,8 @@ export default function Work() {
           </span>{" "}
           from LATAM&apos;s largest marketplace to national banks, cruise lines and
           early-stage startups, plus one product I designed, built and shipped on my
-          own. Seven that shaped how I work.
+          own. Seven that shaped how I work, and two I took on for the pleasure of
+          it.
         </p>
       </header>
 
@@ -177,6 +180,17 @@ export default function Work() {
           ))}
         </ul>
       </div>
+
+      {side.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <p className="kicker">Freelance side projects</p>
+          <ul className="hairline-t flex flex-col">
+            {side.map((study) => (
+              <CompactRow key={study.slug} study={study} />
+            ))}
+          </ul>
+        </div>
+      )}
 
       <Link
         href={site.cv.path}
