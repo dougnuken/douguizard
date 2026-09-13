@@ -86,13 +86,13 @@ export default function Contact() {
           <p className="kicker text-[var(--ink-dim)]">/ Direct</p>
           <a
             href={`mailto:${site.email}`}
-            className="w-fit text-[var(--step-small)] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
+            className="inline-flex min-h-11 w-fit items-center text-[var(--step-small)] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
           >
             {site.email}
           </a>
           <a
             href={site.phoneHref}
-            className="w-fit text-[var(--step-small)] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
+            className="inline-flex min-h-11 w-fit items-center text-[var(--step-small)] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
           >
             {site.phone}
           </a>
@@ -126,7 +126,7 @@ export default function Contact() {
           </p>
           <a
             href={`#${sections[0].id}`}
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
+            className="inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
           >
             Back to top ↑
           </a>

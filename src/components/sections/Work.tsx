@@ -108,7 +108,7 @@ function FeaturedRow({ study, index }: { study: CaseStudy; index: number }) {
           className="w-full max-w-[420px] transition-transform duration-300 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5 lg:max-w-none"
         >
           <Component />
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
             {caption}
           </p>
         </RevealText>
@@ -194,7 +194,7 @@ export default function Work() {
 
       <Link
         href={site.cv.path}
-        className="w-fit font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink)] underline-offset-4 hover:underline"
+        className="inline-flex min-h-11 w-fit items-center font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink)] underline-offset-4 hover:underline"
       >
         Full CV →
       </Link>

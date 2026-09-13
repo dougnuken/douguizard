@@ -86,12 +86,17 @@ test("10.4 mercadolibre team string", async ({ page }) => {
   await page.addInitScript(setTheme("dark"));
   await page.goto("/work/mercadolibre-andes", { waitUntil: "networkidle" });
   const txt = await page.evaluate(() => document.body.innerText.replace(/\s+/g, " "));
-  expect(txt, "10.4 team reads 400+ designers · 2K+ engineers").toMatch(
-    /400\+\s*designers\s*·\s*2K\+\s*engineers/i,
-  );
+  // The figures, not their abbreviation: "2K+" was a copy-deck spelling that
+  // never shipped. What must hold is that this page carries the same two
+  // numbers as the hero and the CV, all three read from `work.ts`.
+  expect(txt, "10.4 team carries 400+ designers").toMatch(/400\+\s*designers/i);
+  expect(txt, "10.4 team carries 2,000+ engineers").toMatch(/2,000\+\s*engineers/i);
 });
 
 test("10.6 no draft KPI values remain", async ({ page }) => {
+  // Walks six routes with a full settle on each; 56s alone, over the 60s
+  // default once the suite runs it beside another worker.
+  test.slow();
   const routes = [
     "/",
     "/cv",
@@ -121,6 +126,9 @@ test("10.6 no draft KPI values remain", async ({ page }) => {
 });
 
 test("10.7 Francesca Steri only on BdO and /cv", async ({ page }) => {
+  // Walks six routes with a full settle on each; 56s alone, over the 60s
+  // default once the suite runs it beside another worker.
+  test.slow();
   const routes = [
     "/",
     "/cv",
@@ -138,9 +146,12 @@ test("10.7 Francesca Steri only on BdO and /cv", async ({ page }) => {
     if (has) where.push(r);
   }
   console.log("10.7 appears on", JSON.stringify(where));
-  expect(where.sort(), "10.7 only /cv and /work/banco-de-occidente").toEqual(
-    ["/cv", "/work/banco-de-occidente"].sort(),
-  );
+  // Only the case now. The CV's References block was removed at Doug's
+  // request: a CV is his own account, and the quote belongs on the page whose
+  // work it is about.
+  expect(where, "10.7 only /work/banco-de-occidente").toEqual([
+    "/work/banco-de-occidente",
+  ]);
 });
 
 // ---- extra verifications requested beyond the checklist ----
@@ -241,7 +252,11 @@ test("X3 external anchors carry target/rel", async ({ page }) => {
       (route) =>
         Array.from(document.querySelectorAll<HTMLAnchorElement>("a[href]"))
           .filter((a) => /^https?:/i.test(a.getAttribute("href") || ""))
-          .filter((a) => !a.href.includes(location.host))
+          // Same-site links are not external. Under test `location.host` is
+          // localhost, so the canonical domain has to be named too or the CV's
+          // own "douguizard.com" reads as somebody else's site. Keep in step
+          // with `site.domain`.
+          .filter((a) => !a.href.includes(location.host) && !a.href.includes("douguizard.com"))
           .filter(
             (a) =>
               a.getAttribute("target") !== "_blank" ||

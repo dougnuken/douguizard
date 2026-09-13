@@ -102,7 +102,7 @@ function EarlierEntry({ e }: { e: Experience }) {
           </span>
           <span className="text-[length:var(--step-body)] text-[var(--ink-muted)]">{e.role}</span>
         </p>
-        <p className="cv-summary max-w-[68ch] text-[length:var(--step-small)] leading-[1.55] text-pretty text-[var(--ink-dim)]">
+        <p className="cv-summary max-w-[68ch] text-[length:var(--step-small)] leading-[1.55] text-pretty text-[var(--ink-muted)]">
           {e.summary}
         </p>
       </div>

@@ -18,7 +18,7 @@ export default function VignetteOlbo({ className }: VignetteProps) {
         ))}
       </div>
 
-      <p className="mt-3 font-mono text-[10px] leading-relaxed text-[var(--ink-dim)]">
+      <p className="mt-3 font-mono text-[10px] leading-relaxed text-[var(--ink-muted)]">
         &ldquo;veinte mil en el super&rdquo;
       </p>
 

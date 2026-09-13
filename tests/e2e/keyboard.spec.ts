@@ -105,9 +105,14 @@ test("6.4 every panel has a tabbable element", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await settle(page);
   const counts = await page.evaluate(() =>
+    // The panel counts itself. Since the F-1 fix each panel wrapper carries
+    // tabindex="0", which is what makes a text-only panel like Craft — no
+    // links, no buttons — reachable and scrollable from the keyboard at all.
     Array.from(document.querySelectorAll("[data-panel]")).map((p) => ({
       panel: p.getAttribute("data-panel"),
-      tabbable: p.querySelectorAll("a,button,[tabindex='0'],input,select,textarea").length,
+      tabbable:
+        (p.matches("[tabindex='0']") ? 1 : 0) +
+        p.querySelectorAll("a,button,[tabindex='0'],input,select,textarea").length,
     })),
   );
   const empty = counts.filter((c) => c.tabbable === 0);
@@ -120,7 +125,10 @@ test("6.5 SectionIndex Enter scrolls and moves focus into panel", async ({ page 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
   await settle(page);
-  const links = page.locator("[data-section-index] a, nav[aria-label*='Section' i] a");
+  // Exactly the rail. `aria-label*='Section' i` also matched the header's own
+  // nav, whose label is "Sections", so this test was pressing Enter on a
+  // header link and then asserting the rail's panel index.
+  const links = page.locator('nav[aria-label="Section index"] a');
   const n = await links.count();
   expect(n, "6.5 section index links found").toBeGreaterThan(1);
   await links.nth(2).focus();

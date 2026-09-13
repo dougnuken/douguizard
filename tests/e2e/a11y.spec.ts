@@ -88,9 +88,24 @@ for (const route of ROUTES) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(route, { waitUntil: "networkidle" });
     expect(await page.locator("h1").count(), "3.2 exactly one h1").toBe(1);
-    expect(await page.locator("header").count(), "3.4 header").toBe(1);
-    expect(await page.locator("main#main").count(), "3.4 main#main").toBe(1);
-    expect(await page.locator("footer").count(), "3.4 footer").toBe(1);
+    // Landmarks, not elements. A <header> or <footer> inside a sectioning
+    // element is not a banner or a contentinfo, so counting tags read the home
+    // page's five panel headers as five banners. Only the top-level one is.
+    const landmarks = await page.evaluate(() => {
+      const SCOPE = "article, aside, main, nav, section";
+      const topLevel = (tag: string) =>
+        Array.from(document.querySelectorAll(tag)).filter(
+          (el) => !el.parentElement?.closest(SCOPE),
+        ).length;
+      return {
+        banner: topLevel("header"),
+        main: document.querySelectorAll("main#main").length,
+        footer: document.querySelectorAll("footer").length,
+      };
+    });
+    expect(landmarks.banner, "3.4 exactly one banner").toBe(1);
+    expect(landmarks.main, "3.4 main#main").toBe(1);
+    expect(landmarks.footer, "3.4 the route closes with a footer").toBe(1);
   });
 
   test(`3.5 skip link ${route}`, async ({ page }) => {
@@ -99,6 +114,17 @@ for (const route of ROUTES) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(route, { waitUntil: "networkidle" });
     await page.keyboard.press("Tab");
+    // It translates into view on focus. Wait for it to land rather than
+    // sampling mid-transition, which is why this passed alone and failed in a
+    // full run.
+    await page
+      .waitForFunction(() => {
+        const a = document.activeElement as HTMLElement | null;
+        if (!a) return false;
+        const r = a.getBoundingClientRect();
+        return r.top >= 0 && r.top < window.innerHeight;
+      }, undefined, { timeout: 4000 })
+      .catch(() => {});
     const info = await page.evaluate(() => {
       const a = document.activeElement as HTMLElement | null;
       if (!a) return null;

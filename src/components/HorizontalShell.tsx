@@ -65,6 +65,29 @@ export default function HorizontalShell({
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
+  /**
+   * Arriving at a panel by hash — a pasted `douguizard.com/#about`, a link from
+   * another page, or the rail when its own click handler does not run — scrolls
+   * the panel into view and leaves focus on `body`, because the `<section>` the
+   * hash points at is not focusable. The panel wrapping it is, so send focus
+   * there: the next Tab then continues inside the panel the reader asked for,
+   * which is the whole point of the id being in the URL.
+   */
+  useEffect(() => {
+    const focusHashPanel = () => {
+      const id = window.location.hash.slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      const panel = target?.closest<HTMLElement>("[data-panel]");
+      if (panel && !panel.contains(document.activeElement)) {
+        panel.focus({ preventScroll: true });
+      }
+    };
+    focusHashPanel();
+    window.addEventListener("hashchange", focusHashPanel);
+    return () => window.removeEventListener("hashchange", focusHashPanel);
+  }, []);
+
   const go = (index: number) => {
     const el = ref.current;
     if (!el) return;

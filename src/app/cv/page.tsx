@@ -2,6 +2,7 @@ import CvExperience from "@/components/cv/CvExperience";
 import CvHeader from "@/components/cv/CvHeader";
 import CvSidebar from "@/components/cv/CvSidebar";
 import CvSkills from "@/components/cv/CvSkills";
+import { site } from "@/data/site";
 import { cvFingerprint } from "@/lib/cvFingerprint";
 
 /** Read by `scripts/build-cv-pdf.mjs`; see `lib/cvFingerprint`. */
@@ -42,6 +43,21 @@ export default function CvPage() {
           Print collapses everything to one flow, so `05 §6` is unaffected.
         */}
         <CvSkills />
+
+        {/* The route had no footer, which is also the only landmark the rest
+            of the site closes with. Kept on the sheet: the last page of a CV
+            should say whose it is and where it came from. */}
+        <footer className="cv-colophon hairline-t mt-14 flex flex-wrap items-center justify-between gap-3 pt-8">
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
+            © {new Date().getFullYear()} {site.name}
+          </p>
+          <a
+            href={`https://${site.domain}`}
+            className="inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
+          >
+            {site.domain}
+          </a>
+        </footer>
       </main>
     </>
   );

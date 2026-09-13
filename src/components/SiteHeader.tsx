@@ -60,7 +60,7 @@ export default function SiteHeader() {
               name is noise. */}
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2.5 no-underline"
+            className="flex min-h-11 shrink-0 items-center gap-2.5 no-underline"
             aria-label={`${site.brand} — home`}
           >
             <Image
@@ -124,15 +124,16 @@ export default function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-8">
-          {/* Icon-only on a phone. The word costs ~60px the wordmark needs —
-              it was what truncated the brand to "Dou…" at 320 — and LinkedIn is
-              still spelled out in the hero and in the mobile menu. */}
+          {/* Icon-only from `sm`, and gone below it. At 320 the row wants
+              322px of a 272px column, and this is the piece that costs least
+              to lose: the hero carries LinkedIn as a full-width call to
+              action, and the menu below carries it too. */}
           <a
             href={linkedin.href}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={linkedin.label}
-            className="btn-pill h-10 min-h-10 px-3 text-[13px] sm:px-4"
+            className="btn-pill hidden h-10 min-h-10 px-3 text-[13px] sm:inline-flex sm:px-4"
           >
             <LinkedInMark />
             <span className="hidden sm:inline">{linkedin.label}</span>
@@ -197,6 +198,18 @@ export default function SiteHeader() {
               </Link>
             </li>
           )}
+          <li>
+            <a
+              href={linkedin.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="hairline-b flex min-h-12 items-center gap-2 text-[15px] text-[var(--ink-muted)] no-underline"
+            >
+              <LinkedInMark />
+              {linkedin.label}
+            </a>
+          </li>
           <li>
             <Link
               href={site.cv.path}

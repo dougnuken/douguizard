@@ -47,7 +47,7 @@ export default function CaseColophon({
               href={externalLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block border-b border-[var(--line-strong)] font-display text-2xl text-[var(--ink)] no-underline transition-colors duration-300 hover:border-[var(--ink)]"
+              className="inline-flex min-h-11 items-center border-b border-[var(--line-strong)] font-display text-2xl text-[var(--ink)] no-underline transition-colors duration-300 hover:border-[var(--ink)]"
             >
               {externalLink.label} →
             </a>

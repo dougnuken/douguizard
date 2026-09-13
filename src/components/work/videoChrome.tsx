@@ -190,7 +190,7 @@ export function VideoControlRow({
         type="button"
         onClick={onToggle}
         aria-pressed={isPlaying}
-        className={`kicker inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-1.5 text-[var(--ink)] transition-opacity duration-200 hover:opacity-70 ${VIDEO_FOCUS_RING}`}
+        className={`kicker inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--paper)] px-4 py-1.5 text-[var(--ink)] transition-opacity duration-200 hover:opacity-70 ${VIDEO_FOCUS_RING}`}
         style={{ transitionTimingFunction: "var(--ease-out)" }}
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}

@@ -78,13 +78,16 @@ export default function CvHeader() {
           {dot}
           <span>{site.location.timezone}</span>
           {dot}
-          <a href={`mailto:${site.email}`} className="underline-offset-4 hover:underline">
+          <a
+            href={`mailto:${site.email}`}
+            className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
+          >
             {site.email}
           </a>
           {dot}
           <a
             href={`https://${site.domain}`}
-            className="underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
           >
             {site.domain}
           </a>

@@ -38,7 +38,7 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
         >
           <Link
             href="/#work"
-            className="text-[var(--ink)] no-underline underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center text-[var(--ink)] no-underline underline-offset-4 hover:underline"
           >
             ← All work
           </Link>

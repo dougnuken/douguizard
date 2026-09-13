@@ -50,6 +50,9 @@
   --paper-raised: #17171a;
   --ink: #f2f1ee;
   --ink-muted: #a3a29e;
+  /* `--ink-dim` is for micro-labels — eyebrows, numerals, captions of a few
+     words. It clears AA and it does NOT clear AAA at any size, so prose never
+     uses it: a paragraph in ink-dim measures 5.43 here and 4.88 on paper. */
   --ink-dim: #8a8985;
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
   --line-strong: color-mix(in srgb, var(--ink) 24%, transparent);
@@ -67,7 +70,10 @@
   --paper: #fafaf8;
   --paper-raised: #f2f1ec;
   --ink: #0a0a0a;
-  --ink-muted: #545350;
+  /* Dark enough to clear AAA on `--paper-raised`, not just on `--paper`. At
+     #545350 body copy measured 7.25 on the page and 6.80 inside a case band,
+     and the band is where most of the prose lives. */
+  --ink-muted: #4f4e4b;
   --ink-dim: #6f6e6a;
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
   --line-strong: color-mix(in srgb, var(--ink) 22%, transparent);
@@ -271,49 +277,6 @@
     border-block-end: 1px solid var(--line);
   }
 
-  .btn-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    min-block-size: 44px;
-    padding-inline: 1.375rem;
-    border-radius: 9999px;
-    border: 1px solid var(--line-strong);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    line-height: 1;
-    text-decoration: none;
-    white-space: nowrap;
-    color: var(--ink);
-    background: transparent;
-    transition:
-      transform var(--dur) var(--ease-out),
-      opacity var(--dur) var(--ease-out);
-  }
-
-  .btn-pill--solid {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-  }
-
-  .btn-pill:hover {
-    transform: translateY(-1px);
-  }
-
-  .btn-pill:active {
-    transform: translateY(0) scale(0.985);
-  }
-
-  .btn-pill--solid:hover {
-    opacity: 0.88;
-  }
-
-  /* The single permitted CTA use of the accent. */
-  .btn-pill--signal {
-    box-shadow: inset 0 -2px 0 0 var(--signal);
-  }
 
   .sr-only {
     position: absolute;
@@ -477,11 +440,63 @@
 }
 
 @layer components {
+  /* Moved out of `@layer utilities`. A custom class written there sits AFTER
+     every generated utility of the same specificity, so `.btn-pill` was
+     beating `hidden` on source order: `hidden sm:inline-flex` on the header's
+     LinkedIn pill did nothing, and the row overflowed 320px by 12. A component
+     class belongs in the component layer, where utilities can override it. */
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-block-size: 44px;
+    padding-inline: 1.375rem;
+    border-radius: 9999px;
+    border: 1px solid var(--line-strong);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--ink);
+    background: transparent;
+    transition:
+      transform var(--dur) var(--ease-out),
+      opacity var(--dur) var(--ease-out);
+  }
+
+  .btn-pill--solid {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .btn-pill:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-pill:active {
+    transform: translateY(0) scale(0.985);
+  }
+
+  .btn-pill--solid:hover {
+    opacity: 0.88;
+  }
+
+  /* The single permitted CTA use of the accent. */
+  .btn-pill--signal {
+    box-shadow: inset 0 -2px 0 0 var(--signal);
+  }
+
   .skip-link {
     position: fixed;
     inset-block-start: 0.5rem;
     inset-inline-start: 0.5rem;
     z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
     padding: 0.625rem 1rem;
     border-radius: 9999px;
     background: var(--ink);
@@ -510,10 +525,11 @@
 
   .theme-toggle {
     display: inline-flex;
+    flex: none;
     align-items: center;
     justify-content: center;
-    inline-size: 40px;
-    block-size: 40px;
+    inline-size: 44px;
+    block-size: 44px;
     padding: 2px;
     border-radius: 9999px;
     border: 1px solid var(--line);
@@ -911,6 +927,14 @@
   .cv-case {
     font-size: 7.4pt !important;
     margin-block-start: var(--s1) !important;
+  }
+
+  /* Screen only. It closes the page and gives the route its contentinfo
+     landmark, but on the sheet it repeats the domain the contact line already
+     prints — and page three was full, so one repeated line cost a whole
+     fourth page. */
+  .cv-colophon {
+    display: none !important;
   }
 
   /* Tighten the masthead: the screen rhythm is generous by design. */
