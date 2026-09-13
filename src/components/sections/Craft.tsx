@@ -51,20 +51,31 @@ const STEPS: Step[] = [
 /**
  * Rules instead of cards: a hairline between cells, on the axis the grid
  * actually splits at each breakpoint. Stacked below md, two columns at md,
- * one row at lg — so the rules always meet and no gap floats.
+ * one row at lg.
  *
- * The air around a rule is 48px, not 32. At 32 the rule sat close enough to a
- * 34ch measure to read as a border drawn around the paragraph instead of a
- * division between two of them.
+ * Each range is scoped to itself with `md:max-lg:`, and nothing undoes
+ * anything. The previous version layered lg rules over md ones and cancelled
+ * the leftovers with `pl-0` / `pr-0` — but an arbitrary variant carries a
+ * pseudo-class of specificity, so `lg:[&:nth-child(2n)]:pl-0` and
+ * `lg:[&:not(:first-child)]:pl-12` tie at (0,2,0) and source order decides.
+ * The reset won: column two shipped with a rule flush against its text and
+ * column three with 48px of trailing air it had no use for.
+ *
+ * The air around a rule is 48px. At 32, beside a 34ch measure, a rule reads as
+ * a border drawn around the paragraph rather than a division between two.
  */
-const CELL_BASE =
-  "border-[var(--line)] border-t pt-6 first:border-t-0 first:pt-0 " +
-  "md:[&:nth-child(-n+2)]:border-t-0 md:[&:nth-child(-n+2)]:pt-0 " +
-  "md:[&:nth-child(2n)]:border-l md:[&:nth-child(2n)]:pl-12 md:[&:nth-child(2n+1)]:pr-12";
-
-const CELL_3 =
-  `${CELL_BASE} lg:border-t-0 lg:pt-0 lg:pr-0 lg:[&:nth-child(2n)]:pl-0 ` +
-  "lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-12 lg:[&:not(:last-child)]:pr-12";
+const CELL_3 = [
+  // Stacked: a rule above every cell but the first.
+  "border-[var(--line)] border-t pt-6 first:border-t-0 first:pt-0",
+  // Two columns: no rule above the first row, one rule down the middle.
+  "md:max-lg:[&:nth-child(-n+2)]:border-t-0 md:max-lg:[&:nth-child(-n+2)]:pt-0",
+  "md:max-lg:[&:nth-child(2n)]:border-l md:max-lg:[&:nth-child(2n)]:pl-12",
+  "md:max-lg:[&:nth-child(2n+1)]:pr-12",
+  // One row: no rule above anything, a rule before every cell but the first.
+  "lg:border-t-0 lg:pt-0",
+  "lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-12",
+  "lg:[&:not(:last-child)]:pr-12",
+].join(" ");
 
 export default function Craft() {
   return (

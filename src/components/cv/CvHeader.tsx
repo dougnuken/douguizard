@@ -35,12 +35,15 @@ export default function CvHeader() {
               read on a screen, and a face at the top of it is the difference
               between a record and a person. */}
           <div className="flex min-w-0 items-end gap-6">
+            {/* Its own crop, not the header's. The 28px mark in the site
+                header needs the face to fill it; at 92px that same crop reads
+                as a face pressed against the glass. */}
             <Image
-              src="/portrait/doug-avatar-256.webp"
+              src="/portrait/doug-avatar-cv-384.webp"
               alt=""
               aria-hidden
-              width={256}
-              height={256}
+              width={384}
+              height={384}
               priority
               className="cv-portrait h-[92px] w-[92px] shrink-0 rounded-full object-cover"
             />

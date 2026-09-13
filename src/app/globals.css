@@ -108,7 +108,7 @@
      `feTurbulence` at render time: live turbulence over a full-bleed fixed
      layer hung `Page.printToPDF` outright, because the filter is re-rasterised
      at print resolution on every page. 25kB, once. */
-  --grain: url("/portrait/grain-160.png");
+  --grain: url("/portrait/grain-320.png");
 }
 
 /* Below ~360px the 3.25rem floor is wider than the column: the headline wraps
@@ -626,9 +626,24 @@
     --step-display: 19pt;
     --step-title: 19pt;
     --step-lead: 10.5pt;
-    --step-body: 9pt;
-    --step-small: 8.5pt;
+    --step-body: 9.5pt;
+    --step-small: 9pt;
     --step-meta: 7pt;
+
+    /* The sheet's spacing scale. Every gap and margin below is one of these
+       six, so the rhythm is a decision made once rather than eleven
+       millimetre values each chosen to win back a line.
+
+       Sized so the document fills three pages rather than two-and-a-half: the
+       content runs ~2.5 sheets, and the choice is between cramming it into two
+       or letting it breathe across three. It is read on a screen, where a page
+       costs nothing. */
+    --s1: 1.8mm;
+    --s2: 3.6mm;
+    --s3: 5.4mm;
+    --s4: 7.2mm;
+    --s5: 11mm;
+    --s6: 15mm;
   }
 
   /* The surface goes on `html` and `body` stays transparent, which is not a
@@ -679,8 +694,11 @@
       radial-gradient(64% 30% at 6% 99%, rgba(72, 94, 242, 0.22), transparent 76%);
   }
 
+  /* The tile is 320px painted at 160, so a particle covers half a CSS pixel
+     rather than a whole one — speckle instead of texture. Opacity down with
+     it: the finer the grain the less of it you need to feel it. */
   .cv-print-grain {
-    opacity: 0.055;
+    opacity: 0.04;
     background-image: var(--grain);
     background-size: 160px 160px;
   }
@@ -709,16 +727,16 @@
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     align-items: start !important;
-    gap: 3mm 7mm !important;
-    margin-block-start: 4mm !important;
+    gap: var(--s4) 8mm !important;
+    margin-block-start: var(--s5) !important;
   }
 
   .cv-block {
-    margin-block-end: 3mm;
+    margin-block-end: var(--s4);
   }
 
   .cv-block > div {
-    gap: 1.6mm !important;
+    gap: var(--s2) !important;
   }
 
   /* Print viewport width is ~717 px, so `md:`/`lg:` never fire. The two-up
@@ -726,8 +744,8 @@
      into one very tall column and runs to three pages. */
   .cv-entry {
     grid-template-columns: 28mm minmax(0, 1fr) !important;
-    gap: 0 4mm !important;
-    padding-block: 1.4mm !important;
+    gap: 0 var(--s4) !important;
+    padding-block: var(--s3) !important;
   }
 
   /* The period rail: one line, always. `md:whitespace-nowrap` never fires at
@@ -769,15 +787,23 @@
     column-gap: 7mm !important;
   }
 
-  /* Keep a job, a degree or a quote whole. `.cv-block` is deliberately NOT in
-     the list: the sidebar sections are allowed to flow between columns, only
-     their individual items are atomic. */
-  .cv-entry,
+  /* A degree, a certificate and a skills group stay whole. A JOB does not:
+     Aval's entry runs 55mm and refusing to break it left 90mm of nothing at
+     the foot of page one. It may split between bullets — never inside one, and
+     never leaving its heading behind. `.cv-block` is deliberately absent too:
+     the sidebar sections flow between columns, only their items are atomic. */
   .cv-edu,
   .cv-cert,
-  .cv-group {
+  .cv-group,
+  .cv-bullets li {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  .cv-entry > div > :first-child,
+  .cv-company {
+    break-after: avoid;
+    page-break-after: avoid;
   }
 
   h1,
@@ -789,15 +815,32 @@
 
   /* Print type scale — the clamps above do the work; these are the exceptions. */
   body {
-    font-size: 9pt;
-    line-height: 1.3;
+    font-size: 9.5pt;
+    line-height: 1.5;
   }
 
-  /* Screen leading runs 1.55–1.75, which is right on a lit display and costs
-     most of a sheet on paper. One rule, one rhythm, the name excepted. */
-  #main,
-  #main *:not(.cv-name) {
-    line-height: 1.28 !important;
+  /* Leading, by role. One blanket rule used to force 1.28 on every element in
+     the document — 9pt type on 11.5pt of lead, which is what "cramped" is.
+     These beat the Tailwind `leading-*` utilities on specificity alone, so no
+     rule here needs `!important` to hold. */
+  #main p,
+  #main li,
+  #main dd,
+  #main address,
+  #main blockquote {
+    line-height: 1.55;
+  }
+
+  #main h1,
+  #main h2,
+  #main h3,
+  #main .cv-company {
+    line-height: 1.2;
+  }
+
+  #main .cv-meta,
+  #main .cv-meta * {
+    line-height: 1.5;
   }
 
   /* Paper cannot follow a link and the sheet never expands URLs (below), so
@@ -814,32 +857,33 @@
   .cv-h2 {
     font-size: 7.6pt;
     letter-spacing: 0.16em;
-    margin-block-end: 1.2mm;
-    padding-block-end: 0.8mm;
+    margin-block-end: var(--s2);
+    padding-block-end: var(--s1);
   }
 
   /* `mt-12` between Experience and Earlier is 48 screen px — 12.7 mm of paper. */
   #cv-earlier {
-    margin-block-start: 4mm !important;
+    margin-block-start: var(--s5) !important;
   }
 
   .cv-company {
     font-size: 10pt;
   }
 
+  /* 6.8pt is a footnote. This sheet is read on a screen at 100%. */
   .cv-meta,
   .cv-meta * {
-    font-size: 6.8pt !important;
+    font-size: 7.4pt !important;
   }
 
   .cv-bullets,
   .cv-bullets li {
-    font-size: 9pt !important;
+    font-size: 9.5pt !important;
   }
 
   .cv-bullets {
-    gap: 0.5mm !important;
-    margin-block-start: 0.6mm !important;
+    gap: var(--s1) !important;
+    margin-block-start: var(--s2) !important;
   }
 
   .cv-summary {
@@ -848,35 +892,35 @@
 
   /* Skills and Tools: mono set solid, groups packed. */
   .cv-group {
-    margin-block-end: 1.6mm !important;
+    margin-block-end: var(--s4) !important;
   }
 
   .cv-group .kicker {
-    margin-block-end: 0.6mm !important;
+    margin-block-end: var(--s1) !important;
   }
 
   .cv-columns p {
-    font-size: 8pt !important;
+    font-size: 8.5pt !important;
   }
 
   /* The entry's internal stack: `gap-y-3` is 12 screen px of air per row. */
   .cv-entry > div {
-    gap: 1mm !important;
+    gap: var(--s2) !important;
   }
 
   .cv-case {
-    font-size: 6.8pt !important;
-    margin-block-start: 0.4mm !important;
+    font-size: 7.4pt !important;
+    margin-block-start: var(--s1) !important;
   }
 
   /* Tighten the masthead: the screen rhythm is generous by design. */
   .cv-header-pad {
-    padding-block-end: 2mm !important;
+    padding-block-end: var(--s4) !important;
   }
 
   .cv-summary-lead {
-    margin-block-start: 2mm !important;
-    padding-block-start: 2mm !important;
+    margin-block-start: var(--s4) !important;
+    padding-block-start: var(--s4) !important;
     max-width: none;
   }
 

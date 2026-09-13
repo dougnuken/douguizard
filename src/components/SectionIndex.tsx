@@ -81,7 +81,12 @@ export default function SectionIndex() {
   return (
     <nav
       aria-label="Section index"
-      className="fixed right-6 top-1/2 z-[45] hidden -translate-y-1/2 flex-col items-end gap-4 lg:flex"
+      /* Glass, so the rail reads as a layer floating over the panel rather
+         than as marks printed on it — and so whatever passes underneath stays
+         legible instead of being cut by an opaque plate. `backdrop-blur`
+         degrades to plain translucency where it is unsupported, which is the
+         right failure: still see-through, just not frosted. */
+      className="fixed right-4 top-1/2 z-[45] hidden -translate-y-1/2 flex-col items-end gap-4 rounded-full border border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_55%,transparent)] px-3 py-5 backdrop-blur-[14px] lg:flex"
     >
       {sections.map((s) => {
         const isActive = active === s.id;
@@ -96,7 +101,7 @@ export default function SectionIndex() {
           >
             <span
               aria-hidden
-              className={`pointer-events-none absolute right-full mr-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink)] transition-opacity duration-300 ${
+              className={`pointer-events-none absolute right-full mr-6 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink)] transition-opacity duration-300 ${
                 isActive
                   ? "opacity-100"
                   : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"

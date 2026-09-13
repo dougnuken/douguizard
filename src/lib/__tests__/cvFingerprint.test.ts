@@ -24,7 +24,9 @@ describe("the downloadable CV", () => {
     ).toBe(cvFingerprint());
   });
 
-  it("still fits the two-page budget", () => {
-    expect(stamp.pages).toBeLessThanOrEqual(2);
+  // Three since the spacing rewrite. The old two-page budget was paid for in
+  // leading, which is what made the sheet unreadable.
+  it("still fits the three-page budget", () => {
+    expect(stamp.pages).toBeLessThanOrEqual(3);
   });
 });
