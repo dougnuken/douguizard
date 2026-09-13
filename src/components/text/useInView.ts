@@ -43,9 +43,19 @@ export function useInView<T extends HTMLElement>(): [RefObject<T | null>, boolea
 
     // Already within (or above) the viewport at mount: reveal now rather than
     // waiting for a scroll that may never come.
+    //
+    // BOTH axes, which the first version of this check forgot. The home page
+    // is a horizontal shell: panels 1–4 sit to the right of the viewport at
+    // the same vertical offset as panel 0, so a vertical-only test called them
+    // visible and fired every reveal on the site before anyone had scrolled to
+    // one. The observer below handles them correctly; this shortcut was
+    // overruling it.
     const rect = el.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
-    if (rect.top < vh && rect.bottom > 0) reveal();
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const onScreen =
+      rect.top < vh && rect.bottom > 0 && rect.left < vw && rect.right > 0;
+    if (onScreen) reveal();
 
     return () => io?.disconnect();
   }, []);

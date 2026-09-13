@@ -2,6 +2,7 @@ import { sections } from "@/data/sections";
 import { getCaseStudy } from "@/data/work";
 import { currentExperience } from "@/lib/career";
 import RevealText from "@/components/text/RevealText";
+import CraftTimeline, { type Step } from "@/components/sections/CraftTimeline";
 
 const panel = sections[2];
 const current = currentExperience();
@@ -27,7 +28,7 @@ const EXPERTISE: { title: string; body: string }[] = [
   },
 ];
 
-const STEPS: { title: string; body: string }[] = [
+const STEPS: Step[] = [
   {
     title: "Read the domain before drawing",
     // 45+ states / 15 roles are on Naowee's verified figure set (cv.ts).
@@ -51,19 +52,19 @@ const STEPS: { title: string; body: string }[] = [
  * Rules instead of cards: a hairline between cells, on the axis the grid
  * actually splits at each breakpoint. Stacked below md, two columns at md,
  * one row at lg — so the rules always meet and no gap floats.
+ *
+ * The air around a rule is 48px, not 32. At 32 the rule sat close enough to a
+ * 34ch measure to read as a border drawn around the paragraph instead of a
+ * division between two of them.
  */
 const CELL_BASE =
   "border-[var(--line)] border-t pt-6 first:border-t-0 first:pt-0 " +
   "md:[&:nth-child(-n+2)]:border-t-0 md:[&:nth-child(-n+2)]:pt-0 " +
-  "md:[&:nth-child(2n)]:border-l md:[&:nth-child(2n)]:pl-8 md:[&:nth-child(2n+1)]:pr-8";
+  "md:[&:nth-child(2n)]:border-l md:[&:nth-child(2n)]:pl-12 md:[&:nth-child(2n+1)]:pr-12";
 
 const CELL_3 =
   `${CELL_BASE} lg:border-t-0 lg:pt-0 lg:pr-0 lg:[&:nth-child(2n)]:pl-0 ` +
-  "lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-8 lg:[&:not(:last-child)]:pr-8";
-
-const CELL_4 =
-  `${CELL_BASE} lg:border-t-0 lg:pt-0 lg:pr-0 lg:[&:nth-child(2n)]:pl-0 ` +
-  "lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-6 lg:[&:not(:last-child)]:pr-6";
+  "lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-12 lg:[&:not(:last-child)]:pr-12";
 
 export default function Craft() {
   return (
@@ -110,29 +111,9 @@ export default function Craft() {
         </div>
       </div>
 
-      <div className="hairline-t flex flex-col gap-6 pt-14">
+      <div className="hairline-t flex flex-col gap-8 pt-14">
         <p className="kicker text-[var(--ink-dim)]">How I work</p>
-        <div className="grid gap-6 md:grid-cols-2 md:gap-0 lg:grid-cols-4">
-          {STEPS.map((item, i) => (
-            <RevealText
-              key={item.title}
-              as="div"
-              variant="fade"
-              delay={Math.min(i * 0.06, 0.25)}
-              className={`flex flex-col gap-3 ${CELL_4}`}
-            >
-              <span className="section-num text-[11px] tracking-[0.2em]">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="font-display text-[1.0625rem] font-semibold leading-[1.25] tracking-[-0.015em] text-[var(--ink)]">
-                {item.title}
-              </h3>
-              <p className="max-w-[34ch] text-[var(--step-small)] leading-[1.6] text-[var(--ink-muted)]">
-                {item.body}
-              </p>
-            </RevealText>
-          ))}
-        </div>
+        <CraftTimeline steps={STEPS} />
       </div>
     </section>
   );
