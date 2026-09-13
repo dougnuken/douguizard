@@ -42,7 +42,7 @@ function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
 }
 
 /** The market-facing star: one results-first sentence, then the numbers. */
-export default function CaseImpact({ impact, kpis }: { impact: string; kpis: Kpi[] }) {
+export default function CaseImpact({ impact, kpis }: { impact: string; kpis?: Kpi[] }) {
   return (
     <Band>
       <Eyebrow>The impact</Eyebrow>
@@ -55,11 +55,15 @@ export default function CaseImpact({ impact, kpis }: { impact: string; kpis: Kpi
         {impact}
       </RevealText>
 
-      <div className="hairline-t mt-16 grid grid-cols-2 gap-x-8 gap-y-12 pt-12 md:grid-cols-4">
-        {kpis.map((kpi, i) => (
-          <KpiCard key={kpi.label} kpi={kpi} index={i} />
-        ))}
-      </div>
+      {/* No grid at all when a case has no verified figures. An empty rule
+          across the page reads as something that failed to load. */}
+      {kpis && kpis.length > 0 && (
+        <div className="hairline-t mt-16 grid grid-cols-2 gap-x-8 gap-y-12 pt-12 md:grid-cols-4">
+          {kpis.map((kpi, i) => (
+            <KpiCard key={kpi.label} kpi={kpi} index={i} />
+          ))}
+        </div>
+      )}
     </Band>
   );
 }

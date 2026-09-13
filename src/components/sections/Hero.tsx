@@ -18,7 +18,7 @@ const current = currentExperience();
  */
 const andes = getCaseStudy("mercadolibre-andes");
 const andesEmployer = getExperience("mercadolibre");
-const countries = andes?.kpis.find((k) => k.label === "Countries shipped to")?.value ?? "";
+const countries = andes?.kpis?.find((k) => k.label === "Countries shipped to")?.value ?? "";
 const andesScale = (andes?.team ?? "").replace(", ", " and ");
 
 const SUB = `${current.role} at ${current.company.name}. I set direction across the platform and build the prototypes that define it. Before that, Andes at ${andesEmployer.company.name} — the design system behind ${countries} countries, ${andesScale}.`;

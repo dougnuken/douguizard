@@ -44,7 +44,9 @@ export interface CaseStudy {
   /** 3–4 short bullets of what I actually did. **bold** supported. */
   contributions: string[];
   /** 3–5 metric cards. Draft figures — confirm real numbers per project. */
-  kpis: Kpi[];
+  /** Verified figures only. Omit entirely when a case has none — the band
+   *  then prints the impact sentence alone. */
+  kpis?: Kpi[];
   technologies?: string[];
   externalLink?: { label: string; href: string };
   /** Client engagement or self-initiated product — drives framing and index labels. */
@@ -620,30 +622,72 @@ export const caseStudies: CaseStudy[] = [
     num: "/06",
     experienceId: "qrvey",
     testimonialId: "arman",
-    project: "Embedded Analytics Platform",
-    category: "SaaS × Data Visualization",
-    duration: "1 year",
+    project: "Qrvey — AutomatiQ",
+    category: "SaaS × Survey & NPS × Automation",
+    duration: "11 months",
     team: "Product + Engineering",
     kind: "client",
     tagline:
-      "Crafting the visual language for an embedded analytics platform serving SaaS clients.",
+      "An automation builder for survey work: a trigger, a condition, an action — assembled by people who had never drawn a flow chart.",
     impact:
-      "A brand-neutral analytics language that embeds natively inside any host SaaS product.",
+      "A bad answer could answer itself — a follow-up survey a week later, and the result in the right inbox, with nobody watching for it.",
     context:
-      "Qrvey lets SaaS companies embed analytics in their own products. I owned the visual language — dashboards, charts and configuration — built to disappear into any host.",
+      "Qrvey was a survey and NPS platform: you built a Qrvey, people took it, and then somebody had to read the answers and do something about them. AutomatiQ was the part that did something. As lead UI designer I designed the builder — the process list, the trigger cards, the condition editor and the actions they fire.",
     contributions: [
-      "**Visual language** for the whole dashboard product.",
-      "**Flexible chart systems** across dozens of visualization types.",
-      "**Brand-neutral defaults** with deep theming hooks for each host.",
+      "**A process list that shows whether a process is working** — status, the surveys it covers, average cycle time and how many cycles it has run, on the row itself. A process that had quietly stopped was visible without opening it.",
+      "**Triggers as cards, not as a canvas** — scheduling with its own repeat and end rules, or a new response to a chosen survey, each one a card that expands in place. No connectors to draw and nothing to lay out.",
+      "**Conditions in the product's own words** — *if answer is* or *number of responses*, over a question and its answers, with rows you add and remove one at a time.",
+      "**Actions that reach back into the product** — the email composer attaches the results and drops a live survey link into the body, so the follow-up is the next survey rather than a message about one.",
     ],
-    kpis: [
-      // Vague figures ("Dozens", "Enterprise") replaced with honest
-      // qualitative values — nothing behind the counts.
-      { value: "Charts", label: "The visual language", delta: "one system, many types" },
-      { value: "Embedded", label: "Inside the host product" },
-      { value: "Native", label: "Embed in any host" },
+    // No KPIs. Nothing here was ever measured in a figure I can source, and
+    // three words in number slots ("Charts", "Embedded", "Native") were worse
+    // than none.
+    gallery: [
+      {
+        src: "/work/qrvey/process-list.webp",
+        alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a coloured status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
+        caption: "Every process says whether it is running and what it has done.",
+        width: 2000,
+        height: 1438,
+      },
+      {
+        src: "/work/qrvey/trigger-scheduling.webp",
+        alt: "An expanded Scheduling trigger card: repeat frequency, an interval in days and a time of day, a start date, and an end that is either a number of runs or a specific date.",
+        caption: "The scheduling trigger, with both ways a schedule can end.",
+        width: 2000,
+        height: 682,
+      },
+      {
+        src: "/work/qrvey/trigger-new-response.webp",
+        alt: "A New Response trigger with its survey picker open: a searchable list of surveys, each row carrying an Active or Draft badge and the date it went active.",
+        caption: "Picking the survey whose responses start the process.",
+        width: 2000,
+        height: 583,
+      },
+      {
+        src: "/work/qrvey/condition-branching.webp",
+        alt: "A condition under a New Response trigger: two pills, If Answer Is and Number of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
+        caption: "The condition editor: a question, its answers, and what comes next.",
+        width: 2000,
+        height: 1200,
+      },
+      {
+        src: "/work/qrvey/action-send-email.webp",
+        alt: "The Send Email action open: recipient chips, a subject with a remaining-character count, a rich-text message with buttons to attach results or insert a survey, a survey link inserted into the body, and an attachment block holding the chosen survey.",
+        caption: "The email action, with the results attached and a survey in the body.",
+        width: 2000,
+        height: 1040,
+      },
+      {
+        src: "/work/qrvey/scenario-end-to-end.webp",
+        alt: "A whole process assembled from one scenario written in plain language at the top: a new-response trigger, a condition on the answer given, and two email actions — one to the respondent with a follow-up survey, one to the team with the results — above a Save Changes button warning that saving resets the process.",
+        caption: "One scenario, end to end: trigger, condition, and two actions.",
+        width: 2000,
+        height: 3543,
+      },
     ],
-    technologies: ["Sketch", "Charts.js", "Data Viz", "Component Libraries"],
+    galleryKind: "plain",
+    technologies: ["Sketch", "Design Systems", "Interaction Design", "Data Viz"],
     externalLink: { label: "Visit qrvey.com", href: "https://www.qrvey.com" },
   },
   {

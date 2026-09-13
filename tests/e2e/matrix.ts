@@ -6,6 +6,10 @@ export const ROUTES = [
   "/work/olbo",
   "/work/naowee-suid",
   "/work/banco-de-occidente",
+  // Qrvey joined the matrix when it gained a gallery: it is now the only case
+  // with a "plain" gallery and no KPI band, so it exercises two paths the
+  // other four do not.
+  "/work/qrvey",
 ];
 
 /** Seeded via addInitScript before first navigation so the anti-flash script sees it. */

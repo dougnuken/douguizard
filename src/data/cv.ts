@@ -166,19 +166,25 @@ export const experiences: Experience[] = [
   {
     id: "qrvey",
     company: { name: "Qrvey", url: "https://www.qrvey.com" },
-    client: "Embedded Analytics Platform",
+    client: "Survey & NPS Platform",
     // ⚠️ CONFIRMAR DOUG — Behance says "Lead Senior UX/UI"; the PDF says
     // "Lead UI Designer". The PDF wins.
     role: "Lead UI Designer",
     start: { year: 2016, month: 10 },
     end: { year: 2017, month: 8 },
     location: { city: "Barranquilla", country: "Colombia", mode: "onsite" },
+    // ⚠️ CONFIRMAR DOUG — this entry used to describe Qrvey as an embedded
+    // analytics platform, which is what Qrvey sells TODAY. The 2016–17 screens
+    // Doug kept show a survey and NPS product with an automation builder
+    // (AutomatiQ), and the app's own navigation reads Created Qrveys / Taken
+    // Qrveys / Automation. Reframed to what the artefacts prove. If Doug also
+    // worked on the analytics side, say so and the third bullet comes back.
     summary:
-      "Lead UI designer on Qrvey's embedded analytics platform — dashboards, charts and configuration that SaaS products ship inside their own interfaces.",
+      "Lead UI designer at Qrvey, a survey and NPS platform — the dashboard people ran their surveys from, and AutomatiQ, the builder that turned a response into an action.",
     impact: [
-      "**Owned the visual language** of the dashboard product, mobile and web.",
-      "**Chart and data-visualization system** built to stay brand-neutral inside any host product.",
-      "**Prototyped UX/UI improvements** that shipped to production for enterprise clients.",
+      "**Owned the visual language** of the product, mobile and web.",
+      "**Designed AutomatiQ end to end** — the process list, the trigger cards, the condition editor and the actions they fire.",
+      "**Prototyped UX/UI improvements** that shipped to production.",
     ],
     caseSlug: "qrvey",
     era: "core",

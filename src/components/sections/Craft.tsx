@@ -10,7 +10,7 @@ const current = currentExperience();
 const andes = getCaseStudy("mercadolibre-andes");
 const andesScale = (andes?.team ?? "").replace(", ", " and ");
 const andesCountries =
-  andes?.kpis.find((k) => k.label === "Countries shipped to")?.value ?? "";
+  andes?.kpis?.find((k) => k.label === "Countries shipped to")?.value ?? "";
 
 const EXPERTISE: { title: string; body: string }[] = [
   {

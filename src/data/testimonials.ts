@@ -39,7 +39,10 @@ export const testimonials: Testimonial[] = [
       company: "Qrvey",
       initials: "AE",
     },
-    context: "Qrvey Analytics Platform",
+    // The annotation, not the quote — the quote is never edited. "Analytics
+    // Platform" is what Qrvey sells today; in 2016–17 it was surveys and NPS,
+    // which is what the case now shows.
+    context: "Qrvey · Survey & NPS platform",
     year: "2018",
     experienceId: "qrvey",
     caseSlug: "qrvey",
