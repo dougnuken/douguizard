@@ -37,3 +37,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# QA artifacts. The specs under tests/e2e are source; everything the run
+# produces (screenshots, PDFs, Lighthouse JSON, traces) is not.
+/tests/shots/
+/tests/out/
+/tests/pdf/
+/tests/lh-*.json
+/tests/results.json
+/test-results/
+/playwright-report/
