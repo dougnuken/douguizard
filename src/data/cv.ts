@@ -106,8 +106,7 @@ export const experiences: Experience[] = [
     client: "Andes Design System",
     role: "Tech Lead · Design Systems",
     roleShort: "Tech Lead · Design Systems",
-    // ⚠️ CONFIRMAR DOUG — start month. No source anywhere has it.
-    start: { year: 2024 },
+    start: { year: 2024, month: 1 },
     end: { year: 2026, month: 1 },
     location: { region: "LATAM", mode: "remote" },
     summary:
@@ -128,8 +127,7 @@ export const experiences: Experience[] = [
     role: "Senior Product Designer · Design System Gatekeeper",
     roleShort: "Senior Product Designer · DS Gatekeeper",
     start: { year: 2018, month: 11 },
-    // ⚠️ CONFIRMAR DOUG — end month.
-    end: { year: 2024 },
+    end: { year: 2024, month: 1 },
     // ⚠️ CONFIRMAR DOUG — work mode.
     location: { city: "Bogotá", country: "Colombia", mode: "hybrid" },
     summary:
@@ -147,8 +145,8 @@ export const experiences: Experience[] = [
     id: "globant",
     company: { name: "Globant", url: "https://www.globant.com" },
     client: "Royal Caribbean",
-    // ⚠️ CONFIRMAR DOUG — Behance says "Senior Visual Designer"; the 2026 PDF
-    // and the code say "Senior Product Designer". The newer source wins.
+    // Behance says "Senior Visual Designer"; the 2026 PDF says "Senior Product
+    // Designer". Confirmed: the PDF wins.
     role: "Senior Product Designer",
     start: { year: 2017, month: 8 },
     end: { year: 2018, month: 11 },
@@ -167,20 +165,18 @@ export const experiences: Experience[] = [
     id: "qrvey",
     company: { name: "Qrvey", url: "https://www.qrvey.com" },
     client: "Survey & NPS Platform",
-    // ⚠️ CONFIRMAR DOUG — Behance says "Lead Senior UX/UI"; the PDF says
-    // "Lead UI Designer". The PDF wins.
+    // Behance says "Lead Senior UX/UI"; the 2026 PDF says "Lead UI Designer".
+    // Confirmed: the PDF wins.
     role: "Lead UI Designer",
     start: { year: 2016, month: 10 },
     end: { year: 2017, month: 8 },
     location: { city: "Barranquilla", country: "Colombia", mode: "onsite" },
-    // ⚠️ CONFIRMAR DOUG — this entry used to describe Qrvey as an embedded
-    // analytics platform, which is what Qrvey sells TODAY. The 2016–17 screens
-    // Doug kept show a survey and NPS product with an automation builder
-    // (AutomatiQ), and the app's own navigation reads Created Qrveys / Taken
-    // Qrveys / Automation. Reframed to what the artefacts prove. If Doug also
-    // worked on the analytics side, say so and the third bullet comes back.
+    // Two corrections, both confirmed. Qrvey reads as an embedded analytics
+    // platform today; in 2016–17 it was surveys and NPS, which is what the
+    // screens show. And it was not a new employer: Ideaware promoted Doug onto
+    // the Qrvey account, so this entry and Ideaware's overlap on purpose.
     summary:
-      "Lead UI designer at Qrvey, a survey and NPS platform — the dashboard people ran their surveys from, and AutomatiQ, the builder that turned a response into an action.",
+      "Lead UI designer on Qrvey, an Ideaware engagement — a survey and NPS platform, its dashboard, and AutomatiQ, the builder that turned a response into an action.",
     impact: [
       "**Owned the visual language** of the product, mobile and web.",
       "**Designed AutomatiQ end to end** — the process list, the trigger cards, the condition editor and the actions they fire.",
@@ -194,10 +190,14 @@ export const experiences: Experience[] = [
     company: { name: "Ideaware", url: "https://www.ideaware.co" },
     role: "Senior UX/UI Designer",
     start: { year: 2016, month: 3 },
-    end: { year: 2016, month: 10 },
+    // Ends where Globant begins, not where Qrvey begins: Qrvey was a promotion
+    // onto that account from inside Ideaware, so the two entries overlap on
+    // purpose. Closing this one in Oct 2016 would misdate the job.
+    // ⚠️ CONFIRMAR DOUG — the end month is inferred from the Globant start.
+    end: { year: 2017, month: 8 },
     location: { city: "Barranquilla", country: "Colombia", mode: "onsite" },
     summary:
-      "UX/UI design for international clients at a remote-first agency — wireframes, UI kits and high-fidelity prototypes for web and mobile.",
+      "UX/UI design for international clients at a remote-first agency — wireframes, UI kits and prototypes for web and mobile, and then the Qrvey account, which I was promoted onto and led.",
     impact: [
       "**Wireframes, UI kits and prototypes** delivered developer-ready across web and mobile.",
       "**A new domain on every engagement** — the multi-domain fluency that later made systems work feel natural.",
@@ -237,7 +237,7 @@ export const education: Education[] = [
   {
     id: "uac",
     start: { year: 2006 },
-    // ⚠️ CONFIRMAR DOUG — Behance says 2010; the self-authored PDF says 2009.
+    // Behance says 2010; the self-authored 2026 PDF says 2009. Confirmed: 2009.
     end: { year: 2009 },
     program: "Professional Graphic Designer",
     institution: "Universidad Autónoma del Caribe",

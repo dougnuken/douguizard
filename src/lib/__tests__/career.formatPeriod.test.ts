@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { formatPeriod, getExperience, getWordmarks } from "@/lib/career";
-import { experiences } from "@/data/cv";
+import { experiences, type Experience } from "@/data/cv";
 
 describe("formatPeriod", () => {
   it("renders a closed period with both months", () => {
@@ -11,12 +11,26 @@ describe("formatPeriod", () => {
     expect(formatPeriod(getExperience("naowee"))).toBe("Jan 2026 — Now");
   });
 
+  // Synthetic, deliberately. These two used to point at mercadolibre and aval
+  // because those entries happened to lack a month; the day Doug confirmed the
+  // months, the tests failed without the formatter changing at all. A rule
+  // about missing months is tested with a missing month, not with a person.
+  const stub = (start: Experience["start"], end?: Experience["end"]): Experience => ({
+    ...getExperience("aval"),
+    start,
+    end,
+  });
+
   it("omits an unknown start month instead of guessing one", () => {
-    expect(formatPeriod(getExperience("mercadolibre"))).toBe("2024 — Jan 2026");
+    expect(formatPeriod(stub({ year: 2024 }, { year: 2026, month: 1 }))).toBe(
+      "2024 — Jan 2026",
+    );
   });
 
   it("renders an unknown end month as the bare year", () => {
-    expect(formatPeriod(getExperience("aval"))).toBe("Nov 2018 — 2024");
+    expect(formatPeriod(stub({ year: 2018, month: 11 }, { year: 2024 }))).toBe(
+      "Nov 2018 — 2024",
+    );
   });
 
   it("uses an em dash with single spaces, never a hyphen or 'Present'", () => {

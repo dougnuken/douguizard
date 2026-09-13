@@ -2,7 +2,7 @@ import { site } from "@/data/site";
 import { certifications, education, skills } from "@/data/cv";
 import { currentExperience } from "@/lib/career";
 
-const SITE_URL = "https://douguizard.com";
+const SITE_URL = `https://${site.domain}`;
 
 /**
  * The JSON-LD `Person`, built from `site` and `cv` so it can never drift from

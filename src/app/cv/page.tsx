@@ -2,6 +2,10 @@ import CvExperience from "@/components/cv/CvExperience";
 import CvHeader from "@/components/cv/CvHeader";
 import CvSidebar from "@/components/cv/CvSidebar";
 import CvSkills from "@/components/cv/CvSkills";
+import { cvFingerprint } from "@/lib/cvFingerprint";
+
+/** Read by `scripts/build-cv-pdf.mjs`; see `lib/cvFingerprint`. */
+export const metadata = { other: { "cv-fingerprint": cvFingerprint() } };
 
 /**
  * The CV, rendered from `cv.ts` + `site.ts`. A server component end to end —

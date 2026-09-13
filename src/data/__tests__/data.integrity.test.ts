@@ -50,7 +50,16 @@ describe("cv + work integrity", () => {
     }
   });
 
-  it("no experience period overlaps another", () => {
+  /**
+   * Qrvey and Ideaware overlap on purpose: Doug was promoted onto the Qrvey
+   * account from inside Ideaware, so he held both at once. Every other pair
+   * must stay disjoint — an accidental overlap is a wrong date.
+   */
+  const ALLOWED_OVERLAPS = [["qrvey", "ideaware"]] as const;
+  const isAllowed = (a: string, b: string) =>
+    ALLOWED_OVERLAPS.some(([x, y]) => (a === x && b === y) || (a === y && b === x));
+
+  it("no experience period overlaps another, except the declared one", () => {
     const spans = experiences.map((e) => ({
       id: e.id,
       from: asMonths(e.start),
@@ -60,9 +69,22 @@ describe("cv + work integrity", () => {
       for (let j = i + 1; j < spans.length; j++) {
         const a = spans[i];
         const b = spans[j];
+        if (isAllowed(a.id, b.id)) continue;
         const overlaps = a.from < b.to && b.from < a.to;
         expect(overlaps, `${a.id} overlaps ${b.id}`).toBe(false);
       }
+    }
+  });
+
+  it("the declared overlap is still an overlap — otherwise delete the exception", () => {
+    const span = (id: string) => {
+      const e = experiences.find((x) => x.id === id)!;
+      return { from: asMonths(e.start), to: e.end ? asMonths(e.end) : Number.POSITIVE_INFINITY };
+    };
+    for (const [x, y] of ALLOWED_OVERLAPS) {
+      const a = span(x);
+      const b = span(y);
+      expect(a.from < b.to && b.from < a.to, `${x} no longer overlaps ${y}`).toBe(true);
     }
   });
 

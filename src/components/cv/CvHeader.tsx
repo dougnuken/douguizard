@@ -1,11 +1,19 @@
+import { Fragment } from "react";
 import PrintButton from "@/components/cv/PrintButton";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 import { site } from "@/data/site";
 
 const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
 
-/** `https://linkedin.com/in/dougvargasco` → `linkedin.com/in/dougvargasco`. */
-const linkedinLabel = linkedin.href.replace(/^https?:\/\//, "");
+/** `https://www.behance.net/dougvargas` → `behance.net/dougvargas`. */
+const bare = (href: string) => href.replace(/^https?:\/\/(www\.)?/, "");
+
+/**
+ * The profiles Doug picked for the CV. Printed, not linked as labels: on paper
+ * an address has to be typable, and a page that cannot be clicked should not
+ * pretend otherwise.
+ */
+const cvProfiles = site.social.filter((s) => s.onCv);
 
 const dot = <span aria-hidden="true">·</span>;
 
@@ -56,17 +64,24 @@ export default function CvHeader() {
           </a>
           {dot}
           <a
-            href="https://douguizard.com"
+            href={`https://${site.domain}`}
             className="underline-offset-4 hover:underline"
           >
-            douguizard.com
+            {site.domain}
           </a>
           {/* Printed on the sheet, never on the public page: a CV handed to a
               recruiter carries a phone number, a scraped web page should not. */}
           <span className="cv-phone cv-print-only">{dot}</span>
           <span className="cv-phone cv-print-only">{site.phone}</span>
-          <span className="cv-print-only">{dot}</span>
-          <span className="cv-print-only">{linkedinLabel}</span>
+          {cvProfiles.map((p) => (
+            // Two siblings, not a wrapper: `.cv-print-only` forces
+            // `display: inline` in print, which would collapse a wrapper into
+            // one unbreakable flex item and stop the line wrapping cleanly.
+            <Fragment key={p.href}>
+              <span className="cv-print-only">{dot}</span>
+              <span className="cv-print-only">{bare(p.href)}</span>
+            </Fragment>
+          ))}
         </address>
 
         <p className="cv-summary cv-summary-lead hairline-t max-w-[70ch] pt-6 text-[length:var(--step-body)] leading-[1.65] text-pretty text-[var(--ink-muted)]">

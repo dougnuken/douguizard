@@ -6,7 +6,7 @@ describe("getCaseMeta", () => {
     const meta = getCaseMeta("banco-de-occidente");
     expect(meta.client).toBe("Banco de Occidente");
     expect(meta.role).toBe("Senior Product Designer · Design System Gatekeeper");
-    expect(meta.year).toBe("Nov 2018 — 2024");
+    expect(meta.year).toBe("Nov 2018 — Jan 2024");
     expect(meta.period).toBe(meta.year);
   });
 

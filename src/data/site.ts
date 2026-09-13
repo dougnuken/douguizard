@@ -3,11 +3,15 @@ export interface SocialLink {
   href: string;
   /** Shown in the header pill and listed first in the footer. */
   primary?: boolean;
+  /** Printed on the CV. Doug picks these per profile; the site lists more. */
+  onCv?: boolean;
 }
 
 export interface Site {
   name: string;
   brand: string;
+  /** Bare host, no scheme. The one place the address is written down. */
+  domain: string;
   /** One canonical headline. Header, hero kicker, CV, JSON-LD jobTitle, OG. */
   headline: string;
   /** The arc. Shown as a label, never narrated as a sentence. */
@@ -38,12 +42,11 @@ export interface Site {
 }
 
 const social: SocialLink[] = [
-  { label: "LinkedIn", href: "https://linkedin.com/in/dougvargasco", primary: true },
-  { label: "Behance", href: "https://www.behance.net/dougvargas" },
-  // ⚠️ CONFIRMAR DOUG — GitHub handle. `github.com/dougnuken` is the account that
-  // hosts olbo (work.ts links to dougnuken/bolsillo). Included per the review
-  // deltas (10 §B): it is already public from olbo's "Source" link. If Doug says
-  // no, delete this entry — `sameAs` in the JSON-LD derives from this array.
+  { label: "LinkedIn", href: "https://linkedin.com/in/dougvargasco", primary: true, onCv: true },
+  { label: "Behance", href: "https://www.behance.net/dougvargas", onCv: true },
+  // Stays on the site — it is already public from olbo's "Source" link — but
+  // NOT on the CV: asked directly which profiles the downloadable CV should
+  // carry, Doug named douguizard.com, LinkedIn and Behance, and left this out.
   { label: "GitHub", href: "https://github.com/dougnuken" },
   // The old third profile link is REMOVED: it sat at the same weight as
   // LinkedIn and carries no work this portfolio references.
@@ -52,6 +55,7 @@ const social: SocialLink[] = [
 export const site: Site = {
   name: "Doug Vargas",
   brand: "Douguizard",
+  domain: "douguizard.com",
   headline: "Head of Product · Design Engineer",
   positioning: "Product Designer → Design Engineer",
   summary:
@@ -64,8 +68,8 @@ export const site: Site = {
     timezone: "UTC-5",
     iata: "BAQ",
   },
-  // ⚠️ CONFIRMAR DOUG — the 2026 PDF prints dougvargas72@gmail.com. One address
-  // for both the site and the printable CV; the review deltas pick this one.
+  // The 2026 PDF prints dougvargas72@gmail.com. Confirmed: one address for both
+  // the site and the printable CV, and it is this one.
   email: "hello@douguizard.com",
   phone: "+57 300.351.8299",
   phoneHref: "tel:+573003518299",
@@ -79,7 +83,10 @@ export const site: Site = {
     note: "Selected consulting on design systems and AI-native product",
   },
   social,
-  cv: { path: "/cv" },
+  // Generated from /cv itself by `npm run cv:pdf`, never hand-made — that is
+  // how the last one ended up two jobs out of date. A test compares the file's
+  // stamp against the live data and fails if they drift.
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv.pdf" },
   seo: {
     description:
       "Doug Vargas leads product at Naowee and builds it — design systems, working prototypes in code, AI in the loop. Previously Andes at Mercadolibre.",

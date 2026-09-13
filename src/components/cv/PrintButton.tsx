@@ -14,7 +14,9 @@ export default function PrintButton() {
     return (
       <a
         href={site.cv.pdf}
-        download
+        // Named, not left to the URL: a recruiter's downloads folder should say
+        // whose CV this is.
+        download={`${site.name} — CV.pdf`}
         className="btn-pill h-11 min-h-11 px-5 text-[14px] print:hidden"
       >
         {LABEL}
