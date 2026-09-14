@@ -14,7 +14,10 @@ const SHELL_CLASS = [
 const PANEL_CLASS = [
   "relative",
   "pt-14 lg:pt-16",
-  "lg:flex lg:h-svh lg:w-screen lg:shrink-0 lg:snap-start lg:flex-col lg:overflow-y-auto lg:pr-24",
+  // `pr-28`, not `pr-24`: the section rail occupies the last ~104px of the
+  // viewport, and at 96px the gutter was narrower than the thing standing
+  // in it. The content now stops 8px clear of the wheel.
+  "lg:flex lg:h-svh lg:w-screen lg:shrink-0 lg:snap-start lg:flex-col lg:overflow-y-auto lg:pr-28",
   // Inset, because the panel is its own scroll container: an outset ring would
   // be clipped by the very overflow that makes the panel focusable.
   "focus-visible:outline-2 focus-visible:outline-offset-[-2px]",

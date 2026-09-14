@@ -6,6 +6,7 @@ import { currentExperience, getExperience, getWordmarks } from "@/lib/career";
 import RevealText from "@/components/text/RevealText";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 import FocusWords from "@/components/FocusWords";
+import HeroField from "@/components/hero/HeroField";
 
 const panel = sections[0];
 const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
@@ -49,7 +50,31 @@ export default function Hero() {
          which is exactly where the employer strip fell off the bottom. */
       className="relative mx-auto flex w-full max-w-[1400px] flex-col justify-center overflow-hidden px-6 py-14 md:px-12 lg:min-h-full lg:shrink-0 lg:justify-end lg:pb-14 lg:pt-10 [@media(max-height:780px)]:lg:pb-7 [@media(max-height:780px)]:lg:pt-6"
     >
-      <div className="relative z-[1] flex flex-col gap-7 lg:gap-5 [@media(max-height:780px)]:gap-3">
+      {/*
+        The one image on the home page, and it is computed rather than drawn:
+        three octaves of simplex noise churning through the site's violet. It
+        sits in the right band, where the copy does not go, behind everything,
+        and is masked to nothing at its edges so it reads as light on the page
+        rather than as a rectangle of video.
+
+        Desktop only. A phone has no room beside the headline and no business
+        paying for a full-frame fragment shader; below `lg` it is not mounted,
+        so no context is created at all. `prefers-reduced-motion` is honoured
+        inside the component — it draws one frame and stops.
+      */}
+      <div
+        aria-hidden
+        className="hero-field pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[46%] lg:block"
+      >
+        <HeroField />
+      </div>
+
+      {/* `52%` from `lg`, because the right 46% now has a picture in it. The
+          sub-paragraph is set at 86ch and was running its last third over the
+          shadow, where dark type on a dark disc is not type. The cap is a
+          percentage, not a character count: at 1024 a 640px column would still
+          have crossed the line. */}
+      <div className="relative z-[1] flex flex-col gap-7 lg:max-w-[52%] lg:gap-5 [@media(max-height:780px)]:gap-3">
         {/* One bold word inside a light line is the whole hierarchy: the eye lands
             on "human" before it reads anything, which is the point being made. */}
         <h1

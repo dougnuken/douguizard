@@ -489,6 +489,91 @@
     box-shadow: inset 0 -2px 0 0 var(--signal);
   }
 
+  /* ── `SectionIndex`: the picker wheel ───────────────────────────────────
+     The rail used to be a glass capsule with its labels hanging off the left
+     edge — ~90px INTO the panel's text column, which is exactly where they
+     crossed the Contact rows in the light theme. Both are gone: no plate, and
+     the standing label stands on end inside the gutter, where it costs 13px
+     of width and can never reach the content's right margin. */
+  .rail-vlabel {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    animation: rail-label-in var(--dur) var(--ease-out) both;
+  }
+
+  /* The drum's ends are masked rather than cut, so a row leaves the wheel
+     instead of hitting a border. Rows also fade by angle in JS; this is the
+     last few per cent, and the reason there is no container to draw. */
+  /* The fade is written frame by frame as an inline style, so the one thing
+     that has to beat it — a row the pointer or the keyboard is on — needs
+     `!important`. Nothing else in the file does. */
+  .rail-drum a:hover,
+  .rail-drum a:focus-visible {
+    opacity: 1 !important;
+  }
+
+  .rail-drum {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+  }
+
+  @keyframes rail-label-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-vlabel {
+      animation: none;
+    }
+  }
+
+  /* The hero's noise field.
+  
+     The shader mixes its colours into an opaque ground, so what lands on the
+     page is a rectangle — and a rectangle is exactly what a hero like this one
+     must not have. The mask takes it to nothing well before its own edges,
+     which leaves a soft body of light in the right-hand band and no seam. The
+     ground itself is the paper colour, passed in per theme by `HeroField`, so
+     what the mask fades into is the page it is already standing on.
+  
+     The radii are 50/50 from dead centre for a reason: an ellipse wider than
+     its half-box never reaches its own transparent stop before the box ends,
+     and the seam it was meant to hide is still there. Move the centre and the
+     radii have to come down with it. */
+  .hero-field {
+    -webkit-mask-image: radial-gradient(
+      50% 50% at 50% 50%,
+      #000 18%,
+      rgba(0, 0, 0, 0.58) 56%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      50% 50% at 50% 50%,
+      #000 18%,
+      rgba(0, 0, 0, 0.58) 56%,
+      transparent 100%
+    );
+  }
+
   .skip-link {
     position: fixed;
     inset-block-start: 0.5rem;
@@ -517,10 +602,33 @@
     inset-inline: 0;
     z-index: 60;
     block-size: var(--header-h);
-    background: color-mix(in srgb, var(--paper) 86%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* Thin enough that the blur is the thing you see. At 86% the plate was
+       doing the work and the blur was decoration; at 72% the page passes
+       through it. */
+    background: color-mix(in srgb, var(--paper) 72%, transparent);
     border-block-end: 1px solid var(--line);
+  }
+
+  /* The header has NOT been glass in Chrome for some time, and this is why.
+     Under this project's default browser targets Lightning CSS compiles
+     `backdrop-filter` down to `-webkit-backdrop-filter` ALONE — and Chrome
+     152 has dropped that alias (`CSS.supports("-webkit-backdrop-filter",
+     "blur(9px)")` is now false), so the declaration reached the browser and
+     did nothing. Inside a feature query on the standard property the standard
+     property survives the compiler. Verify with a build, not by reading:
+     `grep -o "backdrop-filter:[^;}]*" .next/static/chunks/*.css` must show
+     the unprefixed form. */
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header {
+      backdrop-filter: blur(18px) saturate(150%);
+    }
+
+    /* The mobile menu hangs off the same bar, so it takes the same glass —
+       otherwise opening it drops an opaque panel out of a translucent one. */
+    .site-header nav[aria-label="Menu"] {
+      background: color-mix(in srgb, var(--paper) 82%, transparent);
+      backdrop-filter: blur(18px) saturate(150%);
+    }
   }
 
   .theme-toggle {
@@ -604,10 +712,17 @@
    ──────────────────────────────────────────────────────────────────────────── */
 @page {
   size: auto;
-  /* Zero, so the surface can reach the paper's edge — @page margins are the
-     one region no element, fixed or otherwise, is allowed to paint. The
-     content's own breathing room moves onto `#main` below. */
-  margin: 0;
+  /* Real margins, repeated on every sheet.
+  
+     They used to be zero, with the breathing room paid for by padding on
+     `#main` instead — which gave page one a generous frame and every page
+     after it none at all. Element padding is paid once, at the start of the
+     flow; the margin box is the only thing a printer repeats. Page two of the
+     CV opened with its first line against the trim.
+  
+     The decoration bleeds back out over the margin below, so nothing is lost
+     by handing the job to @page. */
+  margin: 12mm 14mm;
 }
 
 @media print {
@@ -654,12 +769,12 @@
        content runs ~2.5 sheets, and the choice is between cramming it into two
        or letting it breathe across three. It is read on a screen, where a page
        costs nothing. */
-    --s1: 1.8mm;
-    --s2: 3.6mm;
-    --s3: 5.4mm;
-    --s4: 7.2mm;
-    --s5: 11mm;
-    --s6: 15mm;
+    --s1: 1.6mm;
+    --s2: 3.2mm;
+    --s3: 4.8mm;
+    --s4: 6.4mm;
+    --s5: 9.6mm;
+    --s6: 13mm;
   }
 
   /* The surface goes on `html` and `body` stays transparent, which is not a
@@ -668,7 +783,28 @@
      on `body` therefore paints OVER the two `z-index: -1` layers below, and
      the sheet comes out flat — measured at #0e0e12 in every corner. */
   html {
-    background: var(--paper) !important;
+    /* The wash rides the ROOT background, which is the only background that
+       covers the margin box: the root's background propagates to the page
+       canvas. As a fixed div it could reach the page area and no further,
+       which drew the sheet as a washed card sitting on a dark mount. */
+    background-color: var(--paper) !important;
+    /* Ramped all the way to transparent. Stopping the falloff early draws the
+       ellipse's own edge across the sheet as a band, and on a root box three
+       pages tall that band lands in the middle of page one. */
+    background-image:
+      radial-gradient(
+        86% 30% at 88% 0%,
+        rgba(124, 58, 237, 0.34),
+        rgba(124, 58, 237, 0.12) 44%,
+        transparent 100%
+      ),
+      radial-gradient(
+        70% 26% at 6% 100%,
+        rgba(72, 94, 242, 0.22),
+        rgba(72, 94, 242, 0.08) 46%,
+        transparent 100%
+      ) !important;
+    background-repeat: no-repeat !important;
     overflow: visible !important;
     /* Without this Chrome drops every background and the sheet prints as the
        white one this block just stopped being. */
@@ -683,15 +819,20 @@
     print-color-adjust: exact;
   }
 
-  /* The @page margin is gone, so the content carries its own. */
+  /* The frame now belongs to @page, which repeats it. */
   #main {
-    padding: 16mm 14mm !important;
+    padding: 0 !important;
   }
 
   /* Two fixed layers, which Chrome repeats on every page: a purple wash and a
      grain over it. Both are decoration and neither is in the flow, so nothing
      they do can move a line of type. */
-  .cv-print-surface,
+  /* Inside the page area, deliberately. Pulled out over the margin with a
+     negative inset it bled as hard-edged bands along the trim of every sheet
+     after the first — a fixed layer is laid out against the page area and
+     clipped to the page, so the overflow does not blend, it stacks. The sheet
+     is not left bare by staying inside: the paper colour comes from the root
+     background, which covers the margin box too. */
   .cv-print-grain {
     display: block !important;
     position: fixed;
@@ -704,19 +845,15 @@
      across the whole document, so these two stops land once each — the violet
      over the masthead, the blue under the last line of Tools. Sized for a
      two-page document, which is what the page budget guarantees. */
-  .cv-print-surface {
-    background:
-      radial-gradient(78% 34% at 86% 1%, rgba(124, 58, 237, 0.34), transparent 74%),
-      radial-gradient(64% 30% at 6% 99%, rgba(72, 94, 242, 0.22), transparent 76%);
-  }
-
-  /* The tile is 320px painted at 160, so a particle covers half a CSS pixel
-     rather than a whole one — speckle instead of texture. Opacity down with
-     it: the finer the grain the less of it you need to feel it. */
+  /* The tile is 320px of one-pixel noise painted at 112, so a particle covers
+     roughly a third of a CSS pixel — about 0.09mm on the sheet. That is under
+     the size of a 300dpi dot, which is the point: it should be felt as tooth
+     in the paper and never resolve into specks, even zoomed. Opacity goes up
+     a touch to pay for the fineness. */
   .cv-print-grain {
-    opacity: 0.04;
+    opacity: 0.05;
     background-image: var(--grain);
-    background-size: 160px 160px;
+    background-size: 112px 112px;
   }
 
   .site-header,

@@ -106,6 +106,26 @@ await s("Runtime.evaluate", { awaitPromise: true, expression: "document.fonts.re
 
 // Runtime.evaluate nests its payload one level deeper than printToPDF does:
 // the message is { result: { result: { value } } }.
+// A `next start` left running from a previous build serves the OLD asset
+// manifest, so the new HTML asks for CSS hashes it does not have, every
+// stylesheet 404s, and this script cheerfully prints an unstyled document and
+// stamps it as current. Ask the page whether its own stylesheet arrived.
+const { result: styled } = await s("Runtime.evaluate", {
+  returnByValue: true,
+  expression:
+    "getComputedStyle(document.querySelector('.site-header')).position === 'fixed'" +
+    " && document.styleSheets.length > 0",
+});
+if (styled?.result?.value !== true) {
+  sock.close();
+  chrome.kill();
+  throw new Error(
+    `${BASE}/cv rendered without its stylesheet — the server on that port is ` +
+      "serving a stale build. Restart it (npm run build && npx next start -p 4173) " +
+      "and run this again.",
+  );
+}
+
 const { result: evaluated } = await s("Runtime.evaluate", {
   returnByValue: true,
   expression: `document.querySelector('meta[name="cv-fingerprint"]')?.content ?? ""`,
