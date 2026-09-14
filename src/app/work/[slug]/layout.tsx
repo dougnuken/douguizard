@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import { caseStudies, getCaseMeta, getCaseStudy } from "@/data/work";
+import { caseJsonLd } from "@/lib/caseJsonLd";
 import { site } from "@/data/site";
 
 export async function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
 }
+
+/*
+ * `dynamicParams` is left at its default, on purpose, and it was worth trying
+ * the other way to find out why. Turning it off does 404 an unknown slug
+ * without rendering anything — but Next reaches that 404 by throwing
+ * `NoFallbackError` internally, which lands in the production logs as an error
+ * on every mistyped URL, and the reader gets a bare 404 instead of the case
+ * -study one sitting in `not-found.tsx`. A render per made-up URL is the
+ * cheaper of the two prices.
+ */
 
 export async function generateMetadata({
   params,
@@ -39,10 +50,25 @@ export async function generateMetadata({
   };
 }
 
-export default function WorkSlugLayout({
+export default async function WorkSlugLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ slug: string }>;
 }) {
-  return <div className="min-h-svh">{children}</div>;
+  const { slug } = await params;
+  const study = getCaseStudy(slug);
+
+  return (
+    <div className="min-h-svh">
+      {children}
+      {study ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(caseJsonLd(study)) }}
+        />
+      ) : null}
+    </div>
+  );
 }

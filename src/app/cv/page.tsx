@@ -5,6 +5,7 @@ import CvSidebar from "@/components/cv/CvSidebar";
 import CvSkills from "@/components/cv/CvSkills";
 import { site } from "@/data/site";
 import { cvFingerprint } from "@/lib/cvFingerprint";
+import { cvJsonLd } from "@/lib/personJsonLd";
 
 /** Read by `scripts/build-cv-pdf.mjs`; see `lib/cvFingerprint`. */
 export const metadata = { other: { "cv-fingerprint": cvFingerprint() } };
@@ -64,6 +65,14 @@ export default function CvPage() {
           </a>
         </footer>
       </main>
+
+      {/* A `ProfilePage` pointing at the Person, both in one graph. The root
+          document carries the Person alone; this page is the document about
+          the person, and saying so is what ties the two URLs to one entity. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(cvJsonLd()) }}
+      />
     </>
   );
 }
