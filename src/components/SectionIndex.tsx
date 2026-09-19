@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { sections } from "@/data/sections";
 import { setActiveSection } from "@/lib/activeSection";
+import { stepSpring, type Spring } from "@/lib/spring";
+import RailLabel from "./RailLabel";
 
 /* ── Wheel geometry ─────────────────────────────────────────────────────────
    The rail is a picker drum seen edge-on: its detents sit at equal ANGLES on
@@ -38,15 +40,6 @@ const MAX_OFF = (sections.length - 1) * STEP;
    the fade has blended it into the paper. Dim ink plus a fade fails. */
 const DIM = 0.38;
 
-/* Underdamped on purpose: ζ = 16 / (2√170) ≈ 0.61, which overshoots by ~7%
-   and settles. That overshoot IS the feel — a critically damped spring only
-   glides into place, and the point of a detent is that you land in it. */
-const STIFFNESS = 170;
-const DAMPING = 16;
-
-/** Fixed substep, so the spring resolves the same on a 60Hz and a 120Hz panel. */
-const SUBSTEP = 1 / 240;
-
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 export default function SectionIndex() {
@@ -58,8 +51,7 @@ export default function SectionIndex() {
   const rowsRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
   /** Spring state, in detents. Never React state: it moves every frame. */
-  const pos = useRef(0);
-  const vel = useRef(0);
+  const spring = useRef<Spring>({ pos: 0, vel: 0 });
   const goal = useRef(0);
   const raf = useRef(0);
   const reduce = useRef(false);
@@ -96,21 +88,8 @@ export default function SectionIndex() {
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      let t = dt;
-      while (t > 0) {
-        const h = Math.min(SUBSTEP, t);
-        const a = (goal.current - pos.current) * STIFFNESS - vel.current * DAMPING;
-        vel.current += a * h;
-        pos.current += vel.current * h;
-        t -= h;
-      }
-      const done =
-        Math.abs(goal.current - pos.current) < 0.0005 && Math.abs(vel.current) < 0.005;
-      if (done) {
-        pos.current = goal.current;
-        vel.current = 0;
-      }
-      paint(pos.current);
+      const done = stepSpring(spring.current, goal.current, dt);
+      paint(spring.current.pos);
       if (!done) raf.current = requestAnimationFrame(tick);
     };
     raf.current = requestAnimationFrame(tick);
@@ -121,8 +100,8 @@ export default function SectionIndex() {
     (index: number) => {
       goal.current = index;
       if (reduce.current) {
-        pos.current = index;
-        vel.current = 0;
+        spring.current.pos = index;
+        spring.current.vel = 0;
         cancelAnimationFrame(raf.current);
         paint(index);
         return;
@@ -214,8 +193,8 @@ export default function SectionIndex() {
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
       cancelAnimationFrame(raf.current);
-      vel.current = 0;
-      drag = { id: e.pointerId, y0: e.clientY, from: pos.current, moved: false };
+      spring.current.vel = 0;
+      drag = { id: e.pointerId, y0: e.clientY, from: spring.current.pos, moved: false };
     };
 
     const onMove = (e: PointerEvent) => {
@@ -232,8 +211,8 @@ export default function SectionIndex() {
       // Past either end the wheel still moves, at a quarter rate: the give is
       // what tells you there is nothing more, without a hard stop.
       const over = raw < 0 ? raw : raw > LAST ? raw - LAST : 0;
-      pos.current = clamp(raw - over * 0.75, -0.6, LAST + 0.6);
-      paint(pos.current);
+      spring.current.pos = clamp(raw - over * 0.75, -0.6, LAST + 0.6);
+      paint(spring.current.pos);
     };
 
     const onUp = (e: PointerEvent) => {
@@ -242,7 +221,7 @@ export default function SectionIndex() {
       if (drum.hasPointerCapture(drag.id)) drum.releasePointerCapture(drag.id);
       drag = null;
       if (!moved) return; // A tap is a click; let the anchor handle it.
-      const index = clamp(Math.round(pos.current), 0, LAST);
+      const index = clamp(Math.round(spring.current.pos), 0, LAST);
       activeRef.current = index;
       setActive(index);
       setActiveSection(sections[index].id);
@@ -289,8 +268,6 @@ export default function SectionIndex() {
     };
   }, [jump, paint, spinTo]);
 
-  const standing = sections[peek ?? active];
-
   return (
     <nav
       aria-label="Section index"
@@ -301,13 +278,7 @@ export default function SectionIndex() {
          reaches past the content's right margin. */
       className="fixed right-3 top-1/2 z-[45] hidden -translate-y-1/2 items-center gap-3 lg:flex"
     >
-      <span
-        aria-hidden
-        key={standing.id}
-        className="rail-vlabel select-none font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--ink-muted)]"
-      >
-        {standing.label}
-      </span>
+      <RailLabel index={peek ?? active} />
 
       <div
         ref={drumRef}

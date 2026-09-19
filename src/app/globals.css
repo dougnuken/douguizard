@@ -495,10 +495,21 @@
      crossed the Contact rows in the light theme. Both are gone: no plate, and
      the standing label stands on end inside the gutter, where it costs 13px
      of width and can never reach the content's right margin. */
+  /* The reels lay each letter in a cell exactly `1ch + 0.2em` tall, which is
+     only true of a monospace face. `--font-mono` falls back to next/font's
+     "Geist Mono Fallback" — Arial with its size adjusted, i.e. proportional —
+     and while that is showing (a slow first load, a blocked font) W and M
+     overrun their cells and the word collides with itself. So the label skips
+     that fallback and falls straight to the system's monospace instead. */
   .rail-vlabel {
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     writing-mode: vertical-rl;
     text-orientation: mixed;
     animation: rail-label-in var(--dur) var(--ease-out) both;
+  }
+
+  .rail-vlabel-strip {
+    transition: transform var(--dur-slow) var(--ease-out);
   }
 
   /* The drum's ends are masked rather than cut, so a row leaves the wheel
@@ -543,6 +554,10 @@
   @media (prefers-reduced-motion: reduce) {
     .rail-vlabel {
       animation: none;
+    }
+
+    .rail-vlabel-strip {
+      transition: none;
     }
   }
 
