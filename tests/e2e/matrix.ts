@@ -5,6 +5,10 @@ export const ROUTES = [
   "/cv",
   "/work/olbo",
   "/work/naowee-suid",
+  // DC Medical is the only case with no employer behind it AND a client name
+  // of its own (`kind: "side"` + `clientOverride`), so it is the one page that
+  // renders that meta strip.
+  "/work/dc-medical",
   "/work/banco-de-occidente",
   // Qrvey joined the matrix when it gained a gallery: it is now the only case
   // with a "plain" gallery and no KPI band, so it exercises two paths the

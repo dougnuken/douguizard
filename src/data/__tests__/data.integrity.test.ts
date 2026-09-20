@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { experiences, type YearMonth } from "@/data/cv";
 import { caseStudies, getCaseStudy } from "@/data/work";
@@ -108,6 +110,7 @@ describe("cv + work integrity", () => {
   it("case study numbering matches the published order", () => {
     expect(caseStudies.map((c) => c.slug)).toEqual([
       "olbo",
+      "dc-medical",
       "naowee-suid",
       "mercadolibre-andes",
       "banco-de-occidente",
@@ -117,6 +120,26 @@ describe("cv + work integrity", () => {
       "chub",
       "makeappet",
     ]);
+  });
+
+  /**
+   * A renamed capture is silent: the path still type-checks, the page still
+   * builds, and the gallery just renders an empty frame. This is the only
+   * check that fails when a file moves.
+   */
+  it("every media path on a case study exists in /public", () => {
+    const publicDir = resolve(import.meta.dirname, "../../../public");
+    for (const c of caseStudies) {
+      const paths = [
+        c.video?.mp4,
+        c.video?.webm,
+        c.video?.poster,
+        ...(c.gallery ?? []).map((g) => g.src),
+      ].filter((p): p is string => typeof p === "string");
+      for (const p of paths) {
+        expect(existsSync(join(publicDir, p)), `${c.slug}: ${p}`).toBe(true);
+      }
+    }
   });
 
   it("the /NN on each case matches its position", () => {
