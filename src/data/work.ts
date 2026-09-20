@@ -258,167 +258,8 @@ export const caseStudies: CaseStudy[] = [
     externalLink: { label: "Live app", href: "https://dougnuken.github.io/bolsillo/" },
   },
   {
-    slug: "dc-medical",
-    num: "/02",
-    project: "DC Medical Aesthetics",
-    category: "Clinic Operations × Design Engineering",
-    roleOverride: "Product designer and design engineer — end to end",
-    yearOverride: "2026",
-    clientOverride: "DC Medical Aesthetics",
-    duration: "2026 — in use, still shipping",
-    team: "Solo — product, design, code",
-    kind: "side",
-    tagline:
-      "An aesthetic-medicine clinic that runs on a spreadsheet and a calendar, turned into a panel that will not let a procedure start before it is paid for.",
-    impact:
-      "One HTML file and no database: the clinic's own Drive and Calendar become a working panel where every patient has a stage, a balance and a next step — and the green light for a procedure only appears once payment, receipt and consent are in.",
-    context:
-      "A doctor who operates in Barranquilla and rents rooms in Bogotá and Medellín, a secretary who schedules, advises and sells over WhatsApp, and a Google Drive holding the money, the consents and the clinical histories. Everything was already written down; nothing was connected — least of all what a patient still owed, which lived in a column nobody could safely add up.",
-    contributions: [
-      "**The patient case, in five locked phases** — valuation, photos and deposit, full payment with receipt and consent, supplies used, close. Each phase unlocks the next, so the sequence the clinic already follows is the one the software enforces.",
-      "**One file, two runtimes** — the same dashboard runs as a Claude artifact that reads Drive and Calendar through connectors, and as a web panel behind a Cloudflare Worker with a login per person and role.",
-      "**Domain rules as pure functions, under test** — balances, date parsing and the name matching that reconciles a patient spelled three different ways across three sheets, covered by test suites that run in Node without a browser.",
-      "**AI where it removes typing, not judgement** — receipts, supplier invoices and travel expenses are read by AI and confirmed by a person before anything is written.",
-    ],
-    kpis: [
-      { value: "5", label: "Locked phases", delta: "valuation to 45-day follow-up" },
-      { value: "0", label: "New databases", delta: "Drive and Calendar stay the source of truth" },
-      { value: "2", label: "Runtimes, one codebase", delta: "Claude artifact + web panel" },
-      // 11 `test:*` scripts in the repo's package.json, verified 2026-09-20.
-      { value: "11", label: "Test suites", delta: "domain, ledger, worker, browser" },
-    ],
-    process: [
-      {
-        phase: "01",
-        title: "The clinic already had a system — it just wasn't software",
-        body: "Before writing anything I mapped what actually happens: the patient writes on WhatsApp, the secretary books the valuation in Google Calendar, the doctor sets the price after seeing her, the deposit goes into an accounting sheet, the consent is a document in a Drive folder, and the follow-up happens 45 days after the procedure. None of it was wrong. It was just spread across four tools that never spoke to each other, so the answer to \"what does this patient owe, and what is missing before Thursday?\" took ten minutes of opening files.",
-      },
-      {
-        phase: "02",
-        title: "Reading the sheets exactly as they are",
-        body: "The parsers had to survive the real thing: headers that move between months, files named two different ways depending on who created them, spreadsheets exported as .xlsx that the connector returns as unstructured text, and consent documents whose titles lie — a file carrying one patient's name and another patient's data. So the panel never classifies a charge by a file name; it opens the document and asks the person to confirm. The rule that came out of this is the one the whole product rests on: never invent data. If a file is missing or unreadable, the panel says so and says what to do about it, and every figure on screen carries where it came from.",
-      },
-      {
-        phase: "03",
-        title: "The case, and its locks",
-        body: "The five phases are a checklist with consequences. The deposit is at least half the price; it can drop to thirty per cent only with the doctor's authorization, which requires a note and lands in an activity log he can read. Full payment, receipt and signed consent are what turn on the green light that says the procedure can go ahead. The locks are not bureaucracy — they encode the two mistakes that actually cost the clinic money: starting a procedure that was never fully paid, and losing track of a balance between two cities.",
-      },
-      {
-        phase: "04",
-        title: "Two runtimes from one file",
-        body: "The first version runs as a Claude artifact: it reads Drive and Calendar through connectors and writes nothing, which made it safe to put in front of the clinic on day one. The web version is the same file served by a Cloudflare Worker with a login per person, a role that decides who can write, and a Google Apps Script holding the only credentials that touch the real sheets. One codebase, marked at publish time, so a fix lands in both.",
-      },
-      {
-        phase: "05",
-        title: "AI that reads, and a person who signs",
-        body: "Photographing a receipt and having the amount, the date and the supplier come back filled in removes the part of the work that is pure typing. Travel expenses for a trip are read in batches and grouped, so the cost of a jornada in Bogotá is split once across the patients seen on those dates instead of guessed. The monthly analysis, the one piece that talks to a model about the business, only ever receives totals — never a patient's name.",
-      },
-    ],
-    decisions: [
-      {
-        title: "The spreadsheet stays the source of truth",
-        body: "The obvious build was a database with a real schema. I did not do it. The person who keeps the accounting works in Drive every day and would have had to abandon her tool for mine, and the clinic would have been left depending on me to keep the lights on. Reading the sheets instead means the panel can be switched off tomorrow and the clinic loses nothing: it still has every number, in the files it already knows.",
-      },
-      {
-        title: "Balances are read, not summed",
-        body: "Each row of income is one payment, and it carries the balance left after it — so adding up the pending column counts the same debt again with every deposit. An early version did exactly that and reported a phantom balance of thirty-eight million pesos. The fix is one line: a patient's balance is the one on her most recent row. The test that proves it is the one I would keep if I had to delete every other test in the repo.",
-      },
-      {
-        title: "Nothing is written without a person confirming it",
-        body: "Every AI-read receipt, invoice and travel expense lands in a form the user checks and corrects before it is written. It costs a click. It is also why the feature is usable at all: a model that silently miscategorises an expense is worse than typing, because the error is now invisible.",
-      },
-      {
-        title: "Two audiences, one screen, different rights",
-        body: "The secretary registers the whole operation; the doctor and I read it. Rather than build two products, the role lives in the panel's configuration and hides the write actions, so what everyone sees is the same board and the same numbers — which is the point when the argument is about money.",
-      },
-    ],
-    featuresIntro:
-      "The panel is one board with the clinic's day on it. These are the pieces that carry the most weight day to day.",
-    features: [
-      {
-        title: "New patient, checked against the real calendar",
-        body: "One form takes the name, the country and international WhatsApp, the city and the procedure of interest — and offers only the hours the clinic's Google Calendar actually has free that day. Saving it creates the patient and opens her case on phase one.",
-      },
-      {
-        title: "Phases with locks",
-        body: "Each phase lists what is missing and links straight to the form that clears it. The footer always names the next step, so the panel answers \"what do I do now\" without anyone having to remember the protocol.",
-      },
-      {
-        title: "Receipts and invoices read by AI",
-        body: "Photograph a payment receipt, a supplier invoice or a stack of travel expenses and the values come back filled in for review — supplies land in the inventory, expenses in the month's accounting.",
-        kind: "ai",
-      },
-      {
-        title: "The doctor's protocol, aimed at the right patients",
-        body: "The Sculptra instructions for three days before, the day before and after the procedure live as cards, each one listing exactly the patients it is due for today with WhatsApp ready to send.",
-      },
-      {
-        title: "Travel costs per jornada",
-        body: "A trip to a city on given dates groups the patients seen there, and the cost of the trip is split once across them — so the profitability of travelling is a number instead of an intuition.",
-      },
-      {
-        title: "Alerts, and an activity log",
-        body: "One bell gathers valuations, procedures, follow-ups falling due, supplies to reorder and balances owed before a procedure. Everything written goes to an activity log with who did it, which is how an authorized exception stays visible to the doctor.",
-      },
-    ],
-    galleryKind: "browser",
-    video: {
-      webm: "/work/dc-medical/pacientes-nueva.webm",
-      mp4: "/work/dc-medical/pacientes-nueva.mp4",
-      poster: "/work/dc-medical/pacientes-nueva-poster.jpg",
-      label: "Creating a patient and opening her case",
-      caption:
-        "A new patient, end to end: name, WhatsApp and city, then a valuation date that offers only the hours the clinic's calendar has free. Saving opens her case on phase one — valuation paid, proof of payment, clinical history — with the next step waiting in the footer. Recorded against seeded demo data.",
-      width: 1440,
-      height: 900,
-    },
-    gallery: [
-      {
-        src: "/work/dc-medical/seguimiento-panel.webp",
-        alt: "The follow-up board: five counters reading 1 valuation, 3 to reschedule, 4 this week, 4 in the next 30 days and 5 with no follow-up date, above a table of follow-ups to handle, each row naming the patient, her procedure, the date it was done and whether an appointment exists.",
-        caption: "The day, counted: who is due, who has no appointment yet, and who slipped.",
-      },
-      {
-        src: "/work/dc-medical/pacientes-nueva.webp",
-        alt: "The new-patient form with name, country, international WhatsApp, city and valuation date, and a grid of time slots from 8:00 am to 5:00 pm where the hours already taken in Google Calendar are greyed out.",
-        caption: "The form only offers the hours the calendar has free — the agenda is the constraint, not a field.",
-      },
-      {
-        src: "/work/dc-medical/caso-fases.webp",
-        alt: "A patient's case sheet showing the three-step tracker — valuation, first payment, final payment and procedure — with phase one listing valuation paid, proof of payment and clinical history, the valuation price, payment method and date, and a footer naming the next step.",
-        caption: "The case: which phase she is in, what is missing from it, and the one action that comes next.",
-      },
-      {
-        src: "/work/dc-medical/recomendaciones-sculptra.webp",
-        alt: "The recommendations view: the doctor's Sculptra instructions for before the procedure — food, compression garment, exercise, medication, alcohol, companion — each card listing the patients it is due for, with a send-to-patients button.",
-        caption: "The doctor's protocol on the left, the patients it is due for today on the right, WhatsApp ready.",
-      },
-      {
-        src: "/work/dc-medical/sedes-viajes.webp",
-        alt: "The locations view with three cards — Barranquilla as the main site, Bogotá and Medellín as rented rooms — each with its next visit and number of follow-ups due, above a table of trips listing dates, status and patients.",
-        caption: "Three cities, one doctor: the next visit to each, and the trips the travel costs hang from.",
-      },
-    ],
-    // The web panel lives at panel.dcmedicalaesthetics.com behind its Worker.
-    // No link until that DNS resolves — a dead link in a portfolio is worse
-    // than none. Add it here as `links` when the panel goes live.
-    technologies: [
-      "Product Strategy",
-      "HTML & Vanilla JS",
-      "Tailwind CSS",
-      "Cloudflare Workers",
-      "Google Apps Script",
-      "Google Drive & Calendar",
-      "Claude (MCP)",
-      "Playwright",
-      "node --test",
-    ],
-    credits:
-      "I co-own the clinic with the doctor and built this end to end — product decisions, interface and code, AI in the loop. The doctor owns the medical protocol the phases encode; the clinic's secretary is the daily user, and the flows are shaped by watching her use them. Screens and walkthrough are recorded against seeded demo data: no patient information appears anywhere in this case.",
-  },
-  {
     slug: "naowee-suid",
-    num: "/03",
+    num: "/02",
     experienceId: "naowee",
     project: "Naowee — Sports Sector Platform",
     category: "GovTech × Sports × AI-native",
@@ -549,7 +390,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "mercadolibre-andes",
-    num: "/04",
+    num: "/03",
     experienceId: "mercadolibre",
     project: "Andes Design System",
     category: "Design Systems × E-commerce",
@@ -592,7 +433,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "banco-de-occidente",
-    num: "/05",
+    num: "/04",
     experienceId: "aval",
     testimonialId: "francesca",
     project: "Banco de Occidente",
@@ -751,6 +592,165 @@ export const caseStudies: CaseStudy[] = [
     technologies: ["Figma", "Sketch", "Atomic design", "Design tokens", "InVision", "Prototyping"],
     // `externalLink` removed: adldigitallab.com is the employer's corporate site
     // and adds nothing to the work. The two `links` above are the destinations.
+  },
+  {
+    slug: "dc-medical",
+    num: "/05",
+    project: "DC Medical Aesthetics",
+    category: "Clinic Operations × Design Engineering",
+    roleOverride: "Product designer and design engineer — end to end",
+    yearOverride: "2026",
+    clientOverride: "DC Medical Aesthetics",
+    duration: "2026 — in use, still shipping",
+    team: "Solo — product, design, code",
+    kind: "personal",
+    tagline:
+      "An aesthetic-medicine clinic that runs on a spreadsheet and a calendar, turned into a panel that will not let a procedure start before it is paid for.",
+    impact:
+      "One HTML file and no database: the clinic's own Drive and Calendar become a working panel where every patient has a stage, a balance and a next step — and the green light for a procedure only appears once payment, receipt and consent are in.",
+    context:
+      "A doctor who operates in Barranquilla and rents rooms in Bogotá and Medellín, a secretary who schedules, advises and sells over WhatsApp, and a Google Drive holding the money, the consents and the clinical histories. Everything was already written down; nothing was connected — least of all what a patient still owed, which lived in a column nobody could safely add up.",
+    contributions: [
+      "**The patient case, in five locked phases** — valuation, photos and deposit, full payment with receipt and consent, supplies used, close. Each phase unlocks the next, so the sequence the clinic already follows is the one the software enforces.",
+      "**One file, two runtimes** — the same dashboard runs as a Claude artifact that reads Drive and Calendar through connectors, and as a web panel behind a Cloudflare Worker with a login per person and role.",
+      "**Domain rules as pure functions, under test** — balances, date parsing and the name matching that reconciles a patient spelled three different ways across three sheets, covered by test suites that run in Node without a browser.",
+      "**AI where it removes typing, not judgement** — receipts, supplier invoices and travel expenses are read by AI and confirmed by a person before anything is written.",
+    ],
+    kpis: [
+      { value: "5", label: "Locked phases", delta: "valuation to 45-day follow-up" },
+      { value: "0", label: "New databases", delta: "Drive and Calendar stay the source of truth" },
+      { value: "2", label: "Runtimes, one codebase", delta: "Claude artifact + web panel" },
+      // 11 `test:*` scripts in the repo's package.json, verified 2026-09-20.
+      { value: "11", label: "Test suites", delta: "domain, ledger, worker, browser" },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "The clinic already had a system — it just wasn't software",
+        body: "Before writing anything I mapped what actually happens: the patient writes on WhatsApp, the secretary books the valuation in Google Calendar, the doctor sets the price after seeing her, the deposit goes into an accounting sheet, the consent is a document in a Drive folder, and the follow-up happens 45 days after the procedure. None of it was wrong. It was just spread across four tools that never spoke to each other, so the answer to \"what does this patient owe, and what is missing before Thursday?\" took ten minutes of opening files.",
+      },
+      {
+        phase: "02",
+        title: "Reading the sheets exactly as they are",
+        body: "The parsers had to survive the real thing: headers that move between months, files named two different ways depending on who created them, spreadsheets exported as .xlsx that the connector returns as unstructured text, and consent documents whose titles lie — a file carrying one patient's name and another patient's data. So the panel never classifies a charge by a file name; it opens the document and asks the person to confirm. The rule that came out of this is the one the whole product rests on: never invent data. If a file is missing or unreadable, the panel says so and says what to do about it, and every figure on screen carries where it came from.",
+      },
+      {
+        phase: "03",
+        title: "The case, and its locks",
+        body: "The five phases are a checklist with consequences. The deposit is at least half the price; it can drop to thirty per cent only with the doctor's authorization, which requires a note and lands in an activity log he can read. Full payment, receipt and signed consent are what turn on the green light that says the procedure can go ahead. The locks are not bureaucracy — they encode the two mistakes that actually cost the clinic money: starting a procedure that was never fully paid, and losing track of a balance between two cities.",
+      },
+      {
+        phase: "04",
+        title: "Two runtimes from one file",
+        body: "The first version runs as a Claude artifact: it reads Drive and Calendar through connectors and writes nothing, which made it safe to put in front of the clinic on day one. The web version is the same file served by a Cloudflare Worker with a login per person, a role that decides who can write, and a Google Apps Script holding the only credentials that touch the real sheets. One codebase, marked at publish time, so a fix lands in both.",
+      },
+      {
+        phase: "05",
+        title: "AI that reads, and a person who signs",
+        body: "Photographing a receipt and having the amount, the date and the supplier come back filled in removes the part of the work that is pure typing. Travel expenses for a trip are read in batches and grouped, so the cost of a jornada in Bogotá is split once across the patients seen on those dates instead of guessed. The monthly analysis, the one piece that talks to a model about the business, only ever receives totals — never a patient's name.",
+      },
+    ],
+    decisions: [
+      {
+        title: "The spreadsheet stays the source of truth",
+        body: "The obvious build was a database with a real schema. I did not do it. The person who keeps the accounting works in Drive every day and would have had to abandon her tool for mine, and the clinic would have been left depending on me to keep the lights on. Reading the sheets instead means the panel can be switched off tomorrow and the clinic loses nothing: it still has every number, in the files it already knows.",
+      },
+      {
+        title: "Balances are read, not summed",
+        body: "Each row of income is one payment, and it carries the balance left after it — so adding up the pending column counts the same debt again with every deposit. An early version did exactly that and reported a phantom balance of thirty-eight million pesos. The fix is one line: a patient's balance is the one on her most recent row. The test that proves it is the one I would keep if I had to delete every other test in the repo.",
+      },
+      {
+        title: "Nothing is written without a person confirming it",
+        body: "Every AI-read receipt, invoice and travel expense lands in a form the user checks and corrects before it is written. It costs a click. It is also why the feature is usable at all: a model that silently miscategorises an expense is worse than typing, because the error is now invisible.",
+      },
+      {
+        title: "Two audiences, one screen, different rights",
+        body: "The secretary registers the whole operation; the doctor and I read it. Rather than build two products, the role lives in the panel's configuration and hides the write actions, so what everyone sees is the same board and the same numbers — which is the point when the argument is about money.",
+      },
+    ],
+    featuresIntro:
+      "The panel is one board with the clinic's day on it. These are the pieces that carry the most weight day to day.",
+    features: [
+      {
+        title: "New patient, checked against the real calendar",
+        body: "One form takes the name, the country and international WhatsApp, the city and the procedure of interest — and offers only the hours the clinic's Google Calendar actually has free that day. Saving it creates the patient and opens her case on phase one.",
+      },
+      {
+        title: "Phases with locks",
+        body: "Each phase lists what is missing and links straight to the form that clears it. The footer always names the next step, so the panel answers \"what do I do now\" without anyone having to remember the protocol.",
+      },
+      {
+        title: "Receipts and invoices read by AI",
+        body: "Photograph a payment receipt, a supplier invoice or a stack of travel expenses and the values come back filled in for review — supplies land in the inventory, expenses in the month's accounting.",
+        kind: "ai",
+      },
+      {
+        title: "The doctor's protocol, aimed at the right patients",
+        body: "The Sculptra instructions for three days before, the day before and after the procedure live as cards, each one listing exactly the patients it is due for today with WhatsApp ready to send.",
+      },
+      {
+        title: "Travel costs per jornada",
+        body: "A trip to a city on given dates groups the patients seen there, and the cost of the trip is split once across them — so the profitability of travelling is a number instead of an intuition.",
+      },
+      {
+        title: "Alerts, and an activity log",
+        body: "One bell gathers valuations, procedures, follow-ups falling due, supplies to reorder and balances owed before a procedure. Everything written goes to an activity log with who did it, which is how an authorized exception stays visible to the doctor.",
+      },
+    ],
+    galleryKind: "browser",
+    video: {
+      webm: "/work/dc-medical/pacientes-nueva.webm",
+      mp4: "/work/dc-medical/pacientes-nueva.mp4",
+      poster: "/work/dc-medical/pacientes-nueva-poster.jpg",
+      label: "Creating a patient and opening her case",
+      caption:
+        "A new patient, end to end: name, WhatsApp and city, then a valuation date that offers only the hours the clinic's calendar has free. Saving opens her case on phase one — valuation paid, proof of payment, clinical history — with the next step waiting in the footer. Recorded against seeded demo data.",
+      width: 1440,
+      height: 900,
+    },
+    gallery: [
+      {
+        src: "/work/dc-medical/seguimiento-panel.webp",
+        alt: "The follow-up board: five counters reading 1 valuation, 3 to reschedule, 4 this week, 4 in the next 30 days and 5 with no follow-up date, above a table of follow-ups to handle, each row naming the patient, her procedure, the date it was done and whether an appointment exists.",
+        caption: "The day, counted: who is due, who has no appointment yet, and who slipped.",
+      },
+      {
+        src: "/work/dc-medical/pacientes-nueva.webp",
+        alt: "The new-patient form with name, country, international WhatsApp, city and valuation date, and a grid of time slots from 8:00 am to 5:00 pm where the hours already taken in Google Calendar are greyed out.",
+        caption: "The form only offers the hours the calendar has free — the agenda is the constraint, not a field.",
+      },
+      {
+        src: "/work/dc-medical/caso-fases.webp",
+        alt: "A patient's case sheet showing the three-step tracker — valuation, first payment, final payment and procedure — with phase one listing valuation paid, proof of payment and clinical history, the valuation price, payment method and date, and a footer naming the next step.",
+        caption: "The case: which phase she is in, what is missing from it, and the one action that comes next.",
+      },
+      {
+        src: "/work/dc-medical/recomendaciones-sculptra.webp",
+        alt: "The recommendations view: the doctor's Sculptra instructions for before the procedure — food, compression garment, exercise, medication, alcohol, companion — each card listing the patients it is due for, with a send-to-patients button.",
+        caption: "The doctor's protocol on the left, the patients it is due for today on the right, WhatsApp ready.",
+      },
+      {
+        src: "/work/dc-medical/sedes-viajes.webp",
+        alt: "The locations view with three cards — Barranquilla as the main site, Bogotá and Medellín as rented rooms — each with its next visit and number of follow-ups due, above a table of trips listing dates, status and patients.",
+        caption: "Three cities, one doctor: the next visit to each, and the trips the travel costs hang from.",
+      },
+    ],
+    // The web panel lives at panel.dcmedicalaesthetics.com behind its Worker.
+    // No link until that DNS resolves — a dead link in a portfolio is worse
+    // than none. Add it here as `links` when the panel goes live.
+    technologies: [
+      "Product Strategy",
+      "HTML & Vanilla JS",
+      "Tailwind CSS",
+      "Cloudflare Workers",
+      "Google Apps Script",
+      "Google Drive & Calendar",
+      "Claude (MCP)",
+      "Playwright",
+      "node --test",
+    ],
+    credits:
+      "I co-own the clinic with the doctor and built this end to end — product decisions, interface and code, AI in the loop. The doctor owns the medical protocol the phases encode; the clinic's secretary is the daily user, and the flows are shaped by watching her use them. Screens and walkthrough are recorded against seeded demo data: no patient information appears anywhere in this case.",
   },
   {
     slug: "royal-caribbean",

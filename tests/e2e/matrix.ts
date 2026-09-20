@@ -6,8 +6,8 @@ export const ROUTES = [
   "/work/olbo",
   "/work/naowee-suid",
   // DC Medical is the only case with no employer behind it AND a client name
-  // of its own (`kind: "side"` + `clientOverride`), so it is the one page that
-  // renders that meta strip.
+  // of its own (`clientOverride`), so it is the one page whose meta strip is
+  // built from the override rather than from an experience.
   "/work/dc-medical",
   "/work/banco-de-occidente",
   // Qrvey joined the matrix when it gained a gallery: it is now the only case

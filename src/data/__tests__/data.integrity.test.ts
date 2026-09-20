@@ -110,10 +110,10 @@ describe("cv + work integrity", () => {
   it("case study numbering matches the published order", () => {
     expect(caseStudies.map((c) => c.slug)).toEqual([
       "olbo",
-      "dc-medical",
       "naowee-suid",
       "mercadolibre-andes",
       "banco-de-occidente",
+      "dc-medical",
       "royal-caribbean",
       "qrvey",
       "ideaware",
