@@ -735,9 +735,13 @@ export const caseStudies: CaseStudy[] = [
         caption: "Three cities, one doctor: the next visit to each, and the trips the travel costs hang from.",
       },
     ],
-    // The web panel lives at panel.dcmedicalaesthetics.com behind its Worker.
-    // No link until that DNS resolves — a dead link in a portfolio is worse
-    // than none. Add it here as `links` when the panel goes live.
+    // The live panel, which is a sign-in page by design: it is the clinic's
+    // internal tool and holds patient data. The label says so, so nobody
+    // clicks through expecting a demo. Went live 2026-09-21.
+    externalLink: {
+      label: "Live panel — staff sign-in",
+      href: "https://panel.dcmedicalaesthetics.com/login",
+    },
     technologies: [
       "Product Strategy",
       "HTML & Vanilla JS",
