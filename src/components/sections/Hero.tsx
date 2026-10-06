@@ -1,28 +1,36 @@
 import Link from "next/link";
-import { site } from "@/data/site";
-import { sections } from "@/data/sections";
+import { getSite } from "@/data/site";
+import { getSections } from "@/data/sections";
 import { getCaseStudy } from "@/data/work";
 import { currentExperience, getExperience, getWordmarks } from "@/lib/career";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 import FocusWords from "@/components/FocusWords";
 import HeroField from "@/components/hero/HeroField";
 
-const panel = sections[0];
-const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
-const current = currentExperience();
-
 /**
  * The sub-paragraph is composed, never typed: the first sentence comes from
  * the current role, the last from the Andes case's own figures, so no number
- * on this page can drift from the data behind it.
+ * on this page can drift from the data behind it. The figure is looked up on
+ * the English case by its English label — the value is the same in both
+ * languages, and the label is the stable key.
  */
-const andes = getCaseStudy("mercadolibre-andes");
-const andesEmployer = getExperience("mercadolibre");
-const countries = andes?.kpis?.find((k) => k.label === "Countries shipped to")?.value ?? "";
-const andesScale = (andes?.team ?? "").replace(", ", " and ");
-
-const SUB = `${current.role} at ${current.company.name}. I set direction across the platform and build the prototypes that define it. Before that, Andes at ${andesEmployer.company.name} — the design system behind ${countries} countries, ${andesScale}.`;
+function heroSub(locale: Locale): string {
+  const t = getDict(locale).hero;
+  const current = currentExperience();
+  const andes = getCaseStudy("mercadolibre-andes", locale);
+  const andesEn = getCaseStudy("mercadolibre-andes", "en");
+  const countries = andesEn?.kpis?.find((k) => k.label === "Countries shipped to")?.value ?? "";
+  return t.sub({
+    role: current.role,
+    company: current.company.name,
+    andesCompany: getExperience("mercadolibre").company.name,
+    countries,
+    scale: t.joinScale(andes?.team ?? ""),
+  });
+}
 
 /**
  * The hero.
@@ -40,7 +48,12 @@ const SUB = `${current.role} at ${current.company.name}. I set direction across 
  * appears once, on the brackets that mark the focused word, which is the one
  * job this theme reserves it for.
  */
-export default function Hero() {
+export default function Hero({ locale }: { locale: Locale }) {
+  const t = getDict(locale).hero;
+  const panel = getSections(locale)[0];
+  const workPanel = getSections(locale)[1];
+  const site = getSite(locale);
+  const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
   return (
     <section
       id={panel.id}
@@ -119,20 +132,20 @@ export default function Hero() {
           id="home-title"
           className="max-w-[16ch] text-balance font-display text-[length:var(--step-display-xl)] font-medium leading-[0.9] tracking-[-0.04em] text-[var(--ink)]"
         >
-          <RevealText as="span" variant="mask" className="block">
-            Designing the
-          </RevealText>
-          <RevealText as="span" variant="mask" delay={0.07} className="block">
-            <strong className="font-extrabold text-[1.12em] leading-[0.8]">human</strong> side
-          </RevealText>
-          <RevealText as="span" variant="mask" delay={0.14} className="block">
-            of an AI era
-          </RevealText>
+          {t.title.map((line, i) => (
+            <RevealText key={i} as="span" variant="mask" delay={i * 0.07} className="block">
+              {line.pre}
+              {line.strong && (
+                <strong className="font-extrabold text-[1.12em] leading-[0.8]">{line.strong}</strong>
+              )}
+              {line.post}
+            </RevealText>
+          ))}
         </h1>
 
         <RevealText as="div" variant="fade" delay={0.2} className="py-2 lg:py-1">
           <FocusWords
-            sentence="Design Build Ship"
+            sentence={t.focus}
             className="justify-start font-display text-[clamp(22px,min(3.2vw,4.6vh),48px)] font-medium tracking-[-0.02em] text-[var(--ink)]"
           />
         </RevealText>
@@ -146,7 +159,7 @@ export default function Hero() {
              headline above it already owns the scale. */
           className="max-w-[86ch] text-[length:var(--step-body)] font-normal leading-[1.55] text-[var(--ink-muted)]"
         >
-          {SUB}
+          {heroSub(locale)}
         </RevealText>
 
         <RevealText
@@ -164,15 +177,15 @@ export default function Hero() {
             <LinkedInMark />
             LinkedIn
           </a>
-          <Link href={`#${sections[1].id}`} className="btn-pill justify-center">
-            See work
+          <Link href={`#${workPanel.id}`} className="btn-pill justify-center">
+            {t.seeWork}
             <span aria-hidden>→</span>
           </Link>
         </RevealText>
 
         <section aria-labelledby="wordmarks-label" className="hairline-t mt-2 pt-5">
           <h2 id="wordmarks-label" className="sr-only">
-            Where I&apos;ve worked
+            {t.whereWorked}
           </h2>
           <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
             {getWordmarks().map((w) => (

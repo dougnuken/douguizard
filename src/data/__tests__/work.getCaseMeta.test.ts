@@ -39,6 +39,17 @@ describe("getCaseMeta", () => {
     expect(getCaseMeta("olbo").role).toBe("Design Engineer — end to end");
   });
 
+  it("speaks Spanish when asked: the period, the client of a personal case, a localized client", () => {
+    expect(getCaseMeta("banco-de-occidente", "es").year).toBe("Nov 2018 — Ene 2024");
+    expect(getCaseMeta("olbo", "es").client).toBe("Producto propio");
+    expect(getCaseMeta("dc-medical", "es").client).toBe("DC Medical Aesthetics");
+    expect(getCaseMeta("qrvey", "es").client).toBe("Plataforma de encuestas y NPS");
+    // Job titles are the ones on the contract, in both languages.
+    expect(getCaseMeta("banco-de-occidente", "es").role).toBe(
+      getCaseMeta("banco-de-occidente", "en").role,
+    );
+  });
+
   it("never reads a removed field", () => {
     for (const study of caseStudies) {
       expect(study).not.toHaveProperty("colors");

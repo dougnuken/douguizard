@@ -46,7 +46,7 @@ test("8.1-8.3 print media hides chrome, white bg, no URL expansion", async ({ pa
       return els.map((e) => getComputedStyle(e).display).join(",");
     };
     const pdfBtn = Array.from(document.querySelectorAll<HTMLElement>("button, a")).filter((e) =>
-      /download pdf|print/i.test(e.textContent || ""),
+      /download pdf|descargar pdf|print/i.test(e.textContent || ""),
     );
     // 8.3 — look for generated content on links
     let urlExpansion = false;

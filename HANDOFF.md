@@ -138,11 +138,11 @@ Hago **sesiones largas** (8-11+ horas seguidas). Cuando muestres patrones de fat
    - Ajustar fontsize, spacing, breakpoints donde se vean mal
    - Verificar burger menu, scroll, animaciones
 
-2. **i18n español primario con toggle a inglés** (~3h)
-   - Instalar next-intl
-   - Crear archivos JSON con todas las traducciones
-   - Toggle UI en navigation
-   - Routing /es/ /en/
+2. ~~**i18n español primario con toggle a inglés**~~ — **Hecho (oct 2026).**
+   - Español en la raíz (`/`, `/cv`, `/work/…`) e inglés bajo `/en`, cada uno con su `<html lang>`.
+   - Sin librería: textos de interfaz en `src/i18n/dictionaries.ts`, contenido en
+     `src/data/es/` (casos y CV). El switch ES | EN está en el encabezado.
+   - Ver la sección «Languages (ES / EN)» del README.
 
 3. **Manifesto rediseño** (~1h)
    - Cita destacada (pull quote) prominente

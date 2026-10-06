@@ -76,16 +76,39 @@ douguizard/
 
 ## 🛣 Routes
 
-| Route | Description | Type |
+The site is bilingual. **Spanish is the primary language and lives at the root**;
+English is the mirror, one segment down. Every page exists in both, at the same
+path apart from the `/en` prefix.
+
+| Spanish (default) | English | What |
 |---|---|---|
-| `/` | Home — cinematic hero, 3D background, all sections | Static |
-| `/cv` | Curriculum Vitae, print-to-PDF ready | Static |
-| `/work/[slug]` | Individual case study pages | SSG (5 prerendered) |
-| `/work/mercadolibre-andes` | Mercadolibre Andes Design System | SSG |
-| `/work/banco-de-occidente` | Banco de Occidente | SSG |
-| `/work/royal-caribbean` | Royal Caribbean | SSG |
-| `/work/qrvey` | Qrvey | SSG |
-| `/work/ideaware` | Ideaware co | SSG |
+| `/` | `/en` | Home — hero, work, craft, about, contact |
+| `/cv` | `/en/cv` | CV (hoja de vida), print-ready, with its own PDF |
+| `/work/[slug]` | `/en/work/[slug]` | Case studies, all prerendered |
+
+Unmatched addresses get `app/global-not-found.tsx` (Spanish, with a line in English).
+
+---
+
+## 🌐 Languages (ES / EN)
+
+- **Routing:** two route groups, each with its own root layout, so every page is
+  served with the right `<html lang>`: `src/app/(es)/…` and `src/app/(en)/en/…`.
+  Both render the shared pages in `src/components/pages/`.
+- **The switch:** `src/components/LanguageSwitch.tsx`, in the header. It always
+  links to the same page in the other language (on the home page, to the same
+  panel). Below 360 px it moves into the menu.
+- **Interface words** (labels, buttons, headings, accessible names):
+  `src/i18n/dictionaries.ts`. English is the shape; Spanish must match it key
+  for key — TypeScript and `i18n.parity.test.ts` both enforce it.
+- **Content** keeps English as the source and adds Spanish beside it:
+  - Case studies: `src/data/work.ts` (English, plus all the facts: slugs,
+    media, links, figures) and `src/data/es/work.ts` (Spanish words only).
+  - CV: `src/data/cv.ts` + `src/data/es/cv.ts`. Site facts: `src/data/site.ts`.
+  - Cover letter and testimonial framing: in their own data files. **Quotes are
+    never translated** — a Spanish page shows the original and says so.
+- **SEO:** each page declares its canonical and its `hreflang` twin
+  (`alternatesFor` in `src/i18n/config.ts`); the sitemap lists both languages.
 
 ---
 
@@ -172,30 +195,33 @@ To check availability: type the domain into any of those sites.
 ## ✏️ Updating content
 
 ### CV
-All CV data lives in **one file**: `src/data/cv.ts`. Edit the arrays:
-- `experiences` — work history
-- `education` — degrees + certs
-- `skills` — capability tag groups
-- `tools` — toolkit chips
-- `languages` — language proficiencies
+CV facts live in **one file**: `src/data/cv.ts` (dates, companies, roles), with
+the Spanish wording in `src/data/es/cv.ts`.
 
-Save → page hot-reloads. No build needed in dev.
+Each language has its own downloadable PDF, generated from its own page:
+`/cv` → `public/cv/doug-vargas-cv-es.pdf`, `/en/cv` → `public/cv/doug-vargas-cv.pdf`.
+After changing anything the CV prints, regenerate both:
+
+```bash
+npm run build && npx next start -p 4173 &
+npm run cv:pdf      # writes both PDFs and their stamps
+```
+
+A unit test compares each PDF's stamp with the data and fails if either drifts.
 
 ### Case studies
-All case study data lives in **`src/data/work.ts`**. Each entry has:
-- `slug` — URL path (e.g. `/work/my-project`)
-- `client`, `project`, `year`, `role`, `team`, etc.
-- `tagline` — hero subtitle
-- `challenge` — problem statement (1 paragraph)
-- `approach` — array of steps (use `**bold**` for emphasis)
-- `outcome` — headline + description + optional metrics
-- `colors` — `[from, to]` for the gradient cover
-- Optional: `technologies`, `externalLink`
+All case study data lives in **`src/data/work.ts`** (English + facts) and
+**`src/data/es/work.ts`** (the same case in Spanish). Each entry has:
+- `slug` — URL path (e.g. `/work/my-project`, `/en/work/my-project`)
+- `tagline`, `impact`, `context`, `contributions` — the story, in both files
+- `process`, `decisions`, `features`, `gallery`, `kpis` — lists matched by
+  position between the two languages (a test fails if they ever drift)
+- Optional: `video`, `links`, `technologies`, `credits`
 
 To add a new case study:
 1. Add an entry to `caseStudies` in `src/data/work.ts`
-2. The route `/work/your-slug` is auto-generated
-3. The Portfolio list on the home page picks it up automatically
+2. Add its Spanish copy under the same slug in `src/data/es/work.ts`
+3. Both routes are generated, and the Work panel lists it in both languages
 
 ### Site copy
 Each section is its own component in `src/components/sections/`. Edit the JSX directly.

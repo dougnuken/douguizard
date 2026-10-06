@@ -3,6 +3,7 @@
 import RevealText from "@/components/text/RevealText";
 import { Band, Eyebrow } from "./primitives";
 import type { Kpi } from "@/data/work";
+import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * One KPI: the figure, what it measures, and an optional context chip.
@@ -43,9 +44,10 @@ function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
 
 /** The market-facing star: one results-first sentence, then the numbers. */
 export default function CaseImpact({ impact, kpis }: { impact: string; kpis?: Kpi[] }) {
+  const t = useDict().case;
   return (
     <Band>
-      <Eyebrow>The impact</Eyebrow>
+      <Eyebrow>{t.impact}</Eyebrow>
 
       <RevealText
         as="p"

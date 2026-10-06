@@ -1,22 +1,25 @@
 import Link from "next/link";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 
-export default function NotFound() {
+/** A case slug that does not exist — inside its language's tree, so it knows which. */
+export default function CaseNotFound({ locale }: { locale: Locale }) {
+  const t = getDict(locale).case.notFound;
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-12 bg-[var(--paper)] text-center">
       <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-muted)] mb-6">
-        404 · Case study not found
+        {t.kicker}
       </div>
       <h1 className="font-display text-[clamp(64px,10vw,140px)] leading-[0.92] tracking-[-0.04em] mb-12">
-        Lost in <span className="italic text-[var(--ink)]">space</span>?
+        {t.title.pre} <span className="italic text-[var(--ink)]">{t.title.em}</span>
+        {t.title.post}
       </h1>
-      <p className="text-lg text-[var(--ink-muted)] mb-12 max-w-md">
-        The case study you&apos;re looking for doesn&apos;t exist — or hasn&apos;t been published yet.
-      </p>
+      <p className="text-lg text-[var(--ink-muted)] mb-12 max-w-md">{t.body}</p>
       <Link
-        href="/"
+        href={localePath(locale, "/#work")}
         className="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink)] no-underline border border-[var(--ink)] px-6 py-3 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-all"
       >
-        ← Back to all work
+        ← {t.back}
       </Link>
     </div>
   );

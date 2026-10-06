@@ -6,6 +6,7 @@ import MockupGallery from "@/components/work/MockupGallery";
 import { BrowserGallery, BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 import { Band, EyebrowHeading, FadeIn } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 type GalleryItem = NonNullable<CaseStudy["gallery"]>[number];
 type FrameKind = NonNullable<CaseStudy["galleryKind"]>;
@@ -25,8 +26,6 @@ export function browserLabel(src: string): string | undefined {
   if (!product || !moduleName) return undefined;
   return `${product} · ${moduleName}`.toUpperCase();
 }
-
-const WALKTHROUGH_LABEL = "/ Walkthrough — no sound";
 
 /**
  * Screens that already contain their own device.
@@ -94,13 +93,14 @@ export default function CaseProduct({
   gallery,
   galleryKind,
 }: CaseProductProps) {
+  const t = useDict().case;
   const hasGallery = Boolean(gallery && gallery.length > 0);
   const showVideo = Boolean(video && videoPoster);
-  const ariaLabel = `${project} — product screens`;
+  const ariaLabel = t.productScreens(project);
 
   return (
     <Band tone="raised" rule="y" wide>
-      <EyebrowHeading>The product</EyebrowHeading>
+      <EyebrowHeading>{t.product}</EyebrowHeading>
 
       <div className="mt-12 md:mt-16">
         {showVideo && video && videoPoster && (
@@ -123,6 +123,8 @@ export default function CaseProduct({
                   height={video.height}
                   label={video.label}
                   chromeLabel={browserLabel(video.mp4)}
+                  playLabel={t.play}
+                  pauseLabel={t.pause}
                   /* One pass through the app, not a cycle: it opens on one screen
                      and ends on another, so looping would read as a glitch. The
                      control below is how you replay it, and how anyone stops it —
@@ -132,7 +134,7 @@ export default function CaseProduct({
 
                 <FadeIn>
                   <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
-                    <div className="kicker text-[var(--ink-dim)] lg:pt-2">{WALKTHROUGH_LABEL}</div>
+                    <div className="kicker text-[var(--ink-dim)] lg:pt-2">{t.walkthrough}</div>
                     {video.caption && (
                       <p className="max-w-[62ch] text-[17px] leading-[1.6] text-[var(--ink)] md:text-[19px]">
                         {video.caption}
@@ -154,11 +156,13 @@ export default function CaseProduct({
                   height={video.height}
                   label={video.label}
                   loop={false}
+                  playLabel={t.play}
+                  pauseLabel={t.pause}
                 />
 
                 <FadeIn>
                   <div className="lg:pt-2">
-                    <div className="kicker mb-6 text-[var(--ink-dim)]">{WALKTHROUGH_LABEL}</div>
+                    <div className="kicker mb-6 text-[var(--ink-dim)]">{t.walkthrough}</div>
                     {video.caption && (
                       <p className="max-w-[46ch] text-[17px] leading-[1.6] text-[var(--ink)] md:text-[19px]">
                         {video.caption}
@@ -197,7 +201,7 @@ export default function CaseProduct({
         {gallery && gallery.length > 0 && galleryKind === "phone" && (
           <MockupGallery
             ariaLabel={ariaLabel}
-            hint="Swipe →"
+            hint={t.swipe}
             items={gallery.map((g, i) => ({
               id: g.src,
               src: g.src,

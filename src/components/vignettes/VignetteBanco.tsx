@@ -1,12 +1,14 @@
 import VignetteFrame, { type VignetteProps } from "./VignetteFrame";
+import { getDict } from "@/i18n/dictionaries";
 
-const ROWS: { name: string; tone: number; usage: string }[] = [
-  { name: "ink.900", tone: 92, usage: "Text" },
-  { name: "ink.600", tone: 62, usage: "Body" },
-  { name: "ink.300", tone: 34, usage: "Meta" },
-  { name: "line.200", tone: 20, usage: "Rules" },
-  { name: "surface.50", tone: 10, usage: "Cards" },
-  { name: "surface.00", tone: 4, usage: "Page" },
+/** Token names are code and stay as written; what each one is FOR is a word. */
+const ROWS: { name: string; tone: number }[] = [
+  { name: "ink.900", tone: 92 },
+  { name: "ink.600", tone: 62 },
+  { name: "ink.300", tone: 34 },
+  { name: "line.200", tone: 20 },
+  { name: "surface.50", tone: 10 },
+  { name: "surface.00", tone: 4 },
 ];
 
 /** Five columns of component glyphs: foundations → atoms → … → organisms. */
@@ -28,14 +30,12 @@ function Glyph({ kind }: { kind: (typeof GLYPHS)[number] }) {
   return <span className="block h-[8px] w-full bg-[var(--line-strong)]" />;
 }
 
-export default function VignetteBanco({ className }: VignetteProps) {
+export default function VignetteBanco({ className, locale }: VignetteProps) {
+  const t = getDict(locale).work.vignettes.banco;
   return (
-    <VignetteFrame
-      className={className}
-      label="A design-system grid: foundations, atoms, molecules and organisms."
-    >
+    <VignetteFrame className={className} label={t.label}>
       <ul className="flex flex-col">
-        {ROWS.map((r) => (
+        {ROWS.map((r, i) => (
           <li
             key={r.name}
             className="flex items-center gap-2 border-b border-[var(--line)] py-[3px] font-mono text-[9px] tracking-[0.04em] text-[var(--ink-dim)]"
@@ -45,7 +45,7 @@ export default function VignetteBanco({ className }: VignetteProps) {
               style={{ background: `color-mix(in srgb, var(--ink) ${r.tone}%, transparent)` }}
             />
             <span className="flex-1">{r.name}</span>
-            <span>{r.usage}</span>
+            <span>{t.usage[i]}</span>
           </li>
         ))}
       </ul>

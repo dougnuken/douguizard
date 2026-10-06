@@ -1,43 +1,53 @@
 import Image from "next/image";
 import Link from "next/link";
-import { sections } from "@/data/sections";
-import { site } from "@/data/site";
-import { education, experiences, languages } from "@/data/cv";
+import { getSections } from "@/data/sections";
+import { getSite } from "@/data/site";
+import { getCv } from "@/data/cv";
 import { currentExperience, formatPeriod } from "@/lib/career";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
 
-const panel = sections[3];
-const current = currentExperience();
+const BIO: Record<Locale, [string, string]> = {
+  en: [
+    "What has kept me here is not any single screen. It is the systems underneath: the tokens, the governance, the shared language that lets hundreds of designers and thousands of engineers ship as one product.",
+    "The line between designing and building stopped being useful to me. I prototype in code, ship real interfaces, and let the system and the model carry the repetitive weight. olbo and DC Medical are the clearest proof: a finance app and a clinic's operating panel I designed, engineered and shipped on my own, both in daily use.",
+  ],
+  es: [
+    "Lo que me ha mantenido aquí no es ninguna pantalla en particular. Son los sistemas de abajo: los tokens, el gobierno, el lenguaje compartido que permite que cientos de diseñadores y miles de ingenieros entreguen como un solo producto.",
+    "La línea entre diseñar y construir dejó de servirme. Prototipo en código, entrego interfaces reales y dejo que el sistema y el modelo carguen el peso repetitivo. olbo y DC Medical son la prueba más clara: una app de finanzas y el panel de operación de una clínica que diseñé, implementé y lancé por mi cuenta, los dos en uso diario.",
+  ],
+};
 
-const BIO_2 =
-  "What has kept me here is not any single screen. It is the systems underneath: the tokens, the governance, the shared language that lets hundreds of designers and thousands of engineers ship as one product.";
+export default function About({ locale }: { locale: Locale }) {
+  const t = getDict(locale).about;
+  const panel = getSections(locale)[3];
+  const site = getSite(locale);
+  const { education, experiences, languages } = getCv(locale);
+  const current = currentExperience();
+  const [BIO_2, BIO_3] = BIO[locale];
+  const earlierStart = experiences.findIndex((e) => e.era === "earlier");
 
-const BIO_3 =
-  "The line between designing and building stopped being useful to me. I prototype in code, ship real interfaces, and let the system and the model carry the repetitive weight. olbo is the clearest proof: a finance app I designed, engineered and shipped on my own, still running every day.";
+  /**
+   * Every value is derived from `site` / `cv` — only `Focus` is a literal, which
+   * is what the copy deck designates. No fact on this panel is typed twice.
+   */
+  const FACT_ROWS: { label: string; value: string }[] = [
+    {
+      label: t.facts.based,
+      value: `${site.location.city}, ${site.location.country} · ${site.location.timezone}`,
+    },
+    { label: t.facts.currently, value: `${current.role} · ${current.company.name}` },
+    { label: t.facts.focus, value: t.facts.focusValue },
+    { label: t.facts.openTo, value: site.availability.note ?? "" },
+    {
+      label: t.facts.languages,
+      value: languages
+        .map((l) => `${l.name} (${l.cefr === "Native" ? t.facts.native : l.cefr})`)
+        .join(" · "),
+    },
+  ];
 
-/**
- * Every value is derived from `site` / `cv` — only `Focus` is a literal, which
- * is what the copy deck designates. No fact on this panel is typed twice.
- */
-const FACT_ROWS: { label: string; value: string }[] = [
-  {
-    label: "Based",
-    value: `${site.location.city}, ${site.location.country} · ${site.location.timezone}`,
-  },
-  { label: "Currently", value: `${current.role} · ${current.company.name}` },
-  { label: "Focus", value: "Design systems · AI-native product" },
-  { label: "Open to", value: site.availability.note ?? "" },
-  {
-    label: "Languages",
-    value: languages
-      .map((l) => `${l.name} (${l.cefr === "Native" ? "native" : l.cefr})`)
-      .join(" · "),
-  },
-];
-
-const earlierStart = experiences.findIndex((e) => e.era === "earlier");
-
-export default function About() {
   return (
     <section
       id={panel.id}
@@ -84,13 +94,13 @@ export default function About() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <p className="kicker">/ Experience</p>
+          <p className="kicker">{t.experience}</p>
           <ul className="hairline-t flex flex-col">
             {experiences.map((e, i) => (
               <li key={e.id}>
                 {i === earlierStart && (
                   <p className="hairline-b py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--ink-dim)]">
-                    Earlier
+                    {t.earlier}
                   </p>
                 )}
                 <div className="hairline-b grid items-baseline gap-x-6 gap-y-1 py-3 md:grid-cols-[170px_170px_minmax(0,1fr)_auto]">
@@ -98,17 +108,17 @@ export default function About() {
                     {e.company.name}
                   </span>
                   <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
-                    {formatPeriod(e)}
+                    {formatPeriod(e, locale)}
                   </span>
                   <span className="text-[var(--step-small)] leading-[1.5] text-[var(--ink-muted)]">
                     {e.roleShort ?? e.role}
                   </span>
                   {e.caseSlug ? (
                     <Link
-                      href={`/work/${e.caseSlug}`}
+                      href={localePath(locale, `/work/${e.caseSlug}`)}
                       className="flex min-h-11 items-center justify-start font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink)] underline-offset-4 hover:underline md:justify-end"
                     >
-                      See case →
+                      {t.seeCase} →
                     </Link>
                   ) : (
                     <span aria-hidden />
@@ -121,14 +131,14 @@ export default function About() {
 
         <div className="hairline-t flex flex-col gap-2 pt-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
-            / Education —{" "}
+            {t.education} —{" "}
             <span className="text-[var(--ink)]">
               {education[0].program}, {education[0].institution} (
               {education[0].start.year} — {education[0].end?.year})
             </span>
           </p>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
-            / Languages —{" "}
+            {t.languages} —{" "}
             <span className="text-[var(--ink)]">
               {languages.map((l) => `${l.name} ${l.level}`).join(" · ")}
             </span>
@@ -136,7 +146,7 @@ export default function About() {
         </div>
 
         <Link href={site.cv.path} className="btn-pill w-fit">
-          Full CV
+          {t.fullCv}
           <span aria-hidden>→</span>
         </Link>
       </div>
@@ -148,7 +158,7 @@ export default function About() {
             palette. */}
         <Image
           src="/portrait/doug-portrait-900.webp"
-          alt={`${site.name}, photographed in black and white against a dark background.`}
+          alt={t.portraitAlt(site.name)}
           width={900}
           height={1130}
           sizes="(min-width: 1024px) 340px, (min-width: 640px) 50vw, 100vw"

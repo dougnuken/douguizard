@@ -1,5 +1,7 @@
-import { certifications, education, languages } from "@/data/cv";
+import { getCv } from "@/data/cv";
 import { formatPoint } from "@/lib/career";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 
 function Block({
   id,
@@ -31,17 +33,19 @@ function Block({
  * a CV is his own account of his work, and the quotes live on the case pages
  * where the reader can see what they are about.
  */
-export default function CvSidebar() {
+export default function CvSidebar({ locale }: { locale: Locale }) {
+  const t = getDict(locale).cv;
+  const { certifications, education, languages } = getCv(locale);
   return (
     <aside
-      aria-label="Education, certifications and languages"
+      aria-label={t.sidebar}
       className="cv-sidebar mt-14 grid grid-cols-1 content-start gap-x-10 gap-y-12 self-start sm:grid-cols-2 lg:mt-0 lg:grid-cols-1"
     >
-      <Block id="cv-education" title="Education">
+      <Block id="cv-education" title={t.education}>
         {education.map((e) => (
           <div key={e.id} className="cv-edu flex flex-col gap-0.5">
             <p className="cv-meta font-mono text-[11px] tracking-[0.04em] text-[var(--ink-dim)] tabular-nums">
-              {formatPoint(e.start)} — {formatPoint(e.end)}
+              {formatPoint(e.start, locale)} — {formatPoint(e.end, locale)}
             </p>
             <p className="text-[length:var(--step-small)] font-medium leading-[1.4] text-[var(--ink)]">
               {e.program}
@@ -53,7 +57,7 @@ export default function CvSidebar() {
         ))}
       </Block>
 
-      <Block id="cv-certifications" title="Certifications">
+      <Block id="cv-certifications" title={t.certifications}>
         {certifications.map((c) => (
           <div key={c.id} className="cv-cert flex flex-col gap-0.5">
             <p className="cv-meta font-mono text-[11px] tracking-[0.04em] text-[var(--ink-dim)] tabular-nums">
@@ -69,7 +73,7 @@ export default function CvSidebar() {
         ))}
       </Block>
 
-      <Block id="cv-languages" title="Languages">
+      <Block id="cv-languages" title={t.languages}>
         <ul className="flex list-none flex-col gap-2">
           {languages.map((l) => (
             <li

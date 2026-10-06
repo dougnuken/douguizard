@@ -1,13 +1,11 @@
 import VignetteFrame, { type VignetteProps } from "./VignetteFrame";
+import { getDict } from "@/i18n/dictionaries";
 
 const TOKENS = ["color.bg.primary", "space.16", "radius.8"];
 
-export default function VignetteMercadolibre({ className }: VignetteProps) {
+export default function VignetteMercadolibre({ className, locale }: VignetteProps) {
   return (
-    <VignetteFrame
-      className={className}
-      label="The anatomy of a design-system component: tokens resolving into variants."
-    >
+    <VignetteFrame className={className} label={getDict(locale).work.vignettes.andes.label}>
       <div className="flex h-full items-center gap-3">
         <ul className="flex w-[42%] shrink-0 flex-col gap-2">
           {TOKENS.map((t) => (

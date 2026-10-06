@@ -95,7 +95,7 @@ test("R3 print: site chrome hidden, CV header kept", async ({ page }) => {
       document.querySelectorAll<HTMLElement>(".glow-corner, [data-glow], [class*='glow']"),
     ).map((e) => getComputedStyle(e).display);
     const pdfBtn = Array.from(document.querySelectorAll<HTMLElement>("button, a"))
-      .filter((e) => /download pdf|print/i.test(e.textContent || ""))
+      .filter((e) => /download pdf|descargar pdf|print/i.test(e.textContent || ""))
       .map((e) => getComputedStyle(e).display);
     return {
       headers: all,

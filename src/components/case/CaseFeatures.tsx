@@ -2,6 +2,7 @@
 
 import RevealText from "@/components/text/RevealText";
 import { Band, EyebrowHeading, renderBold } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Feature {
   title: string;
@@ -19,6 +20,7 @@ export interface Feature {
  * in the text where anyone can read it.
  */
 function FeatureKind({ kind }: { kind?: Feature["kind"] }) {
+  const labels = useDict().case.featureKind;
   if (!kind) return null;
   const isAi = kind === "ai";
   return (
@@ -27,7 +29,7 @@ function FeatureKind({ kind }: { kind?: Feature["kind"] }) {
       style={{ letterSpacing: isAi ? "0.3em" : "0.25em" }}
     >
       <span aria-hidden className="inline-block h-px w-2.5 shrink-0 bg-[var(--ink-dim)]" />
-      {isAi ? "AI" : "Product"}
+      {isAi ? labels.ai : labels.product}
     </div>
   );
 }
@@ -40,10 +42,11 @@ export default function CaseFeatures({
   intro?: string;
   features: Feature[];
 }) {
+  const t = useDict().case;
   return (
     <Band tone="raised" rule="t">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>What it can do</EyebrowHeading>
+        <EyebrowHeading sticky>{t.features}</EyebrowHeading>
         <div>
           {intro && (
             <RevealText

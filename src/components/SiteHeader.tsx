@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
-import { site } from "@/data/site";
-import { sections } from "@/data/sections";
+import { getSite } from "@/data/site";
+import { getSections } from "@/data/sections";
+import { localePath, splitLocale } from "@/i18n/config";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitch, { LanguageMenuLink } from "@/components/LanguageSwitch";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 import {
   getActiveSection,
@@ -14,17 +17,21 @@ import {
   subscribeActiveSection,
 } from "@/lib/activeSection";
 
-const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
-
-/** Panels the header links to. The Home panel is the brand's own target. */
-const navSections = sections.filter((s) => s.num !== "00");
-
 const linkClass =
   "no-underline transition-colors duration-200 hover:text-[var(--ink)] hover:underline hover:underline-offset-4 hover:decoration-1";
 
 export default function SiteHeader() {
+  const locale = useLocale();
+  const t = useDict();
+  const site = getSite(locale);
+  const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+  /** Panels the header links to. The Home panel is the brand's own target. */
+  const navSections = getSections(locale).filter((s) => s.num !== "00");
+  const home = localePath(locale, "/");
+  const workHref = localePath(locale, "/#work");
+
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome = splitLocale(pathname || "/").path === "/";
   const menuId = useId();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -59,9 +66,9 @@ export default function SiteHeader() {
               says whose site this is, and a second announcement of the same
               name is noise. */}
           <Link
-            href="/"
+            href={home}
             className="flex min-h-11 shrink-0 items-center gap-2.5 no-underline"
-            aria-label={`${site.brand} — home`}
+            aria-label={t.meta.homeLabel(site.brand)}
           >
             <Image
               src="/portrait/doug-avatar-256.webp"
@@ -97,7 +104,7 @@ export default function SiteHeader() {
         </div>
 
         <nav
-          aria-label="Sections"
+          aria-label={t.header.sections}
           className="ml-auto hidden items-center gap-7 lg:flex"
         >
           {isHome &&
@@ -114,12 +121,12 @@ export default function SiteHeader() {
               </a>
             ))}
           {!isHome && (
-            <Link href="/#work" className={`kicker ${linkClass}`}>
-              Work
+            <Link href={workHref} className={`kicker ${linkClass}`}>
+              {t.header.work}
             </Link>
           )}
           <Link href={site.cv.path} className={`kicker ${linkClass}`}>
-            CV
+            {t.header.cv}
           </Link>
         </nav>
 
@@ -138,13 +145,18 @@ export default function SiteHeader() {
             <LinkedInMark />
             <span className="hidden sm:inline">{linkedin.label}</span>
           </a>
+          {/* "ES | EN" wherever there is room for both. Below `sm` a single
+              circle names the way out, and below 360 — where the row has no
+              44px left to give — the switch lives in the menu instead. */}
+          <LanguageSwitch className="hidden sm:inline-flex" />
+          <LanguageSwitch variant="compact" className="hidden min-[360px]:inline-flex sm:hidden" />
           <ThemeToggle />
           <button
             ref={buttonRef}
             type="button"
             aria-expanded={open}
             aria-controls={menuId}
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t.header.closeMenu : t.header.openMenu}
             onClick={() => setOpen((v) => !v)}
             className="theme-toggle lg:hidden"
           >
@@ -168,7 +180,8 @@ export default function SiteHeader() {
 
       <nav
         id={menuId}
-        aria-label="Menu"
+        data-menu
+        aria-label={t.header.menu}
         hidden={!open}
         className="hairline-b absolute inset-x-0 top-full bg-[var(--paper)] px-6 pb-3 lg:hidden"
       >
@@ -190,11 +203,11 @@ export default function SiteHeader() {
           {!isHome && (
             <li>
               <Link
-                href="/#work"
+                href={workHref}
                 onClick={() => setOpen(false)}
                 className="hairline-b flex min-h-12 items-center text-[15px] text-[var(--ink-muted)] no-underline"
               >
-                Work
+                {t.header.work}
               </Link>
             </li>
           )}
@@ -216,17 +229,23 @@ export default function SiteHeader() {
               onClick={() => setOpen(false)}
               className="hairline-b flex min-h-12 items-center text-[15px] text-[var(--ink-muted)] no-underline"
             >
-              CV
+              {t.header.cv}
             </Link>
           </li>
           <li>
             <a
               href={`mailto:${site.email}`}
               onClick={() => setOpen(false)}
-              className="flex min-h-12 items-center text-[15px] text-[var(--ink-muted)] no-underline"
+              className="hairline-b flex min-h-12 items-center text-[15px] text-[var(--ink-muted)] no-underline"
             >
-              Email
+              {t.header.email}
             </a>
+          </li>
+          <li>
+            <LanguageMenuLink
+              onNavigate={() => setOpen(false)}
+              className="flex min-h-12 items-center text-[15px] text-[var(--ink-muted)] no-underline"
+            />
           </li>
         </ul>
       </nav>

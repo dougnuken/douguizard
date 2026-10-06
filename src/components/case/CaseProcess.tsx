@@ -2,6 +2,7 @@
 
 import RevealText from "@/components/text/RevealText";
 import { Band, EyebrowHeading, renderBold } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 export interface ProcessPhase {
   phase: string;
@@ -11,10 +12,11 @@ export interface ProcessPhase {
 
 /** How the work actually happened, phase by phase — the how after the what. */
 export default function CaseProcess({ process }: { process: ProcessPhase[] }) {
+  const t = useDict().case;
   return (
     <Band tone="raised" rule="y">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>How it happened</EyebrowHeading>
+        <EyebrowHeading sticky>{t.howItHappened}</EyebrowHeading>
         <ol className="hairline-t m-0 list-none p-0">
           {process.map((phase, i) => (
             <li

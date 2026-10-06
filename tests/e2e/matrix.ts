@@ -16,6 +16,14 @@ export const ROUTES = [
   "/work/qrvey",
 ];
 
+/**
+ * The same pages in English, one segment down. The matrix above is the Spanish
+ * site — the primary one, served at the root — and every layout, contrast and
+ * motion check runs there; the English tree is held to the head, structure and
+ * wording checks in `seo.spec.ts`, `content.spec.ts` and `i18n.spec.ts`.
+ */
+export const EN_ROUTES = ROUTES.map((r) => (r === "/" ? "/en" : `/en${r}`));
+
 /** Seeded via addInitScript before first navigation so the anti-flash script sees it. */
 export const setTheme = (t: string) =>
   `try{localStorage.setItem("dg-theme", ${JSON.stringify(t)})}catch(e){}`;

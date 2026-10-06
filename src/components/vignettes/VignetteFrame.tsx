@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
+import type { Locale } from "@/i18n/config";
 
 export interface VignetteProps {
   className?: string;
+  /** The words inside a vignette — and its accessible name — follow the page. */
+  locale: Locale;
 }
 
 /**

@@ -640,7 +640,7 @@
 
     /* The mobile menu hangs off the same bar, so it takes the same glass —
        otherwise opening it drops an opaque panel out of a translucent one. */
-    .site-header nav[aria-label="Menu"] {
+    .site-header nav[data-menu] {
       background: color-mix(in srgb, var(--paper) 82%, transparent);
       backdrop-filter: blur(18px) saturate(150%);
     }
@@ -688,6 +688,72 @@
 
   :root[data-theme="light"] .theme-toggle [data-glyph="moon"] {
     display: none;
+  }
+
+  /* ── The language switch. Same hairline and the same 44px as the theme
+     toggle beside it, so the two read as one row of controls. The current
+     language is the filled half — ink on paper, the one inversion the header
+     allows itself — and it is not a link: there is nowhere for it to go. */
+  .lang-switch {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 2px;
+    block-size: 44px;
+    padding: 3px;
+    border-radius: 9999px;
+    border: 1px solid var(--line);
+  }
+
+  .lang-switch__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 40px;
+    block-size: 36px;
+    padding-inline: 0.65rem;
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  a.lang-switch__item:hover {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+
+  .lang-switch__item--current {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .lang-switch-compact {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 9999px;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: var(--ink);
+    text-decoration: none;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .lang-switch-compact:hover {
+    opacity: 0.8;
   }
 }
 

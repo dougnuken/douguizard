@@ -1,4 +1,6 @@
-import { skills, tools } from "@/data/cv";
+import { getCv } from "@/data/cv";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import ToolMarks from "@/components/cv/ToolMarks";
 
 /**
@@ -19,12 +21,14 @@ function join(items: string[]) {
   return items.join(", ");
 }
 
-export default function CvSkills() {
+export default function CvSkills({ locale }: { locale: Locale }) {
+  const t = getDict(locale).cv;
+  const { skills, tools } = getCv(locale);
   return (
     <div className="cv-skills-block mt-14 flex flex-col gap-12">
       <section aria-labelledby="cv-skills">
         <h2 id="cv-skills" className="cv-h2">
-          Skills
+          {t.skills}
         </h2>
         <div className="cv-columns">
           {skills.map((group) => (
@@ -44,7 +48,7 @@ export default function CvSkills() {
 
       <section aria-labelledby="cv-tools">
         <h2 id="cv-tools" className="cv-h2">
-          Tools
+          {t.tools}
         </h2>
         {/* The three whose marks can be drawn faithfully, above the full list.
             A logo says "I live in this" in a way a comma-separated name does

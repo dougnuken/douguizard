@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { ROUTES } from "./matrix";
+import { EN_ROUTES, ROUTES } from "./matrix";
 import { caseStudies } from "../../src/data/work";
 
 const ORIGIN = "https://douguizard.com";
@@ -17,6 +17,12 @@ const head = (page: import("@playwright/test").Page) =>
       title: document.title,
       description: attr('meta[name="description"]'),
       canonical: attr('link[rel="canonical"]', "href"),
+      alternates: Object.fromEntries(
+        Array.from(document.querySelectorAll('link[rel="alternate"][hreflang]')).map((l) => [
+          l.getAttribute("hreflang"),
+          l.getAttribute("href"),
+        ]),
+      ),
       ogTitle: attr('meta[property="og:title"]'),
       ogDescription: attr('meta[property="og:description"]'),
       ogImage: attr('meta[property="og:image"]'),
@@ -31,7 +37,15 @@ const head = (page: import("@playwright/test").Page) =>
     };
   });
 
-for (const route of ROUTES) {
+/** "/work/olbo" → its Spanish and English addresses on the production origin. */
+const pair = (route: string) => {
+  const path = route.startsWith("/en") ? route.slice(3) || "/" : route;
+  const abs = (p: string) => (p === "/" ? ORIGIN : `${ORIGIN}${p}`);
+  return { es: abs(path), en: abs(path === "/" ? "/en" : `/en${path}`) };
+};
+
+for (const route of [...ROUTES, ...EN_ROUTES]) {
+  const lang = route.startsWith("/en") ? "en" : "es";
   test(`E1 head is complete and honest on ${route}`, async ({ page }) => {
     await page.goto(route, { waitUntil: "networkidle" });
     const m = await head(page);
@@ -52,6 +66,15 @@ for (const route of ROUTES) {
     const expected = route === "/" ? ORIGIN : `${ORIGIN}${route}`;
     if (m.canonical !== expected) problems.push(`canonical ${m.canonical} ≠ ${expected}`);
 
+    // The page names its twin in the other language, and Spanish as the
+    // default for everyone else — the same three on both sides of the pair.
+    const twins = pair(route);
+    const want = { es: twins.es, en: twins.en, "x-default": twins.es };
+    for (const [hreflang, href] of Object.entries(want)) {
+      if (m.alternates[hreflang] !== href)
+        problems.push(`hreflang ${hreflang} = ${m.alternates[hreflang]} ≠ ${href}`);
+    }
+
     for (const [name, value] of Object.entries({
       "og:title": m.ogTitle,
       "og:description": m.ogDescription,
@@ -63,7 +86,7 @@ for (const route of ROUTES) {
     if (m.ogImage && !m.ogImage.startsWith("http"))
       problems.push(`og:image is not absolute: ${m.ogImage}`);
 
-    if (m.lang !== "en") problems.push(`html lang = ${m.lang}`);
+    if (m.lang !== lang) problems.push(`html lang = ${m.lang}, expected ${lang}`);
     if (m.h1.length !== 1) problems.push(`${m.h1.length} <h1>: ${JSON.stringify(m.h1)}`);
 
     expect(problems, `E1 ${route}\n  ${problems.join("\n  ")}`).toEqual([]);
@@ -90,6 +113,10 @@ test("E2 structured data parses and says what it should", async ({ page }) => {
   expect(cv, "E2 /cv ProfilePage").toContain("ProfilePage");
 
   expect(await readTypes("/work/olbo"), "E2 case breadcrumb").toContain("BreadcrumbList");
+
+  expect(await readTypes("/en"), "E2 /en").toContain("Person");
+  expect(await readTypes("/en/cv"), "E2 /en/cv ProfilePage").toContain("ProfilePage");
+  expect(await readTypes("/en/work/olbo"), "E2 /en case breadcrumb").toContain("BreadcrumbList");
 });
 
 test("E3 sitemap lists every indexable URL and nothing else", async ({ request }) => {
@@ -100,8 +127,10 @@ test("E3 sitemap lists every indexable URL and nothing else", async ({ request }
 
   const expected = [
     ORIGIN,
+    `${ORIGIN}/en`,
     `${ORIGIN}/cv`,
-    ...caseStudies.map((c) => `${ORIGIN}/work/${c.slug}`),
+    `${ORIGIN}/en/cv`,
+    ...caseStudies.flatMap((c) => [`${ORIGIN}/work/${c.slug}`, `${ORIGIN}/en/work/${c.slug}`]),
   ];
   expect(urls.slice().sort(), `E3 sitemap:\n${urls.join("\n")}`).toEqual(expected.slice().sort());
 });
@@ -125,4 +154,10 @@ test("E5 a URL that does not exist says so", async ({ page }) => {
 
   const bogusCase = await page.goto("/work/not-a-case", { waitUntil: "networkidle" });
   expect(bogusCase?.status(), "E5 unknown case status").toBe(404);
+
+  // The English tree 404s the same way, a case and an address alike.
+  const bogusEnCase = await page.goto("/en/work/not-a-case", { waitUntil: "networkidle" });
+  expect(bogusEnCase?.status(), "E5 unknown /en case status").toBe(404);
+  const bogusEn = await page.goto("/en/this-page-was-never-here", { waitUntil: "networkidle" });
+  expect(bogusEn?.status(), "E5 unknown /en address status").toBe(404);
 });

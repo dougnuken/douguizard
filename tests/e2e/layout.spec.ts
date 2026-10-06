@@ -108,8 +108,9 @@ test("5.5 sticky eyebrow clears header on /work/olbo @1440", async ({ page }) =>
   const info = await page.evaluate(async () => {
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     const heads = Array.from(document.querySelectorAll<HTMLElement>("h2"));
-    // the Process band's sticky eyebrow reads "How it happened" (CaseProcess.tsx:17)
-    const proc = heads.find((h) => /how it happened|process/i.test(h.textContent || ""));
+    // the Process band's sticky eyebrow reads "How it happened" — "Cómo se
+    // hizo" on the Spanish page this route now serves (CaseProcess.tsx)
+    const proc = heads.find((h) => /how it happened|cómo se hizo|process/i.test(h.textContent || ""));
     if (!proc) return { found: false as const, all: heads.map((h) => (h.textContent || "").trim()) };
     proc.scrollIntoView({ block: "start", behavior: "auto" });
     await sleep(120);

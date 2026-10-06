@@ -1,5 +1,7 @@
-import { type ExperienceId } from "@/data/cv";
-import { formatLocation, formatPeriod, getExperience } from "@/lib/career";
+import { getCv, type ExperienceId } from "@/data/cv";
+import { workEs } from "@/data/es/work";
+import { formatLocation, formatPeriod } from "@/lib/career";
+import type { Locale } from "@/i18n/config";
 
 export interface Kpi {
   /** Headline figure — "40%", "18", "2K+", "Hours". */
@@ -601,53 +603,60 @@ export const caseStudies: CaseStudy[] = [
     roleOverride: "Product designer and design engineer — end to end",
     yearOverride: "2026",
     clientOverride: "DC Medical Aesthetics",
-    duration: "2026 — in use, still shipping",
+    duration: "Live since Sep 21, 2026 — still shipping",
     team: "Solo — product, design, code",
     kind: "personal",
     tagline:
-      "An aesthetic-medicine clinic that runs on a spreadsheet and a calendar, turned into a panel that will not let a procedure start before it is paid for.",
+      "A clinic that ran on WhatsApp, a calendar and a shared drive, now run from one panel on the secretary's phone — and no procedure starts before it is paid for.",
     impact:
-      "One HTML file and no database: the clinic's own Drive and Calendar become a working panel where every patient has a stage, a balance and a next step — and the green light for a procedure only appears once payment, receipt and consent are in.",
+      "Two weeks from the first commit to the version the clinic runs today: one panel where every patient has a phase, a balance and a next step, built on the clinic's own Drive and Calendar — and a procedure only gets its green light once the payment, the receipt and the signed consent are in.",
     context:
-      "A doctor who operates in Barranquilla and rents rooms in Bogotá and Medellín, a secretary who schedules, advises and sells over WhatsApp, and a Google Drive holding the money, the consents and the clinical histories. Everything was already written down; nothing was connected — least of all what a patient still owed, which lived in a column nobody could safely add up.",
+      "An aesthetic-medicine clinic in Barranquilla whose doctor also sees patients in rented rooms in Bogotá and Medellín. A secretary who schedules, advises and sells over WhatsApp, a Google Calendar, and a shared Drive holding the money, the consents and the clinical histories. Everything was already written down; nothing was connected — least of all what a patient still owed.",
     contributions: [
-      "**The patient case, in five locked phases** — valuation, photos and deposit, full payment with receipt and consent, supplies used, close. Each phase unlocks the next, so the sequence the clinic already follows is the one the software enforces.",
-      "**One file, two runtimes** — the same dashboard runs as a Claude artifact that reads Drive and Calendar through connectors, and as a web panel behind a Cloudflare Worker with a login per person and role.",
-      "**Domain rules as pure functions, under test** — balances, date parsing and the name matching that reconciles a patient spelled three different ways across three sheets, covered by test suites that run in Node without a browser.",
-      "**AI where it removes typing, not judgement** — receipts, supplier invoices and travel expenses are read by AI and confirmed by a person before anything is written.",
+      "**A plan attacked before it was built** — the first plan went through an adversarial review on three fronts, data, security and feasibility, and only its third version reached code.",
+      "**The patient case as three locked phases** — valuation, payment, procedure. Each unlocks the next, and the green light for a procedure appears only once the full payment, its receipt and the signed consent are in.",
+      "**One file, two runtimes, and a phone app** — the same dashboard runs as a read-only Claude artifact and as a web panel behind a Cloudflare Worker with a login per person, and installs on the secretary's iPhone as an app.",
+      "**Rules as tested functions** — balances, card fees, dates and the name matching that reconciles one patient spelled three ways, covered by twelve test suites, from pure functions to a real browser at phone width.",
     ],
     kpis: [
-      { value: "5", label: "Locked phases", delta: "valuation to 45-day follow-up" },
+      // First commit 2026-09-19, agenda by city released 2026-10-02 — both
+      // read off the dc-medical-dashboard history on 2026-10-06.
+      { value: "14", label: "Days, first commit to today's version", delta: "Sep 19 → Oct 2, 2026" },
+      { value: "3", label: "Phases with locks", delta: "valuation, payment, procedure" },
       { value: "0", label: "New databases", delta: "Drive and Calendar stay the source of truth" },
-      { value: "2", label: "Runtimes, one codebase", delta: "Claude artifact + web panel" },
-      // 11 `test:*` scripts in the repo's package.json, verified 2026-09-20.
-      { value: "11", label: "Test suites", delta: "domain, ledger, worker, browser" },
+      // 12 `test:*` scripts in the repo's package.json, verified 2026-10-06.
+      { value: "12", label: "Test suites", delta: "domain, ledger, worker, browser" },
     ],
     process: [
       {
         phase: "01",
         title: "The clinic already had a system — it just wasn't software",
-        body: "Before writing anything I mapped what actually happens: the patient writes on WhatsApp, the secretary books the valuation in Google Calendar, the doctor sets the price after seeing her, the deposit goes into an accounting sheet, the consent is a document in a Drive folder, and the follow-up happens 45 days after the procedure. None of it was wrong. It was just spread across four tools that never spoke to each other, so the answer to \"what does this patient owe, and what is missing before Thursday?\" took ten minutes of opening files.",
+        body: "Before writing anything I mapped what actually happens. A patient writes on WhatsApp; the secretary books the valuation in Google Calendar; the doctor sets the price after seeing her; the deposit goes into an accounting sheet; the consent is a document in a Drive folder; the follow-up happens 45 days after the procedure. None of it was wrong. It was spread across four tools that never spoke to each other, so the question that runs the clinic — what does this patient owe, and what is missing before Thursday? — took ten minutes of opening files.",
       },
       {
         phase: "02",
-        title: "Reading the sheets exactly as they are",
-        body: "The parsers had to survive the real thing: headers that move between months, files named two different ways depending on who created them, spreadsheets exported as .xlsx that the connector returns as unstructured text, and consent documents whose titles lie — a file carrying one patient's name and another patient's data. So the panel never classifies a charge by a file name; it opens the document and asks the person to confirm. The rule that came out of this is the one the whole product rests on: never invent data. If a file is missing or unreadable, the panel says so and says what to do about it, and every figure on screen carries where it came from.",
+        title: "A plan that had to survive an attack first",
+        body: "The first plan was not built; it was attacked. A review on three fronts — data, security and feasibility — found the traps the sheets hide: one row per payment, so adding up the pending column counts a debt again with every deposit; patient folders spelled two different ways; formulas already sitting in rows the panel must never overwrite. The third version is the one that reached code, with the business decisions written into it: one login per person, a minimum deposit of half the price, and an exception down to thirty per cent only with the doctor's authorization, logged where he can read it.",
       },
       {
         phase: "03",
-        title: "The case, and its locks",
-        body: "The five phases are a checklist with consequences. The deposit is at least half the price; it can drop to thirty per cent only with the doctor's authorization, which requires a note and lands in an activity log he can read. Full payment, receipt and signed consent are what turn on the green light that says the procedure can go ahead. The locks are not bureaucracy — they encode the two mistakes that actually cost the clinic money: starting a procedure that was never fully paid, and losing track of a balance between two cities.",
+        title: "Read first, write later",
+        body: "Version one could not write at all. It ran as a Claude artifact that read Drive and Calendar through connectors, which made it safe to put in front of the clinic on day one. Version two is the same file behind a Cloudflare Worker, with a login per person and a Google Apps Script holding the only credentials that touch the real sheets. Before it went live on September 21, the books from June to September were reconciled against the annual accounting file, and all three layers went through a security audit.",
       },
       {
         phase: "04",
-        title: "Two runtimes from one file",
-        body: "The first version runs as a Claude artifact: it reads Drive and Calendar through connectors and writes nothing, which made it safe to put in front of the clinic on day one. The web version is the same file served by a Cloudflare Worker with a login per person, a role that decides who can write, and a Google Apps Script holding the only credentials that touch the real sheets. One codebase, marked at publish time, so a fix lands in both.",
+        title: "The phone rewrote the interface",
+        body: "Then the panel met its real user. The secretary runs the clinic from an iPhone, often from the car, so the second week went to the phone: the panel installs as an app, tables become cards, the patient sheet slides up from the bottom, every tap target is at least 44 pixels and no field zooms the page. The voice note came out of the same week — she says what happened, the model fills in the new-patient form, and nothing is saved until she has checked it.",
       },
       {
         phase: "05",
-        title: "AI that reads, and a person who signs",
-        body: "Photographing a receipt and having the amount, the date and the supplier come back filled in removes the part of the work that is pure typing. Travel expenses for a trip are read in batches and grouped, so the cost of a jornada in Bogotá is split once across the patients seen on those dates instead of guessed. The monthly analysis, the one piece that talks to a model about the business, only ever receives totals — never a patient's name.",
+        title: "Real money brought its own rules",
+        body: "A week of real payments produced rules no plan had. A credit card lands at 95 per cent, because the clinic passes the card fee on to the patient. The valuation counts inside the price. A payment can be registered before its receipt exists, and stays flagged until the receipt is uploaded. A case whose procedure date has passed with money still owed stays open and says so. Each one came out of real payments and became a rule the panel enforces.",
+      },
+      {
+        phase: "06",
+        title: "The clinic started asking for things",
+        body: "By the second week the requests came from the clinic. The doctor's availability is now read from the document the secretary already writes, as a week of red and green slots she copies straight into WhatsApp. The agenda shows every day by city, because the doctor works in three. A control can move when the doctor brings it forward for a medical reason, with the reason in the log. Each person gets their own permissions, area by area. Most requests shipped within a day of being asked for; the agenda by city, the latest, went out on October 2.",
       },
     ],
     decisions: [
@@ -661,23 +670,39 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Nothing is written without a person confirming it",
-        body: "Every AI-read receipt, invoice and travel expense lands in a form the user checks and corrects before it is written. It costs a click. It is also why the feature is usable at all: a model that silently miscategorises an expense is worse than typing, because the error is now invisible.",
+        body: "A voice note, a photographed receipt, a supplier's invoice: the model reads all of them, and none of them is written until a person has checked the form it filled. It costs a click. It is also why the AI is usable at all: a model that silently miscategorises an expense is worse than typing, because the error is now invisible.",
       },
       {
-        title: "Two audiences, one screen, different rights",
-        body: "The secretary registers the whole operation; the doctor and I read it. Rather than build two products, the role lives in the panel's configuration and hides the write actions, so what everyone sees is the same board and the same numbers — which is the point when the argument is about money.",
+        title: "One accent, and only for what you can press",
+        body: "After a week of daily use the interface was redesigned: Inter throughout, a lighter canvas, white cards without borders, and a single indigo kept for what is actionable — the primary button, the active tab, the active filter. Status colours never stack on top of it, and no text drops below 4.5:1. On a screen where payments, alerts and cities all compete, the one colour that means press here has to mean only that.",
+      },
+      {
+        title: "A colour per city, never on its own",
+        body: "The doctor works in three cities, so the agenda gives each one a colour — orange for Barranquilla, blue for Bogotá, teal for Medellín — checked for colour blindness with every pair side by side. And the colour never carries the city alone: the name always sits beside its dot, and the filter chips double as the legend, so nobody has to tell teal from blue to know where the doctor is.",
       },
     ],
     featuresIntro:
-      "The panel is one board with the clinic's day on it. These are the pieces that carry the most weight day to day.",
+      "The panel is one board with the clinic's day on it — on a laptop at the front desk or on a phone in a car. These are the pieces that carry the most weight.",
     features: [
       {
-        title: "New patient, checked against the real calendar",
-        body: "One form takes the name, the country and international WhatsApp, the city and the procedure of interest — and offers only the hours the clinic's Google Calendar actually has free that day. Saving it creates the patient and opens her case on phase one.",
+        title: "A voice note that fills the form",
+        body: "Say who came in, from where, for what, what she paid and when the appointment is. The model fills the new-patient form, lists what it could not place, and leaves the payments as reminders on the case — nothing is saved until a person checks it.",
+        kind: "ai",
       },
       {
         title: "Phases with locks",
         body: "Each phase lists what is missing and links straight to the form that clears it. The footer always names the next step, so the panel answers \"what do I do now\" without anyone having to remember the protocol.",
+        kind: "product",
+      },
+      {
+        title: "The agenda, by city",
+        body: "List, day and month views of the clinic's Google Calendar, each appointment coloured by the city it happens in — written in the appointment, taken from the patient's record, or inferred from where the doctor is that day — and each one says which.",
+        kind: "product",
+      },
+      {
+        title: "The doctor's slots, ready to send",
+        body: "The availability the secretary keeps in a document becomes a week of red and green slots, with a warning for any day that lands in two cities at once, and copies into WhatsApp as the message she already sends.",
+        kind: "product",
       },
       {
         title: "Receipts and invoices read by AI",
@@ -685,54 +710,56 @@ export const caseStudies: CaseStudy[] = [
         kind: "ai",
       },
       {
-        title: "The doctor's protocol, aimed at the right patients",
-        body: "The Sculptra instructions for three days before, the day before and after the procedure live as cards, each one listing exactly the patients it is due for today with WhatsApp ready to send.",
-      },
-      {
-        title: "Travel costs per jornada",
-        body: "A trip to a city on given dates groups the patients seen there, and the cost of the trip is split once across them — so the profitability of travelling is a number instead of an intuition.",
-      },
-      {
-        title: "Alerts, and an activity log",
-        body: "One bell gathers valuations, procedures, follow-ups falling due, supplies to reorder and balances owed before a procedure. Everything written goes to an activity log with who did it, which is how an authorized exception stays visible to the doctor.",
+        title: "Who can do what",
+        body: "Users and permissions per area — agenda, patients, payments, accounting, inventory — deciding, area by area, what a person can see and what they can change. The secretary runs the day, the doctor reads it, and everything written lands in an activity log with who did it.",
+        kind: "product",
       },
     ],
     galleryKind: "browser",
+    // The walkthrough is the phone, the stills are the desk: the secretary
+    // runs the clinic from both, and the phone is where the voice note lives.
+    videoKind: "phone",
     video: {
-      webm: "/work/dc-medical/pacientes-nueva.webm",
-      mp4: "/work/dc-medical/pacientes-nueva.mp4",
-      poster: "/work/dc-medical/pacientes-nueva-poster.jpg",
-      label: "Creating a patient and opening her case",
+      webm: "/work/dc-medical/nota-de-voz.webm",
+      mp4: "/work/dc-medical/nota-de-voz.mp4",
+      poster: "/work/dc-medical/nota-de-voz-poster.jpg",
+      label:
+        "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one",
       caption:
-        "A new patient, end to end: name, WhatsApp and city, then a valuation date that offers only the hours the clinic's calendar has free. Saving opens her case on phase one — valuation paid, proof of payment, clinical history — with the next step waiting in the footer. Recorded against seeded demo data.",
-      width: 1440,
-      height: 900,
+        "From the secretary's phone: one note describes a new patient, and the form comes back filled — name, WhatsApp, city, procedure, and the valuation already paid. The hour comes from the clinic's calendar, and saving opens the case on phase one with the dictated payment waiting for its receipt. Recorded against the local demo, which stands in for the model with simple rules, on seeded data; the note is typed for the recording, where on her phone it is spoken.",
+      width: 786,
+      height: 1704,
     },
     gallery: [
       {
-        src: "/work/dc-medical/seguimiento-panel.webp",
-        alt: "The follow-up board: five counters reading 1 valuation, 3 to reschedule, 4 this week, 4 in the next 30 days and 5 with no follow-up date, above a table of follow-ups to handle, each row naming the patient, her procedure, the date it was done and whether an appointment exists.",
-        caption: "The day, counted: who is due, who has no appointment yet, and who slipped.",
-      },
-      {
-        src: "/work/dc-medical/pacientes-nueva.webp",
-        alt: "The new-patient form with name, country, international WhatsApp, city and valuation date, and a grid of time slots from 8:00 am to 5:00 pm where the hours already taken in Google Calendar are greyed out.",
-        caption: "The form only offers the hours the calendar has free — the agenda is the constraint, not a field.",
+        src: "/work/dc-medical/agenda-mes.webp",
+        alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines coloured by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a coloured band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
+        caption: "A month of appointments, coloured by the city each one happens in.",
       },
       {
         src: "/work/dc-medical/caso-fases.webp",
-        alt: "A patient's case sheet showing the three-step tracker — valuation, first payment, final payment and procedure — with phase one listing valuation paid, proof of payment and clinical history, the valuation price, payment method and date, and a footer naming the next step.",
-        caption: "The case: which phase she is in, what is missing from it, and the one action that comes next.",
+        alt: "A patient's case sheet open over the cases list: a three-step tracker with valuation and payment done and the procedure current, the procedure set at four vials for face and neck, the procedure date booked, a payment bar at 5.3 of 9.8 million pesos, the case's payments newest first, and a footer naming the next step — register the final payment.",
+        caption: "The case: what is paid, what is missing, and the one action that comes next.",
       },
       {
-        src: "/work/dc-medical/recomendaciones-sculptra.webp",
-        alt: "The recommendations view: the doctor's Sculptra instructions for before the procedure — food, compression garment, exercise, medication, alcohol, companion — each card listing the patients it is due for, with a send-to-patients button.",
-        caption: "The doctor's protocol on the left, the patients it is due for today on the right, WhatsApp ready.",
+        src: "/work/dc-medical/seguimiento-controles.webp",
+        alt: "The follow-up board: counters for valuations, procedures, controls to reschedule, this week, the next 30 days and controls with no date; tabs for valuations, procedures, controls, agenda, slots and balances owed; city filters; and a table of 45-day controls, each with the days left, its status and a WhatsApp button.",
+        caption: "The day, counted: who is due, who has no appointment yet, and who slipped.",
       },
       {
-        src: "/work/dc-medical/sedes-viajes.webp",
-        alt: "The locations view with three cards — Barranquilla as the main site, Bogotá and Medellín as rented rooms — each with its next visit and number of follow-ups due, above a table of trips listing dates, status and patients.",
-        caption: "Three cities, one doctor: the next visit to each, and the trips the travel costs hang from.",
+        src: "/work/dc-medical/agenda-dia.webp",
+        alt: "The agenda in day view for Thursday, 24 September: a banner saying the doctor is in Medellín according to the calendar, appointments as cards by the hour with their type and city, a red line marking the current time, and patient-record and calendar buttons on each card.",
+        caption: "One day by the hour — with a line for now, and where the doctor is.",
+      },
+      {
+        src: "/work/dc-medical/cupos-semana.webp",
+        alt: "The doctor's slots for the week of 5 to 11 October: seven columns, each headed by the city the doctor is in, with hours marked occupied in red or free in green, a count of free hours over the next two months, and a button to copy two months of slots for WhatsApp.",
+        caption: "The doctor's availability, read from the document the secretary already keeps.",
+      },
+      {
+        src: "/work/dc-medical/usuarios-permisos.webp",
+        alt: "Editing a user in Users and permissions: the doctor's account set to view only, with toggles to see, create and edit per area — and to delete, for patients and cases — across agenda and follow-up, patients and cases, and patient payments, under presets for running the day, viewing only, and nothing.",
+        caption: "Who sees what, area by area: the doctor reads, the secretary runs the day.",
       },
     ],
     // The live panel, which is a sign-in page by design: it is the clinic's
@@ -749,12 +776,13 @@ export const caseStudies: CaseStudy[] = [
       "Cloudflare Workers",
       "Google Apps Script",
       "Google Drive & Calendar",
-      "Claude (MCP)",
+      "Claude (API & MCP)",
+      "PWA",
       "Playwright",
       "node --test",
     ],
     credits:
-      "I co-own the clinic with the doctor and built this end to end — product decisions, interface and code, AI in the loop. The doctor owns the medical protocol the phases encode; the clinic's secretary is the daily user, and the flows are shaped by watching her use them. Screens and walkthrough are recorded against seeded demo data: no patient information appears anywhere in this case.",
+      "I co-own the clinic with the doctor and built this end to end — product decisions, interface and code, AI in the loop. The doctor owns the medical protocol the phases encode; the clinic's secretary is the daily user, and the flows are shaped by watching her use them, at the desk and on her phone. Screens and walkthrough are recorded against seeded demo data with invented names: no patient information, and no figure from the clinic's books, appears anywhere in this case.",
   },
   {
     slug: "royal-caribbean",
@@ -999,13 +1027,87 @@ export const caseStudies: CaseStudy[] = [
   },
 ];
 
-export function getCaseStudy(slug: string): CaseStudy | undefined {
-  return caseStudies.find((c) => c.slug === slug);
+/**
+ * What a case SAYS, as opposed to what it IS — the part that changes with the
+ * language. Lists that pair with media or figures (KPIs, process, features,
+ * gallery, links) are matched to the English list by position; `decisions` and
+ * `technologies` are free-standing and replace it whole.
+ */
+export interface CaseCopy {
+  project?: string;
+  category: string;
+  team: string;
+  tagline: string;
+  impact: string;
+  context: string;
+  contributions: string[];
+  roleOverride?: string;
+  clientOverride?: string;
+  duration?: string;
+  /** `value` only where the digits are written differently ("~1.200", "6 años"). */
+  kpis?: { value?: string; label: string; delta?: string }[];
+  process?: { title: string; body: string }[];
+  decisions?: { title: string; body: string }[];
+  featuresIntro?: string;
+  features?: { title: string; body: string }[];
+  video?: { label: string; caption?: string };
+  gallery?: { alt: string; caption?: string }[];
+  links?: { label: string }[];
+  externalLink?: { label: string };
+  credits?: string;
+  technologies?: string[];
 }
 
-export function getNextCaseStudy(slug: string): CaseStudy {
-  const idx = caseStudies.findIndex((c) => c.slug === slug);
-  return caseStudies[(idx + 1) % caseStudies.length];
+function localize(c: CaseStudy, t: CaseCopy | undefined): CaseStudy {
+  if (!t) return c;
+  return {
+    ...c,
+    project: t.project ?? c.project,
+    category: t.category,
+    team: t.team,
+    tagline: t.tagline,
+    impact: t.impact,
+    context: t.context,
+    contributions: t.contributions,
+    roleOverride: t.roleOverride ?? c.roleOverride,
+    clientOverride: t.clientOverride ?? c.clientOverride,
+    duration: t.duration ?? c.duration,
+    kpis: c.kpis?.map((k, i) => {
+      const tk = t.kpis?.[i];
+      return tk ? { value: tk.value ?? k.value, label: tk.label, delta: tk.delta } : k;
+    }),
+    process: c.process?.map((p, i) => ({ ...p, ...t.process?.[i] })),
+    decisions: t.decisions ?? c.decisions,
+    featuresIntro: t.featuresIntro ?? c.featuresIntro,
+    features: c.features?.map((f, i) => ({ ...f, ...t.features?.[i] })),
+    video: c.video && { ...c.video, ...t.video },
+    gallery: c.gallery?.map((g, i) => ({ ...g, ...t.gallery?.[i] })),
+    links: c.links?.map((l, i) => ({ ...l, ...t.links?.[i] })),
+    externalLink: c.externalLink && { ...c.externalLink, ...t.externalLink },
+    credits: t.credits ?? c.credits,
+    technologies: t.technologies ?? c.technologies,
+  };
+}
+
+/** Built once: the Spanish cases are the English ones with their words swapped. */
+const caseStudiesEs: CaseStudy[] = caseStudies.map((c) => localize(c, workEs[c.slug]));
+
+/**
+ * The cases in one language. English returns `caseStudies` itself — the live
+ * array, not a copy — so a test that edits it sees its edit.
+ */
+export function getCaseStudies(locale: Locale = "en"): CaseStudy[] {
+  return locale === "es" ? caseStudiesEs : caseStudies;
+}
+
+export function getCaseStudy(slug: string, locale: Locale = "en"): CaseStudy | undefined {
+  return getCaseStudies(locale).find((c) => c.slug === slug);
+}
+
+export function getNextCaseStudy(slug: string, locale: Locale = "en"): CaseStudy {
+  const list = getCaseStudies(locale);
+  const idx = list.findIndex((c) => c.slug === slug);
+  return list[(idx + 1) % list.length];
 }
 
 export interface CaseMeta {
@@ -1020,6 +1122,9 @@ export interface CaseMeta {
   location?: string;
 }
 
+/** What the meta strip calls the client of a product Doug made for himself. */
+const PERSONAL_PRODUCT: Record<Locale, string> = { en: "Personal product", es: "Producto propio" };
+
 /**
  * Client, role and period for a case, derived from the employer in `cv.ts`.
  * Lives here rather than in `career.ts` so the import direction stays
@@ -1028,8 +1133,8 @@ export interface CaseMeta {
  * Throws on an unknown slug, and on a personal case missing its overrides:
  * a typo must fail the build, not render blank.
  */
-export function getCaseMeta(slug: string): CaseMeta {
-  const c = getCaseStudy(slug);
+export function getCaseMeta(slug: string, locale: Locale = "en"): CaseMeta {
+  const c = getCaseStudy(slug, locale);
   if (!c) throw new Error(`Unknown case study slug: "${slug}".`);
 
   if (!c.experienceId) {
@@ -1039,7 +1144,7 @@ export function getCaseMeta(slug: string): CaseMeta {
       );
     }
     return {
-      client: c.clientOverride ?? "Personal product",
+      client: c.clientOverride ?? PERSONAL_PRODUCT[locale],
       role: c.roleOverride,
       year: c.yearOverride,
       period: c.yearOverride,
@@ -1048,8 +1153,9 @@ export function getCaseMeta(slug: string): CaseMeta {
     };
   }
 
-  const exp = getExperience(c.experienceId);
-  const period = c.yearOverride ?? formatPeriod(exp);
+  const exp = getCv(locale).experiences.find((e) => e.id === c.experienceId);
+  if (!exp) throw new Error(`Unknown experience id: "${c.experienceId}".`);
+  const period = c.yearOverride ?? formatPeriod(exp, locale);
 
   return {
     client: exp.client ?? exp.company.name,

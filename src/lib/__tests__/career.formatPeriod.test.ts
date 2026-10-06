@@ -33,6 +33,14 @@ describe("formatPeriod", () => {
     );
   });
 
+  it("speaks Spanish: abbreviated months and Hoy for the open end", () => {
+    expect(formatPeriod(getExperience("qrvey"), "es")).toBe("Oct 2016 — Ago 2017");
+    expect(formatPeriod(getExperience("naowee"), "es")).toBe("Ene 2026 — Hoy");
+    for (const e of experiences) {
+      expect(formatPeriod(e, "es")).not.toMatch(/Presente|Actualidad|-/);
+    }
+  });
+
   it("uses an em dash with single spaces, never a hyphen or 'Present'", () => {
     for (const e of experiences) {
       const period = formatPeriod(e);

@@ -2,6 +2,7 @@
 
 import { Band, FadeIn, SlashLabel } from "./primitives";
 import type { CaseMeta as CaseMetaType } from "@/data/work";
+import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * Role · Duration · Team · Year.
@@ -11,11 +12,12 @@ import type { CaseMeta as CaseMetaType } from "@/data/work";
  * so a role or a period can only ever be wrong in one place.
  */
 export default function CaseMeta({ meta }: { meta: CaseMetaType }) {
+  const t = useDict().case.meta;
   const cells = [
-    { label: "Role", value: meta.role },
-    { label: "Duration", value: meta.duration },
-    { label: "Team", value: meta.team },
-    { label: "Year", value: meta.year },
+    { label: t.role, value: meta.role },
+    { label: t.duration, value: meta.duration },
+    { label: t.team, value: meta.team },
+    { label: t.year, value: meta.year },
   ];
 
   return (

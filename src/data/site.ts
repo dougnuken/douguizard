@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+
 export interface SocialLink {
   label: string;
   href: string;
@@ -32,6 +34,7 @@ export interface Site {
     note?: string;
   };
   social: SocialLink[];
+  /** `pdf` is per language: each CV page hands out the sheet in its own language. */
   cv: { path: string; pdf?: string };
   seo: {
     /** Trimmed to survive Google's ~160-char cut. Not the same string as summary. */
@@ -107,3 +110,46 @@ export const site: Site = {
     ogImage: "/og.png",
   },
 };
+
+/**
+ * What changes when the site speaks Spanish. Everything else — the name, the
+ * address, the profiles, the headline — is the same fact in both languages.
+ *
+ * The headline stays in English on purpose: "Head of Product · Design
+ * Engineer" is the title on the contract, on LinkedIn and on the CV, and in
+ * Colombian tech it is written that way. Translating it would make the two
+ * versions of the site disagree about what Doug's job is called.
+ */
+const siteEs: Site = {
+  ...site,
+  summary:
+    "Soy un diseñador de producto que construye. Lidero producto en Naowee y hago los prototipos que lo definen: un solo sistema de diseño, código que funciona y la IA en el proceso. Antes mantuve Andes, el sistema de diseño detrás de Mercadolibre en 18 países.",
+  summaryLong:
+    "Soy un diseñador de producto que construye. Hoy soy Head of Product en Naowee, donde marco la dirección de los ocho módulos de negocio de la plataforma construida para el sistema deportivo de Colombia, y construyo los prototipos que los definen. Antes fui líder técnico de Andes, el sistema de diseño detrás de Mercadolibre en 18 países, usado por más de 400 diseñadores y más de 2.000 ingenieros. Antes de eso pasé seis años en Aval Digital Labs como guardián del sistema de diseño del Banco de Occidente, y diseñé su banca digital para escritorio, tableta y celular. Trabajo en código además de en Figma, con la IA en el proceso, y lo que entrego es un producto funcionando.",
+  availability: {
+    ...site.availability,
+    label: "Head of Product en Naowee",
+    badge: "Disponible",
+    note: "Consultoría puntual en sistemas de diseño y producto nativo de IA",
+  },
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv-es.pdf" },
+  seo: {
+    ...site.seo,
+    description:
+      "Doug Vargas lidera producto en Naowee y lo construye: sistemas de diseño, prototipos que funcionan en código y la IA en el proceso. Antes, Andes en Mercadolibre.",
+    keywords: [
+      ...site.seo.keywords,
+      "Diseñador de producto",
+      "Sistemas de diseño",
+      "Ingeniería de diseño",
+      "Producto nativo de IA",
+    ],
+  },
+};
+
+const siteEn: Site = { ...site, cv: { path: "/en/cv", pdf: site.cv.pdf } };
+
+/** The site's facts in one language. `site` itself is the English source. */
+export function getSite(locale: Locale): Site {
+  return locale === "es" ? siteEs : siteEn;
+}

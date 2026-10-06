@@ -2,6 +2,7 @@
 
 import RevealText from "@/components/text/RevealText";
 import { Band, Eyebrow, renderBold } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * Context, then what I did.
@@ -18,11 +19,12 @@ export default function CaseNarrative({
   context: string;
   contributions: string[];
 }) {
+  const t = useDict().case;
   return (
     <>
       <Band tone="raised" rule="y">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-          <Eyebrow sticky>Context</Eyebrow>
+          <Eyebrow sticky>{t.context}</Eyebrow>
           <RevealText
             as="p"
             variant="fade"
@@ -35,7 +37,7 @@ export default function CaseNarrative({
 
       <Band>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-          <Eyebrow sticky>What I did</Eyebrow>
+          <Eyebrow sticky>{t.whatIDid}</Eyebrow>
           <ol className="hairline-t hairline-b m-0 list-none p-0">
             {contributions.map((contribution, i) => (
               <li

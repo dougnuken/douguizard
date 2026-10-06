@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { sections } from "@/data/sections";
 import { stepSpring, type Spring } from "@/lib/spring";
 
 /* ── The standing label: one reel per letter ────────────────────────────────
@@ -29,7 +28,6 @@ import { stepSpring, type Spring } from "@/lib/spring";
    counter lands on a digit. */
 
 /** One reel per letter of the longest label. */
-const SLOTS = Math.max(...sections.map((s) => s.label.length));
 /** Face elements per reel. The fade never shows more than two; three cover rounding. */
 const FACES = 3;
 /** Degrees between faces, the reel's radius in px, and its lens. */
@@ -55,14 +53,26 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
 const wrap = (n: number) => ((n % FACES) + FACES) % FACES;
 const LETTER = /^[A-Z]$/;
 
-/** The letter `k` places along the alphabet from `c`, wrapping. Blank stays blank. */
+/**
+ * The letter `k` places along the alphabet from `c`, wrapping. Blank stays
+ * blank. A character outside A–Z — the Í of SOBRE MÍ, a space — has no
+ * neighbours to roll through, so its reel spins through blanks and lands on
+ * the character itself: `k === 0` is always `c`.
+ */
 const shift = (c: string, k: number) =>
-  LETTER.test(c) ? String.fromCharCode(65 + ((((c.charCodeAt(0) - 65 + k) % 26) + 26) % 26)) : "";
+  k === 0
+    ? c
+    : LETTER.test(c)
+      ? String.fromCharCode(65 + ((((c.charCodeAt(0) - 65 + k) % 26) + 26) % 26))
+      : "";
+
+/** The box is as tall as the longest label in this language, and never resizes. */
+const slotsOf = (labels: string[]) => Math.max(...labels.map((l) => l.length));
 
 /** A label as one character per reel, padded with blanks. */
-const charsOf = (index: number) => {
-  const word = sections[index].label.toUpperCase();
-  return Array.from({ length: SLOTS }, (_, i) => word[i] ?? "");
+const charsOf = (labels: string[], index: number) => {
+  const word = labels[index].toUpperCase();
+  return Array.from({ length: slotsOf(labels) }, (_, i) => word[i] ?? "");
 };
 
 interface Reel {
@@ -147,14 +157,15 @@ function paintReel(r: Reel, faces: (HTMLSpanElement | null)[]) {
   }
 }
 
-export default function RailLabel({ index }: { index: number }) {
+export default function RailLabel({ index, labels }: { index: number; labels: string[] }) {
+  const SLOTS = slotsOf(labels);
   // The first word is server-rendered as plain text; after that the reels
   // own the faces, and React never writes their text again.
   const [first] = useState(index);
   const boxRef = useRef<HTMLSpanElement>(null);
   const faces = useRef<(HTMLSpanElement | null)[]>([]);
   const reels = useRef<Reel[] | null>(null);
-  reels.current ??= charsOf(first).map(restingReel);
+  reels.current ??= charsOf(labels, first).map(restingReel);
   const prev = useRef(first);
   const raf = useRef(0);
   const reduce = useRef(false);
@@ -174,7 +185,7 @@ export default function RailLabel({ index }: { index: number }) {
     const dir: 1 | -1 = index > prev.current ? 1 : -1;
     prev.current = index;
     const all = reels.current!;
-    const chars = charsOf(index);
+    const chars = charsOf(labels, index);
     const facesOf = (s: number) => faces.current.slice(s * FACES, s * FACES + FACES);
 
     // Reduced motion gets the word, not the spin — and so does a rail that
@@ -214,9 +225,9 @@ export default function RailLabel({ index }: { index: number }) {
       raf.current = busy ? requestAnimationFrame(tick) : 0;
     };
     raf.current = requestAnimationFrame(tick);
-  }, [index]);
+  }, [index, labels]);
 
-  const len = sections[index].label.length;
+  const len = labels[index].length;
 
   return (
     <span
@@ -232,7 +243,7 @@ export default function RailLabel({ index }: { index: number }) {
         className="rail-vlabel-strip absolute inset-0"
         style={{ transform: `translateY(calc(${(SLOTS - len) / 2} * ${CELL}))` }}
       >
-        {charsOf(first).map((c, s) => (
+        {charsOf(labels, first).map((c, s) => (
           <span
             key={s}
             className="absolute left-0 w-4"
