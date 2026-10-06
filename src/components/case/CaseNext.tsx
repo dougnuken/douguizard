@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { getCaseMeta, type CaseStudy } from "@/data/work";
+import { localePath } from "@/i18n/config";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { Band, FadeIn, SlashLabel } from "./primitives";
 
 /**
@@ -12,19 +14,21 @@ import { Band, FadeIn, SlashLabel } from "./primitives";
  * weight reads from across the room.
  */
 export default function CaseNext({ next }: { next: CaseStudy }) {
+  const t = useDict().case;
+  const locale = useLocale();
   return (
     <Band tone="raised" rule="t">
       <FadeIn>
-        <SlashLabel className="mb-8 text-[11px] text-[var(--ink-muted)]">Next case study</SlashLabel>
+        <SlashLabel className="mb-8 text-[11px] text-[var(--ink-muted)]">{t.next}</SlashLabel>
       </FadeIn>
 
-      <Link href={`/work/${next.slug}`} className="group block text-inherit no-underline">
+      <Link href={localePath(locale, `/work/${next.slug}`)} className="group block text-inherit no-underline">
         <FadeIn>
           <div
             className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-transform duration-500 group-hover:translate-x-2"
             style={{ transitionTimingFunction: "var(--ease-out)" }}
           >
-            {getCaseMeta(next.slug).client}
+            {getCaseMeta(next.slug, locale).client}
           </div>
 
           <h2

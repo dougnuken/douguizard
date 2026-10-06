@@ -1,4 +1,5 @@
-import { site } from "@/data/site";
+import { getSite } from "@/data/site";
+import type { Locale } from "@/i18n/config";
 
 export interface CoverLetter {
   /** Mono eyebrow above the block. */
@@ -41,11 +42,36 @@ export const coverLetter: CoverLetter = {
 };
 
 /**
+ * The Spanish letter. Written in Spanish, not translated sentence by sentence:
+ * the argument is the same, the figures are the same, and every one of them is
+ * still one the case data carries.
+ */
+const coverLetterEs: CoverLetter = {
+  kicker: "Una carta",
+  updated: "octubre de 2026",
+  salutation: "Hola:",
+  paragraphs: [
+    "Soy un diseñador de producto que aprendió a construir, y eso cambió aquello de lo que puedo hacerme responsable. No entrego una especificación para quedarme esperando a ver qué vuelve: entrego algo que funciona, y después sigo respondiendo por ello.",
+    "En Naowee se ve así: en lugar de escribir un documento que describa cómo deberían funcionar la inspección, vigilancia y control de ~1.200 organizaciones deportivas y sus 30 trámites regulatorios, lo construyo y lo recorro historia por historia con los analistas que tienen que aprobarlo. Un prototipo que funciona resuelve las discusiones que una especificación solo logra aplazar.",
+    "El hábito viene de los sistemas de diseño. Cuando una sola decisión sobre un token llega a más de 400 diseñadores y más de 2.000 ingenieros, dejas de diseñar pantallas y empiezas a diseñar restricciones; y las restricciones que se sostienen son las que se pueden ejecutar, no las que solo se pueden describir.",
+    "Trabajo con la IA como trabajaría con cualquier persona rápida y nueva: le doy espacio y después verifico. En olbo la dejé escribir rápido y dejé que 634 pruebas decidieran qué sobrevivía. Aquí nada sale porque sonaba bien.",
+    "Si estás construyendo algo donde el diseño y la ingeniería no pueden darse el lujo de ser dos entregas separadas, me gustaría conversar.",
+  ],
+  signoff: "Gracias por leer,",
+  note: "Esta es la carta general. Cuéntame qué estás construyendo y te escribo una específica.",
+};
+
+export function getCoverLetter(locale: Locale): CoverLetter {
+  return locale === "es" ? coverLetterEs : coverLetter;
+}
+
+/**
  * The same letter as plain text, for the copy button — a recruiter's form or
  * an email body, not a screenshot of a web page.
  */
-export function coverLetterText(): string {
-  const { salutation, paragraphs, signoff } = coverLetter;
+export function coverLetterText(locale: Locale = "en"): string {
+  const { salutation, paragraphs, signoff } = getCoverLetter(locale);
+  const site = getSite(locale);
   return [
     salutation,
     "",

@@ -1,0 +1,107 @@
+import { notFound } from "next/navigation";
+import { getCaseMeta, getCaseStudy, getNextCaseStudy } from "@/data/work";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
+import { caseJsonLd } from "@/lib/caseJsonLd";
+
+import CaseHeader from "@/components/case/CaseHeader";
+import CaseMeta from "@/components/case/CaseMeta";
+import CaseLinks from "@/components/case/CaseLinks";
+import CaseImpact from "@/components/case/CaseImpact";
+import CaseNarrative from "@/components/case/CaseNarrative";
+import CaseProcess from "@/components/case/CaseProcess";
+import CaseDecisions from "@/components/case/CaseDecisions";
+import CaseTestimonial from "@/components/case/CaseTestimonial";
+import CaseFeatures from "@/components/case/CaseFeatures";
+import CaseProduct from "@/components/case/CaseProduct";
+import CaseNda from "@/components/case/CaseNda";
+import CaseColophon from "@/components/case/CaseColophon";
+import CaseNext from "@/components/case/CaseNext";
+
+/**
+ * One case study, composed, in one language.
+ *
+ * A server component: the study is resolved here, in the route's language, and
+ * each band receives its words as props. The bands themselves stay client
+ * components for their reveals; what they no longer do is look anything up.
+ *
+ * Every section is optional and guarded: a case with only a hero, a meta strip
+ * and a paragraph renders precisely those, and gains no empty headings. Role,
+ * year, client and duration come from `getCaseMeta` — derived from the career
+ * data — instead of being repeated on every case.
+ */
+export default function CasePage({ slug, locale }: { slug: string; locale: Locale }) {
+  const study = getCaseStudy(slug, locale);
+  if (!study) notFound();
+
+  const meta = getCaseMeta(study.slug, locale);
+  const next = getNextCaseStudy(study.slug, locale);
+
+  // `links` supersedes `externalLink`: when a case lists its destinations up
+  // top, repeating one of them in the colophon is noise.
+  const showExternalLink = Boolean(study.externalLink) && !study.links?.length;
+
+  // A video needs something to show before it plays. Falling back to the first
+  // gallery frame means a case can ship a clip without also authoring a poster.
+  const videoPoster = study.video?.poster ?? study.gallery?.[0]?.src;
+  const video = videoPoster && study.video ? study.video : undefined;
+  const hasGallery = Boolean(study.gallery && study.gallery.length > 0);
+
+  const galleryKind = study.galleryKind ?? "phone";
+  const videoKind = study.videoKind ?? (galleryKind === "plain" ? "browser" : galleryKind);
+
+  return (
+    <div className="min-h-svh">
+      <main id="main" tabIndex={-1}>
+        <CaseHeader study={study} meta={meta} />
+        <CaseMeta meta={meta} />
+
+        {study.links && study.links.length > 0 && <CaseLinks links={study.links} />}
+
+        <CaseImpact impact={study.impact} kpis={study.kpis} />
+        <CaseNarrative context={study.context} contributions={study.contributions} />
+
+        {study.process && study.process.length > 0 && <CaseProcess process={study.process} />}
+        {study.decisions && study.decisions.length > 0 && (
+          <CaseDecisions decisions={study.decisions} />
+        )}
+
+        {study.testimonialId && <CaseTestimonial id={study.testimonialId} />}
+
+        {study.features && study.features.length > 0 && (
+          <CaseFeatures intro={study.featuresIntro} features={study.features} />
+        )}
+
+        {(hasGallery || video) && (
+          <CaseProduct
+            project={study.project}
+            video={video}
+            videoPoster={videoPoster}
+            videoKind={videoKind}
+            gallery={study.gallery}
+            galleryKind={galleryKind}
+          />
+        )}
+
+        {/* Stands in for the gallery on a case whose screens belong to the
+            client. The words live with the rest of the interface's; `work.ts`
+            only sets the flag. */}
+        {study.nda && !hasGallery && <CaseNda body={getDict(locale).case.ndaBody} />}
+
+        {(study.technologies || showExternalLink || study.credits) && (
+          <CaseColophon
+            technologies={study.technologies}
+            externalLink={showExternalLink ? study.externalLink : undefined}
+            credits={study.credits}
+          />
+        )}
+
+        <CaseNext next={next} />
+      </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(caseJsonLd(study, locale)) }}
+      />
+    </div>
+  );
+}

@@ -5,21 +5,15 @@ import {
   type ExperienceId,
   type YearMonth,
 } from "@/data/cv";
+import type { Locale } from "@/i18n/config";
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-] as const;
+const MONTHS: Record<Locale, readonly string[]> = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  es: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+};
+
+/** The open end of a current role. "Hoy" is the Spanish CV's word for it. */
+const NOW: Record<Locale, string> = { en: "Now", es: "Hoy" };
 
 /** The one experience with no `end`. Throws if the data has zero or two. */
 export function currentExperience(): Experience {
@@ -39,18 +33,19 @@ export function getExperience(id: ExperienceId): Experience {
   return found;
 }
 
-/** "Oct 2016", "2024" (month omitted), "Now" (end undefined). */
-export function formatPoint(point: YearMonth | undefined): string {
-  if (!point) return "Now";
-  return point.month ? `${MONTHS[point.month - 1]} ${point.year}` : String(point.year);
+/** "Oct 2016", "2024" (month omitted), "Now" (end undefined). "Ago 2017" / "Hoy" in Spanish. */
+export function formatPoint(point: YearMonth | undefined, locale: Locale = "en"): string {
+  if (!point) return NOW[locale];
+  return point.month ? `${MONTHS[locale][point.month - 1]} ${point.year}` : String(point.year);
 }
 
 /**
  * "Oct 2016 — Aug 2017" · "Jan 2026 — Now" · "2024 — Jan 2026".
- * Em dash with single spaces on both sides. Never "Present", never "Ongoing".
+ * Em dash with single spaces on both sides. Never "Present", never "Ongoing" —
+ * and in Spanish never "Presente" or "Actualidad" either: "Ene 2026 — Hoy".
  */
-export function formatPeriod(e: Experience): string {
-  return `${formatPoint(e.start)} — ${formatPoint(e.end)}`;
+export function formatPeriod(e: Pick<Experience, "start" | "end">, locale: Locale = "en"): string {
+  return `${formatPoint(e.start, locale)} — ${formatPoint(e.end, locale)}`;
 }
 
 /**

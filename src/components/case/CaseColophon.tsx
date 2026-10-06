@@ -1,6 +1,7 @@
 "use client";
 
 import { Band, FadeIn, SlashLabel, renderBold } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 export interface CaseColophonProps {
   technologies?: string[];
@@ -21,12 +22,13 @@ export default function CaseColophon({
   externalLink,
   credits,
 }: CaseColophonProps) {
+  const t = useDict().case;
   return (
     <Band tone="paper" rule="t" className="py-20 md:py-24">
       <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
         {technologies && technologies.length > 0 && (
           <FadeIn>
-            <SlashLabel className="mb-4">Tools &amp; methods</SlashLabel>
+            <SlashLabel className="mb-4">{t.tools}</SlashLabel>
             <ul className="flex list-none flex-wrap gap-2">
               {technologies.map((t) => (
                 <li
@@ -42,7 +44,7 @@ export default function CaseColophon({
 
         {externalLink && (
           <FadeIn delay={0.1}>
-            <SlashLabel className="mb-4">Live link</SlashLabel>
+            <SlashLabel className="mb-4">{t.liveLink}</SlashLabel>
             <a
               href={externalLink.href}
               target="_blank"
@@ -58,7 +60,7 @@ export default function CaseColophon({
       {credits && (
         <div className="mt-14 border-t border-[var(--line)] pt-10">
           <FadeIn>
-            <SlashLabel className="mb-4">Authorship</SlashLabel>
+            <SlashLabel className="mb-4">{t.authorship}</SlashLabel>
             <p className="max-w-[760px] text-[15px] leading-[1.65] text-[var(--ink-muted)]">
               {renderBold(credits)}
             </p>

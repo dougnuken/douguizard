@@ -60,23 +60,28 @@ test("10.2 OG title/description match site headline/summary", async ({ page }) =
   expect(meta.ogImage, "10.2 og:image present").toBeTruthy();
 });
 
-test("10.5 'Case study available on request' appears on / and on the ML case", async ({ page }) => {
+for (const { home, ml: mlRoute, phrase } of [
+  { home: "/en", ml: "/en/work/mercadolibre-andes", phrase: "Case study available on request" },
+  { home: "/", ml: "/work/mercadolibre-andes", phrase: "Caso disponible bajo solicitud" },
+]) test(`10.5 '${phrase}' appears on ${home} and on the ML case`, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/", { waitUntil: "networkidle" });
+  await page.goto(home, { waitUntil: "networkidle" });
   await settle(page);
+  const re = new RegExp(phrase, "gi").source;
   const onHome = await page.evaluate(
-    () => (document.body.innerText.match(/Case study available on request/gi) || []).length,
+    (src) => (document.body.innerText.match(new RegExp(src, "gi")) || []).length,
+    re,
   );
-  await page.goto("/work/mercadolibre-andes", { waitUntil: "networkidle" });
+  await page.goto(mlRoute, { waitUntil: "networkidle" });
   await settle(page);
-  const ml = await page.evaluate(() => ({
-    count: (document.body.innerText.match(/Case study available on request/gi) || []).length,
+  const ml = await page.evaluate((src) => ({
+    count: (document.body.innerText.match(new RegExp(src, "gi")) || []).length,
     galleryImgs: document.querySelectorAll("main img").length,
     team: (document.body.innerText.match(/400\+\s*designers[^\n]{0,40}/i) || [""])[0],
     emptyGalleryHeading: /gallery/i.test(document.body.innerText),
-  }));
+  }), re);
   console.log("10.5 home", onHome, "ml", JSON.stringify(ml));
   expect(onHome, "10.5 exactly one on the home ML row").toBe(1);
   expect(ml.count, "10.5 exactly one on the ML case page").toBe(1);
@@ -84,13 +89,19 @@ test("10.5 'Case study available on request' appears on / and on the ML case", a
 
 test("10.4 mercadolibre team string", async ({ page }) => {
   await page.addInitScript(setTheme("dark"));
-  await page.goto("/work/mercadolibre-andes", { waitUntil: "networkidle" });
+  await page.goto("/en/work/mercadolibre-andes", { waitUntil: "networkidle" });
   const txt = await page.evaluate(() => document.body.innerText.replace(/\s+/g, " "));
   // The figures, not their abbreviation: "2K+" was a copy-deck spelling that
   // never shipped. What must hold is that this page carries the same two
   // numbers as the hero and the CV, all three read from `work.ts`.
   expect(txt, "10.4 team carries 400+ designers").toMatch(/400\+\s*designers/i);
   expect(txt, "10.4 team carries 2,000+ engineers").toMatch(/2,000\+\s*engineers/i);
+
+  // The same two figures in Spanish, with the Spanish thousands separator.
+  await page.goto("/work/mercadolibre-andes", { waitUntil: "networkidle" });
+  const es = await page.evaluate(() => document.body.innerText.replace(/\s+/g, " "));
+  expect(es, "10.4 es team carries 400+ diseñadores").toMatch(/400\+\s*diseñadores/i);
+  expect(es, "10.4 es team carries 2.000+ ingenieros").toMatch(/2\.000\+\s*ingenieros/i);
 });
 
 test("10.6 no draft KPI values remain", async ({ page }) => {

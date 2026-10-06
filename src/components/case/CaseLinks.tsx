@@ -1,6 +1,7 @@
 "use client";
 
 import { Band, FadeIn, SlashLabel } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * "Open it" — the case's public destinations, directly under the meta strip so
@@ -13,11 +14,12 @@ import { Band, FadeIn, SlashLabel } from "./primitives";
  * layout by the pixel it grows.
  */
 export default function CaseLinks({ links }: { links: { label: string; href: string }[] }) {
+  const t = useDict().case;
   return (
     <Band rule="b" wide className="py-10 md:py-10">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:items-baseline md:gap-8">
         <FadeIn>
-          <SlashLabel>Open it</SlashLabel>
+          <SlashLabel>{t.openIt}</SlashLabel>
         </FadeIn>
         <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4 md:col-span-3">
           {links.map((link, i) => (

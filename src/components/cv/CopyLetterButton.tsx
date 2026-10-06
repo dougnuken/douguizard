@@ -2,14 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { coverLetterText } from "@/data/coverLetter";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 
 type State = "idle" | "copied" | "failed";
-
-const LABEL: Record<State, string> = {
-  idle: "Copy letter",
-  copied: "Copied",
-  failed: "Couldn't copy",
-};
 
 /**
  * Puts the letter on the clipboard as plain text.
@@ -19,6 +14,8 @@ const LABEL: Record<State, string> = {
  * why `coverLetterText()` renders it without a single tag.
  */
 export default function CopyLetterButton() {
+  const locale = useLocale();
+  const LABEL: Record<State, string> = useDict().cv.copy;
   const [state, setState] = useState<State>("idle");
   const timer = useRef<number | undefined>(undefined);
 
@@ -27,7 +24,7 @@ export default function CopyLetterButton() {
   const copy = async () => {
     window.clearTimeout(timer.current);
     try {
-      await navigator.clipboard.writeText(coverLetterText());
+      await navigator.clipboard.writeText(coverLetterText(locale));
       setState("copied");
     } catch {
       // No clipboard permission, or an insecure origin. Say so rather than

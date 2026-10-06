@@ -2,6 +2,7 @@
 
 import RevealText from "@/components/text/RevealText";
 import { getTestimonial } from "@/data/testimonials";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { Band, EyebrowHeading } from "./primitives";
 
 /**
@@ -17,17 +18,23 @@ import { Band, EyebrowHeading } from "./primitives";
  * theme flips.
  */
 export default function CaseTestimonial({ id }: { id: string }) {
-  const testimonial = getTestimonial(id);
+  const locale = useLocale();
+  const t = useDict().case;
+  const testimonial = getTestimonial(id, locale);
   if (!testimonial) return null;
 
-  const { quote, author, context } = testimonial;
+  const { quote, quoteLang, author, context } = testimonial;
+  // The quote is printed as it was given, never translated: on a page in
+  // another language it carries its own `lang` and a line saying so.
+  const foreign = quoteLang !== locale;
 
   return (
     <Band tone="raised" rule="y">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>In their words</EyebrowHeading>
+        <EyebrowHeading sticky>{t.inTheirWords}</EyebrowHeading>
         <figure className="m-0">
           <blockquote
+            lang={foreign ? quoteLang : undefined}
             className="m-0 max-w-[56ch] border-0 border-l pl-6 font-display leading-[1.45] text-[var(--ink)] text-[length:var(--step-lead)]"
             style={{ borderInlineStartWidth: "1px", borderColor: "var(--line-strong)" }}
           >
@@ -44,6 +51,9 @@ export default function CaseTestimonial({ id }: { id: string }) {
               <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
                 {context}
               </span>
+            )}
+            {foreign && t.quoteOriginal && (
+              <span className="mt-3 block text-[13px] italic text-[var(--ink-dim)]">{t.quoteOriginal}</span>
             )}
           </figcaption>
         </figure>

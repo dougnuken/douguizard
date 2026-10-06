@@ -1,13 +1,11 @@
 import VignetteFrame, { type VignetteProps } from "./VignetteFrame";
+import { getDict } from "@/i18n/dictionaries";
 
 const BARS = [0.35, 0.6, 0.95, 0.5, 0.8, 1, 0.45, 0.7, 0.9, 0.4, 0.65, 0.85, 0.5, 0.3];
 
-export default function VignetteOlbo({ className }: VignetteProps) {
+export default function VignetteOlbo({ className, locale }: VignetteProps) {
   return (
-    <VignetteFrame
-      className={className}
-      label="A captured expense: spoken text becomes an amount, a merchant and a category."
-    >
+    <VignetteFrame className={className} label={getDict(locale).work.vignettes.olbo.label}>
       <div className="flex items-end gap-[3px] h-10">
         {BARS.map((h, i) => (
           <span

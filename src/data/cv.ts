@@ -1,3 +1,6 @@
+import type { Locale } from "@/i18n/config";
+import { educationEs, experiencesEs, languagesEs, skillsEs, toolLabelsEs } from "@/data/es/cv";
+
 export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type YearMonth = { year: number; month?: Month };
 
@@ -345,3 +348,36 @@ export const languages: Language[] = [
   { name: "Spanish", cefr: "Native", level: "Native" },
   { name: "English", cefr: "B1", level: "B1 · Working proficiency" },
 ];
+
+export interface CvData {
+  experiences: Experience[];
+  education: Education[];
+  certifications: Certification[];
+  skills: SkillGroup[];
+  tools: ToolGroup[];
+  languages: Language[];
+}
+
+const cvEn: CvData = { experiences, education, certifications, skills, tools, languages };
+
+/**
+ * The Spanish CV is the English one with its words swapped, field by field and
+ * index by index. Built once at import, so every page of a language reads the
+ * same objects — and a test checks that no list lost or gained an item.
+ */
+const cvEs: CvData = {
+  experiences: experiences.map((e) => ({ ...e, ...experiencesEs[e.id] })),
+  education: education.map((e) => ({ ...e, ...educationEs[e.id] })),
+  certifications,
+  skills: skills.map((g) => ({
+    ...g,
+    label: skillsEs[g.id].label,
+    items: g.items.map((item, i) => ({ ...item, label: skillsEs[g.id].items[i] ?? item.label })),
+  })),
+  tools: tools.map((g) => ({ ...g, label: toolLabelsEs[g.id] })),
+  languages: languagesEs,
+};
+
+export function getCv(locale: Locale): CvData {
+  return locale === "es" ? cvEs : cvEn;
+}

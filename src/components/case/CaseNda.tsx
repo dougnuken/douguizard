@@ -1,9 +1,8 @@
 "use client";
 
-import { site } from "@/data/site";
+import { getSite } from "@/data/site";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { Band, EyebrowHeading, FadeIn } from "./primitives";
-
-const primarySocial = () => site.social.find((s) => s.primary) ?? site.social[0];
 
 /**
  * What stands in for the gallery when the screens belong to the client.
@@ -13,11 +12,13 @@ const primarySocial = () => site.social.find((s) => s.primary) ?? site.social[0]
  * demonstrating something, not confessing to a gap.
  */
 export default function CaseNda({ body }: { body: string }) {
-  const linkedin = primarySocial();
+  const t = useDict().case;
+  const site = getSite(useLocale());
+  const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
 
   return (
     <Band tone="raised" rule="y">
-      <EyebrowHeading>Case study available on request</EyebrowHeading>
+      <EyebrowHeading>{t.nda}</EyebrowHeading>
 
       <FadeIn>
         <p className="mt-10 max-w-[56ch] text-[19px] leading-[1.55] text-[var(--ink)] md:text-[22px]">
@@ -31,10 +32,10 @@ export default function CaseNda({ body }: { body: string }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Ask on {linkedin.label}
+            {t.askOn(linkedin.label)}
           </a>
           <a className="btn-pill" href={`mailto:${site.email}`}>
-            Email
+            {t.email}
           </a>
         </div>
       </FadeIn>

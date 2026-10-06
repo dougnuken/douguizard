@@ -1,5 +1,6 @@
-import { certifications, education, experiences, languages, skills, tools } from "@/data/cv";
-import { site } from "@/data/site";
+import { getCv } from "@/data/cv";
+import { getSite } from "@/data/site";
+import type { Locale } from "@/i18n/config";
 
 /**
  * A stable digest of everything the CV actually prints.
@@ -15,7 +16,9 @@ import { site } from "@/data/site";
  * test compares the two, and any change to a date, a role, a bullet or a
  * profile fails the build until the PDF is regenerated.
  */
-function payload() {
+function payload(locale: Locale) {
+  const site = getSite(locale);
+  const { certifications, education, experiences, languages, skills, tools } = getCv(locale);
   return {
     name: site.name,
     headline: site.headline,
@@ -49,8 +52,8 @@ function payload() {
  * content changes, and it has to produce the same answer in Node and in the
  * browser without importing anything.
  */
-export function cvFingerprint(): string {
-  const text = JSON.stringify(payload());
+export function cvFingerprint(locale: Locale = "en"): string {
+  const text = JSON.stringify(payload(locale));
   let hash = 0xcbf29ce484222325n;
   const prime = 0x100000001b3n;
   const mask = 0xffffffffffffffffn;

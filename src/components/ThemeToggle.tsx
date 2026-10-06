@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * Appearance switch. It holds **no** React state: which glyph shows is decided
@@ -11,6 +12,7 @@ import { useRef } from "react";
 export default function ThemeToggle() {
   const statusRef = useRef<HTMLSpanElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const t = useDict().theme;
 
   const toggle = () => {
     const root = document.documentElement;
@@ -25,10 +27,10 @@ export default function ThemeToggle() {
     }
     buttonRef.current?.setAttribute(
       "aria-label",
-      next === "light" ? "Switch to dark theme" : "Switch to light theme",
+      next === "light" ? t.toDark : t.toLight,
     );
     if (statusRef.current) {
-      statusRef.current.textContent = next === "light" ? "Light theme" : "Dark theme";
+      statusRef.current.textContent = next === "light" ? t.nowLight : t.nowDark;
     }
   };
 
@@ -39,7 +41,7 @@ export default function ThemeToggle() {
         type="button"
         onClick={toggle}
         className="theme-toggle"
-        aria-label="Switch theme"
+        aria-label={t.toggle}
       >
         <svg
           data-glyph="moon"

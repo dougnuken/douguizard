@@ -1,5 +1,6 @@
 import { site } from "@/data/site";
 import { getCaseMeta, type CaseStudy } from "@/data/work";
+import { localePath, type Locale } from "@/i18n/config";
 
 const SITE_URL = `https://${site.domain}`;
 
@@ -15,8 +16,9 @@ const SITE_URL = `https://${site.domain}`;
  * client-owned or NDA-shaped, and asserting authorship of them in machine
  * -readable form is a decision for Doug rather than a default.
  */
-export function caseJsonLd(study: CaseStudy) {
-  const meta = getCaseMeta(study.slug);
+export function caseJsonLd(study: CaseStudy, locale: Locale = "en") {
+  const meta = getCaseMeta(study.slug, locale);
+  const home = localePath(locale, "/");
   const name =
     study.project === meta.client ? study.project : `${study.project} — ${meta.client}`;
 
@@ -28,13 +30,13 @@ export function caseJsonLd(study: CaseStudy) {
         "@type": "ListItem",
         position: 1,
         name: site.name,
-        item: SITE_URL,
+        item: home === "/" ? SITE_URL : `${SITE_URL}${home}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name,
-        item: `${SITE_URL}/work/${study.slug}`,
+        item: `${SITE_URL}${localePath(locale, `/work/${study.slug}`)}`,
       },
     ],
   };

@@ -1,20 +1,20 @@
-import { sections } from "@/data/sections";
-import { site } from "@/data/site";
+import { getSections } from "@/data/sections";
+import { getSite } from "@/data/site";
 import { currentExperience } from "@/lib/career";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
 import LinkedInMark from "@/components/icons/LinkedInMark";
 
-const panel = sections[4];
-const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
-const elsewhere = site.social.filter((s) => !s.primary);
-
-const current = currentExperience();
-
-const LEAD = "The fastest way to reach me is LinkedIn. Email works too.";
-
-const SIGNAL = `I lead product at ${current.company.name} and take on selected consulting alongside it. Most interested in design systems at scale and AI-native product work.`;
-
-export default function Contact() {
+export default function Contact({ locale }: { locale: Locale }) {
+  const t = getDict(locale).contact;
+  const panel = getSections(locale)[4];
+  const site = getSite(locale);
+  const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+  const elsewhere = site.social.filter((s) => !s.primary);
+  const LEAD = t.lead;
+  const SIGNAL = t.signal(currentExperience().company.name);
+  const home = getSections(locale)[0];
   return (
     <section
       id={panel.id}
@@ -77,13 +77,13 @@ export default function Contact() {
 
       <div className="grid gap-8 md:grid-cols-3">
         <div className="flex flex-col gap-2">
-          <p className="kicker text-[var(--ink-dim)]">/ The signal</p>
+          <p className="kicker text-[var(--ink-dim)]">{t.signalLabel}</p>
           <p className="max-w-[38ch] text-[var(--step-small)] leading-[1.6] text-[var(--ink-muted)]">
             {SIGNAL}
           </p>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="kicker text-[var(--ink-dim)]">/ Direct</p>
+          <p className="kicker text-[var(--ink-dim)]">{t.direct}</p>
           <a
             href={`mailto:${site.email}`}
             className="inline-flex min-h-11 w-fit items-center text-[var(--step-small)] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
@@ -98,7 +98,7 @@ export default function Contact() {
           </a>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="kicker text-[var(--ink-dim)]">/ Elsewhere</p>
+          <p className="kicker text-[var(--ink-dim)]">{t.elsewhere}</p>
           <ul className="flex flex-col gap-1">
             {site.social.map((s) => (
               <li key={s.label}>
@@ -125,10 +125,10 @@ export default function Contact() {
             {site.location.city} · {site.location.timezone}
           </p>
           <a
-            href={`#${sections[0].id}`}
+            href={`#${home.id}`}
             className="inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-muted)] no-underline hover:text-[var(--ink)] hover:underline hover:underline-offset-4"
           >
-            Back to top ↑
+            {t.backToTop} ↑
           </a>
         </div>
       </footer>

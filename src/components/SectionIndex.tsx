@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { sections } from "@/data/sections";
+import { sections as baseSections, getSections } from "@/data/sections";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { setActiveSection } from "@/lib/activeSection";
 import { stepSpring, type Spring } from "@/lib/spring";
 import RailLabel from "./RailLabel";
@@ -27,13 +28,15 @@ import RailLabel from "./RailLabel";
 const STEP = 10;
 const RADIUS = 235;
 const HIT_H = 32;
-const LAST = sections.length - 1;
+// Ids, numbers and the count are the same in every language; only the labels
+// differ, and those are read inside the component.
+const LAST = baseSections.length - 1;
 
 const rad = (d: number) => (d * Math.PI) / 180;
 /** Pixels per detent at the centre of the wheel. The scale drag and wheel use. */
 const PITCH = RADIUS * Math.sin(rad(STEP));
 /** The widest a row ever sits from the centre: the wheel parked at one end. */
-const MAX_OFF = (sections.length - 1) * STEP;
+const MAX_OFF = (baseSections.length - 1) * STEP;
 /* How much of its opacity the outermost row gives up. It stops at 0.62 and
    the numerals are set in full `--ink` rather than `--ink-dim`, because that
    is the floor where a 13px numeral still clears 4.5:1 in BOTH themes once
@@ -43,6 +46,10 @@ const DIM = 0.38;
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 export default function SectionIndex() {
+  const locale = useLocale();
+  const t = useDict();
+  const sections = getSections(locale);
+  const labels = sections.map((s) => s.label);
   const [active, setActive] = useState(0);
   /** Which row the pointer is over, so the standing label can preview it. */
   const [peek, setPeek] = useState<number | null>(null);
@@ -116,7 +123,7 @@ export default function SectionIndex() {
     reduce.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     paint(0);
 
-    const els = sections
+    const els = baseSections
       .map((s) => document.getElementById(s.id))
       .filter((el): el is HTMLElement => el !== null);
     if (!els.length) return;
@@ -147,7 +154,7 @@ export default function SectionIndex() {
       current = bestIndex;
       activeRef.current = bestIndex;
       setActive(bestIndex);
-      setActiveSection(sections[bestIndex].id);
+      setActiveSection(baseSections[bestIndex].id);
       spinTo(bestIndex);
     };
 
@@ -172,7 +179,7 @@ export default function SectionIndex() {
 
   /** Scrolls to a panel and leaves focus inside it — the rail's whole contract. */
   const jump = useCallback((index: number) => {
-    const el = document.getElementById(sections[index].id);
+    const el = document.getElementById(baseSections[index].id);
     if (!el) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     el.scrollIntoView({
@@ -224,7 +231,7 @@ export default function SectionIndex() {
       const index = clamp(Math.round(spring.current.pos), 0, LAST);
       activeRef.current = index;
       setActive(index);
-      setActiveSection(sections[index].id);
+      setActiveSection(baseSections[index].id);
       spinTo(index);
       jump(index);
     };
@@ -249,7 +256,7 @@ export default function SectionIndex() {
       }, 320);
       activeRef.current = next;
       setActive(next);
-      setActiveSection(sections[next].id);
+      setActiveSection(baseSections[next].id);
       spinTo(next);
       jump(next);
     };
@@ -270,7 +277,8 @@ export default function SectionIndex() {
 
   return (
     <nav
-      aria-label="Section index"
+      aria-label={t.index.label}
+      data-section-index
       /* No plate, no capsule. The old rail was a glass pill whose labels hung
          off its left edge, ~90px into the panel's text column — which is
          precisely where they crossed the Contact rows in the light theme. The
@@ -278,7 +286,7 @@ export default function SectionIndex() {
          reaches past the content's right margin. */
       className="fixed right-3 top-1/2 z-[45] hidden -translate-y-1/2 items-center gap-3 lg:flex"
     >
-      <RailLabel index={peek ?? active} />
+      <RailLabel index={peek ?? active} labels={labels} />
 
       <div
         ref={drumRef}
@@ -304,7 +312,7 @@ export default function SectionIndex() {
               }}
               onPointerEnter={() => setPeek(i)}
               aria-current={isActive ? "true" : undefined}
-              aria-label={`${s.label} — section ${s.num}`}
+              aria-label={t.index.row(s.label, s.num)}
               style={{ height: HIT_H, marginTop: -HIT_H / 2 }}
               className="group absolute inset-x-0 top-1/2 flex items-center justify-end gap-2 outline-none"
             >

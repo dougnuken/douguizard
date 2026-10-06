@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { experiences, type Experience } from "@/data/cv";
+import { getCv, type Experience } from "@/data/cv";
 import { formatLocation, formatPeriod } from "@/lib/career";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 
 /**
  * `**bold**` → `<strong>`. A server-side twin of the case template's helper:
@@ -20,16 +22,16 @@ function renderBold(text: string): ReactNode {
   );
 }
 
-const MODE_LABEL = { remote: "Remote", hybrid: "Hybrid", onsite: "On-site" } as const;
-
-function metaLine(e: Experience): string {
-  return [formatLocation(e), MODE_LABEL[e.location.mode]].filter(Boolean).join(" · ");
+function metaLine(e: Experience, locale: Locale): string {
+  const mode = getDict(locale).cv.mode;
+  return [formatLocation(e), mode[e.location.mode]].filter(Boolean).join(" · ");
 }
 
 /** Entries older than Globant lose their summary first when print runs long. */
 const OLD_ERA_IDS = new Set(["qrvey", "ideaware"]);
 
-function Entry({ e }: { e: Experience }) {
+function Entry({ e, locale }: { e: Experience; locale: Locale }) {
+  const t = getDict(locale).cv;
   const title = e.client ? `${e.company.name} · ${e.client}` : e.company.name;
 
   return (
@@ -39,7 +41,7 @@ function Entry({ e }: { e: Experience }) {
       }`}
     >
       <p className="cv-meta font-mono text-[11px] leading-[1.6] tracking-[0.04em] text-[var(--ink-muted)] tabular-nums md:whitespace-nowrap">
-        {formatPeriod(e)}
+        {formatPeriod(e, locale)}
       </p>
 
       <div className="flex min-w-0 flex-col gap-2">
@@ -52,7 +54,7 @@ function Entry({ e }: { e: Experience }) {
             {e.role}
           </span>
           <span className="cv-meta font-mono text-[11px] tracking-[0.04em] text-[var(--ink-dim)]">
-            {metaLine(e)}
+            {metaLine(e, locale)}
           </span>
         </p>
 
@@ -76,11 +78,11 @@ function Entry({ e }: { e: Experience }) {
 
         {e.caseSlug && (
           <Link
-            href={`/work/${e.caseSlug}`}
-            aria-label={`See the ${e.company.name} case study`}
+            href={localePath(locale, `/work/${e.caseSlug}`)}
+            aria-label={t.seeCaseLabel(e.company.name)}
             className="cv-case mt-1 w-fit font-mono text-[11px] tracking-[0.12em] uppercase text-[var(--ink)] no-underline underline-offset-4 hover:underline"
           >
-            See case →
+            {t.seeCase} →
           </Link>
         )}
       </div>
@@ -89,11 +91,11 @@ function Entry({ e }: { e: Experience }) {
 }
 
 /** The compact `Earlier` row: period, company, role, one sentence, no bullets. */
-function EarlierEntry({ e }: { e: Experience }) {
+function EarlierEntry({ e, locale }: { e: Experience; locale: Locale }) {
   return (
     <li className="cv-entry hairline-b grid gap-x-8 gap-y-1 py-5 md:grid-cols-[180px_minmax(0,1fr)]">
       <p className="cv-meta font-mono text-[11px] leading-[1.6] tracking-[0.04em] text-[var(--ink-muted)] tabular-nums md:whitespace-nowrap">
-        {formatPeriod(e)}
+        {formatPeriod(e, locale)}
       </p>
       <div className="flex min-w-0 flex-col gap-1">
         <p className="flex flex-wrap items-baseline gap-x-3">
@@ -110,27 +112,29 @@ function EarlierEntry({ e }: { e: Experience }) {
   );
 }
 
-export default function CvExperience() {
+export default function CvExperience({ locale }: { locale: Locale }) {
+  const t = getDict(locale).cv;
+  const { experiences } = getCv(locale);
   const core = experiences.filter((e) => e.era !== "earlier");
   const earlier = experiences.filter((e) => e.era === "earlier");
 
   return (
     <section aria-labelledby="cv-experience">
       <h2 id="cv-experience" className="cv-h2">
-        Experience
+        {t.experience}
       </h2>
       <ol className="flex list-none flex-col">
         {core.map((e) => (
-          <Entry key={e.id} e={e} />
+          <Entry key={e.id} e={e} locale={locale} />
         ))}
       </ol>
 
       <h2 id="cv-earlier" className="cv-h2 mt-12">
-        Earlier
+        {t.earlier}
       </h2>
       <ol className="flex list-none flex-col">
         {earlier.map((e) => (
-          <EarlierEntry key={e.id} e={e} />
+          <EarlierEntry key={e.id} e={e} locale={locale} />
         ))}
       </ol>
     </section>

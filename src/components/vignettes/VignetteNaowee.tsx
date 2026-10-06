@@ -1,10 +1,11 @@
 import VignetteFrame, { type VignetteProps } from "./VignetteFrame";
+import { getDict } from "@/i18n/dictionaries";
 
 /**
  * A digit that rolls from `from` to `to`. Both digits live inside a clipped
  * 1lh column with tabular figures, so the roll can never shift layout.
  */
-function RollingDigit({ from, to }: { from: string; to: string }) {
+export function RollingDigit({ from, to }: { from: string; to: string }) {
   return (
     <span className="inline-block h-[1lh] overflow-hidden align-bottom">
       <span className="vignette-roll block tabular-nums">
@@ -28,15 +29,13 @@ function Counter({ label, from, to }: { label: string; from: string; to: string 
   );
 }
 
-export default function VignetteNaowee({ className }: VignetteProps) {
+export default function VignetteNaowee({ className, locale }: VignetteProps) {
+  const t = getDict(locale).work.vignettes.naowee;
   return (
-    <VignetteFrame
-      className={className}
-      label="A work queue recounting: six pending becomes five, three assigned becomes four."
-    >
+    <VignetteFrame className={className} label={t.label}>
       <div className="flex items-start gap-8">
-        <Counter label="Pending" from="6" to="5" />
-        <Counter label="Assigned" from="3" to="4" />
+        <Counter label={t.pending} from="6" to="5" />
+        <Counter label={t.assigned} from="3" to="4" />
       </div>
 
       <ul className="mt-auto flex flex-col gap-[6px]">
@@ -52,7 +51,7 @@ export default function VignetteNaowee({ className }: VignetteProps) {
             />
             <span className="block h-px flex-1 bg-[var(--line)]" />
             <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
-              {i === 1 ? "Assigned" : "Pending"}
+              {i === 1 ? t.assigned : t.pending}
             </span>
           </li>
         ))}

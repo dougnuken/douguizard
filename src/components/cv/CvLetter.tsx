@@ -1,8 +1,8 @@
 import CopyLetterButton from "@/components/cv/CopyLetterButton";
-import { coverLetter } from "@/data/coverLetter";
-import { site } from "@/data/site";
-
-const [lede, ...rest] = coverLetter.paragraphs;
+import { getCoverLetter } from "@/data/coverLetter";
+import { getSite } from "@/data/site";
+import type { Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 
 /**
  * The cover letter, on the page and off the sheet.
@@ -17,7 +17,10 @@ const [lede, ...rest] = coverLetter.paragraphs;
  * It reuses the same two-column grid as the experience section below, so the
  * letter's right-hand rail lines up with Education rather than floating.
  */
-export default function CvLetter() {
+export default function CvLetter({ locale }: { locale: Locale }) {
+  const coverLetter = getCoverLetter(locale);
+  const site = getSite(locale);
+  const [lede, ...rest] = coverLetter.paragraphs;
   return (
     <section
       aria-labelledby="cv-letter"
@@ -61,7 +64,7 @@ export default function CvLetter() {
 
       <div className="flex flex-col items-start gap-5 lg:pt-[3.4rem]">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
-          Updated {coverLetter.updated}
+          {getDict(locale).cv.letterUpdated(coverLetter.updated)}
         </p>
         <CopyLetterButton />
         <p className="max-w-[34ch] text-[length:var(--step-small)] leading-[1.6] text-[var(--ink-muted)]">

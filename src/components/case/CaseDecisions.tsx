@@ -2,6 +2,7 @@
 
 import RevealText from "@/components/text/RevealText";
 import { Band, EyebrowHeading, renderBold } from "./primitives";
+import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Decision {
   title: string;
@@ -16,10 +17,11 @@ export interface Decision {
  * page's one loud dot repeated in three unrelated meanings.
  */
 export default function CaseDecisions({ decisions }: { decisions: Decision[] }) {
+  const t = useDict().case;
   return (
     <Band>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>Decisions I&apos;d defend</EyebrowHeading>
+        <EyebrowHeading sticky>{t.decisions}</EyebrowHeading>
         <ul className="hairline-t m-0 list-none p-0">
           {decisions.map((decision, i) => (
             <li key={decision.title} className="hairline-b py-8 md:py-11">

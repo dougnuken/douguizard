@@ -1,6 +1,7 @@
-import { site } from "@/data/site";
-import { certifications, education, skills } from "@/data/cv";
+import { getSite, site } from "@/data/site";
+import { getCv } from "@/data/cv";
 import { currentExperience } from "@/lib/career";
+import { htmlLang, localePath, type Locale } from "@/i18n/config";
 
 const SITE_URL = `https://${site.domain}`;
 
@@ -14,8 +15,10 @@ const SITE_URL = `https://${site.domain}`;
  * Person. Case studies are still not emitted as CreativeWork — several are
  * NDA-shaped or client-owned, and that is Doug's call to make, not a gap.
  */
-export function personNode() {
+export function personNode(locale: Locale = "en") {
   const current = currentExperience();
+  const site = getSite(locale);
+  const { certifications, education, skills } = getCv(locale);
 
   return {
     "@type": "Person",
@@ -60,8 +63,8 @@ export function personNode() {
 }
 
 /** The root document's structured data: one Person, one context. */
-export function personJsonLd() {
-  return { "@context": "https://schema.org", ...personNode() };
+export function personJsonLd(locale: Locale = "en") {
+  return { "@context": "https://schema.org", ...personNode(locale) };
 }
 
 /**
@@ -72,20 +75,22 @@ export function personJsonLd() {
  * on a different URL is a reference to nothing as far as a parser walking this
  * page alone is concerned.
  */
-export function cvJsonLd() {
+export function cvJsonLd(locale: Locale = "en") {
+  const site = getSite(locale);
+  const home = localePath(locale, "/");
   return {
     "@context": "https://schema.org",
     "@graph": [
-      personNode(),
+      personNode(locale),
       {
         "@type": "ProfilePage",
         "@id": `${SITE_URL}${site.cv.path}#profile`,
         url: `${SITE_URL}${site.cv.path}`,
         name: `${site.name} — CV`,
         description: site.summary,
-        inLanguage: "en",
+        inLanguage: htmlLang[locale],
         mainEntity: { "@id": `${SITE_URL}/#person` },
-        isPartOf: { "@type": "WebPage", "@id": `${SITE_URL}/` },
+        isPartOf: { "@type": "WebPage", "@id": `${SITE_URL}${home === "/" ? "/" : home}` },
       },
     ],
   };

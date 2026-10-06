@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useDict } from "@/i18n/LocaleProvider";
 
 const SHELL_CLASS = [
   "flex flex-col",
@@ -44,6 +45,7 @@ export default function HorizontalShell({
   labels?: string[];
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const t = useDict();
 
   useEffect(() => {
     const el = ref.current;
@@ -141,7 +143,7 @@ export default function HorizontalShell({
       data-hshell
       tabIndex={0}
       role="group"
-      aria-label="Sections — use the arrow keys to move between panels"
+      aria-label={t.shell.label}
       onKeyDown={onKeyDown}
       className={SHELL_CLASS}
     >

@@ -128,7 +128,8 @@ test("6.5 SectionIndex Enter scrolls and moves focus into panel", async ({ page 
   // Exactly the rail. `aria-label*='Section' i` also matched the header's own
   // nav, whose label is "Sections", so this test was pressing Enter on a
   // header link and then asserting the rail's panel index.
-  const links = page.locator('nav[aria-label="Section index"] a');
+  // By attribute, not by label: the label is translated, the attribute is not.
+  const links = page.locator("nav[data-section-index] a");
   const n = await links.count();
   expect(n, "6.5 section index links found").toBeGreaterThan(1);
   await links.nth(2).focus();

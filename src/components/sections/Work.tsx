@@ -1,47 +1,36 @@
 import Link from "next/link";
 import type { ComponentType } from "react";
-import { caseStudies, getCaseMeta, type CaseStudy } from "@/data/work";
-import { sections } from "@/data/sections";
-import { site } from "@/data/site";
+import { getCaseMeta, getCaseStudies, type CaseStudy } from "@/data/work";
+import { getSections } from "@/data/sections";
+import { getSite } from "@/data/site";
 import { yearsOfExperience } from "@/lib/career";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
 import VignetteOlbo from "@/components/vignettes/VignetteOlbo";
 import VignetteNaowee from "@/components/vignettes/VignetteNaowee";
 import VignetteMercadolibre from "@/components/vignettes/VignetteMercadolibre";
 import VignetteBanco from "@/components/vignettes/VignetteBanco";
+import VignetteDc from "@/components/vignettes/VignetteDc";
 import type { VignetteProps } from "@/components/vignettes/VignetteFrame";
 
-const panel = sections[1];
-
-/** The four cases that carry a live vignette, with the caption under each. */
-const VIGNETTES: Record<string, { Component: ComponentType<VignetteProps>; caption: string }> = {
-  olbo: {
-    Component: VignetteOlbo,
-    caption: "Say it out loud; the category is inferred.",
-  },
-  "naowee-suid": {
-    Component: VignetteNaowee,
-    caption: "Assign a filing; the queue recounts in place.",
-  },
-  "mercadolibre-andes": {
-    Component: VignetteMercadolibre,
-    caption: "One component, its tokens and its variants.",
-  },
-  "banco-de-occidente": {
-    Component: VignetteBanco,
-    caption: "Foundations first, then atoms, then organisms.",
-  },
+/**
+ * The cases that carry a live vignette. Captions and labels are words, so
+ * they come from the dictionary under the same key.
+ */
+const VIGNETTES: Record<
+  string,
+  { Component: ComponentType<VignetteProps>; key: "olbo" | "naowee" | "andes" | "banco" | "dc" }
+> = {
+  olbo: { Component: VignetteOlbo, key: "olbo" },
+  "naowee-suid": { Component: VignetteNaowee, key: "naowee" },
+  "mercadolibre-andes": { Component: VignetteMercadolibre, key: "andes" },
+  "banco-de-occidente": { Component: VignetteBanco, key: "banco" },
+  "dc-medical": { Component: VignetteDc, key: "dc" },
 };
 
-const NDA_LABEL = "Case study available on request";
-
-const featured = caseStudies.filter((c) => VIGNETTES[c.slug]);
-const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c.kind !== "side");
-/** Their own group: work taken on outside a job, not a shorter version of it. */
-const side = caseStudies.filter((c) => c.kind === "side");
-
-function MetaLine({ study }: { study: CaseStudy }) {
-  const meta = getCaseMeta(study.slug);
+function MetaLine({ study, locale }: { study: CaseStudy; locale: Locale }) {
+  const meta = getCaseMeta(study.slug, locale);
   // Two ways this line can stutter, both suppressed here rather than in the
   // data: a case whose project and client are the same word ("Qrvey · Qrvey"),
   // and a personal one, whose client is the literal "Personal product" and
@@ -58,10 +47,10 @@ function MetaLine({ study }: { study: CaseStudy }) {
   );
 }
 
-function ReadAffordance() {
+function ReadAffordance({ locale }: { locale: Locale }) {
   return (
     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink)]">
-      Read
+      {getDict(locale).work.read}
       <span
         aria-hidden
         className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -73,12 +62,14 @@ function ReadAffordance() {
   );
 }
 
-function FeaturedRow({ study, index }: { study: CaseStudy; index: number }) {
-  const { Component, caption } = VIGNETTES[study.slug];
+function FeaturedRow({ study, index, locale }: { study: CaseStudy; index: number; locale: Locale }) {
+  const t = getDict(locale).work;
+  const { Component, key } = VIGNETTES[study.slug];
+  const { caption } = t.vignettes[key];
   return (
     <li className="hairline-b">
       <Link
-        href={`/work/${study.slug}`}
+        href={localePath(locale, `/work/${study.slug}`)}
         aria-label={`${study.project} — ${study.tagline}`}
         className="group grid items-center gap-6 py-7 no-underline outline-none lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10"
       >
@@ -87,17 +78,17 @@ function FeaturedRow({ study, index }: { study: CaseStudy; index: number }) {
           <h3 className="font-display text-[clamp(1.5rem,2.2vw,2.25rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-[var(--ink)] group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[6px] group-focus-visible:underline">
             {study.project}
           </h3>
-          <MetaLine study={study} />
+          <MetaLine study={study} locale={locale} />
           <p className="max-w-[52ch] text-[var(--step-small)] leading-[1.5] text-[var(--ink-muted)]">
             {study.tagline}
           </p>
           {study.nda && (
             <span className="mt-1 inline-flex w-fit rounded-full border border-[var(--line-strong)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
-              {NDA_LABEL}
+              {t.nda}
             </span>
           )}
           <span className="mt-2">
-            <ReadAffordance />
+            <ReadAffordance locale={locale} />
           </span>
         </div>
 
@@ -107,7 +98,7 @@ function FeaturedRow({ study, index }: { study: CaseStudy; index: number }) {
           delay={Math.min(index * 0.06, 0.25)}
           className="w-full max-w-[420px] transition-transform duration-300 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5 lg:max-w-none"
         >
-          <Component />
+          <Component locale={locale} />
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
             {caption}
           </p>
@@ -117,11 +108,11 @@ function FeaturedRow({ study, index }: { study: CaseStudy; index: number }) {
   );
 }
 
-function CompactRow({ study }: { study: CaseStudy }) {
+function CompactRow({ study, locale }: { study: CaseStudy; locale: Locale }) {
   return (
     <li className="hairline-b">
       <Link
-        href={`/work/${study.slug}`}
+        href={localePath(locale, `/work/${study.slug}`)}
         aria-label={`${study.project} — ${study.tagline}`}
         className="group flex flex-wrap items-baseline gap-x-5 gap-y-1.5 py-[18px] no-underline outline-none"
       >
@@ -129,16 +120,31 @@ function CompactRow({ study }: { study: CaseStudy }) {
         <h3 className="font-display text-[1.25rem] font-semibold leading-[1.2] tracking-[-0.02em] text-[var(--ink)] group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[6px] group-focus-visible:underline">
           {study.project}
         </h3>
-        <MetaLine study={study} />
+        <MetaLine study={study} locale={locale} />
         <span className="ml-auto">
-          <ReadAffordance />
+          <ReadAffordance locale={locale} />
         </span>
       </Link>
     </li>
   );
 }
 
-export default function Work() {
+export default function Work({ locale }: { locale: Locale }) {
+  const t = getDict(locale).work;
+  const panel = getSections(locale)[1];
+  const site = getSite(locale);
+  const caseStudies = getCaseStudies(locale);
+  const featured = caseStudies.filter((c) => VIGNETTES[c.slug]);
+  const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c.kind !== "side");
+  /** Their own group: work taken on outside a job, not a shorter version of it. */
+  const side = caseStudies.filter((c) => c.kind === "side");
+  // Counted, never typed: adding a case changes the sentence that counts them.
+  const intro = t.intro({
+    years: yearsOfExperience(),
+    own: caseStudies.filter((c) => c.kind === "personal").length,
+    core: caseStudies.length - side.length,
+    side: side.length,
+  });
   return (
     <section
       id={panel.id}
@@ -156,37 +162,31 @@ export default function Work() {
           {panel.title}
         </h2>
         <p className="max-w-[62ch] text-[length:var(--step-body)] leading-[1.6] text-[var(--ink-muted)]">
-          <span className="text-[var(--ink)]">
-            {yearsOfExperience()} years of systems, products and teams —
-          </span>{" "}
-          from LATAM&apos;s largest marketplace to national banks, cruise lines and
-          early-stage startups, plus one product I designed, built and shipped on my
-          own. Seven that shaped how I work, and two I took on for the pleasure of
-          it.
+          <span className="text-[var(--ink)]">{intro.lead}</span> {intro.rest}
         </p>
       </header>
 
       <ul className="hairline-t flex flex-col">
         {featured.map((study, i) => (
-          <FeaturedRow key={study.slug} study={study} index={i} />
+          <FeaturedRow key={study.slug} study={study} index={i} locale={locale} />
         ))}
       </ul>
 
       <div className="flex flex-col gap-3">
-        <p className="kicker">Earlier work</p>
+        <p className="kicker">{t.earlier}</p>
         <ul className="hairline-t flex flex-col">
           {compact.map((study) => (
-            <CompactRow key={study.slug} study={study} />
+            <CompactRow key={study.slug} study={study} locale={locale} />
           ))}
         </ul>
       </div>
 
       {side.length > 0 && (
         <div className="flex flex-col gap-3">
-          <p className="kicker">Freelance side projects</p>
+          <p className="kicker">{t.side}</p>
           <ul className="hairline-t flex flex-col">
             {side.map((study) => (
-              <CompactRow key={study.slug} study={study} />
+              <CompactRow key={study.slug} study={study} locale={locale} />
             ))}
           </ul>
         </div>
@@ -196,7 +196,7 @@ export default function Work() {
         href={site.cv.path}
         className="inline-flex min-h-11 w-fit items-center font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink)] underline-offset-4 hover:underline"
       >
-        Full CV →
+        {t.fullCv} →
       </Link>
     </section>
   );

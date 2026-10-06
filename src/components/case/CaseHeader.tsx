@@ -3,6 +3,8 @@
 import Link from "next/link";
 import RevealText from "@/components/text/RevealText";
 import type { CaseMeta, CaseStudy } from "@/data/work";
+import { localePath } from "@/i18n/config";
+import { useDict, useLocale } from "@/i18n/LocaleProvider";
 
 function Dot() {
   return (
@@ -26,6 +28,8 @@ function Dot() {
  * a pixel of what the reader sees.
  */
 export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: CaseMeta }) {
+  const t = useDict().case;
+  const locale = useLocale();
   return (
     <section
       className="relative flex flex-col justify-end overflow-hidden bg-[var(--paper)] px-6 pb-20 md:px-12"
@@ -33,14 +37,14 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
     >
       <div className="relative z-10 mx-auto w-full max-w-[1400px]">
         <nav
-          aria-label="Breadcrumb"
+          aria-label={t.breadcrumb}
           className="mb-12 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)]"
         >
           <Link
-            href="/#work"
+            href={localePath(locale, "/#work")}
             className="inline-flex min-h-11 items-center text-[var(--ink)] no-underline underline-offset-4 hover:underline"
           >
-            ← All work
+            ← {t.allWork}
           </Link>
           <Dot />
           <span>{study.num}</span>

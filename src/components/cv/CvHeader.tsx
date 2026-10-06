@@ -2,19 +2,11 @@ import { Fragment } from "react";
 import Image from "next/image";
 import PrintButton from "@/components/cv/PrintButton";
 import LinkedInMark from "@/components/icons/LinkedInMark";
-import { site } from "@/data/site";
-
-const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+import { getSite } from "@/data/site";
+import type { Locale } from "@/i18n/config";
 
 /** `https://www.behance.net/dougvargas` → `behance.net/dougvargas`. */
 const bare = (href: string) => href.replace(/^https?:\/\/(www\.)?/, "");
-
-/**
- * The profiles Doug picked for the CV. Printed, not linked as labels: on paper
- * an address has to be typable, and a page that cannot be clicked should not
- * pretend otherwise.
- */
-const cvProfiles = site.social.filter((s) => s.onCv);
 
 const dot = <span aria-hidden="true">·</span>;
 
@@ -23,7 +15,15 @@ const dot = <span aria-hidden="true">·</span>;
  * `--step-title`, not `--step-display`, and the only decorative surface on the
  * route is the single glow behind it — dropped in print.
  */
-export default function CvHeader() {
+export default function CvHeader({ locale }: { locale: Locale }) {
+  const site = getSite(locale);
+  const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+  /**
+   * The profiles Doug picked for the CV. Printed, not linked as labels: on paper
+   * an address has to be typable, and a page that cannot be clicked should not
+   * pretend otherwise.
+   */
+  const cvProfiles = site.social.filter((s) => s.onCv);
   return (
     <header className="cv-header-pad relative isolate pb-10">
       <div className="glow-corner cv-glow print:hidden" aria-hidden="true" />
