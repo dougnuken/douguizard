@@ -1,17 +1,29 @@
 "use client";
 
-import { Band, FadeIn, SlashLabel } from "./primitives";
+import { Band, FadeIn, SlashLabel, type BandProps } from "./primitives";
+import CaseLinks from "./CaseLinks";
 import type { CaseMeta as CaseMetaType } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
 /**
- * Role · Duration · Team · Year.
+ * Role · Duration · Team · Year — and, when the case has any, where to open it.
+ *
+ * The case at a glance, directly under the showcase: once the reader has seen
+ * the product, the next question is who made it, in what role, and when.
  *
  * Every cell comes off `getCaseMeta(slug)`, which derives it from the employer
  * in `cv.ts`. The case page reads none of these fields off the study any more,
  * so a role or a period can only ever be wrong in one place.
  */
-export default function CaseMeta({ meta }: { meta: CaseMetaType }) {
+export default function CaseMeta({
+  meta,
+  links,
+  tone,
+}: {
+  meta: CaseMetaType;
+  links?: { label: string; href: string }[];
+  tone?: BandProps["tone"];
+}) {
   const t = useDict().case.meta;
   const cells = [
     { label: t.role, value: meta.role },
@@ -21,7 +33,7 @@ export default function CaseMeta({ meta }: { meta: CaseMetaType }) {
   ];
 
   return (
-    <Band rule="y" wide className="py-12 md:py-12">
+    <Band tone={tone} rule="t" wide className="py-10 md:py-12">
       <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
         {cells.map((cell, i) => (
           <FadeIn key={cell.label} delay={i * 0.06}>
@@ -32,6 +44,8 @@ export default function CaseMeta({ meta }: { meta: CaseMetaType }) {
           </FadeIn>
         ))}
       </dl>
+
+      {links && links.length > 0 && <CaseLinks links={links} />}
     </Band>
   );
 }

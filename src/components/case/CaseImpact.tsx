@@ -1,7 +1,7 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, Eyebrow } from "./primitives";
+import { Band, Eyebrow, type BandProps } from "./primitives";
 import type { Kpi } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
@@ -43,16 +43,24 @@ function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
 }
 
 /** The market-facing star: one results-first sentence, then the numbers. */
-export default function CaseImpact({ impact, kpis }: { impact: string; kpis?: Kpi[] }) {
+export default function CaseImpact({
+  impact,
+  kpis,
+  tone,
+}: {
+  impact: string;
+  kpis?: Kpi[];
+  tone?: BandProps["tone"];
+}) {
   const t = useDict().case;
   return (
-    <Band>
+    <Band tone={tone} rule="t">
       <Eyebrow>{t.impact}</Eyebrow>
 
       <RevealText
         as="p"
         variant="mask"
-        className="mt-8 max-w-[960px] font-display text-[clamp(1.75rem,4vw,3.375rem)] font-medium leading-[1.14] tracking-[-0.025em] text-[var(--ink)]"
+        className="mt-6 max-w-[960px] font-display text-[clamp(1.75rem,4vw,3.375rem)] font-medium leading-[1.14] tracking-[-0.025em] text-[var(--ink)] md:mt-8"
       >
         {impact}
       </RevealText>
@@ -60,7 +68,7 @@ export default function CaseImpact({ impact, kpis }: { impact: string; kpis?: Kp
       {/* No grid at all when a case has no verified figures. An empty rule
           across the page reads as something that failed to load. */}
       {kpis && kpis.length > 0 && (
-        <div className="hairline-t mt-16 grid grid-cols-2 gap-x-8 gap-y-12 pt-12 md:grid-cols-4">
+        <div className="hairline-t mt-10 grid grid-cols-2 gap-x-8 gap-y-10 pt-8 md:mt-14 md:grid-cols-4 md:pt-10">
           {kpis.map((kpi, i) => (
             <KpiCard key={kpi.label} kpi={kpi} index={i} />
           ))}

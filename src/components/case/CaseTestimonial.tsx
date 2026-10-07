@@ -3,11 +3,13 @@
 import RevealText from "@/components/text/RevealText";
 import { getTestimonial } from "@/data/testimonials";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { Band, EyebrowHeading } from "./primitives";
+import { Band, EyebrowHeading, type BandProps } from "./primitives";
 
 /**
- * One endorsement, placed after the decisions and before the screens — so it
- * lands on the argument rather than on the screenshots.
+ * One endorsement, placed straight after "what I did" — so it lands on the
+ * claim it vouches for, and inside the part of the page a reader skimming for
+ * a minute actually reaches. At the foot of a long case it was social proof
+ * that only the most patient reader ever saw.
  *
  * Returns `null` when the id resolves to nothing: a stale `testimonialId` left
  * behind in `work.ts` must never be able to break a build or render an empty
@@ -17,7 +19,7 @@ import { Band, EyebrowHeading } from "./primitives";
  * the whole treatment — which is also why it still reads as a quote when the
  * theme flips.
  */
-export default function CaseTestimonial({ id }: { id: string }) {
+export default function CaseTestimonial({ id, tone }: { id: string; tone?: BandProps["tone"] }) {
   const locale = useLocale();
   const t = useDict().case;
   const testimonial = getTestimonial(id, locale);
@@ -29,7 +31,7 @@ export default function CaseTestimonial({ id }: { id: string }) {
   const foreign = quoteLang !== locale;
 
   return (
-    <Band tone="raised" rule="y">
+    <Band tone={tone} rule="t">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
         <EyebrowHeading sticky>{t.inTheirWords}</EyebrowHeading>
         <figure className="m-0">

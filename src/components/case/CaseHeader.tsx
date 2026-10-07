@@ -26,19 +26,24 @@ function Dot() {
  * be. An `h2` above the `h1` inverted the outline on every case page; the line
  * is a label, not a section, so demoting it fixes the outline without changing
  * a pixel of what the reader sees.
+ *
+ * No minimum height. The hero used to hold 62% of the viewport open whatever
+ * it contained, which pushed the product below the fold on every screen size.
+ * It is as tall as its words now, so the showcase under it starts inside the
+ * first screen: the reader sees what was made before reading about it.
  */
 export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: CaseMeta }) {
   const t = useDict().case;
   const locale = useLocale();
   return (
     <section
-      className="relative flex flex-col justify-end overflow-hidden bg-[var(--paper)] px-6 pb-20 md:px-12"
-      style={{ minBlockSize: "62svh", paddingBlockStart: "calc(var(--header-h) + 48px)" }}
+      className="relative overflow-hidden bg-[var(--paper)] px-6 pb-12 md:px-12 md:pb-16"
+      style={{ paddingBlockStart: "calc(var(--header-h) + 32px)" }}
     >
       <div className="relative z-10 mx-auto w-full max-w-[1400px]">
         <nav
           aria-label={t.breadcrumb}
-          className="mb-12 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)]"
+          className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)] md:mb-10"
         >
           <Link
             href={localePath(locale, "/#work")}
@@ -54,13 +59,13 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
           <span>{meta.year}</span>
         </nav>
 
-        <p className="kicker mb-6 tracking-[0.3em]">{meta.client}</p>
+        <p className="kicker mb-4 tracking-[0.3em]">{meta.client}</p>
 
         <RevealText
           as="h1"
           variant="mask"
           delay={0.05}
-          className="mb-12 max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)]"
+          className="mb-6 max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)] md:mb-8"
         >
           {study.project}
         </RevealText>

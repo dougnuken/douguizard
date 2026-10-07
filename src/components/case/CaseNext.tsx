@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getCaseMeta, type CaseStudy } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { Band, FadeIn, SlashLabel } from "./primitives";
+import { Band, FadeIn, SlashLabel, type BandProps } from "./primitives";
 
 /**
  * The way onward.
@@ -13,11 +13,11 @@ import { Band, FadeIn, SlashLabel } from "./primitives";
  * colour shift has nowhere to go, and the type is large enough that a change of
  * weight reads from across the room.
  */
-export default function CaseNext({ next }: { next: CaseStudy }) {
+export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandProps["tone"] }) {
   const t = useDict().case;
   const locale = useLocale();
   return (
-    <Band tone="raised" rule="t">
+    <Band tone={tone} rule="t">
       <FadeIn>
         <SlashLabel className="mb-8 text-[11px] text-[var(--ink-muted)]">{t.next}</SlashLabel>
       </FadeIn>
