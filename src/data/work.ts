@@ -402,20 +402,21 @@ export const caseStudies: CaseStudy[] = [
     // No gallery, no video, no screenshots: the screens are Mercadolibre's.
     nda: true,
     tagline:
-      "Technical lead on the design system behind Mercadolibre, across 18 countries.",
+      "Technical lead on the design system behind Mercadolibre: 18 countries, three platforms, one library.",
     impact:
-      "One library, maintained for iOS, Android and Web, that 400+ designers and 2,000+ engineers build the same product out of.",
+      "400+ designers and 2,000+ engineers build from one library, kept in parity across iOS, Android and Web.",
     context:
-      "Andes is the source of truth for Mercadolibre's commerce, fintech and shipping products. I owned foundations and component definitions, kept the three platforms in parity, and brought AI into how the system audits itself.",
+      "Andes is the source of truth for Mercadolibre's commerce, fintech and shipping products. I owned its foundations and component definitions, and brought AI into how it audits itself.",
     contributions: [
-      "**Foundational definitions** — tokens, spacing, type and motion, agreed once and governing the product suite.",
-      "**Cross-platform parity** — one component API, shipped the same on iOS, Android and Web, worked out directly with the engineering teams that build it.",
-      "**Component maintenance at scale** — additions, deprecations and migrations across a library hundreds of designers open every day.",
-      "**AI inside the systems practice** — prompt-driven audits that catch drift in Figma before it reaches a release.",
+      "**Foundations** — tokens, spacing, type and motion, agreed once and governing the product suite.",
+      "**Cross-platform parity** — one component API, shipped identically on iOS, Android and Web, worked out with engineering.",
+      "**Maintenance at scale** — additions, deprecations and migrations in a library hundreds of designers open daily.",
+      "**AI in the systems practice** — prompt-driven audits that catch drift in Figma before it ships.",
     ],
     // "~40% fewer rework cycles" is REMOVED: no source behind it. Its
-    // qualitative replacement lives in `context` ("the three platforms in
-    // parity"). Reinstate a number only against a real measurement.
+    // qualitative replacement lives in `impact` ("kept in parity across iOS,
+    // Android and Web"). Reinstate a number only against a real measurement.
+    // The "Countries shipped to" label is looked up verbatim by Hero and Craft.
     kpis: [
       { value: "400+", label: "Designers on the system" },
       { value: "2K+", label: "Engineers on the system" },
@@ -444,16 +445,15 @@ export const caseStudies: CaseStudy[] = [
     team: "12+ product squads",
     kind: "client",
     tagline:
-      "The transactional portal for one of Colombia's largest banks, and Velocity — the design system that kept it consistent across twelve squads.",
+      "One of Colombia's largest banks: its portal redesigned, and Velocity, the design system 12+ squads shared.",
     impact:
-      "An outdated, overloaded banking portal rebuilt as one light, legible product — and a documented design system that made the next screen cheaper than the last.",
+      "An overloaded banking portal rebuilt as one light, legible product, on a documented system that made each screen cheaper than the last.",
     context:
-      "Banco de Occidente's digital banking was visually dense and hard to move through, and every squad solved the same problems differently. I redesigned the transactional portal and built Velocity, the bank's design system, as the official gatekeeper of what went into it.",
+      "The portal was dense and hard to navigate, and every squad solved the same problems differently. I redesigned it and built Velocity to fix both.",
     contributions: [
-      "**Redesigned the transactional portal** — login and registration, accounts and cards, transfers, payments and product blocking, for desktop, tablet and mobile.",
-      "**Built Velocity, the bank's design system** — documentation, foundations, atoms, molecules and organisms, on atomic-design principles so the front end could mirror the structure.",
-      "**Design System Gatekeeper** — approved additions, deprecations and patterns across 12+ product squads, and ran the workshops and crits that taught the system.",
-      "**Drew the illustrated icon set** — 15 mini-illustrations that give the whole product a recognizable character instead of a generic glyph library.",
+      "**Redesigned the transactional portal** — login, accounts, cards, transfers, payments and product blocking, identical on desktop, tablet and mobile.",
+      "**Built Velocity, the bank's design system** — foundations to organisms, on atomic design so the front end mirrors it.",
+      "**Design System Gatekeeper** — approved additions, deprecations and patterns for 12+ squads, and ran the workshops and crits.",
     ],
     kpis: [
       // Doug's own figure, consistent across cv.ts and the published piece.
@@ -471,64 +471,66 @@ export const caseStudies: CaseStudy[] = [
     process: [
       {
         phase: "01",
-        title: "Discovery, then research",
-        body: "To build the thing you have to understand the business first. We ran discovery with the client and the stakeholders, then competitive and user research — days spent on the business model, the requirements, and who was actually going to use this.",
+        title: "Research, then flows",
+        body: "Discovery, competitive research and user research came first. Then six flows, mapped with their exceptions before any screen: in banking, the exception is the product.",
       },
       {
         phase: "02",
-        title: "Flows before screens",
-        body: "We mapped the system's behaviour for each use case before drawing anything: login and registration, payments, enabling and disabling services, transfers, sending and requesting, blocking a product. Six flows, with their exceptions and their error states, because in banking the exception is the product.",
-      },
-      {
-        phase: "03",
-        title: "Interactive wireframes, tested on people",
-        body: "Every stage went to an interactive prototype before it went to visual design. It let the team and the client see how the product would actually work, and it let us run user testing without paying for a full build first. The registration flow went through several rounds on the back of that feedback.",
-      },
-      {
-        phase: "04",
-        title: "A system, not a set of screens",
-        body: "Large products cannot scale without one. Velocity documents foundations, atoms, molecules and organisms so designers across digital products, marketing and engineering stay in sync. I followed atomic design deliberately, because the same structure survives the handoff into the front end.",
+        title: "Prototypes tested on people",
+        body: "Every stage became an interactive prototype that users tested before any build; registration went through several rounds.",
       },
     ],
     decisions: [
       {
-        title: "Atomic design, because the front end thinks that way too",
-        body: "A design system can be organized any number of ways. I chose atoms, molecules and organisms because that structure survives the crossing into code — engineers were building components at the same granularity, so documentation and implementation could share one vocabulary instead of translating.",
-      },
-      {
         title: "Two layers of navigation, and no more",
-        body: "The old portal buried people in nested page trees. I replaced navigation depth with a popup system: page, then a blurred background, then the component, then the popup. Two layers is enough for every banking task in the product, and nobody gets lost in something two layers deep.",
+        body: "The old portal buried people in nested pages. A popup system replaced navigation depth, and two layers cover every banking task.",
       },
       {
         title: "Identical across devices, not merely similar",
-        body: "The brief asked for a similar experience on desktop, tablet and mobile. We targeted identical instead. Every desktop capability survives to the phone with the same names in the same order, because a customer who learns the portal on a laptop should not have to relearn it on the bus.",
+        body: "The brief asked for similar. Every desktop capability reaches the phone with the same names, in the same order: nothing to relearn on the bus.",
       },
     ],
     // Every capture is a presentation artboard that already contains its own
     // tablet, phone or isometric board, so they render as flat cards: a browser
     // window around a tablet would be a frame inside a frame.
     galleryKind: "plain",
+    // Ordered show-first: the portal home is the cover, the phone and the
+    // accounts screen follow it, then the system, then the flow behind it.
     gallery: [
       {
         src: "/work/banco-de-occidente/portal-dashboard.webp",
         width: 2271,
         height: 1715,
         alt: "The Banco de Occidente transactional portal on a tablet: a left sidebar with the customer's name and benefit tier, cards for a Mastercard and a savings account with their balances, a favourite-transactions row, a month calendar and a spending chart.",
-        caption: "The portal home: products, favourite transactions and the month at a glance.",
+        caption: "The portal home: products, favourite transactions, the month at a glance.",
+      },
+      {
+        src: "/work/banco-de-occidente/responsive-mobile.webp",
+        width: 1510,
+        height: 1461,
+        alt: "Two iPhone screens side by side: a Mastercard Black detail with minimum payment, total payment and due date above a Pay button, and the movements tab listing card purchases with dates, instalment counts and amounts.",
+        caption: "On a phone: every desktop capability, in the same order.",
+      },
+      {
+        src: "/work/banco-de-occidente/products-and-cards.webp",
+        width: 1784,
+        height: 1218,
+        alt: "The accounts section of the portal on a tablet: a savings account card showing available, redeemable and current balances, a filterable movements table listing purchases and transfers with amounts, and a success toast confirming a chequebook has been blocked.",
+        caption: "Balances, movements, and proof the block worked.",
       },
       {
         src: "/work/banco-de-occidente/login-registration.webp",
         width: 1784,
         height: 1218,
         alt: "The portal's login screen on a tablet: a cookie notice across the top, a promotional panel on the left, and a sign-in card asking for document type, document number and password, with links to recover a password and to register.",
-        caption: "Login and registration, stripped of anything that could distract mid-task.",
+        caption: "Login, with nothing to distract mid-task.",
       },
       {
-        src: "/work/banco-de-occidente/user-flow-login-otp.webp",
-        width: 1965,
-        height: 1053,
-        alt: "The registration and one-time-password flow diagrammed as boxes and arrows: register, enter document type and ID, send a one-time password, enter it or request another by SMS, accept the data-processing agreement, then either a successful login or a validation failure.",
-        caption: "One of six flows mapped before any screen existed, exceptions included.",
+        src: "/work/banco-de-occidente/design-system-foundations.webp",
+        width: 2033,
+        height: 2340,
+        alt: "Design system foundation boards laid out in perspective: a colour scale from light to dark blue with neutral and gold secondaries, a type scale from hero down to caption, a spacing scale, and sheets of button and form-field states.",
+        caption: "Foundations: colour, type, spacing, every state of every control.",
       },
       {
         src: "/work/banco-de-occidente/design-system-grid.webp",
@@ -538,39 +540,25 @@ export const caseStudies: CaseStudy[] = [
         caption: "Velocity, indexed the way the front end is built.",
       },
       {
-        src: "/work/banco-de-occidente/design-system-foundations.webp",
-        width: 2033,
-        height: 2340,
-        alt: "Design system foundation boards laid out in perspective: a colour scale from light to dark blue with neutral and gold secondaries, a type scale from hero down to caption, a spacing scale, and sheets of button and form-field states.",
-        caption: "Foundations: colour, type, spacing and every state of every control.",
-      },
-      {
         src: "/work/banco-de-occidente/illustrated-icons.webp",
         width: 1203,
         height: 709,
         alt: "Fifteen illustrated icons in blue and green line art: a statement, a credit score, a certificate, a scheduled document, a location pin, stacked coins, a piggy bank, a phone payment, a phone message, a phone with a plus, a protected phone, a phone with a fingerprint, a failed transaction, a house, and a browser window.",
-        caption: "Fifteen icons drawn for the system, not licensed into it.",
-      },
-      {
-        src: "/work/banco-de-occidente/products-and-cards.webp",
-        width: 1784,
-        height: 1218,
-        alt: "The accounts section of the portal on a tablet: a savings account card showing available, redeemable and current balances, a filterable movements table listing purchases and transfers with amounts, and a success toast confirming a chequebook has been blocked.",
-        caption: "Accounts and cards: balances, movements and the confirmation that the block worked.",
+        caption: "Fifteen icons drawn for the system, not licensed.",
       },
       {
         src: "/work/banco-de-occidente/popups-system.webp",
         width: 1569,
         height: 804,
         alt: "The popup system drawn as four stacked planes in perspective, labelled from the back: the page, a blurred background, the component, and the popup itself.",
-        caption: "Depth instead of nesting: two layers cover every task in the product.",
+        caption: "Depth instead of nesting: two layers, every task.",
       },
       {
-        src: "/work/banco-de-occidente/responsive-mobile.webp",
-        width: 1510,
-        height: 1461,
-        alt: "Two iPhone screens side by side: a Mastercard Black detail with minimum payment, total payment and due date above a Pay button, and the movements tab listing card purchases with dates, instalment counts and amounts.",
-        caption: "The same portal on a phone — every desktop capability, in the same order.",
+        src: "/work/banco-de-occidente/user-flow-login-otp.webp",
+        width: 1965,
+        height: 1053,
+        alt: "The registration and one-time-password flow diagrammed as boxes and arrows: register, enter document type and ID, send a one-time password, enter it or request another by SMS, accept the data-processing agreement, then either a successful login or a validation failure.",
+        caption: "Registration, mapped with its exceptions before any screen.",
       },
     ],
     links: [
@@ -795,15 +783,15 @@ export const caseStudies: CaseStudy[] = [
     team: "Cross-functional US + LATAM",
     kind: "client",
     tagline:
-      "Designing onboard guest experiences for Royal Caribbean's fleets across Caribbean and Mediterranean routes.",
+      "Mobile booking and onboard experiences for Royal Caribbean guests on Caribbean and Mediterranean routes.",
     impact:
-      "Onboard guest experiences that follow passengers from booking to disembarkation — resilient to life at sea.",
+      "One mobile journey from booking to disembarkation — schedules, dining, excursions, balances — that holds up on a ship's patchy Wi-Fi.",
     context:
-      "Cruise guests spend a week aboard with patchy connectivity. I designed the booking and onboard experience — schedules, dining, excursions, balances — for guests of every age and comfort level.",
+      "Cruise guests of every age and comfort level spend a week aboard on patchy connectivity. I designed booking and the onboard experience to work for all of them.",
     contributions: [
-      "**Mobile booking flows** across destinations and stateroom types.",
-      "**Onboard experience** — schedules, dining, excursions and balances that work with intermittent Wi-Fi.",
-      "**Remote collaboration** with US product and engineering at Royal Caribbean HQ.",
+      "**Mobile booking** — flows across destinations and stateroom types.",
+      "**Onboard experience** — schedules, dining, excursions and balances that work on intermittent Wi-Fi.",
+      "**Remote collaboration** — with US product and engineering at Royal Caribbean HQ.",
     ],
     kpis: [
       { value: "2", label: "Fleets & regions", delta: "Caribbean + Med" },
@@ -824,32 +812,41 @@ export const caseStudies: CaseStudy[] = [
     team: "Product + Engineering",
     kind: "client",
     tagline:
-      "An automation builder for survey work: a trigger, a condition, an action — assembled by people who had never drawn a flow chart.",
+      "A survey automation builder — trigger, condition, action — for people who had never drawn a flow chart.",
     impact:
-      "A bad answer could answer itself — a follow-up survey a week later, and the result in the right inbox, with nobody watching for it.",
+      "A bad answer could answer itself: a follow-up survey a week later, and the results in the right inbox, with nobody watching.",
     context:
-      "Qrvey was a survey and NPS platform: you built a Qrvey, people took it, and then somebody had to read the answers and do something about them. AutomatiQ was the part that did something. As lead UI designer I designed the builder — the process list, the trigger cards, the condition editor and the actions they fire.",
+      "Qrvey was a survey and NPS platform; someone still had to act on the answers. As lead UI designer, I designed AutomatiQ, the builder that did.",
     contributions: [
-      "**A process list that shows whether a process is working** — status, the surveys it covers, average cycle time and how many cycles it has run, on the row itself. A process that had quietly stopped was visible without opening it.",
-      "**Triggers as cards, not as a canvas** — scheduling with its own repeat and end rules, or a new response to a chosen survey, each one a card that expands in place. No connectors to draw and nothing to lay out.",
-      "**Conditions in the product's own words** — *if answer is* or *number of responses*, over a question and its answers, with rows you add and remove one at a time.",
-      "**Actions that reach back into the product** — the email composer attaches the results and drops a live survey link into the body, so the follow-up is the next survey rather than a message about one.",
+      "**A list that reports on itself** — every process shows status, surveys covered, average cycle time and cycles run.",
+      "**Cards, not a canvas** — triggers and conditions open in place, in the product's words; no connectors to draw.",
+      "**The follow-up is the next survey** — emails carry the results and a live survey link in the body.",
     ],
     // No KPIs. Nothing here was ever measured in a figure I can source, and
     // three words in number slots ("Charts", "Embedded", "Native") were worse
     // than none.
+    // Ordered show-first: the process list is the cover, the condition editor
+    // (trigger, condition and action slot in one frame) comes next, then the
+    // parts in the order a process is built, then the whole scenario.
     gallery: [
       {
         src: "/work/qrvey/process-list.webp",
         alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a coloured status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
-        caption: "Every process says whether it is running and what it has done.",
+        caption: "Each process: running or paused, and what it has done.",
         width: 2000,
         height: 1438,
       },
       {
+        src: "/work/qrvey/condition-branching.webp",
+        alt: "A condition under a New Response trigger: two pills, If Answer Is and Number of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
+        caption: "Conditions in the product's words: \"if answer is\", \"number of responses\".",
+        width: 2000,
+        height: 1200,
+      },
+      {
         src: "/work/qrvey/trigger-scheduling.webp",
         alt: "An expanded Scheduling trigger card: repeat frequency, an interval in days and a time of day, a start date, and an end that is either a number of runs or a specific date.",
-        caption: "The scheduling trigger, with both ways a schedule can end.",
+        caption: "Scheduling, with both ways a schedule can end.",
         width: 2000,
         height: 682,
       },
@@ -861,23 +858,16 @@ export const caseStudies: CaseStudy[] = [
         height: 583,
       },
       {
-        src: "/work/qrvey/condition-branching.webp",
-        alt: "A condition under a New Response trigger: two pills, If Answer Is and Number of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
-        caption: "The condition editor: a question, its answers, and what comes next.",
-        width: 2000,
-        height: 1200,
-      },
-      {
         src: "/work/qrvey/action-send-email.webp",
         alt: "The Send Email action open: recipient chips, a subject with a remaining-character count, a rich-text message with buttons to attach results or insert a survey, a survey link inserted into the body, and an attachment block holding the chosen survey.",
-        caption: "The email action, with the results attached and a survey in the body.",
+        caption: "Email: results attached, a survey in the body.",
         width: 2000,
         height: 1040,
       },
       {
         src: "/work/qrvey/scenario-end-to-end.webp",
         alt: "A whole process assembled from one scenario written in plain language at the top: a new-response trigger, a condition on the answer given, and two email actions — one to the respondent with a follow-up survey, one to the team with the results — above a Save Changes button warning that saving resets the process.",
-        caption: "One scenario, end to end: trigger, condition, and two actions.",
+        caption: "One scenario: trigger, condition, two actions.",
         width: 2000,
         height: 3543,
       },
@@ -896,20 +886,21 @@ export const caseStudies: CaseStudy[] = [
     team: "Distributed agency",
     kind: "client",
     tagline:
-      "Designing wireframes, UI kits, and prototypes for international clients across web and mobile.",
+      "Wireframes, UI kits and prototypes for US and LATAM clients, across web and mobile.",
     impact:
-      "Product design across fintech, marketplaces and B2B — the multi-domain fluency that later made systems work feel natural.",
+      "Developer-ready design across fintech, marketplaces and B2B — the multi-domain fluency that later made systems work feel natural.",
     context:
-      "A remote-first agency serving US and LATAM clients. Each engagement meant learning a new domain fast and shipping clean, developer-ready design.",
+      "A remote-first agency, where the job was learning a client's domain fast and shipping clean design.",
     contributions: [
-      "**Wireframes & UI kits** across fintech, consumer and B2B products.",
-      "**High-fidelity prototypes** for stakeholder validation and developer handoff.",
-      "**Reusable patterns** applied and tailored per client.",
+      "**Wireframes and UI kits** — for fintech, consumer and B2B products.",
+      "**High-fidelity prototypes** — for stakeholder validation and developer handoff.",
+      "**Reusable patterns** — applied across clients and tailored to each.",
     ],
+    // "Dev-ready" is gone from the cards: it is one of the draft placeholder
+    // values the content suite bans. The claim itself lives in `impact`.
     kpis: [
       { value: "Agency", label: "A new domain each engagement" },
       { value: "US + LATAM", label: "Distributed clients" },
-      { value: "Dev-ready", label: "Handoff quality" },
     ],
     technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
     externalLink: { label: "Visit ideaware.co", href: "https://www.ideaware.co" },
@@ -928,47 +919,48 @@ export const caseStudies: CaseStudy[] = [
     // ⚠️ CONFIRMAR DOUG — Doug calls it "Chupp"; the splash screen's wordmark
     // reads CHUB. Going with the artwork, since that is what a reader sees.
     tagline:
-      "Book a car by the minute, see what it costs before you commit, and control the cabin once you are in it.",
+      "Book a car by the minute, see the cost up front, then control the cabin.",
     impact:
-      "A booking flow that answers the two questions a rental app usually hides — what this car is, and what this trip will cost — before you agree to either.",
+      "A booking flow that answers what rental apps usually hide — what the car is, what the trip costs — before you commit.",
     // ⚠️ CONFIRMAR DOUG — Doug described it as "an app for requesting services,
     // Uber-style", but no screen has a driver: pricing is per minute, the
     // vehicle sheet leads with range and acceleration, and one screen is the
     // car's own dashboard. Written as what the screens show.
     context:
-      "A side project taken on in 2018, alongside the day job. Chub books a car rather than a ride: you pick a vehicle, see its range and what it charges per minute, and the app becomes the cabin's controls once the trip starts. I designed it from scratch and worked alongside the dev team through handoff.",
+      "Chub books a car, not a ride: pick a vehicle, see its range and per-minute rate, and once the trip starts the app becomes the cabin's controls.",
     contributions: [
-      "**The vehicle sheet leads with the decision** — range, acceleration, seats and the per-minute rate on one card, above the button. What a driver needs to choose is not buried behind it.",
-      "**The route screen prices the trip before it starts** — pickup, destination, an estimated duration and a fare range, with the card on file already shown, so the last screen holds no surprises.",
-      "**The app becomes the car** — once the trip is running the same product turns into a cabin panel: climate, ventilated seats, inside and outside temperature, and the speed.",
-      "**Dark by default, one accent** — a violet that only marks what is live: the active route, the selected vehicle, the primary action.",
+      "**The decision on one card** — range, acceleration, seats and the per-minute rate, above the button.",
+      "**Cost up front** — pickup, destination, estimated time and a fare range, before the trip starts.",
+      "**The app becomes the car** — mid-trip it runs climate and ventilated seats, and shows temperature and speed.",
     ],
+    // Ordered show-first: the vehicle sheet is the cover — the car, its specs
+    // and its price in one frame — then the trip in the order it happens.
     gallery: [
-      {
-        src: "/work/chub/onboarding.webp",
-        alt: "Chub's first run screen: the wordmark over a car rendered on a glowing ring, the line \"Choose a Vehicle and trip with style\", and Get started above a Skip link.",
-        caption: "First run: what the product is, in one screen.",
-      },
       {
         src: "/work/chub/vehicle.webp",
         alt: "A vehicle sheet over the map: the model name with its rating, a spec row for acceleration, range and seats, its pick-up address and distance, the saved card, a per-minute price, and a Book Car button.",
-        caption: "Range, rate and distance before the button, not after it.",
+        caption: "Range, rate and distance before the button.",
       },
       {
         src: "/work/chub/route.webp",
         alt: "The route drawn across a dark map with a distance marker, and a panel below carrying the pick-up and destination, the service class, a fare range, the estimated trip time, the saved card and a Need Assistance button.",
-        caption: "The trip priced and timed before it starts.",
+        caption: "Priced and timed before it starts.",
       },
       {
         src: "/work/chub/cabin.webp",
         alt: "The in-car panel: chips for air conditioning and ventilated seats, inside and outside temperature, a circular gauge reading 65 km/h with the gear selector around it, and a line saying the air conditioning is on.",
         caption: "Under way, the app is the cabin.",
       },
+      {
+        src: "/work/chub/onboarding.webp",
+        alt: "Chub's first run screen: the wordmark over a car rendered on a glowing ring, the line \"Choose a Vehicle and trip with style\", and Get started above a Skip link.",
+        caption: "First run: the product in one screen.",
+      },
     ],
     galleryKind: "phone",
     technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
     credits:
-      "Product design end to end — flows, interface and the handoff. Built by a development team I worked alongside. The project ended at handoff; it was never released.",
+      "Product design end to end, handed off to the development team that built it. Never released.",
   },
   {
     slug: "makeappet",
@@ -982,23 +974,19 @@ export const caseStudies: CaseStudy[] = [
     duration: "2018",
     team: "Me and the dev team, through handoff",
     tagline:
-      "Swipe to meet a dog or a cat near you — the pattern people already know, pointed at adoption instead of dating.",
+      "Swipe to meet a dog or cat nearby: the dating pattern everyone knows, pointed at adoption.",
     impact:
-      "Adoption borrowed the one interaction everybody already knows how to use, and put a shelter's donation ask where the attention already was.",
+      "Adoption borrowed the one interaction everyone already knows, and put the shelters' donation ask where the attention already was.",
     context:
-      "A side project from 2018, alongside the day job. MakeAppet applies the swipe-to-match pattern to finding a pet nearby: browse by species, swipe through what is close, and open a full profile before deciding. I designed it from scratch and worked alongside the dev team through handoff.",
+      "MakeAppet applies swipe-to-match to finding a pet nearby: browse by species, swipe through what is close, and open a full profile before deciding.",
     contributions: [
-      "**The card carries the decision, the profile carries the detail** — name, age and distance on the card; breed, weight, sex and a written description one tap deeper. Nobody adopts from a photograph alone.",
-      "**Two ways in, not one** — a swipe stack for browsing and a filtered grid by species and distance, because half of the people arriving already know whether they want a cat.",
-      "**The shelter ask sits in the browse screen** — a donation panel between the search and the results, where the attention already is, instead of behind a menu nobody opens.",
-      "**The match screen hands over a first line** — the moment of a match is also the moment of not knowing what to say, so the screen offers the opener rather than an empty field.",
+      "**Nobody adopts from a photo** — a tap deeper, the profile adds breed, weight, sex and a description.",
+      "**Two ways in** — swipe to browse, or filter by species and distance when you know what you want.",
+      "**The shelter ask where people look** — a donation panel between search and results, not buried in a menu.",
     ],
+    // Ordered show-first: the swipe card is the cover — the pattern reads in
+    // one glance — then the profile and the match it leads to, then the grid.
     gallery: [
-      {
-        src: "/work/makeappet/welcome.webp",
-        alt: "The welcome screen: a grid of photographs of dogs and their owners behind a paw mark, the line \"Connect and uncover the ideal pets that match your preferences in your area\", and an Explore button.",
-        caption: "The premise, before any account is asked for.",
-      },
       {
         src: "/work/makeappet/swipe.webp",
         alt: "The swipe screen: For you and Nearby tabs above a full-bleed photo card of a dog with its name, age and distance, and round dismiss and like buttons below it.",
@@ -1007,23 +995,28 @@ export const caseStudies: CaseStudy[] = [
       {
         src: "/work/makeappet/profile.webp",
         alt: "A pet profile: a large photograph, the name and distance, a four-cell grid of age, breed, sex and weight, a written description, and a primary Bark me button beside a favourite button.",
-        caption: "Breed, age, weight and a description — the part a photo cannot carry.",
-      },
-      {
-        src: "/work/makeappet/browse.webp",
-        alt: "The browse screen: a location and a search field with filters, a violet panel asking for a donation on behalf of shelters, then an Adoption section with species tabs and a grid of nearby pets.",
-        caption: "Browse by species, with the shelters' ask in the flow.",
+        caption: "What a photo cannot carry.",
       },
       {
         src: "/work/makeappet/match.webp",
         alt: "The match screen: a Congratulations heading with an It's a Match ribbon, the two matched pets either side of a heart, a suggested opening line, and a Say woof button above a Not now link.",
         caption: "A match, and something to say.",
       },
+      {
+        src: "/work/makeappet/browse.webp",
+        alt: "The browse screen: a location and a search field with filters, a violet panel asking for a donation on behalf of shelters, then an Adoption section with species tabs and a grid of nearby pets.",
+        caption: "Browse by species, the shelters' ask included.",
+      },
+      {
+        src: "/work/makeappet/welcome.webp",
+        alt: "The welcome screen: a grid of photographs of dogs and their owners behind a paw mark, the line \"Connect and uncover the ideal pets that match your preferences in your area\", and an Explore button.",
+        caption: "The premise, before any sign-up.",
+      },
     ],
     galleryKind: "phone",
     technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
     credits:
-      "Product design end to end — flows, interface and the handoff. Built by a development team I worked alongside. The project ended at handoff; it was never released.",
+      "Product design end to end, handed off to the development team that built it. Never released.",
   },
 ];
 

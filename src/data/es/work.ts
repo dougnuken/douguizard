@@ -237,16 +237,17 @@ export const workEs: Record<string, CaseCopy> = {
     category: "Sistemas de diseño × E-commerce",
     duration: "~2 años",
     team: "400+ diseñadores, 2.000+ ingenieros",
-    tagline: "Líder técnico del sistema de diseño detrás de Mercadolibre, en 18 países.",
+    tagline:
+      "Líder técnico del sistema de diseño detrás de Mercadolibre: 18 países, tres plataformas, una sola librería.",
     impact:
-      "Una sola librería, mantenida para iOS, Android y Web, con la que más de 400 diseñadores y más de 2.000 ingenieros construyen el mismo producto.",
+      "Más de 400 diseñadores y más de 2.000 ingenieros construyen con una sola librería, mantenida en paridad en iOS, Android y Web.",
     context:
-      "Andes es la fuente de verdad de los productos de comercio, fintech y envíos de Mercadolibre. Fui dueño de los fundamentos y de las definiciones de componentes, mantuve las tres plataformas en paridad y llevé la IA a la forma en que el sistema se audita a sí mismo.",
+      "Andes es la fuente de verdad de los productos de comercio, fintech y envíos de Mercadolibre. Fui dueño de sus fundamentos y de las definiciones de componentes, y llevé la IA a la forma en que se audita a sí mismo.",
     contributions: [
-      "**Definiciones fundacionales**: tokens, espaciado, tipografía y movimiento, acordados una vez y gobernando la suite de productos.",
-      "**Paridad multiplataforma**: una sola API de componente, lanzada igual en iOS, Android y Web, trabajada directamente con los equipos de ingeniería que la construyen.",
-      "**Mantenimiento de componentes a escala**: adiciones, deprecaciones y migraciones en una librería que cientos de diseñadores abren todos los días.",
-      "**IA dentro de la práctica de sistemas**: auditorías guiadas por prompts que detectan desviaciones en Figma antes de que lleguen a un release.",
+      "**Fundamentos**: tokens, espaciado, tipografía y movimiento, acordados una vez y gobernando la suite de productos.",
+      "**Paridad multiplataforma**: una sola API de componente, lanzada idéntica en iOS, Android y Web, trabajada con ingeniería.",
+      "**Mantenimiento a escala**: adiciones, deprecaciones y migraciones en una librería que cientos de diseñadores abren a diario.",
+      "**IA en la práctica de sistemas**: auditorías guiadas por prompts que detectan desviaciones en Figma antes de que salgan.",
     ],
     kpis: [
       { label: "Diseñadores en el sistema" },
@@ -265,16 +266,15 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "6 años",
     team: "12+ squads de producto",
     tagline:
-      "El portal transaccional de uno de los bancos más grandes de Colombia, y Velocity: el sistema de diseño que lo mantuvo consistente en doce squads.",
+      "Uno de los bancos más grandes de Colombia: su portal rediseñado y Velocity, el sistema de diseño que compartían más de 12 squads.",
     impact:
-      "Un portal bancario anticuado y sobrecargado, reconstruido como un solo producto liviano y legible, y un sistema de diseño documentado que hizo que la siguiente pantalla costara menos que la anterior.",
+      "Un portal bancario sobrecargado, reconstruido como un solo producto liviano y legible, sobre un sistema documentado que hizo cada pantalla más barata que la anterior.",
     context:
-      "La banca digital del Banco de Occidente era visualmente densa y difícil de recorrer, y cada squad resolvía los mismos problemas de forma distinta. Rediseñé el portal transaccional y construí Velocity, el sistema de diseño del banco, como guardián oficial de lo que entraba en él.",
+      "El portal era denso y difícil de recorrer, y cada squad resolvía los mismos problemas a su manera. Lo rediseñé y construí Velocity para resolver ambas cosas.",
     contributions: [
-      "**Rediseñé el portal transaccional**: ingreso y registro, cuentas y tarjetas, transferencias, pagos y bloqueo de productos, para escritorio, tableta y celular.",
-      "**Construí Velocity, el sistema de diseño del banco**: documentación, fundamentos, átomos, moléculas y organismos, con principios de diseño atómico para que el front end pudiera reflejar la misma estructura.",
-      "**Guardián del sistema de diseño**: aprobé adiciones, deprecaciones y patrones en más de 12 squads de producto, y dirigí los talleres y las críticas que enseñaban el sistema.",
-      "**Dibujé el set de íconos ilustrados**: 15 mini ilustraciones que le dan a todo el producto un carácter reconocible en lugar de una librería de glifos genérica.",
+      "**Rediseñé el portal transaccional**: ingreso, cuentas, tarjetas, transferencias, pagos y bloqueo de productos, idéntico en escritorio, tableta y celular.",
+      "**Construí Velocity, el sistema de diseño del banco**: de fundamentos a organismos, con diseño atómico para que el front end lo refleje.",
+      "**Guardián del sistema de diseño**: aprobé adiciones, deprecaciones y patrones para más de 12 squads, y dirigí los talleres y las críticas.",
     ],
     kpis: [
       { label: "Squads de producto alineados", delta: "un solo sistema" },
@@ -284,72 +284,61 @@ export const workEs: Record<string, CaseCopy> = {
     ],
     process: [
       {
-        title: "Descubrimiento, después investigación",
-        body: "Para construir algo primero hay que entender el negocio. Hicimos descubrimiento con el cliente y los stakeholders, y después investigación competitiva y con usuarios: días dedicados al modelo de negocio, los requisitos y a quién iba a usar esto de verdad.",
+        title: "Investigación, después flujos",
+        body: "Primero, descubrimiento e investigación competitiva y con usuarios. Después, seis flujos mapeados con sus excepciones antes de cualquier pantalla: en la banca, la excepción es el producto.",
       },
       {
-        title: "Flujos antes que pantallas",
-        body: "Mapeamos el comportamiento del sistema para cada caso de uso antes de dibujar nada: ingreso y registro, pagos, activar y desactivar servicios, transferencias, enviar y solicitar, bloquear un producto. Seis flujos, con sus excepciones y sus estados de error, porque en la banca la excepción es el producto.",
-      },
-      {
-        title: "Wireframes interactivos, probados con personas",
-        body: "Cada etapa pasó por un prototipo interactivo antes del diseño visual. Eso le permitió al equipo y al cliente ver cómo funcionaría el producto de verdad, y nos dejó hacer pruebas con usuarios sin pagar antes un desarrollo completo. El flujo de registro pasó por varias rondas a partir de esa retroalimentación.",
-      },
-      {
-        title: "Un sistema, no un conjunto de pantallas",
-        body: "Los productos grandes no escalan sin uno. Velocity documenta fundamentos, átomos, moléculas y organismos para que los diseñadores de productos digitales, mercadeo e ingeniería estén sincronizados. Seguí el diseño atómico a propósito, porque la misma estructura sobrevive a la entrega al front end.",
+        title: "Prototipos probados con personas",
+        body: "Cada etapa se volvió un prototipo interactivo que los usuarios probaron antes de cualquier desarrollo; el registro pasó por varias rondas.",
       },
     ],
     decisions: [
       {
-        title: "Diseño atómico, porque el front end también piensa así",
-        body: "Un sistema de diseño se puede organizar de muchas maneras. Elegí átomos, moléculas y organismos porque esa estructura sobrevive al paso al código: ingeniería construía componentes con la misma granularidad, así que la documentación y la implementación podían compartir un vocabulario en lugar de traducirse.",
-      },
-      {
         title: "Dos capas de navegación, y no más",
-        body: "El portal anterior enterraba a la gente en árboles de páginas anidadas. Reemplacé la profundidad de navegación por un sistema de popups: la página, luego un fondo desenfocado, luego el componente, luego el popup. Dos capas alcanzan para cada tarea bancaria del producto, y nadie se pierde en algo de dos capas de profundidad.",
+        body: "El portal anterior enterraba a la gente en páginas anidadas. Un sistema de popups reemplazó la profundidad de navegación, y dos capas alcanzan para cada tarea bancaria.",
       },
       {
         title: "Idéntico entre dispositivos, no solo parecido",
-        body: "El brief pedía una experiencia similar en escritorio, tableta y celular. Apuntamos a idéntica. Cada capacidad del escritorio llega al teléfono con los mismos nombres y en el mismo orden, porque un cliente que aprende el portal en un portátil no debería tener que volver a aprenderlo en el bus.",
+        body: "El brief pedía algo similar. Cada capacidad del escritorio llega al celular con los mismos nombres, en el mismo orden: nada que volver a aprender en el bus.",
       },
     ],
+    // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
       {
         alt: "El portal transaccional del Banco de Occidente en una tableta: una barra lateral con el nombre del cliente y su nivel de beneficios, tarjetas de una Mastercard y de una cuenta de ahorros con sus saldos, una fila de transacciones favoritas, un calendario del mes y un gráfico de gastos.",
         caption: "El inicio del portal: productos, transacciones favoritas y el mes de un vistazo.",
       },
       {
+        alt: "Dos pantallas de iPhone lado a lado: el detalle de una Mastercard Black con pago mínimo, pago total y fecha límite sobre un botón de Pagar, y la pestaña de movimientos con compras con tarjeta, fechas, número de cuotas y montos.",
+        caption: "En el celular: cada capacidad del escritorio, en el mismo orden.",
+      },
+      {
+        alt: "La sección de cuentas del portal en una tableta: una tarjeta de cuenta de ahorros con saldo disponible, canjeable y actual, una tabla filtrable de movimientos con compras y transferencias y sus montos, y un aviso de éxito que confirma el bloqueo de una chequera.",
+        caption: "Saldos, movimientos y la prueba de que el bloqueo funcionó.",
+      },
+      {
         alt: "La pantalla de ingreso del portal en una tableta: un aviso de cookies arriba, un panel promocional a la izquierda y una tarjeta de ingreso que pide tipo de documento, número de documento y contraseña, con enlaces para recuperar la contraseña y para registrarse.",
-        caption: "Ingreso y registro, sin nada que distraiga a mitad de la tarea.",
-      },
-      {
-        alt: "El flujo de registro y clave de un solo uso diagramado en cajas y flechas: registrarse, ingresar tipo y número de documento, enviar una clave de un solo uso, ingresarla o pedir otra por SMS, aceptar el tratamiento de datos y luego un ingreso exitoso o una falla de validación.",
-        caption: "Uno de seis flujos mapeados antes de que existiera cualquier pantalla, excepciones incluidas.",
-      },
-      {
-        alt: "El índice del sistema de diseño Velocity, de cinco columnas: Documentación, Fundamentos, Átomos, Moléculas y Organismos, con conceptos básicos, reglas de nombres, principios de escritura, grillas, espaciado, colores, tipografía, botones, inputs, controles, íconos, campos, desplegables, listas, tablas, encabezados, formularios, modales, selector de fecha y navegación por pestañas.",
-        caption: "Velocity, indexado como se construye el front end.",
+        caption: "Ingreso, sin nada que distraiga a mitad de la tarea.",
       },
       {
         alt: "Tableros de fundamentos del sistema dispuestos en perspectiva: una escala de color de azul claro a oscuro con secundarios neutros y dorados, una escala tipográfica del hero al caption, una escala de espaciado y hojas con los estados de botones y campos de formulario.",
         caption: "Fundamentos: color, tipografía, espaciado y cada estado de cada control.",
       },
       {
+        alt: "El índice del sistema de diseño Velocity, de cinco columnas: Documentación, Fundamentos, Átomos, Moléculas y Organismos, con conceptos básicos, reglas de nombres, principios de escritura, grillas, espaciado, colores, tipografía, botones, inputs, controles, íconos, campos, desplegables, listas, tablas, encabezados, formularios, modales, selector de fecha y navegación por pestañas.",
+        caption: "Velocity, indexado como se construye el front end.",
+      },
+      {
         alt: "Quince íconos ilustrados en línea azul y verde: un extracto, un puntaje de crédito, un certificado, un documento programado, un pin de ubicación, monedas apiladas, una alcancía, un pago con el celular, un mensaje en el celular, un celular con un más, un celular protegido, un celular con huella, una transacción fallida, una casa y una ventana de navegador.",
         caption: "Quince íconos dibujados para el sistema, no licenciados.",
       },
       {
-        alt: "La sección de cuentas del portal en una tableta: una tarjeta de cuenta de ahorros con saldo disponible, canjeable y actual, una tabla filtrable de movimientos con compras y transferencias y sus montos, y un aviso de éxito que confirma el bloqueo de una chequera.",
-        caption: "Cuentas y tarjetas: saldos, movimientos y la confirmación de que el bloqueo funcionó.",
-      },
-      {
         alt: "El sistema de popups dibujado como cuatro planos apilados en perspectiva, rotulados desde el fondo: la página, un fondo desenfocado, el componente y el popup.",
-        caption: "Profundidad en vez de anidación: dos capas cubren cada tarea del producto.",
+        caption: "Profundidad en vez de anidación: dos capas, cada tarea.",
       },
       {
-        alt: "Dos pantallas de iPhone lado a lado: el detalle de una Mastercard Black con pago mínimo, pago total y fecha límite sobre un botón de Pagar, y la pestaña de movimientos con compras con tarjeta, fechas, número de cuotas y montos.",
-        caption: "El mismo portal en un celular: cada capacidad del escritorio, en el mismo orden.",
+        alt: "El flujo de registro y clave de un solo uso diagramado en cajas y flechas: registrarse, ingresar tipo y número de documento, enviar una clave de un solo uso, ingresarla o pedir otra por SMS, aceptar el tratamiento de datos y luego un ingreso exitoso o una falla de validación.",
+        caption: "El registro, mapeado con sus excepciones antes de cualquier pantalla.",
       },
     ],
     links: [{ label: "Prototipo interactivo (Figma)" }, { label: "Caso en Behance" }],
@@ -511,15 +500,15 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "1 año",
     team: "Equipo multifuncional EE. UU. + LATAM",
     tagline:
-      "Diseñando experiencias a bordo para las flotas de Royal Caribbean en rutas por el Caribe y el Mediterráneo.",
+      "Reservas móviles y experiencias a bordo para los huéspedes de Royal Caribbean en rutas por el Caribe y el Mediterráneo.",
     impact:
-      "Experiencias a bordo que acompañan al pasajero desde la reserva hasta el desembarque, resistentes a la vida en altamar.",
+      "Un solo recorrido móvil desde la reserva hasta el desembarque —horarios, restaurantes, excursiones, saldos— que aguanta el Wi-Fi irregular de un barco.",
     context:
-      "Los huéspedes de un crucero pasan una semana a bordo con una conexión irregular. Diseñé la reserva y la experiencia a bordo —horarios, restaurantes, excursiones, saldos— para huéspedes de todas las edades y de cualquier nivel de comodidad con la tecnología.",
+      "Huéspedes de todas las edades y niveles de comodidad con la tecnología pasan una semana a bordo con una conexión irregular. Diseñé la reserva y la experiencia a bordo para que les sirvieran a todos.",
     contributions: [
-      "**Flujos de reserva móviles** para distintos destinos y tipos de camarote.",
+      "**Reservas móviles**: flujos para distintos destinos y tipos de camarote.",
       "**Experiencia a bordo**: horarios, restaurantes, excursiones y saldos que funcionan con un Wi-Fi intermitente.",
-      "**Colaboración remota** con los equipos de producto e ingeniería en la sede de Royal Caribbean en Estados Unidos.",
+      "**Colaboración remota**: con producto e ingeniería en la sede de Royal Caribbean en Estados Unidos.",
     ],
     kpis: [
       { label: "Flotas y regiones", delta: "Caribe + Mediterráneo" },
@@ -535,41 +524,41 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "11 meses",
     team: "Producto + Ingeniería",
     tagline:
-      "Un constructor de automatizaciones para encuestas: un disparador, una condición y una acción, armados por personas que nunca habían dibujado un diagrama de flujo.",
+      "Un constructor de automatizaciones para encuestas —disparador, condición, acción— para personas que nunca habían dibujado un diagrama de flujo.",
     impact:
-      "Una mala respuesta podía responderse sola: una encuesta de seguimiento una semana después, y el resultado en la bandeja correcta, sin nadie pendiente de ello.",
+      "Una mala respuesta podía responderse sola: una encuesta de seguimiento una semana después y los resultados en la bandeja correcta, sin nadie pendiente.",
     context:
-      "Qrvey era una plataforma de encuestas y NPS: armabas un Qrvey, la gente lo respondía y después alguien tenía que leer las respuestas y hacer algo con ellas. AutomatiQ era la parte que hacía algo. Como diseñador UI líder diseñé el constructor: la lista de procesos, las tarjetas de disparadores, el editor de condiciones y las acciones que ejecutan.",
+      "Qrvey era una plataforma de encuestas y NPS; alguien todavía tenía que actuar sobre las respuestas. Como diseñador UI líder, diseñé AutomatiQ, el constructor que lo hacía.",
     contributions: [
-      "**Una lista de procesos que muestra si un proceso está funcionando**: estado, las encuestas que cubre, el tiempo promedio de ciclo y cuántos ciclos ha corrido, en la misma fila. Un proceso que se había detenido en silencio se veía sin abrirlo.",
-      "**Disparadores como tarjetas, no como lienzo**: una programación con sus propias reglas de repetición y de fin, o una respuesta nueva a una encuesta elegida, cada una como una tarjeta que se expande en su sitio. Sin conectores que dibujar y nada que acomodar.",
-      "**Condiciones con las palabras del propio producto**: *si la respuesta es* o *número de respuestas*, sobre una pregunta y sus respuestas, con filas que se agregan y se quitan una a una.",
-      "**Acciones que vuelven al producto**: el editor de correo adjunta los resultados y pone un enlace vivo a una encuesta en el cuerpo, así que el seguimiento es la siguiente encuesta y no un mensaje sobre ella.",
+      "**Una lista que informa sobre sí misma**: cada proceso muestra su estado, las encuestas que cubre, el tiempo promedio de ciclo y los ciclos que ha corrido.",
+      "**Tarjetas, no un lienzo**: disparadores y condiciones se abren en su sitio, con las palabras del producto; sin conectores que dibujar.",
+      "**El seguimiento es la siguiente encuesta**: los correos llevan los resultados y un enlace vivo a una encuesta en el cuerpo.",
     ],
+    // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
       {
         alt: "La pestaña de Automatización de Qrvey: un botón de Crear proceso sobre una lista de tarjetas de procesos, cada una con una barra de estado de color que dice En ejecución o En pausa, su nombre y fecha de creación, y tres cifras: encuestas cubiertas, tiempo promedio y ciclos ejecutados. Una barra lateral ofrece encuestas de ejemplo y consejos.",
-        caption: "Cada proceso dice si está corriendo y qué ha hecho.",
+        caption: "Cada proceso: en ejecución o en pausa, y lo que ha hecho.",
+      },
+      {
+        alt: "Una condición bajo un disparador de Respuesta nueva: dos pastillas, Si la respuesta es y Número de respuestas, sobre un panel con una pregunta y sus filas de respuestas con botones para agregar o quitar cada una, y una fila de Seleccionar acción esperando debajo.",
+        caption: "Condiciones con las palabras del producto: «si la respuesta es», «número de respuestas».",
       },
       {
         alt: "Una tarjeta de disparador de Programación expandida: frecuencia de repetición, un intervalo en días y una hora del día, una fecha de inicio y un final que es un número de ejecuciones o una fecha específica.",
-        caption: "El disparador de programación, con las dos formas en que puede terminar.",
+        caption: "Programación, con las dos formas en que puede terminar.",
       },
       {
         alt: "Un disparador de Respuesta nueva con su selector de encuestas abierto: una lista buscable de encuestas, cada fila con una insignia de Activa o Borrador y la fecha en que se activó.",
         caption: "Elegir la encuesta cuyas respuestas inician el proceso.",
       },
       {
-        alt: "Una condición bajo un disparador de Respuesta nueva: dos pastillas, Si la respuesta es y Número de respuestas, sobre un panel con una pregunta y sus filas de respuestas con botones para agregar o quitar cada una, y una fila de Seleccionar acción esperando debajo.",
-        caption: "El editor de condiciones: una pregunta, sus respuestas y lo que sigue.",
-      },
-      {
         alt: "La acción Enviar correo abierta: chips de destinatarios, un asunto con el conteo de caracteres restantes, un mensaje de texto enriquecido con botones para adjuntar resultados o insertar una encuesta, un enlace a una encuesta insertado en el cuerpo y un bloque de adjunto con la encuesta elegida.",
-        caption: "La acción de correo, con los resultados adjuntos y una encuesta en el cuerpo.",
+        caption: "Correo: resultados adjuntos y una encuesta en el cuerpo.",
       },
       {
         alt: "Un proceso completo armado a partir de un escenario escrito en lenguaje simple arriba: un disparador de respuesta nueva, una condición sobre la respuesta dada y dos acciones de correo —una a quien respondió con una encuesta de seguimiento y otra al equipo con los resultados— sobre un botón de Guardar cambios que advierte que guardar reinicia el proceso.",
-        caption: "Un escenario de punta a punta: disparador, condición y dos acciones.",
+        caption: "Un escenario: disparador, condición y dos acciones.",
       },
     ],
     technologies: ["Sketch", "Sistemas de diseño", "Diseño de interacción", "Visualización de datos"],
@@ -582,20 +571,19 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "1 año",
     team: "Agencia distribuida",
     tagline:
-      "Diseñando wireframes, UI kits y prototipos para clientes internacionales, en web y móvil.",
+      "Wireframes, UI kits y prototipos para clientes de Estados Unidos y Latinoamérica, en web y móvil.",
     impact:
-      "Diseño de producto en fintech, marketplaces y B2B: la soltura entre dominios que después hizo natural el trabajo de sistemas.",
+      "Diseño listo para desarrollo en fintech, marketplaces y B2B: la soltura entre dominios que después hizo natural el trabajo de sistemas.",
     context:
-      "Una agencia remota que atendía clientes de Estados Unidos y Latinoamérica. Cada proyecto implicaba aprender rápido un dominio nuevo y entregar un diseño limpio y listo para desarrollo.",
+      "Una agencia remota, donde el trabajo era aprender rápido el dominio de cada cliente y entregar un diseño limpio.",
     contributions: [
-      "**Wireframes y UI kits** para productos fintech, de consumo y B2B.",
-      "**Prototipos de alta fidelidad** para validar con stakeholders y entregar a desarrollo.",
-      "**Patrones reutilizables** aplicados y ajustados a cada cliente.",
+      "**Wireframes y UI kits**: para productos fintech, de consumo y B2B.",
+      "**Prototipos de alta fidelidad**: para validar con stakeholders y entregar a desarrollo.",
+      "**Patrones reutilizables**: aplicados entre clientes y ajustados a cada uno.",
     ],
     kpis: [
       { value: "Agencia", label: "Un dominio nuevo en cada proyecto" },
       { value: "EE. UU. + LATAM", label: "Clientes distribuidos" },
-      { value: "Listo para dev", label: "Calidad de entrega" },
     ],
     technologies: ["Sketch", "InVision", "Wireframing", "Prototipado"],
     externalLink: { label: "Visitar ideaware.co" },
@@ -607,38 +595,38 @@ export const workEs: Record<string, CaseCopy> = {
     roleOverride: "Diseñador de producto — de punta a punta",
     team: "Yo y el equipo de desarrollo, hasta la entrega",
     tagline:
-      "Reserva un carro por minuto, mira cuánto cuesta antes de comprometerte y controla la cabina una vez estás adentro.",
+      "Reserva un carro por minuto, conoce el costo de antemano y después controla la cabina.",
     impact:
-      "Un flujo de reserva que responde las dos preguntas que una app de alquiler suele esconder —qué carro es este y cuánto va a costar este viaje— antes de que aceptes cualquiera de las dos.",
+      "Un flujo de reserva que responde lo que las apps de alquiler suelen esconder —qué carro es y cuánto cuesta el viaje— antes de que te comprometas.",
     context:
-      "Un proyecto paralelo de 2018, junto al trabajo de planta. Chub reserva un carro, no un viaje: eliges un vehículo, ves su autonomía y cuánto cobra por minuto, y la app se convierte en los controles de la cabina cuando arranca el viaje. Lo diseñé desde cero y trabajé con el equipo de desarrollo hasta la entrega.",
+      "Chub reserva un carro, no un viaje: eliges un vehículo, ves su autonomía y su tarifa por minuto, y cuando arranca el viaje la app se convierte en los controles de la cabina.",
     contributions: [
-      "**La ficha del vehículo empieza por la decisión**: autonomía, aceleración, puestos y la tarifa por minuto en una sola tarjeta, encima del botón. Lo que alguien necesita para elegir no queda escondido detrás.",
-      "**La pantalla de ruta pone precio al viaje antes de empezar**: recogida, destino, una duración estimada y un rango de tarifa, con la tarjeta guardada ya a la vista, para que la última pantalla no tenga sorpresas.",
-      "**La app se vuelve el carro**: con el viaje en marcha, el mismo producto se convierte en un panel de cabina: clima, asientos ventilados, temperatura interior y exterior, y la velocidad.",
-      "**Oscuro por defecto, un solo acento**: un violeta que solo marca lo que está activo: la ruta en curso, el vehículo elegido, la acción principal.",
+      "**La decisión en una sola tarjeta**: autonomía, aceleración, puestos y la tarifa por minuto, encima del botón.",
+      "**El costo por adelantado**: recogida, destino, tiempo estimado y un rango de tarifa, antes de que empiece el viaje.",
+      "**La app se vuelve el carro**: en pleno viaje maneja el clima y los asientos ventilados, y muestra la temperatura y la velocidad.",
     ],
+    // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
       {
-        alt: "La primera pantalla de Chub: el logotipo sobre un carro dibujado en un anillo luminoso, la frase «Choose a Vehicle and trip with style» y un botón de Get started sobre un enlace de Skip.",
-        caption: "Primer uso: qué es el producto, en una pantalla.",
-      },
-      {
         alt: "La ficha de un vehículo sobre el mapa: el modelo con su calificación, una fila de especificaciones con aceleración, autonomía y puestos, su dirección de recogida y distancia, la tarjeta guardada, un precio por minuto y un botón de Book Car.",
-        caption: "Autonomía, tarifa y distancia antes del botón, no después.",
+        caption: "Autonomía, tarifa y distancia antes del botón.",
       },
       {
         alt: "La ruta dibujada sobre un mapa oscuro con un marcador de distancia, y un panel debajo con la recogida y el destino, la clase de servicio, un rango de tarifa, el tiempo estimado de viaje, la tarjeta guardada y un botón de Need Assistance.",
-        caption: "El viaje, con precio y tiempo, antes de empezar.",
+        caption: "Con precio y tiempo antes de empezar.",
       },
       {
         alt: "El panel dentro del carro: chips para el aire acondicionado y los asientos ventilados, temperatura interior y exterior, un indicador circular en 65 km/h con el selector de cambios alrededor y una línea que dice que el aire acondicionado está encendido.",
         caption: "En marcha, la app es la cabina.",
       },
+      {
+        alt: "La primera pantalla de Chub: el logotipo sobre un carro dibujado en un anillo luminoso, la frase «Choose a Vehicle and trip with style» y un botón de Get started sobre un enlace de Skip.",
+        caption: "Primer uso: el producto en una pantalla.",
+      },
     ],
     technologies: ["Sketch", "iOS", "Prototipado", "Entrega a desarrollo"],
     credits:
-      "Diseño de producto de punta a punta: flujos, interfaz y la entrega. Lo construyó un equipo de desarrollo con el que trabajé. El proyecto terminó en la entrega; nunca se lanzó.",
+      "Diseño de producto de punta a punta, entregado al equipo de desarrollo que lo construyó. Nunca se lanzó.",
   },
 
   makeappet: {
@@ -647,41 +635,41 @@ export const workEs: Record<string, CaseCopy> = {
     roleOverride: "Diseñador de producto — de punta a punta",
     team: "Yo y el equipo de desarrollo, hasta la entrega",
     tagline:
-      "Desliza para conocer a un perro o un gato cerca de ti: el patrón que la gente ya conoce, apuntado a la adopción en lugar de a las citas.",
+      "Desliza para conocer a un perro o un gato cerca: el patrón de las apps de citas que todos conocen, apuntado a la adopción.",
     impact:
-      "La adopción tomó prestada la única interacción que todo el mundo ya sabe usar, y puso la petición de donación de un refugio donde ya estaba la atención.",
+      "La adopción tomó prestada la interacción que todo el mundo ya sabe usar, y puso la petición de donación de los refugios donde ya estaba la atención.",
     context:
-      "Un proyecto paralelo de 2018, junto al trabajo de planta. MakeAppet aplica el patrón de deslizar para hacer match a encontrar una mascota cerca: explorar por especie, deslizar entre las que están cerca y abrir un perfil completo antes de decidir. Lo diseñé desde cero y trabajé con el equipo de desarrollo hasta la entrega.",
+      "MakeAppet aplica el deslizar para hacer match a encontrar una mascota cerca: explorar por especie, deslizar entre las que están cerca y abrir un perfil completo antes de decidir.",
     contributions: [
-      "**La tarjeta lleva la decisión, el perfil lleva el detalle**: nombre, edad y distancia en la tarjeta; raza, peso, sexo y una descripción escrita un toque más adentro. Nadie adopta solo con una fotografía.",
-      "**Dos formas de entrar, no una**: una pila para deslizar al explorar y una grilla filtrada por especie y distancia, porque la mitad de quienes llegan ya saben si quieren un gato.",
-      "**La petición del refugio va en la pantalla de exploración**: un panel de donación entre la búsqueda y los resultados, donde ya está la atención, en lugar de detrás de un menú que nadie abre.",
-      "**La pantalla de match entrega una primera frase**: el momento del match también es el momento de no saber qué decir, así que la pantalla ofrece el saludo en lugar de un campo vacío.",
+      "**Nadie adopta por una foto**: un toque más adentro, el perfil suma raza, peso, sexo y una descripción.",
+      "**Dos formas de entrar**: deslizar para explorar, o filtrar por especie y distancia cuando ya sabes qué buscas.",
+      "**La petición del refugio donde la gente mira**: un panel de donación entre la búsqueda y los resultados, no escondido en un menú.",
     ],
+    // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
-      {
-        alt: "La pantalla de bienvenida: una grilla de fotografías de perros con sus dueños detrás de una huella, la frase «Connect and uncover the ideal pets that match your preferences in your area» y un botón de Explore.",
-        caption: "La premisa, antes de pedir cualquier cuenta.",
-      },
       {
         alt: "La pantalla para deslizar: pestañas For you y Nearby sobre una tarjeta a sangre con la foto de un perro, su nombre, edad y distancia, y botones redondos para descartar y dar like debajo.",
         caption: "El patrón que todos ya conocen, sin cambios.",
       },
       {
         alt: "El perfil de una mascota: una fotografía grande, el nombre y la distancia, una grilla de cuatro celdas con edad, raza, sexo y peso, una descripción escrita y un botón principal de Bark me junto a uno de favorito.",
-        caption: "Raza, edad, peso y una descripción: lo que una foto no puede contar.",
-      },
-      {
-        alt: "La pantalla de exploración: una ubicación y un campo de búsqueda con filtros, un panel violeta que pide una donación a nombre de los refugios, y luego una sección de Adopción con pestañas por especie y una grilla de mascotas cercanas.",
-        caption: "Explorar por especie, con la petición de los refugios en el flujo.",
+        caption: "Lo que una foto no puede contar.",
       },
       {
         alt: "La pantalla de match: un título de Congratulations con una cinta de It's a Match, las dos mascotas a cada lado de un corazón, una frase de saludo sugerida y un botón de Say woof sobre un enlace de Not now.",
         caption: "Un match, y algo que decir.",
       },
+      {
+        alt: "La pantalla de exploración: una ubicación y un campo de búsqueda con filtros, un panel violeta que pide una donación a nombre de los refugios, y luego una sección de Adopción con pestañas por especie y una grilla de mascotas cercanas.",
+        caption: "Explorar por especie, con la petición de los refugios incluida.",
+      },
+      {
+        alt: "La pantalla de bienvenida: una grilla de fotografías de perros con sus dueños detrás de una huella, la frase «Connect and uncover the ideal pets that match your preferences in your area» y un botón de Explore.",
+        caption: "La premisa, antes de pedir una cuenta.",
+      },
     ],
     technologies: ["Sketch", "iOS", "Prototipado", "Entrega a desarrollo"],
     credits:
-      "Diseño de producto de punta a punta: flujos, interfaz y la entrega. Lo construyó un equipo de desarrollo con el que trabajé. El proyecto terminó en la entrega; nunca se lanzó.",
+      "Diseño de producto de punta a punta, entregado al equipo de desarrollo que lo construyó. Nunca se lanzó.",
   },
 };
