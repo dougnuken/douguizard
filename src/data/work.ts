@@ -119,15 +119,15 @@ export const caseStudies: CaseStudy[] = [
     team: "Solo — design, engineering, shipping",
     kind: "personal",
     tagline:
-      "A personal finance PWA that reads your pace, not your balance. Live, 634 tests, zero dependencies.",
+      "A personal finance app that reads your spending pace, not your balance — designed, built and shipped solo.",
     impact:
-      "Live, installable, in daily use: 634 tests in 292ms, zero dependencies, designed and engineered end to end with AI in the loop.",
+      "Live and in daily use: log an expense by photo, voice, bank text or PDF, and one color tells you whether the month is on pace.",
     context:
       "Budgeting apps answer \"how much is left\", the anxious question. I built olbo for my own household: a local-first PWA in Colombian pesos whose traffic light reads spending pace against the calendar.",
     contributions: [
       "**Product and interface** — 24 views, from the traffic-light dashboard to AI that reads receipts, voice and PDFs.",
       "**Zero dependencies** — vanilla ES modules, no build step; pure budget math, so 634 tests run in 292ms.",
-      "**Verifiable privacy** — local-first, with a strict CSP that allows nothing but the app and api.anthropic.com.",
+      "**Privacy you can check** — your data stays on the phone; the only thing that leaves it is the call to the AI.",
     ],
     kpis: [
       { value: "634", label: "Tests passing", delta: "in 292ms" },
@@ -201,7 +201,7 @@ export const caseStudies: CaseStudy[] = [
       label:
         "Screen recording of olbo: an expense of 120.000 Colombian pesos typed on the app's own keypad, categorized and saved, then the dashboard and the movements list recalculating.",
       caption:
-        "The floor every capture path lands on: 120.000 pesos in four taps, and the pace recalculated before the sheet closes.",
+        "An expense logged in four taps; the month's pace updates before the sheet closes.",
       width: 786,
       height: 1704,
     },
@@ -257,19 +257,19 @@ export const caseStudies: CaseStudy[] = [
     tagline:
       "Digitizing how Colombia runs its sport: 130+ screens across 8 modules, designed and built with AI.",
     impact:
-      "One AI-native platform now stands in for a stack of disconnected tools, shipped at a pace a classic design-to-dev handoff can't match.",
+      "30 sports-sector procedures that lived in Word, email and a document manager, now in one platform: 130+ screens across 8 modules, prototyped in code with AI.",
     context:
-      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build its platform, SUID, in code: one design system, AI in the loop.",
+      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build the platform myself, in code: one design system, AI in the loop.",
     contributions: [
-      "**One design system** — 38+ naowee-* components and a single wizard recipe hold 130+ screens to one language.",
+      "**One design system** — 38+ shared components and one step-by-step form pattern keep 130+ screens consistent.",
       "**The sector's real hierarchy** — committees → federations → leagues → clubs → athletes, modeled with cascading approval.",
       "**Prototypes, not specs** — built with Claude Code, Cursor and Gemini; analysts sign off on the running product.",
     ],
     kpis: [
       { value: "30", label: "Procedures digitized", delta: "Word, email and GESDOC before" },
       { value: "~1,200", label: "Sports organizations in scope" },
-      { value: "130+", label: "Screens shipped", delta: "across 8 business modules" },
-      { value: "8", label: "Business modules", delta: "of 13 total" },
+      { value: "130+", label: "Screens shipped", delta: "across 8 of 13 modules" },
+      { value: "38+", label: "Shared components", delta: "one design system" },
     ],
     process: [
       {
@@ -379,6 +379,8 @@ export const caseStudies: CaseStudy[] = [
     num: "/03",
     experienceId: "mercadolibre",
     project: "Andes Design System",
+    // The kicker names the brand; the h1 under it already names the system.
+    clientOverride: "Mercadolibre",
     category: "Design Systems × E-commerce",
     duration: "~2 years",
     team: "400+ designers, 2,000+ engineers",
@@ -425,13 +427,13 @@ export const caseStudies: CaseStudy[] = [
     testimonialId: "francesca",
     project: "Banco de Occidente",
     category: "Banking × Design Systems",
-    duration: "6 years",
+    duration: "5+ years",
     team: "12+ product squads",
     kind: "client",
     tagline:
       "One of Colombia's largest banks: its portal redesigned, and Velocity, the design system 12+ squads shared.",
     impact:
-      "An overloaded banking portal rebuilt as one light, legible product, on a documented system that made each screen cheaper than the last.",
+      "A dense portal rebuilt as one light product, on a design system that made each new screen cheaper than the last.",
     context:
       "The portal was dense and hard to navigate, and every squad solved the same problems differently. I redesigned it and built Velocity to fix both.",
     contributions: [
@@ -442,13 +444,15 @@ export const caseStudies: CaseStudy[] = [
     kpis: [
       // Doug's own figure, consistent across cv.ts and the published piece.
       { value: "12+", label: "Product squads aligned", delta: "one system" },
-      // Derived from the Aval experience (Nov 2018 — 2024), not typed.
-      { value: "6 yr", label: "As design system gatekeeper" },
+      // The Aval experience runs Nov 2018 — Jan 2024: five years and two months,
+      // printed beside this card in the meta strip. "6 yr" contradicted it.
+      { value: "5+ yr", label: "As design system gatekeeper" },
       // Counted off the published system grid: 23 named tiles across five
       // columns. "20+" is deliberately conservative so it cannot be over-read.
       { value: "20+", label: "Documented system areas", delta: "foundations → organisms" },
-      // The "Illustrated Icons" section of the piece: three rows of five.
-      { value: "15", label: "Illustrated icons", delta: "drawn for the system" },
+      // The redesign's defining promise, from the first contribution: one portal,
+      // identical on all three. The fifteen icons stay in the gallery caption.
+      { value: "3", label: "Devices, one portal", delta: "desktop, tablet, mobile" },
       // ⚠️ CONFIRMAR DOUG — "millions of customers" was a KPI here ("M+") with
       // no source behind it, so it is out. Reinstate only against a real figure.
     ],
@@ -586,7 +590,7 @@ export const caseStudies: CaseStudy[] = [
       "The aesthetic-medicine clinic I co-own in Barranquilla ran on WhatsApp, Google Calendar and a shared Drive: everything written down, nothing connected. I built one panel on top of those tools, not instead of them.",
     contributions: [
       "**Three locked phases** — valuation, payment, procedure; the procedure's green light needs full payment, receipt and signed consent.",
-      "**One file, two runtimes** — a read-only Claude artifact, and a web panel behind a Cloudflare Worker.",
+      "**Safe rollout** — a read-only version on day one; editing came later, behind per-person logins and a security audit.",
       "**Rules as tested functions** — balances, card fees, dates and name matching, covered by 12 test suites.",
     ],
     kpis: [
@@ -669,7 +673,7 @@ export const caseStudies: CaseStudy[] = [
       label:
         "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one",
       caption:
-        "One note fills the new-patient form and opens the case; on this demo, simple rules stand in for the model.",
+        "A voice note fills in a new patient and opens her case. Demo data; here, fixed rules stand in for the AI.",
       width: 786,
       height: 1704,
     },
@@ -753,13 +757,10 @@ export const caseStudies: CaseStudy[] = [
       "**Onboard experience** — schedules, dining, excursions and balances that work on intermittent Wi-Fi.",
       "**Remote collaboration** — with US product and engineering at Royal Caribbean HQ.",
     ],
-    kpis: [
-      { value: "2", label: "Fleets & regions", delta: "Caribbean + Med" },
-      { value: "End-to-end", label: "Guest journey" },
-      { value: "Offline", label: "Resilient at sea" },
-    ],
+    // No KPIs: "End-to-end" and "Offline" were words in number slots, and one
+    // figure alone reads as a gap. No external link either: globant.com is the
+    // employer's site and shows none of this work.
     technologies: ["Sketch", "iOS", "Android", "Prototyping", "Cross-cultural collaboration"],
-    externalLink: { label: "Visit globant.com", href: "https://www.globant.com" },
   },
   {
     slug: "qrvey",
@@ -771,10 +772,12 @@ export const caseStudies: CaseStudy[] = [
     duration: "11 months",
     team: "Product + Engineering",
     kind: "client",
+    // The kicker names the company; "Survey & NPS Platform" read as a category.
+    clientOverride: "Qrvey",
     tagline:
       "A survey automation builder — trigger, condition, action — for people who had never drawn a flow chart.",
     impact:
-      "A bad answer could answer itself: a follow-up survey a week later, and the results in the right inbox, with nobody watching.",
+      "A negative answer could trigger its own follow-up — a new survey a week later, results emailed to the team — set up with cards, not a flow chart.",
     context:
       "Qrvey was a survey and NPS platform; someone still had to act on the answers. As lead UI designer, I designed AutomatiQ, the builder that did.",
     contributions: [
@@ -856,14 +859,9 @@ export const caseStudies: CaseStudy[] = [
       "**High-fidelity prototypes** — for stakeholder validation and developer handoff.",
       "**Reusable patterns** — applied across clients and tailored to each.",
     ],
-    // "Dev-ready" is gone from the cards: it is one of the draft placeholder
-    // values the content suite bans. The claim itself lives in `impact`.
-    kpis: [
-      { value: "Agency", label: "A new domain each engagement" },
-      { value: "US + LATAM", label: "Distributed clients" },
-    ],
+    // No KPIs: "Agency" and "US + LATAM" were words in number slots. No
+    // external link: the agency's site shows none of this work.
     technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
-    externalLink: { label: "Visit ideaware.co", href: "https://www.ideaware.co" },
   },
   {
     slug: "chub",
@@ -875,7 +873,7 @@ export const caseStudies: CaseStudy[] = [
     roleOverride: "Product designer — end to end",
     yearOverride: "2018",
     duration: "2018",
-    team: "Me and the dev team, through handoff",
+    team: "Solo designer, handed off to a dev team",
     // ⚠️ CONFIRMAR DOUG — Doug calls it "Chupp"; the splash screen's wordmark
     // reads CHUB. Going with the artwork, since that is what a reader sees.
     tagline:
@@ -932,7 +930,7 @@ export const caseStudies: CaseStudy[] = [
     roleOverride: "Product designer — end to end",
     yearOverride: "2018",
     duration: "2018",
-    team: "Me and the dev team, through handoff",
+    team: "Solo designer, handed off to a dev team",
     tagline:
       "Swipe to meet a dog or cat nearby: the dating pattern everyone knows, pointed at adoption.",
     impact:

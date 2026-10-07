@@ -19,15 +19,15 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "Semanas, y sigue en marcha",
     team: "Solo — diseño, ingeniería, lanzamiento",
     tagline:
-      "Una PWA de finanzas personales que lee tu ritmo, no tu saldo. En vivo, 634 pruebas, cero dependencias.",
+      "Una app de finanzas personales que lee tu ritmo de gasto, no tu saldo: diseñada, construida y lanzada en solitario.",
     impact:
-      "En vivo, instalable y en uso diario: 634 pruebas en 292 ms, cero dependencias, diseñada e implementada de punta a punta con la IA en el proceso.",
+      "En vivo y en uso diario: registras un gasto con una foto, la voz, el mensaje del banco o un PDF, y un solo color te dice si el mes va a buen ritmo.",
     context:
       "Las apps de presupuesto responden «cuánto te queda», la pregunta ansiosa. Construí olbo para mi propio hogar: una PWA local-first en pesos colombianos cuyo semáforo lee el ritmo de gasto contra el calendario.",
     contributions: [
       "**Producto e interfaz**: 24 vistas, del tablero del semáforo a la IA que lee recibos, voz y PDF.",
       "**Cero dependencias**: módulos ES nativos, sin paso de build; matemática de presupuesto pura, así que 634 pruebas corren en 292 ms.",
-      "**Privacidad verificable**: local-first, con una CSP estricta que no permite nada más que la app y api.anthropic.com.",
+      "**Privacidad comprobable**: tus datos se quedan en el celular; lo único que sale de él es la llamada a la IA.",
     ],
     kpis: [
       { label: "Pruebas que pasan", delta: "en 292 ms" },
@@ -87,7 +87,7 @@ export const workEs: Record<string, CaseCopy> = {
       label:
         "Grabación de olbo: un gasto de 120.000 pesos digitado en el teclado propio de la app, categorizado y guardado; luego el tablero y la lista de movimientos se recalculan.",
       caption:
-        "El piso al que llega toda captura: 120.000 pesos en cuatro toques y el ritmo recalculado antes de que se cierre la hoja.",
+        "Un gasto registrado en cuatro toques; el ritmo del mes se actualiza antes de que se cierre la hoja.",
     },
     gallery: [
       {
@@ -129,19 +129,19 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "Digitalizar cómo Colombia gestiona su deporte: más de 130 pantallas en 8 módulos, diseñadas y construidas con IA.",
     impact:
-      "Una sola plataforma nativa de IA reemplaza hoy una pila de herramientas desconectadas, y sale a un ritmo que la entrega clásica de diseño a desarrollo no alcanza.",
+      "30 trámites del sector deportivo que vivían en Word, correo y un gestor documental, ahora en una sola plataforma: más de 130 pantallas en 8 módulos, prototipadas en código con IA.",
     context:
-      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo en código su plataforma, SUID: un solo sistema de diseño, con la IA en el proceso.",
+      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo la plataforma yo mismo, en código: un solo sistema de diseño, con la IA en el proceso.",
     contributions: [
-      "**Un solo sistema de diseño**: más de 38 componentes naowee-* y una sola receta de asistente mantienen más de 130 pantallas en un mismo lenguaje.",
+      "**Un solo sistema de diseño**: más de 38 componentes compartidos y un solo patrón de formulario por pasos mantienen coherentes más de 130 pantallas.",
       "**La jerarquía real del sector**: comités → federaciones → ligas → clubes → deportistas, modelada con aprobación en cascada.",
       "**Prototipos, no especificaciones**: construidos con Claude Code, Cursor y Gemini; los analistas aprueban contra el producto en marcha.",
     ],
     kpis: [
       { label: "Trámites digitalizados", delta: "antes en Word, correo y GESDOC" },
       { value: "~1.200", label: "Organizaciones deportivas en alcance" },
-      { label: "Pantallas entregadas", delta: "en 8 módulos de negocio" },
-      { label: "Módulos de negocio", delta: "de 13 en total" },
+      { label: "Pantallas entregadas", delta: "en 8 de 13 módulos" },
+      { label: "Componentes compartidos", delta: "un solo sistema de diseño" },
     ],
     process: [
       {
@@ -246,12 +246,12 @@ export const workEs: Record<string, CaseCopy> = {
 
   "banco-de-occidente": {
     category: "Banca × Sistemas de diseño",
-    duration: "6 años",
+    duration: "Más de 5 años",
     team: "12+ squads de producto",
     tagline:
       "Uno de los bancos más grandes de Colombia: su portal rediseñado y Velocity, el sistema de diseño que compartían más de 12 squads.",
     impact:
-      "Un portal bancario sobrecargado, reconstruido como un solo producto liviano y legible, sobre un sistema documentado que hizo cada pantalla más barata que la anterior.",
+      "Un portal denso, reconstruido como un solo producto liviano, sobre un sistema de diseño que hizo cada pantalla nueva más barata que la anterior.",
     context:
       "El portal era denso y difícil de recorrer, y cada squad resolvía los mismos problemas a su manera. Lo rediseñé y construí Velocity para resolver ambas cosas.",
     contributions: [
@@ -261,9 +261,9 @@ export const workEs: Record<string, CaseCopy> = {
     ],
     kpis: [
       { label: "Squads de producto alineados", delta: "un solo sistema" },
-      { value: "6 años", label: "Como guardián del sistema de diseño" },
+      { value: "5+ años", label: "Como guardián del sistema de diseño" },
       { label: "Áreas del sistema documentadas", delta: "de fundamentos a organismos" },
-      { label: "Íconos ilustrados", delta: "dibujados para el sistema" },
+      { label: "Dispositivos, un solo portal", delta: "escritorio, tableta, celular" },
     ],
     process: [
       {
@@ -333,7 +333,7 @@ export const workEs: Record<string, CaseCopy> = {
   "dc-medical": {
     category: "Operación clínica × Ingeniería de diseño",
     roleOverride: "Diseñador de producto e ingeniero de diseño — de punta a punta",
-    duration: "En vivo desde el 21 sep 2026 — sigue saliendo",
+    duration: "En vivo desde el 21 sep 2026, en desarrollo activo",
     team: "Solo — producto, diseño, código",
     tagline:
       "El panel que maneja una clínica desde el celular de la secretaria. Ningún procedimiento empieza sin estar pagado.",
@@ -343,7 +343,7 @@ export const workEs: Record<string, CaseCopy> = {
       "La clínica de medicina estética de la que soy socio, en Barranquilla, funcionaba con WhatsApp, Google Calendar y un Drive compartido: todo escrito, nada conectado. Construí un panel encima de esas herramientas, no en su lugar.",
     contributions: [
       "**Tres fases con candado**: valoración, pago, procedimiento; la luz verde del procedimiento exige el pago completo, su recibo y el consentimiento firmado.",
-      "**Un archivo, dos entornos**: un artifact de Claude de solo lectura y un panel web detrás de un Cloudflare Worker.",
+      "**Salida segura**: una versión de solo lectura desde el primer día; la edición llegó después, con acceso por persona y una auditoría de seguridad.",
       "**Reglas como funciones con pruebas**: saldos, comisiones de tarjeta, fechas y el emparejado de nombres, cubiertos por 12 suites de pruebas.",
     ],
     kpis: [
@@ -359,7 +359,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         title: "Primero leer, después escribir",
-        body: "La primera versión fue un artifact de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La escritura llegó después, con un usuario por persona y una auditoría de seguridad; en vivo desde el 21 de septiembre.",
+        body: "La primera versión fue un artefacto de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La escritura llegó después, con un usuario por persona y una auditoría de seguridad; en vivo desde el 21 de septiembre.",
       },
       {
         title: "El celular reescribió la interfaz",
@@ -408,7 +408,7 @@ export const workEs: Record<string, CaseCopy> = {
       label:
         "En el celular: una nota de voz llena el formulario de paciente nueva, la valoración toma una hora libre del calendario de la clínica y, al guardar, se abre el caso en la fase uno",
       caption:
-        "Una nota llena el formulario de paciente nueva y abre el caso; en esta demo, reglas simples reemplazan al modelo.",
+        "Una nota de voz llena la ficha de una paciente nueva y abre su caso. Datos de demostración; aquí, reglas fijas hacen el papel de la IA.",
     },
     // Paired by index with work.ts: the case sheet leads, then the agenda.
     gallery: [
@@ -469,13 +469,7 @@ export const workEs: Record<string, CaseCopy> = {
       "**Experiencia a bordo**: horarios, restaurantes, excursiones y saldos que funcionan con un Wi-Fi intermitente.",
       "**Colaboración remota**: con producto e ingeniería en la sede de Royal Caribbean en Estados Unidos.",
     ],
-    kpis: [
-      { label: "Flotas y regiones", delta: "Caribe + Mediterráneo" },
-      { value: "De punta a punta", label: "Recorrido del huésped" },
-      { value: "Sin conexión", label: "Resistente en altamar" },
-    ],
     technologies: ["Sketch", "iOS", "Android", "Prototipado", "Colaboración intercultural"],
-    externalLink: { label: "Visitar globant.com" },
   },
 
   qrvey: {
@@ -485,9 +479,9 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "Un constructor de automatizaciones para encuestas —disparador, condición, acción— para personas que nunca habían dibujado un diagrama de flujo.",
     impact:
-      "Una mala respuesta podía responderse sola: una encuesta de seguimiento una semana después y los resultados en la bandeja correcta, sin nadie pendiente.",
+      "Una respuesta negativa podía disparar su propio seguimiento —una nueva encuesta una semana después y los resultados por correo al equipo—, configurado con tarjetas, no con un diagrama de flujo.",
     context:
-      "Qrvey era una plataforma de encuestas y NPS; alguien todavía tenía que actuar sobre las respuestas. Como diseñador UI líder, diseñé AutomatiQ, el constructor que lo hacía.",
+      "Qrvey era una plataforma de encuestas y NPS; alguien todavía tenía que actuar sobre las respuestas. Como diseñador UI principal, diseñé AutomatiQ, el constructor que lo hacía.",
     contributions: [
       "**Una lista que informa sobre sí misma**: cada proceso muestra su estado, las encuestas que cubre, el tiempo promedio de ciclo y los ciclos que ha corrido.",
       "**Tarjetas, no un lienzo**: disparadores y condiciones se abren en su sitio, con las palabras del producto; sin conectores que dibujar.",
@@ -540,19 +534,14 @@ export const workEs: Record<string, CaseCopy> = {
       "**Prototipos de alta fidelidad**: para validar con stakeholders y entregar a desarrollo.",
       "**Patrones reutilizables**: aplicados entre clientes y ajustados a cada uno.",
     ],
-    kpis: [
-      { value: "Agencia", label: "Un dominio nuevo en cada proyecto" },
-      { value: "EE. UU. + LATAM", label: "Clientes distribuidos" },
-    ],
     technologies: ["Sketch", "InVision", "Wireframing", "Prototipado"],
-    externalLink: { label: "Visitar ideaware.co" },
   },
 
   chub: {
     category: "iOS × Movilidad",
-    clientOverride: "Proyecto freelance paralelo",
+    clientOverride: "Proyecto freelance",
     roleOverride: "Diseñador de producto — de punta a punta",
-    team: "Yo y el equipo de desarrollo, hasta la entrega",
+    team: "Diseño en solitario, entregado a un equipo de desarrollo",
     tagline:
       "Reserva un carro por minuto, conoce el costo de antemano y después controla la cabina.",
     impact:
@@ -590,9 +579,9 @@ export const workEs: Record<string, CaseCopy> = {
 
   makeappet: {
     category: "iOS × Adopción de mascotas",
-    clientOverride: "Proyecto freelance paralelo",
+    clientOverride: "Proyecto freelance",
     roleOverride: "Diseñador de producto — de punta a punta",
-    team: "Yo y el equipo de desarrollo, hasta la entrega",
+    team: "Diseño en solitario, entregado a un equipo de desarrollo",
     tagline:
       "Desliza para conocer a un perro o un gato cerca: el patrón de las apps de citas que todos conocen, apuntado a la adopción.",
     impact:
