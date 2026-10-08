@@ -1081,6 +1081,12 @@ const PERSONAL_PRODUCT: Record<Locale, string> = { en: "Personal product", es: "
  * Lives here rather than in `career.ts` so the import direction stays
  * `career.ts → cv.ts` and `work.ts → cv.ts + career.ts` — no cycle.
  *
+ * The client is the case's `clientOverride` first, for any case: the CV names
+ * the end client of an engagement ("Andes Design System", "Survey & NPS
+ * Platform") where a case page wants the brand it was for, and the kicker
+ * above an h1 that already says "Andes Design System" must not say it again.
+ * Without an override it is the CV's client, then the employer.
+ *
  * Throws on an unknown slug, and on a personal case missing its overrides:
  * a typo must fail the build, not render blank.
  */
@@ -1109,7 +1115,7 @@ export function getCaseMeta(slug: string, locale: Locale = "en"): CaseMeta {
   const period = c.yearOverride ?? formatPeriod(exp, locale);
 
   return {
-    client: exp.client ?? exp.company.name,
+    client: c.clientOverride ?? exp.client ?? exp.company.name,
     role: c.roleOverride ?? exp.role,
     year: period,
     period,

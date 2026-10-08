@@ -42,6 +42,10 @@ type Tone = NonNullable<BandProps["tone"]>;
  * what it looks like, who did what, what it changed, and someone else saying
  * so. The deep read (process, decisions) follows for whoever stays.
  *
+ * A case with no screens still opens on evidence rather than prose: on the
+ * NDA notice when the screens are the client's, on the testimonial when there
+ * is one and nothing else to show.
+ *
  * Every section is optional and guarded: a case with only a hero, a meta strip
  * and a paragraph renders precisely those, and gains no empty headings. Role,
  * year, client and duration come from `getCaseMeta` — derived from the career
@@ -68,6 +72,12 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   const nda = study.nda && !study.gallery?.length;
   const vignette = nda ? VIGNETTES[study.slug] : undefined;
 
+  // A case with nothing to show and no notice to give (Royal Caribbean) would
+  // open on a hero and then text. Its strongest proof is someone else's word,
+  // so the testimonial takes the showcase's slot — straight under the hero —
+  // instead of its usual one after "what I did", and is not repeated there.
+  const proofFirst = !showcase && !nda && study.testimonialId ? study.testimonialId : undefined;
+
   /*
    * The bands after the showcase alternate paper and raised by position, not
    * by name. Which bands a case has varies — Qrvey has no process, Royal
@@ -79,7 +89,9 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
     { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={study.links} /> },
     {
       key: "impact",
-      render: (tone) => <CaseImpact tone={tone} impact={study.impact} kpis={study.kpis} />,
+      render: (tone) => (
+        <CaseImpact tone={tone} impact={study.impact} kpis={study.kpis} kind={study.kind} />
+      ),
     },
     {
       key: "narrative",
@@ -88,7 +100,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
       ),
     },
   ];
-  if (study.testimonialId) {
+  if (study.testimonialId && !proofFirst) {
     const id = study.testimonialId;
     bands.push({ key: "testimonial", render: (tone) => <CaseTestimonial tone={tone} id={id} /> });
   }
@@ -135,9 +147,11 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
       <main id="main" tabIndex={-1}>
         <CaseHeader study={study} meta={meta} />
 
-        {/* The showcase sits on the raised tone, so the first band after it
-            opens on paper. */}
+        {/* Whatever stands in the showcase's slot — the product, the NDA
+            notice or the testimonial — sits on the raised tone, so the first
+            counted band after it opens on paper. */}
         {showcase && <CaseShowcase project={study.project} plan={media} />}
+        {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
         {nda && (
           <CaseNda
             body={dict.case.ndaBody}

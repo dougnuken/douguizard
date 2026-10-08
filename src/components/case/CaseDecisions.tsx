@@ -20,9 +20,11 @@ export interface Decision {
  *
  * The section keeps its sticky eyebrow in the left gutter — the one band that
  * still does. It is the deepest read on the page, and the label is what tells
- * a reader halfway down it what they are reading.
+ * a reader halfway down it what they are reading. It is two words ("Key
+ * decisions") because the gutter is 200px: the longer label it replaced broke
+ * in two there, and a label that wraps no longer reads as one.
  *
- * The bullet is a short rule on the baseline rather than a filled dot: the
+ * The bullet is a short rule beside the first line rather than a filled dot: the
  * same weight, but a typographic mark rather than the page's one loud dot
  * repeated in three unrelated meanings.
  */
@@ -38,11 +40,14 @@ export default function CaseDecisions({ decisions, tone }: { decisions: Decision
               key={decision.title}
               className="hairline-b grid grid-cols-1 gap-3 py-6 md:py-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10"
             >
-              <div className="flex items-baseline gap-3.5">
-                <span
-                  aria-hidden
-                  className="inline-block h-px w-2.5 shrink-0 -translate-y-[0.35em] bg-[var(--ink)]"
-                />
+              {/* The rule hangs from the top of the row, not off its baseline:
+                  the masked title is an inline-block, and an inline-block's
+                  baseline is its LAST line, so a two-line title used to get
+                  its mark beside the second line. The row carries the title's
+                  size so the rule's `em` is the title's — 0.7em down is the
+                  middle of the first line's lowercase at 1.3 leading. */}
+              <div className="flex items-start gap-3.5 text-[clamp(18px,1.5vw,21px)]">
+                <span aria-hidden className="mt-[0.7em] h-px w-2.5 shrink-0 bg-[var(--ink)]" />
                 <RevealText
                   as="h3"
                   variant="mask"

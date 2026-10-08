@@ -16,6 +16,11 @@ import { Band, FadeIn, SlashLabel, type BandProps } from "./primitives";
 export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandProps["tone"] }) {
   const t = useDict().case;
   const locale = useLocale();
+  // The line over the title says who the work was for — unless that IS the
+  // title ("BANCO DE OCCIDENTE" over "Banco de Occidente"), where it says
+  // what kind of work it was instead, the same rule the hero's kicker keeps.
+  const client = getCaseMeta(next.slug, locale).client;
+  const over = client.toLowerCase() === next.project.toLowerCase() ? next.category : client;
   return (
     <Band tone={tone} rule="t">
       <FadeIn>
@@ -28,7 +33,7 @@ export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandP
             className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-transform duration-500 group-hover:translate-x-2"
             style={{ transitionTimingFunction: "var(--ease-out)" }}
           >
-            {getCaseMeta(next.slug, locale).client}
+            {over}
           </div>
 
           <h2

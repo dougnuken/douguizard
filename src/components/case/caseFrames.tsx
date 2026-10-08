@@ -6,7 +6,7 @@ import { BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 import type { MockupItem } from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
-import { shotNumber, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
+import { balanceColumns, shotNumber, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
 import { FadeIn } from "./primitives";
 
 /**
@@ -72,14 +72,34 @@ function PlainCaption({ shot }: { shot: Shot }) {
  * tablet, a phone or an isometric board drawn inside it. Wrapping those in a
  * browser window would render a browser containing a tablet containing the
  * product, so `plain` gives them the same 1px card as every other frame and
- * nothing else. Ratios differ per item (0.92 → 2.16), so nothing is forced into
+ * nothing else. Ratios differ per item (0.56 → 3.43), so nothing is forced into
  * a shared aspect box; each card is as tall as its screen.
+ *
+ * Which is why the two columns are CSS columns rather than grid rows. A grid
+ * row is as tall as its taller card, so a 2000×3543 scenario left ~1,150px of
+ * empty column beside it, and a short card under a tall one left a hole.
+ * Columns stack each card straight under the one before.
+ *
+ * Which card goes in which column is `balanceColumns`' call, not the
+ * browser's: left to itself a multicol fills one column and then the other,
+ * and with cards this uneven no single cut comes out even. The list is
+ * written left column first, a forced column break opens the right one, and
+ * `break-inside-avoid` keeps each card with its caption. On a phone it is one
+ * column again, and `order` puts the cards back in their authored sequence —
+ * the "01/02" numbers read in order at every width.
  */
 export function PlainGallery({ shots, ariaLabel }: { shots: Shot[]; ariaLabel: string }) {
+  const [left, right] = balanceColumns(shots);
   return (
-    <ul aria-label={ariaLabel} className="grid list-none grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
-      {shots.map((shot, i) => (
-        <li key={shot.item.src} className="self-start">
+    <ul aria-label={ariaLabel} className="flex list-none flex-col gap-8 md:block md:columns-2 md:gap-6">
+      {[...left, ...right].map((shot, i) => (
+        <li
+          key={shot.item.src}
+          style={{ order: shot.num }}
+          className={`break-inside-avoid ${
+            i === left.length - 1 || i === shots.length - 1 ? "" : "md:mb-6"
+          } ${i === left.length ? "md:break-before-column" : ""}`}
+        >
           <FadeIn delay={Math.min(i * 0.05, 0.25)}>
             <figure className="m-0">
               <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">

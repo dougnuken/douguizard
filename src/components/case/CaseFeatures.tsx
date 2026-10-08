@@ -35,9 +35,25 @@ function FeatureKind({ kind }: { kind?: Feature["kind"] }) {
 }
 
 /**
+ * Columns by feature count, so the last row is never one card alone. Static
+ * strings — Tailwind scans source text.
+ *
+ * Four is two pairs at every width, not a row of three with an orphan under
+ * it. Three is one row on a desktop and a stack below it, since a tablet's two
+ * columns would strand the third. Counts that split cleanly into neither (five,
+ * seven) take three across, where the short row at least holds two.
+ */
+function columnsFor(count: number): string {
+  if (count <= 1) return "";
+  if (count === 3) return "lg:grid-cols-3";
+  if (count % 2 === 0 && count % 3 !== 0) return "md:grid-cols-2";
+  return "md:grid-cols-2 lg:grid-cols-3";
+}
+
+/**
  * What the product can do, as a grid of cards a reader can skim by title.
  *
- * Three across on a desktop, two on a tablet, one on a phone — with the
+ * Up to three across on a desktop, two on a tablet, one on a phone — with the
  * eyebrow on top rather than in a sticky gutter, because a grid needs the
  * whole measure. Titles carry the weight; bodies drop to the caption step, so
  * a reader who only reads titles still gets the list.
@@ -66,7 +82,9 @@ export default function CaseFeatures({
         </RevealText>
       )}
 
-      <ul className="mt-10 grid list-none grid-cols-1 gap-x-10 gap-y-8 p-0 md:mt-12 md:grid-cols-2 md:gap-y-10 lg:grid-cols-3">
+      <ul
+        className={`mt-10 grid list-none grid-cols-1 gap-x-10 gap-y-8 p-0 md:mt-12 md:gap-y-10 ${columnsFor(features.length)}`}
+      >
         {features.map((feature, i) => {
           const delay = Math.min(i * 0.05, 0.25);
           return (

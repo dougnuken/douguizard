@@ -3,10 +3,12 @@ import { caseStudies, getCaseStudies } from "@/data/work";
 import {
   LEAD_PHONES_MAX,
   LEAD_PHONES_SPLIT,
+  balanceColumns,
   hasShowcase,
   planCaseMedia,
   shotNumber,
   type GalleryItem,
+  type Shot,
 } from "@/lib/caseMedia";
 
 const shots = (n: number): GalleryItem[] =>
@@ -91,5 +93,58 @@ describe("planCaseMedia — the rules", () => {
   it("numbers stills with two digits", () => {
     expect(shotNumber(3)).toBe("03");
     expect(shotNumber(12)).toBe("12");
+  });
+});
+
+describe("balanceColumns", () => {
+  const sized = (dims: [number, number][]): Shot[] =>
+    dims.map(([width, height], i) => ({
+      item: { src: `/work/x/s${i + 1}.webp`, alt: `Screen ${i + 1}`, width, height },
+      num: i + 1,
+    }));
+  // A column's height, in column widths, as the split estimates it.
+  const tall = (column: Shot[]) =>
+    column.reduce((sum, { item }) => sum + item.height! / item.width! + 0.1, 0);
+  const nums = (column: Shot[]) => column.map((s) => s.num);
+
+  // Every real plain gallery, in both languages: the split may move a screen
+  // to the other column, never drop, repeat or reorder one within a column.
+  for (const locale of ["en", "es"] as const) {
+    for (const study of getCaseStudies(locale).filter((s) => s.galleryKind === "plain")) {
+      it(`${locale}/${study.slug}: every still once, each column in order, the first top left`, () => {
+        const { rest } = planCaseMedia(study);
+        const [left, right] = balanceColumns(rest);
+        expect([...nums(left), ...nums(right)].sort((a, b) => a - b)).toEqual(nums(rest));
+        for (const column of [left, right]) {
+          expect(nums(column)).toEqual([...nums(column)].sort((a, b) => a - b));
+        }
+        expect(left[0]).toBe(rest[0]);
+      });
+    }
+  }
+
+  it("evens out what no single cut can: one tall board among short ones", () => {
+    // Banco de Occidente's gallery band. The best cut CSS columns could make
+    // left ~1.1 column widths (~760px) between the two.
+    const shots = sized([
+      [1510, 1461], [1784, 1218], [1784, 1218], [2033, 2340],
+      [1786, 795], [1203, 709], [1569, 804], [1965, 1053],
+    ]);
+    const [left, right] = balanceColumns(shots);
+    expect(Math.abs(tall(left) - tall(right))).toBeLessThan(0.1);
+  });
+
+  it("keeps the authored cut when it is already the even one", () => {
+    // Qrvey: four short boards, then the 2000×3543 scenario on its own.
+    const shots = sized([[2000, 1200], [2000, 682], [2000, 583], [2000, 1040], [2000, 3543]]);
+    const [left, right] = balanceColumns(shots);
+    expect(nums(left)).toEqual([1, 2, 3, 4]);
+    expect(nums(right)).toEqual([5]);
+  });
+
+  it("handles no still and one still", () => {
+    expect(balanceColumns([])).toEqual([[], []]);
+    const one = sized([[1000, 800]]);
+    expect(balanceColumns(one)).toEqual([one, []]);
   });
 });

@@ -112,10 +112,12 @@ export function caseMetadata(locale: Locale, slug: string): Metadata {
   }
 
   const meta = getCaseMeta(study.slug, locale);
-  // "Banco de Occidente — Banco de Occidente" stutters, so a case whose
-  // project and client are the same word keeps one of them.
-  const title =
-    study.project === meta.client ? study.project : `${study.project} — ${meta.client}`;
+  // "Banco de Occidente — Banco de Occidente" stutters, and so does "Qrvey —
+  // AutomatiQ — Qrvey" now that a case can name its brand: a project that
+  // already opens with its client's name keeps it once.
+  const title = study.project.toLowerCase().startsWith(meta.client.toLowerCase())
+    ? study.project
+    : `${study.project} — ${meta.client}`;
   const path = `/work/${study.slug}`;
   const site = getSite(locale);
 

@@ -25,12 +25,16 @@ export default function CaseMeta({
   tone?: BandProps["tone"];
 }) {
   const t = useDict().case.meta;
+  // A duration that only repeats the year ("Duration 2018" beside "Year 2018")
+  // says nothing the year does not, so the cell goes rather than stutter. The
+  // grid keeps its four tracks, so the cells that remain stay on the columns
+  // the walkthrough caption above them is aligned to.
   const cells = [
     { label: t.role, value: meta.role },
-    { label: t.duration, value: meta.duration },
+    meta.duration.trim() !== meta.year.trim() && { label: t.duration, value: meta.duration },
     { label: t.team, value: meta.team },
     { label: t.year, value: meta.year },
-  ];
+  ].filter((cell) => cell !== false);
 
   return (
     <Band tone={tone} rule="t" wide className="py-10 md:py-12">
