@@ -677,9 +677,12 @@ export const caseStudies: CaseStudy[] = [
     // agenda; the browser gallery runs two full-width leaders and two-up rows,
     // so the day view sits beside the slots, and the follow-up board beside the
     // permissions sheet drawn over it.
+    // The two drawer captures are `-v2`: re-exported with the drawer's backdrop
+    // lifted. The new name is what invalidates the image optimiser's year-long
+    // cache, which keys on the URL, not on the file's contents.
     gallery: [
       {
-        src: "/work/dc-medical/caso-fases.webp",
+        src: "/work/dc-medical/caso-fases-v2.webp",
         alt: "A patient's case sheet open over the cases list: a three-step tracker with valuation and payment done and the procedure current, the procedure set at four vials for face and neck, the procedure date booked, a payment bar at 5.3 of 9.8 million pesos, the case's payments newest first, and a footer naming the next step — register the final payment.",
         caption: "The case: what's paid, what's missing, the one action that comes next.",
       },
@@ -704,7 +707,7 @@ export const caseStudies: CaseStudy[] = [
         caption: "Follow-up, counted: who's due, who has no date yet, who slipped.",
       },
       {
-        src: "/work/dc-medical/usuarios-permisos.webp",
+        src: "/work/dc-medical/usuarios-permisos-v2.webp",
         alt: "Editing a user in Users and permissions: the doctor's account set to view only, with toggles to see, create and edit per area — and to delete, for patients and cases — across agenda and follow-up, patients and cases, and patient payments, under presets for running the day, viewing only, and nothing.",
         caption: "Permissions by area: the doctor reads, the secretary runs the day.",
       },
