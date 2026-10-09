@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { caseStudies, getCaseMeta, type CaseStudy } from "@/data/work";
+import { caseStudies, getCaseMeta, getCaseStudy, type CaseStudy } from "@/data/work";
 
 describe("getCaseMeta", () => {
   it("derives client, role and year from the experience for a client case", () => {
@@ -19,6 +19,24 @@ describe("getCaseMeta", () => {
     expect(meta.client).toBe("Personal product");
     expect(meta.role).toBe("Design Engineer — end to end");
     expect(meta.year).toBe("2026");
+  });
+
+  it("prefers a case's clientOverride to the CV's client, for a case with an experience too", () => {
+    const index = caseStudies.findIndex((c) => c.slug === "banco-de-occidente");
+    const original = caseStudies[index];
+    caseStudies[index] = { ...original, clientOverride: "Grupo Aval" };
+    try {
+      const meta = getCaseMeta("banco-de-occidente");
+      expect(meta.client).toBe("Grupo Aval");
+      // Only the client moves: role and period still come off the experience.
+      expect(meta.role).toBe("Senior Product Designer · Design System Gatekeeper");
+      expect(meta.year).toBe("Nov 2018 — Jan 2024");
+    } finally {
+      caseStudies[index] = original;
+    }
+    // Without one, the CV's client; without that, the employer.
+    expect(getCaseMeta("banco-de-occidente").client).toBe("Banco de Occidente");
+    expect(getCaseMeta("ideaware").client).toBe("Ideaware");
   });
 
   it("throws on an unknown slug", () => {
@@ -43,7 +61,11 @@ describe("getCaseMeta", () => {
     expect(getCaseMeta("banco-de-occidente", "es").year).toBe("Nov 2018 — Ene 2024");
     expect(getCaseMeta("olbo", "es").client).toBe("Producto propio");
     expect(getCaseMeta("dc-medical", "es").client).toBe("DC Medical Aesthetics");
-    expect(getCaseMeta("qrvey", "es").client).toBe("Plataforma de encuestas y NPS");
+    // The Spanish CV names Qrvey's end client in Spanish. The case may name
+    // its brand instead (`clientOverride` wins), so the expectation follows
+    // whichever the data says rather than pinning one of them.
+    const qrvey = getCaseStudy("qrvey", "es");
+    expect(getCaseMeta("qrvey", "es").client).toBe(qrvey?.clientOverride ?? "Plataforma de encuestas y NPS");
     // Job titles are the ones on the contract, in both languages.
     expect(getCaseMeta("banco-de-occidente", "es").role).toBe(
       getCaseMeta("banco-de-occidente", "en").role,

@@ -12,8 +12,10 @@ test("S1 sticky eyebrow behaviour through its whole band", async ({ page }) => {
 
   const info = await page.evaluate(async () => {
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    // The Decisions band is the one that keeps a sticky gutter eyebrow; the
+    // Process band's eyebrow sits on top of its timeline and never sticks.
     const h2 = Array.from(document.querySelectorAll<HTMLElement>("h2")).find((h) =>
-      /how it happened/i.test(h.textContent || ""),
+      /key decisions|decisiones clave/i.test(h.textContent || ""),
     );
     if (!h2) return { found: false as const };
     const cs = getComputedStyle(h2);

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { ComponentType } from "react";
 import { getCaseMeta, getCaseStudies, type CaseStudy } from "@/data/work";
 import { getSections } from "@/data/sections";
 import { getSite } from "@/data/site";
@@ -7,27 +6,7 @@ import { yearsOfExperience } from "@/lib/career";
 import { localePath, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
-import VignetteOlbo from "@/components/vignettes/VignetteOlbo";
-import VignetteNaowee from "@/components/vignettes/VignetteNaowee";
-import VignetteMercadolibre from "@/components/vignettes/VignetteMercadolibre";
-import VignetteBanco from "@/components/vignettes/VignetteBanco";
-import VignetteDc from "@/components/vignettes/VignetteDc";
-import type { VignetteProps } from "@/components/vignettes/VignetteFrame";
-
-/**
- * The cases that carry a live vignette. Captions and labels are words, so
- * they come from the dictionary under the same key.
- */
-const VIGNETTES: Record<
-  string,
-  { Component: ComponentType<VignetteProps>; key: "olbo" | "naowee" | "andes" | "banco" | "dc" }
-> = {
-  olbo: { Component: VignetteOlbo, key: "olbo" },
-  "naowee-suid": { Component: VignetteNaowee, key: "naowee" },
-  "mercadolibre-andes": { Component: VignetteMercadolibre, key: "andes" },
-  "banco-de-occidente": { Component: VignetteBanco, key: "banco" },
-  "dc-medical": { Component: VignetteDc, key: "dc" },
-};
+import { VIGNETTES } from "@/components/vignettes/registry";
 
 function MetaLine({ study, locale }: { study: CaseStudy; locale: Locale }) {
   const meta = getCaseMeta(study.slug, locale);
@@ -36,6 +15,8 @@ function MetaLine({ study, locale }: { study: CaseStudy; locale: Locale }) {
   // and a personal one, whose client is the literal "Personal product" and
   // whose category already opens with it.
   const clientIsRedundant =
+    // Side projects sit under their own group heading, which already says so.
+    study.kind === "side" ||
     study.project === meta.client ||
     (study.kind === "personal" && study.category.toLowerCase().startsWith(meta.client.toLowerCase()));
 

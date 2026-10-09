@@ -109,12 +109,17 @@ export interface BandProps {
  * One horizontal band of the case. Replaces the `section` + max-width +
  * padding triplet that the monolith repeated thirteen times, so the page's
  * rhythm lives in one place and a band can never drift half a step.
+ *
+ * The step is 64/96, down from 96/128. At the old step a dozen bands spent
+ * close to three screens on padding alone, and the page read as long before
+ * anyone had read a word of it. The bands are scannable grids now, not essays,
+ * and they need a gap, not a pause.
  */
 export function Band({ children, tone = "paper", rule = "none", wide = false, className }: BandProps) {
   return (
     <section
       className={twMerge(
-        "relative z-[2] px-6 py-24 md:px-12 md:py-32",
+        "relative z-[2] px-6 py-16 md:px-12 md:py-24",
         tone === "raised" ? "bg-[var(--paper-raised)]" : "bg-[var(--paper)]",
         RULES[rule],
         className,

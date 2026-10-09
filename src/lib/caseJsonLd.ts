@@ -19,8 +19,11 @@ const SITE_URL = `https://${site.domain}`;
 export function caseJsonLd(study: CaseStudy, locale: Locale = "en") {
   const meta = getCaseMeta(study.slug, locale);
   const home = localePath(locale, "/");
-  const name =
-    study.project === meta.client ? study.project : `${study.project} — ${meta.client}`;
+  // Named as the page's <title> is (metadata.ts): a project that already opens
+  // with its client's name ("Qrvey — AutomatiQ") does not repeat it.
+  const name = study.project.toLowerCase().startsWith(meta.client.toLowerCase())
+    ? study.project
+    : `${study.project} — ${meta.client}`;
 
   return {
     "@context": "https://schema.org",

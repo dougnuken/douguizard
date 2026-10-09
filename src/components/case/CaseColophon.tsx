@@ -1,12 +1,13 @@
 "use client";
 
-import { Band, FadeIn, SlashLabel, renderBold } from "./primitives";
+import { Band, FadeIn, SlashLabel, renderBold, type BandProps } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface CaseColophonProps {
   technologies?: string[];
   externalLink?: { label: string; href: string };
   credits?: string;
+  tone?: BandProps["tone"];
 }
 
 /**
@@ -21,10 +22,11 @@ export default function CaseColophon({
   technologies,
   externalLink,
   credits,
+  tone,
 }: CaseColophonProps) {
   const t = useDict().case;
   return (
-    <Band tone="paper" rule="t" className="py-20 md:py-24">
+    <Band tone={tone} rule="t" className="py-14 md:py-20">
       <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
         {technologies && technologies.length > 0 && (
           <FadeIn>

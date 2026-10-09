@@ -1,7 +1,7 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, renderBold } from "./primitives";
+import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface ProcessPhase {
@@ -10,49 +10,66 @@ export interface ProcessPhase {
   body: string;
 }
 
-/** How the work actually happened, phase by phase — the how after the what. */
-export default function CaseProcess({ process }: { process: ProcessPhase[] }) {
+/**
+ * Columns by phase count. Static strings — Tailwind scans source text. Four
+ * phases run as one row; five or six fold into rows of three rather than
+ * leaving a single phase stranded on a second row of four.
+ */
+function columnsFor(count: number): string {
+  if (count <= 1) return "";
+  if (count === 2) return "md:grid-cols-2";
+  if (count === 3) return "md:grid-cols-3";
+  if (count === 4) return "md:grid-cols-2 lg:grid-cols-4";
+  return "md:grid-cols-2 lg:grid-cols-3";
+}
+
+/**
+ * How the work actually happened — as a timeline, not an essay.
+ *
+ * It used to be one phase per full-width row, numeral in a gutter, a paragraph
+ * per row: four screens of reading for something whose shape is "four steps".
+ * The phases now sit side by side, each on a segment of one hairline with a
+ * short ink tick where it begins, so the sequence is legible before a word of
+ * it is: number, title, and the short account under it for whoever wants it.
+ */
+export default function CaseProcess({ process, tone }: { process: ProcessPhase[]; tone?: BandProps["tone"] }) {
   const t = useDict().case;
   return (
-    <Band tone="raised" rule="y">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>{t.howItHappened}</EyebrowHeading>
-        <ol className="hairline-t m-0 list-none p-0">
-          {process.map((phase, i) => (
-            <li
-              key={phase.phase}
-              className="hairline-b grid grid-cols-1 gap-4 py-8 md:grid-cols-[64px_1fr] md:gap-8 md:py-11"
+    <Band tone={tone} rule="t">
+      <EyebrowHeading>{t.howItHappened}</EyebrowHeading>
+
+      <ol className={`mt-10 grid list-none grid-cols-1 gap-x-8 gap-y-10 p-0 md:mt-12 ${columnsFor(process.length)}`}>
+        {process.map((phase, i) => (
+          <li key={phase.phase} className="hairline-t relative pt-5 md:pt-6">
+            {/* The tick marks where a phase starts on the shared line. */}
+            <span aria-hidden className="absolute -top-px left-0 h-px w-6 bg-[var(--ink)]" />
+            <RevealText
+              as="div"
+              variant="mask"
+              delay={i * 0.04}
+              className="section-num text-[clamp(18px,1.6vw,22px)] leading-none"
             >
-              <RevealText
-                as="div"
-                variant="mask"
-                delay={i * 0.04}
-                className="section-num text-[clamp(24px,2.5vw,36px)] leading-none"
-              >
-                {phase.phase}
-              </RevealText>
-              <div>
-                <RevealText
-                  as="h3"
-                  variant="mask"
-                  delay={i * 0.04 + 0.05}
-                  className="font-display text-[clamp(21px,2.1vw,30px)] font-medium leading-[1.2] tracking-[-0.02em] text-[var(--ink)]"
-                >
-                  {phase.title}
-                </RevealText>
-                <RevealText
-                  as="p"
-                  variant="fade"
-                  delay={i * 0.04 + 0.1}
-                  className="mt-4 max-w-[680px] text-[clamp(15px,1.3vw,18px)] leading-[1.65] text-[var(--ink-muted)]"
-                >
-                  {renderBold(phase.body)}
-                </RevealText>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
+              {phase.phase}
+            </RevealText>
+            <RevealText
+              as="h3"
+              variant="mask"
+              delay={i * 0.04 + 0.05}
+              className="mt-4 font-display text-[clamp(18px,1.5vw,21px)] font-medium leading-[1.25] tracking-[-0.015em] text-[var(--ink)]"
+            >
+              {phase.title}
+            </RevealText>
+            <RevealText
+              as="p"
+              variant="fade"
+              delay={i * 0.04 + 0.1}
+              className="mt-3 text-[15px] leading-[1.6] text-[var(--ink-muted)]"
+            >
+              {renderBold(phase.body)}
+            </RevealText>
+          </li>
+        ))}
+      </ol>
     </Band>
   );
 }

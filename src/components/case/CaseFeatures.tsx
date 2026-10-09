@@ -1,7 +1,7 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, renderBold } from "./primitives";
+import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Feature {
@@ -34,70 +34,84 @@ function FeatureKind({ kind }: { kind?: Feature["kind"] }) {
   );
 }
 
-/** What the product can do — between the decisions and the screens. */
+/**
+ * Columns by feature count, so the last row is never one card alone. Static
+ * strings — Tailwind scans source text.
+ *
+ * Four is two pairs at every width, not a row of three with an orphan under
+ * it. Three is one row on a desktop and a stack below it, since a tablet's two
+ * columns would strand the third. Counts that split cleanly into neither (five,
+ * seven) take three across, where the short row at least holds two.
+ */
+function columnsFor(count: number): string {
+  if (count <= 1) return "";
+  if (count === 3) return "lg:grid-cols-3";
+  if (count % 2 === 0 && count % 3 !== 0) return "md:grid-cols-2";
+  return "md:grid-cols-2 lg:grid-cols-3";
+}
+
+/**
+ * What the product can do, as a grid of cards a reader can skim by title.
+ *
+ * Up to three across on a desktop, two on a tablet, one on a phone — with the
+ * eyebrow on top rather than in a sticky gutter, because a grid needs the
+ * whole measure. Titles carry the weight; bodies drop to the caption step, so
+ * a reader who only reads titles still gets the list.
+ */
 export default function CaseFeatures({
   intro,
   features,
+  tone,
 }: {
   intro?: string;
   features: Feature[];
+  tone?: BandProps["tone"];
 }) {
   const t = useDict().case;
   return (
-    <Band tone="raised" rule="t">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
-        <EyebrowHeading sticky>{t.features}</EyebrowHeading>
-        <div>
-          {intro && (
-            <RevealText
-              as="p"
-              variant="fade"
-              className="max-w-[780px] font-display text-[clamp(19px,1.9vw,26px)] leading-[1.4] tracking-[-0.01em] text-[var(--ink)]"
-            >
-              {intro}
-            </RevealText>
-          )}
+    <Band tone={tone} rule="t">
+      <EyebrowHeading>{t.features}</EyebrowHeading>
 
-          {/* Two-up on desktop with real rules between the cells: the grid
-              carries no gap, the padding does the spacing, so the hairlines
-              meet instead of floating. Collapses to a single column. */}
-          <ul
-            className={`hairline-t m-0 grid list-none grid-cols-1 p-0 md:grid-cols-2 ${
-              intro ? "mt-12 md:mt-16" : ""
-            }`}
-          >
-            {features.map((feature, i) => {
-              const delay = Math.min(i * 0.05, 0.25);
-              return (
-                <li
-                  key={feature.title}
-                  className="hairline-b py-8 md:py-10 md:odd:border-r md:odd:border-[var(--line)] md:odd:pr-10 md:odd:last:border-r-0 md:even:pl-10"
-                >
-                  <FeatureKind kind={feature.kind} />
-                  <RevealText
-                    as="h3"
-                    variant="mask"
-                    delay={delay}
-                    className={`font-display text-[clamp(19px,1.8vw,25px)] font-medium leading-[1.25] tracking-[-0.02em] text-[var(--ink)] ${
-                      feature.kind ? "mt-3" : ""
-                    }`}
-                  >
-                    {feature.title}
-                  </RevealText>
-                  <RevealText
-                    as="p"
-                    variant="fade"
-                    delay={delay + 0.06}
-                    className="mt-3.5 max-w-[540px] text-[clamp(14.5px,1.2vw,17px)] leading-[1.65] text-[var(--ink-muted)]"
-                  >
-                    {renderBold(feature.body)}
-                  </RevealText>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      {intro && (
+        <RevealText
+          as="p"
+          variant="fade"
+          className="mt-6 max-w-[62ch] font-display text-[clamp(18px,1.6vw,22px)] leading-[1.45] tracking-[-0.01em] text-[var(--ink)] md:mt-8"
+        >
+          {intro}
+        </RevealText>
+      )}
+
+      <ul
+        className={`mt-10 grid list-none grid-cols-1 gap-x-10 gap-y-8 p-0 md:mt-12 md:gap-y-10 ${columnsFor(features.length)}`}
+      >
+        {features.map((feature, i) => {
+          const delay = Math.min(i * 0.05, 0.25);
+          return (
+            <li key={feature.title} className="hairline-t pt-5 md:pt-6">
+              <FeatureKind kind={feature.kind} />
+              <RevealText
+                as="h3"
+                variant="mask"
+                delay={delay}
+                className={`font-display text-[clamp(18px,1.5vw,21px)] font-medium leading-[1.25] tracking-[-0.015em] text-[var(--ink)] ${
+                  feature.kind ? "mt-3" : ""
+                }`}
+              >
+                {feature.title}
+              </RevealText>
+              <RevealText
+                as="p"
+                variant="fade"
+                delay={delay + 0.06}
+                className="mt-3 text-[15px] leading-[1.6] text-[var(--ink-muted)]"
+              >
+                {renderBold(feature.body)}
+              </RevealText>
+            </li>
+          );
+        })}
+      </ul>
     </Band>
   );
 }

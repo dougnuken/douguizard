@@ -156,11 +156,11 @@ export function PosterButton({ onClick, label }: { onClick: () => void; label: s
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`absolute inset-0 grid place-items-center ${VIDEO_FOCUS_RING}`}
+      className="group absolute inset-0 grid place-items-center focus-visible:outline-none"
       style={{ background: "color-mix(in srgb, var(--paper) 32%, transparent)" }}
     >
       <span
-        className="grid h-14 w-14 place-items-center rounded-full border border-[var(--line-strong)] bg-[var(--paper)] text-[var(--ink)] transition-transform duration-300 hover:scale-105"
+        className="grid h-14 w-14 place-items-center rounded-full border border-[var(--line-strong)] bg-[var(--paper)] text-[var(--ink)] transition-transform duration-300 hover:scale-105 group-focus-visible:[outline:2px_solid_var(--ink)] group-focus-visible:[outline-offset:3px]"
         style={{ transitionTimingFunction: "var(--ease-out)" }}
       >
         {/* optical centering of the triangle */}
@@ -189,7 +189,6 @@ export function VideoControlRow({
       <button
         type="button"
         onClick={onToggle}
-        aria-pressed={isPlaying}
         className={`kicker inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--paper)] px-4 py-1.5 text-[var(--ink)] transition-opacity duration-200 hover:opacity-70 ${VIDEO_FOCUS_RING}`}
         style={{ transitionTimingFunction: "var(--ease-out)" }}
       >

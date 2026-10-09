@@ -132,7 +132,7 @@ export default function DeviceVideo({
 
         {/* The way in whenever nothing is moving: reduced motion, a refused
             autoplay, or simply before the first play. */}
-        {!hasStarted && !isPlaying && <PosterButton onClick={toggle} label={playLabel} />}
+        {!hasStarted && !isPlaying && <PosterButton onClick={toggle} label={`${playLabel}: ${label}`} />}
       </PhoneFrame>
 
       {description && (
