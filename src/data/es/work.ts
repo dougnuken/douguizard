@@ -23,26 +23,26 @@ export const workEs: Record<string, CaseCopy> = {
     impact:
       "En vivo y en uso diario: registras un gasto con una foto, la voz, el mensaje del banco o un PDF, y un solo color te dice si el mes va a buen ritmo.",
     context:
-      "Las apps de presupuesto responden «cuánto te queda», la pregunta ansiosa. Construí olbo para mi propio hogar: una PWA local-first en pesos colombianos cuyo semáforo lee el ritmo de gasto contra el calendario.",
+      "Las apps de presupuesto responden «cuánto te queda», la pregunta que angustia. Construí olbo para mi propio hogar: una PWA local-first en pesos colombianos cuyo semáforo compara el ritmo de gasto con el calendario.",
     contributions: [
       "**Producto e interfaz**: 24 vistas, del tablero del semáforo a la IA que lee recibos, voz y PDF.",
-      "**Cero dependencias**: módulos ES nativos, sin paso de build; matemática de presupuesto pura, así que 634 pruebas corren en 292 ms.",
+      "**Cero dependencias**: módulos ES nativos, sin paso de build; matemática de presupuesto pura, así que 634 pruebas corren en 292\u00a0ms.",
       "**Privacidad comprobable**: tus datos se quedan en el celular; lo único que sale de él es la llamada a la IA.",
     ],
     kpis: [
-      { label: "Pruebas que pasan", delta: "en 292 ms" },
+      { label: "Pruebas que pasan", delta: "en 292\u00a0ms" },
       { label: "Dependencias", delta: "sin bundler, sin framework" },
       { label: "Módulos JS", delta: "en 24 vistas" },
-      { label: "Relación pruebas-código", delta: "6.400 líneas de pruebas" },
+      { value: "1:2,5", label: "Relación pruebas-código", delta: "6.400 líneas de pruebas" },
     ],
     process: [
       {
         title: "El problema era mío",
-        body: "Cada app que probé contaba centavos en la moneda de otro. Primero el producto: pesos enteros, mis datos en mi propio teléfono, una pantalla que me diga si voy bien.",
+        body: "Cada app que probé contaba centavos en la moneda de otro. Primero el producto: pesos enteros, mis datos en mi propio celular, una pantalla que me diga si voy bien.",
       },
       {
         title: "Hecho con IA, decidido por las pruebas",
-        body: "Trabajé con Claude como pareja, pero me negué a que el resultado fuera desechable: una capa de dominio pura, con «hoy» siempre inyectado, así que cada prueba corre en Node sin navegador. La IA escribía rápido; las pruebas decidían qué sobrevivía.",
+        body: "Programé en pareja con Claude, pero me negué a que el resultado fuera desechable: una capa de dominio pura, con «hoy» siempre inyectado, así que cada prueba corre en Node sin navegador. La IA escribía rápido; las pruebas decidían qué sobrevivía.",
       },
       {
         title: "Lanzar, y después escuchar",
@@ -52,11 +52,11 @@ export const workEs: Record<string, CaseCopy> = {
     decisions: [
       {
         title: "El semáforo lee ritmo, no saldo",
-        body: "Ritmo de gasto sobre el mes transcurrido: verde hasta 1, ámbar hasta 1,25 y rojo por encima. Gastar el 90 % el día 28 está bien; el 80 % el día 10, no.",
+        body: "Ritmo de gasto sobre el mes transcurrido: verde hasta 1, ámbar hasta 1,25 y rojo por encima. Gastar el 90\u00a0% el día 28 está bien; el 80\u00a0% el día 10, no.",
       },
       {
         title: "Las facturas variables nunca reservan plata",
-        body: "Luz, agua y gasolina solo cuentan cuando registras lo que de verdad costaron. Un estimado reservado puede pintar un rojo falso, y uno basta para dejar de creerle al color.",
+        body: "Luz, agua y gasolina solo cuentan cuando registras lo que de verdad costaron. Un estimado reservado puede pintar un rojo falso, y un solo rojo falso basta para dejar de creerle al color.",
       },
       {
         title: "Privacidad que se puede comprobar, no solo leer",
@@ -72,7 +72,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         title: "Di el gasto en voz alta",
-        body: "«Cincuenta mil en el mercado» se vuelve un movimiento estructurado: Claude con la llamada a herramienta forzada, marcado para revisión por debajo de 0,7 de confianza.",
+        body: "«Cincuenta mil en el mercado» se vuelve un movimiento estructurado: Claude responde con una llamada a herramienta forzada, y si la confianza baja de 0,7, queda marcado para revisión.",
       },
       {
         title: "Pega el mensaje del banco",
@@ -129,16 +129,16 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "Digitalizar cómo Colombia gestiona su deporte: más de 130 pantallas en 8 módulos, diseñadas y construidas con IA.",
     impact:
-      "30 trámites del sector deportivo que vivían en Word, correo y un gestor documental, ahora en una sola plataforma: más de 130 pantallas en 8 módulos, prototipadas en código con IA.",
+      "Una sola plataforma reemplaza hoy una pila de herramientas desconectadas, prototipada en código con IA.",
     context:
-      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo la plataforma yo mismo, en código: un solo sistema de diseño, con la IA en el proceso.",
+      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo en código los prototipos que definen la plataforma: un solo sistema de diseño, con la IA en el proceso.",
     contributions: [
-      "**Un solo sistema de diseño**: más de 38 componentes compartidos y un solo patrón de formulario por pasos mantienen coherentes más de 130 pantallas.",
+      "**Un solo sistema de diseño**: más de 38 componentes compartidos y un solo patrón de formulario por pasos mantienen coherente cada pantalla.",
       "**La jerarquía real del sector**: comités → federaciones → ligas → clubes → deportistas, modelada con aprobación en cascada.",
-      "**Prototipos, no especificaciones**: construidos con Claude Code, Cursor y Gemini; los analistas aprueban contra el producto en marcha.",
+      "**Prototipos, no especificaciones**: construidos con Claude Code, Cursor y Gemini; los analistas aprueban el producto ya en marcha.",
     ],
     kpis: [
-      { label: "Trámites digitalizados", delta: "antes en Word, correo y GESDOC" },
+      { label: "Trámites digitalizados", delta: "antes en Word y correo" },
       { value: "~1.200", label: "Organizaciones deportivas en alcance" },
       { label: "Pantallas entregadas", delta: "en 8 de 13 módulos" },
       { label: "Componentes compartidos", delta: "un solo sistema de diseño" },
@@ -150,11 +150,11 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         title: "Deportistas y eventos, modelados construyéndolos",
-        body: "Un deportista aprobado hereda la liga y la federación de su club. Eventos, resultados y rankings entran por plantilla .xlsx en 83 deportes: las filas válidas cargan y las fallas vuelven por número de fila.",
+        body: "Un deportista aprobado hereda la liga y la federación de su club. Eventos, resultados y rankings entran por plantilla .xlsx en 83 deportes: las filas válidas cargan y las que fallan vuelven con su número de fila.",
       },
       {
         title: "Lo que se firma es el prototipo",
-        body: "Cada módulo empieza como un prototipo clicable con roles y estados reales, recorrido historia por historia en un tour guiado. El sistema de diseño es el contrato; la demo es como lo firmamos.",
+        body: "Cada módulo empieza como un prototipo clicable con roles y estados reales, revisado historia por historia en un recorrido guiado. El sistema de diseño es el contrato; la demo, la firma.",
       },
     ],
     decisions: [
@@ -179,6 +179,10 @@ export const workEs: Record<string, CaseCopy> = {
     // Paired by index with work.ts: venues, investment calls, then IVC.
     gallery: [
       {
+        alt: "El espacio de trabajo del profesional en el trámite IVC-2026-005: 18 días de plazo junto a una lista de 7 documentos, cada uno citando el artículo del Decreto 1387/1970 al que responde, con validar, rechazar u observar por documento.",
+        caption: "Cada documento revisado contra el artículo al que responde.",
+      },
+      {
         alt: "El registro georreferenciado de escenarios deportivos: un mapa coroplético de Colombia sombreado por departamento, con filtros de región, tipo de escenario, estado y CAR, junto a un ranking de departamentos y una leyenda de intensidad.",
         caption: "Los escenarios deportivos del país, departamento por departamento.",
       },
@@ -193,14 +197,6 @@ export const workEs: Record<string, CaseCopy> = {
       {
         alt: "Revisión del área técnica de la postulación RAD-2026-003: un aviso de área asignada con su SLA, una lista de chequeo arquitectónica donde cada ítem cita su artículo de la Resolución 933 y se marca como cumple o sin verificar, un avance de 4 de 6 y un panel con los documentos cargados.",
         caption: "Una de ocho áreas técnicas, revisada artículo por artículo.",
-      },
-      {
-        alt: "La bandeja de asignación de la coordinadora de IVC: contadores con 6 en remisión, 3 asignados y 3 en validación, sobre una tabla de 25 trámites con número de radicado, la organización deportiva y su NIT, días restantes, estado y profesional asignado.",
-        caption: "Cada trámite con un plazo y un responsable.",
-      },
-      {
-        alt: "El espacio de trabajo del profesional en el trámite IVC-2026-005: 18 días de plazo junto a una lista de 7 documentos, cada uno citando el artículo del Decreto 1387/1970 al que responde, con validar, rechazar u observar por documento.",
-        caption: "Cada documento revisado contra el artículo al que responde.",
       },
     ],
     links: [{ label: "Sistema de diseño" }, { label: "Hub de demos" }],
@@ -223,18 +219,18 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "Líder técnico del sistema de diseño detrás de Mercadolibre: 18 países, tres plataformas, una sola librería.",
     impact:
-      "Más de 400 diseñadores y más de 2.000 ingenieros construyen con una sola librería, mantenida en paridad en iOS, Android y Web.",
+      "Los productos de comercio, fintech y envíos de Mercadolibre se construyen con una sola librería.",
     context:
-      "Andes es la fuente de verdad de los productos de comercio, fintech y envíos de Mercadolibre. Fui dueño de sus fundamentos y de las definiciones de componentes, y llevé la IA a la forma en que se audita a sí mismo.",
+      "Andes es la fuente de verdad de Mercadolibre. Estuve a cargo de sus fundamentos y de la definición de sus componentes, y llevé la IA a sus propias auditorías.",
     contributions: [
-      "**Fundamentos**: tokens, espaciado, tipografía y movimiento, acordados una vez y gobernando la suite de productos.",
-      "**Paridad multiplataforma**: una sola API de componente, lanzada idéntica en iOS, Android y Web, trabajada con ingeniería.",
+      "**Fundamentos**: tokens, espaciado, tipografía y movimiento, acordados una vez para regir toda la suite de productos.",
+      "**Paridad multiplataforma**: una sola API por componente, acordada con ingeniería y lanzada idéntica en iOS, Android y Web.",
       "**Mantenimiento a escala**: adiciones, deprecaciones y migraciones en una librería que cientos de diseñadores abren a diario.",
       "**IA en la práctica de sistemas**: auditorías guiadas por prompts que detectan desviaciones en Figma antes de que salgan.",
     ],
     kpis: [
       { label: "Diseñadores en el sistema" },
-      { label: "Ingenieros en el sistema" },
+      { value: "2.000+", label: "Ingenieros en el sistema" },
       { label: "Países" },
       { label: "Plataformas en paridad", delta: "iOS, Android, Web" },
     ],
@@ -247,7 +243,7 @@ export const workEs: Record<string, CaseCopy> = {
   "banco-de-occidente": {
     category: "Banca × Sistemas de diseño",
     duration: "Más de 5 años",
-    team: "12+ squads de producto",
+    team: "Equipos del banco y de Aval Digital Labs",
     tagline:
       "Uno de los bancos más grandes de Colombia: su portal rediseñado y Velocity, el sistema de diseño que compartían más de 12 squads.",
     impact:
@@ -257,11 +253,11 @@ export const workEs: Record<string, CaseCopy> = {
     contributions: [
       "**Rediseñé el portal transaccional**: ingreso, cuentas, tarjetas, transferencias, pagos y bloqueo de productos, idéntico en escritorio, tableta y celular.",
       "**Construí Velocity, el sistema de diseño del banco**: de fundamentos a organismos, con diseño atómico para que el front end lo refleje.",
-      "**Guardián del sistema de diseño**: aprobé adiciones, deprecaciones y patrones para más de 12 squads, y dirigí los talleres y las críticas.",
+      "**Guardián del sistema de diseño**: aprobé adiciones, deprecaciones y patrones en los squads del banco, y dirigí los talleres y las críticas.",
     ],
     kpis: [
       { label: "Squads de producto alineados", delta: "un solo sistema" },
-      { value: "5+ años", label: "Como guardián del sistema de diseño" },
+      { label: "Íconos ilustrados", delta: "dibujados para el sistema" },
       { label: "Áreas del sistema documentadas", delta: "de fundamentos a organismos" },
       { label: "Dispositivos, un solo portal", delta: "escritorio, tableta, celular" },
     ],
@@ -282,7 +278,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         title: "Idéntico entre dispositivos, no solo parecido",
-        body: "El brief pedía algo similar. Cada capacidad del escritorio llega al celular con los mismos nombres, en el mismo orden: nada que volver a aprender en el bus.",
+        body: "El brief pedía una experiencia similar; la hicimos idéntica. Cada capacidad del escritorio llega al celular con los mismos nombres, en el mismo orden: nada que volver a aprender en el bus.",
       },
     ],
     // Paired by position with `work.ts`, which sets the order (cover first).
@@ -301,7 +297,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         alt: "La pantalla de ingreso del portal en una tableta: un aviso de cookies arriba, un panel promocional a la izquierda y una tarjeta de ingreso que pide tipo de documento, número de documento y contraseña, con enlaces para recuperar la contraseña y para registrarse.",
-        caption: "Ingreso, sin nada que distraiga a mitad de la tarea.",
+        caption: "Ingreso: tipo de documento, número de documento y contraseña.",
       },
       {
         alt: "Tableros de fundamentos del sistema dispuestos en perspectiva: una escala de color de azul claro a oscuro con secundarios neutros y dorados, una escala tipográfica del hero al caption, una escala de espaciado y hojas con los estados de botones y campos de formulario.",
@@ -317,7 +313,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         alt: "El sistema de popups dibujado como cuatro planos apilados en perspectiva, rotulados desde el fondo: la página, un fondo desenfocado, el componente y el popup.",
-        caption: "Profundidad en vez de anidación: dos capas, cada tarea.",
+        caption: "Profundidad en vez de anidación: dos capas para cualquier tarea.",
       },
       {
         alt: "El flujo de registro y clave de un solo uso diagramado en cajas y flechas: registrarse, ingresar tipo y número de documento, enviar una clave de un solo uso, ingresarla o pedir otra por SMS, aceptar el tratamiento de datos y luego un ingreso exitoso o una falla de validación.",
@@ -338,13 +334,13 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "El panel que maneja una clínica desde el celular de la secretaria. Ningún procedimiento empieza sin estar pagado.",
     impact:
-      "Dos semanas del primer commit a la versión que la clínica usa hoy: cada paciente con una fase, un saldo y un siguiente paso.",
+      "Saber cuánto debía una paciente tomaba diez minutos abriendo archivos; ahora cada caso lo muestra junto al siguiente paso.",
     context:
       "La clínica de medicina estética de la que soy socio, en Barranquilla, funcionaba con WhatsApp, Google Calendar y un Drive compartido: todo escrito, nada conectado. Construí un panel encima de esas herramientas, no en su lugar.",
     contributions: [
       "**Tres fases con candado**: valoración, pago, procedimiento; la luz verde del procedimiento exige el pago completo, su recibo y el consentimiento firmado.",
-      "**Salida segura**: una versión de solo lectura desde el primer día; la edición llegó después, con acceso por persona y una auditoría de seguridad.",
-      "**Reglas como funciones con pruebas**: saldos, comisiones de tarjeta, fechas y el emparejado de nombres, cubiertos por 12 suites de pruebas.",
+      "**Despliegue seguro**: una versión de solo lectura desde el primer día; la edición llegó después, con acceso por persona y tras una auditoría de seguridad.",
+      "**Reglas como funciones con pruebas**: saldos, comisiones de tarjeta, fechas y el cruce de nombres, cubiertos por 12 suites de pruebas.",
     ],
     kpis: [
       { label: "Días, del primer commit a la versión de hoy", delta: "19 sep → 2 oct 2026" },
@@ -355,11 +351,11 @@ export const workEs: Record<string, CaseCopy> = {
     process: [
       {
         title: "Primero se atacó el plan",
-        body: "Mapeé cómo funcionaba de verdad la clínica y luego sometí el plan a una revisión adversarial en datos, seguridad y factibilidad. Encontró las trampas que esconden las hojas; solo la tercera versión llegó al código.",
+        body: "Mapeé cómo funcionaba de verdad la clínica y luego sometí el plan a una revisión adversarial en datos, seguridad y factibilidad. Encontró las trampas que esconden las hojas de cálculo; solo la tercera versión llegó al código.",
       },
       {
         title: "Primero leer, después escribir",
-        body: "La primera versión fue un artefacto de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La escritura llegó después, con un usuario por persona y una auditoría de seguridad; en vivo desde el 21 de septiembre.",
+        body: "La primera versión fue un artefacto de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La edición llegó después, con un usuario por persona y tras una auditoría de seguridad; en vivo desde el 21 de septiembre.",
       },
       {
         title: "El celular reescribió la interfaz",
@@ -367,7 +363,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         title: "Plata real, y después pedidos reales",
-        body: "Los pagos reales trajeron reglas que ningún plan tenía: una tarjeta de crédito entra al 95 %, porque la clínica le traslada la comisión a la paciente. Después la clínica empezó a pedir: cupos, agenda por ciudad, permisos. La mayoría salió en menos de un día.",
+        body: "Los pagos reales trajeron reglas que ningún plan tenía: una tarjeta de crédito entra al 95\u00a0%, porque la clínica le traslada la comisión a la paciente. Después la clínica empezó a pedir: cupos, agenda por ciudad, permisos. La mayoría salió en menos de un día.",
       },
     ],
     decisions: [
@@ -408,7 +404,7 @@ export const workEs: Record<string, CaseCopy> = {
       label:
         "En el celular: una nota de voz llena el formulario de paciente nueva, la valoración toma una hora libre del calendario de la clínica y, al guardar, se abre el caso en la fase uno",
       caption:
-        "Una nota de voz llena la ficha de una paciente nueva y abre su caso. Datos de demostración; aquí, reglas fijas hacen el papel de la IA.",
+        "Una nota de voz, escrita aquí para la grabación, llena la ficha de una paciente nueva y abre su caso. Datos de demostración; reglas fijas hacen el papel de la IA.",
     },
     // Paired by index with work.ts: the case sheet leads, then the agenda.
     gallery: [
@@ -451,7 +447,7 @@ export const workEs: Record<string, CaseCopy> = {
       "node --test",
     ],
     credits:
-      "Soy socio de la clínica junto al médico y construí el panel de punta a punta. Él es dueño del protocolo médico; el uso diario de la secretaria moldeó los flujos. Pantallas y recorrido usan datos de prueba: ninguna paciente real, ninguna cifra de la clínica.",
+      "Soy socio de la clínica junto al médico y construí el panel de punta a punta. El protocolo médico es suyo; el uso diario de la secretaria moldeó los flujos. Pantallas y recorrido usan datos de prueba: ninguna paciente real, ninguna cifra de la clínica.",
   },
 
   "royal-caribbean": {
@@ -459,11 +455,11 @@ export const workEs: Record<string, CaseCopy> = {
     duration: "1 año",
     team: "Equipo multifuncional EE. UU. + LATAM",
     tagline:
-      "Reservas móviles y experiencias a bordo para los huéspedes de Royal Caribbean en rutas por el Caribe y el Mediterráneo.",
+      "Reservas móviles y experiencias a bordo para huéspedes de crucero en rutas por el Caribe y el Mediterráneo.",
     impact:
-      "Un solo recorrido móvil desde la reserva hasta el desembarque —horarios, restaurantes, excursiones, saldos— que aguanta el Wi-Fi irregular de un barco.",
+      "Un solo recorrido móvil que acompaña al huésped desde la reserva hasta el desembarque, hecho para aguantar en altamar.",
     context:
-      "Huéspedes de todas las edades y niveles de comodidad con la tecnología pasan una semana a bordo con una conexión irregular. Diseñé la reserva y la experiencia a bordo para que les sirvieran a todos.",
+      "Huéspedes de todas las edades, unos más cómodos con la tecnología que otros, pasan una semana a bordo con una conexión irregular. Diseñé la reserva y la experiencia a bordo para que les sirvieran a todos.",
     contributions: [
       "**Reservas móviles**: flujos para distintos destinos y tipos de camarote.",
       "**Experiencia a bordo**: horarios, restaurantes, excursiones y saldos que funcionan con un Wi-Fi intermitente.",
@@ -475,17 +471,17 @@ export const workEs: Record<string, CaseCopy> = {
   qrvey: {
     category: "SaaS × Encuestas y NPS × Automatización",
     duration: "11 meses",
-    team: "Producto + Ingeniería",
+    team: "Producto e ingeniería",
     tagline:
       "Un constructor de automatizaciones para encuestas —disparador, condición, acción— para personas que nunca habían dibujado un diagrama de flujo.",
     impact:
-      "Una respuesta negativa podía disparar su propio seguimiento —una nueva encuesta una semana después y los resultados por correo al equipo—, configurado con tarjetas, no con un diagrama de flujo.",
+      "Una respuesta negativa podía disparar su propio seguimiento —una nueva encuesta una semana después y los resultados por correo al equipo— sin nadie pendiente de ello.",
     context:
-      "Qrvey era una plataforma de encuestas y NPS; alguien todavía tenía que actuar sobre las respuestas. Como diseñador UI principal, diseñé AutomatiQ, el constructor que lo hacía.",
+      "Qrvey era una plataforma de encuestas y NPS, pero alguien todavía tenía que hacer algo con las respuestas. Como diseñador UI principal, diseñé AutomatiQ, el constructor que se encargaba de eso.",
     contributions: [
-      "**Una lista que informa sobre sí misma**: cada proceso muestra su estado, las encuestas que cubre, el tiempo promedio de ciclo y los ciclos que ha corrido.",
+      "**Una lista que informa sobre sí misma**: cada proceso muestra su estado, las encuestas que cubre, el tiempo promedio de ciclo y los ciclos que ha ejecutado.",
       "**Tarjetas, no un lienzo**: disparadores y condiciones se abren en su sitio, con las palabras del producto; sin conectores que dibujar.",
-      "**El seguimiento es la siguiente encuesta**: los correos llevan los resultados y un enlace vivo a una encuesta en el cuerpo.",
+      "**El seguimiento es la siguiente encuesta**: los correos llevan los resultados y un enlace activo a una encuesta en el cuerpo.",
     ],
     // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
@@ -495,7 +491,7 @@ export const workEs: Record<string, CaseCopy> = {
       },
       {
         alt: "Una condición bajo un disparador de Respuesta nueva: dos pastillas, Si la respuesta es y Número de respuestas, sobre un panel con una pregunta y sus filas de respuestas con botones para agregar o quitar cada una, y una fila de Seleccionar acción esperando debajo.",
-        caption: "Condiciones con las palabras del producto: «si la respuesta es», «número de respuestas».",
+        caption: "Condiciones con las palabras del producto: «If Answer Is», «# of Responses».",
       },
       {
         alt: "Una tarjeta de disparador de Programación expandida: frecuencia de repetición, un intervalo en días y una hora del día, una fecha de inicio y un final que es un número de ejecuciones o una fecha específica.",
@@ -526,7 +522,7 @@ export const workEs: Record<string, CaseCopy> = {
     tagline:
       "Wireframes, UI kits y prototipos para clientes de Estados Unidos y Latinoamérica, en web y móvil.",
     impact:
-      "Diseño listo para desarrollo en fintech, marketplaces y B2B: la soltura entre dominios que después hizo natural el trabajo de sistemas.",
+      "Diseño listo para desarrollo en fintech, marketplaces y B2B: la soltura entre dominios que después hizo natural el trabajo en sistemas de diseño.",
     context:
       "Una agencia remota, donde el trabajo era aprender rápido el dominio de cada cliente y entregar un diseño limpio.",
     contributions: [
@@ -539,7 +535,7 @@ export const workEs: Record<string, CaseCopy> = {
 
   chub: {
     category: "iOS × Movilidad",
-    clientOverride: "Proyecto freelance",
+    clientOverride: "Proyecto freelance paralelo",
     roleOverride: "Diseñador de producto — de punta a punta",
     team: "Diseño en solitario, entregado a un equipo de desarrollo",
     tagline:
@@ -550,8 +546,8 @@ export const workEs: Record<string, CaseCopy> = {
       "Chub reserva un carro, no un viaje: eliges un vehículo, ves su autonomía y su tarifa por minuto, y cuando arranca el viaje la app se convierte en los controles de la cabina.",
     contributions: [
       "**La decisión en una sola tarjeta**: autonomía, aceleración, puestos y la tarifa por minuto, encima del botón.",
-      "**El costo por adelantado**: recogida, destino, tiempo estimado y un rango de tarifa, antes de que empiece el viaje.",
-      "**La app se vuelve el carro**: en pleno viaje maneja el clima y los asientos ventilados, y muestra la temperatura y la velocidad.",
+      "**Una ruta con precio**: recogida, destino, tiempo estimado y un rango de tarifa, para que la última pantalla no traiga sorpresas.",
+      "**Una sola app, de la reserva a la cabina**: en pleno viaje controla el aire acondicionado y los asientos ventilados, y muestra la temperatura y la velocidad.",
     ],
     // Paired by position with `work.ts`, which sets the order (cover first).
     gallery: [
@@ -579,17 +575,17 @@ export const workEs: Record<string, CaseCopy> = {
 
   makeappet: {
     category: "iOS × Adopción de mascotas",
-    clientOverride: "Proyecto freelance",
+    clientOverride: "Proyecto freelance paralelo",
     roleOverride: "Diseñador de producto — de punta a punta",
     team: "Diseño en solitario, entregado a un equipo de desarrollo",
     tagline:
-      "Desliza para conocer a un perro o un gato cerca: el patrón de las apps de citas que todos conocen, apuntado a la adopción.",
+      "Desliza para conocer a un perro o un gato cerca: el patrón de las apps de citas que todos conocen, aplicado a la adopción.",
     impact:
-      "La adopción tomó prestada la interacción que todo el mundo ya sabe usar, y puso la petición de donación de los refugios donde ya estaba la atención.",
+      "La adopción toma prestado el deslizar de las apps de citas y pone la petición de donación de los refugios donde ya está la atención.",
     context:
-      "MakeAppet aplica el deslizar para hacer match a encontrar una mascota cerca: explorar por especie, deslizar entre las que están cerca y abrir un perfil completo antes de decidir.",
+      "MakeAppet lleva el «desliza y haz match» a la búsqueda de una mascota cercana: explorar por especie, deslizar entre las que están cerca y abrir un perfil completo antes de decidir.",
     contributions: [
-      "**Nadie adopta por una foto**: un toque más adentro, el perfil suma raza, peso, sexo y una descripción.",
+      "**Nadie adopta por una foto**: con un toque más, el perfil suma raza, peso, sexo y una descripción.",
       "**Dos formas de entrar**: deslizar para explorar, o filtrar por especie y distancia cuando ya sabes qué buscas.",
       "**La petición del refugio donde la gente mira**: un panel de donación entre la búsqueda y los resultados, no escondido en un menú.",
     ],
@@ -597,7 +593,7 @@ export const workEs: Record<string, CaseCopy> = {
     gallery: [
       {
         alt: "La pantalla para deslizar: pestañas For you y Nearby sobre una tarjeta a sangre con la foto de un perro, su nombre, edad y distancia, y botones redondos para descartar y dar like debajo.",
-        caption: "El patrón que todos ya conocen, sin cambios.",
+        caption: "Nombre, edad y distancia en la tarjeta; like o descartar.",
       },
       {
         alt: "El perfil de una mascota: una fotografía grande, el nombre y la distancia, una grilla de cuatro celdas con edad, raza, sexo y peso, una descripción escrita y un botón principal de Bark me junto a uno de favorito.",

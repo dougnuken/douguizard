@@ -161,7 +161,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Variable bills never reserve money",
-        body: "Power, water and fuel count only once you record what they cost. A reserved estimate can paint a false red, and one is enough to stop believing the color.",
+        body: "Power, water and fuel count only once you record what they cost. A reserved estimate can paint a false red, and one false red is enough to stop believing the color.",
       },
       {
         title: "Privacy you can check, not just read",
@@ -257,16 +257,16 @@ export const caseStudies: CaseStudy[] = [
     tagline:
       "Digitizing how Colombia runs its sport: 130+ screens across 8 modules, designed and built with AI.",
     impact:
-      "30 sports-sector procedures that lived in Word, email and a document manager, now in one platform: 130+ screens across 8 modules, prototyped in code with AI.",
+      "One platform now stands in for a stack of disconnected tools, prototyped in code with AI.",
     context:
-      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build the platform myself, in code: one design system, AI in the loop.",
+      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build, in code, the prototypes that define the platform: one design system, AI in the loop.",
     contributions: [
-      "**One design system** — 38+ shared components and one step-by-step form pattern keep 130+ screens consistent.",
+      "**One design system** — 38+ shared components and one step-by-step form pattern keep every screen consistent.",
       "**The sector's real hierarchy** — committees → federations → leagues → clubs → athletes, modeled with cascading approval.",
       "**Prototypes, not specs** — built with Claude Code, Cursor and Gemini; analysts sign off on the running product.",
     ],
     kpis: [
-      { value: "30", label: "Procedures digitized", delta: "Word, email and GESDOC before" },
+      { value: "30", label: "Procedures digitized", delta: "Word and email before" },
       { value: "~1,200", label: "Sports organizations in scope" },
       { value: "130+", label: "Screens shipped", delta: "across 8 of 13 modules" },
       { value: "38+", label: "Shared components", delta: "one design system" },
@@ -279,7 +279,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         phase: "02",
-        title: "Athletes and events, modeled by building",
+        title: "Athletes and events, modeled by building them",
         body: "An approved athlete inherits the club's league and federation. Events, results and rankings enter by .xlsx template across 83 sports: valid rows load, failures come back by row number.",
       },
       {
@@ -317,11 +317,16 @@ export const caseStudies: CaseStudy[] = [
       width: 1920,
       height: 1200,
     },
-    // The venue map leads: a whole country at a glance is the scale of the work
-    // in one image. Screens stay in same-module pairs (venues, investment calls,
-    // IVC) because the browser gallery runs two full-width leaders and then
-    // two-up rows. IVC goes last: the walkthrough above already shows its queue.
+    // The IVC workspace leads, full width, right under the IVC walkthrough: an
+    // odd count gives the browser gallery one leader and then two-up rows, so
+    // the venues pair and the investment-calls pair each keep a row of their
+    // own. The IVC queue is not repeated here: the walkthrough's poster is it.
     gallery: [
+      {
+        src: "/work/naowee/ivc-workspace-tramite.webp",
+        alt: "The professional's workspace on procedure IVC-2026-005: 18 days left on the deadline beside a checklist of 7 documents, each citing the article of Decreto 1387/1970 it answers, with validate, reject or observe available per document.",
+        caption: "Each document checked against the article it answers.",
+      },
       {
         src: "/work/naowee/escenarios-mapa.webp",
         alt: "The georeferenced sports-venue registry: a choropleth of Colombia shaded by department, with filters for region, venue type, status and CAR, beside a ranking of departments and an intensity legend.",
@@ -341,16 +346,6 @@ export const caseStudies: CaseStudy[] = [
         src: "/work/naowee/project-revision-area-tecnica.webp",
         alt: "Technical-area review of application RAD-2026-003: an assigned-area notice with its SLA, an architectural checklist where every item cites its article of Resolución 933 and is marked compliant or unverified, progress at 4 of 6, and a panel of the uploaded documents.",
         caption: "One of eight technical areas, reviewed article by article.",
-      },
-      {
-        src: "/work/naowee/ivc-bandeja.webp",
-        alt: "The IVC coordinator's assignment queue: counters reading 6 in referral, 3 assigned and 3 in validation, above a table of 25 procedures listing each filing number, the sports organization and its NIT, days remaining, status and assigned professional.",
-        caption: "Every procedure with a deadline and an owner.",
-      },
-      {
-        src: "/work/naowee/ivc-workspace-tramite.webp",
-        alt: "The professional's workspace on procedure IVC-2026-005: 18 days left on the deadline beside a checklist of 7 documents, each citing the article of Decreto 1387/1970 it answers, with validate, reject or observe available per document.",
-        caption: "Each document checked against the article it answers.",
       },
     ],
     // Both are public GitHub Pages, and Doug wants them reachable from the
@@ -390,9 +385,9 @@ export const caseStudies: CaseStudy[] = [
     tagline:
       "Technical lead on the design system behind Mercadolibre: 18 countries, three platforms, one library.",
     impact:
-      "400+ designers and 2,000+ engineers build from one library, kept in parity across iOS, Android and Web.",
+      "Commerce, fintech and shipping products across Mercadolibre are built from one library.",
     context:
-      "Andes is the source of truth for Mercadolibre's commerce, fintech and shipping products. I owned its foundations and component definitions, and brought AI into how it audits itself.",
+      "Andes is Mercadolibre's source of truth. I owned its foundations and component definitions, and brought AI into how it audits itself.",
     contributions: [
       "**Foundations** — tokens, spacing, type and motion, agreed once and governing the product suite.",
       "**Cross-platform parity** — one component API, shipped identically on iOS, Android and Web, worked out with engineering.",
@@ -400,12 +395,12 @@ export const caseStudies: CaseStudy[] = [
       "**AI in the systems practice** — prompt-driven audits that catch drift in Figma before it ships.",
     ],
     // "~40% fewer rework cycles" is REMOVED: no source behind it. Its
-    // qualitative replacement lives in `impact` ("kept in parity across iOS,
-    // Android and Web"). Reinstate a number only against a real measurement.
+    // qualitative replacement is the "Platforms in parity" card. Reinstate a
+    // number only against a real measurement.
     // The "Countries shipped to" label is looked up verbatim by Hero and Craft.
     kpis: [
       { value: "400+", label: "Designers on the system" },
-      { value: "2K+", label: "Engineers on the system" },
+      { value: "2,000+", label: "Engineers on the system" },
       { value: "18", label: "Countries shipped to" },
       { value: "3", label: "Platforms in parity", delta: "iOS, Android, Web" },
     ],
@@ -428,7 +423,7 @@ export const caseStudies: CaseStudy[] = [
     project: "Banco de Occidente",
     category: "Banking × Design Systems",
     duration: "5+ years",
-    team: "12+ product squads",
+    team: "The bank's and Aval Digital Labs' teams",
     kind: "client",
     tagline:
       "One of Colombia's largest banks: its portal redesigned, and Velocity, the design system 12+ squads shared.",
@@ -439,19 +434,19 @@ export const caseStudies: CaseStudy[] = [
     contributions: [
       "**Redesigned the transactional portal** — login, accounts, cards, transfers, payments and product blocking, identical on desktop, tablet and mobile.",
       "**Built Velocity, the bank's design system** — foundations to organisms, on atomic design so the front end mirrors it.",
-      "**Design System Gatekeeper** — approved additions, deprecations and patterns for 12+ squads, and ran the workshops and crits.",
+      "**Design System Gatekeeper** — approved additions, deprecations and patterns across the bank's squads, and ran the workshops and crits.",
     ],
     kpis: [
       // Doug's own figure, consistent across cv.ts and the published piece.
       { value: "12+", label: "Product squads aligned", delta: "one system" },
-      // The Aval experience runs Nov 2018 — Jan 2024: five years and two months,
-      // printed beside this card in the meta strip. "6 yr" contradicted it.
-      { value: "5+ yr", label: "As design system gatekeeper" },
+      // The "Illustrated Icons" section of the piece: three rows of five. It took
+      // back the slot of a tenure card that only repeated the Duration cell.
+      { value: "15", label: "Illustrated icons", delta: "drawn for the system" },
       // Counted off the published system grid: 23 named tiles across five
       // columns. "20+" is deliberately conservative so it cannot be over-read.
       { value: "20+", label: "Documented system areas", delta: "foundations → organisms" },
       // The redesign's defining promise, from the first contribution: one portal,
-      // identical on all three. The fifteen icons stay in the gallery caption.
+      // identical on all three.
       { value: "3", label: "Devices, one portal", delta: "desktop, tablet, mobile" },
       // ⚠️ CONFIRMAR DOUG — "millions of customers" was a KPI here ("M+") with
       // no source behind it, so it is out. Reinstate only against a real figure.
@@ -475,7 +470,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Identical across devices, not merely similar",
-        body: "The brief asked for similar. Every desktop capability reaches the phone with the same names, in the same order: nothing to relearn on the bus.",
+        body: "The brief asked for a similar experience; we made it identical. Every desktop capability reaches the phone with the same names, in the same order: nothing to relearn on the bus.",
       },
     ],
     // Every capture is a presentation artboard that already contains its own
@@ -489,21 +484,21 @@ export const caseStudies: CaseStudy[] = [
         src: "/work/banco-de-occidente/portal-dashboard.webp",
         width: 2271,
         height: 1715,
-        alt: "The Banco de Occidente transactional portal on a tablet: a left sidebar with the customer's name and benefit tier, cards for a Mastercard and a savings account with their balances, a favourite-transactions row, a month calendar and a spending chart.",
-        caption: "The portal home: products, favourite transactions, the month at a glance.",
+        alt: "The Banco de Occidente transactional portal on a tablet: a left sidebar with the customer's name and benefit tier, cards for a Mastercard and a savings account with their balances, a favorite-transactions row, a month calendar and a spending chart.",
+        caption: "The portal home: products, favorite transactions, the month at a glance.",
       },
       {
         src: "/work/banco-de-occidente/responsive-mobile.webp",
         width: 1510,
         height: 1461,
-        alt: "Two iPhone screens side by side: a Mastercard Black detail with minimum payment, total payment and due date above a Pay button, and the movements tab listing card purchases with dates, instalment counts and amounts.",
+        alt: "Two iPhone screens side by side: a Mastercard Black detail with minimum payment, total payment and due date above a Pay button, and the movements tab listing card purchases with dates, installment counts and amounts.",
         caption: "On a phone: every desktop capability, in the same order.",
       },
       {
         src: "/work/banco-de-occidente/products-and-cards.webp",
         width: 1784,
         height: 1218,
-        alt: "The accounts section of the portal on a tablet: a savings account card showing available, redeemable and current balances, a filterable movements table listing purchases and transfers with amounts, and a success toast confirming a chequebook has been blocked.",
+        alt: "The accounts section of the portal on a tablet: a savings account card showing available, redeemable and current balances, a filterable movements table listing purchases and transfers with amounts, and a success toast confirming a checkbook has been blocked.",
         caption: "Balances, movements, and proof the block worked.",
       },
       {
@@ -511,20 +506,20 @@ export const caseStudies: CaseStudy[] = [
         width: 1784,
         height: 1218,
         alt: "The portal's login screen on a tablet: a cookie notice across the top, a promotional panel on the left, and a sign-in card asking for document type, document number and password, with links to recover a password and to register.",
-        caption: "Login, with nothing to distract mid-task.",
+        caption: "Login: document type, document number and password.",
       },
       {
         src: "/work/banco-de-occidente/design-system-foundations.webp",
         width: 2033,
         height: 2340,
-        alt: "Design system foundation boards laid out in perspective: a colour scale from light to dark blue with neutral and gold secondaries, a type scale from hero down to caption, a spacing scale, and sheets of button and form-field states.",
-        caption: "Foundations: colour, type, spacing, every state of every control.",
+        alt: "Design system foundation boards laid out in perspective: a color scale from light to dark blue with neutral and gold secondaries, a type scale from hero down to caption, a spacing scale, and sheets of button and form-field states.",
+        caption: "Foundations: color, type, spacing, every state of every control.",
       },
       {
         src: "/work/banco-de-occidente/design-system-grid.webp",
         width: 1786,
         height: 795,
-        alt: "The Velocity design system index, five columns wide: Documentation, Foundations, Atoms, Molecules and Organisms, listing basics, naming rules, writing principles, grids, spacing, colours, typography, buttons, inputs, controls, icons, fields, dropdowns, lists, tables, headers, forms, modals, date picker and tab navigation.",
+        alt: "The Velocity design system index, five columns wide: Documentation, Foundations, Atoms, Molecules and Organisms, listing basics, naming rules, writing principles, grids, spacing, colors, typography, buttons, inputs, controls, icons, fields, dropdowns, lists, tables, headers, forms, modals, date picker and tab navigation.",
         caption: "Velocity, indexed the way the front end is built.",
       },
       {
@@ -538,7 +533,7 @@ export const caseStudies: CaseStudy[] = [
         src: "/work/banco-de-occidente/popups-system.webp",
         width: 1569,
         height: 804,
-        alt: "The popup system drawn as four stacked planes in perspective, labelled from the back: the page, a blurred background, the component, and the popup itself.",
+        alt: "The popup system drawn as four stacked planes in perspective, labeled from the back: the page, a blurred background, the component, and the popup itself.",
         caption: "Depth instead of nesting: two layers, every task.",
       },
       {
@@ -576,21 +571,21 @@ export const caseStudies: CaseStudy[] = [
     num: "/05",
     project: "DC Medical Aesthetics",
     category: "Clinic Operations × Design Engineering",
-    roleOverride: "Product designer and design engineer — end to end",
+    roleOverride: "Product Designer and Design Engineer — end to end",
     yearOverride: "2026",
     clientOverride: "DC Medical Aesthetics",
     duration: "Live since Sep 21, 2026 — still shipping",
     team: "Solo — product, design, code",
     kind: "personal",
     tagline:
-      "The panel that runs a clinic from the secretary's phone. No procedure starts until it's paid.",
+      "The panel that runs a clinic from the secretary's phone. No procedure starts until it's paid for.",
     impact:
-      "Two weeks from first commit to the version the clinic runs today: each patient with a phase, a balance, a next step.",
+      "Finding what a patient owed used to take ten minutes of opening files; now every case shows it beside the next step.",
     context:
       "The aesthetic-medicine clinic I co-own in Barranquilla ran on WhatsApp, Google Calendar and a shared Drive: everything written down, nothing connected. I built one panel on top of those tools, not instead of them.",
     contributions: [
       "**Three locked phases** — valuation, payment, procedure; the procedure's green light needs full payment, receipt and signed consent.",
-      "**Safe rollout** — a read-only version on day one; editing came later, behind per-person logins and a security audit.",
+      "**Safe rollout** — a read-only version on day one; editing came later, behind per-person logins, after a security audit.",
       "**Rules as tested functions** — balances, card fees, dates and name matching, covered by 12 test suites.",
     ],
     kpis: [
@@ -611,7 +606,7 @@ export const caseStudies: CaseStudy[] = [
       {
         phase: "02",
         title: "Read first, write later",
-        body: "Version one was a read-only Claude artifact, safe to put in front of the clinic on day one. Writing came later, behind a login per person and a security audit; live since September 21.",
+        body: "Version one was a read-only Claude artifact, safe to put in front of the clinic on day one. Editing came later, behind a login per person, after a security audit; live since September 21.",
       },
       {
         phase: "03",
@@ -634,8 +629,8 @@ export const caseStudies: CaseStudy[] = [
         body: "Each income row carries the balance left after that payment, so summing counts a debt again with every deposit. An early version reported a phantom thirty-eight million pesos. Now the latest row wins.",
       },
       {
-        title: "A colour per city, never on its own",
-        body: "The doctor works in three cities: orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for colour blindness. The name always sits beside its dot, so nobody has to tell teal from blue.",
+        title: "A color per city, never on its own",
+        body: "The doctor works in three cities: orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for color blindness. The name always sits beside its dot, so nobody has to tell teal from blue.",
       },
     ],
     featuresIntro:
@@ -673,7 +668,7 @@ export const caseStudies: CaseStudy[] = [
       label:
         "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one",
       caption:
-        "A voice note fills in a new patient and opens her case. Demo data; here, fixed rules stand in for the AI.",
+        "A voice note, typed here for the recording, fills in a new patient's form and opens her case. Demo data; fixed rules stand in for the AI.",
       width: 786,
       height: 1704,
     },
@@ -690,8 +685,8 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         src: "/work/dc-medical/agenda-mes.webp",
-        alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines coloured by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a coloured band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
-        caption: "A month of appointments, each coloured by its city.",
+        alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines colored by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a colored band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
+        caption: "A month of appointments, each colored by its city.",
       },
       {
         src: "/work/dc-medical/agenda-dia.webp",
@@ -747,11 +742,11 @@ export const caseStudies: CaseStudy[] = [
     team: "Cross-functional US + LATAM",
     kind: "client",
     tagline:
-      "Mobile booking and onboard experiences for Royal Caribbean guests on Caribbean and Mediterranean routes.",
+      "Mobile booking and onboard experiences for cruise guests on Caribbean and Mediterranean routes.",
     impact:
-      "One mobile journey from booking to disembarkation — schedules, dining, excursions, balances — that holds up on a ship's patchy Wi-Fi.",
+      "One mobile journey that follows guests from booking to disembarkation, built to hold up at sea.",
     context:
-      "Cruise guests of every age and comfort level spend a week aboard on patchy connectivity. I designed booking and the onboard experience to work for all of them.",
+      "Cruise guests of every age and every comfort level with technology spend a week aboard with patchy connectivity. I designed booking and the onboard experience to work for all of them.",
     contributions: [
       "**Mobile booking** — flows across destinations and stateroom types.",
       "**Onboard experience** — schedules, dining, excursions and balances that work on intermittent Wi-Fi.",
@@ -770,14 +765,14 @@ export const caseStudies: CaseStudy[] = [
     project: "Qrvey — AutomatiQ",
     category: "SaaS × Survey & NPS × Automation",
     duration: "11 months",
-    team: "Product + Engineering",
+    team: "Product and engineering",
     kind: "client",
     // The kicker names the company; "Survey & NPS Platform" read as a category.
     clientOverride: "Qrvey",
     tagline:
       "A survey automation builder — trigger, condition, action — for people who had never drawn a flow chart.",
     impact:
-      "A negative answer could trigger its own follow-up — a new survey a week later, results emailed to the team — set up with cards, not a flow chart.",
+      "A negative answer could trigger its own follow-up — a new survey a week later, results emailed to the team — with nobody watching for it.",
     context:
       "Qrvey was a survey and NPS platform; someone still had to act on the answers. As lead UI designer, I designed AutomatiQ, the builder that did.",
     contributions: [
@@ -794,15 +789,15 @@ export const caseStudies: CaseStudy[] = [
     gallery: [
       {
         src: "/work/qrvey/process-list.webp",
-        alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a coloured status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
+        alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a colored status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
         caption: "Each process: running or paused, and what it has done.",
         width: 2000,
         height: 1438,
       },
       {
         src: "/work/qrvey/condition-branching.webp",
-        alt: "A condition under a New Response trigger: two pills, If Answer Is and Number of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
-        caption: "Conditions in the product's words: \"if answer is\", \"number of responses\".",
+        alt: "A condition under a New Response trigger: two pills, If Answer Is and # of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
+        caption: "Conditions in the product's words: \"If Answer Is\", \"# of Responses\".",
         width: 2000,
         height: 1200,
       },
@@ -851,7 +846,7 @@ export const caseStudies: CaseStudy[] = [
     tagline:
       "Wireframes, UI kits and prototypes for US and LATAM clients, across web and mobile.",
     impact:
-      "Developer-ready design across fintech, marketplaces and B2B — the multi-domain fluency that later made systems work feel natural.",
+      "Developer-ready design across fintech, marketplaces and B2B — the multi-domain fluency that later made design-systems work feel natural.",
     context:
       "A remote-first agency, where the job was learning a client's domain fast and shipping clean design.",
     contributions: [
@@ -870,7 +865,7 @@ export const caseStudies: CaseStudy[] = [
     category: "iOS × Mobility",
     kind: "side",
     clientOverride: "Freelance side project",
-    roleOverride: "Product designer — end to end",
+    roleOverride: "Product Designer — end to end",
     yearOverride: "2018",
     duration: "2018",
     team: "Solo designer, handed off to a dev team",
@@ -888,8 +883,8 @@ export const caseStudies: CaseStudy[] = [
       "Chub books a car, not a ride: pick a vehicle, see its range and per-minute rate, and once the trip starts the app becomes the cabin's controls.",
     contributions: [
       "**The decision on one card** — range, acceleration, seats and the per-minute rate, above the button.",
-      "**Cost up front** — pickup, destination, estimated time and a fare range, before the trip starts.",
-      "**The app becomes the car** — mid-trip it runs climate and ventilated seats, and shows temperature and speed.",
+      "**A priced route** — pickup, destination, estimated time and a fare range, so the last screen holds no surprises.",
+      "**One app, from booking to cabin** — mid-trip it runs climate and ventilated seats, and shows temperature and speed.",
     ],
     // Ordered show-first: the vehicle sheet is the cover — the car, its specs
     // and its price in one frame — then the trip in the order it happens.
@@ -927,14 +922,14 @@ export const caseStudies: CaseStudy[] = [
     category: "iOS × Pet adoption",
     kind: "side",
     clientOverride: "Freelance side project",
-    roleOverride: "Product designer — end to end",
+    roleOverride: "Product Designer — end to end",
     yearOverride: "2018",
     duration: "2018",
     team: "Solo designer, handed off to a dev team",
     tagline:
       "Swipe to meet a dog or cat nearby: the dating pattern everyone knows, pointed at adoption.",
     impact:
-      "Adoption borrowed the one interaction everyone already knows, and put the shelters' donation ask where the attention already was.",
+      "Adoption borrows the swipe from dating apps, and puts the shelters' donation ask where the attention already is.",
     context:
       "MakeAppet applies swipe-to-match to finding a pet nearby: browse by species, swipe through what is close, and open a full profile before deciding.",
     contributions: [
@@ -948,11 +943,11 @@ export const caseStudies: CaseStudy[] = [
       {
         src: "/work/makeappet/swipe.webp",
         alt: "The swipe screen: For you and Nearby tabs above a full-bleed photo card of a dog with its name, age and distance, and round dismiss and like buttons below it.",
-        caption: "The pattern everyone already knows, unchanged.",
+        caption: "Name, age and distance on the card; like or pass.",
       },
       {
         src: "/work/makeappet/profile.webp",
-        alt: "A pet profile: a large photograph, the name and distance, a four-cell grid of age, breed, sex and weight, a written description, and a primary Bark me button beside a favourite button.",
+        alt: "A pet profile: a large photograph, the name and distance, a four-cell grid of age, breed, sex and weight, a written description, and a primary Bark me button beside a favorite button.",
         caption: "What a photo cannot carry.",
       },
       {

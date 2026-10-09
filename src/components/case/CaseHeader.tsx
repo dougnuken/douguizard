@@ -90,7 +90,7 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
               <Dot className="mx-[0.5em]" />
             </span>
           )}
-          {meta.role}
+          {meta.role.replace(/ · /g, " ·\u00a0")}
         </p>
 
         <RevealText

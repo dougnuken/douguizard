@@ -62,7 +62,7 @@ test("10.2 OG title/description match site headline/summary", async ({ page }) =
 
 for (const { home, ml: mlRoute, phrase } of [
   { home: "/en", ml: "/en/work/mercadolibre-andes", phrase: "Case study available on request" },
-  { home: "/", ml: "/work/mercadolibre-andes", phrase: "Caso disponible bajo solicitud" },
+  { home: "/", ml: "/work/mercadolibre-andes", phrase: "Caso disponible a solicitud" },
 ]) test(`10.5 '${phrase}' appears on ${home} and on the ML case`, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));

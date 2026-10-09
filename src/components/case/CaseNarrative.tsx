@@ -1,7 +1,7 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, Eyebrow, renderBold, type BandProps } from "./primitives";
+import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 /**
@@ -28,7 +28,7 @@ export default function CaseNarrative({
     <Band tone={tone} rule="t">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
         <div>
-          <Eyebrow>{t.context}</Eyebrow>
+          <EyebrowHeading>{t.context}</EyebrowHeading>
           <RevealText
             as="p"
             variant="fade"
@@ -39,7 +39,7 @@ export default function CaseNarrative({
         </div>
 
         <div>
-          <Eyebrow>{t.whatIDid}</Eyebrow>
+          <EyebrowHeading>{t.whatIDid}</EyebrowHeading>
           <ol className="hairline-t mt-6 list-none p-0 md:mt-8">
             {contributions.map((contribution, i) => (
               <li

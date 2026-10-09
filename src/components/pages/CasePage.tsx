@@ -86,7 +86,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
    * means a missing band can never leave a seam.
    */
   const bands: { key: string; render: (tone: Tone) => ReactNode }[] = [
-    { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={study.links} /> },
+    { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={study.links} wide={!proofFirst} /> },
     {
       key: "impact",
       render: (tone) => (

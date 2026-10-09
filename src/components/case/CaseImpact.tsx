@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import RevealText from "@/components/text/RevealText";
-import { Band, Eyebrow, type BandProps } from "./primitives";
+import { Band, EyebrowHeading, type BandProps } from "./primitives";
 import type { CaseStudy, Kpi } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
@@ -117,7 +117,7 @@ export default function CaseImpact({
   const figures = kpis && kpis.length > 0 ? kpis : undefined;
   return (
     <Band tone={tone} rule="t">
-      <Eyebrow>{kind === "side" ? t.idea : t.impact}</Eyebrow>
+      <EyebrowHeading>{kind === "side" ? t.idea : t.impact}</EyebrowHeading>
 
       {figures && (
         <div

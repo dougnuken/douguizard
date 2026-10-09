@@ -15,6 +15,8 @@ function MetaLine({ study, locale }: { study: CaseStudy; locale: Locale }) {
   // and a personal one, whose client is the literal "Personal product" and
   // whose category already opens with it.
   const clientIsRedundant =
+    // Side projects sit under their own group heading, which already says so.
+    study.kind === "side" ||
     study.project === meta.client ||
     (study.kind === "personal" && study.category.toLowerCase().startsWith(meta.client.toLowerCase()));
 

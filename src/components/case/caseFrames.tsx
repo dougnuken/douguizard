@@ -27,7 +27,9 @@ import { FadeIn } from "./primitives";
 export function browserLabel(src: string): string | undefined {
   const parts = src.split("/").filter(Boolean);
   const product = parts.at(-2);
-  const moduleName = parts.at(-1)?.replace(/\.\w+$/, "").split("-")[0];
+  // A walkthrough is filed as "recorrido-<module>"; its label is the module.
+  const tokens = parts.at(-1)?.replace(/\.\w+$/, "").split("-") ?? [];
+  const moduleName = tokens[0] === "recorrido" ? tokens[1] : tokens[0];
   if (!product || !moduleName) return undefined;
   return `${product} · ${moduleName}`.toUpperCase();
 }

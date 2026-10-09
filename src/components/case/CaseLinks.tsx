@@ -29,15 +29,18 @@ export default function CaseLinks({ links }: { links: { label: string; href: str
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex min-h-11 items-baseline gap-2.5 font-display text-[clamp(20px,2vw,28px)] leading-none text-[var(--ink)] underline decoration-[var(--line-strong)] decoration-1 underline-offset-[10px] hover:decoration-[var(--ink)] hover:decoration-2"
+              className="group inline-block min-h-11 font-display text-[clamp(20px,2vw,28px)] leading-[1.6] text-[var(--ink)] underline decoration-[var(--line-strong)] decoration-1 underline-offset-[10px] hover:decoration-[var(--ink)] hover:decoration-2"
             >
-              {link.label}
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-500 group-hover:translate-x-1"
-                style={{ transitionTimingFunction: "var(--ease-out)" }}
-              >
-                →
+              {link.label.slice(0, link.label.lastIndexOf(" ") + 1)}
+              <span className="whitespace-nowrap">
+                {link.label.slice(link.label.lastIndexOf(" ") + 1)}
+                <span
+                  aria-hidden
+                  className="ml-2.5 inline-block transition-transform duration-500 group-hover:translate-x-1"
+                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                >
+                  →
+                </span>
               </span>
             </a>
           </FadeIn>

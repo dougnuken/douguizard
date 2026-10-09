@@ -19,10 +19,12 @@ export default function CaseMeta({
   meta,
   links,
   tone,
+  wide = true,
 }: {
   meta: CaseMetaType;
   links?: { label: string; href: string }[];
   tone?: BandProps["tone"];
+  wide?: boolean;
 }) {
   const t = useDict().case.meta;
   // A duration that only repeats the year ("Duration 2018" beside "Year 2018")
@@ -30,14 +32,14 @@ export default function CaseMeta({
   // grid keeps its four tracks, so the cells that remain stay on the columns
   // the walkthrough caption above them is aligned to.
   const cells = [
-    { label: t.role, value: meta.role },
+    { label: t.role, value: meta.role.replace(/ · /g, " ·\u00a0") },
     meta.duration.trim() !== meta.year.trim() && { label: t.duration, value: meta.duration },
     { label: t.team, value: meta.team },
     { label: t.year, value: meta.year },
   ].filter((cell) => cell !== false);
 
   return (
-    <Band tone={tone} rule="t" wide className="py-10 md:py-12">
+    <Band tone={tone} rule="t" wide={wide} className="py-10 md:py-12">
       <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
         {cells.map((cell, i) => (
           <FadeIn key={cell.label} delay={i * 0.06}>

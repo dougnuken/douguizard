@@ -21,6 +21,9 @@ export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandP
   // what kind of work it was instead, the same rule the hero's kicker keeps.
   const client = getCaseMeta(next.slug, locale).client;
   const over = client.toLowerCase() === next.project.toLowerCase() ? next.category : client;
+  const cut = next.project.lastIndexOf(" ");
+  const head = next.project.slice(0, cut + 1);
+  const tail = next.project.slice(cut + 1);
   return (
     <Band tone={tone} rule="t">
       <FadeIn>
@@ -37,15 +40,21 @@ export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandP
           </div>
 
           <h2
-            className="mb-8 font-display text-[clamp(56px,11vw,160px)] font-semibold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] transition-[font-weight] duration-300 group-hover:font-extrabold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[12px]"
+            className="mb-8 font-display text-[clamp(44px,11vw,160px)] font-semibold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] transition-[font-weight] duration-300 group-hover:font-extrabold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[12px]"
           >
-            {next.project}
-            <span
-              className="inline-block transition-transform duration-500 group-hover:translate-x-4"
-              style={{ transitionTimingFunction: "var(--ease-out)" }}
-            >
-              {" "}
-              →
+            {/* The arrow is bound to the last word, so it never wraps onto a line
+                of its own; it is decoration, so the heading reads as the name. */}
+            {head}
+            <span className="whitespace-nowrap">
+              {tail}
+              <span
+                aria-hidden
+                className="inline-block transition-transform duration-500 group-hover:translate-x-4"
+                style={{ transitionTimingFunction: "var(--ease-out)" }}
+              >
+                {" "}
+                →
+              </span>
             </span>
           </h2>
 

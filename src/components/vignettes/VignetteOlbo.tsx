@@ -17,7 +17,7 @@ export default function VignetteOlbo({ className, locale }: VignetteProps) {
       </div>
 
       <p className="mt-3 font-mono text-[10px] leading-relaxed text-[var(--ink-muted)]">
-        &ldquo;veinte mil en el super&rdquo;
+        {locale === "es" ? "«veinte mil en el súper»" : "“veinte mil en el súper”"}
       </p>
 
       <div className="mt-auto flex items-end justify-between gap-3">

@@ -43,9 +43,9 @@ const GRID_COLS: Record<Columns, string> = {
   2: "md:grid-cols-2",
   3: "md:grid-cols-3",
   4: "md:grid-cols-2 lg:grid-cols-4",
-  // Five handsets fit one row only from `xl`; below it they settle into three
+  // Five handsets fit one row from `lg`; below it they settle into three
   // across, which still beats four-and-a-stray.
-  5: "md:grid-cols-3 xl:grid-cols-5",
+  5: "md:grid-cols-3 lg:grid-cols-5",
 };
 
 /** Per-column `sizes`, so next/image never downloads a 1179px file for a 300px slot. */
@@ -54,7 +54,7 @@ const SIZES: Record<Columns, string> = {
   2: "(max-width: 767px) 70vw, (max-width: 1279px) 44vw, 420px",
   3: "(max-width: 767px) 70vw, (max-width: 1279px) 30vw, 340px",
   4: "(max-width: 767px) 70vw, (max-width: 1279px) 42vw, 300px",
-  5: "(max-width: 767px) 70vw, (max-width: 1279px) 30vw, 260px",
+  5: "(max-width: 767px) 70vw, (max-width: 1023px) 30vw, (max-width: 1279px) 18vw, 260px",
 };
 
 /**
@@ -113,6 +113,7 @@ export default function MockupGallery({
       ? "flex snap-x snap-mandatory gap-5 overflow-x-auto pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       : "grid grid-cols-1 gap-12",
     "md:grid md:snap-none md:gap-x-8 md:gap-y-12 md:overflow-x-visible md:pb-0",
+    "focus-visible:[outline:2px_solid_var(--ink)] focus-visible:[outline-offset:4px]",
     GRID_COLS[cols],
     className
   );
@@ -123,7 +124,7 @@ export default function MockupGallery({
 
   return (
     <div className="w-full">
-      <ul className={listClass} aria-label={ariaLabel}>
+      <ul className={listClass} aria-label={ariaLabel} tabIndex={isRail && !lead ? 0 : undefined}>
         {lead && (
           <li className={itemClass}>
             <div className={twMerge("w-full max-w-[420px]", ALIGN[cols])}>{lead}</div>
