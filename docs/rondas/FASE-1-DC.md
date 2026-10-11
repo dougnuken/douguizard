@@ -58,19 +58,37 @@ mejorar su UI. Reutiliza el kit de mockups que se construya aquí.
 ## Fallos conocidos (línea base del 11 oct; no cuentan como fallo de una fase)
 
 Medidos con `node scripts/qa/check.mjs` sobre el build de `1e097a4`:
-- `/` @390: los enlaces sociales del pie (LinkedIn, Behance, GitHub) miden ~17 px de alto (< 44 px).
-- `/` @1440: tres `span.absolute.inset-0` quedan en opacidad 0 tras el revelado (probablemente decorativos; el auditor lo confirma).
+- `/` @390: los enlaces sociales del pie (LinkedIn, Behance, GitHub) miden ~17 px de alto (< 44 px). **Real**; es B7.
+- `/` @1440: tres `span.absolute` quedan en opacidad 0 tras el revelado. **Decorativos, confirmado:** son las marcas inactivas
+  del riel lateral (`RailLabel.tsx:249`, sin texto ni hijos). `check.mjs` los reporta; no son fallo de ninguna fase.
 
-## Backlog
+## Backlog (auditoría U0, tag `a0`, build `1e097a4`, 390 y 1440)
 
-(lo llena `pf-ux-auditor` en U0, con evidencia)
+Evidencia: `tests/shots/a0-*.png` (se regeneran con `node scripts/qa/shots.mjs --tag a0`; no se versionan).
+
+| # | prioridad · esfuerzo | dónde | qué pasa | idea |
+|---|---|---|---|---|
+| B1 | alto · M | `/` primera pantalla | el hero (titular + blob violeta) no muestra ningún producto ni nombra DC; nada real hasta hacer scroll | una pieza real (escena hero de DC) o un acceso a DC en el hero |
+| B2 | alto · M | `/` · Work (`Work.tsx:118,151`) | 5 `FeaturedRow` idénticas con viñeta abstracta (`VignetteDc` es un dibujo, no la captura); DC (`/05`) queda ~5 filas abajo; no existe una fila «destacada» | DC primero **y** variante destacada más grande, con el mockup en lugar de la viñeta |
+| B3 | alto · M | `/work/dc-medical` enlaces | la única salida externa («Panel en vivo — acceso del personal →», `externalLink`) está en el colophon, al 85–90 % del scroll; no hay «Ver la web» ni demo; el caso no define `links` | fila de enlaces junto a `CaseHeader`/`CaseShowcase` con «Ver la web · Panel del personal · Probar demo»; quitar el `externalLink` del colophon (el código ya lo oculta si hay `links`) |
+| B4 | alto · M | `/work/dc-medical` hero @1440 | la mitad derecha del hero está vacía; el producto empieza en y≈655 y queda cortado en el primer pantallazo | escena hero grande a la derecha del título o justo debajo |
+| B5 | medio · M | `/work/dc-medical` showcase | la pieza principal necesita pulsar «Reproducir»; el pie de captura es mono 10 px gris | que el producto se lea sin reproducir nada; subir el pie |
+| B6 | medio · M | `/work/dc-medical` @390 | la primera pantalla es solo texto; el celular asoma en y≈540 atenuado por el modal de la captura | escena hero con el celular completo antes del scroll |
+| B7 | medio · S | `/` @390 pie | LinkedIn/Behance/GitHub miden 17 px de alto (confirmado) | zona táctil de 44 px |
+| B8 | bajo · — | `/` | `scrollWidth` 375 a 390 y 1425 a 1440 = barra de scroll, no desborde | sin acción |
+
+Orden previsto para el caso: `CaseHeader` → escena hero → `CaseShowcase` (video + galería real) → `CaseScenes` (4–5 escenas,
+banda propia, en `CasePage.tsx` después del showcase y antes de las bandas) → `CaseMeta`/`CaseLinks` → impacto.
 
 ## Puertas (decisiones de Doug; el director se detiene y pregunta)
 
 - **A · Dirección visual de las escenas** — tras ver el primer plate. Opciones: (1) claro luminoso (marfil, champán, mármol)
-  como una «ventana» dentro del sitio oscuro; (2) oscuro editorial (obsidiana con acentos champán) que respeta el sitio;
-  (3) mixto por escena. Recomendación provisional: **(1)**, por contraste con el sitio y porque la medicina estética luxury vive
-  en tonos claros; se confirma con el plate delante.
+  como una «ventana» dentro del sitio oscuro; (2) oscuro editorial (mármol negro, obsidiana, acento champán) con la pantalla
+  encendida como única fuente de luz; (3) mixto por escena. **Recomendación (revisada tras U0): (2).** El auditor lo razona
+  bien: las capturas del panel son claras y pastel, y sobre una escena oscura se leen como «pantalla encendida» sin aplanar el
+  sitio (`#111`); una escena beige clara chocaría con el resto de la página. Además el lujo en estética médica también vive en
+  negro y champán. Un solo acento, luz y grano coherentes entre escenas, bordes que se funden con la banda. Se confirma con el
+  plate delante; (1) queda como alternativa si el plate oscuro no se ve «clínico» y limpio.
 - **B · Dónde vive el demo y con qué acceso** — opciones: (1) origen aparte desde el repo privado del panel
   (p. ej. `demo.dcmedicalaesthetics.com`, assets estáticos, despliegue de Doug): el código del panel sigue privado y el dominio
   de la marca da credibilidad; requiere permiso de escritura en `dc-medical-dashboard`; (2) proyecto aparte en Vercel con
