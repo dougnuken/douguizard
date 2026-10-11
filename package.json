@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "cv:pdf": "node scripts/build-cv-pdf.mjs"
+    "cv:pdf": "node scripts/build-cv-pdf.mjs",
+    "mockups:build": "python3 scripts/mockups/compose.py --all",
+    "mockups:check": "python3 scripts/mockups/compose.py --all --check",
+    "mockups:test": "python3 -m unittest discover -s mockups/tests"
   },
   "dependencies": {
     "next": "^16.2.0",

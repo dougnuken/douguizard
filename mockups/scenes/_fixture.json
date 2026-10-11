@@ -1,0 +1,33 @@
+{
+  "id": "_fixture",
+  "case": "dc-medical",
+  "kind": "hero",
+  "plate": "../fixtures/plate-fixture.webp",
+  "screen": {
+    "source": "public/work/dc-medical/nota-de-voz-poster.jpg",
+    "fit": "cover",
+    "key": "#00FF00",
+    "tolerance": 50,
+    "glare": 0
+  },
+  "output": {
+    "dir": "public/work/dc-medical/scenes",
+    "width": 2400,
+    "quality": 88
+  },
+  "alt": {
+    "es": "Escena de prueba sintetica: celular con la captura de la nota de voz.",
+    "en": "Synthetic test scene: phone showing the voice-note capture."
+  },
+  "caption": {
+    "es": "Escena de prueba (no se publica).",
+    "en": "Test scene (not published)."
+  },
+  "higgsfield": {
+    "model": "",
+    "resolution": "",
+    "prompt": "",
+    "job_id": "",
+    "notes": "Plate sintetico generado por scripts/mockups/make-fixture-plate.py. No usa creditos."
+  }
+}
