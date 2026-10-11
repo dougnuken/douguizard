@@ -342,7 +342,8 @@ def detect_corners(mask, cropped=False, info=None):
                     n2, c2 = -n2, -c2
             Qk = Q[keep]
             new.append((n2, c2))
-            resid.append(float(np.abs(Qk @ n2 - c2).mean()))
+            Qw = P[select_side(P, n2, c2, A, B, W, H, cropped, win=6.0)]  # ventana ancha: delata un lado curvo
+            resid.append(float(np.abs(Qw @ n2 - c2).mean()))
             extents.append(extent_of(Qk, n2))
             npts.append(int(len(Qk)))
         lines = new
@@ -843,7 +844,7 @@ def main(argv=None):
         data = json.loads(data_path.read_text(encoding="utf-8"))
     data.update(results)
     if not a.include_fixtures:  # las escenas de prueba (_*) nunca llegan al JSON que importa el frontend
-        pass
+        data = {k: v for k, v in data.items() if not k.startswith("_")}
     text = json.dumps({k: data[k] for k in sorted(data)}, indent=2, ensure_ascii=False) + "\n"
     data_path.parent.mkdir(parents=True, exist_ok=True)
     if not data_path.is_file() or data_path.read_text(encoding="utf-8") != text:

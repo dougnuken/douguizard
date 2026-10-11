@@ -1,7 +1,17 @@
 {
-  "hero-mano": {
-    "src": "/work/dc-medical/scenes/hero-mano.cab0f20b.webp",
-    "width": 1744,
-    "height": 2336
+  "dc-hero": {
+    "case": "dc-medical",
+    "kind": "hero",
+    "src": "/work/dc-medical/scenes/dc-hero.2a9f751e.webp",
+    "width": 1168,
+    "height": 880,
+    "alt": {
+      "es": "Una tableta sostenida con dos manos, vista en perspectiva, muestra el tablero de seguimiento de controles del panel de DC Medical.",
+      "en": "A tablet held in two hands, seen in perspective, shows the DC Medical dashboard's follow-up board for check-ups."
+    },
+    "caption": {
+      "es": "El tablero de seguimiento, en una tableta.",
+      "en": "The follow-up board, on a tablet."
+    }
   }
 }

@@ -24,10 +24,10 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
 
 ```json
 {
-  "id": "hero-mano",
+  "id": "dc-hero",
   "case": "dc-medical",
   "kind": "hero",
-  "plate": "hero-mano.webp",
+  "plate": "dc-hero.webp",
   "screen": { "source": "public/work/dc-medical/seguimiento-controles.webp", "fit": "cover", "key": "#00FF00", "tolerance": 50, "glare": 0, "cropped": true, "sheen": { "amount": 0.5, "angle": 40 } },
   "output": { "dir": "public/work/dc-medical/scenes", "width": 2400, "quality": 85 },
   "alt": { "es": "…", "en": "…" },
@@ -147,8 +147,8 @@ descontamina bien. Pide siempre los cuatro lados de la pantalla visibles: el com
 
 ### Alternativa archivada: oscura editorial (solo texto)
 
-La usó el primer plate (`hero-mano`, `gpt_image_2` 2k medio, 3:4, 2 créditos); Doug eligió la dirección clara. Su prompt literal está en
-`mockups/scenes/hero-mano.json`. Objeto + base:
+La usó el primer plate (`_hero-mano-oscuro`, `gpt_image_2` 2k medio, 3:4, 2 créditos); Doug eligió la dirección clara. Su prompt literal está en
+`mockups/scenes/_hero-mano-oscuro.json`. Objeto + base:
 
 > Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic, dark and moody. A woman's elegant manicured hand with nude champagne-toned nails holds a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, black silk sleeve cuff.
 > Background: deep obsidian black polished marble with fine champagne-gold veining, softly out of focus, with a few soft champagne-gold light bokeh circles far behind. Lighting: one soft warm key light from the upper left and a thin champagne rim light along the edges of the hand and phone, subtle film grain, shallow depth of field, 85mm lens, high-end magazine look, generous dark negative space around the subject. The phone screen is a perfectly flat, uniform, pure chroma-key green (#00FF00) fill: no UI, no text, no icons, no reflections, no glare, no gradient, the entire screen visible and sharp with all four rounded corners fully in frame. The screen does not emit light and casts no green glow, no green reflection and no green tint on the skin, nails, phone frame or background. No other green anywhere in the scene, no plants, no leaves. No text, no logos, no brand marks, no jewelry, no identifiable faces (hand and forearm only, face out of frame).

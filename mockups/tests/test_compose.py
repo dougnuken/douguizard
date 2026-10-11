@@ -500,6 +500,17 @@ class CroppedTests(unittest.TestCase):
         bad[3][0] += 8
         with self.assertRaisesRegex(compose.SceneError, "quad"):
             compose.detect_screens(arr, 1, 50, 1, [{"quad": bad}], True)
+        # desplazado 3,5 px: sigue dentro de la ventana de puntos, pero el residual lo delata
+        near = [[x + 3.5, y] for x, y in TRUTH_CROP["corners"]]
+        with self.assertRaisesRegex(compose.SceneError, "residual"):
+            compose.detect_screens(arr, 1, 50, 1, [{"quad": near}], True)
+
+    def test_residual_limit_is_wired(self):
+        arr = np.array(Image.open(REPO / "mockups/fixtures/plate-cropped.webp").convert("RGB"))
+        compose.detect_screens(arr, 1, 50, 1, [{"cropped": True}], True)  # limpio: pasa
+        with mock.patch.object(compose, "MAX_RESIDUAL", 0.01):
+            with self.assertRaisesRegex(compose.SceneError, "residual"):
+                compose.detect_screens(arr, 1, 50, 1, [{"cropped": True}], True)
 
     def test_spill_warn_and_fail(self):
         def plate(bg):
@@ -572,7 +583,8 @@ class SheenTests(unittest.TestCase):
             return a[c[1] - 6:c[1] + 6, c[0] - 6:c[0] + 6].mean()
         self.assertGreater(patch(glow, left) - patch(base, left), 3.0)
         self.assertLess(abs(patch(glow, right) - patch(base, right)), 3.0)
-        # dedos: identicos al plate con y sin brillo
+        # dedos: identicos al plate aunque el brillo nazca justo donde esta el dedo (borde derecho, angulo 180)
+        glow, _, _ = self.build({"amount": 1.0, "angle": 180})
         plate = np.array(Image.open(REPO / "mockups/fixtures/plate-fixture.webp").convert("RGB")).astype(int)
         W, H = TRUTH["size"]
         m = Image.new("L", (W, H), 0)

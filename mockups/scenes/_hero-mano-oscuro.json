@@ -1,8 +1,8 @@
 {
-  "id": "hero-mano",
+  "id": "_hero-mano-oscuro",
   "case": "dc-medical",
   "kind": "hero",
-  "plate": "hero-mano.webp",
+  "plate": "_hero-mano-oscuro.webp",
   "screen": {
     "source": "public/work/dc-medical/nota-de-voz-poster.jpg",
     "fit": "cover",
@@ -30,6 +30,6 @@
     "aspect": "3:4",
     "prompt": "Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic, dark and moody. A woman's elegant manicured hand with nude champagne-toned nails holds a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, black silk sleeve cuff. Background: deep obsidian black polished marble with fine champagne-gold veining, softly out of focus, with a few soft champagne-gold light bokeh circles far behind. Lighting: one soft warm key light from the upper left and a thin champagne rim light along the edges of the hand and phone, subtle film grain, shallow depth of field, 85mm lens, high-end magazine look, generous dark negative space around the subject. The phone screen is a perfectly flat, uniform, pure chroma-key green (#00FF00) fill: no UI, no text, no icons, no reflections, no glare, no gradient, the entire screen visible and sharp with all four rounded corners fully in frame. The screen does not emit light and casts no green glow, no green reflection and no green tint on the skin, nails, phone frame or background. No other green anywhere in the scene, no plants, no leaves. No text, no logos, no brand marks, no jewelry, no identifiable faces (hand and forearm only, face out of frame).",
     "job_id": "766631df-5c3b-4fa4-aec8-8cd498e6f6eb",
-    "notes": "Dirección oscura editorial; 0 px de exceso verde tras componer; pantalla = póster del video (ya publicado); costo 2 créditos"
+    "notes": "Dirección oscura editorial; 0 px de exceso verde tras componer; pantalla = póster del video (ya publicado); costo 2 créditos. Archivada: dirección oscura, alternativa si se pide"
   }
 }
