@@ -6,6 +6,7 @@ import { yearsOfExperience } from "@/lib/career";
 import { localePath, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
+import BrowserFrame from "@/components/work/BrowserFrame";
 import { VIGNETTES } from "@/components/vignettes/registry";
 
 function MetaLine({ study, locale }: { study: CaseStudy; locale: Locale }) {
@@ -40,6 +41,36 @@ function ReadAffordance({ locale }: { locale: Locale }) {
         →
       </span>
     </span>
+  );
+}
+
+function SpotlightRow({ study, shot, locale }: { study: CaseStudy; shot: NonNullable<CaseStudy["gallery"]>[number]; locale: Locale }) {
+  const t = getDict(locale).work;
+  return (
+    <li className="hairline-b">
+      <Link
+        href={localePath(locale, `/work/${study.slug}`)}
+        aria-label={`${study.project} — ${study.tagline}`}
+        className="group grid items-center gap-8 py-9 no-underline outline-none lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 lg:py-12"
+      >
+        <div className="flex flex-col gap-3">
+          <span className="section-num text-sm">{study.num}</span>
+          <p className="kicker">{t.latest}</p>
+          <h3 className="font-display text-[clamp(2rem,3.4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-[var(--ink)] group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[8px] group-focus-visible:underline">
+            {study.project}
+          </h3>
+          <MetaLine study={study} locale={locale} />
+          <p className="max-w-[46ch] text-[length:var(--step-body)] leading-[1.5] text-[var(--ink-muted)]">{study.tagline}</p>
+          <span className="mt-2"><ReadAffordance locale={locale} /></span>
+        </div>
+        <RevealText as="div" variant="fade" className="w-full transition-transform duration-300 group-hover:-translate-y-0.5 group-focus-visible:-translate-y-0.5">
+          <BrowserFrame src={shot.src} alt={shot.alt} sizes="(max-width: 1023px) 92vw, 760px" animate={false} interactive={false} />
+          {shot.caption && (
+            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">{shot.caption}</p>
+          )}
+        </RevealText>
+      </Link>
+    </li>
   );
 }
 
@@ -115,8 +146,11 @@ export default function Work({ locale }: { locale: Locale }) {
   const panel = getSections(locale)[1];
   const site = getSite(locale);
   const caseStudies = getCaseStudies(locale);
-  const featured = caseStudies.filter((c) => VIGNETTES[c.slug]);
-  const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c.kind !== "side");
+  const first = caseStudies[0];
+  const shot = first?.nda ? undefined : first?.gallery?.[first.spotlightShot ?? 0];
+  const spotlight = shot ? first : undefined;
+  const featured = caseStudies.filter((c) => VIGNETTES[c.slug] && c !== spotlight);
+  const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c !== spotlight && c.kind !== "side");
   /** Their own group: work taken on outside a job, not a shorter version of it. */
   const side = caseStudies.filter((c) => c.kind === "side");
   // Counted, never typed: adding a case changes the sentence that counts them.
@@ -148,6 +182,7 @@ export default function Work({ locale }: { locale: Locale }) {
       </header>
 
       <ul className="hairline-t flex flex-col">
+        {spotlight && shot && <SpotlightRow study={spotlight} shot={shot} locale={locale} />}
         {featured.map((study, i) => (
           <FeaturedRow key={study.slug} study={study} index={i} locale={locale} />
         ))}

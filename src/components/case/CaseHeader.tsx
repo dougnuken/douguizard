@@ -41,7 +41,15 @@ const fold = (s: string) => s.trim().toLowerCase();
  * It is as tall as its words now, so the showcase under it starts inside the
  * first screen: the reader sees what was made before reading about it.
  */
-export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: CaseMeta }) {
+export default function CaseHeader({
+  study,
+  meta,
+  links,
+}: {
+  study: CaseStudy;
+  meta: CaseMeta;
+  links?: { label: string; href: string }[];
+}) {
   const t = useDict().case;
   const locale = useLocale();
 
@@ -110,6 +118,23 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
         >
           {study.tagline}
         </RevealText>
+
+        {links?.length ? (
+          <RevealText as="div" variant="fade" delay={0.3} className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:mt-10">
+            {links.map((link, i) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`btn-pill justify-center whitespace-normal py-3 text-center leading-[1.25]${i === 0 ? " btn-pill--solid" : ""}`}
+              >
+                {link.label}
+                <span aria-hidden>→</span>
+              </a>
+            ))}
+          </RevealText>
+        ) : null}
       </div>
     </section>
   );

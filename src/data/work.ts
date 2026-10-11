@@ -103,14 +103,188 @@ export interface CaseStudy {
   videoKind?: "phone" | "browser";
   /** Extra destinations beyond externalLink — live app, source, writeups. */
   links?: { label: string; href: string }[];
+  /** Show `links` as buttons under the hero instead of as the meta strip's last row. */
+  linksFirst?: boolean;
+  /** Index into `gallery` of the capture the home's spotlight row shows (default 0). */
+  spotlightShot?: number;
   /** Who did what — authorship and collaborators, in one paragraph. */
   credits?: string;
 }
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "olbo",
+    slug: "dc-medical",
     num: "/01",
+    project: "DC Medical Aesthetics",
+    category: "Clinic Operations × Design Engineering",
+    roleOverride: "Product Designer and Design Engineer — end to end",
+    yearOverride: "2026",
+    clientOverride: "DC Medical Aesthetics",
+    duration: "Live since Sep 21, 2026 — still shipping",
+    team: "Solo — product, design, code",
+    kind: "personal",
+    tagline:
+      "The panel that runs a clinic from the secretary's phone. No procedure starts until it's paid for.",
+    impact:
+      "Finding what a patient owed used to take ten minutes of opening files; now every case shows it beside the next step.",
+    context:
+      "The aesthetic-medicine clinic I co-own in Barranquilla ran on WhatsApp, Google Calendar and a shared Drive: everything written down, nothing connected. I built one panel on top of those tools, not instead of them.",
+    contributions: [
+      "**Three locked phases** — valuation, payment, procedure; the procedure's green light needs full payment, receipt and signed consent.",
+      "**Safe rollout** — a read-only version on day one; editing came later, behind per-person logins, after a security audit.",
+      "**Rules as tested functions** — balances, card fees, dates and name matching, covered by 12 test suites.",
+    ],
+    kpis: [
+      // First commit 2026-09-19, agenda by city released 2026-10-02 — both
+      // read off the dc-medical-dashboard history on 2026-10-06.
+      { value: "14", label: "Days, first commit to today's version", delta: "Sep 19 → Oct 2, 2026" },
+      { value: "3", label: "Phases with locks", delta: "valuation, payment, procedure" },
+      { value: "0", label: "New databases", delta: "Drive and Calendar stay the source of truth" },
+      // 12 `test:*` scripts in the repo's package.json, verified 2026-10-06.
+      { value: "12", label: "Test suites", delta: "domain, ledger, worker, browser" },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "The plan was attacked first",
+        body: "I mapped how the clinic actually worked, then put the plan through an adversarial review on data, security and feasibility. It found the traps the sheets hide; only the third version reached code.",
+      },
+      {
+        phase: "02",
+        title: "Read first, write later",
+        body: "Version one was a read-only Claude artifact, safe to put in front of the clinic on day one. Editing came later, behind a login per person, after a security audit; live since September 21.",
+      },
+      {
+        phase: "03",
+        title: "The phone rewrote the interface",
+        body: "The secretary runs the clinic from an iPhone, often from the car. So the panel installs as an app, tables become cards, tap targets are at least 44 pixels, and a voice note fills the new-patient form.",
+      },
+      {
+        phase: "04",
+        title: "Real money, then real requests",
+        body: "Real payments set rules no plan had: a credit card lands at 95%, because the clinic passes the fee on to the patient. Then the clinic started asking: slots, an agenda by city, permissions. Most shipped within a day.",
+      },
+    ],
+    decisions: [
+      {
+        title: "The spreadsheet stays the source of truth",
+        body: "A real database was the obvious build. But the person who keeps the books works in Drive every day, and the clinic shouldn't depend on me. Switch the panel off tomorrow and nothing is lost.",
+      },
+      {
+        title: "Balances are read, not summed",
+        body: "Each income row carries the balance left after that payment, so summing counts a debt again with every deposit. An early version reported a phantom thirty-eight million pesos. Now the latest row wins.",
+      },
+      {
+        title: "A color per city, never on its own",
+        body: "The doctor works in three cities: orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for color blindness. The name always sits beside its dot, so nobody has to tell teal from blue.",
+      },
+    ],
+    featuresIntro:
+      "One board with the clinic's day on it, on a laptop at the front desk or a phone in a car.",
+    features: [
+      {
+        title: "A voice note that fills the form",
+        body: "Say who came, for what, and what she paid. The model fills the form and saves nothing until a person checks it.",
+        kind: "ai",
+      },
+      {
+        title: "Phases with locks",
+        body: "Each phase lists what's missing and links to the form that clears it. The footer always names the next step.",
+        kind: "product",
+      },
+      {
+        title: "The doctor's slots, ready to send",
+        body: "The document the secretary already keeps becomes a week of red and green slots, flags days in two cities, and copies into WhatsApp.",
+        kind: "product",
+      },
+      {
+        title: "Receipts and invoices read by AI",
+        body: "Photograph a receipt, a supplier invoice or travel expenses: the values come back filled in for review, then land in inventory or the month's accounting.",
+        kind: "ai",
+      },
+    ],
+    galleryKind: "browser",
+    // The walkthrough is the phone, the stills are the desk: the secretary
+    // runs the clinic from both, and the phone is where the voice note lives.
+    videoKind: "phone",
+    video: {
+      webm: "/work/dc-medical/nota-de-voz.webm",
+      mp4: "/work/dc-medical/nota-de-voz.mp4",
+      poster: "/work/dc-medical/nota-de-voz-poster.jpg",
+      label:
+        "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one",
+      caption:
+        "A voice note, typed here for the recording, fills in a new patient's form and opens her case. Demo data; fixed rules stand in for the AI.",
+      width: 786,
+      height: 1704,
+    },
+    // The case sheet leads: three locked phases, the payment bar and the one
+    // next step are the product's argument in a single screen. Then the month
+    // agenda; the browser gallery runs two full-width leaders and two-up rows,
+    // so the day view sits beside the slots, and the follow-up board beside the
+    // permissions sheet drawn over it.
+    // The two drawer captures are `-v2`: re-exported with the drawer's backdrop
+    // lifted. The new name is what invalidates the image optimiser's year-long
+    // cache, which keys on the URL, not on the file's contents.
+    gallery: [
+      {
+        src: "/work/dc-medical/caso-fases-v2.webp",
+        alt: "A patient's case sheet open over the cases list: a three-step tracker with valuation and payment done and the procedure current, the procedure set at four vials for face and neck, the procedure date booked, a payment bar at 5.3 of 9.8 million pesos, the case's payments newest first, and a footer naming the next step — register the final payment.",
+        caption: "The case: what's paid, what's missing, the one action that comes next.",
+      },
+      {
+        src: "/work/dc-medical/agenda-mes.webp",
+        alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines colored by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a colored band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
+        caption: "A month of appointments, each colored by its city.",
+      },
+      {
+        src: "/work/dc-medical/agenda-dia.webp",
+        alt: "The agenda in day view for Thursday, 24 September: a banner saying the doctor is in Medellín according to the calendar, appointments as cards by the hour with their type and city, a red line marking the current time, and patient-record and calendar buttons on each card.",
+        caption: "One day by the hour, and the city the doctor is in.",
+      },
+      {
+        src: "/work/dc-medical/cupos-semana.webp",
+        alt: "The doctor's slots for the week of 5 to 11 October: seven columns, each headed by the city the doctor is in, with hours marked occupied in red or free in green, a count of free hours over the next two months, and a button to copy two months of slots for WhatsApp.",
+        caption: "The doctor's slots, read from the secretary's own document.",
+      },
+      {
+        src: "/work/dc-medical/seguimiento-controles.webp",
+        alt: "The follow-up board: counters for valuations, procedures, controls to reschedule, this week, the next 30 days and controls with no date; tabs for valuations, procedures, controls, agenda, slots and balances owed; city filters; and a table of 45-day controls, each with the days left, its status and a WhatsApp button.",
+        caption: "Follow-up, counted: who's due, who has no date yet, who slipped.",
+      },
+      {
+        src: "/work/dc-medical/usuarios-permisos-v2.webp",
+        alt: "Editing a user in Users and permissions: the doctor's account set to view only, with toggles to see, create and edit per area — and to delete, for patients and cases — across agenda and follow-up, patients and cases, and patient payments, under presets for running the day, viewing only, and nothing.",
+        caption: "Permissions by area: the doctor reads, the secretary runs the day.",
+      },
+    ],
+    // The two public destinations, under the hero. The panel is a sign-in page by design (the clinic's internal tool,
+    // patient data behind it), so its label says so. A third entry, "Try the demo", is added by U4 only once the demo
+    // URL answers 200 and the leak scan is clean: never a placeholder href.
+    linksFirst: true,
+    spotlightShot: 4, // seguimiento-controles: the follow-up board
+    links: [
+      { label: "Visit the website", href: "https://dcmedicalaesthetics.com/" },
+      { label: "Staff panel (sign-in)", href: "https://panel.dcmedicalaesthetics.com/login" },
+    ],
+    technologies: [
+      "Product Strategy",
+      "HTML & Vanilla JS",
+      "Tailwind CSS",
+      "Cloudflare Workers",
+      "Google Apps Script",
+      "Google Drive & Calendar",
+      "Claude (API & MCP)",
+      "PWA",
+      "Playwright",
+      "node --test",
+    ],
+    credits:
+      "I co-own the clinic with the doctor and built the panel end to end. He owns the medical protocol; the secretary's daily use shaped the flows. Screens and walkthrough use seeded demo data: no real patient, no clinic figure.",
+  },
+  {
+    slug: "olbo",
+    num: "/02",
     project: "olbo",
     category: "Personal Product × Design Engineering",
     roleOverride: "Design Engineer — end to end",
@@ -247,7 +421,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "naowee-suid",
-    num: "/02",
+    num: "/03",
     experienceId: "naowee",
     project: "Naowee — Sports Sector Platform",
     category: "GovTech × Sports × AI-native",
@@ -371,7 +545,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "mercadolibre-andes",
-    num: "/03",
+    num: "/04",
     experienceId: "mercadolibre",
     project: "Andes Design System",
     // The kicker names the brand; the h1 under it already names the system.
@@ -417,7 +591,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "banco-de-occidente",
-    num: "/04",
+    num: "/05",
     experienceId: "aval",
     testimonialId: "francesca",
     project: "Banco de Occidente",
@@ -565,174 +739,6 @@ export const caseStudies: CaseStudy[] = [
     technologies: ["Figma", "Sketch", "Atomic design", "Design tokens", "InVision", "Prototyping"],
     // `externalLink` removed: adldigitallab.com is the employer's corporate site
     // and adds nothing to the work. The two `links` above are the destinations.
-  },
-  {
-    slug: "dc-medical",
-    num: "/05",
-    project: "DC Medical Aesthetics",
-    category: "Clinic Operations × Design Engineering",
-    roleOverride: "Product Designer and Design Engineer — end to end",
-    yearOverride: "2026",
-    clientOverride: "DC Medical Aesthetics",
-    duration: "Live since Sep 21, 2026 — still shipping",
-    team: "Solo — product, design, code",
-    kind: "personal",
-    tagline:
-      "The panel that runs a clinic from the secretary's phone. No procedure starts until it's paid for.",
-    impact:
-      "Finding what a patient owed used to take ten minutes of opening files; now every case shows it beside the next step.",
-    context:
-      "The aesthetic-medicine clinic I co-own in Barranquilla ran on WhatsApp, Google Calendar and a shared Drive: everything written down, nothing connected. I built one panel on top of those tools, not instead of them.",
-    contributions: [
-      "**Three locked phases** — valuation, payment, procedure; the procedure's green light needs full payment, receipt and signed consent.",
-      "**Safe rollout** — a read-only version on day one; editing came later, behind per-person logins, after a security audit.",
-      "**Rules as tested functions** — balances, card fees, dates and name matching, covered by 12 test suites.",
-    ],
-    kpis: [
-      // First commit 2026-09-19, agenda by city released 2026-10-02 — both
-      // read off the dc-medical-dashboard history on 2026-10-06.
-      { value: "14", label: "Days, first commit to today's version", delta: "Sep 19 → Oct 2, 2026" },
-      { value: "3", label: "Phases with locks", delta: "valuation, payment, procedure" },
-      { value: "0", label: "New databases", delta: "Drive and Calendar stay the source of truth" },
-      // 12 `test:*` scripts in the repo's package.json, verified 2026-10-06.
-      { value: "12", label: "Test suites", delta: "domain, ledger, worker, browser" },
-    ],
-    process: [
-      {
-        phase: "01",
-        title: "The plan was attacked first",
-        body: "I mapped how the clinic actually worked, then put the plan through an adversarial review on data, security and feasibility. It found the traps the sheets hide; only the third version reached code.",
-      },
-      {
-        phase: "02",
-        title: "Read first, write later",
-        body: "Version one was a read-only Claude artifact, safe to put in front of the clinic on day one. Editing came later, behind a login per person, after a security audit; live since September 21.",
-      },
-      {
-        phase: "03",
-        title: "The phone rewrote the interface",
-        body: "The secretary runs the clinic from an iPhone, often from the car. So the panel installs as an app, tables become cards, tap targets are at least 44 pixels, and a voice note fills the new-patient form.",
-      },
-      {
-        phase: "04",
-        title: "Real money, then real requests",
-        body: "Real payments set rules no plan had: a credit card lands at 95%, because the clinic passes the fee on to the patient. Then the clinic started asking: slots, an agenda by city, permissions. Most shipped within a day.",
-      },
-    ],
-    decisions: [
-      {
-        title: "The spreadsheet stays the source of truth",
-        body: "A real database was the obvious build. But the person who keeps the books works in Drive every day, and the clinic shouldn't depend on me. Switch the panel off tomorrow and nothing is lost.",
-      },
-      {
-        title: "Balances are read, not summed",
-        body: "Each income row carries the balance left after that payment, so summing counts a debt again with every deposit. An early version reported a phantom thirty-eight million pesos. Now the latest row wins.",
-      },
-      {
-        title: "A color per city, never on its own",
-        body: "The doctor works in three cities: orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for color blindness. The name always sits beside its dot, so nobody has to tell teal from blue.",
-      },
-    ],
-    featuresIntro:
-      "One board with the clinic's day on it, on a laptop at the front desk or a phone in a car.",
-    features: [
-      {
-        title: "A voice note that fills the form",
-        body: "Say who came, for what, and what she paid. The model fills the form and saves nothing until a person checks it.",
-        kind: "ai",
-      },
-      {
-        title: "Phases with locks",
-        body: "Each phase lists what's missing and links to the form that clears it. The footer always names the next step.",
-        kind: "product",
-      },
-      {
-        title: "The doctor's slots, ready to send",
-        body: "The document the secretary already keeps becomes a week of red and green slots, flags days in two cities, and copies into WhatsApp.",
-        kind: "product",
-      },
-      {
-        title: "Receipts and invoices read by AI",
-        body: "Photograph a receipt, a supplier invoice or travel expenses: the values come back filled in for review, then land in inventory or the month's accounting.",
-        kind: "ai",
-      },
-    ],
-    galleryKind: "browser",
-    // The walkthrough is the phone, the stills are the desk: the secretary
-    // runs the clinic from both, and the phone is where the voice note lives.
-    videoKind: "phone",
-    video: {
-      webm: "/work/dc-medical/nota-de-voz.webm",
-      mp4: "/work/dc-medical/nota-de-voz.mp4",
-      poster: "/work/dc-medical/nota-de-voz-poster.jpg",
-      label:
-        "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one",
-      caption:
-        "A voice note, typed here for the recording, fills in a new patient's form and opens her case. Demo data; fixed rules stand in for the AI.",
-      width: 786,
-      height: 1704,
-    },
-    // The case sheet leads: three locked phases, the payment bar and the one
-    // next step are the product's argument in a single screen. Then the month
-    // agenda; the browser gallery runs two full-width leaders and two-up rows,
-    // so the day view sits beside the slots, and the follow-up board beside the
-    // permissions sheet drawn over it.
-    // The two drawer captures are `-v2`: re-exported with the drawer's backdrop
-    // lifted. The new name is what invalidates the image optimiser's year-long
-    // cache, which keys on the URL, not on the file's contents.
-    gallery: [
-      {
-        src: "/work/dc-medical/caso-fases-v2.webp",
-        alt: "A patient's case sheet open over the cases list: a three-step tracker with valuation and payment done and the procedure current, the procedure set at four vials for face and neck, the procedure date booked, a payment bar at 5.3 of 9.8 million pesos, the case's payments newest first, and a footer naming the next step — register the final payment.",
-        caption: "The case: what's paid, what's missing, the one action that comes next.",
-      },
-      {
-        src: "/work/dc-medical/agenda-mes.webp",
-        alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines colored by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a colored band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
-        caption: "A month of appointments, each colored by its city.",
-      },
-      {
-        src: "/work/dc-medical/agenda-dia.webp",
-        alt: "The agenda in day view for Thursday, 24 September: a banner saying the doctor is in Medellín according to the calendar, appointments as cards by the hour with their type and city, a red line marking the current time, and patient-record and calendar buttons on each card.",
-        caption: "One day by the hour, and the city the doctor is in.",
-      },
-      {
-        src: "/work/dc-medical/cupos-semana.webp",
-        alt: "The doctor's slots for the week of 5 to 11 October: seven columns, each headed by the city the doctor is in, with hours marked occupied in red or free in green, a count of free hours over the next two months, and a button to copy two months of slots for WhatsApp.",
-        caption: "The doctor's slots, read from the secretary's own document.",
-      },
-      {
-        src: "/work/dc-medical/seguimiento-controles.webp",
-        alt: "The follow-up board: counters for valuations, procedures, controls to reschedule, this week, the next 30 days and controls with no date; tabs for valuations, procedures, controls, agenda, slots and balances owed; city filters; and a table of 45-day controls, each with the days left, its status and a WhatsApp button.",
-        caption: "Follow-up, counted: who's due, who has no date yet, who slipped.",
-      },
-      {
-        src: "/work/dc-medical/usuarios-permisos-v2.webp",
-        alt: "Editing a user in Users and permissions: the doctor's account set to view only, with toggles to see, create and edit per area — and to delete, for patients and cases — across agenda and follow-up, patients and cases, and patient payments, under presets for running the day, viewing only, and nothing.",
-        caption: "Permissions by area: the doctor reads, the secretary runs the day.",
-      },
-    ],
-    // The live panel, which is a sign-in page by design: it is the clinic's
-    // internal tool and holds patient data. The label says so, so nobody
-    // clicks through expecting a demo. Went live 2026-09-21.
-    externalLink: {
-      label: "Live panel — staff sign-in",
-      href: "https://panel.dcmedicalaesthetics.com/login",
-    },
-    technologies: [
-      "Product Strategy",
-      "HTML & Vanilla JS",
-      "Tailwind CSS",
-      "Cloudflare Workers",
-      "Google Apps Script",
-      "Google Drive & Calendar",
-      "Claude (API & MCP)",
-      "PWA",
-      "Playwright",
-      "node --test",
-    ],
-    credits:
-      "I co-own the clinic with the doctor and built the panel end to end. He owns the medical protocol; the secretary's daily use shaped the flows. Screens and walkthrough use seeded demo data: no real patient, no clinic figure.",
   },
   {
     slug: "royal-caribbean",

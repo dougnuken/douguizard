@@ -253,7 +253,7 @@ test("X2 scroll regression: /work/olbo reached by client nav scrolls", async ({ 
 });
 
 test("X3 external anchors carry target/rel", async ({ page }) => {
-  const routes = ["/", "/cv", "/work/olbo", "/work/naowee-suid", "/work/banco-de-occidente"];
+  const routes = ["/", "/cv", "/work/olbo", "/work/naowee-suid", "/work/banco-de-occidente", "/work/dc-medical", "/en/work/dc-medical"];
   const bad: unknown[] = [];
   for (const r of routes) {
     await page.addInitScript(setTheme("dark"));

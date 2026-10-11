@@ -64,6 +64,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   // `links` supersedes `externalLink`: when a case lists its destinations up
   // top, repeating one of them in the colophon is noise.
   const showExternalLink = Boolean(study.externalLink) && !study.links?.length;
+  const linksTop = study.linksFirst && study.links?.length ? study.links : undefined;
 
   // A confidential case has no screens to lead with, so it leads with the
   // notice instead — and with its home-page vignette when it has one, which
@@ -86,7 +87,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
    * means a missing band can never leave a seam.
    */
   const bands: { key: string; render: (tone: Tone) => ReactNode }[] = [
-    { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={study.links} wide={!proofFirst} /> },
+    { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={linksTop ? undefined : study.links} wide={!proofFirst} /> },
     {
       key: "impact",
       render: (tone) => (
@@ -145,7 +146,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   return (
     <div className="min-h-svh">
       <main id="main" tabIndex={-1}>
-        <CaseHeader study={study} meta={meta} />
+        <CaseHeader study={study} meta={meta} links={linksTop} />
 
         {/* Whatever stands in the showcase's slot — the product, the NDA
             notice or the testimonial — sits on the raised tone, so the first

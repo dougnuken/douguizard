@@ -433,7 +433,8 @@ export const workEs: Record<string, CaseCopy> = {
         caption: "Permisos por área: el médico lee, la secretaria maneja el día.",
       },
     ],
-    externalLink: { label: "Panel en vivo — acceso del personal" },
+    // Paired by index with work.ts. U4 appends { label: "Probar demo" } here, in step with the English list.
+    links: [{ label: "Ver la web" }, { label: "Panel del personal (inicio de sesión)" }],
     technologies: [
       "Estrategia de producto",
       "HTML y Vanilla JS",

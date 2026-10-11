@@ -109,17 +109,36 @@ describe("cv + work integrity", () => {
 
   it("case study numbering matches the published order", () => {
     expect(caseStudies.map((c) => c.slug)).toEqual([
+      "dc-medical",
       "olbo",
       "naowee-suid",
       "mercadolibre-andes",
       "banco-de-occidente",
-      "dc-medical",
       "royal-caribbean",
       "qrvey",
       "ideaware",
       "chub",
       "makeappet",
     ]);
+  });
+
+  it("dc-medical is /01 and lists the clinic's two origins", () => {
+    const dc = caseStudies[0];
+    expect(dc.slug).toBe("dc-medical");
+    expect(dc.externalLink).toBeUndefined();
+    expect(dc.linksFirst).toBe(true);
+    expect(dc.gallery?.[dc.spotlightShot ?? 0].src).toBe("/work/dc-medical/seguimiento-controles.webp");
+    expect(dc.links?.map((l) => l.href)).toEqual([
+      "https://dcmedicalaesthetics.com/",
+      "https://panel.dcmedicalaesthetics.com/login",
+    ]);
+  });
+
+  it("every external href is https", () => {
+    for (const c of caseStudies) {
+      const hrefs = [...(c.links ?? []).map((l) => l.href), ...(c.externalLink ? [c.externalLink.href] : [])];
+      for (const h of hrefs) expect(h.startsWith("https://"), `${c.slug}: ${h}`).toBe(true);
+    }
   });
 
   /**

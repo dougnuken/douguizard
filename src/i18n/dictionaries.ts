@@ -63,6 +63,7 @@ const en = {
     /** "400+ designers, 2,000+ engineers" → "400+ designers and 2,000+ engineers". */
     joinScale: (team: string) => team.replace(", ", " and "),
     seeWork: "See work",
+    latest: "Latest",
     whereWorked: "Where I've worked",
   },
   work: {
@@ -71,6 +72,7 @@ const en = {
       rest: `from LATAM's largest marketplace to national banks, cruise lines and early-stage startups, plus ${numberWord(p.own, "en")} products of my own, designed, built and shipped end to end. ${numberWord(p.core, "en", { capital: true })} that shaped how I work, and ${numberWord(p.side, "en")} I took on for the pleasure of it.`,
     }),
     read: "Read",
+    latest: "Most recent",
     nda: "Case study available on request",
     earlier: "Earlier work",
     side: "Freelance side projects",
@@ -248,6 +250,7 @@ const es: Dict = {
       `${p.role} en ${p.company}. Marco la dirección de la plataforma y construyo los prototipos que la definen. Antes, Andes en ${p.andesCompany}: el sistema de diseño detrás de ${p.countries} países, ${p.scale}.`,
     joinScale: (team: string) => team.replace(", ", " y "),
     seeWork: "Ver trabajo",
+    latest: "Lo más reciente",
     whereWorked: "Dónde he trabajado",
   },
   work: {
@@ -256,6 +259,7 @@ const es: Dict = {
       rest: `del marketplace más grande de Latinoamérica a bancos nacionales, cruceros y startups en etapa temprana, más ${numberWord(p.own, "es")} productos propios, diseñados, construidos y lanzados de punta a punta. ${numberWord(p.core, "es", { capital: true })} que definieron cómo trabajo y ${numberWord(p.side, "es")} que tomé por el gusto de hacerlos.`,
     }),
     read: "Leer",
+    latest: "Lo más reciente",
     nda: "Caso disponible a solicitud",
     earlier: "Trabajo anterior",
     side: "Proyectos freelance paralelos",

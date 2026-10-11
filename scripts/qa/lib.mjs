@@ -107,9 +107,9 @@ export async function settle(page, maxMs = 8000) {
 export const slug = (route) => route.replace(/\W+/g, "_").replace(/^_+|_+$/g, "") || "root";
 
 /** Abre una ruta con tema y alto de viewport como en tests/e2e. */
-export async function open(browser, { base, route, width, theme = "dark", reduced = true }) {
+export async function open(browser, { base, route, width, height, theme = "dark", reduced = true }) {
   const ctx = await browser.newContext({
-    viewport: { width, height: width < 768 ? 812 : 900 },
+    viewport: { width, height: height || (width < 768 ? 812 : 900) },
     deviceScaleFactor: 1,
     colorScheme: theme === "light" ? "light" : "dark",
     reducedMotion: reduced ? "reduce" : "no-preference",

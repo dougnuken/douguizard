@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { getSite } from "@/data/site";
 import { getSections } from "@/data/sections";
-import { getCaseStudy } from "@/data/work";
+import { getCaseStudies, getCaseStudy } from "@/data/work";
 import { currentExperience, getExperience, getWordmarks } from "@/lib/career";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import RevealText from "@/components/text/RevealText";
 import LinkedInMark from "@/components/icons/LinkedInMark";
@@ -54,6 +54,7 @@ export default function Hero({ locale }: { locale: Locale }) {
   const workPanel = getSections(locale)[1];
   const site = getSite(locale);
   const linkedin = site.social.find((s) => s.primary) ?? site.social[0];
+  const latest = getCaseStudies(locale)[0];
   return (
     <section
       id={panel.id}
@@ -166,7 +167,7 @@ export default function Hero({ locale }: { locale: Locale }) {
           as="div"
           variant="fade"
           delay={0.36}
-          className="flex flex-col gap-3 sm:flex-row sm:items-center"
+          className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
         >
           <a
             href={linkedin.href}
@@ -179,6 +180,13 @@ export default function Hero({ locale }: { locale: Locale }) {
           </a>
           <Link href={`#${workPanel.id}`} className="btn-pill justify-center">
             {t.seeWork}
+            <span aria-hidden>→</span>
+          </Link>
+          <Link
+            href={localePath(locale, `/work/${latest.slug}`)}
+            className="inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-muted)] no-underline underline-offset-4 hover:text-[var(--ink)] hover:underline sm:ml-2"
+          >
+            {t.latest}: {latest.project}
             <span aria-hidden>→</span>
           </Link>
         </RevealText>
