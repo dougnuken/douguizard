@@ -406,12 +406,8 @@ export const workEs: Record<string, CaseCopy> = {
       caption:
         "Una nota de voz, escrita aquí para la grabación, llena la ficha de una paciente nueva y abre su caso. Datos de demostración; reglas fijas hacen el papel de la IA.",
     },
-    // Paired by index with work.ts: the case sheet leads, then the agenda.
+    // Paired by index with work.ts: the month agenda leads.
     gallery: [
-      {
-        alt: "La ficha del caso de una paciente abierta sobre la lista de casos: un indicador de tres pasos con valoración y pago completos y el procedimiento en curso, el procedimiento definido en cuatro viales para rostro y cuello, la fecha del procedimiento agendada, una barra de pagos en 5,3 de 9,8 millones de pesos, los pagos del caso del más reciente al más antiguo y un pie que nombra el siguiente paso: registrar el pago final.",
-        caption: "El caso: qué está pagado, qué falta y la única acción que sigue.",
-      },
       {
         alt: "La agenda en vista de mes: septiembre de 2026 de lunes a domingo, con las citas de cada día como líneas cortas del color de su ciudad —naranja para Barranquilla, azul para Bogotá, verde azulado para Medellín—, una franja de color sobre los días que el médico pasa en cada ciudad y un conteo de citas por ciudad encima de la grilla.",
         caption: "Un mes de citas, cada una con el color de su ciudad.",
@@ -419,10 +415,6 @@ export const workEs: Record<string, CaseCopy> = {
       {
         alt: "La agenda en vista de día para el jueves 24 de septiembre: un aviso de que el médico está en Medellín según el calendario, las citas como tarjetas por hora con su tipo y su ciudad, una línea roja que marca la hora actual y botones de ficha y calendario en cada tarjeta.",
         caption: "Un día por horas, y la ciudad donde está el médico.",
-      },
-      {
-        alt: "Los cupos del médico para la semana del 5 al 11 de octubre: siete columnas, cada una con la ciudad donde está el médico, horas marcadas como ocupadas en rojo o libres en verde, un conteo de horas libres en los próximos dos meses y un botón para copiar dos meses de cupos para WhatsApp.",
-        caption: "Los cupos del médico, leídos del propio documento de la secretaria.",
       },
       {
         alt: "El tablero de seguimiento: contadores de valoraciones, procedimientos, controles por reagendar, esta semana, los próximos 30 días y controles sin fecha; pestañas de valoraciones, procedimientos, controles, agenda, cupos y por cobrar; filtros por ciudad; y una tabla de controles a los 45 días, cada uno con los días que faltan, su estado y un botón de WhatsApp.",
