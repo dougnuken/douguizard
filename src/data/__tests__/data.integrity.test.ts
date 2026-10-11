@@ -1,3 +1,4 @@
+import scenesJson from "../scenes.generated.json";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -162,6 +163,22 @@ describe("cv + work integrity", () => {
       for (const p of paths) {
         expect(existsSync(join(publicDir, p)), `${c.slug}: ${p}`).toBe(true);
       }
+      for (const id of c.scenes ?? []) {
+        const entry = (scenesJson as Record<string, { case: string }>)[id];
+        expect(entry, `${c.slug}: scene "${id}" is not in scenes.generated.json`).toBeDefined();
+        expect(id.startsWith("_"), `${c.slug}: scene "${id}" is a fixture`).toBe(false);
+        expect(entry?.case, `${c.slug}: scene "${id}"`).toBe(c.slug);
+      }
+    }
+    for (const [id, entry] of Object.entries(scenesJson as Record<string, { src: string }>)) {
+      if (id.startsWith("_")) continue;
+      expect(existsSync(join(publicDir, entry.src)), `scene ${id}: ${entry.src}`).toBe(true);
+    }
+  });
+
+  it("no scene id starts with `_`", () => {
+    for (const c of caseStudies) {
+      for (const id of c.scenes ?? []) expect(id.startsWith("_"), `${c.slug}: ${id}`).toBe(false);
     }
   });
 

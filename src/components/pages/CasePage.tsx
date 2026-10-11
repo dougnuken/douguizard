@@ -5,9 +5,11 @@ import type { Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { caseJsonLd } from "@/lib/caseJsonLd";
 import { hasShowcase, planCaseMedia } from "@/lib/caseMedia";
+import { getCaseScenes, planScenes } from "@/lib/caseScenes";
 import { VIGNETTES } from "@/components/vignettes/registry";
 
 import CaseHeader from "@/components/case/CaseHeader";
+import CaseScenes, { SceneHero } from "@/components/case/CaseScenes";
 import CaseShowcase from "@/components/case/CaseShowcase";
 import CaseNda from "@/components/case/CaseNda";
 import CaseMeta from "@/components/case/CaseMeta";
@@ -60,6 +62,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   const next = getNextCaseStudy(study.slug, locale);
   const media = planCaseMedia(study);
   const showcase = hasShowcase(media);
+  const plan = planScenes(getCaseScenes(study, locale));
 
   // `links` supersedes `externalLink`: when a case lists its destinations up
   // top, repeating one of them in the colophon is noise.
@@ -101,6 +104,10 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
       ),
     },
   ];
+  if (plan.band.length) {
+    const band = plan.band;
+    bands.unshift({ key: "scenes", render: (tone) => <CaseScenes tone={tone} scenes={band} /> });
+  }
   if (study.testimonialId && !proofFirst) {
     const id = study.testimonialId;
     bands.push({ key: "testimonial", render: (tone) => <CaseTestimonial tone={tone} id={id} /> });
@@ -147,6 +154,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
     <div className="min-h-svh">
       <main id="main" tabIndex={-1}>
         <CaseHeader study={study} meta={meta} links={linksTop} />
+        {plan.hero && <SceneHero scene={plan.hero} />}
 
         {/* Whatever stands in the showcase's slot — the product, the NDA
             notice or the testimonial — sits on the raised tone, so the first

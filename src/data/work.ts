@@ -105,6 +105,8 @@ export interface CaseStudy {
   links?: { label: string; href: string }[];
   /** Show `links` as buttons under the hero instead of as the meta strip's last row. */
   linksFirst?: boolean;
+  /** Scene ids from scenes.generated.json, in display order. The first `hero` is the hero scene; the rest form the band (max 5). Words and sizes live in the manifest, never here. */
+  scenes?: string[];
   /** `src` of the `gallery` capture the home's spotlight row shows. No fallback: if it is missing, no row. */
   spotlightSrc?: string;
   /** Who did what — authorship and collaborators, in one paragraph. */
@@ -250,6 +252,7 @@ export const caseStudies: CaseStudy[] = [
     // patient data behind it), so its label says so. A third entry, "Try the demo", is added by U4 only once the demo
     // URL answers 200 and the leak scan is clean: never a placeholder href.
     linksFirst: true,
+    scenes: ["dc-hero"],
     spotlightSrc: "/work/dc-medical/seguimiento-controles.webp", // seguimiento-controles: the follow-up board
     links: [
       { label: "Visit the website", href: "https://dcmedicalaesthetics.com/" },
