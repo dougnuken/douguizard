@@ -253,7 +253,7 @@ Se entrega **sin créditos, sin escenas y sin demo**. Cierra B2, B3 y B1.
      `["https://dcmedicalaesthetics.com/", "https://panel.dcmedicalaesthetics.com/login"]`; y otro: todo `href` de `links` y de `externalLink`
      de cualquier caso empieza por `https://`.
    - `tests/e2e/content.spec.ts:256` (X3): sumar `"/work/dc-medical"` y `"/en/work/dc-medical"` a `routes`.
-   - `tests/e2e/dc.spec.ts` (nuevo, `pf-executor` es dueño): (i) `/` y `/en`: el primer `li` de `#work ul` contiene `a[href$="/work/dc-medical"]` y un
+   - `tests/e2e/dc.spec.ts` (nuevo, `pf-executor` es dueño): (i) `/` y `/en`: el primer `li` del primer `ul` de `section#work` (`#work ul` en CSS) contiene `a[href$="/work/dc-medical"]` y un
      `img` cuyo `alt` no está vacío; (ii) `/work/dc-medical` y `/en/work/dc-medical`: `main a[href="https://dcmedicalaesthetics.com/"]` y
      `main a[href="https://panel.dcmedicalaesthetics.com/login"]` existen una sola vez, con `target="_blank"` y `rel` con `noopener noreferrer`,
      el de «Ver la web» / «Visit the website» tiene `getBoundingClientRect().bottom` menor que `innerHeight` a 390×844 y los dos a 1440×900 (los enlaces se ven en la primera pantalla);
@@ -299,7 +299,7 @@ puede divergir del manifiesto, y cambiar la UI no obliga a tocar `work.ts`.
 
 #### U2b-artista · el JSON generado trae los textos (`pf-mockup-artist`, 0 créditos; en paralelo con U1)
 
-**Hoy:** `scripts/mockups/compose.py` escribe `src/data/scenes.generated.json` con `{ "<id>": { "src", "width", "height" } }` (`compose.py:495` define la ruta y el cierre de `main` la escribe).
+**Hoy:** `scripts/mockups/compose.py` escribe `src/data/scenes.generated.json` con `{ "<id>": { "src", "width", "height" } }` (`compose.py:597` define la ruta dentro de `main`, línea 585; la escritura va en 621–627).
 **Nuevo:** pedido explícito. Cada entrada pasa a:
 ```json
 "dc-hero": {

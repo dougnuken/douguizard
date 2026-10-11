@@ -18,13 +18,16 @@ Lo mantiene el director. Cada agente lee la fila de su fase antes de editar, mar
 | F0 | Equipo, protocolo, plan, scripts de QA (`shots`, `check`, `leak-scan`) | director | `.claude/**`, `docs/**`, `scripts/qa/**`, `CLAUDE.md` | **hecha** (scripts probados contra el build de `1e097a4`) |
 | U0 | Auditoría de la primera impresión (home + caso DC) | pf-ux-auditor | — (solo lee) | **hecha** → Backlog B1–B8 en `FASE-1-DC.md` |
 | V0 | Viabilidad del demo (lee `dc-medical-dashboard`, solo lectura) | analista (general-purpose) | — (solo lee) | **hecha** → enfoque (a): paquete estático con interceptor, datos inventados |
-| P1 | Plan de fases U1–U6 (Opus, esfuerzo alto) | pf-planner | `docs/rondas/FASE-1-DC.md` | **en curso** |
-| U2a | Compositor del kit de mockups + plate sintético + pruebas | pf-mockup-artist | `mockups/**`, `scripts/mockups/**`, `public/work/dc-medical/scenes/**`, `src/data/scenes.generated.json`, líneas `mockups:*` de `package.json` | **en curso** (rutas disjuntas del resto) |
-| U1 | DC Medical primero + enlaces a la web y al panel | pf-executor | `src/data/**`, `src/components/**`, `tests/e2e/matrix.ts` | pendiente |
-| U2 | Kit de mockups (manifiestos + compositor) y componente de escenas | pf-mockup-artist + pf-executor | `mockups/**`, `scripts/mockups/**` / `src/components/case/**` | pendiente |
-| U3 | Escenas luxury con Higgsfield | director (gasto) + pf-mockup-artist | `mockups/plates/**`, `public/work/dc-medical/scenes/**` | **1 de 6 plates hecho** (`hero-mano`, dirección oscura, 2 créditos, job `766631df…`); el resto **bloqueado: créditos** (quedan ~1,3) |
+| P1 | Plan de fases U1–U6 (Opus, esfuerzo alto) | pf-planner | `docs/rondas/FASE-1-DC.md` | **hecho** y revisado (pf-plan-reviewer: PASA). **Re-plan de U3/U3a en curso** por el cambio de dirección de arte de Doug (referencias Ron Design Lab: limpio, claro, device protagonista) |
+| U2a | Compositor del kit de mockups + plate sintético + pruebas | pf-mockup-artist | `mockups/**`, `scripts/mockups/**`, `public/work/dc-medical/scenes/**`, `src/data/scenes.generated.json`, líneas `mockups:*` de `package.json` | **hecha** y revisada (código + seguridad); 23 pruebas con mutaciones |
+| U1 | DC primero (`/01`), fila destacada en la home, enlaces a la web y al panel, acceso en el hero | pf-executor | `src/data/work.ts`, `src/data/es/work.ts`, `src/components/**`, `src/i18n/dictionaries.ts`, `src/data/__tests__/**`, `tests/e2e/**` | **en curso**. Sin créditos ni demo |
+| U2b-artista | `compose.py` copia `case/kind/alt/caption` al JSON generado | pf-mockup-artist | `scripts/mockups/**`, `mockups/**`, `src/data/scenes.generated.json` | pendiente (junto con U3a) |
+| U2b | Campo `scenes`, `CaseScenes`, `SceneHero`, tests | pf-executor | `src/data/**`, `src/components/case/**`, `src/data/__tests__/**` | pendiente (después de U1) |
+| U3a | Compositor: **pantalla recortada por el encuadre**, reflejo de vidrio `sheen` | pf-mockup-artist | `scripts/mockups/**`, `mockups/**` | pendiente (0 créditos; espera el re-plan) |
+| U3 | Escenas con Higgsfield, dirección clara (6 plates) | director (gasto) + pf-mockup-artist | `mockups/plates/**`, `public/work/dc-medical/scenes/**` | **bloqueada: créditos.** Hechos: `hero-mano` (oscuro, 2 cr, alternativa archivada) y 2 pruebas claras de 0,5 cr (A y B). Saldo **0,3**. Conjunto ≈ 12 cr a 2k + reserva |
 | U4 | Panel demo con datos sintéticos y login falso | por definir | por definir | **bloqueada: alojamiento** |
-| U5 | Seguridad de lo publicado | pf-security | `docs/rondas/SEGURIDAD.md` | pendiente |
+| S1 | **Saneamiento de medios YA publicados** del caso DC (hallazgo crítico de pf-security, `SEGURIDAD.md`) | director + pf-executor | `public/work/dc-medical/**`, `src/data/work.ts`, `src/data/es/work.ts` | **abierto: decisión de Doug.** `cupos-semana.webp` (cupos y viajes reales del Dr.) y `caso-fases-v2.webp` (un monto real y estructura de casos reales) siguen publicados. Se rehacen con datos 100 % inventados (depende de U4) |
+| U5 | Seguridad de lo publicado | pf-security | `docs/rondas/SEGURIDAD.md` | cruce de medios **hecho** (FALLA: 2 críticos, ver S1); queda re-verificar tras S1 y revisar el demo |
 | U6 | Cierre | pf-final-verifier | — (solo lee) | pendiente |
 
 ## Notas operativas

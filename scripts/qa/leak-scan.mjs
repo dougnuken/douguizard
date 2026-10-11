@@ -91,7 +91,8 @@ function walk(dir) {
 function scanFile(full) {
   const rel = relative(ROOT, full).split(sep).join("/");
   const name = rel.split("/").pop();
-  if (SKIP_FILE.has(name)) return;
+  // Cachés de build que git ya ignora (`tsc` deja tsconfig.tsbuildinfo con hashes que parecen teléfonos).
+  if (SKIP_FILE.has(name) || name.endsWith(".tsbuildinfo")) return;
   if (BINARY.has(extname(name).toLowerCase())) {
     binaries++;
     return;
