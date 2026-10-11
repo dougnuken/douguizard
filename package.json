@@ -11,7 +11,7 @@
     "test:watch": "vitest",
     "cv:pdf": "node scripts/build-cv-pdf.mjs",
     "mockups:build": "python3 scripts/mockups/compose.py --all",
-    "mockups:check": "python3 scripts/mockups/compose.py --all --check",
+    "mockups:check": "python3 scripts/mockups/compose.py --all --check --include-fixtures",
     "mockups:test": "python3 -m unittest discover -s mockups/tests"
   },
   "dependencies": {

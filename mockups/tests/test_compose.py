@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import numpy as np
@@ -20,18 +21,19 @@ import compose  # noqa: E402
 COMPOSE = REPO / "scripts" / "mockups" / "compose.py"
 TRUTH = json.loads((REPO / "mockups/fixtures/plate-fixture.truth.json").read_text())
 TRUTH_DUO = json.loads((REPO / "mockups/fixtures/plate-fixture-duo.truth.json").read_text())
+TRUTH_CROP = json.loads((REPO / "mockups/fixtures/plate-cropped.truth.json").read_text())
 
 
 def make_root(tmp, with_plate=True, scene="_fixture"):
+    """Raiz de repo temporal con fixtures SINTETICOS (ninguna captura real)."""
     root = Path(tmp)
-    for d in ("mockups/scenes", "mockups/fixtures", "public/work/dc-medical", "src/data"):
+    for d in ("mockups/scenes", "mockups/fixtures", "mockups/screens", "public/work/dc-medical", "src/data"):
         (root / d).mkdir(parents=True, exist_ok=True)
     if with_plate:
-        for f in (REPO / "mockups/fixtures").glob("plate-fixture*.webp"):
+        for f in (REPO / "mockups/fixtures").glob("plate-*.webp"):
             shutil.copy(f, root / "mockups/fixtures/")
-    for f in (REPO / "public/work/dc-medical").glob("*"):
-        if f.suffix in (".jpg", ".webp"):
-            shutil.copy(f, root / "public/work/dc-medical/")
+    for f in (REPO / "mockups/screens").glob("fixture-*.webp"):
+        shutil.copy(f, root / "mockups/screens/")
     m = json.loads((REPO / f"mockups/scenes/{scene}.json").read_text())
     m["output"]["lossless"] = True
     (root / f"mockups/scenes/{scene}.json").write_text(json.dumps(m))
@@ -249,7 +251,7 @@ class ManifestTests(unittest.TestCase):
     # M3
     def test_screen_and_screens_together_fail(self):
         def mut(m):
-            m["screen"] = {"source": "public/work/dc-medical/agenda-dia.webp"}
+            m["screen"] = {"source": "mockups/screens/fixture-landscape.webp"}
         with self.assertRaisesRegex(compose.SceneError, "'screen' o 'screens'"):
             self.load(mut)
 
@@ -310,13 +312,13 @@ class ManifestTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             root, p = self.duo(t)
             h1 = compose.content_hash(compose.load_manifest(p, root))
-            Image.new("RGB", (900, 900), (1, 2, 3)).save(root / "public/work/dc-medical/nota-de-voz-poster.jpg")
+            Image.new("RGB", (900, 900), (1, 2, 3)).save(root / "mockups/screens/fixture-portrait.webp", "WEBP", lossless=True)
             self.assertNotEqual(h1, compose.content_hash(compose.load_manifest(p, root)))
 
     def test_small_capture_warns_on_stderr(self):
         with tempfile.TemporaryDirectory() as t:
             root, p = self.duo(t)
-            Image.new("RGB", (60, 120), (200, 200, 200)).save(root / "public/work/dc-medical/nota-de-voz-poster.jpg")
+            Image.new("RGB", (60, 120), (200, 200, 200)).save(root / "mockups/screens/fixture-portrait.webp", "WEBP", lossless=True)
             sc = compose.load_manifest(p, root)
             err = io.StringIO()
             with contextlib.redirect_stderr(err):
@@ -332,6 +334,272 @@ class ManifestTests(unittest.TestCase):
             with contextlib.redirect_stderr(err):
                 compose.compose_scene(sc)
             self.assertNotIn("AVISO", err.getvalue())
+
+
+# ------------------------------------------------------------------ U2b-artista: el JSON generado trae los textos
+
+class JsonOutputTests(unittest.TestCase):
+    KEYS = {"case", "kind", "src", "width", "height", "alt", "caption"}
+
+    def clone(self, root, new_id):
+        m = json.loads((root / "mockups/scenes/_fixture.json").read_text())
+        m["id"] = new_id
+        (root / f"mockups/scenes/{new_id}.json").write_text(json.dumps(m))
+        return m
+
+    def test_entry_shape_and_order(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t)
+            m = self.clone(root, "scene-b")
+            self.clone(root, "scene-a")
+            r = run(root, "--all", "--include-fixtures")
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            data = json.loads((root / "src/data/scenes.generated.json").read_text())
+            self.assertEqual(list(data), sorted(data))
+            self.assertEqual(set(data), {"_fixture", "scene-a", "scene-b"})
+            for v in data.values():
+                self.assertTrue(self.KEYS <= set(v), v)
+                self.assertEqual(list(v)[:5], ["case", "kind", "src", "width", "height"])
+            e = data["scene-b"]
+            self.assertEqual((e["case"], e["kind"], e["alt"], e["caption"]), (m["case"], m["kind"], m["alt"], m["caption"]))
+            self.assertRegex(e["src"], r"^/work/dc-medical/scenes/scene-b\.[0-9a-f]{8}\.webp$")
+            self.assertEqual((e["width"], e["height"]), (1600, 1200))
+
+    def test_underscore_ids_never_in_default_json(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t)
+            self.clone(root, "scene-a")
+            (root / "src/data/scenes.generated.json").write_text('{"_old": {"src": "/x"}}\n')
+            for args in (("--all",), ("--scene", "scene-a"), ("--scene", "_fixture")):
+                r = run(root, *args)
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+                text = (root / "src/data/scenes.generated.json").read_text()
+                self.assertNotIn('"_', text)
+            self.assertIn('"scene-a"', text)
+
+    def test_scene_keeps_other_entries(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t)
+            self.clone(root, "scene-a")
+            self.clone(root, "scene-b")
+            self.assertEqual(run(root, "--all").returncode, 0)
+            before = json.loads((root / "src/data/scenes.generated.json").read_text())
+            m = json.loads((root / "mockups/scenes/scene-b.json").read_text())
+            m["caption"]["es"] = "Otro texto"
+            (root / "mockups/scenes/scene-b.json").write_text(json.dumps(m))
+            self.assertEqual(run(root, "--scene", "scene-b").returncode, 0)
+            after = json.loads((root / "src/data/scenes.generated.json").read_text())
+            self.assertEqual(after["scene-a"], before["scene-a"])
+            self.assertEqual(after["scene-b"]["caption"]["es"], "Otro texto")
+            self.assertEqual(after["scene-b"]["src"], before["scene-b"]["src"])  # solo cambia el texto, no la imagen
+
+
+# ------------------------------------------------------------------ U3a: pantallas recortadas, quad, sheen
+
+def assert_corners_close(got, want, tol_visible=2.0, tol_out=6.0, size=(1600, 1200)):
+    W, H = size
+    for g, w in zip(got, want):
+        out = not (0 <= w[0] <= W and 0 <= w[1] <= H)
+        d = float(np.hypot(g[0] - w[0], g[1] - w[1]))
+        if d > (tol_out if out else tol_visible):
+            raise AssertionError(f"esquina {g} a {d:.1f} px de {w}")
+
+
+def cropped_fixture_info(**mut):
+    arr = np.array(Image.open(REPO / "mockups/fixtures/plate-cropped.webp").convert("RGB"))
+    corners, comp, info = compose.detect_screens(arr, 1, 50, 1, [{"cropped": True}], True)[0]
+    return corners, comp, info
+
+
+def border_plate(poly, size=(1000, 800)):
+    im = Image.new("RGB", size, (230, 215, 200))
+    ImageDraw.Draw(im).polygon(poly, fill=(0, 255, 0))
+    return np.array(im)
+
+
+def sample_map_error(corners, comp, truth):
+    """Mapea 25 puntos de la mascara visible con la homografia detectada y con la verdadera: error maximo en px."""
+    unit = [(0, 0), (1, 0), (1, 1), (0, 1)]
+    Ht = compose.persp_coeffs(unit, truth)
+    Hd = compose.persp_coeffs(unit, corners)
+    Hinv = compose.persp_coeffs(truth, unit)
+    inner = ~compose.dilate(~comp, 8)
+    ys, xs = np.nonzero(inner)
+    idx = np.linspace(0, len(xs) - 1, 25).astype(int)
+    pts = [(float(xs[i]) + 0.5, float(ys[i]) + 0.5) for i in idx]
+    u = compose.apply_persp(Hinv, pts)
+    back = compose.apply_persp(Hd, u)
+    return max(float(np.hypot(a[0] - b[0], a[1] - b[1])) for a, b in zip(pts, back))
+
+
+class CroppedTests(unittest.TestCase):
+    def test_a_cropped_fixture_corners_and_mapping(self):
+        corners, comp, info = cropped_fixture_info()
+        assert_corners_close(corners, TRUTH_CROP["corners"])
+        self.assertEqual(info["outside"], [False, True, False, False])
+        self.assertLessEqual(info["residual"], 1.5)
+        self.assertLessEqual(sample_map_error(corners, comp, TRUTH_CROP["corners"]), 1.5)
+
+    def test_b_real_plate_check_and_no_green_left(self):
+        r = subprocess.run([sys.executable, str(COMPOSE), "--scene", "_light-tablet-b", "--check"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("(fuera)", r.stdout)
+        res = float(r.stdout.split("residual ")[1].split(" px")[0])
+        self.assertLessEqual(res, 1.5)
+        sc = compose.load_manifest(REPO / "mockups/scenes/_light-tablet-b.json", REPO)
+        img, info = compose.compose_scene(sc)
+        arr = np.array(Image.open(sc["plate_path"]).convert("RGB"))
+        comp = compose.largest_component(compose.key_mask(arr, 1, 50))
+        o = np.array(img).astype(int)
+        residual_green = (o[..., 1] > 200) & (o[..., 0] < 60) & (o[..., 2] < 60) & compose.dilate(comp, 2)
+        self.assertEqual(int(residual_green.sum()), 0)
+        ring = compose.dilate(comp, 6) & ~comp
+        self.assertEqual(int(((o[..., 1] - np.maximum(o[..., 0], o[..., 2]) > 40) & ring).sum()), 0)
+
+    def test_c_not_cropped_still_fails_at_border(self):
+        arr = np.array(Image.open(REPO / "mockups/fixtures/plate-cropped.webp").convert("RGB"))
+        with self.assertRaisesRegex(compose.SceneError, "toca el borde"):
+            compose.detect_screens(arr, 1, 50, 1, [{"cropped": False}], True)
+
+    def test_d_three_visible_sides_fail(self):
+        a = border_plate([(100, 100), (1100, 120), (1090, 700), (110, 720)])
+        with self.assertRaisesRegex(compose.SceneError, r"solo se ven 3 de 4 lados \(faltan: derecha\)"):
+            compose.detect_screens(a, 1, 50, 1, [{"cropped": True}], True)
+
+    def test_e_mutation_border_exclusion(self):
+        corners, comp, info = cropped_fixture_info()
+        self.assertEqual(info["border_points"], 0)
+        with mock.patch.object(compose, "BORDER_EXCL", 0):
+            _, _, bad = cropped_fixture_info()
+        self.assertGreater(bad["border_points"], 0)  # sin la exclusion el borde del encuadre entra al ajuste
+
+    def test_e_mutation_trim_at_border_ends(self):
+        a = border_plate([(100, -6), (900, 20), (890, 760), (110, 780)])
+        def left_extent():
+            return compose.detect_screens(a, 1, 50, 1, [{"cropped": True}], True)[0][2]["extents"][3]
+        good = left_extent()
+        self.assertGreater(good, 650)
+        with mock.patch.object(compose, "TRIM_AT_BORDER", True):
+            self.assertLess(left_extent(), 650)  # el lado izquierdo pierde el tramo junto al borde
+
+    def test_e_mutation_shifted_corner_rejected(self):
+        corners, _, _ = cropped_fixture_info()
+        assert_corners_close(corners, TRUTH_CROP["corners"])
+        shifted = [list(p) for p in TRUTH_CROP["corners"]]
+        shifted[2][0] += 3
+        with self.assertRaises(AssertionError):
+            assert_corners_close(corners, shifted)
+
+    def test_quad_manual_validated(self):
+        arr = np.array(Image.open(REPO / "mockups/fixtures/plate-cropped.webp").convert("RGB"))
+        good = compose.detect_screens(arr, 1, 50, 1, [{"quad": TRUTH_CROP["corners"]}], True)[0]
+        self.assertTrue(good[2]["manual"])
+        self.assertLessEqual(good[2]["residual"], 1.5)
+        bad = [list(p) for p in TRUTH_CROP["corners"]]
+        bad[2][0] += 8
+        bad[3][0] += 8
+        with self.assertRaisesRegex(compose.SceneError, "quad"):
+            compose.detect_screens(arr, 1, 50, 1, [{"quad": bad}], True)
+
+    def test_spill_warn_and_fail(self):
+        def plate(bg):
+            a = np.full((600, 900, 3), bg, np.uint8)
+            a[150:450, 250:650] = (0, 255, 0)
+            return a
+        info = compose.detect_screens(plate((120, 140, 120)), 1, 50, 1, None, True)[0][2]
+        self.assertGreaterEqual(info["spill"], compose.SPILL_WARN)
+        self.assertLess(info["spill"], compose.SPILL_FAIL)
+        with self.assertRaisesRegex(compose.SceneError, "derrame"):
+            compose.detect_screens(plate((100, 150, 100)), 1, 50, 1, None, True)
+
+    def test_check_line_reports_residual_and_percent(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t, scene="_fixture-cropped")
+            r = run(root, "--scene", "_fixture-cropped", "--check")
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertIn("(fuera)", r.stdout)
+            self.assertRegex(r.stdout, r"residual 0\.\d\d px  \d+ % del plate")
+
+    def test_cropped_manifest_privacy_and_types(self):
+        for bad in ("../../../etc/hostname", "/etc/hostname"):
+            with tempfile.TemporaryDirectory() as t:
+                root = make_root(t, scene="_fixture-cropped")
+                p = root / "mockups/scenes/_fixture-cropped.json"
+                m = json.loads(p.read_text())
+                m["screen"]["source"] = bad
+                p.write_text(json.dumps(m))
+                r = run(root, "--scene", "_fixture-cropped", "--check")
+                self.assertNotEqual(r.returncode, 0)
+                self.assertIn("captura", r.stdout)
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t, scene="_fixture-cropped")
+            p = root / "mockups/scenes/_fixture-cropped.json"
+            for key, val in (("cropped", "si"), ("quad", [[0, 0]]), ("sheen", {"amount": 2, "angle": 0}), ("sheen", {"amount": 0.5})):
+                m = json.loads(p.read_text())
+                m["screen"][key] = val
+                p.write_text(json.dumps(m))
+                with self.assertRaises(compose.SceneError, msg=(key, val)):
+                    compose.load_manifest(p, root)
+
+
+class SheenTests(unittest.TestCase):
+    def build(self, sheen):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t)
+            p = root / "mockups/scenes/_fixture.json"
+            m = json.loads(p.read_text())
+            if sheen is not None:
+                m["screen"]["sheen"] = sheen
+            p.write_text(json.dumps(m))
+            sc = compose.load_manifest(p, root)
+            img, info = compose.compose_scene(sc)
+            return np.array(img).astype(int), compose.content_hash(sc), info
+
+    def test_amount_zero_is_identical_to_absent(self):
+        a, ha, _ = self.build(None)
+        b, hb, _ = self.build({"amount": 0, "angle": 90})
+        self.assertTrue((a == b).all())
+        self.assertEqual(ha, hb)
+
+    def test_sheen_brightens_origin_and_spares_fingers(self):
+        base, h0, _ = self.build(None)
+        glow, h1, info = self.build({"amount": 0.5, "angle": 0})  # nace en el borde izquierdo
+        self.assertNotEqual(h0, h1)
+        (TL, TR, BR, BL) = [np.array(c) for c in info["corners"]]
+        left = ((TL + BL) / 2 * 0.92 + (TR + BR) / 2 * 0.08).astype(int)  # cerca del borde izquierdo
+        right = ((TL + BL) / 2 * 0.15 + (TR + BR) / 2 * 0.85).astype(int)
+        def patch(a, c):
+            return a[c[1] - 6:c[1] + 6, c[0] - 6:c[0] + 6].mean()
+        self.assertGreater(patch(glow, left) - patch(base, left), 3.0)
+        self.assertLess(abs(patch(glow, right) - patch(base, right)), 3.0)
+        # dedos: identicos al plate con y sin brillo
+        plate = np.array(Image.open(REPO / "mockups/fixtures/plate-fixture.webp").convert("RGB")).astype(int)
+        W, H = TRUTH["size"]
+        m = Image.new("L", (W, H), 0)
+        d = ImageDraw.Draw(m)
+        d.polygon([tuple(p) for p in TRUTH["finger_polygon"]], fill=255)
+        d.ellipse(tuple(TRUTH["finger_ellipse"]), fill=255)
+        inner = ~compose.dilate(~(np.array(m) > 0), 4) & compose.dilate(compose.key_mask(plate.astype(np.uint8), 1, 50), 12)
+        self.assertGreater(int(inner.sum()), 2000)
+        self.assertLessEqual(int(np.abs(glow - plate)[inner].max()), 2)
+
+    def test_hash_depends_on_cropped_quad_sheen(self):
+        names = set()
+        for mod in (None, ("sheen", {"amount": 0.5, "angle": 10}), ("sheen", {"amount": 0.5, "angle": 20}),
+                    ("sheen", {"amount": 0.7, "angle": 10}), ("cropped", True),
+                    ("quad", [list(map(float, p)) for p in TRUTH["corners"]])):
+            with tempfile.TemporaryDirectory() as t:
+                root = make_root(t)
+                p = root / "mockups/scenes/_fixture.json"
+                m = json.loads(p.read_text())
+                if mod:
+                    m["screen"][mod[0]] = mod[1]
+                p.write_text(json.dumps(m))
+                names.add(compose.content_hash(compose.load_manifest(p, root)))
+        self.assertEqual(len(names), 6)
+
+    def test_algo_version_is_3(self):
+        self.assertEqual(compose.ALGO_VERSION, "3")
 
 
 if __name__ == "__main__":

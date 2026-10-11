@@ -9,9 +9,9 @@ nunca lo deforma un modelo de imagen, y cuando la UI cambia se regenera todo **s
 mockups/plates/     plates archivados (los que salen de Higgsfield)
 mockups/screens/    capturas fuente saneadas (o usa public/work/**)
 mockups/scenes/     un manifiesto <id>.json por escena
-mockups/fixtures/   plate sintético de prueba + verdad de sus esquinas
+mockups/fixtures/   plates sintéticos de prueba + verdad de sus esquinas (`make-fixture-plate.py`)
 public/work/<caso>/scenes/<id>.<hash8>.webp   salida (nombre versionado por contenido)
-src/data/scenes.generated.json                GENERADO: { id: { src, width, height } }; no se edita a mano
+src/data/scenes.generated.json                GENERADO (ver «Salida»); no se edita a mano
 ```
 
 Comandos: `npm run mockups:build` (compone todo salvo las escenas de prueba `_*`; `--include-fixtures` las incluye) · `npm run mockups:check` (valida sin escribir) · `npm run mockups:test`.
@@ -28,7 +28,7 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
   "case": "dc-medical",
   "kind": "hero",
   "plate": "hero-mano.webp",
-  "screen": { "source": "public/work/dc-medical/agenda-dia.webp", "fit": "cover", "key": "#00FF00", "tolerance": 50, "glare": 0.4 },
+  "screen": { "source": "public/work/dc-medical/seguimiento-controles.webp", "fit": "cover", "key": "#00FF00", "tolerance": 50, "glare": 0, "cropped": true, "sheen": { "amount": 0.5, "angle": 40 } },
   "output": { "dir": "public/work/dc-medical/scenes", "width": 2400, "quality": 85 },
   "alt": { "es": "…", "en": "…" },
   "caption": { "es": "…", "en": "…" },
@@ -46,6 +46,9 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
 | `screen.key` / `tolerance` | color clave (`#00FF00`) y tolerancia (50): es clave el píxel con G > 120 y G − máx(R,B) > tolerancia. |
 | `screen.glare` | 0–1: devuelve al resultado los reflejos del plate sobre la pantalla (0 = sin reflejos). |
 | `screens` | en vez de `screen`: lista de 1 a 3 pantallas `{ source, fit, glare, rank, … }`. `rank` 1 = la región verde de mayor área, 2 = la siguiente… `screen` único equivale a `screens:[{rank:1}]`. `key` y `tolerance` deben coincidir. |
+| `screen.cropped` | `true` si el encuadre corta la pantalla a propósito (esquinas fuera del plate). Sin él, una pantalla que toca el borde se rechaza. Ver «Pantallas recortadas». |
+| `screen.quad` | respaldo manual `[[x,y]×4]` = TL, TR, BR, BL en px del plate (pueden quedar fuera); solo si la detección falla en un plate ya pagado. Se valida con el mismo residual. |
+| `screen.sheen` | `{ "amount": 0–1, "angle": 0–360 }`: brillo de cristal que nace en una esquina de la captura y sigue la perspectiva; no toca los dedos. Ausente o `amount: 0` = sin brillo. Valor de las escenas: `{ 0.5, 35–140 }`. |
 | `screen.aspect` | opcional, ancho/alto físico de la pantalla si la perspectiva engaña (por defecto se estima del plate). |
 | `output` | `dir` bajo `public/`, `width` máx. (2400), `quality` WebP (85), `lossless` opcional. |
 | `higgsfield` | `model`, `resolution`, `prompt`, `job_id` (vacío si el plate es sintético), `notes`. |
@@ -54,6 +57,37 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
 
 3. `npm run mockups:check` → debe imprimir «ok» con las esquinas detectadas; luego `npm run mockups:build` y mira el resultado.
 4. Commit del plate, el manifiesto, la salida `.webp` y `src/data/scenes.generated.json`.
+
+### Pantallas recortadas (`cropped`) y brillo (`sheen`)
+
+Con `cropped: true` el contorno del borde de la imagen (≤ 3 px) se ignora y las 4 rectas se ajustan solo con el borde real del
+device; las esquinas se obtienen intersectando rectas y pueden caer **fuera** del plate (`--check` las marca `(fuera)`). Hace falta
+ver **los cuatro lados**, cada uno con ≥ 40 puntos y ≥ 6 % de `max(ancho, alto)`; si no, falla diciendo qué lado falta. El recorte del 12 %
+de cada extremo solo se aplica en las esquinas reales, no donde el lado termina contra el borde. `--check` imprime el **residual**
+(debe ser ≤ 1,5 px), el **% del plate** que ocupa la pantalla y el **derrame** verde del anillo de 24 px (aviso ≥ 12, error ≥ 24).
+El borde de la pantalla se compone con la cobertura real del verde (sin escalones) y el borde del dedo se descontamina del verde.
+
+## Salida
+
+`src/data/scenes.generated.json` lo escribe `compose.py` (no se edita a mano), ordenado por `id`, sin las escenas `_*` (salvo con
+`--include-fixtures`); es lo único que importa el frontend. Los textos viven **solo** en el manifiesto:
+
+```json
+"dc-hero": {
+  "case": "dc-medical", "kind": "hero",
+  "src": "/work/dc-medical/scenes/dc-hero.1a2b3c4d.webp", "width": 2400, "height": 1350,
+  "alt": { "es": "…", "en": "…" }, "caption": { "es": "…", "en": "…" }
+}
+```
+
+`--all` regenera el archivo entero; `--scene <id>` actualiza solo esa entrada y conserva las demás. Una escena `_*` se compone
+pero nunca entra al JSON salvo que se pida con `--include-fixtures` (úsalo solo en un `--root` temporal).
+
+## Pruebas y fixtures
+
+`npm run mockups:test` usa plates y capturas **sintéticos** (`mockups/fixtures/`, `mockups/screens/fixture-*.webp`), generados con
+`python3 scripts/mockups/make-fixture-plate.py` (`--cropped` solo el recortado). Ninguna prueba con fixtures usa capturas reales.
+Los plates reales de prueba (`_light-phone-a`, `_light-tablet-b`) están en `mockups/plates/` con prefijo `_`: no se publican.
 
 El nombre de salida lleva el hash del plate + la captura + los parámetros: cambiar cualquiera crea una URL nueva (el optimizador
 cachea un año por URL) y borra solo las versiones viejas del mismo `id`. Los bytes del WebP pueden variar con la versión de libwebp/PIL aunque el nombre no cambie: el determinismo está garantizado en la misma máquina y versión de PIL. El `plate` debe estar bajo `mockups/plates/` o `mockups/fixtures/`; se rechazan rutas fuera y imágenes de más de 60 Mpx.
@@ -81,49 +115,40 @@ Antes de commitear: `node scripts/qa/leak-scan.mjs`.
 
 ## Plantilla de prompt (plates con pantalla verde)
 
-Hay dos direcciones. El primer plate real (`hero-mano`, 2 créditos, `gpt_image_2` 2k medium, 3:4) usó la **oscura editorial**;
-la dirección final del sitio la elige Doug (Puerta A de `docs/rondas/FASE-1-DC.md`). Cambia solo la primera parte (el objeto) y
-pega la base de la dirección elegida al final.
+**Dirección vigente (Doug): clara y limpia**, referencias «Ron Design Lab»: fondo liso y claro (gris perla, azul hielo, lavanda→rosa
+suave; degradados sin textura), **sin props**, el device ocupa casi todo el encuadre con perspectiva dramática (inclinado 20–35°),
+a veces cortado por el borde, y manos cuyos dedos cruzan **por delante** de la pantalla. La UI de DC es pastel, así que escena y
+UI se sienten un solo sistema. Prohibido en escena y fondo: verde y menta (chocan con la clave), plantas, joyas, marcas, rostros.
 
-### Base CLARA (marfil, champán, mármol claro)
+**Base clara** (rellena `{ESCENA}`, `{FONDO}` y `{DISPOSITIVO}`; es la de las pruebas A y B):
 
-> Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic. Palette: ivory, champagne, soft beige,
-> light marble, white orchids or white peonies in a blurred background, soft diffused window light from the left, shallow depth
-> of field, 85mm lens, high-end magazine look. **The device screen is a perfectly flat, uniform, pure chroma-key green
-> (#00FF00): no reflections, no glare, no gradient, no UI, no text, no icons, no notch artifacts, entire screen visible and
-> sharp.** No green plants or leaves anywhere in the scene, no other green objects, no text, no logos, no brand marks, no
-> identifiable faces (crop faces out of frame; hands and forearms only), natural manicured hands, no jewelry with text.
+> Clean, refined premium product photograph, the style of a high-end app launch mockup. {ESCENA}. Seamless soft studio background: {FONDO}, no props, no objects. Soft diffused studio light, shallow depth of field, ultra clean and minimal.
+> The {DISPOSITIVO} screen is a perfectly flat, uniform, pure chroma-key green (#00FF00): no UI, no text, no icons, no reflections, no glare, no gradient; the screen emits no light and casts no green glow or green tint on the skin, nails, frame or background. No other green anywhere, no plants. No text, no logos, no brand marks, no jewelry, no identifiable face (hands and forearms only, when hands appear).
 
-**Celular en mano:** `A woman's manicured hand holding a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, soft ivory linen sleeve, champagne-colored background bokeh.` + base clara.
+| Variante | `{ESCENA}` | `{FONDO}` / `{DISPOSITIVO}` |
+|---|---|---|
+| Celular en mano, dedo por delante | *Extreme close-up of a modern smartphone held in portrait by an elegant woman's hand with natural nude manicure, tilted about 25 degrees toward the camera with strong perspective, the device filling most of the frame and slightly cropped by the frame edge. The fingertips of her other hand reach in front of the lower part of the screen, as if about to tap, overlapping the screen* | *a smooth pale pearl-grey to soft lavender-blush gradient* / *phone* |
+| Tableta en dos manos, recortada | *A slim modern tablet held in landscape by two elegant hands with natural nude manicure and a light-to-medium skin tone, strongly foreshortened with dramatic perspective as if seen from the left and slightly below, the device huge in the frame, its upper-right corner cropped by the edge of the image while the screen's top, left, bottom and right edges all stay partly visible* | *a smooth pale ice-blue to pearl-grey gradient* / *tablet* |
+| Monitor, primer plano | *An extreme close-up of a large thin-bezel desktop monitor seen from slightly above and from the right with strong perspective, the display filling most of the frame, its lower-left corner cropped by the edge of the image while the screen's four edges all stay partly visible, no desk and no stand base in view* | *a smooth pearl-grey to soft lavender-blush gradient* / *monitor* |
+| Laptop en picado bajo | *A slim modern laptop open, seen from a low angle at about 30 degrees from the left with dramatic perspective, the screen filling most of the frame and its upper-right corner cropped by the edge of the image while all four edges of the screen stay partly visible, no hands* | *a smooth pale ice-blue to soft lavender gradient* / *laptop* |
+| Laptop con guante negro | *A slim modern laptop open, seen from the right and slightly above in strong perspective, the screen filling most of the frame; the fingertips of a hand in a thin black glove reach in front of the lower-right part of the screen, overlapping it, as if about to tap* | *a smooth pearl-grey to pale ice-blue gradient* / *laptop* |
+| Tableta con una mano de piel oscura | *A slim modern tablet held in landscape by one hand with a deep brown skin tone and natural nude manicure, tilted about 25 degrees toward the camera with strong perspective, the device filling most of the frame; the fingertips of the other hand reach in front of the lower-left part of the screen, overlapping it, as if about to tap* | *a smooth soft lavender to blush-pink gradient* / *tablet* |
 
-**Laptop en escritorio:** `A slim laptop open on a light Carrara marble desk, viewed from a three-quarter front angle at a slightly raised height, a porcelain cup and a single white orchid stem beside it, champagne wall softly out of focus.` + base clara.
-
-**Dúo (laptop + celular):** `A slim laptop open on a light marble desk with a smartphone standing upright next to it on a small champagne stone stand, both screens facing the camera, three-quarter view, white peonies in a blurred vase behind.` + base clara. *(Dos pantallas verdes: decláralas en `screens`; la laptop suele ser `rank` 1.)*
-
-**Tableta:** `A tablet held landscape in two manicured hands over a light marble surface, slightly tilted toward the camera, soft ivory cashmere cuff, champagne bokeh with white flowers.` + base clara.
-
-### Base OSCURA EDITORIAL (obsidiana, champán, luz de borde) — la del primer plate
-
-**Celular en mano (objeto):**
-`Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic, dark and moody. A woman's elegant manicured hand with nude champagne-toned nails holds a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, black silk sleeve cuff.`
-
-**Base oscura (pegar después del objeto; sustituye el objeto para laptop, dúo o tableta):**
-
-> Background: deep obsidian black polished marble with fine champagne-gold veining, softly out of focus, with a few soft
-> champagne-gold light bokeh circles far behind. Lighting: one soft warm key light from the upper left and a thin champagne
-> rim light along the edges of the hand and phone, subtle film grain, shallow depth of field, 85mm lens, high-end magazine
-> look, generous dark negative space around the subject. The phone screen is a perfectly flat, uniform, pure chroma-key green
-> (#00FF00) fill: no UI, no text, no icons, no reflections, no glare, no gradient, the entire screen visible and sharp with
-> all four rounded corners fully in frame. **The screen does not emit light and casts no green glow, no green reflection and
-> no green tint on the skin, nails, phone frame or background.** No other green anywhere in the scene, no plants, no leaves.
-> No text, no logos, no brand marks, no jewelry, no identifiable faces (hand and forearm only, face out of frame).
-
-El prompt literal del primer plate está en `mockups/scenes/hero-mano.json` (`higgsfield.prompt`).
+Criterios de aceptación de un plate (se revisan con `--check` y **una** mirada al compuesto): una sola región verde sólida con los 4 lados
+detectados, residual ≤ 1,5 px, derrame < 12; sin tinte verde en piel, uñas, marco ni fondo; sin plantas, texto, logos, rostros ni joyas;
+dedos limpios por delante de la UI (cinco dedos); el device protagonista; fondo liso de la familia indicada. **Un reintento por escena,
+solo con aprobación del director**; antes se corrige sin créditos (`tolerance`, `quad`, `fit`).
 
 ### Lo que funcionó
 
-Pedir **explícitamente** que la pantalla verde no emite brillo ni tinte sobre la piel, las uñas y el marco dio 0 píxeles de exceso
-verde tras componer (sin esa frase, los modelos suelen dejar un reflejo verdoso en los dedos). Pide también las cuatro esquinas
-redondeadas a cuadro: el compositor las necesita completas.
+Pedir **explícitamente** que la pantalla verde no emite luz ni tinte sobre la piel, las uñas y el marco dio 0 píxeles de exceso verde
+tras componer (sin esa frase, los modelos suelen dejar un reflejo verdoso en los dedos). Con fondo liso y claro el borde del dedo se
+descontamina bien. Pide siempre los cuatro lados de la pantalla visibles: el compositor los necesita completos, aunque el encuadre corte una esquina.
 
-Pide 3:4 o 4:5 para `hero`/`detail` y 16:9 para `wide`. Revisa en el plate: verde plano y limpio, 4 esquinas visibles, sin texto ni rostros.
+### Alternativa archivada: oscura editorial (solo texto)
+
+La usó el primer plate (`hero-mano`, `gpt_image_2` 2k medio, 3:4, 2 créditos); Doug eligió la dirección clara. Su prompt literal está en
+`mockups/scenes/hero-mano.json`. Objeto + base:
+
+> Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic, dark and moody. A woman's elegant manicured hand with nude champagne-toned nails holds a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, black silk sleeve cuff.
+> Background: deep obsidian black polished marble with fine champagne-gold veining, softly out of focus, with a few soft champagne-gold light bokeh circles far behind. Lighting: one soft warm key light from the upper left and a thin champagne rim light along the edges of the hand and phone, subtle film grain, shallow depth of field, 85mm lens, high-end magazine look, generous dark negative space around the subject. The phone screen is a perfectly flat, uniform, pure chroma-key green (#00FF00) fill: no UI, no text, no icons, no reflections, no glare, no gradient, the entire screen visible and sharp with all four rounded corners fully in frame. The screen does not emit light and casts no green glow, no green reflection and no green tint on the skin, nails, phone frame or background. No other green anywhere in the scene, no plants, no leaves. No text, no logos, no brand marks, no jewelry, no identifiable faces (hand and forearm only, face out of frame).

@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-ALGO_VERSION = "2"
+ALGO_VERSION = "3"
 DEFAULT_ROOT = Path(__file__).resolve().parents[2]
 KINDS = ("hero", "wide", "duo", "detail")
 ID_RE = re.compile(r"[a-z0-9_-]+")
@@ -194,21 +194,91 @@ def intersect(l1, l2):
 
 
 SECTORS = [np.array(v, float) for v in ((0, -1), (1, 0), (0, 1), (-1, 0))]  # top right bottom left
-TRIM = 0.12
+SIDE_NAMES = ("arriba", "derecha", "abajo", "izquierda")
+TRIM = 0.12            # fraccion de cada extremo del lado que se descarta (zona redondeada)
+BORDER_EXCL = 3        # px del borde de la imagen cuyo contorno se ignora (pantallas recortadas)
+TRIM_AT_BORDER = False  # si True, recorta tambien los extremos que terminan contra el borde (solo para pruebas de mutacion)
+MIN_SIDE_POINTS = 40
+MIN_EXTENT = 0.06      # extension visible minima de un lado, fraccion de max(W, H)
+MAX_RESIDUAL = 1.5     # px
+ANGLE_RANGE = (55.0, 125.0)
+MAX_CORNER_DIST = 1.0  # esquina a mas de esto x max(W, H) del plate: rectas casi paralelas
+SPILL_WARN, SPILL_FAIL = 12.0, 24.0
 
 
-def detect_corners(mask):
-    """mask: bool, componente de la pantalla. Devuelve [TL,TR,BR,BL] en coords continuas (borde de pixel)."""
-    edge = mask & ~erode4(mask)
-    ys, xs = np.nonzero(edge)
+def contour_points(mask, cropped):
+    H, W = mask.shape
+    ys, xs = np.nonzero(mask & ~erode4(mask))
+    if cropped and BORDER_EXCL > 0:
+        keep = (xs >= BORDER_EXCL) & (xs < W - BORDER_EXCL) & (ys >= BORDER_EXCL) & (ys < H - BORDER_EXCL)
+        xs, ys = xs[keep], ys[keep]
     P = np.stack([xs + 0.5, ys + 0.5], 1)
     if len(P) > 8000:
         P = P[:: int(np.ceil(len(P) / 8000))]
+    return P
+
+
+def corner_inside(p, W, H):
+    return BORDER_EXCL <= p[0] <= W - BORDER_EXCL and BORDER_EXCL <= p[1] <= H - BORDER_EXCL
+
+
+def corners_of(ls):
+    t, r, b, l = ls
+    return [intersect(t, l), intersect(t, r), intersect(b, r), intersect(b, l)]
+
+
+def side_ends(c):
+    TL, TR, BR, BL = c
+    return [(TL, TR), (TR, BR), (BL, BR), (TL, BL)]
+
+
+def select_side(P, n, c, A, B, W, H, cropped, win=4.0):
+    """Puntos del contorno que pertenecen a un lado: cerca de la recta y fuera de los extremos redondeados.
+    En pantallas recortadas el recorte solo va en los extremos que son esquina real (dentro de la imagen)."""
+    v = B - A
+    t = ((P - A) @ v) / float(v @ v)
+    if cropped:
+        lo = TRIM if (TRIM_AT_BORDER or corner_inside(A, W, H)) else -0.02
+        hi = 1 - TRIM if (TRIM_AT_BORDER or corner_inside(B, W, H)) else 1.02
+    else:
+        lo, hi = TRIM, 1 - TRIM
+    return (np.abs(P @ n - c) < win) & (t > lo) & (t < hi)
+
+
+def extent_of(Q, n):
+    d = np.array([-n[1], n[0]])
+    u = Q @ d
+    return float(u.max() - u.min())
+
+
+def check_geometry(corners, W, H, lines=None):
+    big = max(W, H)
+    for x, y in corners:
+        dx = max(-x, 0, x - W)
+        dy = max(-y, 0, y - H)
+        if np.hypot(dx, dy) > MAX_CORNER_DIST * big or not np.isfinite([x, y]).all():
+            raise SceneError("rectas casi paralelas: una esquina cae lejisimos del plate; reencuadra el plate o declara 'quad'")
+    if lines is not None:
+        for i in range(4):
+            n1, n2 = lines[i][0], lines[(i + 1) % 4][0]
+            ang = float(np.degrees(np.arccos(np.clip(n1 @ n2, -1, 1))))  # entre normales exteriores
+            if not ANGLE_RANGE[0] <= ang <= ANGLE_RANGE[1]:
+                raise SceneError(
+                    f"los lados {SIDE_NAMES[i]} y {SIDE_NAMES[(i + 1) % 4]} forman {ang:.0f} grados (se esperan 55-125): "
+                    "rectas casi paralelas o lados mal detectados")
+
+
+def detect_corners(mask, cropped=False, info=None):
+    """mask: bool, componente de la pantalla. Devuelve [TL,TR,BR,BL] en coords continuas (borde de pixel).
+    cropped=True admite que el encuadre corte la pantalla (esquinas fuera de la imagen). info (dict) recibe metricas."""
+    H, W = mask.shape
+    P = contour_points(mask, cropped)
     if len(P) < 100:
         raise SceneError("contorno de pantalla demasiado pequeno")
     yy, xx = np.nonzero(mask)
     centroid = np.array([xx.mean() + 0.5, yy.mean() + 0.5])
     rng = np.random.default_rng(12345)
+    min_ext = MIN_EXTENT * max(W, H)
 
     # 1) rectas largas por RANSAC secuencial; una por sector (arriba/derecha/abajo/izquierda)
     remaining = np.ones(len(P), bool)
@@ -223,58 +293,121 @@ def detect_corners(mask):
         cnt = int(inl.sum())
         if cnt < 40:
             break
-        m = P[remaining][inl].mean(0)
+        Pin = P[remaining][inl]
+        m = Pin.mean(0)
         if n @ (m - centroid) < 0:
             n, c = -n, -c
         dots = [float(n @ s) for s in SECTORS]
         k = int(np.argmax(dots))
-        if dots[k] > 0.6 and (k not in best or cnt > best[k][2]):
+        ok_ext = (not cropped) or extent_of(Pin, n) >= min_ext
+        if dots[k] > 0.6 and ok_ext and (k not in best or cnt > best[k][2]):
             best[k] = (n, c, cnt)
         remaining &= ~(np.abs(P @ n - c) < 3.0)
     if len(best) < 4:
+        if cropped:
+            falta = ", ".join(SIDE_NAMES[k] for k in range(4) if k not in best)
+            raise SceneError(
+                f"pantalla recortada: solo se ven {len(best)} de 4 lados (faltan: {falta}); hace falta ver los cuatro, "
+                "aunque alguna esquina quede fuera del encuadre; reencuadra el plate")
         raise SceneError("no se pudieron ajustar los 4 lados de la pantalla")
     lines = [(best[k][0], best[k][1]) for k in range(4)]
 
-    def corners_of(ls):
-        t, r, b, l = ls
-        return [intersect(t, l), intersect(t, r), intersect(b, r), intersect(b, l)]
+    def safe_corners(ls):
+        try:
+            return corners_of(ls)
+        except np.linalg.LinAlgError:
+            raise SceneError("rectas casi paralelas: no se pueden intersectar los lados de la pantalla")
 
-    # 2) refinar: puntos cerca de cada recta, sin el 12 % de cada extremo (zona redondeada)
+    # 2) refinar: puntos cerca de cada recta, sin los extremos redondeados
+    resid, extents, npts = [], [], []
     for _ in range(2):
-        TL, TR, BR, BL = corners_of(lines)
-        ends = [(TL, TR), (TR, BR), (BL, BR), (TL, BL)]
-        new = []
-        for (n, c), (A, B) in zip(lines, ends):
-            v = B - A
-            t = ((P - A) @ v) / float(v @ v)
-            sel = (np.abs(P @ n - c) < 4.0) & (t > TRIM) & (t < 1 - TRIM)
-            if sel.sum() < 20:
+        corners = safe_corners(lines)
+        new, resid, extents, npts = [], [], [], []
+        for (n, c), (A, B) in zip(lines, side_ends(corners)):
+            sel = select_side(P, n, c, A, B, W, H, cropped)
+            if sel.sum() < (MIN_SIDE_POINTS if cropped else 20):
                 raise SceneError("pocos puntos para ajustar un lado de la pantalla")
             Q = P[sel]
             n2, c2 = fit_pca(Q)
             if n2 @ n < 0:
                 n2, c2 = -n2, -c2
+            keep = np.ones(len(Q), bool)
             for _ in range(4):
-                keep = np.abs(Q @ n2 - c2) < 1.5
-                if keep.sum() < 15:
+                k2 = np.abs(Q @ n2 - c2) < 1.5
+                if k2.sum() < 15:
                     break
+                keep = k2
                 n2, c2 = fit_pca(Q[keep])
                 if n2 @ n < 0:
                     n2, c2 = -n2, -c2
+            Qk = Q[keep]
             new.append((n2, c2))
+            resid.append(float(np.abs(Qk @ n2 - c2).mean()))
+            extents.append(extent_of(Qk, n2))
+            npts.append(int(len(Qk)))
         lines = new
+    if cropped:
+        for i in range(4):
+            if npts[i] < MIN_SIDE_POINTS or extents[i] < min_ext:
+                raise SceneError(
+                    f"pantalla recortada: el lado {SIDE_NAMES[i]} se ve solo {extents[i]:.0f} px ({npts[i]} puntos); "
+                    "hace falta ver los cuatro lados; reencuadra el plate")
+    residual = float(np.mean(resid))
     # el borde de la mascara esta 0.5 px fuera del centro del pixel de contorno
     lines = [(n, c + 0.5) for n, c in lines]
-    return [tuple(map(float, p)) for p in corners_of(lines)]
+    corners = [tuple(map(float, p)) for p in safe_corners(lines)]
+    check_geometry(corners, W, H, lines if cropped else None)
+    if residual > MAX_RESIDUAL:
+        raise SceneError(f"residual {residual:.2f} px > {MAX_RESIDUAL}: el contorno no es un cuadrilatero limpio; revisa el plate o declara 'quad'")
+    if info is not None:
+        info.update({"residual": residual, "npts": npts, "extents": extents,
+                     "outside": [not (0 <= x <= W and 0 <= y <= H) for x, y in corners],
+                     "border_points": int(((P[:, 0] < 3) | (P[:, 0] > W - 3) | (P[:, 1] < 3) | (P[:, 1] > H - 3)).sum())})
+    return corners
 
 
+def validate_quad(mask, quad, info=None):
+    """Respaldo manual: comprueba que el cuadrilatero declarado (TL,TR,BR,BL en px del plate) cuadra con el contorno visible."""
+    H, W = mask.shape
+    corners = [(float(x), float(y)) for x, y in quad]
+    check_geometry(corners, W, H)
+    P = contour_points(mask, True)
+    # normales exteriores: desde el centro del cuadrilatero
+    ctr = np.mean(np.array(corners), axis=0)
+    resid = []
+    for i, (A, B) in enumerate(side_ends([np.array(c) for c in corners])):
+        d = B - A
+        n = np.array([-d[1], d[0]]) / float(np.hypot(*d))
+        if n @ ((A + B) / 2 - ctr) < 0:
+            n = -n
+        c = float(n @ A) - 0.5  # los centros de los pixeles de contorno estan 0.5 px dentro del borde
+        sel = select_side(P, n, c, A, B, W, H, True)
+        if sel.sum() < 20:
+            raise SceneError(f"el 'quad' declarado no coincide con el contorno visible (lado {SIDE_NAMES[i]})")
+        resid.append(float(np.abs(P[sel] @ n - c).mean()))
+    residual = float(np.mean(resid))
+    if residual > MAX_RESIDUAL:
+        raise SceneError(f"el 'quad' declarado no cuadra con el contorno: residual {residual:.2f} px > {MAX_RESIDUAL}")
+    if info is not None:
+        info.update({"residual": residual, "outside": [not (0 <= x <= W and 0 <= y <= H) for x, y in corners], "manual": True})
+    return corners
 
 
 SIGNIFICANT = 0.20  # una region verde >= 20 % de la mayor cuenta como pantalla
 
 
-def detect_screens(plate_arr, ci, tol, n_declared=1):
-    """Devuelve [(esquinas, mascara)] ordenado por area (rank 1 = la mayor). Falla si el plate no coincide con lo declarado."""
+def spill_excess(plate_arr, comp, ci, ring=24):
+    """Exceso medio de la clave (canal clave - max(otros), solo positivo) en el anillo de `ring` px fuera de la mascara."""
+    a = plate_arr.astype(np.int16)
+    others = [i for i in range(3) if i != ci]
+    ex = np.clip(a[..., ci] - np.maximum(a[..., others[0]], a[..., others[1]]), 0, None)
+    band = dilate(comp, ring) & ~dilate(comp, 1)
+    return float(ex[band].mean()) if band.any() else 0.0
+
+
+def detect_screens(plate_arr, ci, tol, n_declared=1, opts=None, with_info=False):
+    """Devuelve [(esquinas, mascara)] (o [(esquinas, mascara, info)]) ordenado por area (rank 1 = la mayor).
+    opts: lista por rank con {'cropped': bool, 'quad': [[x,y]*4] | None}. Falla si el plate no coincide con lo declarado."""
     key = key_mask(plate_arr, ci, tol)
     comps = components(key)
     if not comps or comps[0].sum() < 0.002 * key.size:
@@ -290,10 +423,22 @@ def detect_screens(plate_arr, ci, tol, n_declared=1):
     H, W = key.shape
     res = []
     for i, c in enumerate(sig, 1):
+        o = (opts[i - 1] if opts else None) or {}
+        cropped, quad = bool(o.get("cropped")), o.get("quad")
         ys, xs = np.nonzero(c)
-        if ys.min() == 0 or xs.min() == 0 or ys.max() == H - 1 or xs.max() == W - 1:
-            raise SceneError(f"la pantalla {i} toca el borde de la imagen: las esquinas serian falsas; reencuadra el plate")
-        res.append((detect_corners(c), c))
+        touches = ys.min() == 0 or xs.min() == 0 or ys.max() == H - 1 or xs.max() == W - 1
+        if touches and not (cropped or quad):
+            raise SceneError(f"la pantalla {i} toca el borde de la imagen: las esquinas serian falsas; reencuadra el plate "
+                             "o declara 'cropped': true si el encuadre corta la pantalla a proposito")
+        info = {"mask_pct": 100.0 * float(c.sum()) / c.size, "touches_border": bool(touches)}
+        try:
+            corners = validate_quad(c, quad, info) if quad else detect_corners(c, cropped, info)
+        except SceneError as e:
+            raise SceneError(f"pantalla {i}: {e}")
+        info["spill"] = spill_excess(plate_arr, c, ci)
+        if info["spill"] >= SPILL_FAIL:
+            raise SceneError(f"pantalla {i}: derrame verde {info['spill']:.1f} >= {SPILL_FAIL:.0f} en el anillo de 24 px; el plate tiene tinte verde")
+        res.append((corners, c, info) if with_info else (corners, c))
     return res
 
 
@@ -360,6 +505,9 @@ def norm_screen(scr, idx, ctx):
         "aspect": scr.get("aspect"),
         "bg": scr.get("bg", "#000000"),
         "rank": scr.get("rank", idx + 1),
+        "cropped": scr.get("cropped", False),
+        "quad": scr.get("quad"),
+        "sheen": scr.get("sheen"),
     }
     if s["fit"] not in ("cover", "contain"):
         raise SceneError(f"{ctx}: fit debe ser cover|contain")
@@ -374,6 +522,23 @@ def norm_screen(scr, idx, ctx):
         raise SceneError(f"{ctx}: bg debe ser #RRGGBB")
     if not isinstance(s["rank"], int) or isinstance(s["rank"], bool) or s["rank"] < 1:
         raise SceneError(f"{ctx}: rank debe ser un entero >= 1")
+    if not isinstance(s["cropped"], bool):
+        raise SceneError(f"{ctx}: cropped debe ser true o false")
+    q = s["quad"]
+    if q is not None:
+        ok = (isinstance(q, list) and len(q) == 4 and all(
+            isinstance(pt, list) and len(pt) == 2 and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in pt)
+            for pt in q))
+        if not ok:
+            raise SceneError(f"{ctx}: quad debe ser [[x,y],[x,y],[x,y],[x,y]] (TL, TR, BR, BL en px del plate)")
+        s["quad"] = [[float(x), float(y)] for x, y in q]
+    sh = s["sheen"]
+    if sh is not None:
+        if (not isinstance(sh, dict) or set(sh) - {"amount", "angle"} or not all(
+                isinstance(sh.get(k), (int, float)) and not isinstance(sh.get(k), bool) for k in ("amount", "angle"))
+                or not 0 <= sh["amount"] <= 1 or not 0 <= sh["angle"] <= 360):
+            raise SceneError(f"{ctx}: sheen debe ser {{ amount: 0-1, angle: 0-360 }}")
+        s["sheen"] = {"amount": float(sh["amount"]), "angle": float(sh["angle"])} if sh["amount"] > 0 else None
     return s
 
 
@@ -454,8 +619,19 @@ def fit_texture(cap, tw, th, fit, bg):
     return canvas
 
 
+def sheen_gradient(tw, th, amount, angle):
+    """Brillo de cristal en coordenadas de la captura (u, v en [0,1], v hacia abajo): g(t) = clip(1 - t/0.6, 0, 1) ** 1.6."""
+    th_r = np.radians(angle)
+    c, sn = np.cos(th_r), np.sin(th_r)
+    u = (np.arange(tw, dtype=np.float32) + 0.5) / tw
+    v = (np.arange(th, dtype=np.float32) + 0.5) / th
+    uu, vv = np.meshgrid(u, v)
+    t = ((uu - 0.5) * c + (vv - 0.5) * sn) / (abs(c) + abs(sn)) + 0.5
+    return (np.clip(1 - t / 0.6, 0, 1) ** 1.6).astype(np.float32)
+
+
 def warp_screen(s, corners, W, H, sid):
-    """Captura ajustada y deformada a la pantalla, a resolucion del plate (RGB float32)."""
+    """Captura (y brillo) ajustada y deformada a la pantalla, a resolucion del plate: (RGB float32, g float32 | None)."""
     cap = open_image(s["source_path"], sid).convert("RGB")
     w_est, h_est = quad_size(corners)
     SS = 2
@@ -476,7 +652,27 @@ def warp_screen(s, corners, W, H, sid):
     rect = [(0, 0), (Wp, 0), (Wp, Hp), (0, Hp)]
     back = persp_coeffs(apply_persp(fwd, rect), rect)
     warped = Image.fromarray(texp).transform((W * SS, H * SS), Image.PERSPECTIVE, tuple(back), Image.BICUBIC)
-    return np.asarray(warped.resize((W, H), Image.LANCZOS)).astype(np.float32)
+    cap_down = np.asarray(warped.resize((W, H), Image.LANCZOS)).astype(np.float32)
+    g = None
+    if s.get("sheen"):
+        gp = np.pad(sheen_gradient(tw, th, s["sheen"]["amount"], s["sheen"]["angle"]), pad, mode="edge")
+        gw = Image.fromarray(gp, "F").transform((W * SS, H * SS), Image.PERSPECTIVE, tuple(back), Image.BICUBIC)
+        g = np.clip(np.asarray(gw.resize((W, H), Image.BILINEAR), dtype=np.float32), 0, 1)
+    return cap_down, g
+
+
+def soft_alpha(arr, comp, ci):
+    a = arr.astype(np.float32)
+    others = [i for i in range(3) if i != ci]
+    ex = np.clip(a[..., ci] - np.maximum(a[..., others[0]], a[..., others[1]]), 0, None)
+    inner = erode4(erode4(comp))
+    ref = max(float(np.median(ex[inner])) if inner.any() else 255.0, 100.0)
+    soft = np.clip(ex / ref, 0.0, 1.0)
+    return np.where(inner, 1.0, np.where(dilate(comp, 1), soft, 0.0)).astype(np.float32)
+
+
+def screen_opts(sc):
+    return [{"cropped": s["cropped"], "quad": s["quad"]} for s in sc["screens"]]
 
 
 def compose_scene(sc):
@@ -485,23 +681,32 @@ def compose_scene(sc):
     plate = open_image(sc["plate_path"], sc["id"]).convert("RGB")
     arr = np.array(plate)
     H, W = arr.shape[:2]
-    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]))
+    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]), screen_opts(sc), True)
 
     p = arr.astype(np.float32)
-    # despill: en una banda de 6 px alrededor de cada mascara, limita el canal clave
-    band = dilate(np.any([c for _, c in found], axis=0), 6)
     others = [i for i in range(3) if i != ci]
+    alphas = [soft_alpha(arr, f[1], ci) for f in found]
+    # despill: en una banda de 6 px alrededor de cada mascara, limita el canal clave a max(otros)
+    band = dilate(np.any([f[1] for f in found], axis=0), 6)
     lim = np.maximum(p[..., others[0]], p[..., others[1]])
     ch = p[..., ci]
-    p[..., ci] = np.where(band, np.minimum(ch, lim), ch)
+    ch = np.where(band, np.minimum(ch, lim), ch)
+    # en los pixeles de borde (mezcla de verde y objeto) el limite es el promedio de los otros dos canales: sin tinte amarillento
+    edge = np.any([(al > 0) & (al < 1) for al in alphas], axis=0)
+    ch = np.where(edge, np.minimum(ch, 0.5 * (p[..., others[0]] + p[..., others[1]])), ch)
+    p[..., ci] = ch
+    # el interior de la pantalla no aporta nada del plate: lo pone la captura
+    for f in found:
+        p[erode4(erode4(f[1]))] = 0.0
     out = p
     infos = []
-    for s, (corners, comp) in zip(sc["screens"], found):
-        cap_down = warp_screen(s, corners, W, H, sc["id"])
+    for s, (corners, comp, dinfo), alpha in zip(sc["screens"], found, alphas):
+        cap_down, g_sheen = warp_screen(s, corners, W, H, sc["id"])
         w_est, h_est = quad_size(corners)
-        # alfa: mascara de la clave suavizada ~1 px (dedos y objetos que tapan se conservan)
-        alpha = np.maximum(box_blur(dilate(comp, 1).astype(np.float32), 1), comp.astype(np.float32))
-        out = out * (1 - alpha[..., None]) + cap_down * alpha[..., None]
+        # compuesto exacto de borde: el plate despillado ya trae (1 - c) del objeto; se suma c de la captura.
+        # alfa = cobertura de la clave (el exceso de verde crece con la fraccion de pixel verde): sin escalones ni
+        # puntos grises, 1 en el interior y 0 fuera; los dedos y objetos que tapan la pantalla se conservan
+        out = out + cap_down * alpha[..., None]
         if s["glare"] > 0:
             Y = (0.299 * arr[..., 0] + 0.587 * arr[..., 1] + 0.114 * arr[..., 2]).astype(np.float32)
             m = comp.astype(np.float32)
@@ -512,7 +717,10 @@ def compose_scene(sc):
             base = num / np.maximum(den, 1e-3)
             g = np.clip(Y - base, 0, None) * float(s["glare"]) * alpha
             out = out + g[..., None]
-        infos.append({"rank": s["rank"], "corners": corners, "screen": (w_est, h_est)})
+        if g_sheen is not None:  # brillo de cristal: solo donde hay alfa (no toca los dedos que cruzan la pantalla)
+            k = (0.30 * s["sheen"]["amount"] * g_sheen * alpha)[..., None]
+            out = out + (255.0 - out) * k
+        infos.append({"rank": s["rank"], "corners": corners, "screen": (w_est, h_est), "detect": dinfo})
     img = Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8), "RGB")
     return img, {"corners": infos[0]["corners"], "screens": infos, "size": (W, H)}
 
@@ -521,7 +729,7 @@ def content_hash(sc):
     o = sc["output"]
     params = {
         "algo": ALGO_VERSION,
-        "screens": [{k: s[k] for k in ("fit", "glare", "aspect", "bg", "rank")} | {"key": s["key"].upper(), "tolerance": s["tolerance"]}
+        "screens": [{k: s[k] for k in ("fit", "glare", "aspect", "bg", "rank", "cropped", "quad", "sheen")} | {"key": s["key"].upper(), "tolerance": s["tolerance"]}
                     for s in sc["screens"]],
         "output": {"width": o["width"], "quality": o["quality"], "lossless": o["lossless"]},
         "webp": {"method": WEBP_METHOD, "format": "WEBP"},
@@ -564,19 +772,30 @@ def build_scene(sc, root, use_cache=True):
     with Image.open(dest) as im:
         w, h = im.size
     rel = out_dir.relative_to((root / "public").resolve()).as_posix()
-    return {"src": f"/{rel}/{fname}", "width": w, "height": h}
+    raw = sc["raw"]
+    return {
+        "case": raw["case"], "kind": raw["kind"],
+        "src": f"/{rel}/{fname}", "width": w, "height": h,
+        "alt": {"es": raw["alt"]["es"], "en": raw["alt"]["en"]},
+        "caption": {"es": raw["caption"]["es"], "en": raw["caption"]["en"]},
+    }
 
 
 def check_scene(sc):
     need_files(sc)
     ci = parse_key(sc["key"])
     arr = np.array(open_image(sc["plate_path"], sc["id"]).convert("RGB"))
-    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]))
+    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]), screen_opts(sc), True)
     parts = []
-    for s, (corners, _) in zip(sc["screens"], found):
+    for s, (corners, _, info) in zip(sc["screens"], found):
         w, h = quad_size(corners)
-        cs = " ".join(f"({x:.0f},{y:.0f})" for x, y in corners)
-        parts.append(f"#{s['rank']} ~{w:.0f}x{h:.0f} {cs}")
+        cs = " ".join(f"({x:.0f},{y:.0f}){' (fuera)' if out else ''}" for (x, y), out in zip(corners, info["outside"]))
+        extra = f"residual {info['residual']:.2f} px  {info['mask_pct']:.0f} % del plate  derrame {info['spill']:.1f}"
+        if info["spill"] >= SPILL_WARN:
+            extra += f"  AVISO: derrame >= {SPILL_WARN:.0f}"
+        if info.get("manual"):
+            extra += "  (quad manual)"
+        parts.append(f"#{s['rank']} ~{w:.0f}x{h:.0f} {cs} {extra}")
     return f"ok     {sc['id']}  plate {arr.shape[1]}x{arr.shape[0]}  pantallas: " + " | ".join(parts)
 
 
@@ -612,6 +831,8 @@ def main(argv=None):
             else:
                 results[sc["id"]] = r = build_scene(sc, root, not a.no_cache)
                 print(f"ok     {sc['id']}  {r['src']}  {r['width']}x{r['height']}")
+                if sc["id"].startswith("_") and not a.include_fixtures:
+                    print(f"       ({sc['id']} es de prueba: no se escribe en scenes.generated.json; usa --include-fixtures)")
         except (SceneError, OSError, ValueError) as e:
             failed += 1
             print(f"FALLA  {f.stem}: {e}")
@@ -621,6 +842,8 @@ def main(argv=None):
     if a.scene and data_path.is_file():
         data = json.loads(data_path.read_text(encoding="utf-8"))
     data.update(results)
+    if not a.include_fixtures:  # las escenas de prueba (_*) nunca llegan al JSON que importa el frontend
+        pass
     text = json.dumps({k: data[k] for k in sorted(data)}, indent=2, ensure_ascii=False) + "\n"
     data_path.parent.mkdir(parents=True, exist_ok=True)
     if not data_path.is_file() or data_path.read_text(encoding="utf-8") != text:

@@ -1,0 +1,39 @@
+{
+  "id": "_light-phone-a",
+  "case": "dc-medical",
+  "kind": "detail",
+  "plate": "_light-phone-a.webp",
+  "screen": {
+    "source": "public/work/dc-medical/nota-de-voz-poster.jpg",
+    "fit": "cover",
+    "key": "#00FF00",
+    "tolerance": 50,
+    "glare": 0,
+    "sheen": {
+      "amount": 0.5,
+      "angle": 35
+    }
+  },
+  "output": {
+    "dir": "public/work/dc-medical/scenes",
+    "width": 2400,
+    "quality": 85
+  },
+  "alt": {
+    "es": "Un celular en una mano, con la otra a punto de tocar la pantalla, que muestra el formulario de nueva paciente del panel de DC Medical.",
+    "en": "A smartphone held in one hand, the other about to tap the screen, which shows the DC Medical dashboard's new-patient form."
+  },
+  "caption": {
+    "es": "Prueba A: celular con dedo por delante de la pantalla.",
+    "en": "Test A: phone with a finger in front of the screen."
+  },
+  "higgsfield": {
+    "model": "gpt_image_2",
+    "resolution": "1k-low",
+    "quality": "low",
+    "aspect": "3:4",
+    "prompt": "Clean, refined premium product photograph, the style of a high-end app launch mockup. Extreme close-up of a modern smartphone held in portrait by an elegant woman's hand with natural nude manicure, tilted about 25 degrees toward the camera with strong perspective, the device filling most of the frame and slightly cropped by the frame edge. The fingertips of her other hand reach in front of the lower part of the screen, as if about to tap, overlapping the screen. Seamless soft studio background: a smooth pale pearl-grey to soft lavender-blush gradient, no props, no objects. Soft diffused studio light, shallow depth of field, ultra clean and minimal.\nThe phone screen is a perfectly flat, uniform, pure chroma-key green (#00FF00): no UI, no text, no icons, no reflections, no glare, no gradient; the screen emits no light and casts no green glow or green tint on the skin, nails, frame or background. No other green anywhere, no plants. No text, no logos, no brand marks, no jewelry, no identifiable face (hands and forearms only, when hands appear).",
+    "job_id": "47600b6e-e859-4843-a208-2b75df0d5477",
+    "notes": "Prueba pagada (1k baja, 0,5 créditos). Prefijo _: no se publica. Pantalla = póster del video (verificado por seguridad). Si se promueve a escena, renombrar sin guion bajo y cambiar la captura por la de la demo sintética (U4)."
+  }
+}

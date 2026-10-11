@@ -3,6 +3,7 @@
 
 - plate-fixture.webp: celular en perspectiva + dedo que tapa una esquina.
 - plate-fixture-duo.webp: laptop + celular (dos pantallas, para el soporte de `screens`).
+- plate-cropped.webp (`--cropped`): tableta que el encuadre corta por arriba y por la derecha, con la esquina TR fuera.
 Cada uno con su .truth.json (esquinas exactas, continuas, resolucion final). Salida: mockups/fixtures/.
 """
 import json
@@ -10,7 +11,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from compose import apply_persp, persp_coeffs  # noqa: E402
@@ -107,6 +108,42 @@ def duo():
         {"rank": 1, "corners": [list(p) for p in laptop]}, {"rank": 2, "corners": [list(p) for p in phone]}]})
 
 
+def cropped():
+    Q = [(520, 60), (1640, -60), (1560, 980), (500, 1040)]  # TL TR BR BL; TR queda fuera del plate
+    img = render([Device(Q, 2200, 1850, body=70, body_r=130, bezel=16, bezel_r=100, screen_r=70, color=(120, 118, 124))])
+    save("plate-cropped", img, {"size": [W, H], "corners": [list(p) for p in Q], "note": "TR fuera: cortado por arriba y por la derecha"})
+
+
+def make_capture(name, w, h):
+    """Captura SINTETICA (no real) para las pruebas: texto fino y bloques pastel, para ver nitidez y recortes."""
+    img = Image.new("RGB", (w, h), (244, 241, 252))
+    d = ImageDraw.Draw(img)
+    f1, f2, f3 = (ImageFont.load_default(size=int(w * k)) for k in (0.07, 0.045, 0.032))
+    d.rectangle((0, 0, w, int(h * 0.07)), fill=(222, 214, 246))
+    d.text((int(w * 0.05), int(h * 0.018)), "Panel de prueba", font=f2, fill=(52, 36, 110))
+    d.text((int(w * 0.05), int(h * 0.10)), "Resumen sintetico", font=f1, fill=(30, 24, 60))
+    palette = [(214, 200, 250), (252, 214, 236), (200, 232, 250), (232, 224, 250)]
+    y, i = int(h * 0.19), 0
+    while y + int(h * 0.12) < h * 0.93:
+        d.rounded_rectangle((int(w * 0.05), y, int(w * 0.95), y + int(h * 0.10)), radius=int(w * 0.03), fill=palette[i % 4])
+        d.text((int(w * 0.09), y + int(h * 0.018)), f"Tarjeta {i + 1}: texto de ejemplo", font=f2, fill=(30, 24, 60))
+        d.text((int(w * 0.09), y + int(h * 0.058)), "Linea fina 0123456789 abcdefg", font=f3, fill=(80, 70, 120))
+        y += int(h * 0.12)
+        i += 1
+    d.rounded_rectangle((int(w * 0.05), int(h * 0.94), int(w * 0.95), int(h * 0.985)), radius=int(w * 0.02), fill=(92, 70, 200))
+    d.text((int(w * 0.36), int(h * 0.949)), "Guardar", font=f2, fill=(255, 255, 255))
+    out = ROOT / "mockups" / "screens"
+    out.mkdir(parents=True, exist_ok=True)
+    img.save(out / f"{name}.webp", "WEBP", lossless=True)
+    print(f"ok  mockups/screens/{name}.webp")
+
+
 if __name__ == "__main__":
-    single()
-    duo()
+    make_capture("fixture-portrait", 786, 1704)
+    make_capture("fixture-landscape", 1440, 900)
+    if "--cropped" in sys.argv[1:]:
+        cropped()
+    else:
+        single()
+        duo()
+        cropped()

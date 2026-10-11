@@ -4,7 +4,7 @@
   "kind": "hero",
   "plate": "../fixtures/plate-fixture.webp",
   "screen": {
-    "source": "public/work/dc-medical/nota-de-voz-poster.jpg",
+    "source": "mockups/screens/fixture-portrait.webp",
     "fit": "cover",
     "key": "#00FF00",
     "tolerance": 50,

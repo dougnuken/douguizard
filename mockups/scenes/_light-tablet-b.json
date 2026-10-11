@@ -1,0 +1,40 @@
+{
+  "id": "_light-tablet-b",
+  "case": "dc-medical",
+  "kind": "hero",
+  "plate": "_light-tablet-b.webp",
+  "screen": {
+    "source": "public/work/dc-medical/seguimiento-controles.webp",
+    "fit": "cover",
+    "key": "#00FF00",
+    "tolerance": 50,
+    "glare": 0,
+    "cropped": true,
+    "sheen": {
+      "amount": 0.5,
+      "angle": 40
+    }
+  },
+  "output": {
+    "dir": "public/work/dc-medical/scenes",
+    "width": 2400,
+    "quality": 85
+  },
+  "alt": {
+    "es": "Una tableta sostenida con dos manos, vista en perspectiva y cortada por el borde derecho, que muestra el tablero de seguimiento del panel de DC Medical.",
+    "en": "A tablet held in two hands, seen in perspective and cropped by the right edge, showing the DC Medical dashboard's follow-up board."
+  },
+  "caption": {
+    "es": "Prueba B: tableta recortada por el encuadre.",
+    "en": "Test B: tablet cropped by the frame."
+  },
+  "higgsfield": {
+    "model": "gpt_image_2",
+    "resolution": "1k-low",
+    "quality": "low",
+    "aspect": "4:3",
+    "prompt": "Clean, refined premium product photograph, the style of a high-end app launch mockup. A slim modern tablet held in landscape by two elegant hands with natural nude manicure and a light-to-medium skin tone, strongly foreshortened with dramatic perspective as if seen from the left and slightly below, the device huge in the frame, its upper-right corner cropped by the edge of the image while the screen's top, left, bottom and right edges all stay partly visible. Seamless soft studio background: a smooth pale ice-blue to pearl-grey gradient, no props, no objects. Soft diffused studio light, shallow depth of field, ultra clean and minimal.\nThe tablet screen is a perfectly flat, uniform, pure chroma-key green (#00FF00): no UI, no text, no icons, no reflections, no glare, no gradient; the screen emits no light and casts no green glow or green tint on the skin, nails, frame or background. No other green anywhere, no plants. No text, no logos, no brand marks, no jewelry, no identifiable face (hands and forearms only, when hands appear).",
+    "job_id": "318b9481-44b3-43b1-b38e-935b29acb286",
+    "notes": "Prueba pagada (1k baja, 0,5 créditos). Prefijo _: no se publica. Pantalla recortada (cropped: true): la esquina superior derecha queda fuera del plate. Promover a dc-hero (Puerta C, opción 0) = renombrar sin guion bajo; 0 créditos."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "_fixture-cropped",
+  "case": "dc-medical",
+  "kind": "hero",
+  "plate": "../fixtures/plate-cropped.webp",
+  "screen": {
+    "source": "mockups/screens/fixture-landscape.webp",
+    "fit": "cover",
+    "key": "#00FF00",
+    "tolerance": 50,
+    "glare": 0,
+    "cropped": true,
+    "sheen": {
+      "amount": 0.5,
+      "angle": 40
+    }
+  },
+  "output": {
+    "dir": "public/work/dc-medical/scenes",
+    "width": 2400,
+    "quality": 85
+  },
+  "alt": {
+    "es": "Escena de prueba sintetica: tableta recortada por el encuadre.",
+    "en": "Synthetic test scene: tablet cropped by the frame."
+  },
+  "caption": {
+    "es": "Escena recortada de prueba (no se publica).",
+    "en": "Cropped test scene (not published)."
+  },
+  "higgsfield": {
+    "model": "",
+    "resolution": "",
+    "quality": "",
+    "aspect": "4:3",
+    "prompt": "",
+    "job_id": "",
+    "notes": "Plate sintetico. No usa creditos."
+  }
+}

@@ -4,14 +4,37 @@
   "kind": "duo",
   "plate": "../fixtures/plate-fixture-duo.webp",
   "screens": [
-    { "rank": 1, "source": "public/work/dc-medical/agenda-dia.webp", "fit": "cover", "glare": 0 },
-    { "rank": 2, "source": "public/work/dc-medical/nota-de-voz-poster.jpg", "fit": "cover", "glare": 0 }
+    {
+      "rank": 1,
+      "source": "mockups/screens/fixture-landscape.webp",
+      "fit": "cover",
+      "glare": 0
+    },
+    {
+      "rank": 2,
+      "source": "mockups/screens/fixture-portrait.webp",
+      "fit": "cover",
+      "glare": 0
+    }
   ],
-  "output": { "dir": "public/work/dc-medical/scenes", "width": 2400, "quality": 88 },
+  "output": {
+    "dir": "public/work/dc-medical/scenes",
+    "width": 2400,
+    "quality": 88
+  },
   "alt": {
     "es": "Escena de prueba sintetica: laptop y celular con capturas de la interfaz.",
     "en": "Synthetic test scene: laptop and phone showing interface captures."
   },
-  "caption": { "es": "Escena duo de prueba (no se publica).", "en": "Test duo scene (not published)." },
-  "higgsfield": { "model": "", "resolution": "", "prompt": "", "job_id": "", "notes": "Plate sintetico." }
+  "caption": {
+    "es": "Escena duo de prueba (no se publica).",
+    "en": "Test duo scene (not published)."
+  },
+  "higgsfield": {
+    "model": "",
+    "resolution": "",
+    "prompt": "",
+    "job_id": "",
+    "notes": "Plate sintetico."
+  }
 }

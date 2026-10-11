@@ -1,0 +1,25 @@
+{
+  "size": [
+    1600,
+    1200
+  ],
+  "corners": [
+    [
+      520,
+      60
+    ],
+    [
+      1640,
+      -60
+    ],
+    [
+      1560,
+      980
+    ],
+    [
+      500,
+      1040
+    ]
+  ],
+  "note": "TR fuera: cortado por arriba y por la derecha"
+}
