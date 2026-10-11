@@ -50,7 +50,7 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
 | `output` | `dir` bajo `public/`, `width` máx. (2400), `quality` WebP (85), `lossless` opcional. |
 | `higgsfield` | `model`, `resolution`, `prompt`, `job_id` (vacío si el plate es sintético), `notes`. |
 
-**Dúo y pantallas múltiples:** declara cada pantalla en `screens`. Una región verde significativa (≥ 20 % de la mayor) que no esté declarada es un ERROR (y declarar de más también); las manchas verdes pequeñas se ignoran. Ejemplo: `mockups/scenes/_fixture-duo.json`. Una pantalla pegada al borde de la imagen se rechaza (esquinas falsas); si la captura es menor que la pantalla, avisa por stderr.
+**Dúo y pantallas múltiples:** declara cada pantalla en `screens`. Una región verde significativa (≥ 20 % de la mayor) que no esté declarada es un ERROR (y declarar de más también); las manchas verdes pequeñas se ignoran. Ejemplo: `mockups/scenes/_fixture-duo.json`. **Ojo con `rank`:** se decide por el conteo de píxeles verdes; si dos pantallas miden casi lo mismo, el orden es frágil y puede invertirse al regenerar el plate. Prefiere plates donde una pantalla sea claramente mayor. Una pantalla pegada al borde de la imagen se rechaza (esquinas falsas); si la captura es menor que la pantalla, avisa por stderr.
 
 3. `npm run mockups:check` → debe imprimir «ok» con las esquinas detectadas; luego `npm run mockups:build` y mira el resultado.
 4. Commit del plate, el manifiesto, la salida `.webp` y `src/data/scenes.generated.json`.
@@ -81,9 +81,11 @@ Antes de commitear: `node scripts/qa/leak-scan.mjs`.
 
 ## Plantilla de prompt (plates con pantalla verde)
 
-Cambia solo la primera línea (el objeto). Medicina estética luxury: marfil, champán, mármol claro, luz de ventana suave.
+Hay dos direcciones. El primer plate real (`hero-mano`, 2 créditos, `gpt_image_2` 2k medium, 3:4) usó la **oscura editorial**;
+la dirección final del sitio la elige Doug (Puerta A de `docs/rondas/FASE-1-DC.md`). Cambia solo la primera parte (el objeto) y
+pega la base de la dirección elegida al final.
 
-**Base (pegar al final de cualquier variante):**
+### Base CLARA (marfil, champán, mármol claro)
 
 > Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic. Palette: ivory, champagne, soft beige,
 > light marble, white orchids or white peonies in a blurred background, soft diffused window light from the left, shallow depth
@@ -92,12 +94,36 @@ Cambia solo la primera línea (el objeto). Medicina estética luxury: marfil, ch
 > sharp.** No green plants or leaves anywhere in the scene, no other green objects, no text, no logos, no brand marks, no
 > identifiable faces (crop faces out of frame; hands and forearms only), natural manicured hands, no jewelry with text.
 
-**Celular en mano:** `A woman's manicured hand holding a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, soft ivory linen sleeve, champagne-colored background bokeh.` + Base.
+**Celular en mano:** `A woman's manicured hand holding a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, soft ivory linen sleeve, champagne-colored background bokeh.` + base clara.
 
-**Laptop en escritorio:** `A slim laptop open on a light Carrara marble desk, viewed from a three-quarter front angle at a slightly raised height, a porcelain cup and a single white orchid stem beside it, champagne wall softly out of focus.` + Base.
+**Laptop en escritorio:** `A slim laptop open on a light Carrara marble desk, viewed from a three-quarter front angle at a slightly raised height, a porcelain cup and a single white orchid stem beside it, champagne wall softly out of focus.` + base clara.
 
-**Dúo (laptop + celular):** `A slim laptop open on a light marble desk with a smartphone standing upright next to it on a small champagne stone stand, both screens facing the camera, three-quarter view, white peonies in a blurred vase behind.` + Base. *(Dos pantallas verdes: decláralas en `screens`; la laptop suele ser `rank` 1.)*
+**Dúo (laptop + celular):** `A slim laptop open on a light marble desk with a smartphone standing upright next to it on a small champagne stone stand, both screens facing the camera, three-quarter view, white peonies in a blurred vase behind.` + base clara. *(Dos pantallas verdes: decláralas en `screens`; la laptop suele ser `rank` 1.)*
 
-**Tableta:** `A tablet held landscape in two manicured hands over a light marble surface, slightly tilted toward the camera, soft ivory cashmere cuff, champagne bokeh with white flowers.` + Base.
+**Tableta:** `A tablet held landscape in two manicured hands over a light marble surface, slightly tilted toward the camera, soft ivory cashmere cuff, champagne bokeh with white flowers.` + base clara.
 
-Pide 16:9 para `hero`/`wide`, 4:5 para `detail`. Revisa en el plate: verde plano y limpio, 4 esquinas visibles, sin texto ni rostros.
+### Base OSCURA EDITORIAL (obsidiana, champán, luz de borde) — la del primer plate
+
+**Celular en mano (objeto):**
+`Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic, dark and moody. A woman's elegant manicured hand with nude champagne-toned nails holds a modern smartphone in portrait, tilted about 15 degrees toward the camera, screen facing the viewer, three-quarter view, black silk sleeve cuff.`
+
+**Base oscura (pegar después del objeto; sustituye el objeto para laptop, dúo o tableta):**
+
+> Background: deep obsidian black polished marble with fine champagne-gold veining, softly out of focus, with a few soft
+> champagne-gold light bokeh circles far behind. Lighting: one soft warm key light from the upper left and a thin champagne
+> rim light along the edges of the hand and phone, subtle film grain, shallow depth of field, 85mm lens, high-end magazine
+> look, generous dark negative space around the subject. The phone screen is a perfectly flat, uniform, pure chroma-key green
+> (#00FF00) fill: no UI, no text, no icons, no reflections, no glare, no gradient, the entire screen visible and sharp with
+> all four rounded corners fully in frame. **The screen does not emit light and casts no green glow, no green reflection and
+> no green tint on the skin, nails, phone frame or background.** No other green anywhere in the scene, no plants, no leaves.
+> No text, no logos, no brand marks, no jewelry, no identifiable faces (hand and forearm only, face out of frame).
+
+El prompt literal del primer plate está en `mockups/scenes/hero-mano.json` (`higgsfield.prompt`).
+
+### Lo que funcionó
+
+Pedir **explícitamente** que la pantalla verde no emite brillo ni tinte sobre la piel, las uñas y el marco dio 0 píxeles de exceso
+verde tras componer (sin esa frase, los modelos suelen dejar un reflejo verdoso en los dedos). Pide también las cuatro esquinas
+redondeadas a cuadro: el compositor las necesita completas.
+
+Pide 3:4 o 4:5 para `hero`/`detail` y 16:9 para `wide`. Revisa en el plate: verde plano y limpio, 4 esquinas visibles, sin texto ni rostros.

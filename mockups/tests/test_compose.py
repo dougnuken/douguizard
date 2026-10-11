@@ -1,5 +1,8 @@
+import contextlib
 import hashlib
+import io
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -191,6 +194,144 @@ class DuoTests(unittest.TestCase):
             r = run(root, "--scene", "_fixture", "--check")
             self.assertNotEqual(r.returncode, 0)
             self.assertIn("screens", r.stdout)
+
+
+class ManifestTests(unittest.TestCase):
+    """Validacion del manifiesto (duo como base): privacidad, esquema y hash."""
+
+    def duo(self, t, mutate=None):
+        root = make_root(t, scene="_fixture-duo")
+        p = root / "mockups/scenes/_fixture-duo.json"
+        m = json.loads(p.read_text())
+        if mutate:
+            mutate(m)
+        p.write_text(json.dumps(m))
+        return root, p
+
+    def load(self, mutate=None):
+        with tempfile.TemporaryDirectory() as t:
+            root, p = self.duo(t, mutate)
+            return compose.load_manifest(p, root)
+
+    def name_of(self, mutate=None):
+        with tempfile.TemporaryDirectory() as t:
+            root, p = self.duo(t, mutate)
+            sc = compose.load_manifest(p, root)
+            return compose.content_hash(sc)
+
+    # M1: privacidad tambien en screens[], incluida la SEGUNDA entrada
+    def test_privacy_screens_second_entry(self):
+        for bad in ("../../../etc/hostname", "/etc/hostname", "mockups/screens/link.jpg", "public/work/../../etc/hostname"):
+            with tempfile.TemporaryDirectory() as t:
+                def mut(m, bad=bad):
+                    m["screens"][1]["source"] = bad
+                root, p = self.duo(t, mut)
+                (root / "mockups/screens").mkdir(parents=True, exist_ok=True)
+                os.symlink("/etc/hostname", root / "mockups/screens/link.jpg")
+                r = run(root, "--scene", "_fixture-duo", "--check")
+                self.assertNotEqual(r.returncode, 0, bad)
+                self.assertIn("captura", r.stdout, bad)
+                self.assertIn("FALLA", r.stdout, bad)
+
+    def test_privacy_single_screen_symlink(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = make_root(t)
+            (root / "mockups/screens").mkdir(parents=True, exist_ok=True)
+            os.symlink("/etc/hostname", root / "mockups/screens/link.jpg")
+            p = root / "mockups/scenes/_fixture.json"
+            m = json.loads(p.read_text())
+            m["screen"]["source"] = "link.jpg"
+            p.write_text(json.dumps(m))
+            r = run(root, "--scene", "_fixture", "--check")
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn("captura", r.stdout)
+
+    # M3
+    def test_screen_and_screens_together_fail(self):
+        def mut(m):
+            m["screen"] = {"source": "public/work/dc-medical/agenda-dia.webp"}
+        with self.assertRaisesRegex(compose.SceneError, "'screen' o 'screens'"):
+            self.load(mut)
+
+    def test_rank_duplicate_fails(self):
+        def mut(m):
+            m["screens"][1]["rank"] = 1
+        with self.assertRaisesRegex(compose.SceneError, "rank"):
+            self.load(mut)
+
+    def test_rank_out_of_range_fails(self):
+        for r in (3, 0, -1):
+            def mut(m, r=r):
+                m["screens"][1]["rank"] = r
+            with self.assertRaisesRegex(compose.SceneError, "rank"):
+                self.load(mut)
+
+    def test_more_than_three_screens_fail(self):
+        def mut(m):
+            m["screens"] = [dict(m["screens"][0], rank=i + 1) for i in range(4)]
+        with self.assertRaisesRegex(compose.SceneError, "1 a 3"):
+            self.load(mut)
+
+    def test_key_or_tolerance_mismatch_fails(self):
+        def mut_key(m):
+            m["screens"][1]["key"] = "#FF0000"
+        def mut_tol(m):
+            m["screens"][1]["tolerance"] = 60
+        for mut in (mut_key, mut_tol):
+            with self.assertRaisesRegex(compose.SceneError, "key y tolerance"):
+                self.load(mut)
+
+    # M4: el nombre versionado depende de fit / glare / rank de cada pantalla
+    def test_hash_depends_on_each_screen_param(self):
+        base = self.name_of()
+        self.assertEqual(base, self.name_of())  # sin cambios: mismo nombre
+
+        def reorder(m):  # mismas claves en otro orden: no cambia nada
+            m["screens"] = [dict(reversed(list(x.items()))) for x in m["screens"]]
+        self.assertEqual(base, self.name_of(reorder))
+
+        def fit(m):
+            m["screens"][1]["fit"] = "contain"
+        def glare(m):
+            m["screens"][1]["glare"] = 0.3
+        def fit0(m):
+            m["screens"][0]["fit"] = "contain"
+        def rank(m):  # intercambia rank con la MISMA captura en ambas: solo cambia la posicion
+            m["screens"][1]["source"] = m["screens"][0]["source"]
+            m["screens"][1]["fit"] = "contain"
+        base2 = self.name_of(rank)
+        def rank_swapped(m):
+            rank(m)
+            m["screens"][0]["rank"], m["screens"][1]["rank"] = 2, 1
+        names = {base, base2, self.name_of(fit), self.name_of(glare), self.name_of(fit0), self.name_of(rank_swapped)}
+        self.assertEqual(len(names), 6)
+
+    def test_hash_changes_with_capture_bytes(self):
+        with tempfile.TemporaryDirectory() as t:
+            root, p = self.duo(t)
+            h1 = compose.content_hash(compose.load_manifest(p, root))
+            Image.new("RGB", (900, 900), (1, 2, 3)).save(root / "public/work/dc-medical/nota-de-voz-poster.jpg")
+            self.assertNotEqual(h1, compose.content_hash(compose.load_manifest(p, root)))
+
+    def test_small_capture_warns_on_stderr(self):
+        with tempfile.TemporaryDirectory() as t:
+            root, p = self.duo(t)
+            Image.new("RGB", (60, 120), (200, 200, 200)).save(root / "public/work/dc-medical/nota-de-voz-poster.jpg")
+            sc = compose.load_manifest(p, root)
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                compose.compose_scene(sc)
+            self.assertIn("AVISO", err.getvalue())
+            self.assertIn("menor que la pantalla", err.getvalue())
+
+    def test_big_capture_does_not_warn(self):
+        with tempfile.TemporaryDirectory() as t:
+            root, p = self.duo(t)
+            sc = compose.load_manifest(p, root)
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                compose.compose_scene(sc)
+            self.assertNotIn("AVISO", err.getvalue())
 
 
 if __name__ == "__main__":
