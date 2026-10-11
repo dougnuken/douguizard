@@ -18,7 +18,7 @@ Lista de revisión:
 - Mockups: la pantalla compuesta se ve nítida, sin halo verde en los bordes, sin deformación de texto, dedos delante de la
   pantalla donde corresponde; el tono de la escena acompaña al resto de la página.
 - Marcos de dispositivo coherentes entre sí; tipografía y contraste legibles; a 390 los botones se ven para el dedo.
-- Nada de datos de pacientes legibles en ninguna captura (nombres, teléfonos, montos reales): si dudas, es hallazgo alto.
+- Datos en pantalla: la política es «ningún dato REAL»; los nombres de pacientas inventados son aceptables y tú no puedes saber si son reales (eso lo cruza `pf-security` contra la lista real). Anótalos como `info` («se leen nombres/teléfonos/montos en <captura, zona>») sin juzgarlos. Es hallazgo alto solo si ves un enlace, un id, un correo, o un nombre completo de persona del equipo (doctor, secretaria) con apellidos.
 - Lo que pida la fase (su «Aceptación»).
 Cada hallazgo dice captura o ruta + zona + qué se ve mal. Si algo ya se veía igual en la captura de la fase anterior (mismo
 nombre con el tag anterior), dilo como «preexistente»: no cuenta para FALLA. No propongas rediseños; un arreglo mínimo, sí.
