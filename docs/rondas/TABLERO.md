@@ -16,13 +16,22 @@ Lo mantiene el director. Cada agente lee la fila de su fase antes de editar, mar
 | fase | qué | dueño | rutas que escribe | estado |
 |---|---|---|---|---|
 | F0 | Equipo, protocolo, plan, scripts de QA (`shots`, `check`, `leak-scan`) | director | `.claude/**`, `docs/**`, `scripts/qa/**`, `CLAUDE.md` | **hecha** (scripts probados contra el build de `1e097a4`) |
-| U0 | Auditoría de la primera impresión (home + caso DC) | pf-ux-auditor | — (solo lee) | pendiente |
+| U0 | Auditoría de la primera impresión (home + caso DC) | pf-ux-auditor | — (solo lee) | **en curso** (servidor de lectura en `:3131`) |
+| V0 | Viabilidad del demo (lee `dc-medical-dashboard`, solo lectura) | analista (general-purpose) | — (solo lee) | **en curso** |
+| U2a | Compositor del kit de mockups + plate sintético + pruebas | pf-mockup-artist | `mockups/**`, `scripts/mockups/**`, `public/work/dc-medical/scenes/**`, `src/data/scenes.generated.json`, líneas `mockups:*` de `package.json` | **en curso** (rutas disjuntas del resto) |
 | U1 | DC Medical primero + enlaces a la web y al panel | pf-executor | `src/data/**`, `src/components/**`, `tests/e2e/matrix.ts` | pendiente |
 | U2 | Kit de mockups (manifiestos + compositor) y componente de escenas | pf-mockup-artist + pf-executor | `mockups/**`, `scripts/mockups/**` / `src/components/case/**` | pendiente |
 | U3 | Escenas luxury con Higgsfield | director (gasto) + pf-mockup-artist | `mockups/plates/**`, `public/work/dc-medical/scenes/**` | **bloqueada: créditos** |
 | U4 | Panel demo con datos sintéticos y login falso | por definir | por definir | **bloqueada: alojamiento** |
 | U5 | Seguridad de lo publicado | pf-security | `docs/rondas/SEGURIDAD.md` | pendiente |
 | U6 | Cierre | pf-final-verifier | — (solo lee) | pendiente |
+
+## Notas operativas
+
+- Claude Code carga `.claude/agents/*.md` al **iniciar** la sesión: los `pf-*` creados en la sesión que los escribió no existen
+  como tipo hasta la siguiente. Mientras tanto se lanzan como `general-purpose` con la orden de leer su archivo de rol, con
+  modelo y esfuerzo fijados en la llamada. En una sesión nueva se llaman por su nombre.
+- `src/data/scenes.generated.json` lo escribe `scripts/mockups/compose.py` (dueño: pf-mockup-artist); el frontend solo lo importa.
 
 ## Pedidos entre roles
 
