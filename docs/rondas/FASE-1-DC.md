@@ -21,21 +21,26 @@ mejorar su UI. Reutiliza el kit de mockups que se construya aquí.
 
 ## Decisiones del director (el planeador las respeta, no las reabre)
 
-- **La escena se genera, la pantalla es real.** Higgsfield produce *plates* (celular en mano, laptop en escritorio de mármol…)
-  con la pantalla en verde cromático `#00FF00` plano. `scripts/mockups/compose.py` (Python, PIL + numpy, sin dependencias npm)
+- **La escena se genera, la pantalla es real.** Higgsfield produce *plates* (tableta, monitor, laptop o celular, a veces con una mano
+  cuyos dedos pasan por delante de la pantalla, sobre un fondo liso) con la pantalla en verde cromático `#00FF00` plano. `scripts/mockups/compose.py` (Python, PIL + numpy, sin dependencias npm)
   detecta el verde, ajusta las 4 esquinas, aplica perspectiva y compone la captura real, respetando dedos y reflejos. Así el
   texto de la UI nunca lo deforma un modelo de imagen, y al cambiar la UI **se regenera sin gastar créditos**.
 - **Kit permanente:** `mockups/scenes/<id>.json` (manifiesto: prompt, modelo, `job_id`, plate, captura de origen, salida, alt
   ES/EN), `mockups/plates/` (plates archivados), `mockups/screens/` (capturas fuente saneadas), `mockups/README.md`, y
   `npm run mockups:build`. Salida versionada en `public/work/dc-medical/scenes/` (nombre con sufijo de contenido: el
   optimizador cachea un año por URL).
+- **Dirección visual (resuelta por Doug, oct 11): limpia, clara, con el device de protagonista.** Referencias «Ron Design Lab»
+  (dribbble.com/RonDesignLab): fondo liso y claro (gris perla, azul hielo, lavanda→rosa suave), sin props; el device casi llena el
+  encuadre con perspectiva dramática y a veces cortado por el borde; manos que interactúan (dedos por delante de la pantalla).
+  Doug: «me gustan mucho, así los quiero: limpios, refinados y que el protagonista sea el device». Ya no es «oscuro editorial».
 - **Datos del caso:** campo nuevo `scenes` en `CaseStudy` (con `alt` y `caption` ES/EN) y un componente `CaseScenes`. Los
   tests de `src/data/__tests__` (orden, `/NN`, medios existentes) lo cubren.
 - **El demo es estático y de origen aparte.** Datos **100 % sintéticos, inventados desde cero** (jamás derivados ni «limpiados»
   de los fixtures del panel, que salen de la hoja real). Backend simulado en el navegador, login de demostración que dice
   serlo, sin acceso al panel real ni a Apps Script. Se enlaza desde el caso; **no** va en un iframe ni en este origen
   (la CSP de este sitio es estricta y no se debilita).
-- **Créditos:** 3,3 disponibles; un plate 2k cuesta ~2. Solo el director gasta, con `get_cost` y presupuesto aprobado.
+- **Créditos:** saldo ≈ 0,3 (plan free, un trabajo a la vez); `gpt_image_2`: 1k baja 0,5 · 1k medio 1 · 2k medio 2 · 2k alto ≈ 6,5. Todo gasto nuevo exige
+  recarga del usuario. Solo el director gasta, con `get_cost` y presupuesto aprobado; un reintento por escena, solo con su aprobación.
 
 ## Reglas
 
@@ -82,26 +87,25 @@ banda propia, en `CasePage.tsx` después del showcase y antes de las bandas) →
 
 ## Puertas (decisiones de Doug; el director se detiene y pregunta)
 
-- **A · Dirección visual de las escenas** — tras ver el primer plate. Opciones: (1) claro luminoso (marfil, champán, mármol)
-  como una «ventana» dentro del sitio oscuro; (2) oscuro editorial (mármol negro, obsidiana, acento champán) con la pantalla
-  encendida como única fuente de luz; (3) mixto por escena. **Recomendación (revisada tras U0): (2).** El auditor lo razona
-  bien: las capturas del panel son claras y pastel, y sobre una escena oscura se leen como «pantalla encendida» sin aplanar el
-  sitio (`#111`); una escena beige clara chocaría con el resto de la página. Además el lujo en estética médica también vive en
-  negro y champán. Un solo acento, luz y grano coherentes entre escenas, bordes que se funden con la banda. Se confirma con el
-  plate delante; (1) queda como alternativa si el plate oscuro no se ve «clínico» y limpio.
+- **A · Dirección visual de las escenas — RESUELTA por Doug (oct 11).** Mandó cinco referencias de «Ron Design Lab» (dribbble.com/RonDesignLab) y
+  dijo: «me gustan mucho, así los quiero: limpios, refinados y que el protagonista sea el device». **Texto vigente:** (a) fondo liso y claro (gris perla,
+  azul hielo, lavanda→rosa suave; degradados sin textura), sin props ni decorado; (b) el device ocupa casi todo el encuadre, muy cerca, con perspectiva
+  dramática (inclinado 20–35°, contrapicado o picado), a veces cortado por el borde de la imagen; (c) manos que interactúan: dedos por delante de la
+  pantalla (oclusión real), en distintos tonos de piel, a veces un guante oscuro; (d) la UI es pastel (lavanda, menta, magenta, cian), así que escena y UI
+  se sienten un solo sistema. El plate oscuro de mármol negro queda como **alternativa archivada** (solo su prompt, en el README del kit), no como dirección.
 - **B · Dónde vive el demo y con qué acceso** — opciones: (1) origen aparte desde el repo privado del panel
   (p. ej. `demo.dcmedicalaesthetics.com`, assets estáticos, despliegue de Doug): el código del panel sigue privado y el dominio
   de la marca da credibilidad; requiere permiso de escritura en `dc-medical-dashboard`; (2) proyecto aparte en Vercel con
   subdominio de douguizard.com; (3) dentro de este repo en `/demo/dc`: **no recomendada** (mismo origen, debilita la CSP y
   publica el código del panel). Recomendación: **(1)**.
 - **B-2 · Marca dentro del demo** — conservar «DC Medical Aesthetics» solo si Doug lo confirma; si no, marca neutra (ver U4).
-- **C · Créditos de Higgsfield** — cuánto se aprueba gastar y en qué escenas (ver U3: prueba ≈ 2; conjunto ≈ 12 + reserva 4).
+- **C · Créditos de Higgsfield** — saldo ≈ 0,3, así que el usuario debe recargar; cuánto se aprueba y en qué escenas (ver U3: hero 4,0 · cinco de escritorio 14,0 · seis 16,0, con 2 reintentos incluidos).
 - **D · Acceso a DC en el hero de la home** — tras U1: línea discreta bajo los botones (recomendada), nada, o chip sobre el titular (ver U1).
 
 ## Fases
 
 Orden y dependencias: **U1 → U2b → (U3 ∥ U4) → U5 → U6**. Corren en paralelo, con rutas disjuntas: U2a (hecha) y U2b-artista con U1.
-U3 y U4 están **bloqueadas** por las Puertas C y B; U1 y U2b se entregan sin ellas. Cada fase termina con
+U3 y U4 están **bloqueadas** por las Puertas C (créditos: hay que recargar) y B; la A ya la resolvió Doug; U1 y U2b se entregan sin ellas. Cada fase termina con
 `npx tsc --noEmit && npm run lint && npm test 2>&1 | tail -40` en verde, `node scripts/qa/leak-scan.mjs` limpio y
 `grep -c $'\x08'` = 0 en cada archivo tocado (Reglas 6 y 10). Los números de línea son del árbol de trabajo del 11 oct (commit `70ba0f9` más lo de U2a, que no toca `src/`); si un `grep -n` ya no
 coincide, manda el patrón, no la línea. Mapa con el Backlog: U1 resuelve B1, B2 y B3; U2b y U3 resuelven B4 y, en parte, B6;
@@ -184,7 +188,7 @@ Se entrega **sin créditos, sin escenas y sin demo**. Cierra B2, B3 y B1.
    `<CaseHeader study={study} meta={meta} links={linksTop} />` (línea 148) y en `CaseMeta` (línea 89)
    `links={linksTop ? undefined : study.links}`. Los demás casos no cambian (ninguno define `linksFirst`).
 6. **Fila destacada (`Work.tsx`).** Imports: `import BrowserFrame from "@/components/work/BrowserFrame";`. Nuevo componente junto a
-   `FeaturedRow`, usando la **primera captura del caso** (`gallery[0]` = `caso-fases-v2.webp`, ya saneada, con su `alt` y `caption` ES/EN):
+   `FeaturedRow`, usando la **primera captura del caso** (`seguimiento-controles.webp`, verificada por pf-security (`caso-fases-v2` está retirada, ver S1), con su `alt` y `caption` ES/EN que describen el tablero de seguimiento):
    ```tsx
    function SpotlightRow({ study, shot, locale }: { study: CaseStudy; shot: NonNullable<CaseStudy["gallery"]>[number]; locale: Locale }) {
      const t = getDict(locale).work;
@@ -362,15 +366,16 @@ imprime `True` (vacuo si `{}`; con el fixture temporal, `True`). **Riesgo:** nin
    - `SceneFigure` (interno):
      ```tsx
      <figure className="m-0">
-       <div className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--scene-bg)]">
+       <div className="overflow-hidden rounded-[20px] border border-[var(--line)] bg-[var(--paper-raised)] md:rounded-[28px]">
          <Image src={scene.src} alt={scene.alt} width={scene.width} height={scene.height} sizes={sizes} priority={priority} draggable={false} className="block h-auto w-full select-none" />
        </div>
        <figcaption className="mt-3 max-w-[68ch] text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">{scene.caption}</figcaption>
      </figure>
      ```
      (el mismo pie de 13,5 px que `BrowserFrame`; `next/image` con `width`/`height` reales reserva el espacio: CLS 0.)
-4. **`src/app/globals.css`:** token nuevo dentro del bloque `:root {` (línea 48), antes de `color-scheme`: `--scene-bg: #111111;` (el mismo en los dos
-   temas: es el fondo de carga y el color con el que el compositor funde los bordes). No toca `--paper`, así que `theme.tokens.test.ts` sigue verde.
+4. **Temas claro y oscuro (sin tocar `globals.css`).** Las escenas son **claras** (perla, hielo, lavanda) y el sitio tiene los dos temas (`ThemeToggle`, `dg-theme`). Por eso la imagen va dentro de una tarjeta
+   de radio grande (20 px, 28 px desde `md`, el `rounded-[…]` de arriba) con el borde `--line` y de fondo de carga `--paper-raised` (existe en los dos temas; **no** se crea ningún token): en el tema oscuro se lee
+   como una «ventana clara» sobre `#101010`; en el claro, el mismo borde la separa del papel `#fafaf8`. Sin sombras (el sitio no las usa) y sin degradado de borde. `theme.tokens.test.ts` no se toca.
 5. **`src/i18n/dictionaries.ts`:** `case.scenes`: EN `"Product in context"`, ES `"El producto en contexto"` (después de `product`).
 6. **`CasePage.tsx`:** `const scenes = getCaseScenes(study, locale); const plan = planScenes(scenes);` (si `study.scenes` no existe devuelve `[]`).
    Entre `<CaseHeader … />` y `{showcase && …}`: `{plan.hero && <SceneHero scene={plan.hero} />}`. En `bands`, **al principio** (es una banda contada, así
@@ -386,19 +391,20 @@ imprime `True` (vacuo si `{}`; con el fixture temporal, `True`). **Riesgo:** nin
      `detail` (6+6) y centra uno suelto; y un `it` sobre el JSON real: todo `alt` y `caption` tiene texto en `es` y en `en`, y `es` ≠ `en`.
    - `tests/e2e/scenes.spec.ts` (nuevo): para `/work/dc-medical` y `/en/work/dc-medical`: **ningún** `img` ni `source` del documento contiene `_fixture` ni `/scenes/_`; si
      el caso lleva `scenes`, cada `img` de escena tiene `alt` no vacío, atributos `width`/`height`, `naturalWidth > 0` tras cargar y el hero es el primero
-     bajo el `h1`; si no lleva, no existe `h2` «Product in context»/«El producto en contexto».
+     bajo el `h1`; si no lleva, no existe `h2` «Product in context»/«El producto en contexto». Se ejecuta en **los dos temas** (`setTheme("dark")` y `setTheme("light")` de
+     `matrix.ts`): sin desborde horizontal (`document.documentElement.scrollWidth <= innerWidth`) a 390 y a 1440 y con la tarjeta de cada escena dentro de la banda.
 8. **Regla de oro de las pruebas:** `_fixture` y `_fixture-duo` **nunca** se renderizan; los tres niveles de arriba (build que lanza, test que falla,
    e2e que busca la cadena) deben fallar antes que verlas en producción.
 9. **Vista previa opcional y descartable** (para ver el layout antes de U3): en una **copia** del repo fuera del árbol (`<scratchpad>/u2b-preview`, con
    `node_modules` enlazado), copiar `mockups/scenes/_fixture.json` a `dc-prueba.json` (id sin guion bajo), correr `npm run mockups:build`, listar
    `scenes: ["dc-prueba"]` en la copia, construir y capturar. Nada de eso vuelve al repo. Si el enlace de `node_modules` falla, se difiere a la
-   escena de prueba real de U3-prueba.
+   escena real del tramo 1 de U3 (`dc-hero`).
 
 **Dueño de rutas:** `pf-executor` en `src/**` y `tests/e2e/**`. Solo lee `scenes.generated.json` y los manifiestos.
 
 **Pruebas y capturas:** `npx tsc --noEmit`; `npm run lint`; `npm test 2>&1 | tail -40`; `npm run mockups:test 2>&1 | tail -15`;
 `npm run build` (el build debe pasar con `scenes` ausente); `npx playwright test tests/e2e/scenes.spec.ts tests/e2e/security.spec.ts 2>&1 | tail -30`;
-`node scripts/qa/check.mjs --routes /work/dc-medical,/en/work/dc-medical`. Capturas solo si se hizo la vista previa (2 miradas, 390 y 1440).
+`node scripts/qa/check.mjs --routes /work/dc-medical,/en/work/dc-medical`. Capturas solo si se hizo la vista previa (3 miradas: 1440 oscuro, 1440 claro y 390 claro, con `--theme dark|light`).
 
 **Aceptación:** `grep -n "scenes" src/data/work.ts` muestra el campo en la interfaz y ninguna lista en un caso; `grep -c "_fixture" src/data/scenes.generated.json` = 0;
 las tres líneas de `npm test` nuevas pasan; `/work/dc-medical` se ve **exactamente igual** que al cerrar U1 (sin escenas no se pinta nada ni queda un `h2` vacío);
@@ -406,95 +412,129 @@ con la vista previa, la banda no desborda en 320–1920 y las imágenes no despl
 archivos de U1: por eso va después; `getCaseScenes` lanzando en SSG tumba el build ante un id mal escrito (es lo buscado); el optimizador cachea un año
 por URL: el hash del nombre de salida ya lo resuelve.
 
-### U3 · Escenas luxury con Higgsfield (director + `pf-mockup-artist`; **bloqueada por la Puerta C**)
+### U3 · Escenas con Higgsfield: limpias, claras, el device protagonista (director + `pf-mockup-artist`; **bloqueada por la Puerta C**: no hay créditos)
 
-**Hoy:** la cuenta tiene 3,3 créditos; un plate 2k cuesta ≈ 2 y uno de calidad alta ≈ 6,5 (`get_cost` lo consulta el director antes de cada
-generación). `mockups/plates/` y `mockups/screens/` están vacíos; `mockups/README.md` trae la plantilla de prompt **clara** (marfil/champán).
+**Hoy**
+- Saldo de Higgsfield ≈ **0,3** créditos (plan free: **un solo trabajo a la vez**). Tarifas medidas con `gpt_image_2`: 1k baja = 0,5 · 1k medio = 1 · **2k medio = 2** · 2k alto ≈ 6,5.
+  **Todo lo que sigue exige que el usuario recargue**; con 0,3 no alcanza ni para otra prueba. `get_cost` lo consulta el director antes de cada generación.
+- Ya hay dos pruebas pagadas (1k baja, 0,5 cada una; plates en el scratchpad de la sesión del director:
+  `/tmp/claude-0/-home-user/d644eace-2edc-5271-9b2f-69be50c22aa7/scratchpad/plates/light-A.png` y `light-B.png`): **A** (job `47600b6e-e859-4843-a208-2b75df0d5477`, 3:4,
+  celular en una mano con la otra cruzando por delante de la pantalla) compuesta con una captura real: texto nítido, el dedo tapa bien el botón de la UI, 0 píxeles de exceso
+  verde, sin brillo verde en la piel; **B** (job `318b9481-44b3-43b1-b38e-935b29acb286`, 4:3, tableta en dos manos con perspectiva dramática y el lado derecho cortado por el
+  encuadre): plate válido, pero `compose.py` lo rechaza hoy (`compose.py:295`, «toca el borde de la imagen»). Medido en el plate B: la máscara roza el borde derecho solo en la
+  esquina superior derecha (≈ 110 filas) y los **cuatro lados** de la pantalla siguen visibles en parte.
+- `mockups/plates/` y `mockups/screens/` están vacíos; `mockups/README.md` trae todavía la plantilla de prompt marfil/champán con orquídeas, que deja de valer (U3a la reemplaza).
+- **S1 (11 oct, cruce de pf-security, `docs/rondas/SEGURIDAD.md`):** `caso-fases-v2.webp` y `cupos-semana.webp` contienen datos derivados de los reales y se retiran del sitio (PR #4). Capturas utilizables HOY: `seguimiento-controles.webp` y `usuarios-permisos-v2.webp`; `agenda-mes.webp` y `agenda-dia.webp` a la espera de que Doug confirme que las bandas de ciudad son inventadas. Las escenas que necesiten ficha de caso o cupos esperan la captura sintética de U4. Como la pantalla se compone, cambiarla después cuesta 0 créditos.
+- Hallazgo de privacidad que fija el orden: las seis capturas saneadas de `public/work/dc-medical/` (`caso-fases-v2`, `agenda-mes`, `agenda-dia`, `cupos-semana`, `seguimiento-controles`,
+  `usuarios-permisos-v2`) son **de escritorio, 2880×1800**. La única captura vertical (celular) es el póster/video de la nota de voz (786×1704), **vetado hasta que U5 lo despeje**
+  (muestra un nombre y un teléfono que parecen inventados y nunca se verificaron). Ninguna escena usa el póster ni fotogramas del video antes del veredicto de U5.
 
-**Dirección de arte vigente (Puerta A, recomendación revisada): oscuro editorial** — mármol negro/obsidiana, la pantalla encendida como única fuente de
-luz, **un solo acento** (champán), luz y grano coherentes entre escenas y bordes que se funden con `#111111` (`--scene-bg`). Alternativa: claro luminoso
-(la plantilla actual).
+**Dirección de arte vigente (Puerta A, resuelta por Doug).** Referencias «Ron Design Lab»: **fondo liso y claro** (gris perla, azul hielo, lavanda→rosa suave; degradados sin textura), **sin props ni decorado**;
+el **device ocupa casi todo el encuadre**, muy cerca, con perspectiva dramática (inclinado 20–35°, contrapicado o picado) y a veces **cortado por el borde** de la imagen;
+**manos que interactúan** (dedos por delante de la pantalla, en distintos tonos de piel, o un guante oscuro); la UI de DC es pastel (lavanda, menta, magenta, cian), así que escena y UI
+se sienten un solo sistema. Prohibido en fondo y escena: verde y menta (chocan con la clave), plantas, joyas, marcas, rostros. La alternativa oscura (mármol negro, champán) queda archivada: solo su prompt, en el README.
 
-**Hallazgo de privacidad que fija el orden:** las seis capturas saneadas de `public/work/dc-medical/` (`caso-fases-v2`, `agenda-mes`, `agenda-dia`,
-`cupos-semana`, `seguimiento-controles`, `usuarios-permisos-v2`) son **de escritorio, 2880×1800**. No existe una captura saneada **vertical** del panel en el
-celular (el único formato así es el póster/video de la nota de voz, 786×1704, pendiente de la verificación de U5). Por eso: **ninguna escena usa el póster ni
-fotogramas del video** hasta que U5 los despeje, y la escena que necesita un celular (`dc-duo`) espera a una captura vertical de la **demo sintética** (U4) o a
-un fotograma que U5 apruebe. Las otras cinco muestran pantallas de escritorio en laptop, tableta o monitor.
+#### U3a · el compositor aprende pantallas recortadas y brillo de cristal (`pf-mockup-artist`, 0 créditos; antes de generar nada)
 
-#### U3a · el compositor aprende la luz oscura (`pf-mockup-artist`, 0 créditos; antes de generar nada)
+`screen.glow` y `output.edge_fade` **se descartan** (eran para fondos oscuros; no se implementan). `glare` se mantiene sin cambios (con un plate de pantalla verde plana aporta ≈ 0; las escenas llevan `glare: 0`).
 
-Pedido explícito, probado con el plate sintético de `mockups/fixtures/`:
-1. **`screen.glow`** (0–1, por defecto 0): después de componer, suma a la imagen un resplandor suave **fuera** de la pantalla (desenfoque ≈ 6 % del
-   ancho de la pantalla, tomado del color medio de la captura, mezcla «screen»). Así la pantalla es la única fuente de luz **sin** que el plate pida una
-   pantalla verde que ilumine verde el mármol y los dedos.
-2. **`output.edge_fade`** (fracción del lado menor, p. ej. `0.06`) y **`output.edge_color`** (`"#111111"`): funde los bordes de la imagen con ese color.
-3. **Métrica de derrame en `--check`:** media de `G − máx(R,B)` en un anillo de 24 px fuera del cuadrilátero de cada pantalla; umbral de aviso 12, de error 24.
-   También imprime cuántas manchas verdes menores (< 20 % de la mayor) ignoró.
-4. **`mockups/README.md`:** sección «Variante oscura» con la base de prompt de abajo y los campos nuevos. La base (cada escena cambia solo la primera línea):
-   > Photorealistic editorial product photograph for a luxury aesthetic-medicine clinic. Palette: black marble with fine champagne veining, obsidian,
-   > deep charcoal, a single warm champagne accent. Low-key lighting, one soft dim key light from the upper left, deep shadows, fine film grain, shallow
-   > depth of field, 85mm lens, high-end magazine look. **The device screen is a perfectly flat, uniform, pure chroma-key green (#00FF00): no
-   > reflections, no glare, no gradient, no UI, no text, no icons, entire screen visible and sharp, and it emits no light onto the scene.** No green
-   > plants or leaves anywhere, no other green objects, no text, no logos, no brand marks, no identifiable faces (hands and forearms only), natural
-   > manicured hands, no jewelry with text.
+**(i) Pantalla recortada por el encuadre — `screens[].cropped` (o `screen.cropped`), booleano, por defecto `false`.** Sin él, el rechazo actual se mantiene (`test_g_mask_touching_border_fails`).
+Con `cropped: true` (`compose.py`: `detect_screens` y `detect_corners`):
+1. Contorno de la máscara como hoy (`mask & ~erode4(mask)`), **excluyendo** los puntos a ≤ 3 px del borde de la imagen (`BORDER_EXCL = 3`): son el borde del encuadre, no del device.
+2. RANSAC secuencial de rectas como hoy, una por sector (arriba, derecha, abajo, izquierda). Exige **los cuatro lados**, cada uno con ≥ 40 puntos inliers y una extensión visible ≥ 6 % de
+   `max(W, H)` del plate; el ángulo entre dos lados adyacentes debe estar entre 55° y 125°. **Por qué los cuatro y no «≥ 2»**: una homografía de 8 grados de libertad necesita las cuatro rectas;
+   con dos o tres lados visibles las esquinas ocultas quedan indeterminadas. Si faltan lados: `SceneError("pantalla recortada: solo se ven N de 4 lados (faltan: …); hace falta ver los cuatro, aunque alguna esquina quede fuera del encuadre; reencuadra el plate")`.
+3. Refinado como hoy, pero el recorte `TRIM = 0.12` de cada extremo se aplica **solo en los extremos donde el contorno gira** (esquina real, redondeada); en los extremos del tramo que
+   terminan contra el borde de la imagen el recorte es 0.
+4. Esquinas = intersección de rectas adyacentes, **aunque caigan fuera de la imagen** (coordenadas negativas o mayores que `W`/`H`). Si una esquina queda a más de `1.0 × max(W, H)` del plate: error «rectas casi paralelas».
+5. `warp_screen` y la homografía no cambian (aceptan esquinas fuera de plano); el alfa sigue siendo la máscara de la clave.
+6. `--check` imprime las esquinas con la marca `(fuera)` cuando corresponda, el **residual** (distancia media de los puntos visibles del contorno a su lado, debe ser ≤ 1,5 px; si no, error), y el
+   **porcentaje del plate** que ocupa la pantalla.
+7. Respaldo manual `screens[].quad` (`[[x,y],[x,y],[x,y],[x,y]]` = TL, TR, BR, BL en píxeles del plate, pueden quedar fuera): solo si la detección automática falla en un plate ya pagado; se valida con el mismo residual.
+   Un plate nuevo se pide de modo que no haga falta.
 
-**Dueño:** `pf-mockup-artist` en `scripts/mockups/**`, `mockups/**`. **Aceptación:** `npm run mockups:test` y `npm run mockups:check` verdes;
-con el fixture, `glow` y `edge_fade` cambian el hash del nombre de salida (nombre nuevo) y la métrica de derrame sale en cero.
+*Pruebas (`mockups/tests/test_compose.py`)*: (a) fixture sintético nuevo `mockups/fixtures/plate-cropped.webp` + `.truth.json`, generado por `scripts/mockups/make-fixture-plate.py --cropped` (plate 1600×1200,
+esquinas verdaderas TL (520,60), TR (1640,−60), BR (1560,980), BL (500,1040): cortado por la derecha **y** por arriba, con TR fuera): esquinas visibles (TL, BR, BL) a ≤ 2 px de la verdad, la esquina fuera a ≤ 6 px, y el
+**mapeo de 25 puntos de muestra dentro de la máscara visible** a ≤ 1,5 px de la homografía verdadera; (b) `_light-tablet-b` (plate B real): `--check` ok con TR `(fuera)`, residual ≤ 1,5 px, y la composición sin ningún píxel
+verde residual dentro de la máscara; (c) `cropped: false` sobre el fixture recortado sigue fallando con «toca el borde»; (d) con 3 lados visibles (se pinta un plate sin lado derecho) falla con el mensaje de arriba;
+(e) **mutaciones que la suite debe detectar** (se aplican con `unittest.mock.patch` y el test espera el fallo): `BORDER_EXCL = 0` (las esquinas se desvían > 2 px), `TRIM` aplicado también en extremos de borde,
+y una esquina verdadera desplazada 3 px (el helper de tolerancia debe rechazarla).
 
-#### Las seis escenas (orden de generación = orden de la lista; primero UNA de prueba)
+**(ii) Brillo de cristal — `screens[].sheen = { "amount": 0–1, "angle": 0–360 }`, ausente = 0.** Un plate de pantalla verde plana no trae reflejos y las referencias de Doug sí. Se calcula en coordenadas de la captura (`u`, `v` ∈ [0,1],
+`v` hacia abajo): `t = ((u − 0.5)·cosθ + (v − 0.5)·sinθ) / (|cosθ| + |sinθ|) + 0.5` (θ = `angle`; 0° = de izquierda a derecha, 90° = de arriba abajo; el brillo nace en `t = 0`),
+`g(t) = clip(1 − t/0.6, 0, 1)^1.6`, y se compone `out = out + (255 − out) · (0.30 · amount · g) · alpha`. El degradado se deforma con **la misma homografía** que la captura (sigue la perspectiva y el recorte) y
+solo se aplica donde hay `alpha` (la máscara de la clave), así que **no toca los dedos** que cruzan la pantalla. Determinista (float32, sin ruido). `sheen`, `cropped` y `quad` entran en `content_hash`
+(el nombre de salida cambia) y `ALGO_VERSION` pasa a `"3"`. *Prueba*: con el fixture, `amount: 0` da exactamente los bytes de hoy; `amount: 0.5` aclara la esquina de origen y deja intactos los píxeles de dedo (`test_b_finger_pixels_untouched` extendido).
+Valores por escena en la lista de abajo.
 
-Todas: `case: "dc-medical"`, salida `output.dir: "public/work/dc-medical/scenes"`, `width` 2400, `quality` 85, `screen.fit: "cover"`, `glow` 0.5,
-`edge_fade` 0.06, `edge_color` "#111111". Formato del plate: 16:9 para `hero`/`wide`/`duo`, 4:5 para `detail`. Primera línea del prompt (el resto es la base):
+**(iii) Adoptar las pruebas pagadas como entradas reales de prueba.** Copiar `light-A.png` y `light-B.png` a `mockups/plates/_light-phone-a.webp` y `_light-tablet-b.webp` (WebP **sin pérdida**, para no ensuciar el verde) con los manifiestos
+`mockups/scenes/_light-phone-a.json` (`kind: "detail"`, `higgsfield.job_id` `47600b6e-e859-4843-a208-2b75df0d5477`, `model` `gpt_image_2`, `resolution` `1k-low`, el prompt de la prueba A completo, captura `public/work/dc-medical/agenda-dia.webp`)
+y `_light-tablet-b.json` (`kind: "hero"`, `cropped: true`, job `318b9481-44b3-43b1-b38e-935b29acb286`, captura `public/work/dc-medical/seguimiento-controles.webp`, el prompt de B). Llevan guion bajo: `--all` no los publica.
+**Nunca** el póster como captura. Si Doug acepta la resolución, el director puede promover el plate B a escena (renombrar sin guion bajo) a coste 0 (ver Puerta C, opción 0).
 
-| # | id | tipo | encuadre (primera línea del prompt) | pantalla (captura saneada) | costo est. |
-|---|---|---|---|---|---|
-| 1 | `dc-hero` | hero | *A slim graphite laptop open on a black marble desk with fine champagne veining, three-quarter front view from a slightly raised angle, a single champagne ceramic object beside it, deep obsidian background out of focus.* | `public/work/dc-medical/caso-fases-v2.webp` (la ficha del caso: el argumento del producto) | 2,0 |
-| 2 | `dc-agenda` | wide | *A slim laptop seen almost straight on at desk height on a black marble surface, a thin champagne-gold pen resting in front, dark charcoal wall softly out of focus.* | `agenda-mes.webp` | 2,0 |
-| 3 | `dc-cupos` | detail | *A tablet held in landscape by two manicured hands over black marble, slightly tilted toward the camera, dark cashmere cuffs, close crop.* | `cupos-semana.webp` | 2,0 |
-| 4 | `dc-seguimiento` | detail | *Close crop of the corner of an open laptop on black marble, a manicured hand resting near the trackpad, the screen filling the upper two thirds of the frame.* | `seguimiento-controles.webp` | 2,0 |
-| 5 | `dc-permisos` | wide | *A large desktop monitor on a black marble desk with a slim keyboard, seen from slightly above and to the side, obsidian wall.* | `usuarios-permisos-v2.webp` | 2,0 |
-| 6 | `dc-duo` | duo | *A slim laptop open on a black marble desk with a smartphone standing upright beside it on a small champagne stone stand, both screens facing the camera, three-quarter view.* | `screens`: rank 1 (laptop) `agenda-dia.webp`; rank 2 (celular) **captura vertical saneada de la demo (U4)**, hoy inexistente | 2,0 |
+**(iv) README.** `mockups/README.md`: reemplazar la «Plantilla de prompt» por la base clara de abajo (con sus variantes), documentar `cropped`, `quad` y `sheen`, y dejar la plantilla oscura como «Alternativa archivada» (solo texto).
 
-Presupuesto: **12,0 créditos** si ninguna falla (1–5 = 10,0; la 6 solo cuando exista la captura vertical = 2,0) + **reserva 4,0** (dos reintentos) = **16,0
-a aprobar**. La banda del caso queda así: hero `dc-hero`; banda (en este orden) `dc-agenda`, `dc-cupos`, `dc-seguimiento`, `dc-permisos`, `dc-duo` — es decir
-ancho, dos detalles lado a lado, ancho, dúo (el tope de `SCENE_BAND_MAX` = 5). Sin la sexta, la banda trae 4 y sigue siendo válida.
+**Dueño:** `pf-mockup-artist` en `scripts/mockups/**`, `mockups/**`. **Aceptación:** `npm run mockups:test 2>&1 | tail -20` y `npm run mockups:check` verdes (los `_light-*` incluidos con `--include-fixtures`); `grep -c "glow\|edge_fade" scripts/mockups/compose.py` = 0;
+`grep -n 'ALGO_VERSION = "3"' scripts/mockups/compose.py`; `--check` del plate B imprime `(fuera)` y un residual ≤ 1,5; `npm run mockups:build` sin `--include-fixtures` no publica ninguno `_*` (`grep -c '"_' src/data/scenes.generated.json` = 0).
 
-**Orden de generación y flujo**
+#### Las seis escenas (orden de generación = orden de la lista; primero lo que NO depende de una captura de celular)
+
+**Base de prompt clara** (la de las pruebas A y B; cada escena rellena `{ESCENA}`, `{FONDO}` y `{DISPOSITIVO}`):
+> Clean, refined premium product photograph, the style of a high-end app launch mockup. {ESCENA}. Seamless soft studio background: {FONDO}, no props, no objects. Soft diffused studio light, shallow depth of field, ultra clean and minimal.
+> The {DISPOSITIVO} screen is a perfectly flat, uniform, pure chroma-key green (#00FF00): no UI, no text, no icons, no reflections, no glare, no gradient; the screen emits no light and casts no green glow or green tint on the skin,
+> nails, frame or background. No other green anywhere, no plants. No text, no logos, no brand marks, no jewelry, no identifiable face (hands and forearms only, when hands appear).
+
+Todas: `case: "dc-medical"`, `output`: `dir` `public/work/dc-medical/scenes`, `width` 2400, `quality` 85; `screens[0]`: `fit` `cover`, `key` `#00FF00`, `tolerance` 50, `glare` 0; calidad de generación **2k medio = 2,0 créditos** (la prueba hero también:
+la baja resolución se ve blanda a ancho completo). Criterio de recorte: la pantalla debe conservar sus **cuatro lados** visibles en parte. Si `cover` corta un elemento clave de la captura, el artista cambia esa escena a `contain` con `bg` del color de fondo de la captura (una mirada).
+
+| # | id · tipo · plate | `{ESCENA}` | `{FONDO}` / `{DISPOSITIVO}` | pantalla (captura saneada) | `cropped` · `sheen` | costo |
+|---|---|---|---|---|---|---|
+| 1 | `dc-hero` · hero · 4:3 | *A slim modern tablet held in landscape by two elegant hands with natural nude manicure and a light-to-medium skin tone, strongly foreshortened with dramatic perspective as if seen from the left and slightly below, the device huge in the frame, its upper-right corner cropped by the edge of the image while the screen's top, left, bottom and right edges all stay partly visible* | *a smooth pale ice-blue to pearl-grey gradient* / *tablet* | `seguimiento-controles.webp` (el tablero de seguimiento; la ficha del caso volverá cuando exista la captura sintética de U4: basta cambiar `screen.source` y correr `npm run mockups:build`, 0 créditos) | sí · `{amount 0.5, angle 40}` | 2,0 |
+| 2 | `dc-agenda` · wide · 16:9 (si el modelo no lo admite, 3:2) | *An extreme close-up of a large thin-bezel desktop monitor seen from slightly above and from the right with strong perspective, the display filling most of the frame, its lower-left corner cropped by the edge of the image while the screen's four edges all stay partly visible, no desk and no stand base in view* | *a smooth pearl-grey to soft lavender-blush gradient* / *monitor* | `agenda-mes.webp` | sí · `{amount 0.5, angle 35}` | 2,0 |
+| 3 | `dc-cupos` · detail · 3:4 | *A slim modern tablet held in landscape by one hand with a deep brown skin tone and natural nude manicure, tilted about 25 degrees toward the camera with strong perspective, the device filling most of the frame; the fingertips of the other hand reach in front of the lower-left part of the screen, overlapping it, as if about to tap* | *a smooth soft lavender to blush-pink gradient* / *tablet* | **captura sintética de los cupos (U4); `cupos-semana.webp` está retirada (S1)**: esta escena va DESPUÉS de U4 | no · `{amount 0.5, angle 140}` | 2,0 |
+| 4 | `dc-seguimiento` · detail · 3:4 | *A slim modern laptop open, seen from a low angle at about 30 degrees from the left with dramatic perspective, the screen filling most of the frame and its upper-right corner cropped by the edge of the image while all four edges of the screen stay partly visible, no hands* | *a smooth pale ice-blue to soft lavender gradient* / *laptop* | `seguimiento-controles.webp` | sí · `{amount 0.5, angle 40}` | 2,0 |
+| 5 | `dc-permisos` · wide · 16:9 (o 3:2) | *A slim modern laptop open, seen from the right and slightly above in strong perspective, the screen filling most of the frame; the fingertips of a hand in a thin black glove reach in front of the lower-right part of the screen, overlapping it, as if about to tap* | *a smooth pearl-grey to pale ice-blue gradient* / *laptop* | `usuarios-permisos-v2.webp` | no · `{amount 0.5, angle 140}` | 2,0 |
+| 6 | `dc-celular` · detail · 3:4 | **Exactamente el prompt de la prueba A**: *Extreme close-up of a modern smartphone held in portrait by an elegant woman's hand with natural nude manicure, tilted about 25 degrees toward the camera with strong perspective, the device filling most of the frame and slightly cropped by the frame edge. The fingertips of her other hand reach in front of the lower part of the screen, as if about to tap, overlapping the screen* | *a smooth pale pearl-grey to soft lavender-blush gradient* / *phone* | **captura vertical saneada de la demo sintética (U4)**, o el póster solo si U5 lo despeja; hoy no existe | sí si el plate sale cortado · `{amount 0.5, angle 35}` | 2,0 (0 si se acepta el plate A de 1k) |
+
+Tonos de piel: clara-media (1), oscura (3), guante negro (5), media (6); los demás sin manos. Sin rostros, sin joyas, sin marcas en ninguna.
+Banda del caso (U2b): hero `dc-hero`; banda en este orden `dc-agenda` (ancho), `dc-cupos` + `dc-seguimiento` (detalles lado a lado), `dc-permisos` (ancho) y, cuando exista, `dc-celular` (detalle suelto, centrado):
+cinco escenas, el tope de `SCENE_BAND_MAX`. Sin la 6, la banda trae 4 y es válida.
+
+**Costo por escala** (2k medio = 2,0 por escena). Sin reintentos: **1 escena = 2,0 · 5 de escritorio = 10,0 · 6 = 12,0**. Con la reserva de **un reintento por escena** el techo es el doble (4,0 · 20,0 · 24,0); para aprobar se
+propone el costo base más 2 reintentos (+4,0). Con el saldo de ≈ 0,3, **el usuario debe recargar** en cualquier escala (detalle en la Puerta C).
+
+**Orden de generación y flujo** (el plan free admite un trabajo a la vez: todo es secuencial)
 1. **U3a** (arriba, 0 créditos).
-2. **U3-prueba — solo `dc-hero` (≈ 2,0; alcanza con los 3,3).** El director consulta `get_cost`, genera, descarga el plate y lo guarda en
-   `mockups/plates/dc-hero.webp` (el director deja el archivo y pasa al artista `job_id`, modelo y resolución; el artista es el dueño del resto de la ruta).
-   El artista escribe `mockups/scenes/dc-hero.json` (prompt completo, `higgsfield.job_id`, `model`, `resolution`, `notes`), corre
-   `python3 scripts/mockups/compose.py --scene dc-hero --check` y luego `npm run mockups:build`. El ejecutor pone `scenes: ["dc-hero"]` en DC (con U2b hecha) y
-   toma `node scripts/qa/shots.mjs --routes /work/dc-medical --widths 390,1440 --tag u3` (2 miradas). **Puerta A.**
-3. **U3-resto** (tras la Puerta A y con presupuesto aprobado en la Puerta C): escenas 2 a 5, una por una, cada una validada antes de gastar la siguiente;
-   la 6 cuando exista la captura vertical. Mismo flujo por escena. `pf-security` mira cada medio nuevo (EQUIPO §2). El ejecutor completa `scenes` en `work.ts`.
+2. **Tramo 1 · `dc-hero`** (2,0). El director consulta `get_cost`, genera con la base y la fila 1, descarga y deja el plate en `mockups/plates/dc-hero.webp` (WebP sin pérdida) con el `job_id`, el modelo y la resolución para el artista, que escribe
+   `mockups/scenes/dc-hero.json` (prompt completo y los valores de la fila 1), corre `python3 scripts/mockups/compose.py --scene dc-hero --check` y `npm run mockups:build`. El ejecutor añade `scenes: ["dc-hero"]` en DC (con U2b hecha) y toma
+   `node scripts/qa/shots.mjs --routes /work/dc-medical --widths 390,1440 --tag u3` en los **dos temas** (`--theme dark` y `--theme light`; 3 miradas). Punto de control del director (no es Puerta): si el hero no cumple los criterios, **no** se genera el resto y se reporta.
+3. **Tramo 2 · escenas 2 a 5** (8,0), una por una; cada una pasa los criterios antes de gastar la siguiente. `pf-security` mira cada medio nuevo (EQUIPO §2). El ejecutor completa `scenes` en `work.ts` (orden de la banda de arriba).
+4. **Tramo 3 · `dc-celular`** (2,0) solo cuando exista la captura vertical (U4 o veredicto de U5 sobre el póster). Mismo flujo.
 
-**Criterios de aceptación de un plate** (el artista los revisa con `--check` y con **una** mirada al compuesto a tamaño real; si uno falla, no se compone):
-- Verde plano: la región clave es un cuadrilátero limpio de 4 esquinas, sin gradientes ni reflejos; el compositor declara el número exacto de pantallas;
-  derrame < 12 (error ≥ 24); sin manchas verdes menores que el compositor tenga que ignorar cerca de la pantalla.
-- Sin plantas ni otros objetos verdes; sin texto, logos ni marcas; sin rostros identificables (solo manos y antebrazos); sin joyas con texto.
-- Dedos y bordes ocluyendo bien: ningún halo verde ni recorte duro alrededor de un dedo en el compuesto (se mira a 100 %); la pantalla entera a cuadro y sin pegarse al borde.
-- Luz y grano coherentes con el resto del conjunto; acento único champán; los bordes se funden con `#111111` sin banda visible.
+**Criterios de aceptación de un plate** (el artista los revisa con `--check` y **una** mirada al compuesto a tamaño real; si uno falla, no se compone ni se avanza):
+- **Verde plano:** una sola región clave sólida con los 4 lados detectados (`cropped` donde aplique), residual ≤ 1,5 px, el número de pantallas igual al declarado y ninguna mancha verde menor cerca de la pantalla.
+- **Sin derrame:** exceso verde medio en el anillo de 24 px fuera de la máscara < 12 (aviso) y < 24 (error); sin tinte verde en piel, uñas, marco ni fondo.
+- **Sin plantas ni otros verdes**; fondo sin verde ni menta; sin texto, logos ni marcas; sin rostros identificables; sin joyas.
+- **Dedos limpios:** el dedo queda por delante de la UI, sin halo verde ni borde duro (mirar el contorno a 100 %); manos naturales (cinco dedos, sin deformaciones).
+- **Device protagonista:** la pantalla ocupa ≥ 55 % del plate (lo imprime `--check`); el recorte por el borde es el que pidió el prompt y no otro.
+- **Fondo limpio y coherente:** degradado liso de la familia indicada, sin objetos ni viñeta fuerte; luz suave igual en todas las escenas.
 
-**Si un plate falla:** el artista NO regenera ni pide gastar: reporta (≤ 10 líneas) el defecto exacto (qué criterio, dónde en la imagen) y propone el **cambio de
-prompt** (texto completo). El director decide el gasto con `get_cost` y dentro de la reserva; **una generación pagada nunca se reintenta sin avisar a Doug**
-(EQUIPO §3). Defectos que se corrigen sin créditos antes de pedir un reintento: derrame leve (subir `tolerance`), reflejo suave (bajar `glare`).
+**Regla de reintento: un reintento por escena, solo con aprobación del director.** Si un plate falla, el artista NO regenera ni pide gastar: reporta (≤ 10 líneas) el criterio que falló y dónde, y propone el cambio de prompt (texto completo).
+El director decide con `get_cost` y dentro de la reserva; **una generación pagada nunca se reintenta sin avisar a Doug** (EQUIPO §3). Antes de pedir un reintento se corrige sin créditos lo que se pueda (subir `tolerance`, un `quad` manual, otro `fit`).
 
-**Puerta A · dirección visual** (tras `dc-hero` compuesto; `SendUserFile` con la captura a 1440 y a 390). Opciones: (1) oscuro editorial (recomendada, ver «Puertas»);
-(2) claro luminoso (marfil/champán, como «ventana» dentro del sitio oscuro; cambia la base de prompt y `edge_color`); (3) mixto por escena. Si Doug elige (2) o (3),
-el artista adapta la base y la prueba se repite con **un** plate más (≈ 2,0), dentro de la reserva.
+**Puerta A · dirección visual: RESUELTA por Doug** (ver «Puertas»). No se vuelve a preguntar.
 
-**Puerta C · créditos** (el director la plantea antes de U3-prueba). Opciones: (1) **solo la prueba** — `dc-hero` ≈ 2,0; sirve con los 3,3 de hoy (recomendada para
-empezar: la Puerta A la necesita igual); (2) **cuatro escenas** — hero + `dc-agenda`, `dc-cupos`, `dc-seguimiento` ≈ 8,0 + reserva 2,0 = 10,0 (faltan ≈ 6,7); (3) **conjunto
-completo** — seis escenas ≈ 12,0 + reserva 4,0 = 16,0 (faltan ≈ 12,7). (Variante premium: `dc-hero` en calidad alta ≈ 6,5 + cinco de 2k ≈ 10,0 + reserva 4,0 = 20,5.)
-Recomendación: (1) ahora; tras ver la prueba, (3) si Doug la aprueba.
+**Puerta C · créditos** (el director la plantea antes del tramo 1; saldo hoy ≈ 0,3, tarifas del párrafo «Hoy»). Opciones:
+(0) **sin recarga** — promover el plate B (1k baja, ya pagado) a `dc-hero`: 0 créditos; se verá blando en pantallas 2× y es la única escena; reversible cuando haya recarga;
+(1) **solo el hero** — 2,0 + 1 reintento = **4,0**; recargar ≥ 3,7;
+(2) **cinco escenas de escritorio** (1 a 5) — 10,0 + 2 reintentos = **14,0** a aprobar; recargar ≥ 13,7 (techo con un reintento por escena: 20,0);
+(3) **las seis** — 12,0 + 2 reintentos = **16,0**; recargar ≥ 15,7 (techo 24,0).
+**Recomendación: (2)**, en tramos (primero el hero, luego 2–5); la sexta (celular) se aprueba aparte cuando exista la captura vertical, porque depende de U4/U5 de todos modos y las pruebas A y B ya validaron el prompt base.
 
-**Dueños de rutas:** `pf-mockup-artist` en `mockups/**`, `scripts/mockups/**` y `public/work/dc-medical/scenes/**`; el director deposita el plate descargado; `pf-executor` solo
-`src/data/work.ts` (la lista `scenes`) y las capturas. **Pruebas:** `npm run mockups:check`, `npm run mockups:build`, `npm run mockups:test`, `npm test`,
-`npx playwright test tests/e2e/scenes.spec.ts`, `node scripts/qa/check.mjs --routes /work/dc-medical,/en/work/dc-medical`,
-`node scripts/qa/leak-scan.mjs`. **Aceptación (por escena):** salida `*.webp` con hash en `public/work/dc-medical/scenes/`, entrada en
-`scenes.generated.json` con `case/kind/alt/caption`, manifiesto con `job_id` no vacío, la escena visible en el caso, ninguna `_*` publicada. **Riesgos:** la captura de
-origen cambia → `npm run mockups:build` regenera (el nombre cambia, así que no hay caché vieja); un plate no se commitea sin su manifiesto (Regla del director).
+**Dueños de rutas:** `pf-mockup-artist` en `mockups/**`, `scripts/mockups/**` y `public/work/dc-medical/scenes/**`; el director deposita el plate descargado en `mockups/plates/`; `pf-executor` solo `src/data/work.ts` (la lista `scenes`) y las capturas.
+**Pruebas:** `npm run mockups:check`, `npm run mockups:build`, `npm run mockups:test`, `npm test`, `npx playwright test tests/e2e/scenes.spec.ts`, `node scripts/qa/check.mjs --routes /work/dc-medical,/en/work/dc-medical`, `node scripts/qa/leak-scan.mjs`.
+**Aceptación (por escena):** salida `*.webp` con hash en `public/work/dc-medical/scenes/`, entrada en `scenes.generated.json` con `case/kind/alt/caption`, manifiesto con `job_id` no vacío, la escena visible en el caso en los dos temas, ninguna `_*` publicada.
+**Riesgos:** cambiar la captura de origen regenera sin créditos (el nombre cambia, no hay caché vieja); un plate no se commitea sin su manifiesto; el costo de las pruebas A y B ya se gastó y no se repite.
 
 ### U4 · Panel demo sintético y login falso (**bloqueada por la Puerta B**)
 
@@ -563,7 +603,7 @@ Corre cuando U3 y U4 terminaron; solo lee y reporta, y escribe únicamente `docs
 2. **Lista de nombres reales**, armada fuera del repo en su scratchpad (nunca copiada al repo, nunca impresa, nunca en el reporte), pasada con `--denylist <ruta>`.
 3. **Pedido pendiente (TABLERO):** cruzar **todos** los medios ya publicados de DC contra esa lista: las seis capturas de `public/work/dc-medical/*.webp` (incluidas las `-v2`), `nota-de-voz-poster.jpg`
    (muestra un nombre y un teléfono que parecen inventados y **nunca se verificó**) y los **fotogramas** de `nota-de-voz.mp4` y `.webm` (`ffmpeg` cada 2 s a su directorio temporal). Para este pedido se
-   autoriza hasta 12 miradas, recortando la zona del formulario; sin OCR, la lectura es visual. Un nombre o teléfono real, o uno que no se pueda descartar = **crítico**: el medio sale del sitio y de los
+   autoriza hasta 12 miradas, recortando la zona del formulario; sin OCR, la lectura es visual. **Este punto 3 puede adelantarse como U5 parcial** (solo medios ya publicados) para desbloquear `dc-celular` de U3 si Doug prefiere usar el póster en vez de esperar a la demo. Un nombre o teléfono real, o uno que no se pueda descartar = **crítico**: el medio sale del sitio y de los
    manifiestos hasta reemplazarlo por uno de la demo sintética.
 4. **Medios nuevos de U3:** salidas de `public/work/dc-medical/scenes/`, plates archivados y capturas fuente: ¿se lee algo real? Metadatos de los plates y los WebP (EXIF, XMP, texto de PNG, C2PA) sin
    cuenta ni rutas locales; el `job_id` del manifiesto es lo único permitido.
@@ -581,7 +621,7 @@ Corre cuando U3 y U4 terminaron; solo lee y reporta, y escribe únicamente `docs
 Solo lee y reporta (EQUIPO §3). Orden: (0) cerrar `next start` sueltos de más de una hora; (1) `npx tsc --noEmit`, `npm run lint`, `npm test` con `| tail`; (2) `npm run build` (nadie más construye: confirmarlo en
 `docs/rondas/TABLERO.md`); (3) `npx playwright test 2>&1 | tail -60` completa (lo que falle se repite una vez y se dice si fue estable); (4) `npm run mockups:test` y `npm run mockups:check`;
 (5) `node scripts/qa/leak-scan.mjs` limpio y `grep -c $'\x08'` = 0 en cada archivo tocado por la ronda; (6) `node scripts/qa/shots.mjs --routes /,/en,/work/dc-medical,/en/work/dc-medical --widths 390,1440 --tag u6`
-(máx. 6 miradas: fila destacada, hero, enlaces, escenas, nada cortado ni desbordado); (7) comprobaciones propias de esta ronda: DC primero y `/01`; `grep -c "Live panel" src/data/work.ts` = 0; los dos enlaces de DC
+(máx. 6 miradas: fila destacada, hero, enlaces, escenas, nada cortado ni desbordado; al menos una del caso con `--theme light`); (7) comprobaciones propias de esta ronda: DC primero y `/01`; `grep -c "Live panel" src/data/work.ts` = 0; los dos enlaces de DC
 y, si Puerta B se resolvió, el de la demo; `grep -c "_fixture" src/data/scenes.generated.json` = 0 y ninguna página los renderiza; `docs/rondas/SEGURIDAD.md` existe con veredicto PASA.
 Fallos conocidos y ajenos (de «Fallos conocidos»): los pies sociales a 390 y los tres `span.absolute` del riel. Lista de lo que falta para cerrar: Puertas pendientes, créditos, despliegue de la demo,
 el merge a `main`, B5 y B7 (no elegidos). **Aceptación:** `U6 · pf-final-verifier · PASA` con todo lo anterior; el cierre lo anota el director en el plan.
@@ -595,9 +635,10 @@ el merge a `main`, B5 y B7 (no elegidos). **Aceptación:** `U6 · pf-final-verif
 | U2a | Compositor y plate sintético | Sonnet/medio (`pf-mockup-artist`) | hecha | — | — |
 | U2b-artista | JSON generado con `case/kind/alt/caption` | Sonnet/medio (`pf-mockup-artist`) | 40k + 15k | U2a (en paralelo con U1) | — |
 | U2b | Campo `scenes`, `CaseScenes`, tests | Sonnet/medio (`pf-executor`) + revisores | 110k + 55k | U1, U2b-artista | — |
-| U3a | Luz oscura en el compositor (`glow`, `edge_fade`, derrame) | Sonnet/medio (`pf-mockup-artist`) | 55k + 15k | U2b-artista | — |
-| U3-prueba | `dc-hero` (≈ 2 créditos) | director + Sonnet/medio (`pf-mockup-artist`) + `pf-visual-qa` | 60k | U2b, U3a, **C** | **A** |
-| U3-resto | Escenas 2–6 (≈ 8–10 créditos) | director + Sonnet/medio (`pf-mockup-artist`, `pf-executor`) + `pf-security` (Sonnet/alto) | 130k + 60k | U3-prueba, **A**, **C**, la 6 con U4 | — |
+| U3a | Compositor: pantalla recortada (`cropped`), brillo de cristal (`sheen`), pruebas A y B adoptadas, README claro | Sonnet/medio (`pf-mockup-artist`) | 75k + 20k | U2b-artista | — |
+| U3-hero | Tramo 1: `dc-hero` (2,0 créditos; techo 4,0) | director + Sonnet/medio (`pf-mockup-artist`, `pf-executor`) + `pf-visual-qa` | 60k + 20k | U2b, U3a, **C** (recarga) | **C** |
+| U3-resto | Tramo 2: escenas 2–5 (8,0; techo 16,0) | director + Sonnet/medio (`pf-mockup-artist`, `pf-executor`) + `pf-security` (Sonnet/alto) | 120k + 60k | U3-hero, **C** | — |
+| U3-celular | Tramo 3: `dc-celular` (2,0) con captura vertical saneada | director + Sonnet/medio (`pf-mockup-artist`) + `pf-security` | 40k + 20k | U4 (captura de la demo) o U5 (veredicto del póster), **C** | — |
 | U4 | Demo: D1 semilla/lecturas (Sonnet/alto, 150k) → D2 login/roles (Sonnet/medio, 90k) → D3 escrituras (Sonnet/medio, 120k) → D4 empaquetado, escáner y publicación (Sonnet/alto, 130k) | sesión en el repo privado (agentes `ui-*`) + `pf-security` al final | ≈ 490k + 60k | **B** | **B**, B-2 |
 | U5 | Seguridad de lo publicado | Sonnet/alto (`pf-security`) | 70k | U3, U4 | — |
 | U6 | Cierre | Sonnet/medio (`pf-final-verifier`) | 80k | todas | — |
