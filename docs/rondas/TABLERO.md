@@ -36,7 +36,10 @@ Lo mantiene el director. Cada agente lee la fila de su fase antes de editar, mar
 
 ## Pedidos entre roles
 
-(vacío)
+- **U5 (seguridad) — pendiente de cerrar:** `public/work/dc-medical/nota-de-voz-poster.jpg` (ya publicado) muestra un formulario de
+  nueva paciente con un nombre y un teléfono visibles que parecen inventados. Cruzar **todos** los medios publicados de DC
+  (galería, póster y fotogramas del video, `-v2`) contra la lista de nombres reales armada fuera del repo, y dejar el resultado en
+  `docs/rondas/SEGURIDAD.md`. Origen: reporte de pf-security en U2a.
 
 ## Decisiones pendientes de Doug
 
