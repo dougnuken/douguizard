@@ -14,10 +14,10 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-ALGO_VERSION = "1"
+ALGO_VERSION = "2"
 DEFAULT_ROOT = Path(__file__).resolve().parents[2]
 KINDS = ("hero", "wide", "duo", "detail")
-ID_RE = re.compile(r"^[a-z0-9_-]+$")
+ID_RE = re.compile(r"[a-z0-9_-]+")
 
 
 class SceneError(Exception):
@@ -102,7 +102,9 @@ def key_mask(arr, ci, tol):
     return (dom > 120) & (dom - np.maximum(a[..., others[0]], a[..., others[1]]) > tol)
 
 
-def largest_component(mask):
+
+def components(mask):
+    """Componentes conexos (8-vecinos) de la mascara, de mayor a menor. Etiquetado sobre version reducida."""
     h, w = mask.shape
     s = max(1, int(np.ceil(max(h, w) / 600)))
     H2, W2 = -(-h // s), -(-w // s)
@@ -111,7 +113,8 @@ def largest_component(mask):
     red = pad.reshape(H2, s, W2, s).any(axis=(1, 3))
     flat = bytearray(red.astype(np.uint8).ravel().tobytes())
     labels = [0] * (H2 * W2)
-    best, bestn, cur = 0, 0, 0
+    sizes = {}
+    cur = 0
     for start in np.flatnonzero(red.ravel()).tolist():
         if labels[start]:
             continue
@@ -134,13 +137,19 @@ def largest_component(mask):
                     if flat[j] and not labels[j]:
                         labels[j] = cur
                         stack.append(j)
-        if n > bestn:
-            best, bestn = cur, n
-    if not best:
-        return None
-    comp = (np.array(labels, np.int32).reshape(H2, W2) == best)
-    up = np.repeat(np.repeat(comp, s, axis=0), s, axis=1)[:h, :w]
-    return up & mask
+        sizes[cur] = n
+    lab = np.array(labels, np.int32).reshape(H2, W2)
+    out = []
+    for k in sorted(sizes, key=lambda k: -sizes[k]):
+        up = np.repeat(np.repeat(lab == k, s, axis=0), s, axis=1)[:h, :w] & mask
+        out.append(up)
+    out.sort(key=lambda m: -int(m.sum()))
+    return out
+
+
+def largest_component(mask):
+    c = components(mask)
+    return c[0] if c else None
 
 
 # ---------------------------------------------------------------- esquinas
@@ -259,12 +268,33 @@ def detect_corners(mask):
     return [tuple(map(float, p)) for p in corners_of(lines)]
 
 
-def detect_screen(plate_arr, ci, tol):
+
+
+SIGNIFICANT = 0.20  # una region verde >= 20 % de la mayor cuenta como pantalla
+
+
+def detect_screens(plate_arr, ci, tol, n_declared=1):
+    """Devuelve [(esquinas, mascara)] ordenado por area (rank 1 = la mayor). Falla si el plate no coincide con lo declarado."""
     key = key_mask(plate_arr, ci, tol)
-    comp = largest_component(key)
-    if comp is None or comp.sum() < 0.002 * comp.size:
+    comps = components(key)
+    if not comps or comps[0].sum() < 0.002 * key.size:
         raise SceneError("no se detecto una pantalla en verde")
-    return detect_corners(comp), comp
+    big = int(comps[0].sum())
+    sig = [c for c in comps if c.sum() >= SIGNIFICANT * big]
+    if len(sig) > n_declared:
+        raise SceneError(
+            f"el plate tiene {len(sig)} regiones verdes significativas pero el manifiesto declara {n_declared}: "
+            "declara cada pantalla en 'screens' (con 'rank' 1 = la de mayor area) o corrige el plate")
+    if len(sig) < n_declared:
+        raise SceneError(f"el manifiesto declara {n_declared} pantallas pero el plate solo tiene {len(sig)} regiones verdes")
+    H, W = key.shape
+    res = []
+    for i, c in enumerate(sig, 1):
+        ys, xs = np.nonzero(c)
+        if ys.min() == 0 or xs.min() == 0 or ys.max() == H - 1 or xs.max() == W - 1:
+            raise SceneError(f"la pantalla {i} toca el borde de la imagen: las esquinas serian falsas; reencuadra el plate")
+        res.append((detect_corners(c), c))
+    return res
 
 
 def quad_size(c):
@@ -274,13 +304,43 @@ def quad_size(c):
     return float(w), float(h)
 
 
+
 # ---------------------------------------------------------------- manifiesto
 
-def resolve(root, rel, default_dir):
+PLATE_DIRS = ("mockups/plates", "mockups/fixtures")
+SCREEN_DIRS = ("mockups/screens", "public/work")
+MAX_PIXELS = 60_000_000
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS
+WEBP_METHOD = 4
+
+
+def resolve_under(root, rel, default_dir, allowed, ctx, label):
     rel = str(rel)
     if rel.startswith(("mockups/", "public/")):
-        return (root / rel).resolve()
-    return (root / default_dir / rel).resolve()
+        p = (root / rel).resolve()
+    else:
+        p = (root / default_dir / rel).resolve()
+    for base in allowed:
+        try:
+            p.relative_to((root / base).resolve())
+            return p
+        except ValueError:
+            pass
+    raise SceneError(f"{ctx}: {label} fuera de {' / '.join(allowed)}: {rel!r}")
+
+
+def open_image(path, ctx):
+    import warnings
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", Image.DecompressionBombWarning)
+            im = Image.open(path)
+            im.load()
+        return im
+    except (Image.DecompressionBombError, Image.DecompressionBombWarning):
+        raise SceneError(f"{ctx}: imagen demasiado grande (> {MAX_PIXELS // 1_000_000} Mpx): {path.name}")
+    except OSError as e:
+        raise SceneError(f"{ctx}: imagen ilegible {path.name} ({e})")
 
 
 def need(d, key, typ, ctx):
@@ -289,22 +349,8 @@ def need(d, key, typ, ctx):
     return d[key]
 
 
-def load_manifest(path, root):
-    path = Path(path)
-    try:
-        m = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as e:
-        raise SceneError(f"{path.name}: JSON ilegible ({e})")
-    ctx = path.name
-    sid = need(m, "id", str, ctx)
-    if not ID_RE.match(sid) or sid != path.stem:
-        raise SceneError(f"{ctx}: 'id' debe coincidir con el nombre del archivo y ser [a-z0-9_-]")
-    need(m, "case", str, ctx)
-    if m.get("kind") not in KINDS:
-        raise SceneError(f"{ctx}: 'kind' debe ser uno de {KINDS}")
-    need(m, "plate", str, ctx)
-    scr = need(m, "screen", dict, ctx)
-    need(scr, "source", str, ctx + " screen")
+def norm_screen(scr, idx, ctx):
+    need(scr, "source", str, ctx)
     s = {
         "source": scr["source"],
         "fit": scr.get("fit", "cover"),
@@ -313,16 +359,54 @@ def load_manifest(path, root):
         "glare": scr.get("glare", 0),
         "aspect": scr.get("aspect"),
         "bg": scr.get("bg", "#000000"),
+        "rank": scr.get("rank", idx + 1),
     }
     if s["fit"] not in ("cover", "contain"):
-        raise SceneError(f"{ctx}: screen.fit debe ser cover|contain")
+        raise SceneError(f"{ctx}: fit debe ser cover|contain")
     parse_key(s["key"])
-    if not isinstance(s["tolerance"], (int, float)) or not 0 <= s["tolerance"] <= 200:
-        raise SceneError(f"{ctx}: screen.tolerance fuera de rango")
-    if not isinstance(s["glare"], (int, float)) or not 0 <= s["glare"] <= 1:
-        raise SceneError(f"{ctx}: screen.glare debe estar entre 0 y 1")
+    if not isinstance(s["tolerance"], (int, float)) or isinstance(s["tolerance"], bool) or not 0 <= s["tolerance"] <= 200:
+        raise SceneError(f"{ctx}: tolerance fuera de rango")
+    if not isinstance(s["glare"], (int, float)) or isinstance(s["glare"], bool) or not 0 <= s["glare"] <= 1:
+        raise SceneError(f"{ctx}: glare debe estar entre 0 y 1")
     if s["aspect"] is not None and (not isinstance(s["aspect"], (int, float)) or s["aspect"] <= 0):
-        raise SceneError(f"{ctx}: screen.aspect debe ser un numero > 0 (ancho/alto)")
+        raise SceneError(f"{ctx}: aspect debe ser un numero > 0 (ancho/alto)")
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", str(s["bg"])):
+        raise SceneError(f"{ctx}: bg debe ser #RRGGBB")
+    if not isinstance(s["rank"], int) or isinstance(s["rank"], bool) or s["rank"] < 1:
+        raise SceneError(f"{ctx}: rank debe ser un entero >= 1")
+    return s
+
+
+def load_manifest(path, root):
+    path = Path(path)
+    try:
+        m = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise SceneError(f"{path.name}: JSON ilegible ({e})")
+    if not isinstance(m, dict):
+        raise SceneError(f"{path.name}: el manifiesto debe ser un objeto")
+    ctx = path.name
+    sid = need(m, "id", str, ctx)
+    if not ID_RE.fullmatch(sid) or sid != path.stem:
+        raise SceneError(f"{ctx}: 'id' debe coincidir con el nombre del archivo y ser [a-z0-9_-]")
+    need(m, "case", str, ctx)
+    if m.get("kind") not in KINDS:
+        raise SceneError(f"{ctx}: 'kind' debe ser uno de {KINDS}")
+    need(m, "plate", str, ctx)
+    if "screens" in m and "screen" in m:
+        raise SceneError(f"{ctx}: usa 'screen' o 'screens', no ambos")
+    if "screens" in m:
+        raw = m["screens"]
+        if not isinstance(raw, list) or not 1 <= len(raw) <= 3 or not all(isinstance(x, dict) for x in raw):
+            raise SceneError(f"{ctx}: 'screens' debe ser una lista de 1 a 3 objetos")
+    else:
+        raw = [need(m, "screen", dict, ctx)]
+    screens = [norm_screen(x, i, f"{ctx} screens[{i}]") for i, x in enumerate(raw)]
+    if sorted(s["rank"] for s in screens) != list(range(1, len(screens) + 1)):
+        raise SceneError(f"{ctx}: los rank deben ser 1..{len(screens)} sin repetir")
+    if len({(s["key"].upper(), s["tolerance"]) for s in screens}) > 1:
+        raise SceneError(f"{ctx}: key y tolerance deben ser iguales en todas las pantallas")
+    screens.sort(key=lambda s: s["rank"])
     out = need(m, "output", dict, ctx)
     o = {
         "dir": need(out, "dir", str, ctx + " output"),
@@ -330,9 +414,9 @@ def load_manifest(path, root):
         "quality": out.get("quality", 85),
         "lossless": bool(out.get("lossless", False)),
     }
-    if not isinstance(o["width"], int) or o["width"] < 200:
+    if not isinstance(o["width"], int) or isinstance(o["width"], bool) or o["width"] < 200:
         raise SceneError(f"{ctx}: output.width invalido")
-    if not isinstance(o["quality"], int) or not 1 <= o["quality"] <= 100:
+    if not isinstance(o["quality"], int) or isinstance(o["quality"], bool) or not 1 <= o["quality"] <= 100:
         raise SceneError(f"{ctx}: output.quality debe ser 1-100")
     for k in ("alt", "caption"):
         blk = need(m, k, dict, ctx)
@@ -342,23 +426,16 @@ def load_manifest(path, root):
     if "job_id" not in hf:
         raise SceneError(f"{ctx}: higgsfield.job_id es obligatorio (vacio si el plate es sintetico)")
     out_dir = (root / o["dir"]).resolve()
-    pub = (root / "public").resolve()
     try:
-        out_dir.relative_to(pub)
+        out_dir.relative_to((root / "public").resolve())
     except ValueError:
         raise SceneError(f"{ctx}: output.dir debe estar bajo public/")
-    plate = resolve(root, m["plate"], "mockups/plates")
-    src = resolve(root, s["source"], "mockups/screens")
-    ok = False
-    for base in ("mockups/screens", "public/work"):
-        try:
-            src.relative_to((root / base).resolve())
-            ok = True
-        except ValueError:
-            pass
-    if not ok:
-        raise SceneError(f"{ctx}: la captura debe salir de mockups/screens/ o public/work/ (privacidad)")
-    return {"id": sid, "raw": m, "screen": s, "output": o, "plate_path": plate, "source_path": src, "out_dir": out_dir}
+    plate = resolve_under(root, m["plate"], "mockups/plates", PLATE_DIRS, ctx, "plate")
+    for s in screens:
+        s["source_path"] = resolve_under(
+            root, s["source"], "mockups/screens", SCREEN_DIRS, ctx, "captura (privacidad: solo saneadas)")
+    return {"id": sid, "raw": m, "screens": screens, "key": screens[0]["key"], "tolerance": screens[0]["tolerance"],
+            "output": o, "plate_path": plate, "out_dir": out_dir}
 
 
 # ---------------------------------------------------------------- composicion
@@ -377,22 +454,19 @@ def fit_texture(cap, tw, th, fit, bg):
     return canvas
 
 
-def compose_scene(sc):
-    """Devuelve (PIL RGB sin redimensionar, info)."""
-    s = sc["screen"]
-    ci = parse_key(s["key"])
-    plate = Image.open(sc["plate_path"]).convert("RGB")
-    arr = np.array(plate)
-    H, W = arr.shape[:2]
-    corners, comp = detect_screen(arr, ci, s["tolerance"])
-    cap = Image.open(sc["source_path"]).convert("RGB")
-
+def warp_screen(s, corners, W, H, sid):
+    """Captura ajustada y deformada a la pantalla, a resolucion del plate (RGB float32)."""
+    cap = open_image(s["source_path"], sid).convert("RGB")
     w_est, h_est = quad_size(corners)
     SS = 2
     tw = int(min(4000, max(64, round(w_est * SS))))
     th = int(min(4000, max(64, round(h_est * SS))))
     if s["aspect"]:
         th = int(round(tw / s["aspect"]))
+    pick = max if s["fit"] == "cover" else min
+    if pick(w_est / cap.width, th / SS / cap.height) > 1.0:
+        print(f"AVISO  {sid}: la captura {cap.width}x{cap.height} es menor que la pantalla (~{w_est:.0f}x{h_est:.0f} px): "
+              "se amplia y se vera blanda; usa una captura mayor", file=sys.stderr)
     tex = np.asarray(fit_texture(cap, tw, th, s["fit"], s["bg"]))
     pad = 8
     texp = np.pad(tex, ((pad, pad), (pad, pad), (0, 0)), mode="edge")
@@ -402,53 +476,78 @@ def compose_scene(sc):
     rect = [(0, 0), (Wp, 0), (Wp, Hp), (0, Hp)]
     back = persp_coeffs(apply_persp(fwd, rect), rect)
     warped = Image.fromarray(texp).transform((W * SS, H * SS), Image.PERSPECTIVE, tuple(back), Image.BICUBIC)
-    cap_down = np.asarray(warped.resize((W, H), Image.LANCZOS)).astype(np.float32)
+    return np.asarray(warped.resize((W, H), Image.LANCZOS)).astype(np.float32)
+
+
+def compose_scene(sc):
+    """Devuelve (PIL RGB sin redimensionar, info)."""
+    ci = parse_key(sc["key"])
+    plate = open_image(sc["plate_path"], sc["id"]).convert("RGB")
+    arr = np.array(plate)
+    H, W = arr.shape[:2]
+    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]))
 
     p = arr.astype(np.float32)
-    # despill: en una banda de 6 px alrededor de la mascara, limita el canal clave
-    band = dilate(comp, 6)
+    # despill: en una banda de 6 px alrededor de cada mascara, limita el canal clave
+    band = dilate(np.any([c for _, c in found], axis=0), 6)
     others = [i for i in range(3) if i != ci]
     lim = np.maximum(p[..., others[0]], p[..., others[1]])
     ch = p[..., ci]
     p[..., ci] = np.where(band, np.minimum(ch, lim), ch)
-    # alfa: mascara de la clave suavizada ~1 px
-    alpha = np.maximum(box_blur(dilate(comp, 1).astype(np.float32), 1), comp.astype(np.float32))
-    out = p * (1 - alpha[..., None]) + cap_down * alpha[..., None]
-    if s["glare"] > 0:
-        Y = 0.299 * arr[..., 0] + 0.587 * arr[..., 1] + 0.114 * arr[..., 2]
-        Y = Y.astype(np.float32)
-        m = comp.astype(np.float32)
-        r = max(4, int(0.04 * max(w_est, h_est)))
-        base = box_blur(box_blur(box_blur(Y * m, r), r), r) / np.maximum(box_blur(box_blur(box_blur(m, r), r), r), 1e-3)
-        g = np.clip(Y - base, 0, None) * float(s["glare"]) * alpha
-        out = out + g[..., None]
+    out = p
+    infos = []
+    for s, (corners, comp) in zip(sc["screens"], found):
+        cap_down = warp_screen(s, corners, W, H, sc["id"])
+        w_est, h_est = quad_size(corners)
+        # alfa: mascara de la clave suavizada ~1 px (dedos y objetos que tapan se conservan)
+        alpha = np.maximum(box_blur(dilate(comp, 1).astype(np.float32), 1), comp.astype(np.float32))
+        out = out * (1 - alpha[..., None]) + cap_down * alpha[..., None]
+        if s["glare"] > 0:
+            Y = (0.299 * arr[..., 0] + 0.587 * arr[..., 1] + 0.114 * arr[..., 2]).astype(np.float32)
+            m = comp.astype(np.float32)
+            r = max(4, int(0.04 * max(w_est, h_est)))
+            num, den = m * Y, m
+            for _ in range(3):
+                num, den = box_blur(num, r), box_blur(den, r)
+            base = num / np.maximum(den, 1e-3)
+            g = np.clip(Y - base, 0, None) * float(s["glare"]) * alpha
+            out = out + g[..., None]
+        infos.append({"rank": s["rank"], "corners": corners, "screen": (w_est, h_est)})
     img = Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8), "RGB")
-    return img, {"corners": corners, "size": (W, H), "screen": (w_est, h_est)}
+    return img, {"corners": infos[0]["corners"], "screens": infos, "size": (W, H)}
 
 
 def content_hash(sc):
-    s, o = sc["screen"], sc["output"]
+    o = sc["output"]
     params = {
-        "algo": ALGO_VERSION, "key": s["key"].upper(), "tolerance": s["tolerance"], "fit": s["fit"],
-        "glare": s["glare"], "aspect": s["aspect"], "bg": s["bg"],
-        "width": o["width"], "quality": o["quality"], "lossless": o["lossless"],
+        "algo": ALGO_VERSION,
+        "screens": [{k: s[k] for k in ("fit", "glare", "aspect", "bg", "rank")} | {"key": s["key"].upper(), "tolerance": s["tolerance"]}
+                    for s in sc["screens"]],
+        "output": {"width": o["width"], "quality": o["quality"], "lossless": o["lossless"]},
+        "webp": {"method": WEBP_METHOD, "format": "WEBP"},
     }
     h = hashlib.sha256()
     h.update(sc["plate_path"].read_bytes())
-    h.update(b"\0")
-    h.update(sc["source_path"].read_bytes())
+    for s in sc["screens"]:
+        h.update(b"\0")
+        h.update(s["source_path"].read_bytes())
     h.update(b"\0")
     h.update(json.dumps(params, sort_keys=True).encode())
     return h.hexdigest()[:8]
 
 
+def need_files(sc):
+    if not sc["plate_path"].is_file():
+        raise SceneError(f"{sc['id']}: no existe el plate: {sc['plate_path']}")
+    for s in sc["screens"]:
+        if not s["source_path"].is_file():
+            raise SceneError(f"{sc['id']}: no existe la captura: {s['source_path']}")
+
+
 def build_scene(sc, root, use_cache=True):
-    for k, label in (("plate_path", "plate"), ("source_path", "captura")):
-        if not sc[k].is_file():
-            raise SceneError(f"{sc['id']}: no existe el {label}: {sc[k]}")
+    need_files(sc)
     hsh = content_hash(sc)
     out_dir = sc["out_dir"]
-    out_dir.mkdir(parents=True, exist_ok=True)
     fname = f"{sc['id']}.{hsh}.webp"
     dest = out_dir / fname
     if not (use_cache and dest.is_file()):
@@ -456,7 +555,8 @@ def build_scene(sc, root, use_cache=True):
         mw = sc["output"]["width"]
         if img.width > mw:
             img = img.resize((mw, round(img.height * mw / img.width)), Image.LANCZOS)
-        img.save(dest, "WEBP", quality=sc["output"]["quality"], lossless=sc["output"]["lossless"], method=4)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        img.save(dest, "WEBP", quality=sc["output"]["quality"], lossless=sc["output"]["lossless"], method=WEBP_METHOD)
     old = re.compile(re.escape(sc["id"]) + r"\.[0-9a-f]{8}\.webp")
     for f in out_dir.iterdir():
         if f.name != fname and old.fullmatch(f.name):
@@ -468,15 +568,16 @@ def build_scene(sc, root, use_cache=True):
 
 
 def check_scene(sc):
-    for k, label in (("plate_path", "plate"), ("source_path", "captura")):
-        if not sc[k].is_file():
-            raise SceneError(f"{sc['id']}: no existe el {label}: {sc[k]}")
-    ci = parse_key(sc["screen"]["key"])
-    arr = np.asarray(Image.open(sc["plate_path"]).convert("RGB"))
-    corners, _ = detect_screen(arr, ci, sc["screen"]["tolerance"])
-    w, h = quad_size(corners)
-    cs = " ".join(f"({x:.0f},{y:.0f})" for x, y in corners)
-    return f"ok     {sc['id']}  plate {arr.shape[1]}x{arr.shape[0]}  pantalla ~{w:.0f}x{h:.0f}  esquinas {cs}"
+    need_files(sc)
+    ci = parse_key(sc["key"])
+    arr = np.array(open_image(sc["plate_path"], sc["id"]).convert("RGB"))
+    found = detect_screens(arr, ci, sc["tolerance"], len(sc["screens"]))
+    parts = []
+    for s, (corners, _) in zip(sc["screens"], found):
+        w, h = quad_size(corners)
+        cs = " ".join(f"({x:.0f},{y:.0f})" for x, y in corners)
+        parts.append(f"#{s['rank']} ~{w:.0f}x{h:.0f} {cs}")
+    return f"ok     {sc['id']}  plate {arr.shape[1]}x{arr.shape[0]}  pantallas: " + " | ".join(parts)
 
 
 # ---------------------------------------------------------------- CLI
@@ -484,9 +585,10 @@ def check_scene(sc):
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Compone capturas reales en plates con pantalla verde.")
     g = ap.add_mutually_exclusive_group(required=True)
-    g.add_argument("--all", action="store_true")
+    g.add_argument("--all", action="store_true", help="todas las escenas salvo las de prueba (prefijo _)")
     g.add_argument("--scene", metavar="ID")
     ap.add_argument("--check", action="store_true", help="valida sin escribir nada")
+    ap.add_argument("--include-fixtures", action="store_true", help="con --all, incluye las escenas _*")
     ap.add_argument("--root", default=str(DEFAULT_ROOT), help="raiz del repo (pruebas)")
     ap.add_argument("--no-cache", action="store_true", help="recompone aunque exista la salida versionada")
     a = ap.parse_args(argv)
@@ -499,9 +601,8 @@ def main(argv=None):
         if not files:
             print(f"FALLA  {a.scene}: no existe mockups/scenes/{a.scene}.json")
             return 1
-    if not files:
-        print("FALLA  no hay manifiestos en mockups/scenes/")
-        return 1
+    elif not a.include_fixtures:
+        files = [f for f in files if not f.stem.startswith("_")]
     failed, results = 0, {}
     for f in files:
         try:
@@ -509,8 +610,7 @@ def main(argv=None):
             if a.check:
                 print(check_scene(sc))
             else:
-                results[sc["id"]] = build_scene(sc, root, not a.no_cache)
-                r = results[sc["id"]]
+                results[sc["id"]] = r = build_scene(sc, root, not a.no_cache)
                 print(f"ok     {sc['id']}  {r['src']}  {r['width']}x{r['height']}")
         except (SceneError, OSError, ValueError) as e:
             failed += 1

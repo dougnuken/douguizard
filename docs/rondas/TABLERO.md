@@ -22,7 +22,7 @@ Lo mantiene el director. Cada agente lee la fila de su fase antes de editar, mar
 | U2a | Compositor del kit de mockups + plate sintético + pruebas | pf-mockup-artist | `mockups/**`, `scripts/mockups/**`, `public/work/dc-medical/scenes/**`, `src/data/scenes.generated.json`, líneas `mockups:*` de `package.json` | **en curso** (rutas disjuntas del resto) |
 | U1 | DC Medical primero + enlaces a la web y al panel | pf-executor | `src/data/**`, `src/components/**`, `tests/e2e/matrix.ts` | pendiente |
 | U2 | Kit de mockups (manifiestos + compositor) y componente de escenas | pf-mockup-artist + pf-executor | `mockups/**`, `scripts/mockups/**` / `src/components/case/**` | pendiente |
-| U3 | Escenas luxury con Higgsfield | director (gasto) + pf-mockup-artist | `mockups/plates/**`, `public/work/dc-medical/scenes/**` | **bloqueada: créditos** |
+| U3 | Escenas luxury con Higgsfield | director (gasto) + pf-mockup-artist | `mockups/plates/**`, `public/work/dc-medical/scenes/**` | **1 de 6 plates hecho** (`hero-mano`, dirección oscura, 2 créditos, job `766631df…`); el resto **bloqueado: créditos** (quedan ~1,3) |
 | U4 | Panel demo con datos sintéticos y login falso | por definir | por definir | **bloqueada: alojamiento** |
 | U5 | Seguridad de lo publicado | pf-security | `docs/rondas/SEGURIDAD.md` | pendiente |
 | U6 | Cierre | pf-final-verifier | — (solo lee) | pendiente |

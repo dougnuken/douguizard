@@ -14,7 +14,7 @@ public/work/<caso>/scenes/<id>.<hash8>.webp   salida (nombre versionado por cont
 src/data/scenes.generated.json                GENERADO: { id: { src, width, height } }; no se edita a mano
 ```
 
-Comandos: `npm run mockups:build` (compone todo) · `npm run mockups:check` (valida sin escribir) · `npm run mockups:test`.
+Comandos: `npm run mockups:build` (compone todo salvo las escenas de prueba `_*`; `--include-fixtures` las incluye) · `npm run mockups:check` (valida sin escribir) · `npm run mockups:test`.
 También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Python 3 con PIL y numpy.
 
 ## Agregar una escena
@@ -41,19 +41,22 @@ También `python3 scripts/mockups/compose.py --scene <id> [--check]`. Solo Pytho
 | `id` | `[a-z0-9_-]`, igual al nombre del archivo. El prefijo `_` marca escenas de prueba (el frontend las ignora). |
 | `case` | slug del caso. `kind`: `hero`, `wide`, `duo` o `detail`. |
 | `plate` | relativo a `mockups/plates/`; o ruta completa desde la raíz si empieza por `mockups/` o `public/`. |
-| `screen.source` | relativo a `mockups/screens/`, o ruta completa bajo `public/work/`. Cualquier otro origen falla (privacidad). |
+| `screen.source` (o `screens[].source`) | relativo a `mockups/screens/`, o ruta completa bajo `public/work/`. Cualquier otro origen falla (privacidad). |
 | `screen.fit` | `cover` (recorta, por defecto) o `contain` (barras con `screen.bg`, `#000000`). |
 | `screen.key` / `tolerance` | color clave (`#00FF00`) y tolerancia (50): es clave el píxel con G > 120 y G − máx(R,B) > tolerancia. |
 | `screen.glare` | 0–1: devuelve al resultado los reflejos del plate sobre la pantalla (0 = sin reflejos). |
+| `screens` | en vez de `screen`: lista de 1 a 3 pantallas `{ source, fit, glare, rank, … }`. `rank` 1 = la región verde de mayor área, 2 = la siguiente… `screen` único equivale a `screens:[{rank:1}]`. `key` y `tolerance` deben coincidir. |
 | `screen.aspect` | opcional, ancho/alto físico de la pantalla si la perspectiva engaña (por defecto se estima del plate). |
 | `output` | `dir` bajo `public/`, `width` máx. (2400), `quality` WebP (85), `lossless` opcional. |
 | `higgsfield` | `model`, `resolution`, `prompt`, `job_id` (vacío si el plate es sintético), `notes`. |
+
+**Dúo y pantallas múltiples:** declara cada pantalla en `screens`. Una región verde significativa (≥ 20 % de la mayor) que no esté declarada es un ERROR (y declarar de más también); las manchas verdes pequeñas se ignoran. Ejemplo: `mockups/scenes/_fixture-duo.json`. Una pantalla pegada al borde de la imagen se rechaza (esquinas falsas); si la captura es menor que la pantalla, avisa por stderr.
 
 3. `npm run mockups:check` → debe imprimir «ok» con las esquinas detectadas; luego `npm run mockups:build` y mira el resultado.
 4. Commit del plate, el manifiesto, la salida `.webp` y `src/data/scenes.generated.json`.
 
 El nombre de salida lleva el hash del plate + la captura + los parámetros: cambiar cualquiera crea una URL nueva (el optimizador
-cachea un año por URL) y borra solo las versiones viejas del mismo `id`.
+cachea un año por URL) y borra solo las versiones viejas del mismo `id`. Los bytes del WebP pueden variar con la versión de libwebp/PIL aunque el nombre no cambie: el determinismo está garantizado en la misma máquina y versión de PIL. El `plate` debe estar bajo `mockups/plates/` o `mockups/fixtures/`; se rechazan rutas fuera y imágenes de más de 60 Mpx.
 
 ## Cuando Doug cambie la UI
 
@@ -93,7 +96,7 @@ Cambia solo la primera línea (el objeto). Medicina estética luxury: marfil, ch
 
 **Laptop en escritorio:** `A slim laptop open on a light Carrara marble desk, viewed from a three-quarter front angle at a slightly raised height, a porcelain cup and a single white orchid stem beside it, champagne wall softly out of focus.` + Base.
 
-**Dúo (laptop + celular):** `A slim laptop open on a light marble desk with a smartphone standing upright next to it on a small champagne stone stand, both screens facing the camera, three-quarter view, white peonies in a blurred vase behind.` + Base. *(Dos pantallas verdes: el compositor usa la más grande; para dúo, genera un manifiesto por pantalla con un plate donde la otra pantalla esté apagada, o compón en dos pasadas.)*
+**Dúo (laptop + celular):** `A slim laptop open on a light marble desk with a smartphone standing upright next to it on a small champagne stone stand, both screens facing the camera, three-quarter view, white peonies in a blurred vase behind.` + Base. *(Dos pantallas verdes: decláralas en `screens`; la laptop suele ser `rank` 1.)*
 
 **Tableta:** `A tablet held landscape in two manicured hands over a light marble surface, slightly tilted toward the camera, soft ivory cashmere cuff, champagne bokeh with white flowers.` + Base.
 

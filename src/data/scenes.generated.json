@@ -1,7 +1,7 @@
 {
-  "_fixture": {
-    "src": "/work/dc-medical/scenes/_fixture.704f0891.webp",
-    "width": 1600,
-    "height": 1200
+  "hero-mano": {
+    "src": "/work/dc-medical/scenes/hero-mano.cab0f20b.webp",
+    "width": 1744,
+    "height": 2336
   }
 }
