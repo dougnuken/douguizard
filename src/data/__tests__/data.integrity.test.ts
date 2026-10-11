@@ -127,7 +127,11 @@ describe("cv + work integrity", () => {
     expect(dc.slug).toBe("dc-medical");
     expect(dc.externalLink).toBeUndefined();
     expect(dc.linksFirst).toBe(true);
-    expect(dc.gallery?.[dc.spotlightShot ?? 0].src).toBe("/work/dc-medical/seguimiento-controles.webp");
+    expect(
+      dc.gallery!.some((g) => g.src === dc.spotlightSrc),
+      `dc-medical.spotlightSrc "${dc.spotlightSrc}" is not in its gallery`,
+    ).toBe(true);
+    expect(dc.spotlightSrc).not.toMatch(/caso-fases|cupos-semana/);
     expect(dc.links?.map((l) => l.href)).toEqual([
       "https://dcmedicalaesthetics.com/",
       "https://panel.dcmedicalaesthetics.com/login",

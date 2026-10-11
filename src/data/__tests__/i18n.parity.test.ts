@@ -76,6 +76,12 @@ describe("the cases in Spanish", () => {
       study.gallery?.forEach((g, i) =>
         expect(g.alt, `${c.slug}.gallery[${i}].alt`).not.toBe(c.gallery![i].alt),
       );
+      study.gallery?.forEach((g, i) => {
+        const en = c.gallery![i].caption;
+        if (!en) return;
+        expect(g.caption, `${c.slug}.gallery[${i}].caption`).toBeTruthy();
+        expect(g.caption, `${c.slug}.gallery[${i}].caption`).not.toBe(en);
+      });
       study.process?.forEach((p, i) =>
         expect(p.body, `${c.slug}.process[${i}]`).not.toBe(c.process![i].body),
       );

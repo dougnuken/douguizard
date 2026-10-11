@@ -105,8 +105,8 @@ export interface CaseStudy {
   links?: { label: string; href: string }[];
   /** Show `links` as buttons under the hero instead of as the meta strip's last row. */
   linksFirst?: boolean;
-  /** Index into `gallery` of the capture the home's spotlight row shows (default 0). */
-  spotlightShot?: number;
+  /** `src` of the `gallery` capture the home's spotlight row shows. No fallback: if it is missing, no row. */
+  spotlightSrc?: string;
   /** Who did what — authorship and collaborators, in one paragraph. */
   credits?: string;
 }
@@ -218,20 +218,13 @@ export const caseStudies: CaseStudy[] = [
       width: 786,
       height: 1704,
     },
-    // The case sheet leads: three locked phases, the payment bar and the one
-    // next step are the product's argument in a single screen. Then the month
-    // agenda; the browser gallery runs two full-width leaders and two-up rows,
-    // so the day view sits beside the slots, and the follow-up board beside the
-    // permissions sheet drawn over it.
-    // The two drawer captures are `-v2`: re-exported with the drawer's backdrop
+    // The month agenda leads; the browser gallery runs two full-width leaders
+    // and two-up rows, so the day view sits beside the follow-up board, and the
+    // permissions sheet drawn over it closes the set.
+    // The drawer capture is `-v2`: re-exported with the drawer's backdrop
     // lifted. The new name is what invalidates the image optimiser's year-long
     // cache, which keys on the URL, not on the file's contents.
     gallery: [
-      {
-        src: "/work/dc-medical/caso-fases-v2.webp",
-        alt: "A patient's case sheet open over the cases list: a three-step tracker with valuation and payment done and the procedure current, the procedure set at four vials for face and neck, the procedure date booked, a payment bar at 5.3 of 9.8 million pesos, the case's payments newest first, and a footer naming the next step — register the final payment.",
-        caption: "The case: what's paid, what's missing, the one action that comes next.",
-      },
       {
         src: "/work/dc-medical/agenda-mes.webp",
         alt: "The agenda in month view: September 2026 laid out Monday to Sunday, each day's appointments as short lines colored by city — orange for Barranquilla, blue for Bogotá, teal for Medellín — with a colored band over the days the doctor spends in each city, and a count of appointments per city above the grid.",
@@ -241,11 +234,6 @@ export const caseStudies: CaseStudy[] = [
         src: "/work/dc-medical/agenda-dia.webp",
         alt: "The agenda in day view for Thursday, 24 September: a banner saying the doctor is in Medellín according to the calendar, appointments as cards by the hour with their type and city, a red line marking the current time, and patient-record and calendar buttons on each card.",
         caption: "One day by the hour, and the city the doctor is in.",
-      },
-      {
-        src: "/work/dc-medical/cupos-semana.webp",
-        alt: "The doctor's slots for the week of 5 to 11 October: seven columns, each headed by the city the doctor is in, with hours marked occupied in red or free in green, a count of free hours over the next two months, and a button to copy two months of slots for WhatsApp.",
-        caption: "The doctor's slots, read from the secretary's own document.",
       },
       {
         src: "/work/dc-medical/seguimiento-controles.webp",
@@ -262,7 +250,7 @@ export const caseStudies: CaseStudy[] = [
     // patient data behind it), so its label says so. A third entry, "Try the demo", is added by U4 only once the demo
     // URL answers 200 and the leak scan is clean: never a placeholder href.
     linksFirst: true,
-    spotlightShot: 4, // seguimiento-controles: the follow-up board
+    spotlightSrc: "/work/dc-medical/seguimiento-controles.webp", // seguimiento-controles: the follow-up board
     links: [
       { label: "Visit the website", href: "https://dcmedicalaesthetics.com/" },
       { label: "Staff panel (sign-in)", href: "https://panel.dcmedicalaesthetics.com/login" },

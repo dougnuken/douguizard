@@ -147,7 +147,7 @@ export default function Work({ locale }: { locale: Locale }) {
   const site = getSite(locale);
   const caseStudies = getCaseStudies(locale);
   const first = caseStudies[0];
-  const shot = first?.nda ? undefined : first?.gallery?.[first.spotlightShot ?? 0];
+  const shot = first?.nda ? undefined : first?.gallery?.find((g) => g.src === first.spotlightSrc);
   const spotlight = shot ? first : undefined;
   const featured = caseStudies.filter((c) => VIGNETTES[c.slug] && c !== spotlight);
   const compact = caseStudies.filter((c) => !VIGNETTES[c.slug] && c !== spotlight && c.kind !== "side");
