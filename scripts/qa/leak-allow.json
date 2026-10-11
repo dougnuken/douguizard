@@ -1,0 +1,10 @@
+{
+  "_comment": "Datos que SÍ son públicos a propósito (están en src/data/site.ts). Todo lo demás que el escáner encuentre es un hallazgo. Añadir aquí solo con una razón.",
+  "emails": ["hello@douguizard.com", "dougvargas72@gmail.com", "noreply@anthropic.com"],
+  "phones": ["573003518299", "3003518299"],
+  "files": {
+    "scripts/build-avatar.py": ["ruta_local"],
+    "docs/specs/09-qa-checklist.md": ["ruta_local"],
+    "HANDOFF.md": ["ruta_local"]
+  }
+}
