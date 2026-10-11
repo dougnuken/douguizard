@@ -5,6 +5,8 @@ Método: lista de reales armada fuera del repo (nombres, teléfonos y cifras de 
 `leak-scan --denylist`, búsqueda de cifras reales en `src/` y `mockups/`, y revisión visual de 6 capturas, el póster, 13 fotogramas
 del video (uno cada 1,5 s; 5 estados distintos) y `hero-mano`. Este archivo no contiene ningún dato real, ni parcial.
 
+> **Nota posterior (11 oct):** `scenes/hero-mano.*.webp`, mencionado abajo, se archivó después de este cruce como `_hero-mano-oscuro` y **ya no se publica**. `caso-fases-v2` y `cupos-semana` se retiran en el PR #4 (integrado en la rama de la ronda). La escena publicada hoy, `dc-hero`, usa `seguimiento-controles.webp` (OK en este cruce).
+
 ## Resultado por medio
 
 | Medio | Qué se ve (categorías) | Veredicto | Acción mínima |
