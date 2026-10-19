@@ -12,6 +12,7 @@ import { useDict, useLocale } from "@/i18n/LocaleProvider";
  * one: the page's language and the photo come preselected, and the link at the
  * bottom is a plain download of the chosen file. `<dialog>` brings focus
  * trapping, Escape and the backdrop for free; a click on the backdrop closes it.
+ * The glass and the lit edge are `.cv-download-dialog` in `globals.css`.
  */
 export default function PrintButton() {
   const locale = useLocale();
@@ -62,7 +63,7 @@ export default function PrintButton() {
         ref={ref}
         aria-labelledby={`${id}-title`}
         onClick={(e) => e.target === e.currentTarget && close()}
-        className="m-auto w-[calc(100%-32px)] max-w-[380px] rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-0 text-[var(--ink)] shadow-2xl backdrop:bg-black/50 print:hidden"
+        className="cv-download-dialog m-auto w-[calc(100%-32px)] max-w-[380px] overflow-visible rounded-2xl p-0 text-[var(--ink)] print:hidden"
       >
         <div className="flex flex-col gap-5 p-6">
           <h2 id={`${id}-title`} className="text-[18px] font-semibold leading-tight">
