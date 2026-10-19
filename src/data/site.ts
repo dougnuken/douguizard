@@ -16,6 +16,11 @@ export interface Site {
   domain: string;
   /** One canonical headline. Header, hero kicker, CV, JSON-LD jobTitle, OG. */
   headline: string;
+  /**
+   * The headline cut to fit a browser tab and a search result (titles stay
+   * under 75 characters). Same titles, fewest words; used only in `<title>`.
+   */
+  titleHeadline: string;
   /** The arc. Shown as a label, never narrated as a sentence. */
   positioning: string;
   /** 3 sentences. About bio lead, CV summary lead, and the base for seo.description. */
@@ -63,7 +68,8 @@ export const site: Site = {
   name: "Doug Vargas",
   brand: "Douguizard",
   domain: "douguizard.com",
-  headline: "Head of Product · Design Engineer",
+  headline: "Head of Product · Senior Product Designer (UX/UI) · Design Engineer",
+  titleHeadline: "Head of Product · Product Designer (UX/UI)",
   positioning: "Product Designer → Design Engineer",
   summary:
     "I'm a product designer who builds. I lead product at Naowee and ship the prototypes that define it — one design system, working code, AI in the loop. Before that I maintained Andes, the design system behind Mercadolibre across 18 countries.",
@@ -104,6 +110,7 @@ export const site: Site = {
       "Head of Product",
       "Design Systems",
       "Product Designer",
+      "UX/UI Designer",
       "Naowee",
       "Andes Design System",
       "Mercadolibre",
@@ -119,10 +126,12 @@ export const site: Site = {
  * What changes when the site speaks Spanish. Everything else — the name, the
  * address, the profiles, the headline — is the same fact in both languages.
  *
- * The headline stays in English on purpose: "Head of Product · Design
- * Engineer" is the title on the contract, on LinkedIn and on the CV, and in
- * Colombian tech it is written that way. Translating it would make the two
- * versions of the site disagree about what Doug's job is called.
+ * The headline stays in English on purpose: these are the titles on the
+ * contracts, on LinkedIn and on the CV, and in Colombian tech they are written
+ * that way. Translating them would make the two versions of the site disagree
+ * about what Doug's job is called. "Senior Product Designer (UX/UI)" joined in
+ * Oct 2026, chosen by Doug: it carries the UX/UI keyword recruiters search for
+ * without reading as a junior title next to Head of Product.
  */
 const siteEs: Site = {
   ...site,

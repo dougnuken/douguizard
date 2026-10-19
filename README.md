@@ -1,6 +1,6 @@
 # douguizard
 
-> Doug Vargas — Head of Product · Design Engineer · Personal site & CV
+> Doug Vargas — Head of Product · Senior Product Designer (UX/UI) · Design Engineer · Personal site & CV
 > Next.js 16 · React 19 · Framer Motion · React Three Fiber · Tailwind v4
 
 ---

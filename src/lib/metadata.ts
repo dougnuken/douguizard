@@ -16,7 +16,7 @@ const ORIGIN = `https://${baseSite.domain}`;
  */
 export function rootMetadata(locale: Locale): Metadata {
   const site = getSite(locale);
-  const title = `${site.name} — ${site.headline}`;
+  const title = `${site.name} — ${site.titleHeadline}`;
   return {
     metadataBase: new URL(ORIGIN),
     title: { default: title, template: `%s · ${site.name}` },
@@ -86,7 +86,7 @@ export function cvMetadata(locale: Locale): Metadata {
     .map((e) => e.company.name)
     .join(", ");
   return {
-    title: t.title(site.headline),
+    title: t.title(site.titleHeadline),
     description: t.description({ name: site.name, years: yearsOfExperience(), companies }),
     alternates: alternatesFor(locale, "/cv"),
     openGraph: {

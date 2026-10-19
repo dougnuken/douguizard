@@ -96,7 +96,9 @@ describe("cv + work integrity", () => {
   });
 
   it("site.headline and site.positioning are the only identity strings", () => {
-    expect(site.headline).toBe("Head of Product · Design Engineer");
+    // `titleHeadline` is the same titles cut for a tab, not a second identity.
+    expect(site.headline.startsWith(site.titleHeadline.split(" · ")[0])).toBe(true);
+    expect(site.headline).toBe("Head of Product · Senior Product Designer (UX/UI) · Design Engineer");
     expect(site.positioning).toBe("Product Designer → Design Engineer");
     expect(site).not.toHaveProperty("role");
     expect(site).not.toHaveProperty("cvPath");
