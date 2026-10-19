@@ -9,7 +9,8 @@ filtros ATS. Sale de los mismos datos que la página `/cv`:
 - **PDF:** `npm run cv:pdf` (`scripts/build-cv-pdf.ts`) imprime cuatro archivos con sus sellos, sin
   servidor: con foto `public/cv/doug-vargas-cv-es.pdf` y `public/cv/doug-vargas-cv.pdf`; sin foto
   `public/cv/doug-vargas-cv-es-sin-foto.pdf` y `public/cv/doug-vargas-cv-no-photo.pdf`. En `/cv` y `/en/cv`,
-  "Descargar PDF" baja el de foto y "PDF sin foto" el otro, en el idioma de la página.
+  "Descargar PDF" abre un modal para elegir idioma (por defecto el de la página) y con o sin foto
+  (por defecto con foto).
 - **Foto:** `public/portrait/doug-cv-photo.jpg` (cuadrada, 480 px). La hoja la pasa a grises con
   `filter: grayscale(1)` en `.photo`.
 - **Fuentes:** Archivo y Geist Mono como TTF estáticos en `scripts/cv-fonts/` (licencia OFL).
