@@ -56,11 +56,13 @@ describe("cv + work integrity", () => {
   });
 
   /**
-   * Qrvey and Ideaware overlap on purpose: Doug was promoted onto the Qrvey
-   * account from inside Ideaware, so he held both at once. Every other pair
-   * must stay disjoint — an accidental overlap is a wrong date.
+   * No pair may overlap: an accidental overlap is a wrong date. Qrvey and
+   * Ideaware used to be the one exception, until Doug confirmed (Oct 2026)
+   * that the Senior role ended with the Oct 2016 promotion to Lead on Qrvey;
+   * `qrvey.employer` now says it was still Ideaware. Declare a pair here only
+   * for two jobs genuinely held at once.
    */
-  const ALLOWED_OVERLAPS = [["qrvey", "ideaware"]] as const;
+  const ALLOWED_OVERLAPS: ReadonlyArray<readonly [string, string]> = [];
   const isAllowed = (a: string, b: string) =>
     ALLOWED_OVERLAPS.some(([x, y]) => (a === x && b === y) || (a === y && b === x));
 

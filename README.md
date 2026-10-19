@@ -198,14 +198,18 @@ To check availability: type the domain into any of those sites.
 CV facts live in **one file**: `src/data/cv.ts` (dates, companies, roles), with
 the Spanish wording in `src/data/es/cv.ts`.
 
-Each language has its own downloadable PDF, generated from its own page:
-`/cv` → `public/cv/doug-vargas-cv-es.pdf`, `/en/cv` → `public/cv/doug-vargas-cv.pdf`.
-After changing anything the CV prints, regenerate both:
+Each language has its own downloadable PDF, printed from the same data by
+`src/lib/cvSheet.ts` (a one-column, black-on-white, ATS-friendly sheet):
+Spanish → `public/cv/doug-vargas-cv-es.pdf`, English → `public/cv/doug-vargas-cv.pdf`.
+The button on `/cv` and `/en/cv` downloads the one for its language. After
+changing anything the CV prints, regenerate both (no server needed):
 
 ```bash
-npm run build && npx next start -p 4173 &
 npm run cv:pdf      # writes both PDFs and their stamps
 ```
+
+The sheet's photo is `public/portrait/doug-cv-photo.jpg`; its fonts are the
+static TrueType files in `scripts/cv-fonts/` (OFL).
 
 A unit test compares each PDF's stamp with the data and fails if either drifts.
 

@@ -1,4 +1,5 @@
 import { getCv } from "@/data/cv";
+import { yearsOfExperience } from "@/lib/career";
 import { getSite } from "@/data/site";
 import type { Locale } from "@/i18n/config";
 
@@ -11,14 +12,14 @@ import type { Locale } from "@/i18n/config";
  * file and the facts had no way of noticing each other.
  *
  * So the digest covers content and nothing else — no comments, no formatting,
- * no source layout — and two things read it: the page renders it into a meta
- * tag, and `scripts/build-cv-pdf.mjs` records it beside the generated PDF. A
- * test compares the two, and any change to a date, a role, a bullet or a
- * profile fails the build until the PDF is regenerated.
+ * no source layout. `scripts/build-cv-pdf.ts` records it beside each PDF it
+ * prints from `lib/cvSheet` (and `/cv` renders it into a meta tag). A test
+ * compares the stamp with the data, and any change to a date, a role, a bullet
+ * or a profile fails the build until the PDF is regenerated.
  */
 function payload(locale: Locale) {
   const site = getSite(locale);
-  const { certifications, education, experiences, languages, skills, tools } = getCv(locale);
+  const { certifications, education, experiences, languages, profile, skills, tools } = getCv(locale);
   return {
     name: site.name,
     headline: site.headline,
@@ -26,12 +27,16 @@ function payload(locale: Locale) {
     phone: site.phone,
     domain: site.domain,
     location: site.location,
-    summary: site.summaryLong,
+    // The sheet's own paragraph, with the year count already in it: when the
+    // count ticks over, the PDF is stale and this says so.
+    summary: profile.summary(yearsOfExperience()),
+    highlights: profile.highlights,
     profiles: site.social.filter((s) => s.onCv).map((s) => s.href),
     experiences: experiences.map((e) => ({
       id: e.id,
       company: e.company.name,
       client: e.client ?? null,
+      employer: e.employer ?? null,
       role: e.role,
       start: e.start,
       end: e.end ?? null,
