@@ -1,6 +1,6 @@
-// Print each language's CV to the PDF that its `site.cv.pdf` hands out, and
-// stamp each with the content digest of the data it was printed from, so a
-// stale file cannot survive a test run. Spanish and English are separate sheets
+// Print each language's CV to the PDFs that its `site.cv` hands out, with and
+// without the photo, and stamp each language with the content digest of the
+// data it was printed from, so a stale file cannot survive a test run. Spanish and English are separate sheets
 // with separate stamps: changing a Spanish bullet must fail the Spanish check.
 //
 //   npm run cv:pdf
@@ -16,9 +16,21 @@ import type { Locale } from "@/i18n/config";
 import { cvFingerprint } from "@/lib/cvFingerprint";
 import { renderCvSheet } from "@/lib/cvSheet";
 
-const SHEETS: { locale: Locale; out: string; stamp: string }[] = [
-  { locale: "es", out: "public/cv/doug-vargas-cv-es.pdf", stamp: "public/cv/cv.stamp.es.json" },
-  { locale: "en", out: "public/cv/doug-vargas-cv.pdf", stamp: "public/cv/cv.stamp.json" },
+// Two sheets per language, same content: with the photo and without it. The
+// paths are the ones `site.cv` hands out. One stamp per language covers both.
+const SHEETS: { locale: Locale; withPhoto: string; noPhoto: string; stamp: string }[] = [
+  {
+    locale: "es",
+    withPhoto: "public/cv/doug-vargas-cv-es.pdf",
+    noPhoto: "public/cv/doug-vargas-cv-es-sin-foto.pdf",
+    stamp: "public/cv/cv.stamp.es.json",
+  },
+  {
+    locale: "en",
+    withPhoto: "public/cv/doug-vargas-cv.pdf",
+    noPhoto: "public/cv/doug-vargas-cv-no-photo.pdf",
+    stamp: "public/cv/cv.stamp.json",
+  },
 ];
 
 /** Two A4 pages is the target; the test still allows three. */
@@ -49,37 +61,46 @@ const fontCss = FONTS.map(([family, weight, file]) => {
 const photo = `data:image/jpeg;base64,${readFileSync(resolve("public/portrait/doug-cv-photo.jpg")).toString("base64")}`;
 
 const work = mkdtempSync(join(tmpdir(), "cv-pdf-"));
+
+/** Prints one sheet and returns its page count and size. */
+function print(locale: Locale, out: string, withPhoto: boolean) {
+  const html = join(work, `cv-${locale}-${withPhoto ? "photo" : "plain"}.html`);
+  writeFileSync(html, renderCvSheet(locale, { fontCss, photo: withPhoto ? photo : undefined }));
+  execFileSync(
+    CHROME,
+    [
+      "--headless=new",
+      "--disable-gpu",
+      "--no-pdf-header-footer",
+      `--user-data-dir=${join(work, "profile")}`,
+      // Chrome will not start as root without it — a CI container, not a Mac.
+      ...(process.getuid?.() === 0 ? ["--no-sandbox"] : []),
+      `--print-to-pdf=${resolve(out)}`,
+      `file://${html}`,
+    ],
+    { stdio: "ignore" },
+  );
+  const buf = readFileSync(out);
+  // Chrome leaves the page tree readable enough to count without a parser.
+  const pages = (buf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
+  console.log(JSON.stringify({ out, pages, bytes: buf.length }));
+  if (pages > PAGE_TARGET) console.error(`WARNING: ${out} printed ${pages} pages. ${PAGE_TARGET} is the target.`);
+  return { pages, bytes: buf.length };
+}
+
 try {
   for (const sheet of SHEETS) {
-    const html = join(work, `cv-${sheet.locale}.html`);
-    writeFileSync(html, renderCvSheet(sheet.locale, { fontCss, photo }));
-    execFileSync(
-      CHROME,
-      [
-        "--headless=new",
-        "--disable-gpu",
-        "--no-pdf-header-footer",
-        `--user-data-dir=${join(work, "profile")}`,
-        // Chrome will not start as root without it — a CI container, not a Mac.
-        ...(process.getuid?.() === 0 ? ["--no-sandbox"] : []),
-        `--print-to-pdf=${resolve(sheet.out)}`,
-        `file://${html}`,
-      ],
-      { stdio: "ignore" },
-    );
-
-    const buf = readFileSync(sheet.out);
-    // Chrome leaves the page tree readable enough to count without a parser.
-    const pages = (buf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
-    const fingerprint = cvFingerprint(sheet.locale);
-    writeFileSync(
-      sheet.stamp,
-      `${JSON.stringify({ fingerprint, pages, bytes: buf.length, paper: "A4" }, null, 2)}\n`,
-    );
-    console.log(JSON.stringify({ out: sheet.out, fingerprint, pages, bytes: buf.length }));
-    if (pages > PAGE_TARGET) {
-      console.error(`WARNING: ${sheet.locale} printed ${pages} pages. ${PAGE_TARGET} is the target.`);
-    }
+    const a = print(sheet.locale, sheet.withPhoto, true);
+    const b = print(sheet.locale, sheet.noPhoto, false);
+    const stamp = {
+      fingerprint: cvFingerprint(sheet.locale),
+      // The longer of the two, so the page budget covers both.
+      pages: Math.max(a.pages, b.pages),
+      bytes: a.bytes,
+      bytesNoPhoto: b.bytes,
+      paper: "A4",
+    };
+    writeFileSync(sheet.stamp, `${JSON.stringify(stamp, null, 2)}\n`);
   }
 } finally {
   rmSync(work, { recursive: true, force: true });

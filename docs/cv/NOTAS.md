@@ -6,9 +6,10 @@ filtros ATS. Sale de los mismos datos que la página `/cv`:
 - **Datos (fuente única):** `src/data/cv.ts` (inglés y hechos) y `src/data/es/cv.ts` (español). El
   resumen y las cifras de la cabecera del CV están en `profile` / `profileEs`.
 - **Hoja:** `src/lib/cvSheet.ts` arma el HTML de cada idioma.
-- **PDF:** `npm run cv:pdf` (`scripts/build-cv-pdf.ts`) imprime `public/cv/doug-vargas-cv-es.pdf` y
-  `public/cv/doug-vargas-cv.pdf` con sus sellos. No necesita servidor. El botón de `/cv` y de `/en/cv`
-  descarga el del idioma en que esté la página.
+- **PDF:** `npm run cv:pdf` (`scripts/build-cv-pdf.ts`) imprime cuatro archivos con sus sellos, sin
+  servidor: con foto `public/cv/doug-vargas-cv-es.pdf` y `public/cv/doug-vargas-cv.pdf`; sin foto
+  `public/cv/doug-vargas-cv-es-sin-foto.pdf` y `public/cv/doug-vargas-cv-no-photo.pdf`. En `/cv` y `/en/cv`,
+  "Descargar PDF" baja el de foto y "PDF sin foto" el otro, en el idioma de la página.
 - **Foto:** `public/portrait/doug-cv-photo.jpg` (cuadrada, 480 px). La hoja la pasa a grises con
   `filter: grayscale(1)` en `.photo`.
 - **Fuentes:** Archivo y Geist Mono como TTF estáticos en `scripts/cv-fonts/` (licencia OFL).

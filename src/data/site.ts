@@ -34,8 +34,12 @@ export interface Site {
     note?: string;
   };
   social: SocialLink[];
-  /** `pdf` is per language: each CV page hands out the sheet in its own language. */
-  cv: { path: string; pdf?: string };
+  /**
+   * Per language: each CV page hands out the sheets in its own language. `pdf`
+   * carries the photo (expected in Colombia and LATAM); `pdfNoPhoto` is the same
+   * sheet without it, for US-style hiring and portals that strip images.
+   */
+  cv: { path: string; pdf?: string; pdfNoPhoto?: string };
   seo: {
     /** Trimmed to survive Google's ~160-char cut. Not the same string as summary. */
     description: string;
@@ -89,7 +93,7 @@ export const site: Site = {
   // Generated from /cv itself by `npm run cv:pdf`, never hand-made — that is
   // how the last one ended up two jobs out of date. A test compares the file's
   // stamp against the live data and fails if they drift.
-  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv.pdf" },
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv.pdf", pdfNoPhoto: "/cv/doug-vargas-cv-no-photo.pdf" },
   seo: {
     description:
       "Doug Vargas leads product at Naowee and builds it — design systems, working prototypes in code, AI in the loop. Previously Andes at Mercadolibre.",
@@ -132,7 +136,7 @@ const siteEs: Site = {
     badge: "Disponible",
     note: "Consultoría puntual en sistemas de diseño y producto nativo de IA",
   },
-  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv-es.pdf" },
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv-es.pdf", pdfNoPhoto: "/cv/doug-vargas-cv-es-sin-foto.pdf" },
   seo: {
     ...site.seo,
     description:
@@ -147,7 +151,7 @@ const siteEs: Site = {
   },
 };
 
-const siteEn: Site = { ...site, cv: { path: "/en/cv", pdf: site.cv.pdf } };
+const siteEn: Site = { ...site, cv: { ...site.cv, path: "/en/cv" } };
 
 /** The site's facts in one language. `site` itself is the English source. */
 export function getSite(locale: Locale): Site {

@@ -183,7 +183,8 @@ const en = {
     description: (p: { name: string; years: number; companies: string }) =>
       `Curriculum vitae of ${p.name}. ${p.years} years of product design and design engineering across ${p.companies}.`,
     download: "Download PDF",
-    downloadName: (name: string) => `${name} — CV.pdf`,
+    downloadNoPhoto: "PDF without photo",
+    downloadName: (name: string, photo = true) => `${name} — CV${photo ? "" : " (no photo)"}.pdf`,
     letterUpdated: (when: string) => `Updated ${when}`,
     copy: { idle: "Copy letter", copied: "Copied", failed: "Couldn't copy" },
     experience: "Experience",
@@ -365,7 +366,8 @@ const es: Dict = {
     description: (p) =>
       `Hoja de vida de ${p.name}. ${p.years} años de diseño de producto e ingeniería de diseño en ${p.companies}.`,
     download: "Descargar PDF",
-    downloadName: (name: string) => `${name} — Hoja de vida.pdf`,
+    downloadNoPhoto: "PDF sin foto",
+    downloadName: (name: string, photo = true) => `${name} — Hoja de vida${photo ? "" : " (sin foto)"}.pdf`,
     letterUpdated: (when: string) => `Actualizada en ${when}`,
     copy: { idle: "Copiar carta", copied: "Copiada", failed: "No se pudo copiar" },
     experience: "Experiencia",

@@ -117,7 +117,9 @@ test("I5 neither language leaks the other's interface", async ({ page }) => {
 test("I6 each CV hands out the sheet in its own language", async ({ page, request }) => {
   for (const [route, pdf] of [
     ["/cv", "/cv/doug-vargas-cv-es.pdf"],
+    ["/cv", "/cv/doug-vargas-cv-es-sin-foto.pdf"],
     ["/en/cv", "/cv/doug-vargas-cv.pdf"],
+    ["/en/cv", "/cv/doug-vargas-cv-no-photo.pdf"],
   ] as const) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator(`a[href="${pdf}"]`).first(), `I6 ${route}`).toBeVisible();

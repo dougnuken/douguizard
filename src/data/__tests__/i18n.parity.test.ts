@@ -136,6 +136,8 @@ describe("site, sections, letter and quotes", () => {
   it("each language hands out its own CV", () => {
     expect(getSite("es").cv.pdf).toBe("/cv/doug-vargas-cv-es.pdf");
     expect(getSite("en").cv.pdf).toBe("/cv/doug-vargas-cv.pdf");
+    expect(getSite("es").cv.pdfNoPhoto).toBe("/cv/doug-vargas-cv-es-sin-foto.pdf");
+    expect(getSite("en").cv.pdfNoPhoto).toBe("/cv/doug-vargas-cv-no-photo.pdf");
     expect(getSite("en").cv.path).toBe("/en/cv");
   });
 

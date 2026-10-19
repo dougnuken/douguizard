@@ -200,8 +200,9 @@ the Spanish wording in `src/data/es/cv.ts`.
 
 Each language has its own downloadable PDF, printed from the same data by
 `src/lib/cvSheet.ts` (a one-column, black-on-white, ATS-friendly sheet):
-Spanish → `public/cv/doug-vargas-cv-es.pdf`, English → `public/cv/doug-vargas-cv.pdf`.
-The button on `/cv` and `/en/cv` downloads the one for its language. After
+Spanish → `public/cv/doug-vargas-cv-es.pdf`, English → `public/cv/doug-vargas-cv.pdf`,
+each also without the photo (`doug-vargas-cv-es-sin-foto.pdf`, `doug-vargas-cv-no-photo.pdf`).
+`/cv` and `/en/cv` offer both, in the page's language. After
 changing anything the CV prints, regenerate both (no server needed):
 
 ```bash
