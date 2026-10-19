@@ -1,47 +1,40 @@
 # CV ATS — blanco y negro
 
-`Doug-Vargas-CV.pdf` (con foto, para Colombia y LATAM) y `Doug-Vargas-CV-sin-foto.pdf` (para portales y
-empresas de EE. UU.). Fuente: `cv-ats.template.html`. Regenerar: `python3 docs/cv/build.py`.
+El CV que se descarga en la web es una hoja de una columna, en blanco y negro, pensada para pasar los
+filtros ATS. Sale de los mismos datos que la página `/cv`:
 
-Este CV es independiente de `/cv` del sitio y de `public/cv/*.pdf` (que siguen siendo la versión oscura
-con sello de huella). No reemplaza esos archivos.
+- **Datos (fuente única):** `src/data/cv.ts` (inglés y hechos) y `src/data/es/cv.ts` (español). El
+  resumen y las cifras de la cabecera del CV están en `profile` / `profileEs`.
+- **Hoja:** `src/lib/cvSheet.ts` arma el HTML de cada idioma.
+- **PDF:** `npm run cv:pdf` (`scripts/build-cv-pdf.ts`) imprime `public/cv/doug-vargas-cv-es.pdf` y
+  `public/cv/doug-vargas-cv.pdf` con sus sellos. No necesita servidor. El botón de `/cv` y de `/en/cv`
+  descarga el del idioma en que esté la página.
+- **Foto:** `public/portrait/doug-cv-photo.jpg` (cuadrada, 480 px). La hoja la pasa a grises con
+  `filter: grayscale(1)` en `.photo`.
+- **Fuentes:** Archivo y Geist Mono como TTF estáticos en `scripts/cv-fonts/` (licencia OFL).
 
-## Qué cambió frente al PDF anterior
+Si cambias algo que el CV imprime, corre `npm run cv:pdf`; si no, `npm test` falla.
+
+## Qué cambió frente al PDF anterior (oct 2026)
 
 Revisión de tres agentes: especialista en ATS, reclutadora de RR. HH. y headhunter de liderazgo de producto.
 
 - **Una sola columna, sin tablas ni columnas CSS.** Antes, Educación, Certificaciones, Idiomas y Habilidades
-  iban en 3 columnas, y el texto extraído mezclaba columnas ("2006 — 2009 / 2018 / Español · Nativo").
-- **Cada puesto en un orden fijo:** cargo → empresa – ciudad (modalidad) | MM/AAAA – MM/AAAA → viñetas.
-  Antes el cargo y la ciudad salían pegados ("Head of Product Barranquilla") y las fechas en una columna
-  aparte. Las fechas alineadas a la derecha también se leían como otra columna, por eso van en línea.
+  iban en 3 columnas, y el texto extraído mezclaba columnas.
+- **Cada puesto en un orden fijo:** cargo → empresa (cliente) – ciudad (modalidad) | MM/AAAA – MM/AAAA →
+  viñetas. Las fechas van en línea: alineadas a la derecha, se leían como otra columna.
 - **Fuentes TrueType estáticas.** Las variables de Google Fonts salen como Type 3 en el PDF; algunos ATS
   no extraen texto de Type 3.
-- **Fondo blanco, texto negro**, como el modo claro de douguizard.com (`--ink #0a0a0a`, `--ink-muted #4f4e4b`).
-- **Títulos de sección estándar:** Resumen profesional, Experiencia laboral, Experiencia anterior
-  (antes "ANTES"), Habilidades, Educación, Certificaciones, Idiomas.
-- **Viñetas con verbo + alcance + cifra**, sin el patrón "**Título**: explicación". Solo cifras que ya
-  estaban en `src/data/cv.ts`; no se inventó ningún dato.
-- **Solapamiento Qrvey/Ideaware resuelto:** Qrvey fue un proyecto de Ideaware, así que va como
-  "Lead UI Designer — Ideaware (cliente: Qrvey)". Antes parecían dos empleos simultáneos.
-- **Palabras clave añadidas** que ya eran verdad: design tokens, librería de componentes, user research,
-  cross-functional, stakeholders, mentoría, fintech, Storybook.
-- Herramientas antiguas fuera (InVision, Marvel, Balsamiq, Adobe XD, Sketch, Spline).
-- Cargos en inglés, como en los contratos y en LinkedIn; el resto en español.
+- **Títulos de sección estándar** y **viñetas con verbo + alcance + cifra**, solo con cifras reales.
+- **Ideaware/Qrvey:** el rol Senior terminó en 10/2016 con el ascenso a Lead en Qrvey. Qrvey lleva
+  `employer: "Ideaware"`, y el CV lo imprime como "Ideaware (Qrvey)".
+- **Habilidades:** la web y el CV comparten grupos (Producto, Sistemas de diseño, Ingeniería, IA aplicada,
+  Liderazgo). Fuera las herramientas antiguas (InVision, Marvel, Balsamiq, Adobe XD, Sketch, Spline).
 
 ## Datos confirmados por Doug (19 oct 2026)
 
-- **Aval: 5 años y 2 meses** (11/2018 – 01/2024). La web dice lo mismo desde el 19 oct 2026 (`site.ts`
-  `summaryLong` y la duración del caso en `work.ts`), con `public/cv/*.pdf` regenerados.
+- **Aval: 5 años y 2 meses** (11/2018 – 01/2024), igual en el CV y en la web.
 - **Naowee: equipo de 2 personas** a cargo.
+- **Ideaware:** de Senior UX/UI Designer a Lead UI Designer (Qrvey) en 10/2016.
 - **Inglés B1.**
 - No hay cifras de adopción de Andes ni de NPS del Banco de Occidente: el CV no las menciona.
-
-- **Ideaware:** de Senior UX/UI Designer a Lead UI Designer (Qrvey) en 10/2016.
-
-## Foto
-
-Se queda el retrato de `public/portrait/doug-portrait-900.webp`, recortado y en escala de grises
-(`portrait-cv.jpg`). Se probaron tres retratos con Higgsfield (Nano Banana Pro, dos estilos editoriales) y
-Doug no eligió ninguno. Para cambiarla: reemplaza `portrait-cv.jpg` (cuadrada, ~420 px, centrada en la
-cara) y corre `build.py`.
