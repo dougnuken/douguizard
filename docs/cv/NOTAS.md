@@ -42,30 +42,9 @@ Revisión de tres agentes: especialista en ATS, reclutadora de RR. HH. y headhun
 6. **Inglés B1.** Para empresas de EE. UU. es el primer filtro. Si ya subió, actualízalo (y una
    certificación como EF SET o similar ayuda).
 
-## Foto con Higgsfield (pendiente)
+## Foto
 
-La generación no corrió: la cuenta de Higgsfield tiene 0,3 créditos (plan gratis) y Nano Banana Pro con
-2 variantes a 2K cuesta 2. Mientras tanto, el CV usa `public/portrait/doug-portrait-900.webp` recortado y
-en escala de grises.
-
-El retrato ya está subido a Higgsfield (importado desde
-`https://douguizard.com/portrait/doug-portrait-900.webp`). Con créditos: modelo **Nano Banana Pro**,
-4:5, 2K, esa imagen como referencia y este prompt (adaptado del tuyo: cabeza rapada y barba en vez de
-pelo suelto, ojo derecho nítido):
-
-> Create an artistic editorial portrait of the exact man in the reference image, preserving his identity
-> faithfully: bald shaved head, short dark beard and mustache, same face shape, eyes, nose and skin tone.
-> Close-up bust framing, the face occupying a large portion of the frame, slightly off-center to the right,
-> intense calm expression, direct gaze into the camera. He wears a dark black high-neck top (mock neck).
-> Sophisticated contemporary aesthetic. The background is light and minimal, warm beige / off-white / very
-> soft gray, with a subtle warm orange circular shape behind his head on the right side. Apply a strong
-> horizontal motion blur effect passing mainly through the left side of the portrait, as if part of the face
-> and body were dissolving into fast lateral streaks, with dark blurred bands mixed with warm orange and
-> coral glowing accents, while the right side of the face remains sharp, detailed and recognizable,
-> especially the right eye. Soft diffused studio light from the right. The final result should feel like a
-> fine art fashion photograph, with subtle film grain texture, elegant contrast, a mysterious atmosphere and
-> a clean finish, with no typography, no graphic elements and no interface.
-
-Para usarla: guárdala como `docs/cv/portrait-cv.jpg` (cuadrada, ~420 px; recorta centrado en la cara) y
-corre `build.py`. El CSS la pasa a escala de grises (`filter: grayscale(1)` en `.photo`); quita esa línea
-si quieres conservar el naranja.
+Se queda el retrato de `public/portrait/doug-portrait-900.webp`, recortado y en escala de grises
+(`portrait-cv.jpg`). Se probaron tres retratos con Higgsfield (Nano Banana Pro, dos estilos editoriales) y
+Doug no eligió ninguno. Para cambiarla: reemplaza `portrait-cv.jpg` (cuadrada, ~420 px, centrada en la
+cara) y corre `build.py`.
