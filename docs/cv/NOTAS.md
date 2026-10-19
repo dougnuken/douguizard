@@ -29,18 +29,15 @@ Revisión de tres agentes: especialista en ATS, reclutadora de RR. HH. y headhun
 - Herramientas antiguas fuera (InVision, Marvel, Balsamiq, Adobe XD, Sketch, Spline).
 - Cargos en inglés, como en los contratos y en LinkedIn; el resto en español.
 
-## Datos para confirmar
+## Datos confirmados por Doug (19 oct 2026)
 
-1. **Fin de Senior UX/UI Designer en Ideaware = 10/2016.** Supuse que el cambio a Qrvey fue la promoción.
-2. **Aval: "más de 5 años".** 11/2018 – 01/2024 son 5 años y 2 meses; el sitio dice "seis años" en
-   `site.ts` (`summaryLong`). Uno de los dos está mal.
-3. **12 años de experiencia**, contados desde Smartbiz (10/2014), como `CAREER_ANCHOR`.
-4. **Correo:** `hello@douguizard.com`. El PDF de 2026 traía el Gmail.
-5. **Cifras que harían más fuerte el CV** (el headhunter las marcó; solo si existen): tamaño del equipo que
-   lideras en Naowee y si SUID está en producción; % de adopción de Andes o tiempo ahorrado con las
-   auditorías con IA; usuarios, conversión o NPS de la banca digital del Banco de Occidente.
-6. **Inglés B1.** Para empresas de EE. UU. es el primer filtro. Si ya subió, actualízalo (y una
-   certificación como EF SET o similar ayuda).
+- **Aval: 5 años y 2 meses** (11/2018 – 01/2024). `site.ts` (`summaryLong`, en inglés y español) todavía dice
+  "seis años"; corregirlo cambia la huella de `/cv` y obliga a regenerar `public/cv/*.pdf` con `npm run cv:pdf`.
+- **Naowee: equipo de 2 personas** a cargo.
+- **Inglés B1.**
+- No hay cifras de adopción de Andes ni de NPS del Banco de Occidente: el CV no las menciona.
+
+Sin confirmar: fin de Senior UX/UI Designer en Ideaware = 10/2016 (supuse que ahí fue la promoción a Qrvey).
 
 ## Foto
 
