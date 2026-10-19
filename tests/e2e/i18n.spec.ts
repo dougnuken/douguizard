@@ -114,13 +114,34 @@ test("I5 neither language leaks the other's interface", async ({ page }) => {
   }
 });
 
-test("I6 each CV hands out the sheet in its own language", async ({ page, request }) => {
-  for (const [route, pdf] of [
-    ["/cv", "/cv/doug-vargas-cv-es.pdf"],
-    ["/en/cv", "/cv/doug-vargas-cv.pdf"],
+test("I6 the CV download offers both languages, with and without the photo", async ({ page, request }) => {
+  // The dialog opens on the page's own language with the photo, and every
+  // combination resolves to a sheet that exists.
+  const sheets = {
+    es: { photo: "/cv/doug-vargas-cv-es.pdf", plain: "/cv/doug-vargas-cv-es-sin-foto.pdf" },
+    en: { photo: "/cv/doug-vargas-cv.pdf", plain: "/cv/doug-vargas-cv-no-photo.pdf" },
+  } as const;
+  for (const [route, own, open, withPhoto, noPhoto, other] of [
+    ["/cv", "es", /descargar pdf/i, /con foto/i, /sin foto/i, "English"],
+    ["/en/cv", "en", /download pdf/i, /with photo/i, /without photo/i, "Español"],
   ] as const) {
     await page.goto(route, { waitUntil: "networkidle" });
-    await expect(page.locator(`a[href="${pdf}"]`).first(), `I6 ${route}`).toBeVisible();
+    await page.getByRole("button", { name: open }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog, `I6 ${route} dialog`).toBeVisible();
+    const link = dialog.locator("a[download]");
+    await expect(link, `I6 ${route} default`).toHaveAttribute("href", sheets[own].photo);
+    await dialog.getByLabel(noPhoto).check();
+    await expect(link, `I6 ${route} no photo`).toHaveAttribute("href", sheets[own].plain);
+    await dialog.getByLabel(other).check();
+    const foreign = own === "es" ? "en" : "es";
+    await expect(link, `I6 ${route} other language`).toHaveAttribute("href", sheets[foreign].plain);
+    await dialog.getByLabel(withPhoto).check();
+    await expect(link, `I6 ${route} other language, photo`).toHaveAttribute("href", sheets[foreign].photo);
+    await page.keyboard.press("Escape");
+    await expect(dialog, `I6 ${route} Escape closes`).toBeHidden();
+  }
+  for (const pdf of [...Object.values(sheets.es), ...Object.values(sheets.en)]) {
     const res = await request.get(pdf);
     expect(res.status(), `I6 ${pdf}`).toBe(200);
     expect(res.headers()["content-type"], `I6 ${pdf}`).toContain("pdf");

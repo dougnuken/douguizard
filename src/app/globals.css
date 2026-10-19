@@ -755,6 +755,88 @@
   .lang-switch-compact:hover {
     opacity: 0.8;
   }
+
+  /* The CV download dialog: frosted glass over the page, with a lit edge that
+     slowly travels round it (still under reduced motion). The edge is a conic
+     gradient on a 1px ring (the mask keeps only the padding box), so the panel
+     itself stays clear. */
+  .cv-download-dialog {
+    --dl-edge-a: color-mix(in srgb, white 85%, transparent);
+    --dl-edge-b: color-mix(in srgb, var(--signal) 90%, white);
+    --dl-edge-c: color-mix(in srgb, white 8%, transparent);
+    background: color-mix(in srgb, var(--paper) 58%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid color-mix(in srgb, white 14%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--signal) 18%, transparent),
+      0 0 48px -6px color-mix(in srgb, var(--signal) 45%, transparent),
+      0 30px 70px -20px rgb(0 0 0 / 0.6);
+  }
+  :root[data-theme="light"] .cv-download-dialog {
+    --dl-edge-a: color-mix(in srgb, var(--signal) 40%, white);
+    --dl-edge-b: var(--signal);
+    --dl-edge-c: color-mix(in srgb, var(--ink) 6%, transparent);
+    background: color-mix(in srgb, white 62%, transparent);
+    border-color: color-mix(in srgb, white 70%, transparent);
+    box-shadow:
+      inset 0 1px 0 white,
+      0 0 0 1px color-mix(in srgb, var(--signal) 14%, transparent),
+      0 0 44px -8px color-mix(in srgb, var(--signal) 40%, transparent),
+      0 30px 70px -24px rgb(10 10 30 / 0.35);
+  }
+  .cv-download-dialog::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--dl-edge-angle),
+      var(--dl-edge-c) 0deg,
+      var(--dl-edge-a) 40deg,
+      var(--dl-edge-b) 90deg,
+      var(--dl-edge-c) 150deg,
+      var(--dl-edge-c) 210deg,
+      var(--dl-edge-b) 270deg,
+      var(--dl-edge-a) 310deg,
+      var(--dl-edge-c) 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: dl-edge 7s linear infinite;
+  }
+  /* The page behind is frosted too: the panel's own blur needs something
+     behind it to read as glass, and some engines skip a top-layer element's
+     backdrop-filter, while this one they honour. */
+  .cv-download-dialog::backdrop {
+    background: rgb(5 5 12 / 0.32);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  /* Without backdrop-filter the glass would be see-through text on text. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .cv-download-dialog {
+      background: var(--paper);
+    }
+  }
+}
+
+@property --dl-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes dl-edge {
+  to {
+    --dl-edge-angle: 360deg;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,6 @@
 # douguizard
 
-> Doug Vargas — Head of Product · Design Engineer · Personal site & CV
+> Doug Vargas — Head of Product · Senior Product Designer (UX/UI) · Design Engineer · Personal site & CV
 > Next.js 16 · React 19 · Framer Motion · React Three Fiber · Tailwind v4
 
 ---
@@ -198,14 +198,20 @@ To check availability: type the domain into any of those sites.
 CV facts live in **one file**: `src/data/cv.ts` (dates, companies, roles), with
 the Spanish wording in `src/data/es/cv.ts`.
 
-Each language has its own downloadable PDF, generated from its own page:
-`/cv` → `public/cv/doug-vargas-cv-es.pdf`, `/en/cv` → `public/cv/doug-vargas-cv.pdf`.
-After changing anything the CV prints, regenerate both:
+Each language has its own downloadable PDF, printed from the same data by
+`src/lib/cvSheet.ts` (a one-column, black-on-white, ATS-friendly sheet):
+Spanish → `public/cv/doug-vargas-cv-es.pdf`, English → `public/cv/doug-vargas-cv.pdf`,
+each also without the photo (`doug-vargas-cv-es-sin-foto.pdf`, `doug-vargas-cv-no-photo.pdf`).
+On `/cv` and `/en/cv`, "Download PDF" opens a small dialog to pick the language
+and the photo; the page's language and the photo come preselected. After
+changing anything the CV prints, regenerate both (no server needed):
 
 ```bash
-npm run build && npx next start -p 4173 &
 npm run cv:pdf      # writes both PDFs and their stamps
 ```
+
+The sheet's photo is `public/portrait/doug-cv-photo.jpg`; its fonts are the
+static TrueType files in `scripts/cv-fonts/` (OFL).
 
 A unit test compares each PDF's stamp with the data and fails if either drifts.
 

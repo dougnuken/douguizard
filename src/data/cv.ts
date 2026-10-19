@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import { educationEs, experiencesEs, languagesEs, skillsEs, toolLabelsEs } from "@/data/es/cv";
+import { educationEs, experiencesEs, languagesEs, profileEs, skillsEs, toolLabelsEs } from "@/data/es/cv";
 
 export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type YearMonth = { year: number; month?: Month };
@@ -19,6 +19,12 @@ export interface Experience {
   company: { name: string; url?: string };
   /** End client the work was for. Never the employer. */
   client?: string;
+  /**
+   * Employer of record, when it is not `company`: Qrvey was an Ideaware
+   * engagement. The printed CV leads with it ("Ideaware (client: Qrvey)"), so a
+   * background check finds the right payroll; the site keeps the product name.
+   */
+  employer?: string;
   /** ONE canonical spelling. Used everywhere: CV, case meta strip, timeline. */
   role: string;
   /** Optional shorter form for narrow rows. Same words, fewer of them. */
@@ -59,7 +65,7 @@ export interface Certification {
 }
 
 export interface SkillGroup {
-  id: "product" | "systems" | "engineering" | "ai" | "platforms";
+  id: "product" | "systems" | "engineering" | "ai" | "leadership";
   label: string;
   items: { label: string; primary?: boolean }[];
 }
@@ -95,10 +101,10 @@ export const experiences: Experience[] = [
     summary:
       "Product direction for SUID, the platform built for Colombia's sports system. I set direction across eight business modules and build the prototypes that define them.",
     impact: [
-      "**Product direction across 8 business modules** — inspection and control over ~1,200 sports organizations and their 30 regulatory procedures, plus events, venues, incentives, convocatorias and scoring.",
-      "**One design system, and I build in it** — 38+ components, a canonical shell and a single wizard recipe holding 130+ screens to one language.",
-      "**Modeled the sector's real hierarchy** — committees, federations, leagues, clubs and athletes with cascading approval, across 45+ states and 15 roles.",
-      "**Working prototypes instead of specs** — built in code, then walked story by story with analysts who sign off against the running product.",
+      "Lead SUID, the platform for Colombia's sports system, with a team of 2: 8 business modules, including inspection and oversight of ~1,200 sports organizations and their 30 regulatory procedures.",
+      "Built the product's design system: 38+ components, a canonical shell and a single wizard recipe that keeps 130+ screens in one language.",
+      "Modeled the sector's real hierarchy (committees, federations, leagues, clubs and athletes) with cascading approval across 45+ states and 15 roles.",
+      "Replaced specs with working prototypes in code, built with AI, that analysts sign off story by story against the running product.",
     ],
     caseSlug: "naowee-suid",
     era: "current",
@@ -115,10 +121,10 @@ export const experiences: Experience[] = [
     summary:
       "Technical lead on Andes, the design system behind Mercadolibre's commerce, fintech and shipping products across 18 countries.",
     impact: [
-      "**Design library maintained across iOS, Android and Web** — used by 400+ designers and 2,000+ engineers.",
-      "**Foundational definitions** — tokens, spacing, type and motion governing the product suite across 18 countries.",
-      "**Cross-platform work with engineering** — component APIs agreed once and shipped the same on every platform.",
-      "**AI inside the systems practice** — prompt-driven audits that catch system drift in Figma before it ships.",
+      "Technical lead on Andes, the design system behind Mercadolibre's commerce, fintech and shipping products across 18 countries.",
+      "Maintained the component library for iOS, Android and Web, used by 400+ designers and 2,000+ engineers.",
+      "Defined the system's foundations (design tokens, spacing, type and motion) that govern the whole product suite.",
+      "Agreed single component APIs with engineering across platforms and introduced AI-driven audits that catch system drift in Figma before it ships.",
     ],
     caseSlug: "mercadolibre-andes",
     era: "core",
@@ -136,10 +142,10 @@ export const experiences: Experience[] = [
     summary:
       "Senior product designer for Banco de Occidente's digital banking, and the official gatekeeper of the design system shared across the bank's product squads.",
     impact: [
-      "**Design System Gatekeeper** — governed additions, deprecations and patterns across 12+ product squads.",
-      "**Built Velocity, the bank's design system** — documentation, foundations, atoms, molecules and organisms, on atomic-design principles.",
-      "**Redesigned core banking flows** — login and registration, accounts and cards, transfers and payments, for desktop, tablet and mobile.",
-      "**System literacy** — workshops, classes and crits, plus mentorship for junior and mid-level designers.",
+      "Governed additions, deprecations and patterns of the design system shared by the bank's 12+ product squads.",
+      "Built Velocity, the bank's design system: documentation, foundations and a component library on atomic-design principles.",
+      "Redesigned the core digital-banking flows (login and registration, accounts and cards, transfers and payments) for desktop, tablet and mobile.",
+      "Mentored junior and mid-level designers and led workshops, classes and design critiques.",
     ],
     caseSlug: "banco-de-occidente",
     era: "core",
@@ -157,9 +163,9 @@ export const experiences: Experience[] = [
     summary:
       "Mobile and web design for Royal Caribbean cruises, from Globant's Medellín studio, with product and engineering based in the US.",
     impact: [
-      "**Booking and onboard guest experience** — mobile flows across destinations, stateroom types and life aboard.",
-      "**Designed for intermittent connectivity** — schedules, dining, excursions and balances that hold up at sea.",
-      "**Cross-functional collaboration** with US-based product and engineering teams.",
+      "Designed the mobile and web booking and onboard flows: destinations, stateroom types and life aboard.",
+      "Designed schedules, dining, excursions and balances to hold up on intermittent connectivity at sea.",
+      "Worked with cross-functional product and engineering teams in the United States.",
     ],
     caseSlug: "royal-caribbean",
     era: "core",
@@ -168,6 +174,7 @@ export const experiences: Experience[] = [
     id: "qrvey",
     company: { name: "Qrvey", url: "https://www.qrvey.com" },
     client: "Survey & NPS Platform",
+    employer: "Ideaware",
     // Behance says "Lead Senior UX/UI"; the 2026 PDF says "Lead UI Designer".
     // Confirmed: the PDF wins.
     role: "Lead UI Designer",
@@ -177,13 +184,12 @@ export const experiences: Experience[] = [
     // Two corrections, both confirmed. Qrvey reads as an embedded analytics
     // platform today; in 2016–17 it was surveys and NPS, which is what the
     // screens show. And it was not a new employer: Ideaware promoted Doug onto
-    // the Qrvey account, so this entry and Ideaware's overlap on purpose.
+    // the Qrvey account, hence `employer`. The Senior entry ends where this one starts.
     summary:
       "Lead UI designer on Qrvey, an Ideaware engagement — a survey and NPS platform, its dashboard, and AutomatiQ, the builder that turned a response into an action.",
     impact: [
-      "**Owned the visual language** of the product, mobile and web.",
-      "**Designed AutomatiQ end to end** — the process list, the trigger cards, the condition editor and the actions they fire.",
-      "**Prototyped UX/UI improvements** that shipped to production.",
+      "Promoted to lead UI on Qrvey, a survey and NPS platform: defined its visual language across mobile and web.",
+      "Designed AutomatiQ end to end, the automation builder (processes, triggers, conditions and actions), and prototyped UX/UI improvements that shipped.",
     ],
     caseSlug: "qrvey",
     era: "core",
@@ -193,18 +199,16 @@ export const experiences: Experience[] = [
     company: { name: "Ideaware", url: "https://www.ideaware.co" },
     role: "Senior UX/UI Designer",
     start: { year: 2016, month: 3 },
-    // Ends where Globant begins, not where Qrvey begins: Qrvey was a promotion
-    // onto that account from inside Ideaware, so the two entries overlap on
-    // purpose. Closing this one in Oct 2016 would misdate the job.
-    // ⚠️ CONFIRMAR DOUG — the end month is inferred from the Globant start.
-    end: { year: 2017, month: 8 },
+    // This entry is the Senior role, and it ends where the Qrvey one begins:
+    // Doug confirmed (Oct 2026) the promotion to Lead in Oct 2016. Ideaware
+    // stayed the employer until Aug 2017; `qrvey.employer` carries that.
+    end: { year: 2016, month: 10 },
     location: { city: "Barranquilla", country: "Colombia", mode: "onsite" },
     summary:
       "UX/UI design for international clients at a remote-first agency — wireframes, UI kits and prototypes for web and mobile, and then the Qrvey account, which I was promoted onto and led.",
     impact: [
-      "**Wireframes, UI kits and prototypes** delivered developer-ready across web and mobile.",
-      "**A new domain on every engagement** — the multi-domain fluency that later made systems work feel natural.",
-      "**Pool Botball** — an iOS app for pool chemistry monitoring, designed screen by screen.",
+      "Delivered developer-ready wireframes, UI kits and prototypes for web and mobile to international clients.",
+      "Designed Pool Botball, an iOS app for monitoring pool chemistry.",
     ],
     caseSlug: "ideaware",
     era: "core",
@@ -249,9 +253,9 @@ export const education: Education[] = [
 ];
 
 export const certifications: Certification[] = [
-  { id: "globant-foundations", name: "Design Foundations", issuer: "Globant", year: 2018 },
-  { id: "adl-ds-essentials", name: "Design System Essentials", issuer: "Aval Digital Labs", year: 2020 },
   { id: "coursera-ui", name: "Introduction to UI", issuer: "Coursera", year: 2022 },
+  { id: "adl-ds-essentials", name: "Design System Essentials", issuer: "Aval Digital Labs", year: 2020 },
+  { id: "globant-foundations", name: "Design Foundations", issuer: "Globant", year: 2018 },
 ];
 
 export const skills: SkillGroup[] = [
@@ -261,8 +265,8 @@ export const skills: SkillGroup[] = [
     items: [
       { label: "Product direction", primary: true },
       { label: "Design thinking", primary: true },
-      { label: "User research & surveys" },
-      { label: "User journeys" },
+      { label: "User research" },
+      { label: "Customer journeys" },
       { label: "User flows" },
       { label: "A/B testing" },
       { label: "Wireframing" },
@@ -273,24 +277,26 @@ export const skills: SkillGroup[] = [
     id: "systems",
     label: "Design systems",
     items: [
-      { label: "Tokens & foundations", primary: true },
+      { label: "Design tokens", primary: true },
+      { label: "Foundations" },
       { label: "Component libraries", primary: true },
       { label: "Governance" },
       { label: "Documentation" },
-      { label: "UI kits" },
       { label: "Atomic design" },
-      { label: "Cross-platform parity" },
+      { label: "iOS, Android and Web parity" },
     ],
   },
   {
     id: "engineering",
     label: "Engineering",
     items: [
-      { label: "TypeScript & JavaScript", primary: true },
-      { label: "React & Next.js", primary: true },
+      { label: "TypeScript", primary: true },
+      { label: "JavaScript" },
+      { label: "React", primary: true },
+      { label: "Next.js" },
       { label: "Node.js" },
       { label: "Automated testing" },
-      { label: "PWA & service workers" },
+      { label: "PWA" },
       { label: "IndexedDB" },
       { label: "Content Security Policy" },
       { label: "Git" },
@@ -298,49 +304,34 @@ export const skills: SkillGroup[] = [
   },
   {
     id: "ai",
-    label: "AI in the build",
+    label: "Applied AI",
     items: [
       { label: "Prototyping in code with AI", primary: true },
       { label: "Generative UI" },
-      { label: "LLM-driven flows" },
+      { label: "LLM flows" },
       { label: "Prompt-driven design audits" },
-      { label: "Structured tool calls" },
-      { label: "On-device and privacy constraints" },
+      { label: "Tool calling" },
     ],
   },
   {
-    id: "platforms",
-    label: "Platforms",
+    id: "leadership",
+    label: "Leadership",
     items: [
-      { label: "iOS" },
-      { label: "Android" },
-      { label: "Web" },
-      { label: "Responsive" },
-      { label: "Web & app interactions" },
-      { label: "No-code tools" },
+      { label: "Mentoring" },
+      { label: "Design workshops and critiques" },
+      { label: "Cross-functional teams" },
+      { label: "Stakeholder sign-off" },
+      { label: "Collaboration with US teams" },
     ],
   },
 ];
 
+// Trimmed in Oct 2026 to what Doug works in today: InVision, Marvel, Balsamiq,
+// Adobe XD, Sketch and Spline read as dated on a 2026 CV.
 export const tools: ToolGroup[] = [
-  {
-    id: "design",
-    label: "Design",
-    items: [
-      "Figma",
-      "Sketch",
-      "Adobe XD",
-      "Illustrator",
-      "Photoshop",
-      "Balsamiq",
-      "InVision",
-      "Marvel",
-      "Spline",
-      "Webflow",
-    ],
-  },
+  { id: "design", label: "Design", items: ["Figma", "Webflow", "Illustrator", "Photoshop"] },
   { id: "code", label: "Code", items: ["Claude Code", "Cursor", "GitHub", "Storybook"] },
-  { id: "ai", label: "AI", items: ["Claude", "Gemini", "ChatGPT", "Midjourney"] },
+  { id: "ai", label: "AI", items: ["Claude", "ChatGPT", "Gemini", "Midjourney"] },
   { id: "collaboration", label: "Collaboration", items: ["Jira", "Notion"] },
 ];
 
@@ -349,7 +340,26 @@ export const languages: Language[] = [
   { name: "English", cefr: "B1", level: "B1 · Working proficiency" },
 ];
 
+/**
+ * The top of the printed CV: one paragraph a recruiter reads in seconds, and
+ * the figures behind it. Separate from `site.summary*`, which speak in the
+ * first person for the site; this one is written for an applicant tracker.
+ * Every figure here already appears in an experience's bullets.
+ */
+export interface CvProfile {
+  /** Takes `yearsOfExperience()`, so the count never needs a hand edit. */
+  summary: (years: number) => string;
+  highlights: string[];
+}
+
+export const profile: CvProfile = {
+  summary: (years) =>
+    `Head of Product and design systems lead with ${years} years in digital product design. I lead product at Naowee, the platform for Colombia's sports system, and build working prototypes in code with AI. Before that I was Tech Lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months Design System Gatekeeper at Banco de Occidente.`,
+  highlights: ["18 countries", "400+ designers", "2,000+ engineers", "12+ squads", "130+ screens"],
+};
+
 export interface CvData {
+  profile: CvProfile;
   experiences: Experience[];
   education: Education[];
   certifications: Certification[];
@@ -358,7 +368,7 @@ export interface CvData {
   languages: Language[];
 }
 
-const cvEn: CvData = { experiences, education, certifications, skills, tools, languages };
+const cvEn: CvData = { profile, experiences, education, certifications, skills, tools, languages };
 
 /**
  * The Spanish CV is the English one with its words swapped, field by field and
@@ -366,6 +376,7 @@ const cvEn: CvData = { experiences, education, certifications, skills, tools, la
  * same objects — and a test checks that no list lost or gained an item.
  */
 const cvEs: CvData = {
+  profile: profileEs,
   experiences: experiences.map((e) => ({ ...e, ...experiencesEs[e.id] })),
   education: education.map((e) => ({ ...e, ...educationEs[e.id] })),
   certifications,

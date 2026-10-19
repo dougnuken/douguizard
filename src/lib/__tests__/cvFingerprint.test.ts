@@ -12,7 +12,6 @@ import { cvFingerprint } from "@/lib/cvFingerprint";
  * it tells: change a date, a role, a bullet or a profile, in either language,
  * and it fails until someone runs the generator again.
  *
- *   npm run build && npx next start -p 4173 &
  *   npm run cv:pdf
  */
 const SHEETS = [

@@ -16,6 +16,11 @@ export interface Site {
   domain: string;
   /** One canonical headline. Header, hero kicker, CV, JSON-LD jobTitle, OG. */
   headline: string;
+  /**
+   * The headline cut to fit a browser tab and a search result (titles stay
+   * under 75 characters). Same titles, fewest words; used only in `<title>`.
+   */
+  titleHeadline: string;
   /** The arc. Shown as a label, never narrated as a sentence. */
   positioning: string;
   /** 3 sentences. About bio lead, CV summary lead, and the base for seo.description. */
@@ -34,8 +39,12 @@ export interface Site {
     note?: string;
   };
   social: SocialLink[];
-  /** `pdf` is per language: each CV page hands out the sheet in its own language. */
-  cv: { path: string; pdf?: string };
+  /**
+   * Per language: each CV page hands out the sheets in its own language. `pdf`
+   * carries the photo (expected in Colombia and LATAM); `pdfNoPhoto` is the same
+   * sheet without it, for US-style hiring and portals that strip images.
+   */
+  cv: { path: string; pdf?: string; pdfNoPhoto?: string };
   seo: {
     /** Trimmed to survive Google's ~160-char cut. Not the same string as summary. */
     description: string;
@@ -59,12 +68,13 @@ export const site: Site = {
   name: "Doug Vargas",
   brand: "Douguizard",
   domain: "douguizard.com",
-  headline: "Head of Product · Design Engineer",
+  headline: "Head of Product · Senior Product Designer (UX/UI) · Design Engineer",
+  titleHeadline: "Head of Product · Product Designer (UX/UI)",
   positioning: "Product Designer → Design Engineer",
   summary:
     "I'm a product designer who builds. I lead product at Naowee and ship the prototypes that define it — one design system, working code, AI in the loop. Before that I maintained Andes, the design system behind Mercadolibre across 18 countries.",
   summaryLong:
-    "I'm a product designer who builds. Today I'm Head of Product at Naowee, where I set direction across the eight business modules of the platform built for Colombia's sports system, and build the prototypes that define them. Before that I was technical lead on Andes, the design system behind Mercadolibre across 18 countries, used by 400+ designers and 2,000+ engineers. Earlier I spent six years at Aval Digital Labs as the gatekeeper of Banco de Occidente's design system, and built the bank's digital banking flows for desktop, tablet and mobile. I work in code as well as in Figma, with AI in the loop, and the thing I hand over is a running product.",
+    "I'm a product designer who builds. Today I'm Head of Product at Naowee, where I set direction across the eight business modules of the platform built for Colombia's sports system, and build the prototypes that define them. Before that I was technical lead on Andes, the design system behind Mercadolibre across 18 countries, used by 400+ designers and 2,000+ engineers. Earlier I spent five years and two months at Aval Digital Labs as the gatekeeper of Banco de Occidente's design system, and built the bank's digital banking flows for desktop, tablet and mobile. I work in code as well as in Figma, with AI in the loop, and the thing I hand over is a running product.",
   location: {
     city: "Barranquilla",
     country: "Colombia",
@@ -89,7 +99,7 @@ export const site: Site = {
   // Generated from /cv itself by `npm run cv:pdf`, never hand-made — that is
   // how the last one ended up two jobs out of date. A test compares the file's
   // stamp against the live data and fails if they drift.
-  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv.pdf" },
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv.pdf", pdfNoPhoto: "/cv/doug-vargas-cv-no-photo.pdf" },
   seo: {
     description:
       "Doug Vargas leads product at Naowee and builds it — design systems, working prototypes in code, AI in the loop. Previously Andes at Mercadolibre.",
@@ -100,6 +110,7 @@ export const site: Site = {
       "Head of Product",
       "Design Systems",
       "Product Designer",
+      "UX/UI Designer",
       "Naowee",
       "Andes Design System",
       "Mercadolibre",
@@ -115,24 +126,26 @@ export const site: Site = {
  * What changes when the site speaks Spanish. Everything else — the name, the
  * address, the profiles, the headline — is the same fact in both languages.
  *
- * The headline stays in English on purpose: "Head of Product · Design
- * Engineer" is the title on the contract, on LinkedIn and on the CV, and in
- * Colombian tech it is written that way. Translating it would make the two
- * versions of the site disagree about what Doug's job is called.
+ * The headline stays in English on purpose: these are the titles on the
+ * contracts, on LinkedIn and on the CV, and in Colombian tech they are written
+ * that way. Translating them would make the two versions of the site disagree
+ * about what Doug's job is called. "Senior Product Designer (UX/UI)" joined in
+ * Oct 2026, chosen by Doug: it carries the UX/UI keyword recruiters search for
+ * without reading as a junior title next to Head of Product.
  */
 const siteEs: Site = {
   ...site,
   summary:
     "Soy un diseñador de producto que construye. Lidero producto en Naowee y hago los prototipos que lo definen: un solo sistema de diseño, código que funciona y la IA en el proceso. Antes mantuve Andes, el sistema de diseño detrás de Mercadolibre en 18 países.",
   summaryLong:
-    "Soy un diseñador de producto que construye. Hoy soy Head of Product en Naowee, donde marco la dirección de los ocho módulos de negocio de la plataforma construida para el sistema deportivo de Colombia, y construyo los prototipos que los definen. Antes fui líder técnico de Andes, el sistema de diseño detrás de Mercadolibre en 18 países, usado por más de 400 diseñadores y más de 2.000 ingenieros. Antes de eso pasé seis años en Aval Digital Labs como guardián del sistema de diseño del Banco de Occidente, y diseñé su banca digital para escritorio, tableta y celular. Trabajo en código además de en Figma, con la IA en el proceso, y lo que entrego es un producto funcionando.",
+    "Soy un diseñador de producto que construye. Hoy soy Head of Product en Naowee, donde marco la dirección de los ocho módulos de negocio de la plataforma construida para el sistema deportivo de Colombia, y construyo los prototipos que los definen. Antes fui líder técnico de Andes, el sistema de diseño detrás de Mercadolibre en 18 países, usado por más de 400 diseñadores y más de 2.000 ingenieros. Antes de eso pasé 5 años y 2 meses en Aval Digital Labs como guardián del sistema de diseño del Banco de Occidente, y diseñé su banca digital para escritorio, tableta y celular. Trabajo en código además de en Figma, con la IA en el proceso, y lo que entrego es un producto funcionando.",
   availability: {
     ...site.availability,
     label: "Head of Product en Naowee",
     badge: "Disponible",
     note: "Consultoría puntual en sistemas de diseño y producto nativo de IA",
   },
-  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv-es.pdf" },
+  cv: { path: "/cv", pdf: "/cv/doug-vargas-cv-es.pdf", pdfNoPhoto: "/cv/doug-vargas-cv-es-sin-foto.pdf" },
   seo: {
     ...site.seo,
     description:
@@ -147,7 +160,7 @@ const siteEs: Site = {
   },
 };
 
-const siteEn: Site = { ...site, cv: { path: "/en/cv", pdf: site.cv.pdf } };
+const siteEn: Site = { ...site, cv: { ...site.cv, path: "/en/cv" } };
 
 /** The site's facts in one language. `site` itself is the English source. */
 export function getSite(locale: Locale): Site {

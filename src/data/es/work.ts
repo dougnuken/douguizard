@@ -242,7 +242,7 @@ export const workEs: Record<string, CaseCopy> = {
 
   "banco-de-occidente": {
     category: "Banca × Sistemas de diseño",
-    duration: "Más de 5 años",
+    duration: "5 años y 2 meses",
     team: "Equipos del banco y de Aval Digital Labs",
     tagline:
       "Uno de los bancos más grandes de Colombia: su portal rediseñado y Velocity, el sistema de diseño que compartían más de 12 squads.",
