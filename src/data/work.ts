@@ -422,7 +422,7 @@ export const caseStudies: CaseStudy[] = [
     testimonialId: "francesca",
     project: "Banco de Occidente",
     category: "Banking × Design Systems",
-    duration: "5+ years",
+    duration: "5 years, 2 months",
     team: "The bank's and Aval Digital Labs' teams",
     kind: "client",
     tagline:

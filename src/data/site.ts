@@ -64,7 +64,7 @@ export const site: Site = {
   summary:
     "I'm a product designer who builds. I lead product at Naowee and ship the prototypes that define it — one design system, working code, AI in the loop. Before that I maintained Andes, the design system behind Mercadolibre across 18 countries.",
   summaryLong:
-    "I'm a product designer who builds. Today I'm Head of Product at Naowee, where I set direction across the eight business modules of the platform built for Colombia's sports system, and build the prototypes that define them. Before that I was technical lead on Andes, the design system behind Mercadolibre across 18 countries, used by 400+ designers and 2,000+ engineers. Earlier I spent six years at Aval Digital Labs as the gatekeeper of Banco de Occidente's design system, and built the bank's digital banking flows for desktop, tablet and mobile. I work in code as well as in Figma, with AI in the loop, and the thing I hand over is a running product.",
+    "I'm a product designer who builds. Today I'm Head of Product at Naowee, where I set direction across the eight business modules of the platform built for Colombia's sports system, and build the prototypes that define them. Before that I was technical lead on Andes, the design system behind Mercadolibre across 18 countries, used by 400+ designers and 2,000+ engineers. Earlier I spent five years and two months at Aval Digital Labs as the gatekeeper of Banco de Occidente's design system, and built the bank's digital banking flows for desktop, tablet and mobile. I work in code as well as in Figma, with AI in the loop, and the thing I hand over is a running product.",
   location: {
     city: "Barranquilla",
     country: "Colombia",
@@ -125,7 +125,7 @@ const siteEs: Site = {
   summary:
     "Soy un diseñador de producto que construye. Lidero producto en Naowee y hago los prototipos que lo definen: un solo sistema de diseño, código que funciona y la IA en el proceso. Antes mantuve Andes, el sistema de diseño detrás de Mercadolibre en 18 países.",
   summaryLong:
-    "Soy un diseñador de producto que construye. Hoy soy Head of Product en Naowee, donde marco la dirección de los ocho módulos de negocio de la plataforma construida para el sistema deportivo de Colombia, y construyo los prototipos que los definen. Antes fui líder técnico de Andes, el sistema de diseño detrás de Mercadolibre en 18 países, usado por más de 400 diseñadores y más de 2.000 ingenieros. Antes de eso pasé seis años en Aval Digital Labs como guardián del sistema de diseño del Banco de Occidente, y diseñé su banca digital para escritorio, tableta y celular. Trabajo en código además de en Figma, con la IA en el proceso, y lo que entrego es un producto funcionando.",
+    "Soy un diseñador de producto que construye. Hoy soy Head of Product en Naowee, donde marco la dirección de los ocho módulos de negocio de la plataforma construida para el sistema deportivo de Colombia, y construyo los prototipos que los definen. Antes fui líder técnico de Andes, el sistema de diseño detrás de Mercadolibre en 18 países, usado por más de 400 diseñadores y más de 2.000 ingenieros. Antes de eso pasé 5 años y 2 meses en Aval Digital Labs como guardián del sistema de diseño del Banco de Occidente, y diseñé su banca digital para escritorio, tableta y celular. Trabajo en código además de en Figma, con la IA en el proceso, y lo que entrego es un producto funcionando.",
   availability: {
     ...site.availability,
     label: "Head of Product en Naowee",

@@ -31,13 +31,13 @@ Revisión de tres agentes: especialista en ATS, reclutadora de RR. HH. y headhun
 
 ## Datos confirmados por Doug (19 oct 2026)
 
-- **Aval: 5 años y 2 meses** (11/2018 – 01/2024). `site.ts` (`summaryLong`, en inglés y español) todavía dice
-  "seis años"; corregirlo cambia la huella de `/cv` y obliga a regenerar `public/cv/*.pdf` con `npm run cv:pdf`.
+- **Aval: 5 años y 2 meses** (11/2018 – 01/2024). La web dice lo mismo desde el 19 oct 2026 (`site.ts`
+  `summaryLong` y la duración del caso en `work.ts`), con `public/cv/*.pdf` regenerados.
 - **Naowee: equipo de 2 personas** a cargo.
 - **Inglés B1.**
 - No hay cifras de adopción de Andes ni de NPS del Banco de Occidente: el CV no las menciona.
 
-Sin confirmar: fin de Senior UX/UI Designer en Ideaware = 10/2016 (supuse que ahí fue la promoción a Qrvey).
+- **Ideaware:** de Senior UX/UI Designer a Lead UI Designer (Qrvey) en 10/2016.
 
 ## Foto
 
