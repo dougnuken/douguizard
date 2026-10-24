@@ -317,10 +317,12 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p class="lead" style="margin-top:28px">Three products where many people, many rules and a lot of data meet. What was hard, what we decided, and what it cost.</p>
   </div>
   <aside class="notes">
-    <p>Hello, and thank you for your time today.</p>
-    <p>I will show you three products. Each one has many rules, a lot of data, and many roles.</p>
-    <p>I will focus on problems and decisions, not on pixels.</p>
-    <p>Please stop me at any time. Questions are welcome.</p>
+    <p class="hint">Diapositiva de portada abierta. Sonríe, mira a la cámara, espera un segundo antes de hablar.</p>
+    <p>Hello, and thank you for having me today. My name is Doug.</p>
+    <p>I'm a product designer from Barranquilla, Colombia, and I work on complex products.</p>
+    <p>Today I'll show you three of them. Each one has many rules, a lot of data, and many roles.</p>
+    <p>I'll talk about problems and decisions, not pixels. Please stop me at any time. I'd rather have a conversation.</p>
+    <p>→ But first, let me tell you a little about me.</p>
   </aside>
 </section>
 
@@ -340,10 +342,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <img class="portrait" src="../../public/portrait/doug-portrait-900.webp" alt="Portrait of Doug Vargas">
   </div>
   <aside class="notes">
-    <p>I am Doug. I live in Barranquilla, on the Caribbean coast of Colombia.</p>
+    <p class="hint">Avanza. Habla con calma; esta es tu presentación personal.</p>
+    <p>I'm Doug. I live in Barranquilla, on the Caribbean coast of Colombia.</p>
     <p>I have twelve years in product design. My focus is complex products and design systems.</p>
-    <p>I also write code, so I build my own prototypes.</p>
-    <p class="hint">[DOUG: one personal detail — what you enjoy outside work.]</p>
+    <p>Since 2018, I've worked mostly on products with strict rules: a bank, a government platform, a medical clinic.</p>
+    <p>I also write code, so I build my own prototypes. That'll matter in a moment.</p>
+    <p class="hint">[DOUG: one personal detail, for example what you enjoy outside work. Keep it to one short sentence.]</p>
+    <p>→ Now let me show you my path in one line.</p>
   </aside>
 </section>
 
@@ -361,10 +366,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </ol>
   <blockquote class="quote">“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”<cite>Arman Eshraghi, Founder &amp; CEO, Qrvey</cite></blockquote>
   <aside class="notes">
-    <p>This is my path in one line.</p>
-    <p>I started with screens. At Qrvey I designed a data product. I worked with US teams at Ideaware and Globant.</p>
-    <p>From 2018 I focused on systems: five years at the bank, then two years at Mercadolibre.</p>
-    <p>Today I am Head of Product at Naowee.</p>
+    <p class="hint">Señala la línea de tiempo con el cursor, de izquierda a derecha. Lee la cita de Qrvey solo si vas bien de tiempo.</p>
+    <p>This is my path, from 2014 to today.</p>
+    <p>I started with screens. At Qrvey, I designed a data product. I worked with US teams at Ideaware and at Globant.</p>
+    <p>Then, from 2018, I moved to systems: five years at Banco de Occidente, and two years at Mercadolibre.</p>
+    <p>Today I'm Head of Product at Naowee, a government platform.</p>
+    <p>When I look at the whole line, it goes from screens to systems. The three cases follow it.</p>
+    <p>→ So, why these three cases? Before this call, I did some homework. Let me explain.</p>
   </aside>
 </section>
 
@@ -380,10 +388,20 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="k">Consistency across teams</div><div class="v">One design system shared by 12+ product teams</div><div class="w">Occidente</div>
   </div>
   <aside class="notes">
-    <p>These three products look different. But the problem is the same.</p>
-    <p>People follow rules, and the system must show who can do what. There is a lot of data, and a mistake costs money or trust.</p>
-    <p>In your product I see the same shape: evidence, controls, reviews, roles.</p>
-    <p>That is why I chose these three cases.</p>
+    <p class="hint">Diapositiva clave, no la cortes. Señala la tabla fila por fila. Habla más lento. Esta es la diapositiva donde entregas la idea central por primera vez.</p>
+    <p>Before this call, I did some research on Hyperproof. I wanted to understand what you build.</p>
+    <p>What I understood is that Hyperproof is a compliance operations platform. Teams use it to manage frameworks like SOC 2, ISO 27001 or HIPAA.</p>
+    <p>They link controls to evidence, assign owners and reviewers, and get ready for audits.</p>
+    <p>And one control can be mapped to many frameworks, so evidence isn't collected twice. Correct me if I'm wrong.</p>
+    <p>When I read that, I recognized my own work. Not the industry, but the shape. Let me walk you through it.</p>
+    <p>First, evidence linked to a control. In Naowee, each document is checked against the exact article of the law it must meet.</p>
+    <p>Next, control status and testing. In Naowee, every item is marked "meets the rule" or "not verified yet", with a deadline.</p>
+    <p>Then, roles and permissions. Naowee has 15 roles, with approvals from the top down. DC Medical has access by section and action.</p>
+    <p>Steps that can't be skipped. At DC, a treatment can't start until it's paid and the consent is signed.</p>
+    <p>And consistency across teams. At the bank, more than 12 product teams shared one design system.</p>
+    <p>That's why I picked these three cases. They look different, but in each one people follow rules, and the system must show who can do what.</p>
+    <p>And this is what I take from that work. In complex products, the roles and the statuses are the product. I map them first, then I prove them with a working prototype.</p>
+    <p>→ Now let me show you how I work, step by step.</p>
   </aside>
 </section>
 
@@ -398,10 +416,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <li><div class="i">05</div><div class="t">Launch small, then listen</div><div class="b">Release a safe first version. Real use tells us what to build next.</div><div class="x">DC: view-only on day one</div></li>
   </ol>
   <aside class="notes">
-    <p>This is how I work, in five steps.</p>
-    <p>First I look at the real work: the files people use today. The exceptions are where design is hard.</p>
-    <p>Then I map roles and statuses. At Naowee I mapped more than 45 statuses and 15 roles before I drew a screen.</p>
-    <p>Then a prototype with real roles. Then the design system. Then I launch a safe version and I listen.</p>
+    <p class="hint">Recorre los cinco pasos con el cursor. En el paso 02 haz una pausa y repite la idea central con tus palabras.</p>
+    <p>Here's how I get to those roles and statuses. I work in five steps, and I map who does what before I design screens.</p>
+    <p>Step one: the first thing I do is look at the real work. I ask for the files, emails and spreadsheets people use today.</p>
+    <p>That's where the exceptions are, and that's where design gets hard. At Naowee, this meant 30 processes in Word and email.</p>
+    <p>Step two: I map roles and statuses, before any screen. At Naowee, that was more than 45 statuses and 15 roles, before I drew one screen.</p>
+    <p>Step three: a clickable prototype with real roles and real data. The team approves the prototype, not a document.</p>
+    <p>Step four: what repeats goes into the design system. We have more than 38 shared components.</p>
+    <p>Step five: I launch small, then I listen. At DC, the first version was view-only on day one.</p>
+    <p>→ But how does this work with other people? Let's talk about requirements and developers.</p>
   </aside>
 </section>
 
@@ -427,10 +450,17 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>For requirements, I start from what already exists.</p>
-    <p>I also challenge the plan early. At DC Medical the plan changed twice before I wrote code.</p>
-    <p>I like people to approve something that works. A document is read in many ways. A prototype shows the problems early, when they are cheap.</p>
-    <p>With developers, I give a clear target built with the system. And I turn business rules into tests.</p>
+    <p class="hint">Dos columnas: izquierda requisitos, derecha desarrolladores. Si vas tarde, resume cada columna en una frase.</p>
+    <p>Let me tell you what I've learned about working with others. People agree faster on a prototype than on a document.</p>
+    <p>First, requirements. I start from what already exists. Forms, files and emails show how the work really happens.</p>
+    <p>I also challenge the plan early. At DC Medical, I asked for a hard review of data, security and cost.</p>
+    <p>The plan changed twice before I wrote any code.</p>
+    <p>And I like people to approve something that works. A document can be read in many ways.</p>
+    <p>A prototype shows the problems early, when they're cheap to fix.</p>
+    <p>Now, developers. I give them a clear target: a working prototype built with real components, not a long spec.</p>
+    <p>At Mercadolibre, we agreed on one way to build each component for iOS, Android and web.</p>
+    <p>At DC, the rules about money and dates are automated tests: 12 test suites.</p>
+    <p>→ So that's who I am and how I work. Now the first case, and it's in government. Let me show you Naowee.</p>
   </aside>
 </section>
 
@@ -454,10 +484,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="n">38+</div><div class="l">Shared components</div><div class="d">one design system</div></div>
   </div>
   <aside class="notes">
-    <p>This is Naowee. It is my closest case to your product.</p>
-    <p>It is a government platform with many roles, and every document must meet a rule of the law.</p>
-    <p>I am Head of Product. I set the direction and I build the prototypes for each module.</p>
-    <p class="hint">Timing: Naowee ≈ 11 min.</p>
+    <p class="hint">Diapositiva de apertura del caso 1. Pausa de un segundo. Di la versión corta despacio y el eco de la idea central en media frase.</p>
+    <p>This is Naowee. I'm starting with it because it's my closest case to your product, so I'll spend the most time here.</p>
+    <p>It's a government platform that manages Colombia's sports system: clubs, leagues, athletes, sports venues and public funding.</p>
+    <p>The users are government reviewers and coordinators, and the sports organizations they oversee.</p>
+    <p>I'm Head of Product, from 2026 to today. I work with business analysts, a designer I lead, and the developers.</p>
+    <p>Here are the numbers. Thirty legal processes moved online, from Word and email. About 1,200 sports organizations.</p>
+    <p>More than 130 screens, and more than 38 shared components.</p>
+    <p>The short version of what I learned: map the roles and statuses first.</p>
+    <p>→ Let me start with what I found when I looked at the work.</p>
   </aside>
 </section>
 
@@ -474,9 +509,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>The government inspects about 1,200 sports organizations. The law says how, step by step.</p>
-    <p>Before, all of it moved through Word, email and a shared folder.</p>
-    <p>The process existed, but there was no product.</p>
+    <p class="hint">Muestra la imagen de la bandeja de asignación. Habla más lento en "there was no product".</p>
+    <p>When I started on Naowee, the first thing I asked for was the files people already used.</p>
+    <p>What I found was this. Colombia's Ministry of Sport must inspect about 1,200 sports organizations, and the law says how, step by step.</p>
+    <p>Every inspection moved through Word files, emails and a shared folder. The process existed, but there was no product.</p>
+    <p>On the screen, you see the new assignment inbox: what's in review, what's assigned, and what's being checked.</p>
+    <p>From there I made four decisions. Each one is about a rule, a role or a status.</p>
+    <p>→ The first decision came before any screen.</p>
   </aside>
 </section>
 
@@ -505,9 +544,16 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Like a control's status and its owner: together they decide what each person sees and can do.</p>
   <aside class="notes">
-    <p>I did not start with screens. I started with roles and statuses.</p>
-    <p>Approvals go from the Ministry down to the club. An approved athlete belongs to a club, a league and a federation.</p>
-    <p>A flat list was faster to build. But then nobody could trust a report by league.</p>
+    <p class="hint">Señala la cadena de aprobación de arriba hacia abajo (Ministerio, comités, federaciones, ligas, clubes). Aquí está el corazón del caso: no corras.</p>
+    <p>Looking at those files, I noticed something. Nobody had written down who does what, or what status a request could be in.</p>
+    <p>It lived in people's heads and in emails.</p>
+    <p>So decision one: I mapped every status and every role, more than 45 statuses and 15 roles, before any screen.</p>
+    <p>I also modeled the real chain of approvals, from the Ministry down to each club.</p>
+    <p>An approved athlete belongs to a club, a league and a federation.</p>
+    <p>Of course, this had a cost. A flat list of athletes was faster to build. But then nobody could trust a report by league.</p>
+    <p>You'll probably recognize this from Hyperproof: a control's status and its owner. Together they decide what each person sees and can do.</p>
+    <p class="hint">[DOUG: optional, one sentence about how the analysts or the team reacted when they first saw the map of statuses and roles. Only if it is true.]</p>
+    <p>→ With the roles and statuses clear, I could design the reviewer's screen.</p>
   </aside>
 </section>
 
@@ -526,10 +572,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> This is evidence linked to a control.</p>
   <aside class="notes">
-    <p>This is the reviewer's screen.</p>
-    <p>The deadline is here: 18 days left. Next to it, the checklist.</p>
-    <p>Each document shows the article of the law it must meet. The reviewer approves, rejects or adds a note to each one.</p>
-    <p>The decision stays next to the rule. For you, this is evidence linked to a control.</p>
+    <p class="hint">Señala la fecha límite (18 días) y luego la lista de 7 documentos. Detente en un documento con su artículo de la ley. Esta es la diapositiva más cercana a "evidencia vinculada a un control".</p>
+    <p>Let me tell you why I picked this screen. When I watched the old way, a reviewer opened a file and had to remember which article of the law it should meet.</p>
+    <p>So decision two: each document shows the rule it must meet.</p>
+    <p>This is the reviewer's screen. The deadline is here: 18 days left. Next to it, a checklist of 7 documents.</p>
+    <p>Each document shows the article of the law it must meet. The reviewer approves, rejects, or adds a note.</p>
+    <p>The price was that each row carries more information. But the rule and the proof are in one place.</p>
+    <p>And this is your world. For you, it's evidence linked to a control. The decision stays next to the rule.</p>
+    <p>→ But one document isn't a full review. Let me show you what happens when a whole team reviews one application.</p>
   </aside>
 </section>
 
@@ -548,9 +598,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Like control test results with a due date.</p>
   <aside class="notes">
-    <p>Here, one technical team reviews one project.</p>
-    <p>Every item has its rule and a mark. "Not verified yet" is not the same as "failed".</p>
-    <p>The reviewer sees the progress, 4 of 6, and the deadline at the same time.</p>
+    <p class="hint">Señala una marca "not verified yet" y luego la barra 4 de 6. Haz una pausa después de la frase sobre "not verified yet".</p>
+    <p>Then I looked at how a whole team reviews. Eight technical teams review the same application, each one against its own rules.</p>
+    <p>Nobody could see the progress, or what was missing.</p>
+    <p>So we changed one thing. Here, one technical team reviews one application.</p>
+    <p>Every item has its rule and a mark: it meets the rule, or it's not verified yet.</p>
+    <p>"Not verified yet" isn't the same as "failed". The bar shows 4 of 6 done, under the team's deadline.</p>
+    <p>That was decision three. The trade-off: a third answer is harder to design than yes or no. But it stops people from approving what nobody checked.</p>
+    <p>Think of control test results with a due date. It's the same shape.</p>
+    <p>→ One more decision, this time for the person who assigns the work.</p>
   </aside>
 </section>
 
@@ -569,9 +625,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Like assigning control owners and reviewers while seeing their workload.</p>
   <aside class="notes">
-    <p>Watch the list of reviewers. It shows who is overloaded.</p>
-    <p>The coordinator assigns the request. The counter changes at once, from 6 to 5.</p>
-    <p>No reload, no second screen.</p>
+    <p class="hint">Haz la asignación en la captura o señala el contador que baja de 6 a 5. Di "from 6 to 5" despacio.</p>
+    <p>The last thing I looked at was the coordinator's side. Coordinators assigned new requests without knowing who already had too much work.</p>
+    <p>So decision four: show who's overloaded before you assign. Watch the list of reviewers.</p>
+    <p>The coordinator assigns the request, and the counter changes at once, from 6 pending to 5. No reload, no second screen.</p>
+    <p>The cost is that the list shows more data. But the coordinator decides on one screen.</p>
+    <p>It's like assigning control owners and reviewers while you see their workload.</p>
+    <p>→ That's four decisions. Next, how all of this stays consistent across eight modules.</p>
   </aside>
 </section>
 
@@ -589,10 +649,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="stage tall"><div class="fallback"><span class="meta">Text field: one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
   </div>
   <aside class="notes">
-    <p>Eight modules, eight deadlines, eight reasons to do things differently.</p>
-    <p>My rule is simple: do not make a one-off component. Extend a shared one.</p>
-    <p>Look at the text field: normal, loading, validated, warning, error, read only. Statuses again.</p>
-    <p class="hint">Optional: open the live design system site (link on the slide).</p>
+    <p class="hint">Muestra el campo de texto con sus ocho estados. Opcional: abre el sitio vivo del sistema de diseño (pestaña ya abierta). Si vas tarde, no lo abras.</p>
+    <p>With eight modules, the question was how to keep them consistent. Here's the system behind it. One design system, not eight different styles.</p>
+    <p>It has more than 38 shared components and one pattern for step-by-step forms.</p>
+    <p>Eight modules bring eight deadlines and eight reasons to do things differently.</p>
+    <p>So my rule is simple: no one-off components. If something's missing, we extend a shared one. Anything outside the system is a bug.</p>
+    <p>Look at the text field: idle, active, loading, validated, caution, error, disabled, read only.</p>
+    <p>Those are statuses again, even in one small component.</p>
+    <p>→ Now let me bring it all together: the outcome of Naowee.</p>
   </aside>
 </section>
 
@@ -603,9 +667,12 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p class="lead">Thirty legal processes moved from files to one platform. 130+ screens share one visual language, and the business team approves the working product, not a document.</p>
   </div>
   <aside class="notes">
-    <p>The result: thirty legal processes moved from files to one platform.</p>
-    <p>More than 130 screens, one design system.</p>
-    <p>My lesson: map roles and statuses first. The screens follow.</p>
+    <p class="hint">Diapositiva de cierre del caso 1. Habla despacio. Después del conector, PAUSA: deja 3 segundos de silencio y espera preguntas. Si no hay, usa la transición hacia Occidente.</p>
+    <p>So, what happened: thirty legal processes moved from files to one platform.</p>
+    <p>More than 130 screens share one visual language. And the business team approves the working product, not a document.</p>
+    <p>Looking back, the idea held: I mapped the roles and statuses first, and the screens followed.</p>
+    <p>I'm showing you this because you'll recognize it. Evidence, controls, reviews and roles have the same shape.</p>
+    <p>→ So that's government. Any questions? If not, let's go somewhere very different: a bank, with many teams.</p>
   </aside>
 </section>
 
@@ -629,10 +696,16 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="n">3</div><div class="l">Devices, one experience</div><div class="d">desktop, tablet, phone</div></div>
   </div>
   <aside class="notes">
-    <p>Different industry, same problem: many teams, high stakes, a lot of data.</p>
-    <p>I redesigned the bank's online banking and I built Velocity, its design system.</p>
-    <p>I was also the owner of the system for all the product teams.</p>
-    <p class="hint">Timing: Occidente ≈ 8 min. Cut to 5 if you are late.</p>
+    <p class="hint">PAUSA 1 de preguntas ya hecha (resume cuando termine). Si no hubo preguntas, avanza. Esta es la apertura del caso 2. No repitas la idea central completa: solo la versión corta.</p>
+    <p>This is Banco de Occidente, one of the largest banks in Colombia. Same kind of problem, but at a much bigger scale.</p>
+    <p>I was Senior Product Designer and design system owner at Aval Digital Labs, from 2018 to 2024.</p>
+    <p>I redesigned its online banking, and I built Velocity, the design system that its product teams share.</p>
+    <p>The users are the bank's customers, and more than 12 internal product teams.</p>
+    <p>Here are the numbers. More than 12 teams on one system. More than 20 documented parts.</p>
+    <p>15 custom icons. And 3 devices with one experience.</p>
+    <p>The short version: many teams solved the same problem their own way, until one system with one owner fixed it.</p>
+    <p>Different industry, same starting point: many teams, high stakes, a lot of data. The rules came first.</p>
+    <p>→ Let me start with what the bank looked like when I got there.</p>
   </aside>
 </section>
 
@@ -643,9 +716,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p class="lead">The online bank was crowded, and people got lost in pages inside pages. Fixing screens one by one would not last. The bank needed a shared system, and someone to own it.</p>
   </div>
   <aside class="notes">
-    <p>The old online bank was crowded. People got lost in pages inside pages.</p>
-    <p>And every team built its own answer to the same problem.</p>
-    <p>Fixing screens was not enough. We needed a system, and an owner.</p>
+    <p class="hint">Muestra la captura del banco antiguo. Rápido y claro.</p>
+    <p>When I looked at the old online bank, it was crowded. People got lost in pages inside pages.</p>
+    <p>And every team had built its own answer to the same problem.</p>
+    <p>So I saw that fixing screens one by one wouldn't last. The bank needed a shared system, and someone to own it.</p>
+    <p>→ So where did we start? With the errors.</p>
   </aside>
 </section>
 
@@ -664,9 +739,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Like mapping every rejection path of a workflow before building it.</p>
   <aside class="notes">
-    <p>The happy path is easy. The errors are the real design.</p>
-    <p>This is sign-up with a one-time code. Look at the error branches: send the code again, wrong code, failed check.</p>
-    <p>I drew them first. Then we tested prototypes with users before building.</p>
+    <p class="hint">Señala las ramas de error del registro con código de un solo uso: reenviar código, código incorrecto, verificación fallida.</p>
+    <p>Think about signing up for online banking. It can fail in many ways: the code doesn't arrive, it's typed wrong, or the identity check fails.</p>
+    <p>So decision one: we did research first. Then we mapped six key flows with all their errors, before any screen.</p>
+    <p>Look at the error branches: send the code again, wrong code, failed check. The happy path is easy.</p>
+    <p>Then we turned the flows into prototypes and tested them with real users before building. Sign-up alone went through several rounds.</p>
+    <p>Of course, this meant a slower start. But we had fewer surprises during development.</p>
+    <p>That's when I understood: in banking, the errors are the real design.</p>
+    <p>If you think about Hyperproof, it's like mapping every rejection path of a workflow before building it.</p>
+    <p>→ Next, a rule that kept the whole product simple.</p>
   </aside>
 </section>
 
@@ -684,9 +765,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="stage tall"><div class="flatpad"><img data-src="../../public/work/banco-de-occidente/popups-system.webp" alt="The pop-up system as four layers: page, blurred background, component, pop-up"></div></div>
   </div>
   <aside class="notes">
-    <p>I set a strict limit: two levels.</p>
-    <p>Page, blurred background, pop-up. Every task fits inside it.</p>
-    <p>The rule is simple, so the teams follow it.</p>
+    <p class="hint">Si vas tarde, esta es la diapositiva que puedes saltar (corte a 5 min). Si la muestras, señala: página, fondo difuminado, ventana emergente.</p>
+    <p>The other thing I saw in the old site was people lost in pages inside pages. So decision two was a strict limit: never more than two levels deep.</p>
+    <p>Page, blurred background, pop-up. Pop-up windows replaced deep navigation. Every banking task fits inside one.</p>
+    <p>The price was that a strict limit forces teams to simplify. But simple rules get followed.</p>
+    <p>→ One more rule, this time about the phone.</p>
   </aside>
 </section>
 
@@ -704,9 +787,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="stage tall contain" style="background:#f5f5f7"><img data-mock="occ-iphone-card" data-flat="../../public/work/banco-de-occidente/responsive-mobile.webp" alt="A credit card on a phone: minimum payment, total payment and due date above a Pay button"></div>
   </div>
   <aside class="notes">
-    <p>The brief said "similar". I made it the same.</p>
-    <p>Same names, same order, on the phone and on the computer.</p>
-    <p>Nobody learns anything twice.</p>
+    <p class="hint">Señala la captura en el teléfono y en el computador lado a lado.</p>
+    <p>The brief asked for a "similar" experience on mobile. But when I thought about the customer, similar means people learn twice.</p>
+    <p>So decision three: I made it the same, not just similar. Everything you can do on desktop is on the phone, with the same names, in the same order.</p>
+    <p>Of course, the phone carries more. But nobody has to learn it again.</p>
+    <p>→ To keep many teams on these rules, we needed a system with an owner. That's Velocity.</p>
   </aside>
 </section>
 
@@ -727,10 +812,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>A design system fails when nobody owns it.</p>
+    <p class="hint">Habla del rol de dueño: aprobar, quitar, talleres, revisiones. Es el puente hacia la parte de gobernanza de sistemas en Hyperproof.</p>
+    <p>Here's the system. Velocity goes from colors and type to full screens, in the same order developers build them: small parts first.</p>
     <p>I was the owner. Teams could propose new parts, but each change went through a review.</p>
-    <p>Velocity goes from small parts to full screens, in the same order the developers build them.</p>
-    <p>Each new screen cost less than the last one.</p>
+    <p>I approved what was added or removed. I also ran workshops and design reviews with the teams.</p>
+    <p>That's how I learned that a design system needs an owner, not only a library. It fails when nobody owns it.</p>
+    <p>With the system, each new screen cost less than the last one. You probably know this better than me, since you handle shared rules too.</p>
+    <p>→ Let me close this case with the outcome.</p>
   </aside>
 </section>
 
@@ -742,8 +830,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <blockquote class="quote" style="font-size:26px;margin-top:48px">“We've done 8 projects with him and every single one delivered above expectations. He doesn't just design — he architects how products should feel.”<cite>Francesca Steri, Design Director, Aval Digital Labs</cite></blockquote>
   </div>
   <aside class="notes">
-    <p>The result: one clear online bank, on one shared system.</p>
-    <p>My lesson: a system needs an owner, not only a library.</p>
+    <p class="hint">Lee la cita de Francesca Steri despacio, solo la primera frase si vas tarde. Al final, PAUSA 2 de preguntas: 3 segundos de silencio. Luego usa la transición hacia DC.</p>
+    <p>So, what happened: one owner kept more than 12 teams consistent.</p>
+    <p>A crowded online bank became one clear product, on a system that made every new screen faster to make.</p>
+    <p>Francesca Steri, Design Director at Aval Digital Labs, said: "We've done 8 projects with him and every single one delivered above expectations."</p>
+    <p>Same pattern as Naowee: I mapped the errors and flows first, then proved them with prototypes.</p>
+    <p>I'm showing you this because you'll recognize it. Many teams need the same rules, and someone must keep them.</p>
+    <p>→ So that's the bank. Any questions? If not, now something small: a clinic, where I did everything myself.</p>
   </aside>
 </section>
 
@@ -767,10 +860,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="n">12</div><div class="l">Automated test suites</div><div class="d">money, dates, access, screens</div></div>
   </div>
   <aside class="notes">
-    <p>This is a clinic I co-own with the doctor. There are few roles, but the rules are strict.</p>
-    <p>I built it alone: product, design and code. It is live and private.</p>
+    <p class="hint">Antes de avanzar, aclara que usarás datos de demostración. Esta es la apertura del caso 3. Solo un eco corto de la idea central.</p>
+    <p>This one is personal: I co-own this clinic with the doctor. It's small, the opposite of a bank in size. But the rules are just as strict.</p>
+    <p>It's a web app that runs a medical aesthetics clinic, mostly from the secretary's phone. A treatment can't start until it's paid for.</p>
+    <p>I designed and built it alone. It has been live since September 21, 2026.</p>
+    <p>Here are the numbers. 14 days from first code to the city agenda. 3 steps with locks.</p>
+    <p>0 new databases, because Google Drive stays the main record. And 12 automated test suites.</p>
+    <p>The short version: everything existed, but nothing was connected. So I used locks instead of reminders.</p>
     <p>Everything I show uses demo data. No real patients.</p>
-    <p class="hint">Timing: DC ≈ 8 min including the live demo.</p>
+    <p>→ Let me start with what I found at the clinic.</p>
   </aside>
 </section>
 
@@ -792,9 +890,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>The clinic had all the information, but in many places: WhatsApp, Google Calendar and Google Drive.</p>
+    <p class="hint">Señala los tres bloques (WhatsApp, Calendar, Drive) y luego "One app on top of them".</p>
+    <p>When I looked at how the clinic worked, here's what I found. All the information existed. None of it was connected.</p>
+    <p>The clinic had WhatsApp for every conversation with patients. It had Google Calendar for the doctor's schedule in three cities.</p>
+    <p>And it had Google Drive for payments, patients and stock.</p>
     <p>To know what a patient owed, the secretary opened files for ten minutes.</p>
-    <p>I built one app on top of those tools, not instead of them.</p>
+    <p>She needed one quick answer: what's the next step for this patient?</p>
+    <p>So I built one app on top of those tools, not instead of them.</p>
+    <p>→ The first decision was about a step that must not be skipped.</p>
   </aside>
 </section>
 
@@ -813,9 +916,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <p class="lockline"><b>Each step shows what is missing, with a link to fix it.</b> The bottom bar always says what comes next.</p>
   <p class="bridge"><b>In Hyperproof terms</b> Like an audit step that can't close until the evidence is attached.</p>
   <aside class="notes">
-    <p>Before, a treatment could start before the payment, the receipt or the consent were complete. That is a real risk.</p>
-    <p>So each case has three steps with locks. The treatment needs full payment, the receipt and the signed consent.</p>
-    <p>The case shows what is missing, with a link to fix it. The bottom bar always says what comes next.</p>
+    <p class="hint">Señala los tres pasos y el candado del paso 3. Muestra las tres condiciones: pagado en total, recibo guardado, consentimiento firmado. Esta diapositiva es la más cercana al "paso que no puede cerrarse sin evidencia".</p>
+    <p>The first risk I saw was this. A treatment could start before the payment, the receipt or the consent were complete. That's a real risk.</p>
+    <p>So decision one: a lock, not a reminder. Now each case has three steps. Step one, consultation: the doctor sees the patient, and the case opens.</p>
+    <p>Step two, payment. Each payment is saved with its receipt, so the balance is always clear.</p>
+    <p>Step three, treatment, is locked until three things are true: paid in full, receipt saved, consent signed.</p>
+    <p>Each step shows what's missing, with a link to fix it. The bottom bar always says what comes next.</p>
+    <p>For me, a lock works better than a reminder. If you think about Hyperproof, it's an audit step that can't close until the evidence is attached.</p>
+    <p>→ Next, who can see and do what in this app.</p>
   </aside>
 </section>
 
@@ -834,9 +942,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions by type of object, with presets for the usual cases.</p>
   <aside class="notes">
-    <p>Access is a grid: each section of the app, by each action.</p>
-    <p>There are quick presets. The doctor can see. The secretary runs the day.</p>
-    <p>Nobody sees a button they cannot use. And the server checks too, not only the screen.</p>
+    <p class="hint">Señala la cuadrícula sección por acción y los presets rápidos.</p>
+    <p>The next question was who can see and do what. The need was simple. The doctor needs to see everything. The secretary needs to run the day.</p>
+    <p>So decision two: access by section, not by job title. It's a grid: section by action.</p>
+    <p>For each person and each section of the app — agenda, payments, stock — see, create, edit, and delete where it matters.</p>
+    <p>There are quick presets: run the day, view only, no access.</p>
+    <p>Of course, the admin has more setup. But nobody sees a button they can't use. And the server checks too, not only the screen.</p>
+    <p>For you, this is roles and permissions by type of object, with presets for the usual cases.</p>
+    <p>→ Now, a decision about numbers. Let me tell you what went wrong first.</p>
   </aside>
 </section>
 
@@ -868,10 +981,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>Each row shows what the patient still owes after that payment.</p>
-    <p>The first version added up the column. It showed a debt that did not exist: thirty-eight million pesos, about nine thousand dollars.</p>
-    <p>Now the app reads only the latest row, and a test protects it.</p>
+    <p class="hint">Señala la tabla con los tres pagos, luego "Adding the column: $1.600.000" y "Latest row: $0". Los números son ilustrativos; dilo si te preguntan. Pausa tras "a debt that did not exist".</p>
+    <p>This is the decision I learned the most from. Each payment row shows what the patient still owes after that payment.</p>
+    <p>Look at this example. Three payments. The first version added up the column. It showed a debt that didn't exist.</p>
+    <p>Thirty-eight million pesos. That's about nine thousand dollars.</p>
+    <p>In the example, adding the column gives 1,600,000. But the patient really owes zero.</p>
+    <p>So decision three: never add up balances. Now the app reads only the latest row, and an automated test protects this rule.</p>
+    <p>Here's why I'm showing you this. In any product with a lot of data, the worst bug is a number that looks correct.</p>
     <p>Money rules must be tested, not trusted.</p>
+    <p>→ Now, the device where this app really lives: the phone.</p>
   </aside>
 </section>
 
@@ -889,10 +1007,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="stage tall contain" style="background:#f2f3f5"><img data-mock="dc-iphone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a message asking to check every field"></div>
   </div>
   <aside class="notes">
-    <p>The secretary works from her phone, often from the car.</p>
-    <p>So the app installs on the phone. Tables become cards. Buttons are big.</p>
-    <p>She can say who came, for what, and what she paid. The AI fills the form.</p>
-    <p>But nothing is saved until a person checks it.</p>
+    <p class="hint">Muestra la captura del teléfono. Habla de la regla de la IA con calma: es la frase que pueden citar después.</p>
+    <p>Then I looked at where the work really happens. The secretary runs the clinic from her iPhone, often from the car.</p>
+    <p>So decision four: the phone changed the design. The app installs on the phone like an app. Tables become cards.</p>
+    <p>Buttons are big enough for a thumb.</p>
+    <p>She can say who came, for what, and what she paid. A voice note fills the new-patient form.</p>
+    <p>And here's the rule for AI. The AI fills the form, but nothing is saved until a person checks it.</p>
+    <p>→ One more detail, about color and access for all people.</p>
   </aside>
 </section>
 
@@ -909,9 +1030,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="stage tall"><img data-mock="dc-display-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="The month calendar on a desktop display, appointments colored by city"></div>
   </div>
   <aside class="notes">
-    <p>The doctor works in three cities. Each city has a color.</p>
-    <p>We tested the colors for color blindness. And the city name is always next to the color.</p>
-    <p>Nobody has to tell teal from blue.</p>
+    <p class="hint">Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.</p>
+    <p>This one comes from the doctor's calendar. He works in three cities, and it must show where he is at a glance.</p>
+    <p>So each city has a color, and always its name. Orange is Barranquilla, blue is Bogotá, teal is Medellín.</p>
+    <p>We tested the colors for color blindness. And the city name is always next to the color. Nobody has to tell teal from blue.</p>
+    <p>→ Now, let me show you the real thing. A live demo, three minutes.</p>
   </aside>
 </section>
 
@@ -934,12 +1057,17 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     </div>
   </div>
   <aside class="notes">
-    <p>"This is a private product with patient data. I will show demo data only."</p>
-    <ul>
-      <li>Demo: in the dc-medical-dashboard repo run <b>python tools/demo_server.py 8787</b> (Windows) → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
-      <li>Do not log in to the real app during the call.</li>
-    </ul>
-    <p>If the demo fails, stay on this slide. Do not debug on the call.</p>
+    <p class="hint">Cambia a la pestaña de la demo (http://localhost:8787, editora). Antes di la frase de datos de demostración. Orden: tablero 30 s, caso de paciente 60 s, usuarios y acceso 45 s, vista de lector con ?rol=lector 30 s, nota de voz opcional 15 s. Si falla, quédate en esta diapositiva y no depures. No entres al panel real.</p>
+    <p>"This is a private product with patient data. I'll show demo data only."</p>
+    <p>First, the follow-up board. Here are the counters, the tabs, and the filters by city.</p>
+    <p>The counters answer one question: where's the problem?</p>
+    <p>Now, one patient case. Here are the steps. Here's what's missing. And here, at the bottom, is what comes next.</p>
+    <p>Next, users and access. The doctor can only view. This is the grid I showed you: section by action.</p>
+    <p>Now the same app as a viewer. Look: the edit buttons disappear. Nobody sees a button they can't use.</p>
+    <p class="hint">[Optional, if time: the voice note on the phone. The AI fills the form, and a person confirms.]</p>
+    <p>This is the first version, view-only. It was safe from day one. Editing came later, with a personal login and a security review.</p>
+    <p>And Google Drive stays the main record. If the app goes down, nothing is lost.</p>
+    <p>→ That's the demo. Let me go back to the slides and close this case.</p>
   </aside>
 </section>
 
@@ -950,10 +1078,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p class="lead">Each patient case now shows what is owed next to the next step. When the clinic asks for something new, most of it ships within a day.</p>
   </div>
   <aside class="notes">
-    <p>Now each case shows what the patient owes, next to the next step.</p>
-    <p>When the clinic asks for something, most of it ships within a day.</p>
-    <p>My lesson: turn important rules into locks, not notes.</p>
-    <p class="hint">[DOUG: if you have it, say how long it takes now to find a balance.]</p>
+    <p class="hint">Vuelve a la pestaña del deck. Respira. Es el cierre del caso 3 y de los tres casos: haz el recap corto.</p>
+    <p>So, what happened: each patient case now shows what's owed, next to the next step.</p>
+    <p>When the clinic asks for something new, most of it ships within a day.</p>
+    <p class="hint">[DOUG: if you have it, say how long it takes now to find a balance. Before, it was about ten minutes.]</p>
+    <p>What I learned here: turn important rules into locks, not notes. Roles and statuses first, one more time.</p>
+    <p>Looking back at the three cases, a short recap. At Naowee, a chain of roles and statuses. At the bank, errors and an owner.</p>
+    <p>And at DC, locks and rules that are tested.</p>
+    <p>→ So that's three cases. What do they share? A design system. Let me talk about that.</p>
   </aside>
 </section>
 
@@ -968,10 +1100,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="who">Naowee · 2026–today</div><div class="t">Naowee DS</div><div class="n">38+ components · 130+ screens</div><div class="b">No one-off components. One pattern for forms. Prototypes use the system, so what we approve is what gets built.</div></div>
   </div>
   <aside class="notes">
-    <p>All three cases depend on a design system. So let me talk about systems.</p>
-    <p>The hard part is not the button. It is the rules: who can add, who can remove, how teams change.</p>
-    <p>At Mercadolibre I was the technical lead of Andes, for more than 400 designers and 2,000 developers in 18 countries.</p>
+    <p class="hint">Señala las tres columnas de izquierda a derecha. Tiempo: 1,5 minutos.</p>
+    <p>Something I noticed in all three cases: the hard part of a design system isn't the button. It's the rules for people.</p>
+    <p>Who can add, who can remove, how teams change.</p>
+    <p>At Banco de Occidente, I built Velocity and I owned it, for more than 12 product teams.</p>
+    <p>At Mercadolibre, I was the technical lead of Andes, for more than 400 designers and 2,000 developers in 18 countries.</p>
     <p>We used AI to find inconsistencies in Figma before release.</p>
+    <p>At Naowee, there are no one-off components, and one pattern for forms.</p>
+    <p>Prototypes use the system, so what we approve is what gets built. I'm curious how you handle this at Hyperproof.</p>
+    <p>→ Next, the tools I use to decide and to prove.</p>
   </aside>
 </section>
 
@@ -986,9 +1123,12 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </dl>
   <div class="ai-rule"><b>AI drafts. A person decides.</b><span>I use AI to build prototypes in code and to review design systems. In the products I ship, AI can fill a form, but a person confirms before anything is saved.</span></div>
   <aside class="notes">
+    <p class="hint">Si vas tarde, dila en 1 minuto o menos. Es la diapositiva que se corta primero.</p>
+    <p>A quick word on tools, since they follow what I've shown you. I use Figma to decide, and code to prove it.</p>
     <p>I design in Figma. I also build prototypes in code with Claude Code and Cursor.</p>
-    <p>AI writes a first version. A person always checks it.</p>
-    <p class="hint">If short on time: say this slide in 1 minute.</p>
+    <p>AI drafts, and a person decides. I use AI to build prototypes and to review design systems.</p>
+    <p>In the products I ship, AI can fill a form, but a person confirms before anything is saved.</p>
+    <p>→ Now, to close, what I'd bring to your team.</p>
   </aside>
 </section>
 
@@ -1001,10 +1141,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="i">03</div><div class="t">A shared system, and prototypes developers trust</div><div class="b">Rules that keep many teams consistent, and working prototypes as the common goal.</div></div>
   </div>
   <aside class="notes">
-    <p>To close, three things I would bring to your team.</p>
-    <p>One: I map roles and statuses before screens, so permissions are clear.</p>
-    <p>Two: I make dense data easy to read and to act on.</p>
-    <p>Three: I keep a design system consistent with clear rules, and I use working prototypes to align with developers.</p>
+    <p class="hint">Diapositiva que no se corta. Habla lento, mira a la cámara en la última frase. Señala cada punto 01, 02, 03.</p>
+    <p>To close, let me go back to the beginning. When I read about Hyperproof, I saw controls, evidence, owners, reviewers and audits.</p>
+    <p>That's the same shape I showed you three times. So here are three things I'd bring to your team.</p>
+    <p>One: roles and statuses before screens. Clear permissions and workflows, because they were mapped first. At Naowee, 45 statuses and 15 roles.</p>
+    <p>Two: dense data that people can act on. The next step is next to the data.</p>
+    <p>Statuses are honest, like "not verified yet". And the numbers are numbers you can trust.</p>
+    <p>Three: a shared system, and prototypes that developers trust. Rules that keep many teams consistent, and a working prototype as the common goal.</p>
+    <p>And this is what I take from the three cases. In complex products, the roles and the statuses are the product. I map them first, then I prove them with a working prototype.</p>
+    <p>→ Thank you. Now I'd love to hear your questions.</p>
   </aside>
 </section>
 
@@ -1014,8 +1159,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="contact"><a href="https://douguizard.com" target="_blank" rel="noopener">douguizard.com</a><a href="https://linkedin.com/in/dougvargasco" target="_blank" rel="noopener">linkedin.com/in/dougvargasco</a><a href="mailto:hello@douguizard.com">hello@douguizard.com</a></div>
   </div>
   <aside class="notes">
-    <p>Thank you. I would love to hear your questions.</p>
-    <p class="hint">Q&amp;A bank: see NOTES.md. Press O to jump to any slide during questions.</p>
+    <p class="hint">Deja esta diapositiva abierta durante las preguntas. Sonríe y espera. Pulsa O para saltar a cualquier diapositiva si una pregunta lo pide. Preguntas con más probabilidad: ver el banco de preguntas en NOTES.md.</p>
+    <p>Thank you. I'd love to hear your questions.</p>
+    <p>You can find me at douguizard.com, on LinkedIn, or by email.</p>
+    <p>→ Please, go ahead. What would you like to ask?</p>
   </aside>
 </section>
 
