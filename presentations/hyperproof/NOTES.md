@@ -27,7 +27,8 @@ Es idéntica a la inglesa, para leerla y entenderla antes de presentar.
 
 **Teleprompter:** `teleprompter.html` (el guion completo con conectores, en inglés con traducción al español).
 Ábrelo en otra pantalla o en el iPad. Espacio inicia/pausa, ↑↓ cambia la velocidad, ←→ salta de diapositiva, `T` oculta el español.
-El texto vive en `GUION.md`; si lo editas, corre `python presentations\hyperproof\build-teleprompter.py`.
+El texto vive en `GUION.md`; si lo editas, corre `python presentations\hyperproof\build-teleprompter.py` y
+`python presentations\hyperproof\sync-notes.py` (este copia el guion a las notas de los dos decks, para que digan lo mismo).
 
 ## La idea que deben recordar
 
