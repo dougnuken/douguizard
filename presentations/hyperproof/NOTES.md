@@ -4,7 +4,9 @@ Lunes 26 de octubre de 2026, 2:00 p. m. · 60 minutos · equipo de diseño de Hy
 
 ## Abrir la presentación
 
-1. Una sola vez: `bash presentations/hyperproof/fetch-mockups.sh` (descarga los 9 mockups para que funcione sin internet).
+1. Opcional, una sola vez: en PowerShell, dentro de `presentations\hyperproof`, corre
+   `powershell -ExecutionPolicy Bypass -File fetch-mockups.ps1` (descarga los 9 mockups para que funcione sin internet).
+   Sin este paso el deck igual los carga de internet.
    Si no lo corres, el deck los carga del CDN de Higgsfield; sin internet muestra las capturas planas.
 2. Abre `presentations/hyperproof/index.html` en Chrome (doble clic). Pulsa `F` para pantalla completa.
 3. Pulsa `P`: se abre la **ventana de presentador** con tus notas en inglés sencillo, la siguiente diapositiva y un cronómetro.
@@ -25,7 +27,7 @@ Es idéntica a la inglesa, para leerla y entenderla antes de presentar.
 
 **Teleprompter:** `teleprompter.html` (el guion completo con conectores, en inglés con traducción al español).
 Ábrelo en otra pantalla o en el iPad. Espacio inicia/pausa, ↑↓ cambia la velocidad, ←→ salta de diapositiva, `T` oculta el español.
-El texto vive en `GUION.md`; si lo editas, corre `python3 presentations/hyperproof/build-teleprompter.py`.
+El texto vive en `GUION.md`; si lo editas, corre `python presentations\hyperproof\build-teleprompter.py`.
 
 ## La idea que deben recordar
 
@@ -57,7 +59,7 @@ Nunca cortes «Your world is already in my work» (4) ni «What I would bring» 
 ## Antes de la llamada
 
 - [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 11, 13, 15, 19, 22, 25, 27, 28).
-- [ ] Demo de DC lista: en `dc-medical-dashboard`, `python3 tools/demo_server.py 8787` → http://localhost:8787 (editora) y
+- [ ] Demo de DC lista: en `dc-medical-dashboard`, `python tools/demo_server.py 8787` → http://localhost:8787 (editora) y
       http://localhost:8787/?rol=lector (lector). Ten las dos pestañas abiertas. No inicies sesión en el panel real durante la llamada.
 - [ ] Abre en otra pestaña el sistema de diseño de Naowee: https://naowee-tech.github.io/design-naowee-design-system/
 - [ ] Prueba compartir pestaña + ventana de presentador 10 minutos antes.

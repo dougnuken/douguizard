@@ -36,8 +36,9 @@ body { font-family: var(--font); -webkit-font-smoothing: antialiased; overflow: 
 a { color: inherit; }
 
 /* The deck is drawn on a fixed 1600x900 canvas and scaled to the window. */
-#viewport { position: fixed; inset: 0; display: grid; place-items: center; }
-#deck { position: relative; width: 1600px; height: 900px; transform-origin: center center; flex: none; }
+#viewport { position: fixed; inset: 0; overflow: hidden; }
+/* Centred by offset, not by grid: a grid track grows to the 1600px canvas and pushes it right before the scale applies. */
+#deck { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: center center; }
 
 .slide {
   position: absolute; inset: 0; padding: 88px 104px 96px;
@@ -933,7 +934,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>"This is a private product with patient data. I will show demo data only."</p>
     <ul>
-      <li>Demo: in the dc-medical-dashboard repo run <b>python3 tools/demo_server.py 8787</b> → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
+      <li>Demo: in the dc-medical-dashboard repo run <b>python tools/demo_server.py 8787</b> (Windows) → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
       <li>Do not log in to the real app during the call.</li>
     </ul>
     <p>If the demo fails, stay on this slide. Do not debug on the call.</p>
@@ -1054,14 +1055,14 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   var CDN = "https://d2ol7oe51mr4n9.cloudfront.net/user_3IvZCcP0Hh0Iw00znaf8bruzl4p/";
   var MOCKS = {
     "naowee-display-workspace": "3bd30e97-d373-4978-a9ba-457f4bd63a82",
-    "naowee-ipad-review": "ef1da430-28d9-45bd-8c55-b998c5291b2b",
+    "naowee-ipad-review": "4c0a210e-8776-4888-b061-ec73ed259505",
     "naowee-macbook-ds": "94261b16-3e47-4674-abb4-5ccb9c8f6983",
-    "occ-ipad-accounts": "6f7bd511-16a2-4e05-977a-2259ec5021bd",
+    "occ-ipad-accounts": "4d9815bd-1a1f-4035-b165-f1327d8c66c2",
     "occ-iphone-card": "291f0cc7-4639-4e5c-b24d-bf66b9e19763",
     "dc-iphone-voice": "79423053-04e3-4eb0-9774-1223ed136c80",
     "dc-display-agenda": "bcf9c66c-1279-47bd-a081-9caaf9a0b031",
-    "dc-macbook-followup": "c991d2f7-04f3-44ab-9071-1c49fc95ed14",
-    "dc-ipad-permissions": "18b4d280-71bf-41ce-b705-fd47728b6ba4"
+    "dc-macbook-followup": "b417ddfe-f499-4612-8c75-da729e11c0b2",
+    "dc-ipad-permissions": "0b5371cc-c515-4b39-af64-663031a20104"
   };
   document.querySelectorAll("img[data-mock]").forEach(function (img) {
     var name = img.dataset.mock, tries = ["assets/mockups/" + name + ".jpg", CDN + MOCKS[name] + ".jpg"];
@@ -1084,7 +1085,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 
   function fit() {
     var s = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
-    deck.style.transform = "scale(" + s + ")";
+    deck.style.transform = "translate(-50%, -50%) scale(" + s + ")";
   }
   window.addEventListener("resize", fit); fit();
 
