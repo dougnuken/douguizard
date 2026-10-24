@@ -95,7 +95,7 @@ Los números de la diapositiva de saldos (26) están marcados como ilustrativos.
    I make the disagreement concrete with a prototype, while it is still cheap. At Mercadolibre we agreed one component API across iOS, Android and Web. `[DOUG: a short real story]`
 
 7. **How do you design roles and permissions?**
-   I list roles and states first, then the actions. At Naowee: 15 roles and cascading approval, from the Ministry to the club. At DC: permissions by area and action, with presets; you never see a button you can't use, and the server checks too. (Naowee, DC)
+   I list roles and states first, then the actions. At Naowee: 15 roles and cascading approval, from the Ministry to the club. At DC: permissions by section of the app and action, with presets; you never see a button you can't use, and the server checks too. (Naowee, DC)
 
 8. **How do you handle dense tables and data?**
    I put the next step beside the data and use honest states, like "unverified". Counters at the top answer "where is the problem". On a phone, tables become cards. `[DOUG: your patterns for filters, sorting and bulk actions]`

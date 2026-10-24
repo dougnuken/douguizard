@@ -373,7 +373,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="h">What you design at Hyperproof</div><div class="h">What I designed</div><div class="h" style="text-align:right">Case</div>
     <div class="k">Evidence linked to a control</div><div class="v">Each document is checked against the exact article of the law it must meet</div><div class="w">Naowee</div>
     <div class="k">Control status and testing</div><div class="v">Every item is marked “meets the rule” or “not verified yet”, with a deadline</div><div class="w">Naowee</div>
-    <div class="k">Roles and permissions</div><div class="v">15 roles with approvals from the top down; access by area and action</div><div class="w">Naowee · DC</div>
+    <div class="k">Roles and permissions</div><div class="v">15 roles with approvals from the top down; access by section and action</div><div class="w">Naowee · DC</div>
     <div class="k">Steps that can't be skipped</div><div class="v">A treatment can't start until it's paid and the consent is signed</div><div class="w">DC Medical</div>
     <div class="k">Consistency across teams</div><div class="v">One design system shared by 12+ product teams</div><div class="w">Occidente</div>
   </div>
@@ -464,7 +464,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="kicker">The problem</span>
       <h2 class="title">Thirty legal processes lived in Word and email.</h2>
-      <p class="body" style="margin-top:28px">The government must inspect about 1,200 sports organizations. Each inspection follows the law, step by step. All of it moved through Word files, emails and a shared document folder. The process existed, but there was no product.</p>
+      <p class="body" style="margin-top:28px">Colombia's Ministry of Sport must inspect about 1,200 sports organizations, and the law says how, step by step. Before, every inspection moved through Word files, emails and a shared folder. The process existed, but there was no product.</p>
     </div>
     <div class="col">
       <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-bandeja.webp" alt="The assignment inbox: counters for requests in review, assigned and being checked, above a table of requests with deadlines"></div></div>
@@ -486,7 +486,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <dl class="moment">
         <div><dt>The pain</dt><dd>Nobody had written down who does what, or what status a request could be in. It lived in people's heads and in emails.</dd></div>
         <div><dt>What we did</dt><dd>I mapped 45+ statuses and 15 roles before any screen. I also modeled the real chain of approvals, from the Ministry down to each club.</dd></div>
-        <div><dt>The trade-off</dt><dd>A simple list of athletes would have been faster to build. But reports by league are only correct if the chain is real.</dd></div>
+        <div><dt>The trade-off</dt><dd>A flat list of athletes was faster to build. But then nobody could trust a report by league.</dd></div>
       </dl>
     </div>
     <div class="col">
@@ -505,7 +505,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>I did not start with screens. I started with roles and statuses.</p>
     <p>Approvals go from the Ministry down to the club. An approved athlete belongs to a club, a league and a federation.</p>
-    <p>A simple list was faster to build. But the reports by league would be wrong.</p>
+    <p>A flat list was faster to build. But then nobody could trust a report by league.</p>
   </aside>
 </section>
 
@@ -537,7 +537,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">UX moment 3</span>
       <h2 class="title">“Not verified yet” is a real answer.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Eight technical teams review the same project. Nobody could see the progress, or what was missing.</dd></div>
+        <div><dt>The pain</dt><dd>Eight technical teams review the same application, each one against its own rules. Nobody could see the progress, or what was missing.</dd></div>
         <div><dt>What we did</dt><dd>Each item shows its rule and a mark: meets the rule, or not verified yet. A bar shows 4 of 6 done, under the team's deadline.</dd></div>
         <div><dt>The trade-off</dt><dd>A third answer is harder to design than yes or no, but it stops people from approving what nobody checked.</dd></div>
       </dl>
@@ -558,7 +558,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">UX moment 4</span>
       <h2 class="title">Show who is overloaded before you assign.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Coordinators assigned late requests without knowing who already had too much work.</dd></div>
+        <div><dt>The pain</dt><dd>Coordinators assigned new requests without knowing who already had too much work.</dd></div>
         <div><dt>What we did</dt><dd>The list of reviewers shows who is overloaded. After assigning, the counters update right away: 6 pending becomes 5.</dd></div>
         <div><dt>The trade-off</dt><dd>The list shows more data, but the coordinator decides on one screen.</dd></div>
       </dl>
@@ -653,8 +653,8 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">UX moment 1</span>
       <h2 class="title">In banking, the errors are the real design.</h2>
       <dl class="moment">
-        <div><dt>What we did</dt><dd>Research first. Then six key flows, mapped with all their errors before any screen.</dd></div>
-        <div><dt>How we tested</dt><dd>Each step became a prototype tested with real users before building. Sign-up went through several rounds.</dd></div>
+        <div><dt>The pain</dt><dd>Sign-up can fail in many ways: the code doesn't arrive, it's typed wrong, or the identity check fails.</dd></div>
+        <div><dt>What we did</dt><dd>Six key flows, mapped with all their errors before any screen, then tested as prototypes with real users. Sign-up took several rounds.</dd></div>
         <div><dt>The trade-off</dt><dd>A slower start, but fewer surprises during development.</dd></div>
       </dl>
     </div>
@@ -714,7 +714,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Design system</span>
       <h2 class="title">A design system needs an owner, not only a library.</h2>
       <dl class="moment">
-        <div><dt>What it covers</dt><dd>Everything from colors and type to full screens, organized the same way developers build it.</dd></div>
+        <div><dt>What it covers</dt><dd>From colors and type to full screens, in the same order developers build them: small parts first.</dd></div>
         <div><dt>How I owned it</dt><dd>I approved what was added or removed, and I ran workshops and design reviews with the teams.</dd></div>
       </dl>
     </div>
@@ -727,7 +727,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>A design system fails when nobody owns it.</p>
     <p>I was the owner. Teams could propose new parts, but each change went through a review.</p>
-    <p>Velocity is organized the same way the developers build: from base styles to full screens.</p>
+    <p>Velocity goes from small parts to full screens, in the same order the developers build them.</p>
     <p>Each new screen cost less than the last one.</p>
   </aside>
 </section>
@@ -802,7 +802,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="phases" style="margin-top:56px">
     <div class="phase"><div class="i">Step 1</div><div class="t">Consultation</div><div class="s">The doctor sees the patient. The case opens.</div></div>
     <div class="arrow"></div>
-    <div class="phase"><div class="i">Step 2</div><div class="t">Payment</div><div class="s">Each payment with its receipt. Card payments count at 95%, because of the card fee.</div></div>
+    <div class="phase"><div class="i">Step 2</div><div class="t">Payment</div><div class="s">Each payment is saved with its receipt, so the balance is always clear.</div></div>
     <div class="arrow"></div>
     <div class="phase locked"><div class="i">Step 3 · locked until</div><div class="t">Treatment</div>
       <ul class="gate"><li>Paid in full</li><li>Receipt saved</li><li>Consent signed</li></ul>
@@ -821,10 +821,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">UX moment 2</span>
-      <h2 class="title">Access by area, not by job title.</h2>
+      <h2 class="title">Access by section, not by job title.</h2>
       <dl class="moment">
         <div><dt>The pain</dt><dd>The doctor needs to see everything. The secretary needs to run the day.</dd></div>
-        <div><dt>What we did</dt><dd>For each person and each area: see, create, edit, and delete where it matters. Quick presets: run the day, view only, no access.</dd></div>
+        <div><dt>What we did</dt><dd>For each person and each section of the app (agenda, payments, stock): see, create, edit, and delete where it matters. Quick presets: run the day, view only, no access.</dd></div>
         <div><dt>The trade-off</dt><dd>More setup for the admin, but nobody sees a button they can't use.</dd></div>
       </dl>
     </div>
@@ -832,7 +832,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions by type of object, with presets for the usual cases.</p>
   <aside class="notes">
-    <p>Access is a grid: area by action.</p>
+    <p>Access is a grid: each section of the app, by each action.</p>
     <p>There are quick presets. The doctor can see. The secretary runs the day.</p>
     <p>Nobody sees a button they cannot use. And the server checks too, not only the screen.</p>
   </aside>
@@ -844,7 +844,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">UX moment 3</span>
       <h2 class="title">Never add up balances.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Each payment row shows what the patient still owes after it. An early version added those rows and showed a debt of 38 million pesos that didn't exist.</dd></div>
+        <div><dt>The pain</dt><dd>Each payment row shows what the patient still owes after it. An early version added those rows and showed a debt of 38 million pesos (about US$9,000) that didn't exist.</dd></div>
         <div><dt>What we did</dt><dd>Now the app reads only the latest row. An automated test protects that rule.</dd></div>
         <div><dt>Why it matters</dt><dd>In products with a lot of data, the worst bug is a number that looks correct.</dd></div>
       </dl>
@@ -867,7 +867,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <aside class="notes">
     <p>Each row shows what the patient still owes after that payment.</p>
-    <p>The first version added up the column. It showed a debt that did not exist: thirty-eight million pesos.</p>
+    <p>The first version added up the column. It showed a debt that did not exist: thirty-eight million pesos, about nine thousand dollars.</p>
     <p>Now the app reads only the latest row, and a test protects it.</p>
     <p>Money rules must be tested, not trusted.</p>
   </aside>

@@ -373,7 +373,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="h">Lo que diseñan en Hyperproof</div><div class="h">Lo que yo diseñé</div><div class="h" style="text-align:right">Caso</div>
     <div class="k">Evidencia vinculada a un control (evidence ↔ control)</div><div class="v">Cada documento se revisa contra el artículo exacto de la ley que debe cumplir</div><div class="w">Naowee</div>
     <div class="k">Estado y pruebas de controles (control status &amp; testing)</div><div class="v">Cada ítem se marca “cumple la regla” o “aún sin verificar”, con una fecha límite</div><div class="w">Naowee</div>
-    <div class="k">Roles y permisos (roles &amp; permissions)</div><div class="v">15 roles con aprobaciones de arriba hacia abajo; acceso por área y acción</div><div class="w">Naowee · DC</div>
+    <div class="k">Roles y permisos (roles &amp; permissions)</div><div class="v">15 roles con aprobaciones de arriba hacia abajo; acceso por sección y acción</div><div class="w">Naowee · DC</div>
     <div class="k">Pasos que no se pueden saltar</div><div class="v">Un tratamiento no empieza hasta que se paga y se firma el consentimiento</div><div class="w">DC Medical</div>
     <div class="k">Consistencia entre equipos</div><div class="v">Un design system compartido por 12+ equipos de producto</div><div class="w">Occidente</div>
   </div>
@@ -464,7 +464,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="kicker">El problema</span>
       <h2 class="title">Treinta procesos legales vivían en Word y correo.</h2>
-      <p class="body" style="margin-top:28px">El gobierno debe inspeccionar unas 1.200 organizaciones deportivas. Cada inspección sigue la ley, paso a paso. Todo pasaba por archivos de Word, correos y una carpeta compartida. El proceso existía, pero no había producto.</p>
+      <p class="body" style="margin-top:28px">El Ministerio del Deporte de Colombia debe inspeccionar unas 1.200 organizaciones deportivas, y la ley dice cómo, paso a paso. Antes, cada inspección pasaba por archivos de Word, correos y una carpeta compartida. El proceso existía, pero no había producto.</p>
     </div>
     <div class="col">
       <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-bandeja.webp" alt="La bandeja de asignación: contadores de solicitudes en revisión, asignadas y en verificación, sobre una tabla de solicitudes con fechas límite"></div></div>
@@ -486,7 +486,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <dl class="moment">
         <div><dt>El dolor</dt><dd>Nadie había escrito quién hace qué, ni en qué estado podía estar una solicitud. Vivía en la cabeza de la gente y en los correos.</dd></div>
         <div><dt>Qué hicimos</dt><dd>Mapeé 45+ estados y 15 roles antes de cualquier pantalla. También modelé la cadena real de aprobaciones, del Ministerio hasta cada club.</dd></div>
-        <div><dt>El trade-off</dt><dd>Una lista simple de deportistas habría sido más rápida de construir. Pero los reportes por liga solo son correctos si la cadena es real.</dd></div>
+        <div><dt>El trade-off</dt><dd>Una lista plana de deportistas era más rápida de construir. Pero entonces nadie podría confiar en un reporte por liga.</dd></div>
       </dl>
     </div>
     <div class="col">
@@ -505,7 +505,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>No empecé con pantallas. Empecé con roles y estados.</p>
     <p>Las aprobaciones van del Ministerio hasta el club. Un deportista aprobado pertenece a un club, una liga y una federación.</p>
-    <p>Una lista simple era más rápida de construir. Pero los reportes por liga saldrían mal.</p>
+    <p>Una lista plana era más rápida de construir. Pero entonces nadie podría confiar en un reporte por liga.</p>
   </aside>
 </section>
 
@@ -537,7 +537,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Momento UX 3</span>
       <h2 class="title">“Aún sin verificar” es una respuesta real.</h2>
       <dl class="moment">
-        <div><dt>El dolor</dt><dd>Ocho equipos técnicos revisan el mismo proyecto. Nadie veía el avance ni lo que faltaba.</dd></div>
+        <div><dt>El dolor</dt><dd>Ocho equipos técnicos revisan la misma solicitud, cada uno con sus propias reglas. Nadie veía el avance ni lo que faltaba.</dd></div>
         <div><dt>Qué hicimos</dt><dd>Cada ítem muestra su regla y una marca: cumple la regla o aún sin verificar. Una barra muestra 4 de 6 listos, bajo la fecha límite del equipo.</dd></div>
         <div><dt>El trade-off</dt><dd>Una tercera respuesta es más difícil de diseñar que sí o no, pero evita aprobar lo que nadie revisó.</dd></div>
       </dl>
@@ -558,7 +558,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Momento UX 4</span>
       <h2 class="title">Mostrar quién está sobrecargado antes de asignar.</h2>
       <dl class="moment">
-        <div><dt>El dolor</dt><dd>Los coordinadores asignaban solicitudes tarde sin saber quién ya tenía demasiado trabajo.</dd></div>
+        <div><dt>El dolor</dt><dd>Los coordinadores asignaban solicitudes nuevas sin saber quién ya tenía demasiado trabajo.</dd></div>
         <div><dt>Qué hicimos</dt><dd>La lista de revisores muestra quién está sobrecargado. Al asignar, los contadores se actualizan al instante: 6 pendientes pasan a 5.</dd></div>
         <div><dt>El trade-off</dt><dd>La lista muestra más datos, pero el coordinador decide en una sola pantalla.</dd></div>
       </dl>
@@ -653,8 +653,8 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Momento UX 1</span>
       <h2 class="title">En la banca, los errores son el verdadero diseño.</h2>
       <dl class="moment">
-        <div><dt>Qué hicimos</dt><dd>Primero investigación. Luego seis flujos clave, mapeados con todos sus errores antes de cualquier pantalla.</dd></div>
-        <div><dt>Cómo probamos</dt><dd>Cada paso fue un prototipo probado con usuarios reales antes de construir. El registro pasó por varias rondas.</dd></div>
+        <div><dt>El dolor</dt><dd>El registro puede fallar de muchas formas: el código no llega, se escribe mal o la verificación de identidad falla.</dd></div>
+        <div><dt>Qué hicimos</dt><dd>Seis flujos clave, mapeados con todos sus errores antes de cualquier pantalla, y luego probados como prototipos con usuarios reales. El registro tomó varias rondas.</dd></div>
         <div><dt>El trade-off</dt><dd>Un inicio más lento, pero menos sorpresas en el desarrollo.</dd></div>
       </dl>
     </div>
@@ -714,7 +714,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Design system</span>
       <h2 class="title">Un design system necesita un responsable, no solo una biblioteca.</h2>
       <dl class="moment">
-        <div><dt>Qué cubre</dt><dd>Todo, desde colores y tipografía hasta pantallas completas, organizado como lo construyen los desarrolladores.</dd></div>
+        <div><dt>Qué cubre</dt><dd>De colores y tipografía a pantallas completas, en el mismo orden en que lo construyen los desarrolladores: primero las piezas pequeñas.</dd></div>
         <div><dt>Cómo fui responsable</dt><dd>Aprobaba lo que se agregaba o quitaba, y dirigía talleres y revisiones de diseño con los equipos.</dd></div>
       </dl>
     </div>
@@ -727,7 +727,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>Un design system fracasa cuando nadie es responsable.</p>
     <p>Yo era el responsable. Los equipos podían proponer piezas nuevas, pero cada cambio pasaba por revisión.</p>
-    <p>Velocity está organizado como construyen los desarrolladores: de estilos base a pantallas completas.</p>
+    <p>Velocity va de piezas pequeñas a pantallas completas, en el mismo orden en que lo construyen los desarrolladores.</p>
     <p>Cada pantalla nueva costaba menos que la anterior.</p>
   </aside>
 </section>
@@ -802,7 +802,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="phases" style="margin-top:56px">
     <div class="phase"><div class="i">Paso 1</div><div class="t">Consulta</div><div class="s">El doctor atiende al paciente. Se abre el caso.</div></div>
     <div class="arrow"></div>
-    <div class="phase"><div class="i">Paso 2</div><div class="t">Pago</div><div class="s">Cada pago con su recibo. Los pagos con tarjeta cuentan al 95%, por la comisión de la tarjeta.</div></div>
+    <div class="phase"><div class="i">Paso 2</div><div class="t">Pago</div><div class="s">Cada pago se guarda con su recibo, así el saldo siempre está claro.</div></div>
     <div class="arrow"></div>
     <div class="phase locked"><div class="i">Paso 3 · bloqueado hasta</div><div class="t">Tratamiento</div>
       <ul class="gate"><li>Pagado por completo</li><li>Recibo guardado</li><li>Consentimiento firmado</li></ul>
@@ -821,10 +821,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">Momento UX 2</span>
-      <h2 class="title">Acceso por área, no por cargo.</h2>
+      <h2 class="title">Acceso por sección, no por cargo.</h2>
       <dl class="moment">
         <div><dt>El dolor</dt><dd>El doctor necesita verlo todo. La secretaria necesita manejar el día.</dd></div>
-        <div><dt>Qué hicimos</dt><dd>Para cada persona y cada área: ver, crear, editar y borrar donde importa. Perfiles rápidos: manejar el día, solo ver, sin acceso.</dd></div>
+        <div><dt>Qué hicimos</dt><dd>Para cada persona y cada sección de la app (agenda, pagos, inventario): ver, crear, editar y borrar donde importa. Perfiles rápidos: manejar el día, solo ver, sin acceso.</dd></div>
         <div><dt>El trade-off</dt><dd>Más configuración para el administrador, pero nadie ve un botón que no puede usar.</dd></div>
       </dl>
     </div>
@@ -832,7 +832,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <p class="bridge"><b>En términos de Hyperproof</b> Roles y permisos por tipo de objeto, con perfiles para los casos habituales.</p>
   <aside class="notes">
-    <p>El acceso es una cuadrícula: área por acción.</p>
+    <p>El acceso es una cuadrícula: cada sección de la app, por cada acción.</p>
     <p>Hay perfiles rápidos. El doctor puede ver. La secretaria maneja el día.</p>
     <p>Nadie ve un botón que no puede usar. Y el servidor también lo verifica, no solo la pantalla.</p>
   </aside>
@@ -844,7 +844,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
       <span class="kicker">Momento UX 3</span>
       <h2 class="title">Nunca sumar saldos.</h2>
       <dl class="moment">
-        <div><dt>El dolor</dt><dd>Cada fila de pago muestra lo que el paciente aún debe después. Una versión temprana sumaba esas filas y mostró una deuda de 38 millones de pesos que no existía.</dd></div>
+        <div><dt>El dolor</dt><dd>Cada fila de pago muestra lo que el paciente aún debe después. Una versión temprana sumaba esas filas y mostró una deuda de 38 millones de pesos (unos US$9.000) que no existía.</dd></div>
         <div><dt>Qué hicimos</dt><dd>Ahora la app lee solo la última fila. Una prueba automática protege esa regla.</dd></div>
         <div><dt>Por qué importa</dt><dd>En productos con muchos datos, el peor error es un número que parece correcto.</dd></div>
       </dl>
@@ -867,7 +867,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <aside class="notes">
     <p>Cada fila muestra lo que el paciente aún debe después de ese pago.</p>
-    <p>La primera versión sumaba la columna. Mostró una deuda que no existía: treinta y ocho millones de pesos.</p>
+    <p>La primera versión sumaba la columna. Mostró una deuda que no existía: treinta y ocho millones de pesos, unos nueve mil dólares.</p>
     <p>Ahora la app lee solo la última fila, y una prueba la protege.</p>
     <p>Las reglas de dinero se prueban, no se asumen.</p>
   </aside>
