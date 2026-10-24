@@ -484,15 +484,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><div class="n">38+</div><div class="l">Shared components</div><div class="d">one design system</div></div>
   </div>
   <aside class="notes">
-    <p class="hint">Diapositiva de apertura del caso 1. Pausa de un segundo. Di la versión corta despacio y el eco de la idea central en media frase.</p>
-    <p>This is Naowee. I'm starting with it because it's my closest case to your product, so I'll spend the most time here.</p>
-    <p>It's a government platform that manages Colombia's sports system: clubs, leagues, athletes, sports venues and public funding.</p>
-    <p>The users are government reviewers and coordinators, and the sports organizations they oversee.</p>
-    <p>I'm Head of Product, from 2026 to today. I work with business analysts, a designer I lead, and the developers.</p>
-    <p>Here are the numbers. Thirty legal processes moved online, from Word and email. About 1,200 sports organizations.</p>
-    <p>More than 130 screens, and more than 38 shared components.</p>
-    <p>The short version of what I learned: map the roles and statuses first.</p>
-    <p>→ Let me start with what I found when I looked at the work.</p>
+    <p class="hint">Apertura del caso 1. Pausa de un segundo. No leas los números de las tarjetas: la diapositiva ya los muestra.</p>
+    <p>Let me start with Naowee, because it's the closest case to your product.</p>
+    <p>It's a government platform that runs Colombia's sports system: clubs, leagues, athletes, venues and public funding.</p>
+    <p>I'm Head of Product there. I work with business analysts, a designer I lead, and the developers.</p>
+    <p>→ Let me show you what I found when I looked at the work.</p>
   </aside>
 </section>
 
@@ -510,12 +506,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   </div>
   <aside class="notes">
     <p class="hint">Muestra la imagen de la bandeja de asignación. Habla más lento en "there was no product".</p>
-    <p>When I started on Naowee, the first thing I asked for was the files people already used.</p>
-    <p>What I found was this. Colombia's Ministry of Sport must inspect about 1,200 sports organizations, and the law says how, step by step.</p>
-    <p>Every inspection moved through Word files, emails and a shared folder. The process existed, but there was no product.</p>
-    <p>On the screen, you see the new assignment inbox: what's in review, what's assigned, and what's being checked.</p>
-    <p>From there I made four decisions. Each one is about a rule, a role or a status.</p>
-    <p>→ The first decision came before any screen.</p>
+    <p>When I started, the first thing I asked for was the files people already used.</p>
+    <p>Colombia's Ministry of Sport must inspect about 1,200 sports organizations, and the law says how, step by step.</p>
+    <p>But every inspection moved through Word files, emails and a shared folder. The process existed, but there was no product.</p>
+    <p>From there, I made three decisions. Each one is about a role, a rule or a status.</p>
+    <p>→ The first one came before any screen.</p>
   </aside>
 </section>
 
@@ -606,59 +601,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p>"Not verified yet" isn't the same as "failed". The bar shows 4 of 6 done, under the team's deadline.</p>
     <p>That was decision three. The trade-off: a third answer is harder to design than yes or no. But it stops people from approving what nobody checked.</p>
     <p>Think of control test results with a due date. It's the same shape.</p>
-    <p>→ One more decision, this time for the person who assigns the work.</p>
+    <p>→ Let me bring it together: what happened with Naowee.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Naowee · Workload" data-section="Case 1 · Naowee" data-accent="naowee">
-  <div class="split" style="grid-template-columns: 480px 1fr">
-    <div class="col">
-      <span class="kicker">UX moment 4</span>
-      <h2 class="title">Show who is overloaded before you assign.</h2>
-      <dl class="moment">
-        <div><dt>The pain</dt><dd>Coordinators assigned new requests without knowing who already had too much work.</dd></div>
-        <div><dt>What we did</dt><dd>The list of reviewers shows who is overloaded. After assigning, the counters update right away: 6 pending becomes 5.</dd></div>
-        <div><dt>The trade-off</dt><dd>The list shows more data, but the coordinator decides on one screen.</dd></div>
-      </dl>
-    </div>
-    <div class="stage tall" style="background:#fff"><video muted playsinline loop preload="metadata" poster="../../public/work/naowee/recorrido-ivc-poster.jpg" style="object-fit:contain"><source src="../../public/work/naowee/recorrido-ivc.mp4" type="video/mp4"></video></div>
-  </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Like assigning control owners and reviewers while seeing their workload.</p>
-  <aside class="notes">
-    <p class="hint">Haz la asignación en la captura o señala el contador que baja de 6 a 5. Di "from 6 to 5" despacio.</p>
-    <p>The last thing I looked at was the coordinator's side. Coordinators assigned new requests without knowing who already had too much work.</p>
-    <p>So decision four: show who's overloaded before you assign. Watch the list of reviewers.</p>
-    <p>The coordinator assigns the request, and the counter changes at once, from 6 pending to 5. No reload, no second screen.</p>
-    <p>The cost is that the list shows more data. But the coordinator decides on one screen.</p>
-    <p>It's like assigning control owners and reviewers while you see their workload.</p>
-    <p>→ That's four decisions. Next, how all of this stays consistent across eight modules.</p>
-  </aside>
-</section>
-
-<section class="slide" data-title="Naowee · Design system" data-section="Case 1 · Naowee" data-accent="naowee">
-  <div class="split" style="grid-template-columns: 500px 1fr">
-    <div class="col">
-      <span class="kicker">Design system</span>
-      <h2 class="title">One design system, not eight different styles.</h2>
-      <dl class="moment">
-        <div><dt>What it covers</dt><dd>38+ shared components and one pattern for step-by-step forms, across eight modules.</dd></div>
-        <div><dt>The rule</dt><dd>No one-off components: if something is missing, we extend a shared one. Anything that doesn't follow the system is treated as a bug.</dd></div>
-        <div><dt>See it live</dt><dd><a href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener">Naowee DS</a> · <a href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener">Demos hub</a></dd></div>
-      </dl>
-    </div>
-    <div class="stage tall"><div class="fallback"><span class="meta">Text field: one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
-  </div>
-  <aside class="notes">
-    <p class="hint">Muestra el campo de texto con sus ocho estados. Opcional: abre el sitio vivo del sistema de diseño (pestaña ya abierta). Si vas tarde, no lo abras.</p>
-    <p>With eight modules, the question was how to keep them consistent. Here's the system behind it. One design system, not eight different styles.</p>
-    <p>It has more than 38 shared components and one pattern for step-by-step forms.</p>
-    <p>Eight modules bring eight deadlines and eight reasons to do things differently.</p>
-    <p>So my rule is simple: no one-off components. If something's missing, we extend a shared one. Anything outside the system is a bug.</p>
-    <p>Look at the text field: idle, active, loading, validated, caution, error, disabled, read only.</p>
-    <p>Those are statuses again, even in one small component.</p>
-    <p>→ Now let me bring it all together: the outcome of Naowee.</p>
-  </aside>
-</section>
 
 <section class="slide" data-title="Naowee · Outcome" data-section="Case 1 · Naowee" data-accent="naowee">
   <div class="statement">
@@ -667,11 +613,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p class="lead">Thirty legal processes moved from files to one platform. 130+ screens share one visual language, and the business team approves the working product, not a document.</p>
   </div>
   <aside class="notes">
-    <p class="hint">Diapositiva de cierre del caso 1. Habla despacio. Después del conector, PAUSA: deja 3 segundos de silencio y espera preguntas. Si no hay, usa la transición hacia Occidente.</p>
-    <p>So, what happened: thirty legal processes moved from files to one platform.</p>
-    <p>More than 130 screens share one visual language. And the business team approves the working product, not a document.</p>
+    <p class="hint">Cierre del caso 1. Habla despacio. Después del conector, PAUSA: 3 segundos de silencio y espera preguntas. Si preguntan por carga de trabajo o por el design system de Naowee, pulsa O y salta al anexo (33, 34).</p>
+    <p>So, what happened: thirty legal processes moved from files to one platform, with more than 130 screens on one design system.</p>
+    <p>And the business team approves the working product, not a document.</p>
     <p>Looking back, the idea held: I mapped the roles and statuses first, and the screens followed.</p>
-    <p>I'm showing you this because you'll recognize it. Evidence, controls, reviews and roles have the same shape.</p>
     <p>→ So that's government. Any questions? If not, let's go somewhere very different: a bank, with many teams.</p>
   </aside>
 </section>
@@ -1163,6 +1108,54 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <p>Thank you. I'd love to hear your questions.</p>
     <p>You can find me at douguizard.com, on LinkedIn, or by email.</p>
     <p>→ Please, go ahead. What would you like to ask?</p>
+  </aside>
+</section>
+<section class="slide" data-title="Naowee · Workload" data-section="Backup" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 480px 1fr">
+    <div class="col">
+      <span class="kicker">Backup · Workload</span>
+      <h2 class="title">Show who is overloaded before you assign.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>Coordinators assigned new requests without knowing who already had too much work.</dd></div>
+        <div><dt>What we did</dt><dd>The list of reviewers shows who is overloaded. After assigning, the counters update right away: 6 pending becomes 5.</dd></div>
+        <div><dt>The trade-off</dt><dd>The list shows more data, but the coordinator decides on one screen.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall" style="background:#fff"><video muted playsinline loop preload="metadata" poster="../../public/work/naowee/recorrido-ivc-poster.jpg" style="object-fit:contain"><source src="../../public/work/naowee/recorrido-ivc.mp4" type="video/mp4"></video></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Like assigning control owners and reviewers while seeing their workload.</p>
+  <aside class="notes">
+    <p class="hint">ANEXO, solo si preguntan (pulsa O para llegar aquí). Haz la asignación en la captura o señala el contador que baja de 6 a 5. Di "from 6 to 5" despacio.</p>
+    <p>The last thing I looked at was the coordinator's side. Coordinators assigned new requests without knowing who already had too much work.</p>
+    <p>Another decision we made: show who's overloaded before you assign. Watch the list of reviewers.</p>
+    <p>The coordinator assigns the request, and the counter changes at once, from 6 pending to 5. No reload, no second screen.</p>
+    <p>The cost is that the list shows more data. But the coordinator decides on one screen.</p>
+    <p>It's like assigning control owners and reviewers while you see their workload.</p>
+    <p>→ Does that answer your question?</p>
+  </aside>
+</section>
+<section class="slide" data-title="Naowee · Design system" data-section="Backup" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 500px 1fr">
+    <div class="col">
+      <span class="kicker">Backup · Design system</span>
+      <h2 class="title">One design system, not eight different styles.</h2>
+      <dl class="moment">
+        <div><dt>What it covers</dt><dd>38+ shared components and one pattern for step-by-step forms, across eight modules.</dd></div>
+        <div><dt>The rule</dt><dd>No one-off components: if something is missing, we extend a shared one. Anything that doesn't follow the system is treated as a bug.</dd></div>
+        <div><dt>See it live</dt><dd><a href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener">Naowee DS</a> · <a href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener">Demos hub</a></dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><div class="fallback"><span class="meta">Text field: one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
+  </div>
+  <aside class="notes">
+    <p class="hint">ANEXO, solo si preguntan (pulsa O para llegar aquí). Muestra el campo de texto con sus ocho estados. Opcional: abre el sitio vivo del sistema de diseño (pestaña ya abierta). Si vas tarde, no lo abras.</p>
+    <p>With eight modules, the question was how to keep them consistent. Here's the system behind it. One design system, not eight different styles.</p>
+    <p>It has more than 38 shared components and one pattern for step-by-step forms.</p>
+    <p>Eight modules bring eight deadlines and eight reasons to do things differently.</p>
+    <p>So my rule is simple: no one-off components. If something's missing, we extend a shared one. Anything outside the system is a bug.</p>
+    <p>Look at the text field: idle, active, loading, validated, caution, error, disabled, read only.</p>
+    <p>Those are statuses again, even in one small component.</p>
+    <p>→ Does that answer your question?</p>
   </aside>
 </section>
 

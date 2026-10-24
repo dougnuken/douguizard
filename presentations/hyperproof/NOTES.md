@@ -40,15 +40,18 @@ El texto vive en `GUION.md`; si lo editas, corre `python presentations\hyperproo
 |---|---|---|
 | Intro: portada, hola, carrera, el hilo | 1–4 | 6 |
 | Proceso y requisitos | 5–6 | 5 |
-| Naowee | 7–14 | 11 |
-| Banco de Occidente | 15–21 | 8 |
-| DC Medical + demo en vivo | 22–30 | 9 |
-| Sistemas, herramientas, cierre | 31–34 | 6 |
-| Preguntas | — | 15 |
+| Naowee | 7–12 | 7 |
+| Banco de Occidente | 13–19 | 8 |
+| DC Medical + demo en vivo | 20–28 | 9 |
+| Sistemas, herramientas, cierre | 29–32 | 6 |
+| Preguntas (anexo 33–34 si hace falta) | — | 19 |
 
 **Si te interrumpen con preguntas**, respóndelas ahí: es la mejor señal. Corta en este orden:
-herramientas (31–32 en 1 min) → Occidente a 5 min (salta 18) → DC a 6 min (salta 28).
-Nunca cortes «Your world is already in my work» (4) ni «What I would bring» (33).
+herramientas (29–30 en 1 min) → Occidente a 5 min (salta 16) → DC a 6 min (salta 26).
+Nunca cortes «Your world is already in my work» (4) ni «What I would bring» (31).
+
+**Anexo (33–34):** carga de trabajo y design system de Naowee. Salieron del recorrido para que el caso dure ~7 min;
+si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módulos, pulsa `O` y salta ahí.
 
 ## Transiciones (dilas tal cual)
 
@@ -59,7 +62,7 @@ Nunca cortes «Your world is already in my work» (4) ni «What I would bring» 
 
 ## Antes de la llamada
 
-- [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 11, 13, 15, 19, 22, 25, 27, 28).
+- [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 11, 13, 17, 20, 23, 25, 26, 34).
 - [ ] Demo de DC lista: en `dc-medical-dashboard`, `python tools/demo_server.py 8787` → http://localhost:8787 (editora) y
       http://localhost:8787/?rol=lector (lector). Ten las dos pestañas abiertas. No inicies sesión en el panel real durante la llamada.
 - [ ] Abre en otra pestaña el sistema de diseño de Naowee: https://naowee-tech.github.io/design-naowee-design-system/
@@ -69,11 +72,11 @@ Nunca cortes «Your world is already in my work» (4) ni «What I would bring» 
 ## Pendientes que solo tú puedes llenar `[DOUG]`
 
 1. Diapositiva 2 (notas): un detalle personal — qué te gusta fuera del trabajo.
-2. Diapositiva 30 (notas): cuánto tarda hoy encontrar el saldo de una paciente (antes eran ~10 min).
+2. Diapositiva 28 (notas): cuánto tarda hoy encontrar el saldo de una paciente (antes eran ~10 min).
 3. Preguntas 3, 4, 6, 8, 9, 11 y 12 abajo: una historia o dato propio en cada una.
 
 Lo demás sale de tu sitio (`src/data/work.ts`, `cv.ts`, `testimonials.ts`); no hay cifras inventadas.
-Los números de la diapositiva de saldos (26) están marcados como ilustrativos.
+Los números de la diapositiva de saldos (24) están marcados como ilustrativos.
 
 ## Banco de preguntas (respuestas en inglés sencillo)
 
