@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Doug Vargas · Hyperproof review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Tokens: douguizard.com's light theme, plus one quiet accent per case. */
+:root {
+  --paper: #fafaf8;
+  --stage: #f2f2f0;
+  --ink: #0b0b0c;
+  --ink-muted: #4f4e4b;
+  --ink-dim: #6f6e6a;
+  --line: rgba(11, 11, 12, .1);
+  --line-strong: rgba(11, 11, 12, .2);
+  --signal: #485ef2;
+  --naowee: #e8661c;
+  --occidente: #1f5fd1;
+  --dc: #5b4ff0;
+  --ok: #0f6b31;
+  --warn: #b45309;
+  --accent: var(--signal);
+  --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--paper); color: var(--ink); }
+body { font-family: var(--font); -webkit-font-smoothing: antialiased; overflow: hidden; }
+a { color: inherit; }
+
+/* The deck is drawn on a fixed 1600x900 canvas and scaled to the window. */
+#viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+#deck { position: relative; width: 1600px; height: 900px; transform-origin: center center; flex: none; }
+
+.slide {
+  position: absolute; inset: 0; padding: 88px 104px 96px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  overflow: hidden;
+  transition: opacity 520ms var(--ease), visibility 0s linear 520ms;
+}
+.slide.vcenter { display: flex; flex-direction: column; justify-content: center; }
+.slide.vcenter > .kicker { align-self: flex-start; }
+.split > .col > .title { font-size: 64px; max-width: 14ch; }
+.slide.is-active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 520ms var(--ease); }
+.slide[data-accent="naowee"] { --accent: var(--naowee); }
+.slide[data-accent="occidente"] { --accent: var(--occidente); }
+.slide[data-accent="dc"] { --accent: var(--dc); }
+.notes { display: none; }
+
+/* Type. Tracking tightens as size grows; leading loosens as it shrinks. */
+.display { font-size: 132px; line-height: .92; letter-spacing: -.045em; font-weight: 640; font-stretch: 92%; }
+.title { font-size: 76px; line-height: .98; letter-spacing: -.035em; font-weight: 620; font-stretch: 94%; max-width: 15ch; }
+.title.wide { max-width: 22ch; }
+.h3 { font-size: 30px; line-height: 1.12; letter-spacing: -.015em; font-weight: 600; }
+.lead { font-size: 28px; line-height: 1.38; letter-spacing: -.008em; color: var(--ink-muted); max-width: 34ch; }
+.body { font-size: 22px; line-height: 1.45; color: var(--ink-muted); max-width: 40ch; }
+.small { font-size: 18px; line-height: 1.45; color: var(--ink-muted); }
+.meta { font-family: var(--mono); font-size: 15px; letter-spacing: .01em; color: var(--ink-dim); }
+.kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 16px; color: var(--ink-dim); margin-bottom: 28px; }
+.kicker::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+strong { color: var(--ink); font-weight: 600; }
+
+/* Layout helpers */
+.split { display: grid; grid-template-columns: 560px 1fr; gap: 64px; height: 100%; align-items: center; }
+.split.even { grid-template-columns: 1fr 1fr; }
+.split.reverse { grid-template-columns: 1fr 520px; }
+.col { display: flex; flex-direction: column; }
+.stack > * + * { margin-top: 24px; }
+.center { display: grid; place-content: center; text-align: center; height: 100%; }
+
+/* The stage: a soft, rounded field the device photographs sit in. */
+.stage { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: var(--stage); }
+.stage img, .stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stage.contain img { object-fit: contain; }
+.stage.tall { height: 724px; }
+.stage .fallback { position: absolute; inset: 0; display: grid; place-content: center; gap: 14px; padding: 48px; }
+.stage .fallback .chips { display: flex; flex-wrap: wrap; gap: 10px; max-width: 560px; }
+.stage .fallback .chips span { font: 15px var(--mono); padding: 10px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+.stage .fallback .chips span.e { border-color: #b42318; color: #b42318; }
+.stage .fallback .chips span.v { border-color: var(--ok); color: var(--ok); }
+.stage .fallback .chips span.c { border-color: var(--warn); color: var(--warn); }
+.stage > img { position: relative; }
+.stage .flatpad { position: absolute; inset: 40px; display: grid; place-items: center; }
+.stage .flatpad img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
+img.is-flat { object-fit: contain !important; padding: 40px; }
+.shot { border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(11,11,12,.25), 0 2px 6px rgba(11,11,12,.04); background: #fff; }
+.caption { margin-top: 14px; font-size: 16px; color: var(--ink-dim); }
+
+/* The three-part moment block: pain, what we did, why. */
+.moment { display: grid; gap: 22px; margin-top: 36px; }
+.moment div { padding-top: 16px; border-top: 1px solid var(--line); }
+.moment dt { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); margin-bottom: 6px; }
+.moment dd { font-size: 21px; line-height: 1.42; color: var(--ink); }
+.bridge { position: absolute; left: 104px; bottom: 44px; display: flex; gap: 12px; align-items: baseline; font-size: 18px; color: var(--ink-muted); max-width: 1180px; }
+.bridge b { font-family: var(--mono); font-weight: 500; font-size: 14px; color: var(--signal); white-space: nowrap; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line-strong); }
+.kpis > div { padding: 22px 24px 0 0; }
+.kpis .n { font-size: 64px; line-height: 1; letter-spacing: -.04em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpis .l { margin-top: 10px; font-size: 17px; line-height: 1.35; color: var(--ink-muted); }
+.kpis .d { margin-top: 4px; font-family: var(--mono); font-size: 13px; color: var(--ink-dim); }
+
+/* Chrome: progress, counter, section, controls */
+#progress { position: fixed; left: 0; top: 0; height: 2px; background: var(--signal); width: 0; transition: width 520ms var(--ease); z-index: 5; }
+#chrome { position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim); z-index: 5; pointer-events: none; }
+#chrome .ctl { pointer-events: auto; display: flex; gap: 6px; align-items: center; }
+#chrome button { font: inherit; color: var(--ink-muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; height: 30px; min-width: 30px; padding: 0 10px; cursor: pointer; }
+#chrome button:hover { background: rgba(11,11,12,.04); }
+#chrome button:active { transform: scale(.96); }
+#chrome button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+body.is-clean #chrome, body.is-clean #progress { opacity: 0; }
+
+/* Notes drawer (rehearsal) and overview grid */
+#drawer { position: fixed; left: 50%; bottom: 56px; transform: translate(-50%, 20px); width: min(900px, 92vw); max-height: 40vh; overflow: auto; background: rgba(255,255,255,.82); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid var(--line); border-radius: 22px; padding: 22px 26px; font-size: 17px; line-height: 1.55; box-shadow: 0 30px 80px -30px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity 240ms var(--ease), transform 360ms var(--ease); z-index: 6; }
+#drawer.is-open { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+#drawer p + p, .pnotes p + p { margin-top: 8px; }
+#drawer ul, .pnotes ul { margin: 8px 0 0 20px; }
+#overview { position: fixed; inset: 0; background: rgba(250,250,248,.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 7; padding: 48px; overflow: auto; display: none; }
+#overview.is-open { display: block; }
+#overview ol { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; max-width: 1400px; margin: 0 auto; }
+#overview button { width: 100%; text-align: left; font: 500 15px/1.35 var(--font); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; cursor: pointer; }
+#overview button span { display: block; font: 12px var(--mono); color: var(--ink-dim); margin-bottom: 4px; }
+#overview button.is-current { border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
+
+/* ── Slide-specific pieces ───────────────────────────────────────────── */
+.cover-top { position: absolute; top: 56px; left: 104px; right: 104px; display: flex; justify-content: space-between; }
+.cover-top .name { font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+.cover-top .name::after { content: "*"; color: var(--signal); }
+.cover-hero { position: absolute; right: -40px; top: 120px; width: 980px; height: 620px; }
+.cover-hero img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; border-radius: 40px; }
+.cover-copy { position: absolute; left: 104px; bottom: 112px; width: 760px; }
+.cover-copy .display { position: relative; z-index: 2; }
+
+.portrait { width: 100%; height: 724px; border-radius: 36px; object-fit: cover; object-position: 50% 25%; filter: grayscale(1) contrast(1.04); }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; margin-top: 48px; }
+.facts div { border-top: 1px solid var(--line); padding-top: 14px; }
+.facts dt { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); margin-bottom: 6px; }
+.facts dd { font-size: 20px; line-height: 1.38; }
+
+.timeline { margin-top: 56px; display: grid; grid-template-columns: repeat(7, 1fr); border-top: 1px solid var(--line-strong); }
+.timeline li { list-style: none; padding: 18px 18px 0 0; position: relative; }
+.timeline li::before { content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink-dim); }
+.timeline li.is-key::before { background: var(--signal); border-color: var(--signal); }
+.timeline .y { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); }
+.timeline .c { font-size: 21px; font-weight: 600; letter-spacing: -.01em; margin-top: 8px; }
+.timeline .r { font-size: 16px; line-height: 1.38; color: var(--ink-muted); margin-top: 6px; }
+.quote { margin-top: 56px; max-width: 980px; font-size: 30px; line-height: 1.3; letter-spacing: -.012em; font-weight: 500; }
+.quote cite { display: block; margin-top: 14px; font-style: normal; font-size: 16px; color: var(--ink-dim); font-family: var(--mono); }
+
+.map { margin-top: 44px; display: grid; grid-template-columns: 420px 1fr 170px; border-top: 1px solid var(--line-strong); }
+.map > div { padding: 17px 0; border-bottom: 1px solid var(--line); font-size: 21px; line-height: 1.35; }
+.map .k { font-weight: 600; padding-right: 32px; }
+.map .v { color: var(--ink-muted); padding-right: 24px; }
+.map .w { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); text-align: right; }
+.map .h { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); font-weight: 400; padding: 12px 0; }
+
+.steps { margin-top: 64px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+.steps li { list-style: none; border-top: 2px solid var(--ink); padding-top: 18px; }
+.steps li:nth-child(n+2) { border-top-color: var(--line-strong); }
+.steps .i { font-family: var(--mono); font-size: 14px; color: var(--ink-dim); }
+.steps .t { font-size: 26px; line-height: 1.12; font-weight: 600; letter-spacing: -.015em; margin-top: 12px; }
+.steps .b { font-size: 18px; line-height: 1.45; color: var(--ink-muted); margin-top: 12px; }
+.steps .x { font-size: 15px; line-height: 1.4; color: var(--ink-dim); margin-top: 14px; font-style: italic; }
+
+.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 56px; }
+.twocol h4 { font-size: 24px; font-weight: 600; letter-spacing: -.01em; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+.twocol ul { list-style: none; }
+.twocol li { font-size: 20px; line-height: 1.42; color: var(--ink-muted); padding: 14px 0; border-bottom: 1px solid var(--line); }
+.twocol li b { color: var(--ink); font-weight: 600; }
+
+.opener .num { font-family: var(--mono); font-size: 16px; color: var(--accent); }
+.opener .display { font-size: 112px; margin-top: 18px; }
+.opener .lead { margin-top: 22px; }
+.opener .kpis { margin-top: 56px; }
+.opener .split { height: 540px; }
+.opener .stage { height: 100%; }
+.opener .roleline { margin-top: 26px; font-size: 18px; color: var(--ink-muted); }
+.opener .roleline b { color: var(--ink); font-weight: 600; }
+
+.chain { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+.chain .node { display: flex; align-items: center; gap: 18px; padding: 15px 22px; border: 1px solid var(--line); border-radius: 16px; background: #fff; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+.chain .node span { margin-left: auto; font: 14px var(--mono); color: var(--ink-dim); font-weight: 400; }
+.chain .node i { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; opacity: .35; }
+.chain .node:nth-child(odd) i { opacity: 1; }
+.chain .link { height: 22px; margin-left: 26px; border-left: 1.5px dashed var(--line-strong); }
+.bignums { display: flex; gap: 56px; margin-top: 40px; }
+.bignums .n { font-size: 96px; line-height: .9; letter-spacing: -.045em; font-weight: 640; }
+.bignums .l { font-size: 18px; color: var(--ink-muted); margin-top: 8px; }
+
+.statement { display: grid; align-content: center; height: 100%; }
+.statement .title { font-size: 104px; max-width: 13ch; line-height: .95; }
+.statement .lead { margin-top: 36px; max-width: 42ch; }
+
+.sources { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.sources > div { border: 1px solid var(--line); border-radius: 22px; background: #fff; padding: 26px; }
+.sources b { display: block; font-size: 24px; letter-spacing: -.01em; }
+.sources span { display: block; margin-top: 8px; font-size: 17px; color: var(--ink-muted); line-height: 1.4; }
+.funnel { margin: 22px auto 22px; width: 2px; height: 56px; background: linear-gradient(var(--line-strong), var(--accent)); }
+.panel1 { border-radius: 22px; background: var(--ink); color: #fff; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center; }
+.panel1 b { font-size: 26px; letter-spacing: -.015em; }
+.panel1 span { font: 14px var(--mono); color: rgba(255,255,255,.65); }
+
+.phases { display: grid; grid-template-columns: 1fr 40px 1fr 40px 1.25fr; align-items: stretch; margin-top: 8px; }
+.phase { border: 1px solid var(--line); border-radius: 26px; background: #fff; padding: 32px; min-height: 260px; }
+.phase .i { font: 14px var(--mono); color: var(--ink-dim); }
+.phase .t { font-size: 38px; font-weight: 620; letter-spacing: -.02em; margin-top: 8px; }
+.phase .s { font-size: 19px; color: var(--ink-muted); margin-top: 8px; line-height: 1.4; }
+.phase.locked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.arrow { align-self: center; justify-self: center; width: 22px; height: 2px; background: var(--line-strong); position: relative; }
+.arrow::after { content: ""; position: absolute; right: -1px; top: -4px; border: 5px solid transparent; border-left: 7px solid var(--line-strong); border-right: 0; }
+.gate { margin-top: 16px; display: grid; gap: 8px; }
+.gate li { list-style: none; display: flex; align-items: center; gap: 10px; font-size: 20px; }
+.gate li::before { content: ""; width: 18px; height: 18px; border-radius: 6px; background: var(--accent); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 6.5' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat, linear-gradient(#000,#000); -webkit-mask-composite: xor; mask-composite: exclude; }
+.lockline { margin-top: 26px; font-size: 19px; color: var(--ink-muted); }
+.lockline b { color: var(--ink); }
+
+.ledger { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.ledger th { text-align: left; font: 400 14px var(--mono); color: var(--ink-dim); padding: 10px 14px; border-bottom: 1px solid var(--line-strong); }
+.ledger td { font-size: 21px; padding: 14px; border-bottom: 1px solid var(--line); }
+.ledger td.r, .ledger th.r { text-align: right; }
+.ledger tr.latest td { background: rgba(91,79,240,.07); font-weight: 600; }
+.verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+.verdicts > div { border-radius: 18px; padding: 18px 20px; border: 1px solid var(--line); background: #fff; }
+.verdicts .lbl { font: 14px var(--mono); color: var(--ink-dim); }
+.verdicts .val { font-size: 34px; font-weight: 640; letter-spacing: -.03em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.verdicts .bad .val { color: #b42318; text-decoration: line-through; text-decoration-thickness: 2px; }
+.verdicts .good { border-color: var(--accent); }
+.verdicts .note { font-size: 15px; color: var(--ink-muted); margin-top: 4px; }
+.tag { display: inline-block; font: 13px var(--mono); color: var(--ink-dim); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+
+.ds-collage { display: grid; grid-template-columns: 1.15fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; height: 724px; }
+.ds-collage > div { border-radius: 26px; background: var(--stage); overflow: hidden; display: grid; place-items: center; padding: 18px; }
+.ds-collage > div:first-child { grid-row: span 2; }
+.ds-collage img { width: 100%; height: 100%; object-fit: contain; }
+
+.systems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 56px; }
+.systems > div { border-top: 2px solid var(--ink); padding-top: 18px; }
+.systems .who { font: 14px var(--mono); color: var(--ink-dim); }
+.systems .t { font-size: 34px; font-weight: 640; letter-spacing: -.025em; margin-top: 10px; }
+.systems .n { font-size: 19px; color: var(--ink); margin-top: 14px; font-weight: 600; }
+.systems .b { font-size: 18px; color: var(--ink-muted); line-height: 1.45; margin-top: 10px; }
+
+.tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 56px; }
+.tools > div { border-top: 1px solid var(--line-strong); padding-top: 16px; }
+.tools dt { font: 14px var(--mono); color: var(--ink-dim); }
+.tools dd { font-size: 22px; line-height: 1.5; margin-top: 8px; }
+.ai-rule { margin-top: 56px; display: flex; gap: 28px; align-items: center; padding: 28px 32px; border-radius: 26px; background: #fff; border: 1px solid var(--line); }
+.ai-rule b { font-size: 30px; letter-spacing: -.02em; font-weight: 620; }
+.ai-rule span { font-size: 19px; color: var(--ink-muted); line-height: 1.45; }
+
+.bring { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 64px; }
+.bring > div { padding-top: 20px; border-top: 2px solid var(--signal); }
+.bring .i { font: 14px var(--mono); color: var(--signal); }
+.bring .t { font-size: 32px; line-height: 1.1; font-weight: 620; letter-spacing: -.02em; margin-top: 12px; }
+.bring .b { font-size: 19px; line-height: 1.45; color: var(--ink-muted); margin-top: 14px; }
+
+.demo-steps { counter-reset: d; margin-top: 36px; }
+.demo-steps li { list-style: none; counter-increment: d; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--line); font-size: 21px; }
+.demo-steps li::before { content: counter(d, decimal-leading-zero); font: 14px var(--mono); color: var(--accent); }
+.demo-steps li span { font: 14px var(--mono); color: var(--ink-dim); }
+.private { margin-top: 28px; display: inline-flex; gap: 10px; align-items: center; font-size: 17px; color: var(--ink-muted); }
+.private::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
+
+.thanks .display { font-size: 168px; }
+.contact { margin-top: 56px; display: flex; gap: 48px; font-size: 22px; }
+.contact a { text-decoration: none; border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; }
+
+/* Presenter view */
+body.presenter { overflow: auto; background: #111; color: #eee; }
+body.presenter #viewport, body.presenter #chrome, body.presenter #progress, body.presenter #drawer { display: none !important; }
+#pview { display: none; }
+body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28px; padding: 28px; min-height: 100vh; }
+.pcur { font: 13px var(--mono); color: #888; }
+.ptitle { font-size: 34px; font-weight: 620; letter-spacing: -.02em; margin: 6px 0 18px; color: #fff; }
+.pnotes { font-size: 26px; line-height: 1.5; color: #f2f2f2; }
+.pnotes .hint { color: #9aa4ff; }
+.pside { border-left: 1px solid #333; padding-left: 24px; }
+.pclock { font: 500 56px var(--mono); color: #fff; }
+.pnext { margin-top: 26px; font-size: 18px; color: #bbb; }
+.pnext b { display: block; color: #fff; font-size: 22px; margin-top: 4px; }
+.pbtns { margin-top: 26px; display: flex; gap: 10px; }
+.pbtns button { flex: 1; height: 54px; border-radius: 14px; border: 1px solid #444; background: #1c1c1e; color: #fff; font: 600 18px var(--font); cursor: pointer; }
+.pbtns button:active { transform: scale(.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide, .slide.is-active, #progress, #drawer { transition: opacity 160ms linear !important; }
+  #drawer { transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  #drawer, #overview { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="deck">
+
+<!-- ═══════════════════════════ OPENING ═══════════════════════════ -->
+
+<section class="slide" data-title="Cover" data-section="Intro">
+  <div class="cover-top"><span class="name">Doug Vargas</span><span class="meta">For the Hyperproof design team · October 2026</span></div>
+  <div class="cover-hero"><img data-mock="naowee-display-workspace" data-flat="../../public/work/naowee/ivc-workspace-tramite.webp" alt="A regulatory review workspace from Naowee SUID on a desktop display"></div>
+  <div class="cover-copy">
+    <h1 class="display">When the rules are the product.</h1>
+    <p class="lead" style="margin-top:28px">Three products full of roles, states and dense data, and the decisions that made them usable.</p>
+  </div>
+  <aside class="notes">
+    <p>Hello, and thank you for your time today.</p>
+    <p>I will show you three products. Each one has many rules, a lot of data, and many roles.</p>
+    <p>I will focus on problems and decisions, not on pixels.</p>
+    <p>Please stop me at any time. Questions are welcome during the talk.</p>
+    <p class="hint">Timing: whole intro (slides 1–6) ≈ 12 min.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Hello" data-section="Intro">
+  <div class="split reverse">
+    <div class="col">
+      <span class="kicker">Hello</span>
+      <h2 class="title">I'm Doug. I design products with many rules.</h2>
+      <p class="lead" style="margin-top:28px">Product designer from Barranquilla, Colombia. Twelve years in digital products; since 2018, mostly regulated ones: banking, government, clinic operations.</p>
+      <dl class="facts">
+        <div><dt>Now</dt><dd>Head of Product at Naowee</dd></div>
+        <div><dt>Before</dt><dd>Tech Lead, Andes Design System at Mercadolibre</dd></div>
+        <div><dt>Specialty</dt><dd>Complex products and the design systems behind them</dd></div>
+        <div><dt>Also</dt><dd>I build my prototypes in code</dd></div>
+      </dl>
+    </div>
+    <img class="portrait" src="../../public/portrait/doug-portrait-900.webp" alt="Portrait of Doug Vargas">
+  </div>
+  <aside class="notes">
+    <p>I am Doug. I live in Barranquilla, on the Caribbean coast of Colombia.</p>
+    <p>I have twelve years in product and UI design. My focus is complex products and design systems.</p>
+    <p>I also write code, so I build my own prototypes.</p>
+    <p class="hint">[DOUG: add one personal detail here — what you enjoy outside work.]</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="Career" data-section="Intro">
+  <span class="kicker">Twelve years, in one line</span>
+  <h2 class="title wide">From UI craft to systems and products with rules.</h2>
+  <ol class="timeline">
+    <li><div class="y">2014</div><div class="c">Smartbiz</div><div class="r">Junior UI designer</div></li>
+    <li><div class="y">2016</div><div class="c">Ideaware</div><div class="r">Senior UX/UI, remote, US clients</div></li>
+    <li class="is-key"><div class="y">2016</div><div class="c">Qrvey</div><div class="r">Lead UI, data and workflow product</div></li>
+    <li><div class="y">2017</div><div class="c">Globant</div><div class="r">Royal Caribbean, with a US team</div></li>
+    <li class="is-key"><div class="y">2018</div><div class="c">Banco de Occidente</div><div class="r">Portal and Velocity design system</div></li>
+    <li class="is-key"><div class="y">2024</div><div class="c">Mercadolibre</div><div class="r">Andes DS, 400+ designers, 18 countries</div></li>
+    <li class="is-key"><div class="y">2026</div><div class="c">Naowee</div><div class="r">Head of Product, GovTech</div></li>
+  </ol>
+  <blockquote class="quote">“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”<cite>Arman Eshraghi, Founder &amp; CEO, Qrvey</cite></blockquote>
+  <aside class="notes">
+    <p>This is my path in one line.</p>
+    <p>I started with UI. At Qrvey I designed a data product with workflows. Then I worked with US teams at Ideaware and Globant.</p>
+    <p>From 2018 I focused on systems: five years at the bank, then two years on Andes at Mercadolibre.</p>
+    <p>Today I am Head of Product at Naowee.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="The thread" data-section="Intro">
+  <span class="kicker">Why these three</span>
+  <h2 class="title wide">Your world is already in my work.</h2>
+  <div class="map">
+    <div class="h">In Hyperproof</div><div class="h">Where I solved the same shape</div><div class="h" style="text-align:right">Case</div>
+    <div class="k">Evidence mapped to a control</div><div class="v">Each document checked against the article of law it answers</div><div class="w">Naowee</div>
+    <div class="k">Control status and testing</div><div class="v">45+ states; every item marked compliant or unverified, with an SLA</div><div class="w">Naowee</div>
+    <div class="k">Roles and permissions</div><div class="v">15 roles with cascading approval; permissions by area and action</div><div class="w">Naowee · DC</div>
+    <div class="k">Steps that can't be skipped</div><div class="v">Phases with locks: no procedure before payment, receipt and consent</div><div class="w">DC Medical</div>
+    <div class="k">Consistency across teams</div><div class="v">One design system, governed for 12+ product squads</div><div class="w">Occidente</div>
+  </div>
+  <aside class="notes">
+    <p>These three products look different. But the problem is the same.</p>
+    <p>People follow rules, and the system must show who can do what. The data is dense, and mistakes cost money or trust.</p>
+    <p>In your product I see the same shape: evidence, controls, reviews, roles.</p>
+    <p>That is why I chose these three cases.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="How I work" data-section="Process">
+  <span class="kicker">Process</span>
+  <h2 class="title wide">I design the states and roles first. Screens come after.</h2>
+  <ol class="steps">
+    <li><div class="i">01</div><div class="t">Ask for the paper</div><div class="b">Real files, real spreadsheets, real exceptions. Not only opinions.</div><div class="x">Naowee: 30 procedures in Word and email</div></li>
+    <li><div class="i">02</div><div class="t">Map states and roles</div><div class="b">Who acts, in what state, and what comes next. Before any screen.</div><div class="x">45+ states, 15 roles</div></li>
+    <li><div class="i">03</div><div class="t">Prototype the real thing</div><div class="b">Clickable, in code, with real roles and states. People react to it.</div><div class="x">Analysts sign off story by story</div></li>
+    <li><div class="i">04</div><div class="t">Put it in the system</div><div class="b">Repeated answers become components, patterns and rules.</div><div class="x">38+ shared components</div></li>
+    <li><div class="i">05</div><div class="t">Ship, then listen</div><div class="b">Release the safe version first. Real use writes the next brief.</div><div class="x">DC: read-only on day one</div></li>
+  </ol>
+  <aside class="notes">
+    <p>This is how I work, in five steps.</p>
+    <p>First I want to see the real work: the files people use today. Exceptions are where the design is hard.</p>
+    <p>Then I map states and roles. At Naowee I mapped more than 45 states and 15 roles before I drew a screen.</p>
+    <p>Then a prototype with real roles. Then the system. Then I ship a safe version and I listen.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="Requirements and engineering" data-section="Process">
+  <span class="kicker">Requirements and collaboration</span>
+  <h2 class="title wide">The demo is the requirement, not the document.</h2>
+  <div class="twocol">
+    <div>
+      <h4>How I gather requirements</h4>
+      <ul>
+        <li><b>Start from the artifacts.</b> The forms, files and emails people use today show the real process.</li>
+        <li><b>Attack the plan early.</b> At DC, an adversarial review on data, security and feasibility; only the third version reached code.</li>
+        <li><b>Sign off on something running.</b> Specs get read differently by everyone; a prototype surfaces disagreement while it is cheap.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>How I work with engineering</h4>
+      <ul>
+        <li><b>A resolved target, not a spec.</b> Engineering gets a prototype built on the system's components.</li>
+        <li><b>One component API.</b> At Mercadolibre we agreed single APIs across iOS, Android and Web.</li>
+        <li><b>Rules as tests.</b> At DC, balances, card fees, dates and name matching are tested functions: 12 suites.</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>For requirements, I start from the real artifacts.</p>
+    <p>I also attack the plan early. At DC Medical the plan went through a hard review on data, security and feasibility. Only the third version reached code.</p>
+    <p>I like to sign off on something that runs. People read documents in different ways. A prototype shows the disagreement early, when it is cheap.</p>
+    <p>With engineers, I give a resolved target, built with the system. And I turn business rules into tests.</p>
+  </aside>
+</section>
+
+<!-- ═══════════════════════════ CASE 1 · NAOWEE ═══════════════════════════ -->
+
+<section class="slide opener" data-title="Naowee SUID" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 640px 1fr">
+    <div class="col">
+      <span class="num">Case 1 of 3</span>
+      <h2 class="display">Naowee SUID</h2>
+      <p class="lead">The platform that digitizes how Colombia runs its sport: inspection, oversight, venues and investment calls.</p>
+      <p class="roleline"><b>Head of Product</b> · 2026, ongoing · with business analysts, a designer I lead, and engineering</p>
+    </div>
+    <div class="stage contain"><img data-src="../../public/work/naowee/escenarios-mapa.webp" alt="Georeferenced registry of sports venues across Colombia, shaded by department" style="padding:36px"></div>
+  </div>
+  <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
+    <div><div class="n">30</div><div class="l">Procedures digitized</div><div class="d">Word and email before</div></div>
+    <div><div class="n">~1,200</div><div class="l">Sports organizations in scope</div></div>
+    <div><div class="n">130+</div><div class="l">Screens shipped</div><div class="d">8 of 13 modules</div></div>
+    <div><div class="n">38+</div><div class="l">Shared components</div><div class="d">one design system</div></div>
+  </div>
+  <aside class="notes">
+    <p>The biggest rules problem I work on is in government. This is Naowee.</p>
+    <p>It is my closest case to your product: a regulated process, many roles, and every document must answer a rule.</p>
+    <p>I am Head of Product. I set the direction and I build the prototypes that define each module.</p>
+    <p class="hint">Timing: Naowee ≈ 11 min.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · The problem" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 520px 1fr">
+    <div class="col">
+      <span class="kicker">The problem</span>
+      <h2 class="title">Thirty procedures lived in Word and email.</h2>
+      <p class="body" style="margin-top:28px">Inspection and oversight of ~1,200 sports organizations moved through Word, email and a document manager. The process existed. The product did not.</p>
+    </div>
+    <div class="col">
+      <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-bandeja.webp" alt="The IVC assignment queue: counters for filings in review, assigned and in validation above a table of filings with deadlines and status"></div></div>
+      <p class="caption">The assignment queue that replaced the inbox: in review, assigned, in validation.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>Before, all 30 procedures moved through Word, email and a document manager.</p>
+    <p>The process existed, but there was no product.</p>
+    <p>So before drawing, I counted. I found more than 45 states and 15 roles.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · States and roles" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split even">
+    <div class="col">
+      <span class="kicker">UX moment 1</span>
+      <h2 class="title">The states were the product.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>States and roles lived in people's heads and in email threads.</dd></div>
+        <div><dt>What we did</dt><dd>Mapped every state and role before any screen, and modeled the sector's real hierarchy with cascading approval.</dd></div>
+        <div><dt>The trade-off</dt><dd>A flat athlete table would have shipped months earlier. But medals by league only mean something if the links are real.</dd></div>
+      </dl>
+    </div>
+    <div class="col">
+      <div class="chain">
+        <div class="node"><i></i>Ministry<span>approves down</span></div><div class="link"></div>
+        <div class="node"><i></i>Committees</div><div class="link"></div>
+        <div class="node"><i></i>Federations</div><div class="link"></div>
+        <div class="node"><i></i>Leagues</div><div class="link"></div>
+        <div class="node"><i></i>Clubs</div><div class="link"></div>
+        <div class="node"><i></i>Athletes<span>inherit league and federation</span></div>
+      </div>
+      <div class="bignums"><div><div class="n">45+</div><div class="l">states mapped</div></div><div><div class="n">15</div><div class="l">roles</div></div></div>
+    </div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Control status and owner are the same idea: the state and the role decide what each person sees.</p>
+  <aside class="notes">
+    <p>I did not start with screens. I started with states and roles.</p>
+    <p>Approvals cascade from the Ministry down to the club. An approved athlete inherits the club's league and federation.</p>
+    <p>A flat table was faster to build. But the reports by league would lie.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · Evidence vs rule" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 500px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 2</span>
+      <h2 class="title">Every document answers the article it cites.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>A reviewer opened a file and had to remember which rule it should satisfy.</dd></div>
+        <div><dt>What we did</dt><dd>The deadline sits beside a checklist of 7 documents. Each cites its article of Decreto 1387/1970. Validate, reject or observe, per document.</dd></div>
+        <div><dt>The trade-off</dt><dd>More structure per row, but the rule and the evidence live in one place.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-workspace-tramite.webp" alt="Procedure IVC-2026-005: 18 days left beside a checklist of 7 documents, each citing its article, with validate, reject or observe per document"></div></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> A document checked against its article is evidence mapped to a control.</p>
+  <aside class="notes">
+    <p>This is the reviewer's workspace.</p>
+    <p>The deadline is here: 18 days left. Beside it, the checklist.</p>
+    <p>Each document names the article it answers. The reviewer can validate, reject or observe each one.</p>
+    <p>The decision stays tied to the rule. For you, this is evidence mapped to a control.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · Technical review" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 500px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 3</span>
+      <h2 class="title">“Unverified” is a real state.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>Eight technical areas review one application. Progress and compliance were invisible.</dd></div>
+        <div><dt>What we did</dt><dd>Every item cites its article of Resolución 933 and is marked compliant or unverified. Progress reads 4 of 6, under the area's SLA.</dd></div>
+        <div><dt>The trade-off</dt><dd>A third state is harder to design than pass or fail. It blocks false confidence.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><img data-mock="naowee-ipad-review" data-flat="../../public/work/naowee/project-revision-area-tecnica.webp" alt="Technical-area review on a tablet: an SLA notice and a checklist where each item cites its article and is marked compliant or unverified"></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Compliant and unverified are test results; the SLA is the due date on a control test.</p>
+  <aside class="notes">
+    <p>Here, one technical area reviews one application.</p>
+    <p>Every item has its article and a mark. Unverified is not the same as failed.</p>
+    <p>The reviewer sees progress, 4 of 6, and the SLA at the same time.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · Workload" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 480px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 4</span>
+      <h2 class="title">Workload belongs inside the assignment.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>Coordinators reassigned overdue filings without seeing who was already overloaded.</dd></div>
+        <div><dt>What we did</dt><dd>The picker flags who's overloaded. The counters recompute in place: 6 pending to 5.</dd></div>
+        <div><dt>The trade-off</dt><dd>The picker carries more data, but the decision no longer needs a second screen.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall" style="background:#fff"><video muted playsinline loop preload="metadata" poster="../../public/work/naowee/recorrido-ivc-poster.jpg" style="object-fit:contain"><source src="../../public/work/naowee/recorrido-ivc.mp4" type="video/mp4"></video></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Assigning control owners and reviewers with their workload in view.</p>
+  <aside class="notes">
+    <p>Watch the picker. It shows who is overloaded.</p>
+    <p>The coordinator assigns the filing. The counter changes at once, from 6 to 5.</p>
+    <p>No reload, no second screen.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · Design system" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="split" style="grid-template-columns: 500px 1fr">
+    <div class="col">
+      <span class="kicker">Design system</span>
+      <h2 class="title">One system, or eight dialects.</h2>
+      <dl class="moment">
+        <div><dt>What it governs</dt><dd>38+ shared components and one step-by-step form pattern across eight modules.</dd></div>
+        <div><dt>How it's enforced</dt><dd>No custom components; extend a shared one. Anything off in review is a bug, not a preference.</dd></div>
+        <div><dt>Open it live</dt><dd><a href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener">Naowee DS</a> · <a href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener">Demos hub</a></dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><div class="fallback"><span class="meta">Text field · one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system playground on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
+  </div>
+  <aside class="notes">
+    <p>Eight modules, eight deadlines, eight reasons to fork.</p>
+    <p>My rule is simple: do not make a new component. Extend a shared one.</p>
+    <p>Look at the text field: idle, loading, validated, caution, error, read only. The states again.</p>
+    <p class="hint">Optional: open the live design system site (link on the slide).</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Naowee · Outcome" data-section="Case 1 · Naowee" data-accent="naowee">
+  <div class="statement">
+    <span class="kicker">Outcome</span>
+    <h2 class="title">Model the states and roles. Screens follow.</h2>
+    <p class="lead">Thirty procedures moved from files to one platform, 130+ screens in one language, and analysts who sign off on the running product.</p>
+  </div>
+  <aside class="notes">
+    <p>The result: thirty procedures moved from files to one platform.</p>
+    <p>More than 130 screens, one design system.</p>
+    <p>My lesson: model states and roles first. The screens follow.</p>
+    <p class="hint">Bridge out: "Naowee has 15 roles. The next case is about scale: a bank with many teams."</p>
+  </aside>
+</section>
+
+<!-- ═══════════════════════════ CASE 2 · OCCIDENTE ═══════════════════════════ -->
+
+<section class="slide opener" data-title="Banco de Occidente" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="split" style="grid-template-columns: 640px 1fr">
+    <div class="col">
+      <span class="num">Case 2 of 3</span>
+      <h2 class="display" style="font-size:100px">Banco de Occidente</h2>
+      <p class="lead">One of Colombia's largest banks: its transactional portal, and Velocity, the design system its squads shared.</p>
+      <p class="roleline"><b>Senior Product Designer · Design System Gatekeeper</b> · Aval Digital Labs · 2018–2024</p>
+    </div>
+    <div class="stage"><img data-mock="occ-ipad-accounts" data-flat="../../public/work/banco-de-occidente/products-and-cards.webp" alt="The bank's accounts section on a tablet: balances, movements, and a success toast confirming a checkbook block"></div>
+  </div>
+  <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
+    <div><div class="n">12+</div><div class="l">Product squads aligned</div><div class="d">one system</div></div>
+    <div><div class="n">20+</div><div class="l">Documented system areas</div><div class="d">foundations → organisms</div></div>
+    <div><div class="n">15</div><div class="l">Illustrated icons</div><div class="d">drawn, not licensed</div></div>
+    <div><div class="n">3</div><div class="l">Devices, one portal</div><div class="d">desktop, tablet, mobile</div></div>
+  </div>
+  <aside class="notes">
+    <p>Different domain, same problem: many teams, high stakes, a lot of data.</p>
+    <p>I redesigned the bank's transactional portal and I built Velocity, its design system.</p>
+    <p>I was also the Design System Gatekeeper for the squads.</p>
+    <p class="hint">Timing: Occidente ≈ 8 min. Cut to 5 if you are late.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · The problem" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="statement">
+    <span class="kicker">The problem</span>
+    <h2 class="title">Every squad solved the same problem differently.</h2>
+    <p class="lead">The portal was dense and buried people in nested pages. Fixing screens alone would not last: the fix had to be a system, and someone had to own it.</p>
+  </div>
+  <aside class="notes">
+    <p>The old portal was dense. People got lost in nested pages.</p>
+    <p>And every squad built its own answer to the same problem.</p>
+    <p>Fixing screens was not enough. We needed a system, and an owner.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · Exceptions first" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="split" style="grid-template-columns: 480px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 1</span>
+      <h2 class="title">In banking, the exception is the product.</h2>
+      <dl class="moment">
+        <div><dt>What we did</dt><dd>Discovery and user research first. Then six flows, mapped with their exceptions before any screen.</dd></div>
+        <div><dt>How we validated</dt><dd>Every stage became a prototype tested on people before build; registration went through several rounds.</dd></div>
+        <div><dt>The trade-off</dt><dd>A slower start, and fewer surprises in build.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/banco-de-occidente/user-flow-login-otp.webp" alt="Registration and one-time-password flow: register, document, OTP, resend by SMS, data agreement, then success or validation failure"></div></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Mapping the rejection and failure paths of a workflow before building it.</p>
+  <aside class="notes">
+    <p>The happy path is easy. The failures are the real design.</p>
+    <p>Here is registration with a one-time password. Look at the failure branches: resend, wrong code, validation failure.</p>
+    <p>I drew them first. Then we tested prototypes with users before we built.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · Two layers" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="split" style="grid-template-columns: 480px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 2</span>
+      <h2 class="title">Two layers of navigation, and no more.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>The old portal buried people in nested pages.</dd></div>
+        <div><dt>What we did</dt><dd>A popup system replaced navigation depth. Two layers cover every banking task.</dd></div>
+        <div><dt>The trade-off</dt><dd>A hard limit forces teams to simplify their flows. Simple rules get followed.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><div class="flatpad"><img data-src="../../public/work/banco-de-occidente/popups-system.webp" alt="The popup system as four stacked planes: page, blurred background, component, popup"></div></div>
+  </div>
+  <aside class="notes">
+    <p>I set a hard limit: two layers.</p>
+    <p>Page, blur, component, popup. Every task fits inside it.</p>
+    <p>The rule is simple, so the squads follow it.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · Identical across devices" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="split" style="grid-template-columns: 520px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 3</span>
+      <h2 class="title">Identical across devices, not merely similar.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>The brief asked for a “similar” experience. Similar means relearning.</dd></div>
+        <div><dt>What we did</dt><dd>Every desktop capability reaches the phone, with the same names, in the same order.</dd></div>
+        <div><dt>The trade-off</dt><dd>The phone carries more, but nothing is relearned on the bus.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall contain" style="background:#f5f5f7"><img data-mock="occ-iphone-card" data-flat="../../public/work/banco-de-occidente/responsive-mobile.webp" alt="A credit card detail on a phone: minimum payment, total payment and due date above a Pay button" style="object-position:50% 40%"></div>
+  </div>
+  <aside class="notes">
+    <p>The brief said "similar". I made it identical.</p>
+    <p>Same names, same order, on the phone and on the desktop.</p>
+    <p>People do not relearn anything when they change device.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · Velocity" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="split" style="grid-template-columns: 460px 1fr">
+    <div class="col">
+      <span class="kicker">Design system</span>
+      <h2 class="title">Velocity needed a gate, not just a library.</h2>
+      <dl class="moment">
+        <div><dt>What it governs</dt><dd>Foundations to organisms, on atomic design, so the front end mirrors it.</dd></div>
+        <div><dt>How it's enforced</dt><dd>As Gatekeeper I approved additions, deprecations and patterns, and ran the workshops and crits.</dd></div>
+      </dl>
+    </div>
+    <div class="ds-collage">
+      <div><img data-src="../../public/work/banco-de-occidente/design-system-foundations.webp" alt="Foundation boards: color scale, type scale, spacing and control states"></div>
+      <div><img data-src="../../public/work/banco-de-occidente/design-system-grid.webp" alt="The Velocity index: documentation, foundations, atoms, molecules, organisms"></div>
+      <div><img data-src="../../public/work/banco-de-occidente/illustrated-icons.webp" alt="Fifteen illustrated icons drawn for the system"></div>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>A design system fails when nobody owns it.</p>
+    <p>I owned the gate. Teams could propose additions, but each change went through review.</p>
+    <p>Velocity is indexed the way the front end is built: foundations, atoms, molecules, organisms.</p>
+    <p>Each new screen cost less than the last one.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="Occidente · Outcome" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+  <div class="statement">
+    <span class="kicker">Outcome</span>
+    <h2 class="title">A system needs an owner, not only a library.</h2>
+    <p class="lead">A dense portal rebuilt as one light product, on a system that made each new screen cheaper than the last.</p>
+    <blockquote class="quote" style="font-size:26px;margin-top:48px">“We've done 8 projects with him and every single one delivered above expectations. He doesn't just design — he architects how products should feel.”<cite>Francesca Steri, Design Director, Aval Digital Labs</cite></blockquote>
+  </div>
+  <aside class="notes">
+    <p>The result: one light portal, on one shared system.</p>
+    <p>My lesson: a system needs an owner, not only a library.</p>
+    <p class="hint">Bridge out: "The bank taught me governance. Now a small product where I did everything myself."</p>
+  </aside>
+</section>
+
+<!-- ═══════════════════════════ CASE 3 · DC MEDICAL ═══════════════════════════ -->
+
+<section class="slide opener" data-title="DC Medical" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split" style="grid-template-columns: 600px 1fr">
+    <div class="col">
+      <span class="num">Case 3 of 3</span>
+      <h2 class="display">DC Medical</h2>
+      <p class="lead">The panel that runs an aesthetic clinic from the secretary's phone. No procedure starts until it's paid for.</p>
+      <p class="roleline"><b>Product designer and design engineer, end to end</b> · live since Sep 21, 2026 · I co-own the clinic</p>
+    </div>
+    <div class="stage"><img data-mock="dc-macbook-followup" data-flat="../../public/work/dc-medical/seguimiento-controles.webp" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of controls" style="object-position:55% 45%"></div>
+  </div>
+  <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
+    <div><div class="n">14</div><div class="l">Days, first commit to agenda by city</div><div class="d">Sep 19 → Oct 2, 2026</div></div>
+    <div><div class="n">3</div><div class="l">Phases with locks</div><div class="d">valuation, payment, procedure</div></div>
+    <div><div class="n">0</div><div class="l">New databases</div><div class="d">Drive and Calendar stay the source</div></div>
+    <div><div class="n">12</div><div class="l">Test suites</div><div class="d">domain, ledger, worker, browser</div></div>
+  </div>
+  <aside class="notes">
+    <p>This is a clinic I co-own with the doctor. The roles are few, but the rules are strict.</p>
+    <p>I built it alone: product, design and code. It is live and private.</p>
+    <p>Everything I show uses demo data. No real patient.</p>
+    <p class="hint">Timing: DC ≈ 8 min including the live demo.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · The problem" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split even">
+    <div class="col">
+      <span class="kicker">The problem</span>
+      <h2 class="title">Everything was written down. Nothing was connected.</h2>
+      <p class="body" style="margin-top:28px">Finding what a patient owed took ten minutes of opening files. The secretary needed one answer: what happens next for this patient?</p>
+    </div>
+    <div class="col">
+      <div class="sources">
+        <div><b>WhatsApp</b><span>Every conversation with patients</span></div>
+        <div><b>Calendar</b><span>The doctor's days, in three cities</span></div>
+        <div><b>Drive</b><span>Spreadsheets for money, cases, stock</span></div>
+      </div>
+      <div class="funnel"></div>
+      <div class="panel1"><b>One panel, on top of them</b><span>not instead of them</span></div>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>The clinic had all the information, but in many places: WhatsApp, Google Calendar and a shared Drive.</p>
+    <p>Finding what a patient owed took ten minutes of opening files.</p>
+    <p>I built one panel on top of those tools, not instead of them.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="DC · Phases with locks" data-section="Case 3 · DC Medical" data-accent="dc">
+  <span class="kicker">UX moment 1</span>
+  <h2 class="title wide">A lock is stronger than a reminder.</h2>
+  <div class="phases" style="margin-top:56px">
+    <div class="phase"><div class="i">Phase 1</div><div class="t">Valuation</div><div class="s">The patient is seen. The case opens.</div></div>
+    <div class="arrow"></div>
+    <div class="phase"><div class="i">Phase 2</div><div class="t">Payment</div><div class="s">Each payment, with its receipt. Card payments land at 95%.</div></div>
+    <div class="arrow"></div>
+    <div class="phase locked"><div class="i">Phase 3 · locked until</div><div class="t">Procedure</div>
+      <ul class="gate"><li>Paid in full</li><li>Receipt on file</li><li>Consent signed</li></ul>
+    </div>
+  </div>
+  <p class="lockline"><b>Each phase lists what's missing and links to the form that clears it.</b> The footer always names the next step.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> An audit step that cannot close until its evidence is attached.</p>
+  <aside class="notes">
+    <p>A procedure could start before payment, receipt or consent were complete. That is a real risk.</p>
+    <p>So the case has three phases with locks. The procedure needs full payment, the receipt and signed consent.</p>
+    <p>The case shows what is missing and links to the form that fixes it. The footer always names the next step.</p>
+    <p>A card payment lands at 95%, because the clinic passes the card fee to the patient. Real money set that rule.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · Permissions" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split" style="grid-template-columns: 500px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 2</span>
+      <h2 class="title">Permissions by area, not by job title.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>The doctor needs to read everything. The secretary needs to run the day.</dd></div>
+        <div><dt>What we did</dt><dd>Per person and per area: see, create, edit, and delete where it matters. Presets: run the day, view only, nothing.</dd></div>
+        <div><dt>The trade-off</dt><dd>More setup for the admin, but no screen shows a button a person can't use.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><img data-mock="dc-ipad-permissions" data-flat="../../public/work/dc-medical/usuarios-permisos-v2.webp" alt="Editing a user's permissions on a tablet: toggles to see, create and edit per area, under presets" style="object-position:55% 50%"></div>
+  </div>
+  <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions per object type, with presets for the common cases.</p>
+  <aside class="notes">
+    <p>Permissions are a grid: area by action.</p>
+    <p>There are presets for the common people. The doctor reads. The secretary runs the day.</p>
+    <p>A person never sees a button they cannot use. And the server checks too, not only the screen.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · Balances" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split even">
+    <div class="col">
+      <span class="kicker">UX moment 3</span>
+      <h2 class="title">Balances are read, never summed.</h2>
+      <dl class="moment">
+        <div><dt>The pain</dt><dd>Each payment row carries the balance left after it. An early version summed them and reported a phantom 38 million pesos.</dd></div>
+        <div><dt>What we did</dt><dd>The latest row wins. The rule became a tested function.</dd></div>
+        <div><dt>Why it matters</dt><dd>In data-heavy products, the most dangerous bug is a number that looks right.</dd></div>
+      </dl>
+    </div>
+    <div class="col">
+      <span class="tag" style="align-self:flex-start;margin-bottom:16px">Illustrative numbers</span>
+      <table class="ledger">
+        <thead><tr><th>Payment date</th><th class="r">Paid</th><th class="r">Balance after</th></tr></thead>
+        <tbody>
+          <tr><td>Sep 2</td><td class="r">$ 400.000</td><td class="r">$ 1.100.000</td></tr>
+          <tr><td>Sep 16</td><td class="r">$ 600.000</td><td class="r">$ 500.000</td></tr>
+          <tr class="latest"><td>Sep 30</td><td class="r">$ 500.000</td><td class="r">$ 0</td></tr>
+        </tbody>
+      </table>
+      <div class="verdicts">
+        <div class="bad"><div class="lbl">Sum of the column</div><div class="val">$ 1.600.000</div><div class="note">A debt that doesn't exist</div></div>
+        <div class="good"><div class="lbl">Latest row</div><div class="val">$ 0</div><div class="note">What the patient really owes</div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>Each row shows the balance after that payment.</p>
+    <p>The first version added up the column. It showed a debt that did not exist: thirty-eight million pesos.</p>
+    <p>Now the latest row wins, and a test covers it.</p>
+    <p>Money rules must be tested, not trusted.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · AI drafts, a person confirms" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split" style="grid-template-columns: 560px 1fr">
+    <div class="col">
+      <span class="kicker">UX moment 4</span>
+      <h2 class="title">The phone rewrote the interface.</h2>
+      <dl class="moment">
+        <div><dt>The context</dt><dd>The secretary runs the clinic from an iPhone, often from a car.</dd></div>
+        <div><dt>What we did</dt><dd>It installs as an app; tables become cards; tap targets are 44 px or more. A voice note fills the new-patient form.</dd></div>
+        <div><dt>The rule for AI</dt><dd>The model fills the form and saves nothing until a person checks it.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall contain" style="background:#f2f3f5"><img data-mock="dc-iphone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a notice asking to review every field" style="object-position:50% 45%"></div>
+  </div>
+  <aside class="notes">
+    <p>The secretary works from her phone, often from the car.</p>
+    <p>So the panel installs like an app. Tables become cards. Tap targets are big.</p>
+    <p>She can say who came, for what, and what she paid. The AI fills the form.</p>
+    <p>But nothing is saved until a person checks it. The form says: review every field.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · Color never alone" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split" style="grid-template-columns: 480px 1fr">
+    <div class="col">
+      <span class="kicker">Accessibility</span>
+      <h2 class="title">A color per city, never on its own.</h2>
+      <dl class="moment">
+        <div><dt>The context</dt><dd>The doctor works in three cities. The agenda has to say where he is, at a glance.</dd></div>
+        <div><dt>What we did</dt><dd>Orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for color blindness. The name always sits beside its dot.</dd></div>
+      </dl>
+    </div>
+    <div class="stage tall"><img data-mock="dc-display-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="The month agenda on a desktop display, appointments colored by city" style="object-position:50% 50%"></div>
+  </div>
+  <aside class="notes">
+    <p>The doctor works in three cities. Each city has a color.</p>
+    <p>We checked the colors for color blindness. And the name is always next to the dot.</p>
+    <p>Nobody has to tell teal from blue.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · Live demo" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="split even">
+    <div class="col">
+      <span class="kicker">Live demo · 3 minutes</span>
+      <h2 class="title">Read first, write later.</h2>
+      <p class="body" style="margin-top:24px">Version one was read-only, safe to put in front of the clinic on day one. Editing came later, behind a login per person, after a security audit. Drive stays the source of truth: switch the panel off and nothing is lost.</p>
+      <p class="private">Private product · seeded demo data, no real patients</p>
+    </div>
+    <div class="col">
+      <ol class="demo-steps">
+        <li>Follow-up board: counters, tabs, city filters<span>30 s</span></li>
+        <li>One case: phases, what's missing, next step<span>60 s</span></li>
+        <li>Users and permissions: the doctor, view only<span>45 s</span></li>
+        <li>Same panel as a viewer: the buttons disappear<span>30 s</span></li>
+        <li>Optional: the voice note on the phone<span>15 s</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>"This is a private product with patient data. I will show demo data only."</p>
+    <ul>
+      <li>Open the demo: in the dc-medical-dashboard repo run <b>python3 tools/demo_server.py 8787</b> → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
+      <li>Live panel (sign-in only, do not log in on the call): panel.dcmedicalaesthetics.com</li>
+    </ul>
+    <p>If the demo fails, stay on this slide and use the previous slides. Do not debug on the call.</p>
+  </aside>
+</section>
+
+<section class="slide" data-title="DC · Outcome" data-section="Case 3 · DC Medical" data-accent="dc">
+  <div class="statement">
+    <span class="kicker">Outcome</span>
+    <h2 class="title">A rule is stronger as a lock than as a note.</h2>
+    <p class="lead">Every case now shows what the patient owes beside the next step, and the clinic's requests ship in days, not quarters.</p>
+  </div>
+  <aside class="notes">
+    <p>Now every case shows what the patient owes, next to the next step.</p>
+    <p>When the clinic asks for something, most of it ships within a day.</p>
+    <p>My lesson: a rule is stronger as a lock than as a note.</p>
+    <p class="hint">[DOUG: if you have it, say how long it takes now to find a balance.]</p>
+  </aside>
+</section>
+
+<!-- ═══════════════════════════ CLOSING ═══════════════════════════ -->
+
+<section class="slide vcenter" data-title="Design systems" data-section="Systems and tools">
+  <span class="kicker">Across my career</span>
+  <h2 class="title wide">A design system is mostly governance.</h2>
+  <div class="systems">
+    <div><div class="who">Banco de Occidente · 2018–2024</div><div class="t">Velocity</div><div class="n">12+ squads</div><div class="b">I built it and was its gatekeeper: additions, deprecations, patterns, workshops and crits.</div></div>
+    <div><div class="who">Mercadolibre · 2024–2026</div><div class="t">Andes</div><div class="n">400+ designers · 2,000+ engineers · 18 countries</div><div class="b">Tech lead. Foundations (tokens, spacing, type, motion), one API per component, AI audits that catch drift in Figma before it ships.</div></div>
+    <div><div class="who">Naowee · 2026–now</div><div class="t">Naowee DS</div><div class="n">38+ components · 130+ screens</div><div class="b">No custom components. One wizard recipe. The prototype is built on the system, so the demo is the contract.</div></div>
+  </div>
+  <aside class="notes">
+    <p>All three cases depend on a design system. So let me talk about systems.</p>
+    <p>The hard part is not the button. It is the rules: who can add, who can remove, how we migrate.</p>
+    <p>At Mercadolibre I was tech lead of Andes, for more than 400 designers and 2,000 engineers in 18 countries.</p>
+    <p>We used AI audits to find drift in Figma before release.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="Tools" data-section="Systems and tools">
+  <span class="kicker">Tools</span>
+  <h2 class="title wide">Figma to decide. Code to prove it.</h2>
+  <dl class="tools">
+    <div><dt>Design</dt><dd>Figma<br>Illustrator · Photoshop</dd></div>
+    <div><dt>Code</dt><dd>Claude Code · Cursor<br>GitHub · Storybook</dd></div>
+    <div><dt>AI</dt><dd>Claude · ChatGPT<br>Gemini</dd></div>
+    <div><dt>Team</dt><dd>Jira · Notion</dd></div>
+  </dl>
+  <div class="ai-rule"><b>AI drafts. A person decides.</b><span>I prototype in code with AI, and I audit design systems with it. In the products I ship, AI fills the form and a person confirms before anything is saved.</span></div>
+  <aside class="notes">
+    <p>I design in Figma. I also build prototypes in code with Claude Code and Cursor.</p>
+    <p>AI writes a first version. A person always checks it.</p>
+    <p class="hint">If short on time: say this slide in 1 minute.</p>
+  </aside>
+</section>
+
+<section class="slide vcenter" data-title="For Hyperproof" data-section="Closing">
+  <span class="kicker">What I'd bring</span>
+  <h2 class="title wide">What I would bring to Hyperproof.</h2>
+  <div class="bring">
+    <div><div class="i">01</div><div class="t">Roles and states before screens</div><div class="b">Permissions and workflows that are clear because they were modeled first.</div></div>
+    <div><div class="i">02</div><div class="t">Dense data people can act on</div><div class="b">The next step beside the data; honest states like “unverified”; numbers that can't lie.</div></div>
+    <div><div class="i">03</div><div class="t">A system with rules, and prototypes devs trust</div><div class="b">Governance that scales across teams, and working prototypes as the shared target.</div></div>
+  </div>
+  <aside class="notes">
+    <p>To close, three things I would bring to your team.</p>
+    <p>One: I map roles and states before screens, so permissions are clear.</p>
+    <p>Two: I make dense data easy to read and to act on.</p>
+    <p>Three: I protect a design system with clear rules, and I use working prototypes to align with developers.</p>
+  </aside>
+</section>
+
+<section class="slide thanks" data-title="Thank you" data-section="Closing">
+  <div class="statement">
+    <h2 class="display">Thank you.<br>Questions?</h2>
+    <div class="contact"><a href="https://douguizard.com" target="_blank" rel="noopener">douguizard.com</a><a href="https://linkedin.com/in/dougvargasco" target="_blank" rel="noopener">linkedin.com/in/dougvargasco</a><a href="mailto:hello@douguizard.com">hello@douguizard.com</a></div>
+  </div>
+  <aside class="notes">
+    <p>Thank you. I would love to hear your questions.</p>
+    <p class="hint">Q&amp;A bank: see NOTES.md. Press O to jump to any slide during questions.</p>
+  </aside>
+</section>
+
+</div></div>
+
+<div id="chrome">
+  <span id="section"></span>
+  <span class="ctl">
+    <span id="count"></span>
+    <button id="prev" aria-label="Previous slide">←</button>
+    <button id="next" aria-label="Next slide">→</button>
+    <button id="btn-notes" title="Speaker notes (N)">Notes</button>
+    <button id="btn-presenter" title="Presenter window (P)">Presenter</button>
+  </span>
+</div>
+<div id="drawer" role="region" aria-label="Speaker notes"></div>
+<div id="overview" role="dialog" aria-label="All slides"><ol></ol></div>
+
+<div id="pview">
+  <div>
+    <div class="pcur" id="p-cur"></div>
+    <div class="ptitle" id="p-title"></div>
+    <div class="pnotes" id="p-notes"></div>
+  </div>
+  <div class="pside">
+    <div class="pclock" id="p-timer">00:00</div>
+    <div class="meta" id="p-clock"></div>
+    <div class="pnext">Next<b id="p-next"></b></div>
+    <div class="pbtns"><button id="p-prev">← Prev</button><button id="p-nextbtn">Next →</button></div>
+    <p class="meta" style="margin-top:18px">Keys: ← → space · R resets the timer</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Device mockups: local copy first (run fetch-mockups.sh), then the Higgsfield CDN,
+  // then the flat screenshot they were composited from.
+  var CDN = "https://d2ol7oe51mr4n9.cloudfront.net/user_3IvZCcP0Hh0Iw00znaf8bruzl4p/";
+  var MOCKS = {
+    "naowee-display-workspace": "3bd30e97-d373-4978-a9ba-457f4bd63a82",
+    "naowee-ipad-review": "ef1da430-28d9-45bd-8c55-b998c5291b2b",
+    "naowee-macbook-ds": "94261b16-3e47-4674-abb4-5ccb9c8f6983",
+    "occ-ipad-accounts": "6f7bd511-16a2-4e05-977a-2259ec5021bd",
+    "occ-iphone-card": "291f0cc7-4639-4e5c-b24d-bf66b9e19763",
+    "dc-iphone-voice": "79423053-04e3-4eb0-9774-1223ed136c80",
+    "dc-display-agenda": "bcf9c66c-1279-47bd-a081-9caaf9a0b031",
+    "dc-macbook-followup": "c991d2f7-04f3-44ab-9071-1c49fc95ed14",
+    "dc-ipad-permissions": "18b4d280-71bf-41ce-b705-fd47728b6ba4"
+  };
+  document.querySelectorAll("img[data-mock]").forEach(function (img) {
+    var name = img.dataset.mock, tries = ["assets/mockups/" + name + ".jpg", CDN + MOCKS[name] + ".jpg"];
+    if (img.dataset.flat) tries.push(img.dataset.flat);
+    var k = 0;
+    img.onerror = function () {
+      k++;
+      if (k < tries.length) { if (tries[k] === img.dataset.flat) img.classList.add("is-flat"); img.src = tries[k]; }
+      else { img.onerror = null; img.style.visibility = "hidden"; }
+    };
+    img.src = tries[0];
+  });
+  document.querySelectorAll("img[data-src]").forEach(function (img) { img.src = img.dataset.src; });
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var N = slides.length, cur = 0;
+  var isPresenter = /[?&]presenter\b/.test(location.search);
+  var deck = document.getElementById("deck");
+  var presenterWin = null;
+
+  function fit() {
+    var s = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    deck.style.transform = "scale(" + s + ")";
+  }
+  window.addEventListener("resize", fit); fit();
+
+  function notesOf(i) { var n = slides[i] && slides[i].querySelector(".notes"); return n ? n.innerHTML : ""; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function go(i, fromRemote) {
+    i = Math.max(0, Math.min(N - 1, i));
+    slides[cur].classList.remove("is-active");
+    cur = i;
+    var s = slides[cur];
+    s.classList.add("is-active");
+    document.querySelectorAll("video").forEach(function (v) {
+      if (s.contains(v)) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause();
+    });
+    document.getElementById("progress").style.width = ((cur + 1) / N * 100) + "%";
+    document.getElementById("count").textContent = pad(cur + 1) + " / " + pad(N);
+    document.getElementById("section").textContent = s.dataset.section || "";
+    document.getElementById("drawer").innerHTML = notesOf(cur);
+    document.querySelectorAll("#overview button").forEach(function (b, j) { b.classList.toggle("is-current", j === cur); });
+    if (history.replaceState) history.replaceState(null, "", location.pathname + location.search + "#" + (cur + 1));
+    if (isPresenter) renderPresenter();
+    if (!fromRemote) post({ type: "goto", i: cur });
+  }
+
+  function post(msg) {
+    try {
+      if (isPresenter && window.opener) window.opener.postMessage(msg, "*");
+      if (!isPresenter && presenterWin && !presenterWin.closed) presenterWin.postMessage(msg, "*");
+    } catch (e) {}
+  }
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "goto" && typeof d.i === "number") go(d.i, true);
+    if (d.type === "hello" && !isPresenter) post({ type: "goto", i: cur });
+  });
+
+  // Overview
+  var ol = document.querySelector("#overview ol");
+  slides.forEach(function (s, j) {
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.innerHTML = "<span>" + pad(j + 1) + " · " + (s.dataset.section || "") + "</span>" + (s.dataset.title || "");
+    b.addEventListener("click", function () { toggleOverview(false); go(j); });
+    li.appendChild(b); ol.appendChild(li);
+  });
+  function toggleOverview(force) { document.getElementById("overview").classList.toggle("is-open", force); }
+  function toggleNotes() { document.getElementById("drawer").classList.toggle("is-open"); }
+  function openPresenter() {
+    presenterWin = window.open(location.pathname + "?presenter#" + (cur + 1), "dv-presenter", "width=1100,height=720");
+  }
+
+  document.getElementById("prev").addEventListener("click", function () { go(cur - 1); });
+  document.getElementById("next").addEventListener("click", function () { go(cur + 1); });
+  document.getElementById("btn-notes").addEventListener("click", toggleNotes);
+  document.getElementById("btn-presenter").addEventListener("click", openPresenter);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || k === " " || k === "Enter") { e.preventDefault(); go(cur + 1); }
+    else if (k === "ArrowLeft" || k === "PageUp" || k === "Backspace") { e.preventDefault(); go(cur - 1); }
+    else if (k === "Home") go(0);
+    else if (k === "End") go(N - 1);
+    else if (k === "n" || k === "N") toggleNotes();
+    else if (k === "p" || k === "P") { if (!isPresenter) openPresenter(); }
+    else if (k === "o" || k === "O" || k === "Escape") toggleOverview(k === "Escape" ? false : undefined);
+    else if (k === "c" || k === "C") document.body.classList.toggle("is-clean");
+    else if (k === "f" || k === "F") { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    else if ((k === "r" || k === "R") && isPresenter) t0 = Date.now();
+  });
+
+  // Presenter window
+  var t0 = Date.now();
+  function renderPresenter() {
+    var s = slides[cur], nx = slides[cur + 1];
+    document.getElementById("p-cur").textContent = pad(cur + 1) + " / " + pad(N) + " · " + (s.dataset.section || "");
+    document.getElementById("p-title").textContent = s.dataset.title || "";
+    document.getElementById("p-notes").innerHTML = notesOf(cur);
+    document.getElementById("p-next").textContent = nx ? nx.dataset.title : "End";
+  }
+  if (isPresenter) {
+    document.body.classList.add("presenter");
+    document.title = "Presenter · " + document.title;
+    document.getElementById("p-prev").addEventListener("click", function () { go(cur - 1); });
+    document.getElementById("p-nextbtn").addEventListener("click", function () { go(cur + 1); });
+    setInterval(function () {
+      var s = Math.floor((Date.now() - t0) / 1000);
+      document.getElementById("p-timer").textContent = pad(Math.floor(s / 60)) + ":" + pad(s % 60);
+      document.getElementById("p-clock").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }, 1000);
+    if (window.opener) window.opener.postMessage({ type: "hello" }, "*");
+  }
+
+  var start = parseInt((location.hash || "").slice(1), 10);
+  slides[0].classList.add("is-active");
+  go(isNaN(start) ? 0 : start - 1, true);
+})();
+</script>
+</body>
+</html>
