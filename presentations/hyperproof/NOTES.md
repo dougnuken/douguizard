@@ -20,6 +20,13 @@ Lunes 26 de octubre de 2026, 2:00 p. m. · 60 minutos · equipo de diseño de Hy
 | `C` | Oculta la barra inferior y el progreso |
 | `F` | Pantalla completa |
 
+**Versión en español:** `index.es.html` (botón `ES`/`EN` abajo a la derecha; conserva la diapositiva en la que estás).
+Es idéntica a la inglesa, para leerla y entenderla antes de presentar.
+
+**Teleprompter:** `teleprompter.html` (el guion completo con conectores, en inglés con traducción al español).
+Ábrelo en otra pantalla o en el iPad. Espacio inicia/pausa, ↑↓ cambia la velocidad, ←→ salta de diapositiva, `T` oculta el español.
+El texto vive en `GUION.md`; si lo editas, corre `python3 presentations/hyperproof/build-teleprompter.py`.
+
 ## La idea que deben recordar
 
 > In complex products, the states and the roles are the product. I design them first, then I prove them in a working prototype.

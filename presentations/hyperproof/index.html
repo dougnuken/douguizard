@@ -113,6 +113,7 @@ img.is-flat { object-fit: contain !important; padding: 40px; }
 #chrome { position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim); z-index: 5; pointer-events: none; }
 #chrome .ctl { pointer-events: auto; display: flex; gap: 6px; align-items: center; }
 #chrome button { font: inherit; color: var(--ink-muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; height: 30px; min-width: 30px; padding: 0 10px; cursor: pointer; }
+#chrome a#btn-lang { pointer-events: auto; font: inherit; color: var(--ink-muted); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; height: 30px; padding: 0 10px; display: inline-flex; align-items: center; }
 #chrome button:hover { background: rgba(11,11,12,.04); }
 #chrome button:active { transform: scale(.96); }
 #chrome button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
@@ -307,17 +308,16 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 
 <section class="slide" data-title="Cover" data-section="Intro">
   <div class="cover-top"><span class="name">Doug Vargas</span><span class="meta">For the Hyperproof design team · October 2026</span></div>
-  <div class="cover-hero"><img data-mock="naowee-display-workspace" data-flat="../../public/work/naowee/ivc-workspace-tramite.webp" alt="A regulatory review workspace from Naowee SUID on a desktop display"></div>
+  <div class="cover-hero"><img data-mock="naowee-display-workspace" data-flat="../../public/work/naowee/ivc-workspace-tramite.webp" alt="A document review screen from Naowee SUID on a desktop display"></div>
   <div class="cover-copy">
     <h1 class="display">When the rules are the product.</h1>
-    <p class="lead" style="margin-top:28px">Three products full of roles, states and dense data, and the decisions that made them usable.</p>
+    <p class="lead" style="margin-top:28px">Three products where many people, many rules and a lot of data meet. What was hard, what we decided, and what it cost.</p>
   </div>
   <aside class="notes">
     <p>Hello, and thank you for your time today.</p>
     <p>I will show you three products. Each one has many rules, a lot of data, and many roles.</p>
     <p>I will focus on problems and decisions, not on pixels.</p>
-    <p>Please stop me at any time. Questions are welcome during the talk.</p>
-    <p class="hint">Timing: whole intro (slides 1–6) ≈ 12 min.</p>
+    <p>Please stop me at any time. Questions are welcome.</p>
   </aside>
 </section>
 
@@ -326,59 +326,59 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="kicker">Hello</span>
       <h2 class="title">I'm Doug. I design products with many rules.</h2>
-      <p class="lead" style="margin-top:28px">Product designer from Barranquilla, Colombia. Twelve years in digital products; since 2018, mostly regulated ones: banking, government, clinic operations.</p>
+      <p class="lead" style="margin-top:28px">I'm a product designer from Barranquilla, Colombia, with twelve years in digital products. Since 2018 I've worked mostly on products with strict rules: a bank, a government platform, a medical clinic.</p>
       <dl class="facts">
         <div><dt>Now</dt><dd>Head of Product at Naowee</dd></div>
-        <div><dt>Before</dt><dd>Tech Lead, Andes Design System at Mercadolibre</dd></div>
-        <div><dt>Specialty</dt><dd>Complex products and the design systems behind them</dd></div>
-        <div><dt>Also</dt><dd>I build my prototypes in code</dd></div>
+        <div><dt>Before</dt><dd>Design system lead at Mercadolibre</dd></div>
+        <div><dt>What I do best</dt><dd>Complex products, and the design systems behind them</dd></div>
+        <div><dt>Also</dt><dd>I build my own prototypes in code</dd></div>
       </dl>
     </div>
     <img class="portrait" src="../../public/portrait/doug-portrait-900.webp" alt="Portrait of Doug Vargas">
   </div>
   <aside class="notes">
     <p>I am Doug. I live in Barranquilla, on the Caribbean coast of Colombia.</p>
-    <p>I have twelve years in product and UI design. My focus is complex products and design systems.</p>
+    <p>I have twelve years in product design. My focus is complex products and design systems.</p>
     <p>I also write code, so I build my own prototypes.</p>
-    <p class="hint">[DOUG: add one personal detail here — what you enjoy outside work.]</p>
+    <p class="hint">[DOUG: one personal detail — what you enjoy outside work.]</p>
   </aside>
 </section>
 
 <section class="slide vcenter" data-title="Career" data-section="Intro">
   <span class="kicker">Twelve years, in one line</span>
-  <h2 class="title wide">From UI craft to systems and products with rules.</h2>
+  <h2 class="title wide">Twelve years, from screens to systems.</h2>
   <ol class="timeline">
-    <li><div class="y">2014</div><div class="c">Smartbiz</div><div class="r">Junior UI designer</div></li>
-    <li><div class="y">2016</div><div class="c">Ideaware</div><div class="r">Senior UX/UI, remote, US clients</div></li>
-    <li class="is-key"><div class="y">2016</div><div class="c">Qrvey</div><div class="r">Lead UI, data and workflow product</div></li>
-    <li><div class="y">2017</div><div class="c">Globant</div><div class="r">Royal Caribbean, with a US team</div></li>
-    <li class="is-key"><div class="y">2018</div><div class="c">Banco de Occidente</div><div class="r">Portal and Velocity design system</div></li>
-    <li class="is-key"><div class="y">2024</div><div class="c">Mercadolibre</div><div class="r">Andes DS, 400+ designers, 18 countries</div></li>
-    <li class="is-key"><div class="y">2026</div><div class="c">Naowee</div><div class="r">Head of Product, GovTech</div></li>
+    <li><div class="y">2014</div><div class="c">Smartbiz</div><div class="r">My first UI job</div></li>
+    <li><div class="y">2016</div><div class="c">Ideaware</div><div class="r">Remote work for US clients</div></li>
+    <li class="is-key"><div class="y">2016</div><div class="c">Qrvey</div><div class="r">Lead UI for a data product</div></li>
+    <li><div class="y">2017</div><div class="c">Globant</div><div class="r">Royal Caribbean apps, with a US team</div></li>
+    <li class="is-key"><div class="y">2018</div><div class="c">Banco de Occidente</div><div class="r">Online banking and its design system</div></li>
+    <li class="is-key"><div class="y">2024</div><div class="c">Mercadolibre</div><div class="r">Design system for 400+ designers</div></li>
+    <li class="is-key"><div class="y">2026</div><div class="c">Naowee</div><div class="r">Head of Product, government platform</div></li>
   </ol>
   <blockquote class="quote">“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”<cite>Arman Eshraghi, Founder &amp; CEO, Qrvey</cite></blockquote>
   <aside class="notes">
     <p>This is my path in one line.</p>
-    <p>I started with UI. At Qrvey I designed a data product with workflows. Then I worked with US teams at Ideaware and Globant.</p>
-    <p>From 2018 I focused on systems: five years at the bank, then two years on Andes at Mercadolibre.</p>
+    <p>I started with screens. At Qrvey I designed a data product. I worked with US teams at Ideaware and Globant.</p>
+    <p>From 2018 I focused on systems: five years at the bank, then two years at Mercadolibre.</p>
     <p>Today I am Head of Product at Naowee.</p>
   </aside>
 </section>
 
 <section class="slide vcenter" data-title="The thread" data-section="Intro">
   <span class="kicker">Why these three</span>
-  <h2 class="title wide">Your world is already in my work.</h2>
+  <h2 class="title wide">Your daily work is already in my work.</h2>
   <div class="map">
-    <div class="h">In Hyperproof</div><div class="h">Where I solved the same shape</div><div class="h" style="text-align:right">Case</div>
-    <div class="k">Evidence mapped to a control</div><div class="v">Each document checked against the article of law it answers</div><div class="w">Naowee</div>
-    <div class="k">Control status and testing</div><div class="v">45+ states; every item marked compliant or unverified, with an SLA</div><div class="w">Naowee</div>
-    <div class="k">Roles and permissions</div><div class="v">15 roles with cascading approval; permissions by area and action</div><div class="w">Naowee · DC</div>
-    <div class="k">Steps that can't be skipped</div><div class="v">Phases with locks: no procedure before payment, receipt and consent</div><div class="w">DC Medical</div>
-    <div class="k">Consistency across teams</div><div class="v">One design system, governed for 12+ product squads</div><div class="w">Occidente</div>
+    <div class="h">What you design at Hyperproof</div><div class="h">What I designed</div><div class="h" style="text-align:right">Case</div>
+    <div class="k">Evidence linked to a control</div><div class="v">Each document is checked against the exact article of the law it must meet</div><div class="w">Naowee</div>
+    <div class="k">Control status and testing</div><div class="v">Every item is marked “meets the rule” or “not verified yet”, with a deadline</div><div class="w">Naowee</div>
+    <div class="k">Roles and permissions</div><div class="v">15 roles with approvals from the top down; access by area and action</div><div class="w">Naowee · DC</div>
+    <div class="k">Steps that can't be skipped</div><div class="v">A treatment can't start until it's paid and the consent is signed</div><div class="w">DC Medical</div>
+    <div class="k">Consistency across teams</div><div class="v">One design system shared by 12+ product teams</div><div class="w">Occidente</div>
   </div>
   <aside class="notes">
     <p>These three products look different. But the problem is the same.</p>
-    <p>People follow rules, and the system must show who can do what. The data is dense, and mistakes cost money or trust.</p>
+    <p>People follow rules, and the system must show who can do what. There is a lot of data, and a mistake costs money or trust.</p>
     <p>In your product I see the same shape: evidence, controls, reviews, roles.</p>
     <p>That is why I chose these three cases.</p>
   </aside>
@@ -386,48 +386,48 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 
 <section class="slide vcenter" data-title="How I work" data-section="Process">
   <span class="kicker">Process</span>
-  <h2 class="title wide">I design the states and roles first. Screens come after.</h2>
+  <h2 class="title wide">First I map who does what. Then I design screens.</h2>
   <ol class="steps">
-    <li><div class="i">01</div><div class="t">Ask for the paper</div><div class="b">Real files, real spreadsheets, real exceptions. Not only opinions.</div><div class="x">Naowee: 30 procedures in Word and email</div></li>
-    <li><div class="i">02</div><div class="t">Map states and roles</div><div class="b">Who acts, in what state, and what comes next. Before any screen.</div><div class="x">45+ states, 15 roles</div></li>
-    <li><div class="i">03</div><div class="t">Prototype the real thing</div><div class="b">Clickable, in code, with real roles and states. People react to it.</div><div class="x">Analysts sign off story by story</div></li>
-    <li><div class="i">04</div><div class="t">Put it in the system</div><div class="b">Repeated answers become components, patterns and rules.</div><div class="x">38+ shared components</div></li>
-    <li><div class="i">05</div><div class="t">Ship, then listen</div><div class="b">Release the safe version first. Real use writes the next brief.</div><div class="x">DC: read-only on day one</div></li>
+    <li><div class="i">01</div><div class="t">See the real work</div><div class="b">I ask for the files, emails and spreadsheets people use today, including the exceptions.</div><div class="x">Naowee: 30 processes in Word and email</div></li>
+    <li><div class="i">02</div><div class="t">Map roles and statuses</div><div class="b">Who does what, at which step, and what happens next. Before any screen.</div><div class="x">45+ statuses, 15 roles</div></li>
+    <li><div class="i">03</div><div class="t">Build a clickable prototype</div><div class="b">With real roles and real data, so people react to something real.</div><div class="x">The team approves the prototype, not a document</div></li>
+    <li><div class="i">04</div><div class="t">Add it to the design system</div><div class="b">Anything we repeat becomes a shared component with clear rules.</div><div class="x">38+ shared components</div></li>
+    <li><div class="i">05</div><div class="t">Launch small, then listen</div><div class="b">Release a safe first version. Real use tells us what to build next.</div><div class="x">DC: view-only on day one</div></li>
   </ol>
   <aside class="notes">
     <p>This is how I work, in five steps.</p>
-    <p>First I want to see the real work: the files people use today. Exceptions are where the design is hard.</p>
-    <p>Then I map states and roles. At Naowee I mapped more than 45 states and 15 roles before I drew a screen.</p>
-    <p>Then a prototype with real roles. Then the system. Then I ship a safe version and I listen.</p>
+    <p>First I look at the real work: the files people use today. The exceptions are where design is hard.</p>
+    <p>Then I map roles and statuses. At Naowee I mapped more than 45 statuses and 15 roles before I drew a screen.</p>
+    <p>Then a prototype with real roles. Then the design system. Then I launch a safe version and I listen.</p>
   </aside>
 </section>
 
-<section class="slide vcenter" data-title="Requirements and engineering" data-section="Process">
-  <span class="kicker">Requirements and collaboration</span>
-  <h2 class="title wide">The demo is the requirement, not the document.</h2>
+<section class="slide vcenter" data-title="Requirements and developers" data-section="Process">
+  <span class="kicker">Requirements and teamwork</span>
+  <h2 class="title wide">People agree faster on a prototype than on a document.</h2>
   <div class="twocol">
     <div>
       <h4>How I gather requirements</h4>
       <ul>
-        <li><b>Start from the artifacts.</b> The forms, files and emails people use today show the real process.</li>
-        <li><b>Attack the plan early.</b> At DC, an adversarial review on data, security and feasibility; only the third version reached code.</li>
-        <li><b>Sign off on something running.</b> Specs get read differently by everyone; a prototype surfaces disagreement while it is cheap.</li>
+        <li><b>Start from what exists.</b> Forms, files and emails show how the work really happens.</li>
+        <li><b>Challenge the plan early.</b> At DC I asked for a hard review of data, security and cost. The plan changed twice before any code.</li>
+        <li><b>Approve something that works.</b> Everyone reads a document differently. A prototype shows disagreements early, when they are cheap to fix.</li>
       </ul>
     </div>
     <div>
-      <h4>How I work with engineering</h4>
+      <h4>How I work with developers</h4>
       <ul>
-        <li><b>A resolved target, not a spec.</b> Engineering gets a prototype built on the system's components.</li>
-        <li><b>One component API.</b> At Mercadolibre we agreed single APIs across iOS, Android and Web.</li>
-        <li><b>Rules as tests.</b> At DC, balances, card fees, dates and name matching are tested functions: 12 suites.</li>
+        <li><b>A clear target.</b> Developers get a working prototype built with real components, not a long spec.</li>
+        <li><b>One shared component.</b> At Mercadolibre we agreed on one way to build each component for iOS, Android and web.</li>
+        <li><b>Business rules as tests.</b> At DC, the rules about money and dates are automated tests: 12 test suites.</li>
       </ul>
     </div>
   </div>
   <aside class="notes">
-    <p>For requirements, I start from the real artifacts.</p>
-    <p>I also attack the plan early. At DC Medical the plan went through a hard review on data, security and feasibility. Only the third version reached code.</p>
-    <p>I like to sign off on something that runs. People read documents in different ways. A prototype shows the disagreement early, when it is cheap.</p>
-    <p>With engineers, I give a resolved target, built with the system. And I turn business rules into tests.</p>
+    <p>For requirements, I start from what already exists.</p>
+    <p>I also challenge the plan early. At DC Medical the plan changed twice before I wrote code.</p>
+    <p>I like people to approve something that works. A document is read in many ways. A prototype shows the problems early, when they are cheap.</p>
+    <p>With developers, I give a clear target built with the system. And I turn business rules into tests.</p>
   </aside>
 </section>
 
@@ -438,21 +438,22 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="num">Case 1 of 3</span>
       <h2 class="display">Naowee SUID</h2>
-      <p class="lead">The platform that digitizes how Colombia runs its sport: inspection, oversight, venues and investment calls.</p>
-      <p class="roleline"><b>Head of Product</b> · 2026, ongoing · with business analysts, a designer I lead, and engineering</p>
+      <p class="lead">A government platform that manages Colombia's sports system: clubs, leagues, athletes, sports venues and public funding.</p>
+      <p class="roleline"><b>Who uses it</b> · government reviewers and coordinators, and the sports organizations they oversee</p>
+      <p class="roleline" style="margin-top:8px"><b>My role</b> · Head of Product, 2026 to today, with business analysts, a designer I lead, and the developers</p>
     </div>
-    <div class="stage contain"><img data-src="../../public/work/naowee/escenarios-mapa.webp" alt="Georeferenced registry of sports venues across Colombia, shaded by department" style="padding:36px"></div>
+    <div class="stage contain"><img data-src="../../public/work/naowee/escenarios-mapa.webp" alt="Map of Colombia's sports venues, shaded by department" style="padding:36px"></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
-    <div><div class="n">30</div><div class="l">Procedures digitized</div><div class="d">Word and email before</div></div>
-    <div><div class="n">~1,200</div><div class="l">Sports organizations in scope</div></div>
-    <div><div class="n">130+</div><div class="l">Screens shipped</div><div class="d">8 of 13 modules</div></div>
+    <div><div class="n">30</div><div class="l">Legal processes moved online</div><div class="d">before: Word and email</div></div>
+    <div><div class="n">~1,200</div><div class="l">Sports organizations it oversees</div></div>
+    <div><div class="n">130+</div><div class="l">Screens designed and built</div><div class="d">8 of 13 modules</div></div>
     <div><div class="n">38+</div><div class="l">Shared components</div><div class="d">one design system</div></div>
   </div>
   <aside class="notes">
-    <p>The biggest rules problem I work on is in government. This is Naowee.</p>
-    <p>It is my closest case to your product: a regulated process, many roles, and every document must answer a rule.</p>
-    <p>I am Head of Product. I set the direction and I build the prototypes that define each module.</p>
+    <p>This is Naowee. It is my closest case to your product.</p>
+    <p>It is a government platform with many roles, and every document must meet a rule of the law.</p>
+    <p>I am Head of Product. I set the direction and I build the prototypes for each module.</p>
     <p class="hint">Timing: Naowee ≈ 11 min.</p>
   </aside>
 </section>
@@ -461,30 +462,30 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 520px 1fr">
     <div class="col">
       <span class="kicker">The problem</span>
-      <h2 class="title">Thirty procedures lived in Word and email.</h2>
-      <p class="body" style="margin-top:28px">Inspection and oversight of ~1,200 sports organizations moved through Word, email and a document manager. The process existed. The product did not.</p>
+      <h2 class="title">Thirty legal processes lived in Word and email.</h2>
+      <p class="body" style="margin-top:28px">The government must inspect about 1,200 sports organizations. Each inspection follows the law, step by step. All of it moved through Word files, emails and a shared document folder. The process existed, but there was no product.</p>
     </div>
     <div class="col">
-      <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-bandeja.webp" alt="The IVC assignment queue: counters for filings in review, assigned and in validation above a table of filings with deadlines and status"></div></div>
-      <p class="caption">The assignment queue that replaced the inbox: in review, assigned, in validation.</p>
+      <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-bandeja.webp" alt="The assignment inbox: counters for requests in review, assigned and being checked, above a table of requests with deadlines"></div></div>
+      <p class="caption">The new assignment inbox: what is in review, assigned, or being checked.</p>
     </div>
   </div>
   <aside class="notes">
-    <p>Before, all 30 procedures moved through Word, email and a document manager.</p>
+    <p>The government inspects about 1,200 sports organizations. The law says how, step by step.</p>
+    <p>Before, all of it moved through Word, email and a shared folder.</p>
     <p>The process existed, but there was no product.</p>
-    <p>So before drawing, I counted. I found more than 45 states and 15 roles.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Naowee · States and roles" data-section="Case 1 · Naowee" data-accent="naowee">
+<section class="slide" data-title="Naowee · Roles and statuses" data-section="Case 1 · Naowee" data-accent="naowee">
   <div class="split even">
     <div class="col">
       <span class="kicker">UX moment 1</span>
-      <h2 class="title">The states were the product.</h2>
+      <h2 class="title">First I mapped every status and every role.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>States and roles lived in people's heads and in email threads.</dd></div>
-        <div><dt>What we did</dt><dd>Mapped every state and role before any screen, and modeled the sector's real hierarchy with cascading approval.</dd></div>
-        <div><dt>The trade-off</dt><dd>A flat athlete table would have shipped months earlier. But medals by league only mean something if the links are real.</dd></div>
+        <div><dt>The pain</dt><dd>Nobody had written down who does what, or what status a request could be in. It lived in people's heads and in emails.</dd></div>
+        <div><dt>What we did</dt><dd>I mapped 45+ statuses and 15 roles before any screen. I also modeled the real chain of approvals, from the Ministry down to each club.</dd></div>
+        <div><dt>The trade-off</dt><dd>A simple list of athletes would have been faster to build. But reports by league are only correct if the chain is real.</dd></div>
       </dl>
     </div>
     <div class="col">
@@ -494,38 +495,38 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
         <div class="node"><i></i>Federations</div><div class="link"></div>
         <div class="node"><i></i>Leagues</div><div class="link"></div>
         <div class="node"><i></i>Clubs</div><div class="link"></div>
-        <div class="node"><i></i>Athletes<span>inherit league and federation</span></div>
+        <div class="node"><i></i>Athletes<span>belong to a club, league and federation</span></div>
       </div>
-      <div class="bignums"><div><div class="n">45+</div><div class="l">states mapped</div></div><div><div class="n">15</div><div class="l">roles</div></div></div>
+      <div class="bignums"><div><div class="n">45+</div><div class="l">statuses mapped</div></div><div><div class="n">15</div><div class="l">roles</div></div></div>
     </div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Control status and owner are the same idea: the state and the role decide what each person sees.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Like a control's status and its owner: together they decide what each person sees and can do.</p>
   <aside class="notes">
-    <p>I did not start with screens. I started with states and roles.</p>
-    <p>Approvals cascade from the Ministry down to the club. An approved athlete inherits the club's league and federation.</p>
-    <p>A flat table was faster to build. But the reports by league would lie.</p>
+    <p>I did not start with screens. I started with roles and statuses.</p>
+    <p>Approvals go from the Ministry down to the club. An approved athlete belongs to a club, a league and a federation.</p>
+    <p>A simple list was faster to build. But the reports by league would be wrong.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Naowee · Evidence vs rule" data-section="Case 1 · Naowee" data-accent="naowee">
+<section class="slide" data-title="Naowee · Evidence and rule" data-section="Case 1 · Naowee" data-accent="naowee">
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">UX moment 2</span>
-      <h2 class="title">Every document answers the article it cites.</h2>
+      <h2 class="title">Each document shows the rule it must meet.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>A reviewer opened a file and had to remember which rule it should satisfy.</dd></div>
-        <div><dt>What we did</dt><dd>The deadline sits beside a checklist of 7 documents. Each cites its article of Decreto 1387/1970. Validate, reject or observe, per document.</dd></div>
-        <div><dt>The trade-off</dt><dd>More structure per row, but the rule and the evidence live in one place.</dd></div>
+        <div><dt>The pain</dt><dd>A reviewer opened a file and had to remember which article of the law it should meet.</dd></div>
+        <div><dt>What we did</dt><dd>The deadline sits next to a checklist of 7 documents. Each one shows its article of the law. The reviewer approves, rejects or adds a note to each one.</dd></div>
+        <div><dt>The trade-off</dt><dd>Each row carries more information, but the rule and the proof are in one place.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-workspace-tramite.webp" alt="Procedure IVC-2026-005: 18 days left beside a checklist of 7 documents, each citing its article, with validate, reject or observe per document"></div></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/naowee/ivc-workspace-tramite.webp" alt="A review with 18 days left, beside a checklist of 7 documents, each showing its article of the law, with approve, reject or note per document"></div></div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> A document checked against its article is evidence mapped to a control.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> This is evidence linked to a control.</p>
   <aside class="notes">
-    <p>This is the reviewer's workspace.</p>
-    <p>The deadline is here: 18 days left. Beside it, the checklist.</p>
-    <p>Each document names the article it answers. The reviewer can validate, reject or observe each one.</p>
-    <p>The decision stays tied to the rule. For you, this is evidence mapped to a control.</p>
+    <p>This is the reviewer's screen.</p>
+    <p>The deadline is here: 18 days left. Next to it, the checklist.</p>
+    <p>Each document shows the article of the law it must meet. The reviewer approves, rejects or adds a note to each one.</p>
+    <p>The decision stays next to the rule. For you, this is evidence linked to a control.</p>
   </aside>
 </section>
 
@@ -533,20 +534,20 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">UX moment 3</span>
-      <h2 class="title">“Unverified” is a real state.</h2>
+      <h2 class="title">“Not verified yet” is a real answer.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Eight technical areas review one application. Progress and compliance were invisible.</dd></div>
-        <div><dt>What we did</dt><dd>Every item cites its article of Resolución 933 and is marked compliant or unverified. Progress reads 4 of 6, under the area's SLA.</dd></div>
-        <div><dt>The trade-off</dt><dd>A third state is harder to design than pass or fail. It blocks false confidence.</dd></div>
+        <div><dt>The pain</dt><dd>Eight technical teams review the same project. Nobody could see the progress, or what was missing.</dd></div>
+        <div><dt>What we did</dt><dd>Each item shows its rule and a mark: meets the rule, or not verified yet. A bar shows 4 of 6 done, under the team's deadline.</dd></div>
+        <div><dt>The trade-off</dt><dd>A third answer is harder to design than yes or no, but it stops people from approving what nobody checked.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="naowee-ipad-review" data-flat="../../public/work/naowee/project-revision-area-tecnica.webp" alt="Technical-area review on a tablet: an SLA notice and a checklist where each item cites its article and is marked compliant or unverified"></div>
+    <div class="stage tall"><img data-mock="naowee-ipad-review" data-flat="../../public/work/naowee/project-revision-area-tecnica.webp" alt="A technical review on a tablet: a deadline notice and a checklist where each item shows its rule and is marked as meeting it or not verified yet"></div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Compliant and unverified are test results; the SLA is the due date on a control test.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Like control test results with a due date.</p>
   <aside class="notes">
-    <p>Here, one technical area reviews one application.</p>
-    <p>Every item has its article and a mark. Unverified is not the same as failed.</p>
-    <p>The reviewer sees progress, 4 of 6, and the SLA at the same time.</p>
+    <p>Here, one technical team reviews one project.</p>
+    <p>Every item has its rule and a mark. "Not verified yet" is not the same as "failed".</p>
+    <p>The reviewer sees the progress, 4 of 6, and the deadline at the same time.</p>
   </aside>
 </section>
 
@@ -554,19 +555,19 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 480px 1fr">
     <div class="col">
       <span class="kicker">UX moment 4</span>
-      <h2 class="title">Workload belongs inside the assignment.</h2>
+      <h2 class="title">Show who is overloaded before you assign.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Coordinators reassigned overdue filings without seeing who was already overloaded.</dd></div>
-        <div><dt>What we did</dt><dd>The picker flags who's overloaded. The counters recompute in place: 6 pending to 5.</dd></div>
-        <div><dt>The trade-off</dt><dd>The picker carries more data, but the decision no longer needs a second screen.</dd></div>
+        <div><dt>The pain</dt><dd>Coordinators assigned late requests without knowing who already had too much work.</dd></div>
+        <div><dt>What we did</dt><dd>The list of reviewers shows who is overloaded. After assigning, the counters update right away: 6 pending becomes 5.</dd></div>
+        <div><dt>The trade-off</dt><dd>The list shows more data, but the coordinator decides on one screen.</dd></div>
       </dl>
     </div>
     <div class="stage tall" style="background:#fff"><video muted playsinline loop preload="metadata" poster="../../public/work/naowee/recorrido-ivc-poster.jpg" style="object-fit:contain"><source src="../../public/work/naowee/recorrido-ivc.mp4" type="video/mp4"></video></div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Assigning control owners and reviewers with their workload in view.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Like assigning control owners and reviewers while seeing their workload.</p>
   <aside class="notes">
-    <p>Watch the picker. It shows who is overloaded.</p>
-    <p>The coordinator assigns the filing. The counter changes at once, from 6 to 5.</p>
+    <p>Watch the list of reviewers. It shows who is overloaded.</p>
+    <p>The coordinator assigns the request. The counter changes at once, from 6 to 5.</p>
     <p>No reload, no second screen.</p>
   </aside>
 </section>
@@ -575,19 +576,19 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">Design system</span>
-      <h2 class="title">One system, or eight dialects.</h2>
+      <h2 class="title">One design system, not eight different styles.</h2>
       <dl class="moment">
-        <div><dt>What it governs</dt><dd>38+ shared components and one step-by-step form pattern across eight modules.</dd></div>
-        <div><dt>How it's enforced</dt><dd>No custom components; extend a shared one. Anything off in review is a bug, not a preference.</dd></div>
-        <div><dt>Open it live</dt><dd><a href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener">Naowee DS</a> · <a href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener">Demos hub</a></dd></div>
+        <div><dt>What it covers</dt><dd>38+ shared components and one pattern for step-by-step forms, across eight modules.</dd></div>
+        <div><dt>The rule</dt><dd>No one-off components: if something is missing, we extend a shared one. Anything that doesn't follow the system is treated as a bug.</dd></div>
+        <div><dt>See it live</dt><dd><a href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener">Naowee DS</a> · <a href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener">Demos hub</a></dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="fallback"><span class="meta">Text field · one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system playground on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
+    <div class="stage tall"><div class="fallback"><span class="meta">Text field: one component, every state</span><div class="chips"><span>Idle</span><span>Active</span><span>Loading</span><span class="v">Validated</span><span class="c">Caution</span><span class="e">Error</span><span>Disabled</span><span>Read only</span></div></div><img data-mock="naowee-macbook-ds" data-flat="" alt="The Naowee design system on a laptop, showing a text field and its states" style="object-position:45% 50%"></div>
   </div>
   <aside class="notes">
-    <p>Eight modules, eight deadlines, eight reasons to fork.</p>
-    <p>My rule is simple: do not make a new component. Extend a shared one.</p>
-    <p>Look at the text field: idle, loading, validated, caution, error, read only. The states again.</p>
+    <p>Eight modules, eight deadlines, eight reasons to do things differently.</p>
+    <p>My rule is simple: do not make a one-off component. Extend a shared one.</p>
+    <p>Look at the text field: normal, loading, validated, warning, error, read only. Statuses again.</p>
     <p class="hint">Optional: open the live design system site (link on the slide).</p>
   </aside>
 </section>
@@ -595,14 +596,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 <section class="slide" data-title="Naowee · Outcome" data-section="Case 1 · Naowee" data-accent="naowee">
   <div class="statement">
     <span class="kicker">Outcome</span>
-    <h2 class="title">Model the states and roles. Screens follow.</h2>
-    <p class="lead">Thirty procedures moved from files to one platform, 130+ screens in one language, and analysts who sign off on the running product.</p>
+    <h2 class="title">Map the roles and statuses first. The screens follow.</h2>
+    <p class="lead">Thirty legal processes moved from files to one platform. 130+ screens share one visual language, and the business team approves the working product, not a document.</p>
   </div>
   <aside class="notes">
-    <p>The result: thirty procedures moved from files to one platform.</p>
+    <p>The result: thirty legal processes moved from files to one platform.</p>
     <p>More than 130 screens, one design system.</p>
-    <p>My lesson: model states and roles first. The screens follow.</p>
-    <p class="hint">Bridge out: "Naowee has 15 roles. The next case is about scale: a bank with many teams."</p>
+    <p>My lesson: map roles and statuses first. The screens follow.</p>
   </aside>
 </section>
 
@@ -613,21 +613,22 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="num">Case 2 of 3</span>
       <h2 class="display" style="font-size:100px">Banco de Occidente</h2>
-      <p class="lead">One of Colombia's largest banks: its transactional portal, and Velocity, the design system its squads shared.</p>
-      <p class="roleline"><b>Senior Product Designer · Design System Gatekeeper</b> · Aval Digital Labs · 2018–2024</p>
+      <p class="lead">One of Colombia's largest banks. I redesigned its online banking and built Velocity, the design system its product teams share.</p>
+      <p class="roleline"><b>Who uses it</b> · the bank's customers, and 12+ internal product teams</p>
+      <p class="roleline" style="margin-top:8px"><b>My role</b> · Senior Product Designer and design system owner, Aval Digital Labs, 2018–2024</p>
     </div>
-    <div class="stage"><img data-mock="occ-ipad-accounts" data-flat="../../public/work/banco-de-occidente/products-and-cards.webp" alt="The bank's accounts section on a tablet: balances, movements, and a success toast confirming a checkbook block"></div>
+    <div class="stage"><img data-mock="occ-ipad-accounts" data-flat="../../public/work/banco-de-occidente/products-and-cards.webp" alt="The bank's accounts screen on a tablet: balances, movements, and a message confirming a checkbook was blocked"></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
-    <div><div class="n">12+</div><div class="l">Product squads aligned</div><div class="d">one system</div></div>
-    <div><div class="n">20+</div><div class="l">Documented system areas</div><div class="d">foundations → organisms</div></div>
-    <div><div class="n">15</div><div class="l">Illustrated icons</div><div class="d">drawn, not licensed</div></div>
-    <div><div class="n">3</div><div class="l">Devices, one portal</div><div class="d">desktop, tablet, mobile</div></div>
+    <div><div class="n">12+</div><div class="l">Product teams using one system</div></div>
+    <div><div class="n">20+</div><div class="l">Documented parts of the system</div><div class="d">from colors to full screens</div></div>
+    <div><div class="n">15</div><div class="l">Custom icons</div><div class="d">drawn for the bank</div></div>
+    <div><div class="n">3</div><div class="l">Devices, one experience</div><div class="d">desktop, tablet, phone</div></div>
   </div>
   <aside class="notes">
-    <p>Different domain, same problem: many teams, high stakes, a lot of data.</p>
-    <p>I redesigned the bank's transactional portal and I built Velocity, its design system.</p>
-    <p>I was also the Design System Gatekeeper for the squads.</p>
+    <p>Different industry, same problem: many teams, high stakes, a lot of data.</p>
+    <p>I redesigned the bank's online banking and I built Velocity, its design system.</p>
+    <p>I was also the owner of the system for all the product teams.</p>
     <p class="hint">Timing: Occidente ≈ 8 min. Cut to 5 if you are late.</p>
   </aside>
 </section>
@@ -635,74 +636,74 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 <section class="slide" data-title="Occidente · The problem" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
   <div class="statement">
     <span class="kicker">The problem</span>
-    <h2 class="title">Every squad solved the same problem differently.</h2>
-    <p class="lead">The portal was dense and buried people in nested pages. Fixing screens alone would not last: the fix had to be a system, and someone had to own it.</p>
+    <h2 class="title">Every team solved the same problem in its own way.</h2>
+    <p class="lead">The online bank was crowded, and people got lost in pages inside pages. Fixing screens one by one would not last. The bank needed a shared system, and someone to own it.</p>
   </div>
   <aside class="notes">
-    <p>The old portal was dense. People got lost in nested pages.</p>
-    <p>And every squad built its own answer to the same problem.</p>
+    <p>The old online bank was crowded. People got lost in pages inside pages.</p>
+    <p>And every team built its own answer to the same problem.</p>
     <p>Fixing screens was not enough. We needed a system, and an owner.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Occidente · Exceptions first" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+<section class="slide" data-title="Occidente · Errors first" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
   <div class="split" style="grid-template-columns: 480px 1fr">
     <div class="col">
       <span class="kicker">UX moment 1</span>
-      <h2 class="title">In banking, the exception is the product.</h2>
+      <h2 class="title">In banking, the errors are the real design.</h2>
       <dl class="moment">
-        <div><dt>What we did</dt><dd>Discovery and user research first. Then six flows, mapped with their exceptions before any screen.</dd></div>
-        <div><dt>How we validated</dt><dd>Every stage became a prototype tested on people before build; registration went through several rounds.</dd></div>
-        <div><dt>The trade-off</dt><dd>A slower start, and fewer surprises in build.</dd></div>
+        <div><dt>What we did</dt><dd>Research first. Then six key flows, mapped with all their errors before any screen.</dd></div>
+        <div><dt>How we tested</dt><dd>Each step became a prototype tested with real users before building. Sign-up went through several rounds.</dd></div>
+        <div><dt>The trade-off</dt><dd>A slower start, but fewer surprises during development.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/banco-de-occidente/user-flow-login-otp.webp" alt="Registration and one-time-password flow: register, document, OTP, resend by SMS, data agreement, then success or validation failure"></div></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="../../public/work/banco-de-occidente/user-flow-login-otp.webp" alt="The sign-up flow with a one-time code: register, document, code by SMS, terms, then success or a failed check"></div></div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Mapping the rejection and failure paths of a workflow before building it.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Like mapping every rejection path of a workflow before building it.</p>
   <aside class="notes">
-    <p>The happy path is easy. The failures are the real design.</p>
-    <p>Here is registration with a one-time password. Look at the failure branches: resend, wrong code, validation failure.</p>
-    <p>I drew them first. Then we tested prototypes with users before we built.</p>
+    <p>The happy path is easy. The errors are the real design.</p>
+    <p>This is sign-up with a one-time code. Look at the error branches: send the code again, wrong code, failed check.</p>
+    <p>I drew them first. Then we tested prototypes with users before building.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Occidente · Two layers" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+<section class="slide" data-title="Occidente · Two levels" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
   <div class="split" style="grid-template-columns: 480px 1fr">
     <div class="col">
       <span class="kicker">UX moment 2</span>
-      <h2 class="title">Two layers of navigation, and no more.</h2>
+      <h2 class="title">Never more than two levels deep.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>The old portal buried people in nested pages.</dd></div>
-        <div><dt>What we did</dt><dd>A popup system replaced navigation depth. Two layers cover every banking task.</dd></div>
-        <div><dt>The trade-off</dt><dd>A hard limit forces teams to simplify their flows. Simple rules get followed.</dd></div>
+        <div><dt>The pain</dt><dd>In the old site, people got lost in pages inside pages.</dd></div>
+        <div><dt>What we did</dt><dd>Pop-up windows replaced deep navigation. Any banking task fits in two levels.</dd></div>
+        <div><dt>The trade-off</dt><dd>A strict limit forces teams to simplify. Simple rules get followed.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img data-src="../../public/work/banco-de-occidente/popups-system.webp" alt="The popup system as four stacked planes: page, blurred background, component, popup"></div></div>
+    <div class="stage tall"><div class="flatpad"><img data-src="../../public/work/banco-de-occidente/popups-system.webp" alt="The pop-up system as four layers: page, blurred background, component, pop-up"></div></div>
   </div>
   <aside class="notes">
-    <p>I set a hard limit: two layers.</p>
-    <p>Page, blur, component, popup. Every task fits inside it.</p>
-    <p>The rule is simple, so the squads follow it.</p>
+    <p>I set a strict limit: two levels.</p>
+    <p>Page, blurred background, pop-up. Every task fits inside it.</p>
+    <p>The rule is simple, so the teams follow it.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="Occidente · Identical across devices" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
+<section class="slide" data-title="Occidente · Same on every device" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
   <div class="split" style="grid-template-columns: 520px 1fr">
     <div class="col">
       <span class="kicker">UX moment 3</span>
-      <h2 class="title">Identical across devices, not merely similar.</h2>
+      <h2 class="title">The same on the phone, not just similar.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>The brief asked for a “similar” experience. Similar means relearning.</dd></div>
-        <div><dt>What we did</dt><dd>Every desktop capability reaches the phone, with the same names, in the same order.</dd></div>
-        <div><dt>The trade-off</dt><dd>The phone carries more, but nothing is relearned on the bus.</dd></div>
+        <div><dt>The pain</dt><dd>The brief asked for a “similar” experience on mobile. Similar means people learn twice.</dd></div>
+        <div><dt>What we did</dt><dd>Everything you can do on desktop is on the phone, with the same names, in the same order.</dd></div>
+        <div><dt>The trade-off</dt><dd>The phone carries more, but nobody has to learn it again.</dd></div>
       </dl>
     </div>
-    <div class="stage tall contain" style="background:#f5f5f7"><img data-mock="occ-iphone-card" data-flat="../../public/work/banco-de-occidente/responsive-mobile.webp" alt="A credit card detail on a phone: minimum payment, total payment and due date above a Pay button" style="object-position:50% 40%"></div>
+    <div class="stage tall contain" style="background:#f5f5f7"><img data-mock="occ-iphone-card" data-flat="../../public/work/banco-de-occidente/responsive-mobile.webp" alt="A credit card on a phone: minimum payment, total payment and due date above a Pay button"></div>
   </div>
   <aside class="notes">
-    <p>The brief said "similar". I made it identical.</p>
-    <p>Same names, same order, on the phone and on the desktop.</p>
-    <p>People do not relearn anything when they change device.</p>
+    <p>The brief said "similar". I made it the same.</p>
+    <p>Same names, same order, on the phone and on the computer.</p>
+    <p>Nobody learns anything twice.</p>
   </aside>
 </section>
 
@@ -710,22 +711,22 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split" style="grid-template-columns: 460px 1fr">
     <div class="col">
       <span class="kicker">Design system</span>
-      <h2 class="title">Velocity needed a gate, not just a library.</h2>
+      <h2 class="title">A design system needs an owner, not only a library.</h2>
       <dl class="moment">
-        <div><dt>What it governs</dt><dd>Foundations to organisms, on atomic design, so the front end mirrors it.</dd></div>
-        <div><dt>How it's enforced</dt><dd>As Gatekeeper I approved additions, deprecations and patterns, and ran the workshops and crits.</dd></div>
+        <div><dt>What it covers</dt><dd>Everything from colors and type to full screens, organized the same way developers build it.</dd></div>
+        <div><dt>How I owned it</dt><dd>I approved what was added or removed, and I ran workshops and design reviews with the teams.</dd></div>
       </dl>
     </div>
     <div class="ds-collage">
-      <div><img data-src="../../public/work/banco-de-occidente/design-system-foundations.webp" alt="Foundation boards: color scale, type scale, spacing and control states"></div>
-      <div><img data-src="../../public/work/banco-de-occidente/design-system-grid.webp" alt="The Velocity index: documentation, foundations, atoms, molecules, organisms"></div>
-      <div><img data-src="../../public/work/banco-de-occidente/illustrated-icons.webp" alt="Fifteen illustrated icons drawn for the system"></div>
+      <div><img data-src="../../public/work/banco-de-occidente/design-system-foundations.webp" alt="Base styles: colors, type sizes, spacing and button states"></div>
+      <div><img data-src="../../public/work/banco-de-occidente/design-system-grid.webp" alt="The Velocity index, from base styles to full screens"></div>
+      <div><img data-src="../../public/work/banco-de-occidente/illustrated-icons.webp" alt="Fifteen icons drawn for the bank"></div>
     </div>
   </div>
   <aside class="notes">
     <p>A design system fails when nobody owns it.</p>
-    <p>I owned the gate. Teams could propose additions, but each change went through review.</p>
-    <p>Velocity is indexed the way the front end is built: foundations, atoms, molecules, organisms.</p>
+    <p>I was the owner. Teams could propose new parts, but each change went through a review.</p>
+    <p>Velocity is organized the same way the developers build: from base styles to full screens.</p>
     <p>Each new screen cost less than the last one.</p>
   </aside>
 </section>
@@ -733,14 +734,13 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 <section class="slide" data-title="Occidente · Outcome" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
   <div class="statement">
     <span class="kicker">Outcome</span>
-    <h2 class="title">A system needs an owner, not only a library.</h2>
-    <p class="lead">A dense portal rebuilt as one light product, on a system that made each new screen cheaper than the last.</p>
+    <h2 class="title">One owner kept 12+ teams consistent.</h2>
+    <p class="lead">A crowded online bank, rebuilt as one clear product, on a system that made every new screen faster to make.</p>
     <blockquote class="quote" style="font-size:26px;margin-top:48px">“We've done 8 projects with him and every single one delivered above expectations. He doesn't just design — he architects how products should feel.”<cite>Francesca Steri, Design Director, Aval Digital Labs</cite></blockquote>
   </div>
   <aside class="notes">
-    <p>The result: one light portal, on one shared system.</p>
+    <p>The result: one clear online bank, on one shared system.</p>
     <p>My lesson: a system needs an owner, not only a library.</p>
-    <p class="hint">Bridge out: "The bank taught me governance. Now a small product where I did everything myself."</p>
   </aside>
 </section>
 
@@ -751,21 +751,22 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="col">
       <span class="num">Case 3 of 3</span>
       <h2 class="display">DC Medical</h2>
-      <p class="lead">The panel that runs an aesthetic clinic from the secretary's phone. No procedure starts until it's paid for.</p>
-      <p class="roleline"><b>Product designer and design engineer, end to end</b> · live since Sep 21, 2026 · I co-own the clinic</p>
+      <p class="lead">A web app that runs a medical aesthetics clinic, mostly from the secretary's phone. A treatment can't start until it's paid for.</p>
+      <p class="roleline"><b>Who uses it</b> · the secretary every day; the doctor and the owners to check</p>
+      <p class="roleline" style="margin-top:8px"><b>My role</b> · I designed and built it alone · live since Sep 21, 2026 · I co-own the clinic</p>
     </div>
-    <div class="stage"><img data-mock="dc-macbook-followup" data-flat="../../public/work/dc-medical/seguimiento-controles.webp" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of controls" style="object-position:55% 45%"></div>
+    <div class="stage"><img data-mock="dc-macbook-followup" data-flat="../../public/work/dc-medical/seguimiento-controles.webp" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of follow-up visits" style="object-position:55% 45%"></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
-    <div><div class="n">14</div><div class="l">Days, first commit to agenda by city</div><div class="d">Sep 19 → Oct 2, 2026</div></div>
-    <div><div class="n">3</div><div class="l">Phases with locks</div><div class="d">valuation, payment, procedure</div></div>
-    <div><div class="n">0</div><div class="l">New databases</div><div class="d">Drive and Calendar stay the source</div></div>
-    <div><div class="n">12</div><div class="l">Test suites</div><div class="d">domain, ledger, worker, browser</div></div>
+    <div><div class="n">14</div><div class="l">Days from first code to the city agenda</div><div class="d">Sep 19 → Oct 2, 2026</div></div>
+    <div><div class="n">3</div><div class="l">Steps with locks</div><div class="d">consultation, payment, treatment</div></div>
+    <div><div class="n">0</div><div class="l">New databases</div><div class="d">Google Drive stays the main record</div></div>
+    <div><div class="n">12</div><div class="l">Automated test suites</div><div class="d">money, dates, access, screens</div></div>
   </div>
   <aside class="notes">
-    <p>This is a clinic I co-own with the doctor. The roles are few, but the rules are strict.</p>
+    <p>This is a clinic I co-own with the doctor. There are few roles, but the rules are strict.</p>
     <p>I built it alone: product, design and code. It is live and private.</p>
-    <p>Everything I show uses demo data. No real patient.</p>
+    <p>Everything I show uses demo data. No real patients.</p>
     <p class="hint">Timing: DC ≈ 8 min including the live demo.</p>
   </aside>
 </section>
@@ -774,66 +775,65 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split even">
     <div class="col">
       <span class="kicker">The problem</span>
-      <h2 class="title">Everything was written down. Nothing was connected.</h2>
-      <p class="body" style="margin-top:28px">Finding what a patient owed took ten minutes of opening files. The secretary needed one answer: what happens next for this patient?</p>
+      <h2 class="title">All the information existed. None of it was connected.</h2>
+      <p class="body" style="margin-top:28px">To know what a patient still owed, the secretary opened files for ten minutes. She needed one quick answer: what is the next step for this patient?</p>
     </div>
     <div class="col">
       <div class="sources">
         <div><b>WhatsApp</b><span>Every conversation with patients</span></div>
-        <div><b>Calendar</b><span>The doctor's days, in three cities</span></div>
-        <div><b>Drive</b><span>Spreadsheets for money, cases, stock</span></div>
+        <div><b>Calendar</b><span>The doctor's schedule, in three cities</span></div>
+        <div><b>Drive</b><span>Spreadsheets for payments, patients, stock</span></div>
       </div>
       <div class="funnel"></div>
-      <div class="panel1"><b>One panel, on top of them</b><span>not instead of them</span></div>
+      <div class="panel1"><b>One app on top of them</b><span>not replacing them</span></div>
     </div>
   </div>
   <aside class="notes">
-    <p>The clinic had all the information, but in many places: WhatsApp, Google Calendar and a shared Drive.</p>
-    <p>Finding what a patient owed took ten minutes of opening files.</p>
-    <p>I built one panel on top of those tools, not instead of them.</p>
+    <p>The clinic had all the information, but in many places: WhatsApp, Google Calendar and Google Drive.</p>
+    <p>To know what a patient owed, the secretary opened files for ten minutes.</p>
+    <p>I built one app on top of those tools, not instead of them.</p>
   </aside>
 </section>
 
-<section class="slide vcenter" data-title="DC · Phases with locks" data-section="Case 3 · DC Medical" data-accent="dc">
+<section class="slide vcenter" data-title="DC · Steps with locks" data-section="Case 3 · DC Medical" data-accent="dc">
   <span class="kicker">UX moment 1</span>
-  <h2 class="title wide">A lock is stronger than a reminder.</h2>
+  <h2 class="title wide">A lock works better than a reminder.</h2>
   <div class="phases" style="margin-top:56px">
-    <div class="phase"><div class="i">Phase 1</div><div class="t">Valuation</div><div class="s">The patient is seen. The case opens.</div></div>
+    <div class="phase"><div class="i">Step 1</div><div class="t">Consultation</div><div class="s">The doctor sees the patient. The case opens.</div></div>
     <div class="arrow"></div>
-    <div class="phase"><div class="i">Phase 2</div><div class="t">Payment</div><div class="s">Each payment, with its receipt. Card payments land at 95%.</div></div>
+    <div class="phase"><div class="i">Step 2</div><div class="t">Payment</div><div class="s">Each payment with its receipt. Card payments count at 95%, because of the card fee.</div></div>
     <div class="arrow"></div>
-    <div class="phase locked"><div class="i">Phase 3 · locked until</div><div class="t">Procedure</div>
-      <ul class="gate"><li>Paid in full</li><li>Receipt on file</li><li>Consent signed</li></ul>
+    <div class="phase locked"><div class="i">Step 3 · locked until</div><div class="t">Treatment</div>
+      <ul class="gate"><li>Paid in full</li><li>Receipt saved</li><li>Consent signed</li></ul>
     </div>
   </div>
-  <p class="lockline"><b>Each phase lists what's missing and links to the form that clears it.</b> The footer always names the next step.</p>
-  <p class="bridge"><b>In Hyperproof terms</b> An audit step that cannot close until its evidence is attached.</p>
+  <p class="lockline"><b>Each step shows what is missing, with a link to fix it.</b> The bottom bar always says what comes next.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Like an audit step that can't close until the evidence is attached.</p>
   <aside class="notes">
-    <p>A procedure could start before payment, receipt or consent were complete. That is a real risk.</p>
-    <p>So the case has three phases with locks. The procedure needs full payment, the receipt and signed consent.</p>
-    <p>The case shows what is missing and links to the form that fixes it. The footer always names the next step.</p>
-    <p>A card payment lands at 95%, because the clinic passes the card fee to the patient. Real money set that rule.</p>
+    <p>Before, a treatment could start before the payment, the receipt or the consent were complete. That is a real risk.</p>
+    <p>So each case has three steps with locks. The treatment needs full payment, the receipt and the signed consent.</p>
+    <p>The case shows what is missing, with a link to fix it. The bottom bar always says what comes next.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="DC · Permissions" data-section="Case 3 · DC Medical" data-accent="dc">
+<section class="slide" data-title="DC · Access" data-section="Case 3 · DC Medical" data-accent="dc">
   <div class="split" style="grid-template-columns: 500px 1fr">
     <div class="col">
       <span class="kicker">UX moment 2</span>
-      <h2 class="title">Permissions by area, not by job title.</h2>
+      <h2 class="title">Access by area, not by job title.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>The doctor needs to read everything. The secretary needs to run the day.</dd></div>
-        <div><dt>What we did</dt><dd>Per person and per area: see, create, edit, and delete where it matters. Presets: run the day, view only, nothing.</dd></div>
-        <div><dt>The trade-off</dt><dd>More setup for the admin, but no screen shows a button a person can't use.</dd></div>
+        <div><dt>The pain</dt><dd>The doctor needs to see everything. The secretary needs to run the day.</dd></div>
+        <div><dt>What we did</dt><dd>For each person and each area: see, create, edit, and delete where it matters. Quick presets: run the day, view only, no access.</dd></div>
+        <div><dt>The trade-off</dt><dd>More setup for the admin, but nobody sees a button they can't use.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-ipad-permissions" data-flat="../../public/work/dc-medical/usuarios-permisos-v2.webp" alt="Editing a user's permissions on a tablet: toggles to see, create and edit per area, under presets" style="object-position:55% 50%"></div>
+    <div class="stage tall"><img data-mock="dc-ipad-permissions" data-flat="../../public/work/dc-medical/usuarios-permisos-v2.webp" alt="Editing a user's access on a tablet: switches to see, create and edit per area, under quick presets" style="object-position:55% 50%"></div>
   </div>
-  <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions per object type, with presets for the common cases.</p>
+  <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions by type of object, with presets for the usual cases.</p>
   <aside class="notes">
-    <p>Permissions are a grid: area by action.</p>
-    <p>There are presets for the common people. The doctor reads. The secretary runs the day.</p>
-    <p>A person never sees a button they cannot use. And the server checks too, not only the screen.</p>
+    <p>Access is a grid: area by action.</p>
+    <p>There are quick presets. The doctor can see. The secretary runs the day.</p>
+    <p>Nobody sees a button they cannot use. And the server checks too, not only the screen.</p>
   </aside>
 </section>
 
@@ -841,17 +841,17 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split even">
     <div class="col">
       <span class="kicker">UX moment 3</span>
-      <h2 class="title">Balances are read, never summed.</h2>
+      <h2 class="title">Never add up balances.</h2>
       <dl class="moment">
-        <div><dt>The pain</dt><dd>Each payment row carries the balance left after it. An early version summed them and reported a phantom 38 million pesos.</dd></div>
-        <div><dt>What we did</dt><dd>The latest row wins. The rule became a tested function.</dd></div>
-        <div><dt>Why it matters</dt><dd>In data-heavy products, the most dangerous bug is a number that looks right.</dd></div>
+        <div><dt>The pain</dt><dd>Each payment row shows what the patient still owes after it. An early version added those rows and showed a debt of 38 million pesos that didn't exist.</dd></div>
+        <div><dt>What we did</dt><dd>Now the app reads only the latest row. An automated test protects that rule.</dd></div>
+        <div><dt>Why it matters</dt><dd>In products with a lot of data, the worst bug is a number that looks correct.</dd></div>
       </dl>
     </div>
     <div class="col">
-      <span class="tag" style="align-self:flex-start;margin-bottom:16px">Illustrative numbers</span>
+      <span class="tag" style="align-self:flex-start;margin-bottom:16px">Example numbers</span>
       <table class="ledger">
-        <thead><tr><th>Payment date</th><th class="r">Paid</th><th class="r">Balance after</th></tr></thead>
+        <thead><tr><th>Payment date</th><th class="r">Paid</th><th class="r">Still owed after</th></tr></thead>
         <tbody>
           <tr><td>Sep 2</td><td class="r">$ 400.000</td><td class="r">$ 1.100.000</td></tr>
           <tr><td>Sep 16</td><td class="r">$ 600.000</td><td class="r">$ 500.000</td></tr>
@@ -859,55 +859,55 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
         </tbody>
       </table>
       <div class="verdicts">
-        <div class="bad"><div class="lbl">Sum of the column</div><div class="val">$ 1.600.000</div><div class="note">A debt that doesn't exist</div></div>
-        <div class="good"><div class="lbl">Latest row</div><div class="val">$ 0</div><div class="note">What the patient really owes</div></div>
+        <div class="bad"><div class="lbl">Adding the column</div><div class="val">$ 1.600.000</div><div class="note">A debt that doesn't exist</div></div>
+        <div class="good"><div class="lbl">Latest row</div><div class="val">$ 0</div><div class="note">What she really owes</div></div>
       </div>
     </div>
   </div>
   <aside class="notes">
-    <p>Each row shows the balance after that payment.</p>
+    <p>Each row shows what the patient still owes after that payment.</p>
     <p>The first version added up the column. It showed a debt that did not exist: thirty-eight million pesos.</p>
-    <p>Now the latest row wins, and a test covers it.</p>
+    <p>Now the app reads only the latest row, and a test protects it.</p>
     <p>Money rules must be tested, not trusted.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="DC · AI drafts, a person confirms" data-section="Case 3 · DC Medical" data-accent="dc">
+<section class="slide" data-title="DC · The phone" data-section="Case 3 · DC Medical" data-accent="dc">
   <div class="split" style="grid-template-columns: 560px 1fr">
     <div class="col">
       <span class="kicker">UX moment 4</span>
-      <h2 class="title">The phone rewrote the interface.</h2>
+      <h2 class="title">The phone changed the design.</h2>
       <dl class="moment">
-        <div><dt>The context</dt><dd>The secretary runs the clinic from an iPhone, often from a car.</dd></div>
-        <div><dt>What we did</dt><dd>It installs as an app; tables become cards; tap targets are 44 px or more. A voice note fills the new-patient form.</dd></div>
-        <div><dt>The rule for AI</dt><dd>The model fills the form and saves nothing until a person checks it.</dd></div>
+        <div><dt>The context</dt><dd>The secretary runs the clinic from her iPhone, often from the car.</dd></div>
+        <div><dt>What we did</dt><dd>It installs like an app. Tables turn into cards. Buttons are big enough for a thumb. A voice note can fill the new-patient form.</dd></div>
+        <div><dt>The rule for AI</dt><dd>The AI fills the form, but nothing is saved until a person checks it.</dd></div>
       </dl>
     </div>
-    <div class="stage tall contain" style="background:#f2f3f5"><img data-mock="dc-iphone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a notice asking to review every field" style="object-position:50% 45%"></div>
+    <div class="stage tall contain" style="background:#f2f3f5"><img data-mock="dc-iphone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a message asking to check every field"></div>
   </div>
   <aside class="notes">
     <p>The secretary works from her phone, often from the car.</p>
-    <p>So the panel installs like an app. Tables become cards. Tap targets are big.</p>
+    <p>So the app installs on the phone. Tables become cards. Buttons are big.</p>
     <p>She can say who came, for what, and what she paid. The AI fills the form.</p>
-    <p>But nothing is saved until a person checks it. The form says: review every field.</p>
+    <p>But nothing is saved until a person checks it.</p>
   </aside>
 </section>
 
-<section class="slide" data-title="DC · Color never alone" data-section="Case 3 · DC Medical" data-accent="dc">
+<section class="slide" data-title="DC · City colors" data-section="Case 3 · DC Medical" data-accent="dc">
   <div class="split" style="grid-template-columns: 480px 1fr">
     <div class="col">
       <span class="kicker">Accessibility</span>
-      <h2 class="title">A color per city, never on its own.</h2>
+      <h2 class="title">Each city has a color, and always its name.</h2>
       <dl class="moment">
-        <div><dt>The context</dt><dd>The doctor works in three cities. The agenda has to say where he is, at a glance.</dd></div>
-        <div><dt>What we did</dt><dd>Orange for Barranquilla, blue for Bogotá, teal for Medellín, checked for color blindness. The name always sits beside its dot.</dd></div>
+        <div><dt>The context</dt><dd>The doctor works in three cities. The calendar must show where he is at a glance.</dd></div>
+        <div><dt>What we did</dt><dd>Orange for Barranquilla, blue for Bogotá, teal for Medellín, tested for color blindness. The city name always appears next to the color.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-display-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="The month agenda on a desktop display, appointments colored by city" style="object-position:50% 50%"></div>
+    <div class="stage tall"><img data-mock="dc-display-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="The month calendar on a desktop display, appointments colored by city"></div>
   </div>
   <aside class="notes">
     <p>The doctor works in three cities. Each city has a color.</p>
-    <p>We checked the colors for color blindness. And the name is always next to the dot.</p>
+    <p>We tested the colors for color blindness. And the city name is always next to the color.</p>
     <p>Nobody has to tell teal from blue.</p>
   </aside>
 </section>
@@ -916,16 +916,16 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <div class="split even">
     <div class="col">
       <span class="kicker">Live demo · 3 minutes</span>
-      <h2 class="title">Read first, write later.</h2>
-      <p class="body" style="margin-top:24px">Version one was read-only, safe to put in front of the clinic on day one. Editing came later, behind a login per person, after a security audit. Drive stays the source of truth: switch the panel off and nothing is lost.</p>
-      <p class="private">Private product · seeded demo data, no real patients</p>
+      <h2 class="title">First view-only. Editing later.</h2>
+      <p class="body" style="margin-top:24px">The first version could only show information, so it was safe from day one. Editing came later, with a personal login and a security review. Google Drive stays the main record: if the app goes down, nothing is lost.</p>
+      <p class="private">Private product · demo data only, no real patients</p>
     </div>
     <div class="col">
       <ol class="demo-steps">
-        <li>Follow-up board: counters, tabs, city filters<span>30 s</span></li>
-        <li>One case: phases, what's missing, next step<span>60 s</span></li>
-        <li>Users and permissions: the doctor, view only<span>45 s</span></li>
-        <li>Same panel as a viewer: the buttons disappear<span>30 s</span></li>
+        <li>Follow-up board: counters, tabs, filters by city<span>30 s</span></li>
+        <li>One patient case: steps, what's missing, what's next<span>60 s</span></li>
+        <li>Users and access: the doctor can only view<span>45 s</span></li>
+        <li>Same app as a viewer: the edit buttons disappear<span>30 s</span></li>
         <li>Optional: the voice note on the phone<span>15 s</span></li>
       </ol>
     </div>
@@ -933,23 +933,23 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <aside class="notes">
     <p>"This is a private product with patient data. I will show demo data only."</p>
     <ul>
-      <li>Open the demo: in the dc-medical-dashboard repo run <b>python3 tools/demo_server.py 8787</b> → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
-      <li>Live panel (sign-in only, do not log in on the call): panel.dcmedicalaesthetics.com</li>
+      <li>Demo: in the dc-medical-dashboard repo run <b>python3 tools/demo_server.py 8787</b> → http://localhost:8787 (editor). Viewer: add <b>?rol=lector</b>.</li>
+      <li>Do not log in to the real app during the call.</li>
     </ul>
-    <p>If the demo fails, stay on this slide and use the previous slides. Do not debug on the call.</p>
+    <p>If the demo fails, stay on this slide. Do not debug on the call.</p>
   </aside>
 </section>
 
 <section class="slide" data-title="DC · Outcome" data-section="Case 3 · DC Medical" data-accent="dc">
   <div class="statement">
     <span class="kicker">Outcome</span>
-    <h2 class="title">A rule is stronger as a lock than as a note.</h2>
-    <p class="lead">Every case now shows what the patient owes beside the next step, and the clinic's requests ship in days, not quarters.</p>
+    <h2 class="title">Turn important rules into locks, not notes.</h2>
+    <p class="lead">Each patient case now shows what is owed next to the next step. When the clinic asks for something new, most of it ships within a day.</p>
   </div>
   <aside class="notes">
-    <p>Now every case shows what the patient owes, next to the next step.</p>
+    <p>Now each case shows what the patient owes, next to the next step.</p>
     <p>When the clinic asks for something, most of it ships within a day.</p>
-    <p>My lesson: a rule is stronger as a lock than as a note.</p>
+    <p>My lesson: turn important rules into locks, not notes.</p>
     <p class="hint">[DOUG: if you have it, say how long it takes now to find a balance.]</p>
   </aside>
 </section>
@@ -958,17 +958,17 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 
 <section class="slide vcenter" data-title="Design systems" data-section="Systems and tools">
   <span class="kicker">Across my career</span>
-  <h2 class="title wide">A design system is mostly governance.</h2>
+  <h2 class="title wide">A design system is mostly rules for people.</h2>
   <div class="systems">
-    <div><div class="who">Banco de Occidente · 2018–2024</div><div class="t">Velocity</div><div class="n">12+ squads</div><div class="b">I built it and was its gatekeeper: additions, deprecations, patterns, workshops and crits.</div></div>
-    <div><div class="who">Mercadolibre · 2024–2026</div><div class="t">Andes</div><div class="n">400+ designers · 2,000+ engineers · 18 countries</div><div class="b">Tech lead. Foundations (tokens, spacing, type, motion), one API per component, AI audits that catch drift in Figma before it ships.</div></div>
-    <div><div class="who">Naowee · 2026–now</div><div class="t">Naowee DS</div><div class="n">38+ components · 130+ screens</div><div class="b">No custom components. One wizard recipe. The prototype is built on the system, so the demo is the contract.</div></div>
+    <div><div class="who">Banco de Occidente · 2018–2024</div><div class="t">Velocity</div><div class="n">12+ product teams</div><div class="b">I built it and owned it: what gets added or removed, workshops and design reviews.</div></div>
+    <div><div class="who">Mercadolibre · 2024–2026</div><div class="t">Andes</div><div class="n">400+ designers · 2,000+ developers · 18 countries</div><div class="b">Technical lead. Base styles, one shared way to build each component, and AI checks that find inconsistencies in Figma before release.</div></div>
+    <div><div class="who">Naowee · 2026–today</div><div class="t">Naowee DS</div><div class="n">38+ components · 130+ screens</div><div class="b">No one-off components. One pattern for forms. Prototypes use the system, so what we approve is what gets built.</div></div>
   </div>
   <aside class="notes">
     <p>All three cases depend on a design system. So let me talk about systems.</p>
-    <p>The hard part is not the button. It is the rules: who can add, who can remove, how we migrate.</p>
-    <p>At Mercadolibre I was tech lead of Andes, for more than 400 designers and 2,000 engineers in 18 countries.</p>
-    <p>We used AI audits to find drift in Figma before release.</p>
+    <p>The hard part is not the button. It is the rules: who can add, who can remove, how teams change.</p>
+    <p>At Mercadolibre I was the technical lead of Andes, for more than 400 designers and 2,000 developers in 18 countries.</p>
+    <p>We used AI to find inconsistencies in Figma before release.</p>
   </aside>
 </section>
 
@@ -981,7 +981,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div><dt>AI</dt><dd>Claude · ChatGPT<br>Gemini</dd></div>
     <div><dt>Team</dt><dd>Jira · Notion</dd></div>
   </dl>
-  <div class="ai-rule"><b>AI drafts. A person decides.</b><span>I prototype in code with AI, and I audit design systems with it. In the products I ship, AI fills the form and a person confirms before anything is saved.</span></div>
+  <div class="ai-rule"><b>AI drafts. A person decides.</b><span>I use AI to build prototypes in code and to review design systems. In the products I ship, AI can fill a form, but a person confirms before anything is saved.</span></div>
   <aside class="notes">
     <p>I design in Figma. I also build prototypes in code with Claude Code and Cursor.</p>
     <p>AI writes a first version. A person always checks it.</p>
@@ -993,15 +993,15 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   <span class="kicker">What I'd bring</span>
   <h2 class="title wide">What I would bring to Hyperproof.</h2>
   <div class="bring">
-    <div><div class="i">01</div><div class="t">Roles and states before screens</div><div class="b">Permissions and workflows that are clear because they were modeled first.</div></div>
-    <div><div class="i">02</div><div class="t">Dense data people can act on</div><div class="b">The next step beside the data; honest states like “unverified”; numbers that can't lie.</div></div>
-    <div><div class="i">03</div><div class="t">A system with rules, and prototypes devs trust</div><div class="b">Governance that scales across teams, and working prototypes as the shared target.</div></div>
+    <div><div class="i">01</div><div class="t">Roles and statuses before screens</div><div class="b">Clear permissions and workflows, because they were mapped first.</div></div>
+    <div><div class="i">02</div><div class="t">Dense data that people can act on</div><div class="b">The next step next to the data, honest statuses like “not verified yet”, and numbers you can trust.</div></div>
+    <div><div class="i">03</div><div class="t">A shared system, and prototypes developers trust</div><div class="b">Rules that keep many teams consistent, and working prototypes as the common goal.</div></div>
   </div>
   <aside class="notes">
     <p>To close, three things I would bring to your team.</p>
-    <p>One: I map roles and states before screens, so permissions are clear.</p>
+    <p>One: I map roles and statuses before screens, so permissions are clear.</p>
     <p>Two: I make dense data easy to read and to act on.</p>
-    <p>Three: I protect a design system with clear rules, and I use working prototypes to align with developers.</p>
+    <p>Three: I keep a design system consistent with clear rules, and I use working prototypes to align with developers.</p>
   </aside>
 </section>
 
@@ -1026,6 +1026,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <button id="next" aria-label="Next slide">→</button>
     <button id="btn-notes" title="Speaker notes (N)">Notes</button>
     <button id="btn-presenter" title="Presenter window (P)">Presenter</button>
+    <a id="btn-lang" href="index.es.html" title="Versión en español">ES</a>
   </span>
 </div>
 <div id="drawer" role="region" aria-label="Speaker notes"></div>
@@ -1104,6 +1105,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     document.getElementById("section").textContent = s.dataset.section || "";
     document.getElementById("drawer").innerHTML = notesOf(cur);
     document.querySelectorAll("#overview button").forEach(function (b, j) { b.classList.toggle("is-current", j === cur); });
+    var lang = document.getElementById("btn-lang"); if (lang) lang.href = lang.getAttribute("href").split("#")[0] + "#" + (cur + 1);
     if (history.replaceState) history.replaceState(null, "", location.pathname + location.search + "#" + (cur + 1));
     if (isPresenter) renderPresenter();
     if (!fromRemote) post({ type: "goto", i: cur });
