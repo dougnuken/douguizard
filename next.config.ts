@@ -112,6 +112,14 @@ const nextConfig: NextConfig = {
     imageSizes: [200, 256, 384, 400, 800],
     minimumCacheTTL: 31536000,
   },
+  async redirects() {
+    // The case was first published as "makeappet". The product is MakeaPet,
+    // so the slug follows it, and every link already out there still lands.
+    return [
+      { source: "/work/makeappet", destination: "/work/makeapet", permanent: true },
+      { source: "/en/work/makeappet", destination: "/en/work/makeapet", permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: SECURITY_HEADERS },

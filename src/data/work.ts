@@ -12,6 +12,58 @@ export interface Kpi {
   delta?: string;
 }
 
+/**
+ * A still for a long-form case, published as three files: `<src>.webp` at
+ * full size, `<src>-<width/2>.webp` for phones, and `<src>.jpg` as the
+ * fallback for anything without WebP. `src` has no extension.
+ */
+export interface StoryFigure {
+  src: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+}
+
+/** One encoding of a silent clip — WebM/VP9 offered first, MP4/H.264 as the fallback. */
+export interface FilmSource {
+  webm: string;
+  mp4: string;
+  poster: string;
+  width: number;
+  height: number;
+}
+
+/**
+ * A clip that brings its own device (it was composed, not screen-captured), so
+ * it is shown bare rather than inside the site's phone frame. `mobile` is an
+ * art-directed cut for narrow screens — 4:5 instead of 16:9.
+ */
+export interface StoryFilm {
+  source: FilmSource;
+  mobile?: FilmSource;
+  label: string;
+  caption?: string;
+}
+
+export interface StorySection {
+  title: string;
+  /** Paragraphs. `**bold**` supported. */
+  body?: string[];
+  /** A ruled list under the paragraphs. `**bold**` supported. */
+  points?: string[];
+  figures?: StoryFigure[];
+  film?: StoryFilm;
+}
+
+/** One chapter of a long-form case — research, design, development, results. */
+export interface StoryChapter {
+  id: string;
+  title: string;
+  intro: string;
+  sections: StorySection[];
+}
+
 export interface CaseStudy {
   slug: string;
   num: string;
@@ -105,6 +157,14 @@ export interface CaseStudy {
   links?: { label: string; href: string }[];
   /** Who did what — authorship and collaborators, in one paragraph. */
   credits?: string;
+  /**
+   * A long-form case: a 16:9 cover under the hero, a composed walkthrough, and
+   * the story told chapter by chapter. A case with `story` replaces the
+   * gallery, process and decisions bands with its chapters.
+   */
+  cover?: StoryFigure;
+  film?: StoryFilm;
+  story?: StoryChapter[];
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -907,60 +967,354 @@ export const caseStudies: CaseStudy[] = [
       "Product design end to end, handed off to the development team that built it. Never released.",
   },
   {
-    slug: "makeappet",
+    slug: "makeapet",
     num: "/10",
-    project: "MakeAppet",
-    category: "iOS × Pet adoption",
+    project: "MakeaPet",
+    category: "iOS, Android & PWA × Pets",
     kind: "side",
-    clientOverride: "Freelance side project",
-    roleOverride: "Product Designer — end to end",
-    yearOverride: "2018",
-    duration: "2018",
-    team: "Solo designer, handed off to a dev team",
+    clientOverride: "Personal product",
+    roleOverride: "UX/UI design and product direction",
+    yearOverride: "2026",
+    duration: "October 2026",
+    team: "Doug, directing a team of 10 AI agents",
     tagline:
-      "Swipe to meet a dog or cat nearby: the dating pattern everyone knows, pointed at adoption.",
+      "Tinder for pets: from a five-screen Figma file to a real app on iOS, Android and the web.",
     impact:
-      "Adoption borrows the swipe from dating apps, and puts the shelters' donation ask where the attention already is.",
+      "Five Figma screens became a complete app: one codebase for iOS, Android and PWA, 680+ tests green, AA contrast on every screen.",
     context:
-      "MakeAppet applies swipe-to-match to finding a pet nearby: browse by species, swipe through what is close, and open a full profile before deciding.",
+      "Finding a playmate for your dog or cat comes down to which park you go to, and luck. MakeaPet brings the mechanic everyone already knows, swipe right if you like it, to pets: discover dogs and cats nearby, swipe, and when the interest is mutual, chat with the owner to meet up.",
     contributions: [
-      "**Nobody adopts from a photo** — a tap deeper, the profile adds breed, weight, sex and a description.",
-      "**Two ways in** — swipe to browse, or filter by species and distance when you know what you want.",
-      "**The shelter ask where people look** — a donation panel between search and results, not buried in a menu.",
+      "**Research and UX**: the problem, the users, the information architecture and every flow beyond the five original screens.",
+      "**Design system**: tokens, physical motion, a glass layer and AA accessibility, written as rules an agent can check.",
+      "**Directed the build**: a team of 10 AI agents with separate roles, each phase closed by a design, code and security review.",
     ],
-    // Ordered show-first: the swipe card is the cover — the pattern reads in
-    // one glance — then the profile and the match it leads to, then the grid.
-    gallery: [
+    kpis: [
+      { value: "680+", label: "Automated tests", delta: "60 suites, green" },
+      { value: "10", label: "AI agents directed", delta: "one role each" },
+      { value: "1", label: "Codebase", delta: "iOS, Android and PWA" },
+      { value: "AA", label: "Contrast on every screen", delta: "fixed in the tokens" },
+    ],
+    cover: {
+      src: "/work/makeapet/00-portada-16x9",
+      alt: "MakeaPet on an iPhone held in a dark hand against a neutral grey background: the swipe screen, with an Akita named Candy on a pink card and the LIKE stamp.",
+      width: 2400,
+      height: 1350,
+    },
+    film: {
+      source: {
+        webm: "/work/makeapet/flow-screen-16x9.webm",
+        mp4: "/work/makeapet/flow-screen-16x9.mp4",
+        poster: "/work/makeapet/flow-screen-16x9.jpg",
+        width: 1920,
+        height: 1080,
+      },
+      mobile: {
+        webm: "/work/makeapet/flow-screen-4x5.webm",
+        mp4: "/work/makeapet/flow-screen-4x5.mp4",
+        poster: "/work/makeapet/flow-screen-4x5.jpg",
+        width: 1080,
+        height: 1350,
+      },
+      label:
+        "MakeaPet walkthrough: home, a swipe right with the LIKE stamp, It's a Match, Say woof, the first message typed, a paw reaction on a bubble, the Nearby map and a profile with several pets.",
+      caption:
+        "About 38 seconds in the real app: the production PWA in demo mode, at iPhone size. The grey circle marks each touch.",
+    },
+    story: [
       {
-        src: "/work/makeappet/swipe.webp",
-        alt: "The swipe screen: For you and Nearby tabs above a full-bleed photo card of a dog with its name, age and distance, and round dismiss and like buttons below it.",
-        caption: "Name, age and distance on the card; like or pass.",
+        id: "research",
+        title: "Research",
+        intro:
+          "Before any screen: what problem, for whom, measured against what, and which bets the product had to make.",
+        sections: [
+          {
+            title: "The problem",
+            body: [
+              "Owners who want company for their pet depend on chance: the same park, the same hours, whoever happens to be there. There is no simple way to see who is nearby and whether they would get along.",
+              "The challenge was more than the idea. It was turning a five-screen Figma design into a complete app, identical on iOS and Android, with motion that feels physical and no loss of fidelity to the original design.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/01-swipe",
+                alt: "A dark hand holding an iPhone with the swipe screen: an Akita named Candy, 2, on a pink card mid-drag with the LIKE stamp, a second card behind it, and the pass and like buttons.",
+                caption: "The swipe with the LIKE stamp: the screen the whole product hangs on.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Who it is for",
+            points: [
+              "**Dog and cat owners** looking for a play or walk companion for their pet, close to home.",
+              "**Owners with several pets**, say a dog and a cat. Each pet has its own matches, so they need to choose which one they are swiping as.",
+            ],
+          },
+          {
+            title: "References",
+            body: [
+              "The benchmark was a pattern, not another pet app. Dating apps have already taught millions of people the grammar: swipe right, mutual match, then chat. MakeaPet keeps the grammar and changes the subject.",
+              "Apple's Human Interface Guidelines and its Liquid Glass material set the bar for navigation and depth. The bar for fidelity was Doug's own Figma file: five screens, measured value by value.",
+            ],
+          },
+          {
+            title: "Hypotheses",
+            points: [
+              "**A learned gesture needs no tutorial.** If the swipe behaves the way dating apps taught it, people use it from the first card.",
+              "**In a swipe app, the photo is the product.** A pet without a photo should not exist.",
+              "**Nobody shares where they live for a game.** Owners will only show up on a map if it never gives their location away.",
+              "**Matches belong to the pet, the chat to the owners.** Two pets, two identities, one account.",
+            ],
+          },
+        ],
       },
       {
-        src: "/work/makeappet/profile.webp",
-        alt: "A pet profile: a large photograph, the name and distance, a four-cell grid of age, breed, sex and weight, a written description, and a primary Bark me button beside a favorite button.",
-        caption: "What a photo cannot carry.",
+        id: "design",
+        title: "Design",
+        intro:
+          "Figma as the source of truth, everything new drawn in the same language, and every value a token.",
+        sections: [
+          {
+            title: "Information architecture",
+            body: [
+              "Four tabs: Home, Match, Chats and Profile. The map is not a tab of its own. Figma already had a For you / Nearby control on Match, so Nearby became the map: two views of the same candidates, which is exactly what a segmented control is for.",
+              "Home stays as a feed for browsing without deciding; Match is where you decide. The Profile tab's icon is the active pet's photo, so you always know who you are swiping as.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/02-home",
+                alt: "A hand holding an iPhone with the Home screen: location, search, a purple Pet lover? banner with a Donate button, Cats and Dogs categories and cards of nearby pets.",
+                caption: "Home: the original Figma screen, rebuilt to the measured values.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/makeapet/04-pet-detail",
+                alt: "A hand holding an iPhone with Candy's profile: a full-bleed photo, her name and distance, tiles for age, breed, sex and weight, an About section and a Bark me! button.",
+                caption: "The pet profile: what a photo cannot tell you.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Flows",
+            points: [
+              "**First open**: sign in with Apple, Google or email, then the owner, then the pet in five steps.",
+              "**Swipe → match → Say woof!** → the chat opens with a suggested first line.",
+              "**Nearby**: the map, a pet's card, its full profile.",
+              "**Profile**: my pets, switch the active pet, edit, settings and legal pages.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/12-onboarding",
+                alt: "A hand holding an iPhone with the sign-up screen: a collage of pet photos, the heading Let's get started and buttons to continue with Apple, Google or email.",
+                caption: "Sign-up: Apple, Google or email, then a pet in five steps.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "A design system of tokens",
+            body: [
+              "No loose values. Colors, a 4 pt spacing scale, concentric radii, shadows, type and animation durations all live as tokens. One embedded typeface, Inter, so iOS and Android render the same letters.",
+              "A hard-coded color or number in a component counts as a defect, and a design-auditor agent checks for them at the end of every phase.",
+            ],
+          },
+          {
+            title: "Physical motion",
+            points: [
+              "**Swipe**: the card follows the finger with rotation, the LIKE and NOPE stamps fade in, and it leaves with the gesture's velocity. The ✕ and ♥ buttons trigger the same motion.",
+              "**Match**: both photos fly in, the heart beats and the emoji float on springs.",
+              "**Welcome**: the collage enters in a stagger, then drifts slowly in parallax.",
+              "Every animation runs on the UI thread (Reanimated worklets) and respects **Reduce Motion**.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/03-macro-swipe",
+                alt: "A close-up of the bottom of an iPhone: the pass and like buttons over the bottom of a pet card and the tab bar, with a shallow depth of field.",
+                caption: "Pass and like: the buttons move the card exactly as the finger does.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/makeapet/05-match",
+                alt: "A hand holding an iPhone with the It's a Match screen: Congratulations, two pet photos tilted either side of a heart, floating hearts and emoji, and a Say woof! button.",
+                caption: "It's a Match: photos, heart and emoji on springs.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "The glass layer",
+            body: [
+              "Once the foundation was solid, a glass layer went on top: a GlassSurface component with defined levels, a Liquid Glass–style tab bar with a droplet that stretches between tabs, the pet switcher and the sheets. Glass paw prints became a brand graphic.",
+              "The swipe card stays glass-free, as in Figma: the photo has to lead.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/06-widget-match",
+                alt: "A black-and-white close-up of a dog, with a glass match notice over it: It's a Match, Rocky and Candy liked each other, and a purple Say woof! button.",
+                caption: "The match notice, in glass.",
+                width: 1800,
+                height: 2397,
+              },
+              {
+                src: "/work/makeapet/11-widget-switcher",
+                alt: "A glass sheet on a purple gradient with glass paw prints: Swipe as…, with Rocky the Akita selected, Kira the British Shorthair and an Add a pet row.",
+                caption: "Swipe as…: one pill opens the switcher between pets.",
+                width: 1800,
+                height: 2397,
+              },
+            ],
+          },
+          {
+            title: "Accessibility, AA",
+            body: [
+              "Two colors in the design failed AA. The secondary grey was darkened (#978DAD → #766B8F) and the text on orange buttons went from white to a dark brown (#4A1D06). Figma's orange gradient stayed exactly as it was.",
+              "In chat, your own bubble is solid purple because the gradient did not reach AA. Touch targets are 44 pt minimum, every icon button has a label, every gesture has a button or screen-reader alternative, and text scales to 200%.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/07-chat",
+                alt: "A hand holding an iPhone with a conversation between two owners: solid purple bubbles on the right, white ones on the left, and the compose field.",
+                caption: "Your own bubbles are solid purple: the gradient did not reach AA.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Key decisions, and why",
+            points: [
+              "**A photo is required.** A pet cannot be added without one. In a swipe app the photo is the product, and requiring it removes every no-photo state from the switcher, the avatars and the deck.",
+              "**A map that protects privacy.** It never shows an exact location: each owner is snapped to a grid of about 400 m, and in the database only the owner can read their exact coordinates. The map is monochrome, so the photos supply the color.",
+              "**Several pets, one clear swipe.** A glass pill with the active pet opens Swipe as…, with each pet's new matches. An owner with a single pet never sees the pill.",
+              "**iOS / Android parity.** The same embedded font, custom SVG icons, one shadow implementation, and the same map engine and style on both.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/09-map",
+                alt: "A hand holding an iPhone with the Nearby map: a monochrome grid map with a purple radius, pet photo markers, a Within 2 km filter and a card for Bruno, a French Bulldog, with View profile and like buttons.",
+                caption: "Nearby: a monochrome map, approximate on purpose.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/makeapet/10-profile",
+                alt: "A hand holding an iPhone with the owner's profile: Daniel, an approximate area, and My pets with Rocky marked Active and Kira beside it, plus counts of pets, matches and chats.",
+                caption: "One owner, several pets, one active at a time.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+        ],
       },
       {
-        src: "/work/makeappet/match.webp",
-        alt: "The match screen: a Congratulations heading with an It's a Match ribbon, the two matched pets either side of a heart, a suggested opening line, and a Say woof button above a Not now link.",
-        caption: "A match, and something to say.",
+        id: "development",
+        title: "Development",
+        intro:
+          "Doug did not write the code: the work was directing the team that did, and writing the rules it had to follow.",
+        sections: [
+          {
+            title: "Directing a team of 10 AI agents",
+            body: [
+              "Each agent had one role: architect, UX, UI, Figma, planner, executor, QA, design auditor, code reviewer and security. Every phase was planned, built and then reviewed for design, code and security before it closed: 58 small commits, one or more per phase.",
+              "A handoff file kept the state, the decisions and the next step between sessions, so no agent started from scratch.",
+            ],
+          },
+          {
+            title: "One codebase: iOS, Android and PWA",
+            body: [
+              "Expo and React Native with file-based routes. Gestures and animation on the UI thread with Reanimated; MapLibre with the same monochrome style on both platforms; the same shadows everywhere. The PWA is the same code, deployed to Vercel from the main branch.",
+            ],
+            film: {
+              source: {
+                webm: "/work/makeapet/flow-hand.webm",
+                mp4: "/work/makeapet/flow-hand.mp4",
+                poster: "/work/makeapet/flow-hand.jpg",
+                width: 1080,
+                height: 1350,
+              },
+              label:
+                "The same walkthrough on an iPhone held in a dark hand: swipe, match, chat, map and profile.",
+              caption: "The same recording, in the hand.",
+            },
+          },
+          {
+            title: "Demo mode, no backend",
+            body: [
+              "The whole app runs on local data, so QA and this portfolio never depend on credentials. Supabase (auth, Postgres with PostGIS, realtime and storage) sits behind the same repository interfaces, and a single contract test suite runs against both.",
+            ],
+          },
+          {
+            title: "Quality, automated",
+            points: [
+              "**680+ tests** in 60 suites, green.",
+              "**Visual QA with Playwright** at 390 × 844: every screen in every state, loading, empty, error, offline and large text.",
+              "**Review at every phase**: design rules, code and security, each by its own agent.",
+            ],
+          },
+        ],
       },
       {
-        src: "/work/makeappet/browse.webp",
-        alt: "The browse screen: a location and a search field with filters, a violet panel asking for a donation on behalf of shelters, then an Adoption section with species tabs and a grid of nearby pets.",
-        caption: "Browse by species, the shelters' ask included.",
-      },
-      {
-        src: "/work/makeappet/welcome.webp",
-        alt: "The welcome screen: a grid of photographs of dogs and their owners behind a paw mark, the line \"Connect and uncover the ideal pets that match your preferences in your area\", and an Explore button.",
-        caption: "The premise, before any sign-up.",
+        id: "results",
+        title: "Results and learnings",
+        intro: "What shipped, and what this way of working taught.",
+        sections: [
+          {
+            title: "Results",
+            points: [
+              "**All five Figma screens rebuilt** and extended into a complete app: welcome, sign-up, a five-step pet setup, home, swipe with filters, map, pet profile, match, chats, conversation, profile, my pets, editing, settings and legal pages.",
+              "**680+ automated tests** and QA captures of every screen and state.",
+              "**A PWA live on Vercel**, deployed automatically from the main branch.",
+              "**58 small commits**, each phase closed by a design, code and security review.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/08-macro-chat",
+                alt: "A close-up of an iPhone screen at the start of a chat: the matched pets, suggested replies Woof! and What's Toby's favorite toy?, and a pre-filled first message.",
+                caption: "A suggested first line, so the match turns into a conversation.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Learnings",
+            points: [
+              "**Directing agents is design work too.** Quality came from written rules (tokens, 44 pt targets, AA contrast, Reduce Motion) and from separate roles reviewing each phase, not from asking for something nice.",
+              "**When the design fails AA, fix the token, not the screen.** Changing two tokens fixed every screen at once and left the change documented.",
+              "**Demo mode pays twice.** It powers automated QA and the portfolio: every screen in this case study is the real app, with no backend.",
+              "**Foundation first, glass second.** The glass worked because it sat on a solid base instead of replacing one.",
+            ],
+            figures: [
+              {
+                src: "/work/makeapet/13-app-icon",
+                alt: "The MakeaPet app icon, a white paw with a heart on a purple-to-pink gradient, surrounded by floating glass paw prints on a grey background.",
+                caption: "The icon, with the glass paw prints.",
+                width: 1800,
+                height: 2397,
+              },
+            ],
+          },
+        ],
       },
     ],
-    galleryKind: "phone",
-    technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
+    technologies: [
+      "Figma",
+      "Expo + React Native",
+      "Reanimated",
+      "MapLibre",
+      "Supabase",
+      "Playwright",
+      "AI agents",
+    ],
     credits:
-      "Product design end to end, handed off to the development team that built it. Never released.",
+      "Research, UX/UI design and product direction by Doug Vargas. The code was written by a team of AI agents, directed and reviewed by Doug phase by phase. The mockup scenes were generated with Higgsfield; every screen in them is a real capture or recording of the app.",
   },
 ];
 
@@ -993,6 +1347,44 @@ export interface CaseCopy {
   externalLink?: { label: string };
   credits?: string;
   technologies?: string[];
+  cover?: { alt: string; caption?: string };
+  film?: { label: string; caption?: string };
+  /** Paired with the English chapters by position, and so is everything inside them. */
+  story?: {
+    title: string;
+    intro: string;
+    sections: {
+      title: string;
+      body?: string[];
+      points?: string[];
+      figures?: { alt: string; caption?: string }[];
+      film?: { label: string; caption?: string };
+    }[];
+  }[];
+}
+
+function localizeStory(story: StoryChapter[] | undefined, t: CaseCopy["story"]): StoryChapter[] | undefined {
+  return story?.map((chapter, i) => {
+    const tc = t?.[i];
+    if (!tc) return chapter;
+    return {
+      ...chapter,
+      title: tc.title,
+      intro: tc.intro,
+      sections: chapter.sections.map((section, j) => {
+        const ts = tc.sections[j];
+        if (!ts) return section;
+        return {
+          ...section,
+          title: ts.title,
+          body: ts.body ?? section.body,
+          points: ts.points ?? section.points,
+          figures: section.figures?.map((f, k) => ({ ...f, ...ts.figures?.[k] })),
+          film: section.film && { ...section.film, ...ts.film },
+        };
+      }),
+    };
+  });
 }
 
 function localize(c: CaseStudy, t: CaseCopy | undefined): CaseStudy {
@@ -1023,6 +1415,9 @@ function localize(c: CaseStudy, t: CaseCopy | undefined): CaseStudy {
     externalLink: c.externalLink && { ...c.externalLink, ...t.externalLink },
     credits: t.credits ?? c.credits,
     technologies: t.technologies ?? c.technologies,
+    cover: c.cover && { ...c.cover, ...t.cover },
+    film: c.film && { ...c.film, ...t.film },
+    story: localizeStory(c.story, t.story),
   };
 }
 

@@ -565,47 +565,282 @@ export const workEs: Record<string, CaseCopy> = {
       "Diseño de producto de punta a punta, entregado al equipo de desarrollo que lo construyó. Nunca se lanzó.",
   },
 
-  makeappet: {
-    category: "iOS × Adopción de mascotas",
-    clientOverride: "Proyecto freelance paralelo",
-    roleOverride: "Diseñador de producto — de punta a punta",
-    team: "Diseño en solitario, entregado a un equipo de desarrollo",
+  makeapet: {
+    category: "iOS, Android y PWA × Mascotas",
+    clientOverride: "Producto propio",
+    roleOverride: "Diseño UX/UI y dirección de producto",
+    duration: "Octubre de 2026",
+    team: "Doug, dirigiendo un equipo de 10 agentes de IA",
     tagline:
-      "Desliza para conocer a un perro o un gato cerca: el patrón de las apps de citas que todos conocen, aplicado a la adopción.",
+      "Tinder para mascotas: de cinco pantallas en Figma a una app real para iOS, Android y web.",
     impact:
-      "La adopción toma prestado el deslizar de las apps de citas y pone la petición de donación de los refugios donde ya está la atención.",
+      "Cinco pantallas de Figma se convirtieron en una app completa: un solo código para iOS, Android y PWA, más de 680 tests en verde y contraste AA en todas las pantallas.",
     context:
-      "MakeAppet lleva el «desliza y haz match» a la búsqueda de una mascota cercana: explorar por especie, deslizar entre las que están cerca y abrir un perfil completo antes de decidir.",
+      "Encontrar compañeros de juego para tu perro o tu gato depende del parque al que vas y de la suerte. MakeaPet lleva la mecánica que todo el mundo ya entiende, deslizar a la derecha si te gusta, al mundo de las mascotas: descubres perros y gatos cerca, haces swipe y, si el interés es mutuo, chateas con el dueño para quedar.",
     contributions: [
-      "**Nadie adopta por una foto**: con un toque más, el perfil suma raza, peso, sexo y una descripción.",
-      "**Dos formas de entrar**: deslizar para explorar, o filtrar por especie y distancia cuando ya sabes qué buscas.",
-      "**La petición del refugio donde la gente mira**: un panel de donación entre la búsqueda y los resultados, no escondido en un menú.",
+      "**Investigación y UX**: el problema, los usuarios, la arquitectura de información y todos los flujos más allá de las cinco pantallas originales.",
+      "**Sistema de diseño**: tokens, movimiento físico, una capa de vidrio y accesibilidad AA, escritos como reglas que un agente puede verificar.",
+      "**Dirigí la construcción**: un equipo de 10 agentes de IA con roles separados, y cada fase cerrada con revisión de diseño, código y seguridad.",
     ],
-    // Paired by position with `work.ts`, which sets the order (cover first).
-    gallery: [
+    kpis: [
+      { label: "Tests automatizados", delta: "60 suites, en verde" },
+      { label: "Agentes de IA dirigidos", delta: "un rol cada uno" },
+      { label: "Código", delta: "iOS, Android y PWA" },
+      { label: "Contraste en cada pantalla", delta: "corregido en los tokens" },
+    ],
+    cover: {
+      alt: "MakeaPet en un iPhone sostenido por una mano oscura sobre un fondo gris neutro: la pantalla de swipe, con una akita llamada Candy en una tarjeta rosa y el sello LIKE.",
+    },
+    film: {
+      label:
+        "Recorrido de MakeaPet: inicio, un swipe a la derecha con el sello LIKE, It's a Match, Say woof, el primer mensaje escrito, una pata como reacción en una burbuja, el mapa Nearby y un perfil con varias mascotas.",
+      caption:
+        "Unos 38 segundos en la app real: la PWA de producción en modo demo, a tamaño de iPhone. El círculo gris marca cada toque.",
+    },
+    story: [
       {
-        alt: "La pantalla para deslizar: pestañas For you y Nearby sobre una tarjeta a sangre con la foto de un perro, su nombre, edad y distancia, y botones redondos para descartar y dar like debajo.",
-        caption: "Nombre, edad y distancia en la tarjeta; like o descartar.",
+        title: "Investigación",
+        intro:
+          "Antes de cualquier pantalla: qué problema, para quién, frente a qué referentes y qué apuestas tenía que hacer el producto.",
+        sections: [
+          {
+            title: "El problema",
+            body: [
+              "Los dueños que buscan compañía para su mascota dependen del azar: el mismo parque, las mismas horas, quien coincida. No hay una forma simple de ver quién está cerca y si se llevarían bien.",
+              "El reto no era solo la idea. Era convertir un diseño de cinco pantallas en Figma en una app completa, idéntica en iOS y Android, con un movimiento que se sintiera físico y sin perder fidelidad al diseño original.",
+            ],
+            figures: [
+              {
+                alt: "Una mano oscura sostiene un iPhone con la pantalla de swipe: una akita llamada Candy, 2, en una tarjeta rosa a mitad de arrastre con el sello LIKE, otra tarjeta detrás y los botones de descartar y like.",
+                caption: "El swipe con el sello LIKE: la pantalla de la que cuelga todo el producto.",
+              },
+            ],
+          },
+          {
+            title: "Para quién es",
+            points: [
+              "**Dueños de perros o gatos** que buscan compañía de juego o de paseo para su mascota, cerca de casa.",
+              "**Dueños con varias mascotas**, por ejemplo un perro y un gato. Cada mascota tiene sus propios matches, así que necesitan elegir con cuál hacen swipe.",
+            ],
+          },
+          {
+            title: "Referentes",
+            body: [
+              "El referente fue un patrón, no otra app de mascotas. Las apps de citas ya enseñaron a millones de personas la gramática: deslizar a la derecha, match mutuo y luego chat. MakeaPet conserva la gramática y cambia el tema.",
+              "Las guías de interfaz de Apple y su material Liquid Glass pusieron el listón de navegación y profundidad. El de fidelidad lo puso el propio Figma de Doug: cinco pantallas, medidas valor por valor.",
+            ],
+          },
+          {
+            title: "Hipótesis",
+            points: [
+              "**Un gesto aprendido no necesita tutorial.** Si el swipe se comporta como enseñaron las apps de citas, la gente lo usa desde la primera tarjeta.",
+              "**En una app de swipe, la foto es el producto.** Una mascota sin foto no debería existir.",
+              "**Nadie comparte dónde vive por un juego.** Los dueños solo aparecerán en un mapa si este nunca delata su ubicación.",
+              "**Los matches son de la mascota; el chat, de los dueños.** Dos mascotas, dos identidades, una sola cuenta.",
+            ],
+          },
+        ],
       },
       {
-        alt: "El perfil de una mascota: una fotografía grande, el nombre y la distancia, una grilla de cuatro celdas con edad, raza, sexo y peso, una descripción escrita y un botón principal de Bark me junto a uno de favorito.",
-        caption: "Lo que una foto no puede contar.",
+        title: "Diseño",
+        intro:
+          "Figma como fuente de verdad, todo lo nuevo en el mismo lenguaje y cada valor convertido en token.",
+        sections: [
+          {
+            title: "Arquitectura de información",
+            body: [
+              "Cuatro pestañas: Home, Match, Chats y Profile. El mapa no es una pestaña propia. Figma ya tenía el control For you / Nearby en Match, así que Nearby pasó a ser el mapa: dos vistas de los mismos candidatos, que es justo para lo que sirve un control segmentado.",
+              "Home se queda como un feed para explorar sin decidir; Match es donde se decide. El ícono de Profile es la foto de la mascota activa, para que siempre sepas con quién estás haciendo swipe.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con la pantalla de inicio: ubicación, búsqueda, un banner morado Pet lover? con botón Donate, las categorías Cats y Dogs y tarjetas de mascotas cercanas.",
+                caption: "Inicio: la pantalla original de Figma, recreada con los valores medidos.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con la ficha de Candy: una foto a sangre, su nombre y distancia, recuadros de edad, raza, sexo y peso, una sección About y un botón Bark me!.",
+                caption: "La ficha de la mascota: lo que una foto no puede contar.",
+              },
+            ],
+          },
+          {
+            title: "Flujos",
+            points: [
+              "**Primera apertura**: entrar con Apple, Google o email, luego el dueño y después la mascota en cinco pasos.",
+              "**Swipe → match → Say woof!** → el chat se abre con una primera frase sugerida.",
+              "**Nearby**: el mapa, la tarjeta de una mascota y su ficha completa.",
+              "**Perfil**: mis mascotas, cambiar la mascota activa, editar, ajustes y textos legales.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con la pantalla de registro: un collage de fotos de mascotas, el título Let's get started y botones para continuar con Apple, Google o email.",
+                caption: "Registro: Apple, Google o email, y luego una mascota en cinco pasos.",
+              },
+            ],
+          },
+          {
+            title: "Un sistema de diseño con tokens",
+            body: [
+              "Nada de valores sueltos. Colores, espaciado en escala de 4 pt, radios concéntricos, sombras, tipografía y duraciones de animación viven como tokens. Una sola fuente incrustada, Inter, para que iOS y Android dibujen las mismas letras.",
+              "Un color o un número escrito a mano en un componente se trata como un defecto, y un agente auditor de diseño los busca al cerrar cada fase.",
+            ],
+          },
+          {
+            title: "Movimiento físico",
+            points: [
+              "**Swipe**: la tarjeta sigue al dedo con rotación, aparecen los sellos LIKE y NOPE y sale con la velocidad del gesto. Los botones ✕ y ♥ hacen el mismo movimiento.",
+              "**Match**: las dos fotos entran, el corazón late y los emojis flotan con resorte.",
+              "**Bienvenida**: el collage entra escalonado y luego se desplaza despacio, en parallax.",
+              "Todas las animaciones corren en el hilo de interfaz (worklets de Reanimated) y respetan **Reducir movimiento**.",
+            ],
+            figures: [
+              {
+                alt: "Plano detalle de la parte inferior de un iPhone: los botones de descartar y like sobre el final de una tarjeta y la barra de pestañas, con poca profundidad de campo.",
+                caption: "Descartar y like: los botones mueven la tarjeta igual que el dedo.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con la pantalla It's a Match: Congratulations, dos fotos de mascotas inclinadas a cada lado de un corazón, corazones y emojis flotando y un botón Say woof!.",
+                caption: "It's a Match: fotos, corazón y emojis con resorte.",
+              },
+            ],
+          },
+          {
+            title: "La capa de vidrio",
+            body: [
+              "Con la base resuelta, encima llegó una capa de vidrio: un componente GlassSurface con niveles definidos, una barra de pestañas tipo Liquid Glass con una gota que se estira entre pestañas, el selector de mascota y las hojas. Las huellas de vidrio se volvieron un recurso gráfico de la marca.",
+              "La tarjeta del swipe se quedó sin vidrio, como en Figma: la foto tiene que mandar.",
+            ],
+            figures: [
+              {
+                alt: "Primer plano en blanco y negro de un perro, con un aviso de match en vidrio encima: It's a Match, Rocky and Candy liked each other, y un botón morado Say woof!.",
+                caption: "El aviso de match, en vidrio.",
+              },
+              {
+                alt: "Una hoja de vidrio sobre un degradado morado con huellas de vidrio: Swipe as…, con Rocky, el akita, seleccionado, Kira, la British Shorthair, y una fila Add a pet.",
+                caption: "Swipe as…: una píldora abre el selector entre mascotas.",
+              },
+            ],
+          },
+          {
+            title: "Accesibilidad AA",
+            body: [
+              "Dos colores del diseño no pasaban AA. El gris secundario se oscureció (#978DAD → #766B8F) y el texto sobre los botones naranja pasó de blanco a un marrón oscuro (#4A1D06). El degradado naranja de Figma no se tocó.",
+              "En el chat, la burbuja propia es morado sólido porque el degradado no llegaba a AA. Los toques miden 44 pt como mínimo, cada botón de ícono tiene etiqueta, cada gesto tiene un botón o una acción de lector de pantalla como alternativa y el texto escala hasta el 200 %.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con una conversación entre dos dueños: burbujas moradas sólidas a la derecha, blancas a la izquierda y el campo para escribir.",
+                caption: "Tus burbujas son morado sólido: el degradado no llegaba a AA.",
+              },
+            ],
+          },
+          {
+            title: "Decisiones clave y sus porqués",
+            points: [
+              "**Foto obligatoria.** Una mascota no se puede registrar sin al menos una. En una app de swipe la foto es el producto, y exigirla elimina todos los estados «sin foto» del selector, los avatares y el mazo.",
+              "**Mapa con privacidad.** Nunca muestra la ubicación exacta: cada dueño se ajusta a una rejilla de unos 400 m y, en la base de datos, la coordenada exacta solo la lee su dueño. El mapa es monocromo para que el color lo pongan las fotos.",
+              "**Varias mascotas, un swipe claro.** Una píldora de vidrio con la mascota activa abre Swipe as…, con los matches nuevos de cada una. Si el dueño tiene una sola mascota, la píldora no aparece.",
+              "**Paridad iOS / Android.** La misma fuente incrustada, íconos SVG propios, una sola implementación de sombras y el mismo motor y estilo de mapa en las dos.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con el mapa Nearby: un mapa monocromo en rejilla con un radio morado, marcadores con fotos de mascotas, un filtro Within 2 km y la tarjeta de Bruno, un bulldog francés, con botones View profile y like.",
+                caption: "Nearby: un mapa monocromo, aproximado a propósito.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con el perfil del dueño: Daniel, una zona aproximada y My pets con Rocky marcado como Active y Kira al lado, más el número de mascotas, matches y chats.",
+                caption: "Un dueño, varias mascotas, una activa a la vez.",
+              },
+            ],
+          },
+        ],
       },
       {
-        alt: "La pantalla de match: un título de Congratulations con una cinta de It's a Match, las dos mascotas a cada lado de un corazón, una frase de saludo sugerida y un botón de Say woof sobre un enlace de Not now.",
-        caption: "Un match, y algo que decir.",
+        title: "Desarrollo",
+        intro:
+          "Doug no escribió el código: su trabajo fue dirigir al equipo que lo hizo y escribir las reglas que tenía que cumplir.",
+        sections: [
+          {
+            title: "Dirigir un equipo de 10 agentes de IA",
+            body: [
+              "Cada agente tenía un rol: arquitecto, UX, UI, Figma, planificador, ejecutor, QA, auditor de diseño, revisor de código y seguridad. Cada fase se planificó, se construyó y se revisó en diseño, código y seguridad antes de cerrarse: 58 commits pequeños, uno o varios por fase.",
+              "Un archivo de traspaso guardaba el estado, las decisiones y el siguiente paso entre sesiones, así que ningún agente empezaba de cero.",
+            ],
+          },
+          {
+            title: "Un solo código: iOS, Android y PWA",
+            body: [
+              "Expo y React Native con rutas por archivo. Gestos y animación en el hilo de interfaz con Reanimated; MapLibre con el mismo estilo monocromo en las dos plataformas; las mismas sombras en todas partes. La PWA es el mismo código, desplegado en Vercel desde la rama principal.",
+            ],
+            film: {
+              label:
+                "El mismo recorrido en un iPhone sostenido por una mano oscura: swipe, match, chat, mapa y perfil.",
+              caption: "La misma grabación, en la mano.",
+            },
+          },
+          {
+            title: "Modo demo sin backend",
+            body: [
+              "La app entera funciona con datos locales, así que el QA y este portafolio nunca dependen de credenciales. Supabase (autenticación, Postgres con PostGIS, tiempo real y almacenamiento) va detrás de las mismas interfaces de repositorio, y una única batería de tests de contrato corre contra los dos.",
+            ],
+          },
+          {
+            title: "Calidad automatizada",
+            points: [
+              "**Más de 680 tests** en 60 suites, en verde.",
+              "**QA visual con Playwright** a 390 × 844: cada pantalla en cada estado, carga, vacío, error, sin conexión y texto grande.",
+              "**Revisión en cada fase**: reglas de diseño, código y seguridad, cada una con su propio agente.",
+            ],
+          },
+        ],
       },
       {
-        alt: "La pantalla de exploración: una ubicación y un campo de búsqueda con filtros, un panel violeta que pide una donación a nombre de los refugios, y luego una sección de Adopción con pestañas por especie y una grilla de mascotas cercanas.",
-        caption: "Explorar por especie, con la petición de los refugios incluida.",
-      },
-      {
-        alt: "La pantalla de bienvenida: una grilla de fotografías de perros con sus dueños detrás de una huella, la frase «Connect and uncover the ideal pets that match your preferences in your area» y un botón de Explore.",
-        caption: "La premisa, antes de pedir una cuenta.",
+        title: "Resultados y aprendizajes",
+        intro: "Qué salió, y qué enseñó esta forma de trabajar.",
+        sections: [
+          {
+            title: "Resultados",
+            points: [
+              "**Las cinco pantallas de Figma recreadas** y ampliadas a una app completa: bienvenida, registro, alta de mascota en cinco pasos, inicio, swipe con filtros, mapa, ficha, match, chats, conversación, perfil, mis mascotas, edición, ajustes y textos legales.",
+              "**Más de 680 tests automatizados** y capturas de QA de cada pantalla y estado.",
+              "**PWA publicada en Vercel**, que se despliega sola desde la rama principal.",
+              "**58 commits pequeños**, con cada fase cerrada por una revisión de diseño, código y seguridad.",
+            ],
+            figures: [
+              {
+                alt: "Plano detalle de la pantalla de un iPhone al empezar un chat: las mascotas del match, respuestas sugeridas Woof! y What's Toby's favorite toy?, y un primer mensaje ya escrito.",
+                caption: "Una primera frase sugerida, para que el match se vuelva conversación.",
+              },
+            ],
+          },
+          {
+            title: "Aprendizajes",
+            points: [
+              "**Dirigir agentes también es diseñar.** La calidad salió de reglas escritas (tokens, toques de 44 pt, contraste AA, Reducir movimiento) y de roles separados que revisan cada fase, no de pedir que quede bonito.",
+              "**Si el diseño no pasa AA, se ajusta el token, no la pantalla.** Corregir dos tokens arregló todas las pantallas a la vez y dejó el cambio documentado.",
+              "**El modo demo paga dos veces.** Sirve para el QA automatizado y para el portafolio: cada pantalla de este caso es la app real, sin backend.",
+              "**Primero la base, después el vidrio.** El vidrio funcionó porque llegó sobre una base sólida, no en lugar de ella.",
+            ],
+            figures: [
+              {
+                alt: "El ícono de MakeaPet, una huella blanca con un corazón sobre un degradado de morado a rosa, rodeado de huellas de vidrio flotando sobre un fondo gris.",
+                caption: "El ícono, con las huellas de vidrio.",
+              },
+            ],
+          },
+        ],
       },
     ],
-    technologies: ["Sketch", "iOS", "Prototipado", "Entrega a desarrollo"],
+    technologies: [
+      "Figma",
+      "Expo + React Native",
+      "Reanimated",
+      "MapLibre",
+      "Supabase",
+      "Playwright",
+      "Agentes de IA",
+    ],
     credits:
-      "Diseño de producto de punta a punta, entregado al equipo de desarrollo que lo construyó. Nunca se lanzó.",
+      "Investigación, diseño UX/UI y dirección de producto de Doug Vargas. El código lo escribió un equipo de agentes de IA, dirigido y revisado por Doug fase por fase. Las escenas de los mockups se generaron con Higgsfield; cada pantalla que aparece en ellas es una captura o grabación real de la app.",
   },
 };

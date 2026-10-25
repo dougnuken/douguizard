@@ -65,6 +65,24 @@ describe("the cases in Spanish", () => {
       if (c.video) expect(es.video?.caption ?? es.video?.label, `${c.slug}.video`).toBeDefined();
       if (c.credits) expect(es.credits, `${c.slug}.credits`).toBeDefined();
       expect(es.contributions.length, `${c.slug}.contributions`).toBe(c.contributions.length);
+      if (c.cover) expect(es.cover?.alt, `${c.slug}.cover`).toBeDefined();
+      if (c.film) expect(es.film?.label, `${c.slug}.film`).toBeDefined();
+      if (c.story) {
+        // Every chapter, section, still and clip is paired by position.
+        expect(es.story?.length, `${c.slug}.story`).toBe(c.story.length);
+        c.story.forEach((ch, i) => {
+          const tc = es.story![i];
+          expect(tc.sections.length, `${c.slug}.story[${i}]`).toBe(ch.sections.length);
+          ch.sections.forEach((s, j) => {
+            const ts = tc.sections[j];
+            const at = `${c.slug}.story[${i}].sections[${j}]`;
+            expect(ts.figures?.length, `${at}.figures`).toBe(s.figures?.length);
+            expect(ts.points?.length, `${at}.points`).toBe(s.points?.length);
+            expect(ts.body?.length, `${at}.body`).toBe(s.body?.length);
+            if (s.film) expect(ts.film?.label, `${at}.film`).toBeDefined();
+          });
+        });
+      }
     });
 
     it(`${c.slug}: the prose is actually Spanish`, () => {
