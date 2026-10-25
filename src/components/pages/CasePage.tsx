@@ -20,6 +20,7 @@ import CaseProcess from "@/components/case/CaseProcess";
 import CaseDecisions from "@/components/case/CaseDecisions";
 import CaseColophon from "@/components/case/CaseColophon";
 import CaseNext from "@/components/case/CaseNext";
+import { CaseChapter, CaseCover, CaseFilm } from "@/components/case/CaseStory";
 import type { BandProps } from "@/components/case/primitives";
 
 type Tone = NonNullable<BandProps["tone"]>;
@@ -100,6 +101,18 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
       ),
     },
   ];
+  // A long-form case shows its walkthrough once the reader knows what it is,
+  // then tells the story chapter by chapter, its screens inside the argument.
+  if (study.film) {
+    const film = study.film;
+    bands.push({ key: "film", render: (tone) => <CaseFilm tone={tone} film={film} /> });
+  }
+  study.story?.forEach((chapter, i) => {
+    bands.push({
+      key: `story-${chapter.id}`,
+      render: (tone) => <CaseChapter tone={tone} chapter={chapter} index={i} />,
+    });
+  });
   if (study.testimonialId && !proofFirst) {
     const id = study.testimonialId;
     bands.push({ key: "testimonial", render: (tone) => <CaseTestimonial tone={tone} id={id} /> });
@@ -151,6 +164,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
             notice or the testimonial — sits on the raised tone, so the first
             counted band after it opens on paper. */}
         {showcase && <CaseShowcase project={study.project} plan={media} />}
+        {!showcase && study.cover && <CaseCover cover={study.cover} />}
         {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
         {nda && (
           <CaseNda

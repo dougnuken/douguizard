@@ -122,7 +122,7 @@ describe("cv + work integrity", () => {
       "qrvey",
       "ideaware",
       "chub",
-      "makeappet",
+      "makeapet",
     ]);
   });
 
@@ -139,6 +139,12 @@ describe("cv + work integrity", () => {
         c.video?.webm,
         c.video?.poster,
         ...(c.gallery ?? []).map((g) => g.src),
+        ...[c.film, ...(c.story ?? []).flatMap((ch) => ch.sections.map((s) => s.film))].flatMap((f) =>
+          f ? [f.source, f.mobile].flatMap((s) => (s ? [s.mp4, s.webm, s.poster] : [])) : [],
+        ),
+        ...[c.cover, ...(c.story ?? []).flatMap((ch) => ch.sections.flatMap((s) => s.figures ?? []))].flatMap(
+          (f) => (f ? [`${f.src}.webp`, `${f.src}-${Math.round(f.width / 2)}.webp`, `${f.src}.jpg`] : []),
+        ),
       ].filter((p): p is string => typeof p === "string");
       for (const p of paths) {
         expect(existsSync(join(publicDir, p)), `${c.slug}: ${p}`).toBe(true);
