@@ -566,8 +566,7 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   makeapet: {
-    category: "iOS, Android y PWA × Mascotas",
-    clientOverride: "Producto propio",
+    category: "Producto propio × iOS, Android y PWA",
     roleOverride: "Diseño UX/UI y dirección de producto",
     duration: "Octubre de 2026",
     team: "Doug, dirigiendo un equipo de 10 agentes de IA",

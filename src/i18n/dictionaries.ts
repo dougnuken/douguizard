@@ -103,6 +103,11 @@ const en = {
         checks: ["Paid in full", "Receipt", "Consent"],
         go: "Go-ahead",
       },
+      makeapet: {
+        caption: "Swipe right; when it is mutual, the owners chat.",
+        label: "A pet card swiped to the right: it tilts, takes a LIKE stamp and leaves, with the next card waiting behind it and pass and like buttons below.",
+        forYou: "For you",
+      },
     },
   },
   craft: {
@@ -263,7 +268,7 @@ const es: Dict = {
   work: {
     intro: (p) => ({
       lead: `${p.years} años de sistemas, productos y equipos:`,
-      rest: `del marketplace más grande de Latinoamérica a bancos nacionales, cruceros y startups en etapa temprana, más ${numberWord(p.own, "es")} productos propios, diseñados, construidos y lanzados de punta a punta. ${numberWord(p.core, "es", { capital: true })} que definieron cómo trabajo y ${numberWord(p.side, "es")} que tomé por el gusto de hacerlos.`,
+      rest: `del marketplace más grande de Latinoamérica a bancos nacionales, cruceros y startups en etapa temprana, más ${numberWord(p.own, "es")} productos propios, diseñados, construidos y lanzados de punta a punta. ${numberWord(p.core, "es", { capital: true })} que definieron cómo trabajo y ${numberWord(p.side, "es")} que tomé por el gusto de ${p.side === 1 ? "hacerlo" : "hacerlos"}.`,
     }),
     read: "Leer",
     nda: "Caso disponible a solicitud",
@@ -297,6 +302,11 @@ const es: Dict = {
         phase: "Fase",
         checks: ["Pago completo", "Recibo", "Consentimiento"],
         go: "Luz verde",
+      },
+      makeapet: {
+        caption: "Desliza a la derecha; si es mutuo, los dueños chatean.",
+        label: "Una tarjeta de mascota deslizada a la derecha: se inclina, recibe el sello LIKE y sale, con la siguiente tarjeta esperando detrás y los botones de descartar y like debajo.",
+        forYou: "Para ti",
       },
     },
   },

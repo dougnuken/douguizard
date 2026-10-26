@@ -118,11 +118,11 @@ describe("cv + work integrity", () => {
       "mercadolibre-andes",
       "banco-de-occidente",
       "dc-medical",
+      "makeapet",
       "royal-caribbean",
       "qrvey",
       "ideaware",
       "chub",
-      "makeapet",
     ]);
   });
 

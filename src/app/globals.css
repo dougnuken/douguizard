@@ -354,6 +354,55 @@
     animation: vignette-chip 3s var(--ease-out) infinite;
   }
 
+  /* MakeaPet: the top card tilts, takes its LIKE stamp and leaves right. */
+  @keyframes vignette-swipe {
+    0%,
+    18% {
+      opacity: 1;
+      transform: translateX(0) rotate(0deg);
+    }
+    46% {
+      opacity: 1;
+      transform: translateX(14%) rotate(7deg);
+    }
+    70% {
+      opacity: 0;
+      transform: translateX(120%) rotate(18deg);
+    }
+    71% {
+      opacity: 0;
+      transform: translateX(0) rotate(0deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) rotate(0deg);
+    }
+  }
+
+  @keyframes vignette-stamp {
+    0%,
+    24% {
+      opacity: 0;
+    }
+    40%,
+    66% {
+      opacity: 1;
+    }
+    71%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .vignette-swipe {
+    transform-origin: 50% 100%;
+    animation: vignette-swipe 3s var(--ease-in-out) infinite;
+  }
+
+  .vignette-stamp {
+    animation: vignette-stamp 3s var(--ease-out) infinite;
+  }
+
   @keyframes vignette-chip {
     0%,
     24% {
@@ -864,6 +913,17 @@
     animation: none !important;
     opacity: 1;
     transform: none;
+  }
+
+  .vignette-swipe {
+    animation: none !important;
+    opacity: 1;
+    transform: translateX(14%) rotate(7deg);
+  }
+
+  .vignette-stamp {
+    animation: none !important;
+    opacity: 1;
   }
 }
 
