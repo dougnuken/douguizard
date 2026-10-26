@@ -587,6 +587,7 @@ export const workEs: Record<string, CaseCopy> = {
       { label: "Código", delta: "iOS, Android y PWA" },
       { label: "Contraste en cada pantalla", delta: "corregido en los tokens" },
     ],
+    links: [{ label: "Demo en vivo" }],
     cover: {
       alt: "MakeaPet en un iPhone sostenido por una mano oscura sobre un fondo gris neutro: la pantalla de swipe, con una akita llamada Candy en una tarjeta rosa y el sello LIKE.",
     },
