@@ -61,7 +61,7 @@ si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módu
 
 ## Transiciones (dilas tal cual)
 
-- Into Naowee: *"The biggest rules problem I work on is in government: let me show you Naowee."*
+- Into Naowee: *"The biggest rules problem I worked on was in government: let me show you Naowee."*
 - Out of Naowee: *"Naowee has 15 roles. The next case is about scale: a bank with many teams."*
 - Into DC: *"The bank taught me governance. Now a small product where I led everything, building it with AI agents."*
 - Out of DC: *"All three cases depend on a design system, so let me talk about that."*
