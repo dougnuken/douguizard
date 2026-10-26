@@ -530,22 +530,166 @@ export const workEs: Record<string, CaseCopy> = {
       { label: "Bases de datos nuevas", delta: "Drive y Calendar siguen siendo la fuente de verdad" },
       { label: "Suites de pruebas", delta: "dominio, contabilidad, worker, navegador" },
     ],
-    process: [
+    cover: {
+      alt: "El panel de DC Medical en un iMac plateado sobre un fondo gris neutro: el tablero de seguimiento, con la barra lateral, los contadores de valoraciones y procedimientos, los filtros por ciudad y la lista de controles por agendar.",
+    },
+    film: {
+      label:
+        "En el celular: una nota de voz llena el formulario de paciente nueva, la valoración toma una hora libre del calendario de la clínica y, al guardar, se abre el caso en la fase uno.",
+      caption:
+        "Unos 20 segundos en el panel real, a tamaño de iPhone. La nota de voz se escribe aquí para la grabación; datos de prueba, y reglas fijas hacen el papel de la IA.",
+    },
+    story: [
       {
-        title: "Primero se atacó el plan",
-        body: "Mapeé cómo funcionaba de verdad la clínica y luego sometí el plan a una revisión adversarial en datos, seguridad y factibilidad. Encontró las trampas que esconden las hojas de cálculo; solo la tercera versión llegó al código.",
+        title: "El problema",
+        intro: "Una clínica en tres ciudades, manejada desde WhatsApp, Google Calendar y un Drive compartido: todo escrito, nada conectado.",
+        sections: [
+          {
+            title: "Todo escrito, nada conectado",
+            body: [
+              "Las pacientes llegan por WhatsApp, las citas viven en el calendario de la clínica y los pagos, consentimientos y controles en hojas de Drive llevadas a mano. Para saber cuánto debía una paciente, la secretaria abría archivo tras archivo: unos diez minutos por pregunta.",
+              "Soy socio de la clínica, así que el encargo lo puse yo: un panel encima de esas herramientas, no en su lugar, igual de útil en recepción que en el celular.",
+            ],
+            figures: [
+              {
+                alt: "Un iMac plateado sobre gris con el tablero de seguimiento de DC Medical: la barra lateral con Seguimiento seleccionado, contadores de valoraciones, procedimientos y controles por reagendar, filtros por ciudad y la lista de controles con los días que le faltan a cada paciente.",
+                caption: "Seguimiento: el día de la clínica en una pantalla.",
+              },
+            ],
+          },
+          {
+            title: "Para quién es",
+            points: [
+              "**La secretaria** agenda, asesora y vende. No es técnica y muchas veces trabaja desde un carro, así que todo lo que ve está a un toque de WhatsApp, la historia clínica, el consentimiento o la hoja en Drive.",
+              "**El médico** trabaja en Barranquilla, Bogotá y Medellín. Lee el día; no lo edita.",
+              "**Los socios** revisan contabilidad e inventario, y necesitan cifras que cuadren con las hojas al peso.",
+            ],
+          },
+          {
+            title: "Primero se atacó el plan",
+            body: [
+              "Mapeé cómo funcionaba de verdad la clínica y luego sometí el plan a una revisión adversarial en datos, seguridad y factibilidad. Encontró las trampas que esconden las hojas, como un archivo con el nombre de una paciente y los datos de otra. Solo la tercera versión llegó al código.",
+            ],
+          },
+        ],
       },
       {
-        title: "Primero leer, después escribir",
-        body: "La primera versión fue un artefacto de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La edición llegó después, con un usuario por persona y tras una auditoría de seguridad; en vivo desde el 21 de septiembre.",
+        title: "Diseño",
+        intro: "Un solo tablero con el día de la clínica: en un portátil en recepción o en un celular dentro de un carro.",
+        sections: [
+          {
+            title: "El seguimiento, contado",
+            body: [
+              "La primera pantalla responde una pregunta: a quién le toca, quién no tiene fecha y quién se quedó atrás. Contadores arriba, una pestaña por tipo de trabajo, un filtro por ciudad y cada fila con los días que faltan, su estado y un botón de WhatsApp que abre la conversación.",
+            ],
+            figures: [
+              {
+                alt: "Un primer plano del borde inferior de la pantalla de un iMac, con poca profundidad de campo: filas de pacientes con control pendiente, su procedimiento, la fecha, una etiqueta de estado y los botones verdes de WhatsApp e Historia.",
+                caption: "Cada fila termina en la acción que necesita.",
+              },
+              {
+                alt: "La tarjeta de controles por gestionar en vidrio blanco sobre una aurora pastel menta, lila, rosa y cian: tres pacientes con su procedimiento, una etiqueta Reagendar, Mañana o En 2 días y un botón redondo verde de WhatsApp, y tres contadores de vidrio debajo.",
+                caption: "La lista que la secretaria trabaja cada mañana.",
+              },
+            ],
+          },
+          {
+            title: "Tres fases con candado",
+            body: [
+              "El trabajo de cada paciente es un caso en tres fases: valoración, pago y procedimiento. Cada fase lista lo que falta y lleva al formulario que lo resuelve, y el procedimiento solo se pone en verde con el pago completo, su recibo y el consentimiento firmado.",
+              "El pie siempre nombra el siguiente paso, así que nadie tiene que acordarse de dónde quedó un caso.",
+            ],
+            figures: [
+              {
+                alt: "Un iMac sobre gris con un caso abierto en un panel lateral: el caso C-2026-0001, los tres pasos valoración, pago y procedimiento, el precio de la valoración y el formulario para registrar su pago con método, fecha y recibo.",
+                caption: "Un caso, abierto en su primera fase.",
+              },
+              {
+                alt: "Una tarjeta de vidrio sobre una aurora pastel: el caso C-2026-0001, el nombre de la paciente y su procedimiento, un chulo verde en Valoración, el paso 2 Pago resaltado en índigo, la valoración de 300.000 pesos pagada y el primer pago pendiente, y un deslizador de vidrio para registrar el primer pago.",
+                caption: "Los tres pasos, y la única acción que hace avanzar el caso.",
+              },
+            ],
+          },
+          {
+            title: "El celular reescribió la interfaz",
+            body: [
+              "La secretaria maneja la clínica desde un iPhone, muchas veces desde el carro. Por eso el panel se instala como app, las tablas se vuelven tarjetas, cada zona táctil mide al menos 44 píxeles y una nota de voz llena el formulario de paciente nueva.",
+            ],
+            figures: [
+              {
+                alt: "Una mano oscura sostiene un iPhone con el tablero de seguimiento en el celular: contadores como tarjetas pastel de valoraciones, procedimientos, controles por reagendar y esta semana, y debajo las pestañas y los filtros por ciudad.",
+                caption: "El seguimiento en el celular: el mismo tablero, en tarjetas.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con un caso abierto como hoja: el caso C-2026-0001, los tres pasos, el procedimiento y la fecha de valoración, y un botón índigo para registrar el pago de la valoración.",
+                caption: "Un caso en el celular, con el siguiente paso como botón.",
+              },
+            ],
+          },
+          {
+            title: "La marca, llevada al panel",
+            body: [
+              "La marca de la clínica es un monograma grafito y un logotipo delgado. El panel conserva los dos y suma una aurora pastel de menta, lila, rosa y cian, los mismos tonos de los contadores, sobre un tema claro que nunca cambia. La letra es Inter con cifras tabulares; el color se reserva para el significado.",
+            ],
+            figures: [
+              {
+                alt: "El monograma DC en un ícono de app grafito que flota sobre una aurora pastel y, debajo, una tarjeta de vidrio con el logotipo de DC Medical, la frase El panel de la clínica, en un solo lugar y etiquetas de Agenda, Pacientes, Contabilidad e Inventario.",
+                caption: "El monograma grafito, y la aurora del panel.",
+              },
+            ],
+          },
+        ],
       },
       {
-        title: "El celular reescribió la interfaz",
-        body: "La secretaria maneja la clínica desde un iPhone, muchas veces desde el carro. Por eso el panel se instala como app, las tablas se vuelven tarjetas, cada zona táctil mide al menos 44 píxeles y una nota de voz llena el formulario de paciente nueva.",
-      },
-      {
-        title: "Plata real, y después pedidos reales",
-        body: "Los pagos reales trajeron reglas que ningún plan tenía: una tarjeta de crédito entra al 95\u00a0%, porque la clínica le traslada la comisión a la paciente. Después la clínica empezó a pedir: cupos, agenda por ciudad, permisos. La mayoría salió en menos de un día.",
+        title: "Construcción",
+        intro: "Una primera versión de solo lectura, las reglas de la plata como funciones con pruebas, e IA solo donde ahorra digitar.",
+        sections: [
+          {
+            title: "Primero leer, después escribir",
+            body: [
+              "La primera versión fue un artefacto de Claude de solo lectura, seguro para ponerlo frente a la clínica desde el primer día. La edición llegó después, con un usuario por persona y por rol, tras una auditoría de seguridad; en vivo desde el 21 de septiembre.",
+            ],
+            figures: [
+              {
+                alt: "Un iMac plateado con su pie sobre gris muestra la página de acceso del panel: el logotipo de DC Medical en un panel pastel con la frase El panel de la clínica, en un solo lugar, y el formulario Acceso al panel con usuario, contraseña y un botón índigo Entrar.",
+                caption: "El acceso: un usuario por persona, permisos por área.",
+              },
+            ],
+          },
+          {
+            title: "Plata real, y después pedidos reales",
+            body: [
+              "Los pagos reales trajeron reglas que ningún plan tenía: una tarjeta de crédito entra al 95\u00a0%, porque la clínica le traslada la comisión a la paciente. Los ingresos son caja por fecha de pago, y el mes muestra lo que entró, lo que salió y lo que aún se debe.",
+              "Después la clínica empezó a pedir: cupos, agenda por ciudad, permisos. La mayoría salió en menos de un día.",
+            ],
+            figures: [
+              {
+                alt: "Un iMac sobre gris con la contabilidad de septiembre de 2026: contadores de neto, por pagar y por cobrar, los movimientos del mes y una columna de Atención con las cuentas vencidas y las pacientes que aún deben.",
+                caption: "El mes en contabilidad: lo que entró, lo que vence y quién debe.",
+              },
+            ],
+          },
+          {
+            title: "Una lista, un siguiente paso",
+            body: [
+              "La lista de casos pone a cada paciente en una línea: la fase, lo pagado frente al precio y el siguiente paso escrito, como cobrar la valoración o recibir el primer pago. Las mismas hojas alimentan todas las vistas, así que las cifras nunca se contradicen.",
+            ],
+            figures: [
+              {
+                alt: "Un iMac sobre gris con la lista de casos: la barra lateral con Casos seleccionado, contadores por fase y cada paciente con su procedimiento, un indicador de tres pasos y la fase en la que está.",
+                caption: "Casos: cada paciente, su fase y lo que sigue.",
+              },
+            ],
+          },
+          {
+            title: "IA donde ahorra digitar",
+            points: [
+              "**Una nota de voz que llena el formulario**: di quién llegó, para qué y qué pagó. El modelo llena el formulario y no guarda nada hasta que una persona lo revisa.",
+              "**Recibos y facturas leídos por IA**: fotografía un recibo, una factura de proveedor o gastos de viaje, y los valores vuelven llenos para revisar y luego van al inventario o a la contabilidad del mes.",
+              "**Los cupos del médico, listos para enviar**: el documento que la secretaria ya lleva se vuelve una semana de cupos en rojo y verde, avisa los días que caen en dos ciudades y se copia a WhatsApp.",
+            ],
+          },
+        ],
       },
     ],
     decisions: [
@@ -562,51 +706,6 @@ export const workEs: Record<string, CaseCopy> = {
         body: "El médico trabaja en tres ciudades: naranja para Barranquilla, azul para Bogotá, verde azulado para Medellín, validados para daltonismo. El nombre siempre va junto a su punto, así que nadie tiene que distinguir el verde azulado del azul.",
       },
     ],
-    featuresIntro:
-      "Un solo tablero con el día de la clínica: en un portátil en recepción o en un celular dentro de un carro.",
-    features: [
-      {
-        title: "Una nota de voz que llena el formulario",
-        body: "Di quién llegó, para qué y qué pagó. El modelo llena el formulario y no guarda nada hasta que una persona lo revisa.",
-      },
-      {
-        title: "Fases con candado",
-        body: "Cada fase lista lo que falta y lleva al formulario que lo resuelve. El pie siempre nombra el siguiente paso.",
-      },
-      {
-        title: "Los cupos del médico, listos para enviar",
-        body: "El documento que la secretaria ya lleva se vuelve una semana de cupos en rojo y verde, avisa los días que caen en dos ciudades y se copia a WhatsApp.",
-      },
-      {
-        title: "Recibos y facturas leídos por IA",
-        body: "Fotografía un recibo, una factura de proveedor o gastos de viaje: los valores vuelven llenos para revisar y luego van al inventario o a la contabilidad del mes.",
-      },
-    ],
-    video: {
-      label:
-        "En el celular: una nota de voz llena el formulario de paciente nueva, la valoración toma una hora libre del calendario de la clínica y, al guardar, se abre el caso en la fase uno",
-      caption:
-        "Una nota de voz, escrita aquí para la grabación, llena la ficha de una paciente nueva y abre su caso. Datos de demostración; reglas fijas hacen el papel de la IA.",
-    },
-    // Paired by index with work.ts: the month agenda leads.
-    gallery: [
-      {
-        alt: "La agenda en vista de mes: septiembre de 2026 de lunes a domingo, con las citas de cada día como líneas cortas del color de su ciudad —naranja para Barranquilla, azul para Bogotá, verde azulado para Medellín—, una franja de color sobre los días que el médico pasa en cada ciudad y un conteo de citas por ciudad encima de la grilla.",
-        caption: "Un mes de citas, cada una con el color de su ciudad.",
-      },
-      {
-        alt: "La agenda en vista de día para el jueves 24 de septiembre: un aviso de que el médico está en Medellín según el calendario, las citas como tarjetas por hora con su tipo y su ciudad, una línea roja que marca la hora actual y botones de ficha y calendario en cada tarjeta.",
-        caption: "Un día por horas, y la ciudad donde está el médico.",
-      },
-      {
-        alt: "El tablero de seguimiento: contadores de valoraciones, procedimientos, controles por reagendar, esta semana, los próximos 30 días y controles sin fecha; pestañas de valoraciones, procedimientos, controles, agenda, cupos y por cobrar; filtros por ciudad; y una tabla de controles a los 45 días, cada uno con los días que faltan, su estado y un botón de WhatsApp.",
-        caption: "El seguimiento, contado: a quién le toca, quién no tiene fecha y quién se quedó atrás.",
-      },
-      {
-        alt: "Edición de un usuario en Usuarios y permisos: la cuenta del médico en solo ver, con casillas para ver, crear y editar por área —y borrar, en pacientes y casos— en agenda y seguimiento, pacientes y casos y pagos de pacientes, bajo plantillas para operar el día, solo ver y nada.",
-        caption: "Permisos por área: el médico lee, la secretaria maneja el día.",
-      },
-    ],
     externalLink: { label: "Panel en vivo — acceso del personal" },
     technologies: [
       "Estrategia de producto",
@@ -621,7 +720,7 @@ export const workEs: Record<string, CaseCopy> = {
       "node --test",
     ],
     credits:
-      "Soy socio de la clínica junto al médico y construí el panel de punta a punta. El protocolo médico es suyo; el uso diario de la secretaria moldeó los flujos. Pantallas y recorrido usan datos de prueba: ninguna paciente real, ninguna cifra de la clínica.",
+      "Soy socio de la clínica junto al médico y construí el panel de punta a punta. El protocolo médico es suyo; el uso diario de la secretaria moldeó los flujos. Los mockups son el panel real compuesto sobre escenas de estudio generadas con IA; los nombres de pacientes que aparecen son ficticios.",
   },
 
   "royal-caribbean": {
