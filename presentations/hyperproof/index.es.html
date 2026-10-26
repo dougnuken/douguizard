@@ -276,11 +276,12 @@ body.is-clean #chrome, body.is-clean #progress { opacity: 0; }
 .contact a { text-decoration: none; border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; }
 
 /* Presenter view */
-body.presenter { overflow: auto; background: #111; color: #eee; }
+/* The presenter view is always dark, on the whole page and past the first screen. */
+html.presenter, body.presenter { height: auto; min-height: 100%; overflow: auto; background: #111; color: #eee; }
 body.presenter #viewport, body.presenter #chrome, body.presenter #progress, body.presenter #drawer { display: none !important; }
 #pview { display: none; }
 body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28px; padding: 28px; min-height: 100vh; }
-.pcur { font: 13px var(--mono); color: #888; }
+.pcur { font: 13px var(--mono); color: #c4c4c4; }
 .ptitle { font-size: 34px; font-weight: 620; letter-spacing: -.02em; margin: 6px 0 18px; color: #fff; }
 .pnotes { font-size: 26px; line-height: 1.5; color: #f2f2f2; }
 .pnotes .hint { color: #9aa4ff; }
@@ -294,7 +295,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 .pbtns button { flex: 1; height: 54px; border-radius: 14px; border: 1px solid #444; background: #1c1c1e; color: #fff; font: 600 18px var(--font); cursor: pointer; }
 .pbtns button:active { transform: scale(.97); }
 /* Phone remote: the presenter view laid out for one hand. The laptop never shows it. */
-#p-sync { font: 13px var(--mono); color: #888; margin-top: 6px; }
+#p-sync { font: 13px var(--mono); color: #c4c4c4; margin-top: 6px; }
 #p-sync.is-on { color: #5ee08f; }
 #p-mode { display: none; }
 body.phone #pview { grid-template-columns: 1fr; gap: 14px; padding: 16px 16px calc(116px + env(safe-area-inset-bottom)); min-height: 0; }
@@ -1334,6 +1335,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
     if (isPhone) window.scrollTo(0, 0);
   }
   if (isPresenter) {
+    document.documentElement.classList.add("presenter");
     document.body.classList.add("presenter");
     if (isPhone) document.body.classList.add("phone");
     document.title = "Presentador · " + document.title;
