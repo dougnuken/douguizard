@@ -322,6 +322,18 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
 @keyframes rv { from { opacity: 0; translate: 0 18px; filter: blur(6px); } }
 .slide.is-active .rv { animation: rv 640ms var(--ease) var(--d, 0ms) backwards; }
 @media (prefers-reduced-motion: reduce) { .slide.is-active .rv { animation: none; } }
+/* Minimal device frames drawn in CSS, for real screenshots without a photo scene */
+.stage.devstage { display: grid; place-items: center; grid-template-rows: minmax(0, 1fr); padding: 44px; background: var(--stage); }
+.dev { position: relative; background: #0d0d0f; box-shadow: 0 40px 80px -36px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06); }
+.dev img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.dev.desktop { width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; padding: 12px 12px 30px; }
+.dev.desktop img { border-radius: 6px; }
+.dev.desktop::after { content: ""; position: absolute; left: 50%; bottom: -26px; width: 22%; height: 26px; transform: translateX(-50%); background: linear-gradient(#cfd0d4, #b8b9bd); border-radius: 0 0 8px 8px; }
+.dev.tablet { width: 100%; aspect-ratio: 4 / 3; border-radius: 34px; padding: 16px; }
+.dev.tablet img { border-radius: 20px; }
+.dev.phone { height: 100%; max-height: 100%; aspect-ratio: 9 / 19.5; border-radius: 52px; padding: 11px; }
+.dev.phone img { border-radius: 42px; object-position: center top; }
+.dev.phone::before { content: ""; position: absolute; top: 20px; left: 50%; width: 30%; height: 26px; transform: translateX(-50%); background: #0d0d0f; border-radius: 20px; z-index: 1; }
 </style>
 </head>
 <body>
@@ -653,7 +665,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Who uses it</b> · the bank's customers, and 12+ internal product teams</p>
       <p class="roleline" style="margin-top:8px"><b>My role</b> · Senior Product Designer and design system owner, Aval Digital Labs, 2018–2024</p>
     </div>
-    <div class="stage"><img data-mock="occ-ipad-accounts" data-flat="../../public/work/banco-de-occidente/products-and-cards.webp" alt="The bank's accounts screen on a tablet: balances, movements, and the account's actions menu open on Block card"></div>
+    <div class="stage"><img data-src="../../public/work/banco-de-occidente/portal-dashboard.webp" alt="The bank's accounts screen on a tablet: balances, movements, and the account's actions menu open on Block card" style="object-position:50% 40%"></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">12+</div><div class="l">Product teams using one system</div></div>
@@ -816,7 +828,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Who uses it</b> · the secretary every day; the doctor and the owners to check</p>
       <p class="roleline" style="margin-top:8px"><b>My role</b> · Designed by me, built by directing AI agents · live since Sep 21, 2026 · I co-own the clinic</p>
     </div>
-    <div class="stage"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-seg.jpg" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of follow-up visits"></div></div>
+    <div class="stage devstage"><div class="dev desktop"><img data-src="assets/captures/dc-seg.jpg" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of follow-up visits"></div></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">14</div><div class="l">Days from the first prototype to the city agenda</div><div class="d">Sep 19 → Oct 2, 2026</div></div>
@@ -903,7 +915,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>The trade-off</dt><dd>More setup for the admin, but nobody sees a button they can't use.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-users-edit.jpg" alt="Editing a user's access on a tablet: switches to see, create and edit per area, under quick presets"></div></div>
+    <div class="stage tall devstage"><div class="dev tablet"><img data-src="assets/captures/dc-users-edit.jpg" alt="Editing a user's access on a tablet: switches to see, create and edit per area, under quick presets" style="object-position:right top"></div></div>
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions by type of object, with presets for the usual cases.</p>
   <aside class="notes">
@@ -930,7 +942,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>The rule for AI</dt><dd>The AI fills the form, but nothing is saved until a person checks it.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-phone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a message asking to check every field"></div>
+    <div class="stage tall devstage"><div class="dev phone"><img data-src="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="On a phone: a new-patient form filled from a voice note, with a message asking to check every field"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Muestra la captura del teléfono. Habla de la regla de la IA con calma: es la frase que pueden citar después.</p>
@@ -953,7 +965,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>What we did</dt><dd>Orange for Barranquilla, blue for Bogotá, teal for Medellín, tested for color blindness. The city name always appears next to the color.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-agenda.jpg" alt="The month calendar on a desktop display, appointments colored by city"></div></div>
+    <div class="stage tall devstage"><div class="dev desktop"><img data-src="assets/captures/dc-agenda.jpg" alt="The month calendar on a desktop display, appointments colored by city" style="object-position:center top"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.</p>

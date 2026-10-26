@@ -322,6 +322,18 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
 @keyframes rv { from { opacity: 0; translate: 0 18px; filter: blur(6px); } }
 .slide.is-active .rv { animation: rv 640ms var(--ease) var(--d, 0ms) backwards; }
 @media (prefers-reduced-motion: reduce) { .slide.is-active .rv { animation: none; } }
+/* Minimal device frames drawn in CSS, for real screenshots without a photo scene */
+.stage.devstage { display: grid; place-items: center; grid-template-rows: minmax(0, 1fr); padding: 44px; background: var(--stage); }
+.dev { position: relative; background: #0d0d0f; box-shadow: 0 40px 80px -36px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06); }
+.dev img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.dev.desktop { width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; padding: 12px 12px 30px; }
+.dev.desktop img { border-radius: 6px; }
+.dev.desktop::after { content: ""; position: absolute; left: 50%; bottom: -26px; width: 22%; height: 26px; transform: translateX(-50%); background: linear-gradient(#cfd0d4, #b8b9bd); border-radius: 0 0 8px 8px; }
+.dev.tablet { width: 100%; aspect-ratio: 4 / 3; border-radius: 34px; padding: 16px; }
+.dev.tablet img { border-radius: 20px; }
+.dev.phone { height: 100%; max-height: 100%; aspect-ratio: 9 / 19.5; border-radius: 52px; padding: 11px; }
+.dev.phone img { border-radius: 42px; object-position: center top; }
+.dev.phone::before { content: ""; position: absolute; top: 20px; left: 50%; width: 30%; height: 26px; transform: translateX(-50%); background: #0d0d0f; border-radius: 20px; z-index: 1; }
 </style>
 </head>
 <body>
@@ -653,7 +665,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Quién lo usa</b> · los clientes del banco y 12+ equipos internos de producto</p>
       <p class="roleline" style="margin-top:8px"><b>Mi rol</b> · Diseñador de producto sénior y responsable del design system, Aval Digital Labs, 2018–2024</p>
     </div>
-    <div class="stage"><img data-mock="occ-ipad-accounts" data-flat="../../public/work/banco-de-occidente/products-and-cards.webp" alt="La pantalla de cuentas del banco en una tableta: saldos, movimientos y el menú de acciones de la cuenta abierto en Bloquear tarjeta"></div>
+    <div class="stage"><img data-src="../../public/work/banco-de-occidente/portal-dashboard.webp" alt="La pantalla de cuentas del banco en una tableta: saldos, movimientos y el menú de acciones de la cuenta abierto en Bloquear tarjeta" style="object-position:50% 40%"></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">12+</div><div class="l">Equipos de producto con un solo sistema</div></div>
@@ -816,7 +828,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Quién lo usa</b> · la secretaria a diario; el doctor y los dueños para revisar</p>
       <p class="roleline" style="margin-top:8px"><b>Mi rol</b> · la diseñé yo y la construí dirigiendo agentes de IA · en vivo desde el 21 sep 2026 · soy socio de la clínica</p>
     </div>
-    <div class="stage"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-seg.jpg" alt="El tablero de seguimiento de la clínica en un portátil: contadores, pestañas, filtros por ciudad y una tabla de controles"></div></div>
+    <div class="stage devstage"><div class="dev desktop"><img data-src="assets/captures/dc-seg.jpg" alt="El tablero de seguimiento de la clínica en un portátil: contadores, pestañas, filtros por ciudad y una tabla de controles"></div></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">14</div><div class="l">Días del primer prototipo a la agenda por ciudad</div><div class="d">19 sep → 2 oct de 2026</div></div>
@@ -903,7 +915,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>El trade-off</dt><dd>Más configuración para el administrador, pero nadie ve un botón que no puede usar.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-users-edit.jpg" alt="Edición del acceso de un usuario en una tableta: interruptores para ver, crear y editar por área, bajo perfiles rápidos"></div></div>
+    <div class="stage tall devstage"><div class="dev tablet"><img data-src="assets/captures/dc-users-edit.jpg" alt="Edición del acceso de un usuario en una tableta: interruptores para ver, crear y editar por área, bajo perfiles rápidos" style="object-position:right top"></div></div>
   </div>
   <p class="bridge"><b>En términos de Hyperproof</b> Roles y permisos por tipo de objeto, con perfiles para los casos habituales.</p>
   <aside class="notes">
@@ -930,7 +942,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>La regla para la IA</dt><dd>La IA llena el formulario, pero nada se guarda hasta que una persona lo revisa.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-phone-voice" data-flat="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="En un celular: un formulario de paciente nuevo llenado con una nota de voz, con un mensaje que pide revisar cada campo"></div>
+    <div class="stage tall devstage"><div class="dev phone"><img data-src="../../public/work/dc-medical/nota-de-voz-poster.jpg" alt="En un celular: un formulario de paciente nuevo llenado con una nota de voz, con un mensaje que pide revisar cada campo"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Muestra la captura del teléfono. Habla de la regla de la IA con calma: es la frase que pueden citar después.</p>
@@ -953,7 +965,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>Qué hicimos</dt><dd>Naranja para Barranquilla, azul para Bogotá, verde azulado para Medellín, probados para daltonismo. El nombre de la ciudad siempre aparece junto al color.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-agenda.jpg" alt="El calendario del mes en un monitor, con citas coloreadas por ciudad"></div></div>
+    <div class="stage tall devstage"><div class="dev desktop"><img data-src="assets/captures/dc-agenda.jpg" alt="El calendario del mes en un monitor, con citas coloreadas por ciudad" style="object-position:center top"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.</p>
