@@ -176,117 +176,337 @@ export const caseStudies: CaseStudy[] = [
     roleOverride: "Design Engineer — end to end",
     yearOverride: "2026",
     duration: "Weeks — still shipping",
-    team: "Solo — design, engineering, shipping",
+    team: "Doug, directing specialised AI agents",
     kind: "personal",
     tagline:
-      "A personal finance app that reads your spending pace, not your balance — designed, built and shipped solo.",
+      "A personal finance app that reads your spending pace, not your balance. Version 2.0 trades a heavy dark interface for light, calm glass.",
     impact:
-      "Live and in daily use: log an expense by photo, voice, bank text or PDF, and one color tells you whether the month is on pace.",
+      "The 1.0 worked and had become heavy. 2.0 is a new brand and interface, light, with ink and one lilac accent, rebuilt without touching the math: 647 tests green.",
     context:
-      "Budgeting apps answer \"how much is left\", the anxious question. I built olbo for my own household: a local-first PWA in Colombian pesos whose traffic light reads spending pace against the calendar.",
+      "Budgeting apps answer \"how much is left\", the anxious question. olbo is a local-first PWA in Colombian pesos whose traffic light reads spending pace against the calendar. It worked, but the dark, multicolour interface had grown loud. So I redesigned the brand and the UI, and kept the product.",
     contributions: [
-      "**Product and interface** — 24 views, from the traffic-light dashboard to AI that reads receipts, voice and PDFs.",
-      "**Zero dependencies** — vanilla ES modules, no build step; pure budget math, so 634 tests run in 292ms.",
-      "**Privacy you can check** — your data stays on the phone; the only thing that leaves it is the call to the AI.",
+      "**Brand 2.0**: light instead of dark, ink plus a single lilac accent, Urbanist and Manrope, and the Split Ring mark evolved into Ring and Centre.",
+      "**Interface 2.0**: glass on an aurora with grain, a near-gapless bento, live lines and the FAB as an AI sphere, across all 24 views.",
+      "**Directed the build**: specialised agents for branding, UI, execution and QA, in chained sessions handing off through two files.",
     ],
     kpis: [
-      { value: "634", label: "Tests passing", delta: "in 292ms" },
+      { value: "647", label: "Tests passing", delta: "budget math untouched" },
       { value: "0", label: "Dependencies", delta: "no bundler, no framework" },
-      { value: "62", label: "JS modules", delta: "across 24 views" },
-      // Verified 2026-09-12 in the olbo repo: 6,410 lines of test vs 16,265 of
-      // code = 1:2.5. The delta is rounded down so it cannot be over-read.
-      { value: "1:2.5", label: "Test-to-code ratio", delta: "6,400 lines of tests" },
+      { value: "5", label: "Chained sessions", delta: "each phase closed by QA" },
+      { value: "1", label: "Accent colour", delta: "lilac, used sparingly" },
     ],
-    process: [
-      {
-        phase: "01",
-        title: "The problem was mine",
-        body: "Every app I tried counted cents in someone else's currency. Product first: whole pesos, my data on my own phone, one screen that says if I'm fine.",
-      },
-      {
-        phase: "02",
-        title: "Built with AI, decided by tests",
-        body: "I paired with Claude but refused disposable output: a pure domain layer, with \"today\" always injected, so every test runs in Node without a browser. AI wrote fast; the tests decided what survived.",
-      },
-      {
-        phase: "03",
-        title: "Shipping, then listening",
-        body: "Live as an installable, offline PWA, service worker at v150. Daily use surfaced what no spec would: a timezone bug that broke the color at night, and receipts I refused to retype.",
-      },
-    ],
-    decisions: [
-      {
-        title: "The traffic light reads pace, not balance",
-        body: "Spending pace over the month elapsed: green up to 1, amber to 1.25, red above. 90% spent on the 28th is fine; 80% on the 10th is not.",
-      },
-      {
-        title: "Variable bills never reserve money",
-        body: "Power, water and fuel count only once you record what they cost. A reserved estimate can paint a false red, and one false red is enough to stop believing the color.",
-      },
-      {
-        title: "Privacy you can check, not just read",
-        body: "Everyone claims local-first. Here the CSP header proves it: nothing leaves the device except calls to api.anthropic.com. It cost every inline style, even inside SVGs.",
-      },
-    ],
-    featuresIntro:
-      "Capture is where finance apps die: if it takes effort, nobody does it. So olbo takes an expense however it arrives.",
-    features: [
-      {
-        title: "Photograph the receipt",
-        body: "Claude reads total, merchant and category into a card you confirm before saving.",
-        kind: "ai",
-      },
-      {
-        title: "Say the expense out loud",
-        body: "\"Cincuenta mil en el mercado\" becomes a structured movement: Claude with a forced tool call, flagged for review below 0.7 confidence.",
-        kind: "ai",
-      },
-      {
-        title: "Paste the bank's text message",
-        body: "Deliberately no model: an exact parser reads both bank formats offline, free, with no way to hallucinate an amount.",
-        // Deliberately not tagged "ai": the copy's whole point is that a parser
-        // beats a model here. An AI label next to it would contradict the text.
-        kind: "product",
-      },
-      {
-        title: "Read the whole card statement",
-        body: "A PDF becomes data: closing and due dates, monthly rate, every installment purchase and its remaining term.",
-        kind: "ai",
-      },
-    ],
-    video: {
-      webm: "/work/olbo/captura-gasto.webm",
-      mp4: "/work/olbo/captura-gasto.mp4",
-      poster: "/work/olbo/captura-gasto-poster.jpg",
-      label:
-        "Screen recording of olbo: an expense of 120.000 Colombian pesos typed on the app's own keypad, categorized and saved, then the dashboard and the movements list recalculating.",
-      caption:
-        "An expense logged in four taps; the month's pace updates before the sheet closes.",
-      width: 786,
-      height: 1704,
+    cover: {
+      src: "/work/olbo/00-portada-16x9",
+      alt: "olbo 2.0 on an iPhone held in a dark hand against a neutral grey background: the Today screen, with the lilac glass card Tu dinero, the month ruler and the lilac and black Available and Spent tiles.",
+      width: 2400,
+      height: 1350,
     },
-    // The green ring leads: "Vas al ritmo del mes" is the product's whole idea
-    // in one screen, and the alert state right after it shows the contrast.
-    gallery: [
+    film: {
+      source: {
+        webm: "/work/olbo/flow-screen-16x9.webm",
+        mp4: "/work/olbo/flow-screen-16x9.mp4",
+        poster: "/work/olbo/flow-screen-16x9.jpg",
+        width: 1920,
+        height: 1080,
+      },
+      mobile: {
+        webm: "/work/olbo/flow-screen-4x5.webm",
+        mp4: "/work/olbo/flow-screen-4x5.mp4",
+        poster: "/work/olbo/flow-screen-4x5.jpg",
+        width: 1080,
+        height: 1350,
+      },
+      label:
+        "olbo 2.0 walkthrough: Today with its glass card and tiles, the Analysis tab with the traffic-light gauge, the FAB opening into Expense and Income, an expense of 48,500 pesos typed on the keypad with a category and saved, Movements, and the advisor.",
+      caption:
+        "About 34 seconds in the real app, served locally with neutral demo data, at iPhone size. The grey circle marks each touch.",
+    },
+    story: [
       {
-        src: "/work/olbo/semaforo-verde.webp",
-        alt: "olbo dashboard with the traffic light in green — spending pace is at or under the share of the month elapsed.",
-        caption: "Green: the pace matches the calendar.",
+        id: "problem",
+        title: "The problem",
+        intro: "olbo 1.0 did its job. Daily use showed that the interface was getting in its way.",
+        sections: [
+          {
+            title: "A 1.0 that worked",
+            body: [
+              "Every app I tried counted cents in someone else's currency and answered \"how much is left\". olbo answers whether the month is on pace: spending against the share of the month elapsed, green up to 1, amber to 1.25, red above. Ninety percent spent on the 28th is fine; 80% on the 10th is not.",
+              "It ships as an installable, offline PWA: vanilla ES modules, no build step, data in IndexedDB on the phone. Nothing leaves the device except the calls to the AI, and a strict CSP proves it.",
+            ],
+          },
+          {
+            title: "It got heavy",
+            body: [
+              "The 1.0 was dark purple with a multicolour mesh and plenty of glow. Each piece had a reason; together they shouted. The one colour that matters, the traffic light, was competing with the signature gradient on the button, the FAB and the advisor's orb.",
+              "The brief I set for 2.0 was brand and interface, not features or flows: keep everything that works, and make it calm.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/13-antes-despues",
+                alt: "Two iPhones side by side on grey with the same Today screen and the same demo data: on the left olbo 1.0, dark purple with a multicolour button; on the right olbo 2.0, light, with a lilac glass card and black and lilac tiles.",
+                caption: "The same data, before and after: 1.0 on the left, 2.0 on the right.",
+                width: 2400,
+                height: 1600,
+              },
+            ],
+          },
+          {
+            title: "References",
+            points: [
+              "**A near-gapless bento**: contiguous tiles 4–8 px apart, large radii, child radius = parent − gap.",
+              "**Radical colour minimalism**: a pale neutral base, near-pure black for contrast and one saturated accent used sparingly.",
+              "**Thin, elegant type**: huge display figures at weight 300 with negative tracking.",
+              "**Real glass**: translucent white over soft gradients, so the blur has something to read.",
+            ],
+          },
+        ],
       },
       {
-        src: "/work/olbo/semaforo-alerta.webp",
-        alt: "olbo dashboard with the traffic light in alert — the same pocket read against an earlier day of the month turns the color to a warning.",
-        caption: "The same amount, earlier in the month, reads as alert.",
+        id: "brand",
+        title: "Brand 2.0",
+        intro: "Pearl paper, black ink and a single lilac point: money in order looks calm.",
+        sections: [
+          {
+            title: "Light, not dark",
+            body: [
+              "The references are light, and calm reads better on paper than on neon. olbo 2.0 has one theme: a pearl base (#F0EFF2), ink for text and for contrast (#1D1D1F), and black as a second protagonist on the tiles, the main button and the active dock item. Text never sits straight on the gradient; it always has glass, paper or black under it.",
+            ],
+          },
+          {
+            title: "Lilac, used sparingly",
+            body: [
+              "Green, amber and red already mean state. A lime accent reads as \"on track\" and an orange one as \"careful\", so the only families that cannot collide with the traffic light are blue and violet. Blue is every bank's colour; violet was already olbo's.",
+              "In Colombia, Nu owns deep purple and Nequi magenta on aubergine. A light lilac (#B49CFF) with ink on top belongs to nobody. It appears once per screen, never as text on light (2.01:1 fails) and always with ink over it (7.33:1).",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/04-widget-tu-dinero",
+                alt: "The Tu dinero card from olbo on a lilac and mint aurora with grain: 9,680,700 pesos in thin type, today's movements and the month ruler with a black today chip.",
+                caption: "Tu dinero: the hero card, the only aurora in the app.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Urbanist and Manrope",
+            body: [
+              "Two variable OFL families, self-hosted. Urbanist at weight 300 sets the display figures and the wordmark: geometric, with perfectly round o's. Manrope sets the interface and every figure that aligns or changes, always with tabular numerals. Emphasis comes from weight, never from colour, and there are no italics.",
+            ],
+          },
+          {
+            title: "Ring and Centre",
+            body: [
+              "The Split Ring keeps its geometry, two 140° arcs that slide past each other, and loses its violet slabs and halo. The stroke gets thinner to match the type, and a lilac point sits in the middle: the arcs are money coming in and going out, and the point is you, still in the centre. It is the only colour in the brand.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/12-app-icon",
+                alt: "The olbo app icon on grey: a black rounded square with two white arcs and a lilac point in the centre, and the olbo wordmark below.",
+                caption: "The icon: a black tile, white arcs and the lilac point.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+        ],
       },
       {
-        src: "/work/olbo/registrar.webp",
-        alt: "olbo expense capture screen — entering a movement in whole Colombian pesos in a few taps.",
-        caption: "Capture in whole pesos, in seconds.",
+        id: "interface",
+        title: "Interface 2.0",
+        intro: "The same 24 views and the same flows, redrawn in the new language from tokens up.",
+        sections: [
+          {
+            title: "Glass on an aurora, with grain",
+            body: [
+              "The app background is a soft gradient from pearl through lavender to mint, and the tiles are white glass over it. The Tu dinero card is the only place the aurora intensifies, with fine grain so the gradient reads as material rather than a screen effect.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/01-hoy",
+                alt: "A dark hand holding an iPhone with olbo's Today screen: Hola, Ana. Así va tu octubre, the Tu dinero card, Mi cartera, the Resumen and Análisis tabs and the Disponible and Gastado tiles over the graphite dock.",
+                caption: "Today: one aurora, one lilac tile, one black tile.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Bento and contrast by blocks",
+            body: [
+              "What is left to spend sits on the screen's one lilac tile, with ink on it; what was spent sits on a black tile with a fine bar for each of the last ten days. They are contiguous, as in the references, and the contrast between them does the work colour used to do.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/07-widget-losas",
+                alt: "olbo's two tiles floating on a soft aurora: a lilac Disponible tile with 6,855,700 pesos and 1,142,617 per day, and a black Gastado tile with 1,924,300 and thin bars for the last days.",
+                caption: "Disponible in lilac, Gastado in black.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Live lines",
+            body: [
+              "Charts are fine strokes of 1–2 px: a ruler of ticks for the month with a black chip on today, bars per day in Movements on a square-root scale so the rent does not flatten everything else. They draw themselves in when they appear, using only transform and opacity, and stand still under Reduce Motion.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/05-movimientos",
+                alt: "A hand holding an iPhone with olbo's Movements: search, month filters, an October 2026 tile with 3,919,300 pesos and a fine bar per day, and the day's expenses below.",
+                caption: "Movements: one fine bar per day of the month.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "The FAB, an AI sphere",
+            body: [
+              "The signature gradient survives in exactly one place: the FAB, now a small sphere at the end of the graphite dock. It opens into Expense and Income on paper, and it is the one moving colour on a calm screen.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/06-macro-fab",
+                alt: "A close-up of the bottom of an iPhone: the graphite dock with Hoy active, and the FAB sphere open into Gasto and Ingreso pills, with a shallow depth of field.",
+                caption: "The sphere opens into Expense and Income.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Capture still comes first",
+            body: [
+              "Capture is where finance apps die: if logging takes effort, nobody does it. The redesign kept every way in and gave the keypad a thin Urbanist figure with a caret, sunken keys and the category as a lilac pill.",
+            ],
+            points: [
+              "**Photograph the receipt**: Claude reads total, merchant and category into a card you confirm.",
+              "**Say the expense out loud**: a forced tool call, flagged for review below 0.7 confidence.",
+              "**Paste the bank's text message**: deliberately no model, an exact parser that cannot invent an amount.",
+              "**Read the card statement**: a PDF becomes dates, the rate and every installment purchase.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/02-registrar",
+                alt: "A dark hand holding an iPhone with olbo's New expense sheet: 128,500 pesos in thin type, the keypad, category pills with Supermercado selected in lilac and a black Guardar gasto button.",
+                caption: "New expense: the figure, the keypad, one lilac pill.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/olbo/03-macro-registrar",
+                alt: "A close-up of the bottom of an iPhone: the Supermercado category pill in lilac and the black Guardar gasto button, with the phone's speaker and USB-C port in focus below.",
+                caption: "Save is black, the category lilac; nothing else has colour.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "The traffic light kept its meaning",
+            body: [
+              "Green, amber and red were re-toned for a light background and appear only on the gauge, the status chip and the pace figure. Income and expenses are told apart by sign and icon, not by colour, so a red is always a warning and never just a purchase.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/09-analisis",
+                alt: "A hand holding an iPhone with olbo's Analysis tab: a dotted gauge with a green arc at 14% of salary and the line Vas al ritmo del mes.",
+                caption: "Analysis: the gauge is the only place green appears.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/olbo/11-personas",
+                alt: "A hand holding an iPhone with olbo's People screen: what each person costs this month against a healthy cap of the net income, each with a green Vas bien chip.",
+                caption: "People: every cap read against the same pace.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+          {
+            title: "Advisor and onboarding",
+            body: [
+              "The advisor's orb became the brand symbol, and its replies sit on ink and glass bubbles. The onboarding lost its orange 3D renders: each step is a thin Urbanist headline, a glass tile with a real piece of the app, and a black tile with the button. Progress dots are ink, the current one lilac.",
+            ],
+            figures: [
+              {
+                src: "/work/olbo/08-asesor",
+                alt: "A dark hand holding an iPhone with olbo's advisor, Tu conciencia: the Ring and Centre symbol, the line Sin filtro. Te digo la verdad de tus números para que reacciones, three suggested questions and the input.",
+                caption: "The advisor: the symbol is the orb.",
+                width: 1800,
+                height: 2400,
+              },
+              {
+                src: "/work/olbo/10-onboarding",
+                alt: "A hand holding an iPhone with the first onboarding step: Que no se te escape ni un peso, a glass tile with a gauge at 62% of salary and a Vas bien chip, an example coffee expense and a black Continuar button.",
+                caption: "Onboarding: a real piece of the app on every step.",
+                width: 1800,
+                height: 2400,
+              },
+            ],
+          },
+        ],
       },
       {
-        src: "/work/olbo/movimientos.webp",
-        alt: "olbo movements list — recorded expenses grouped and categorized, stored locally in IndexedDB.",
-        caption: "Movements, categorized and kept on the device.",
+        id: "process",
+        title: "How it was built",
+        intro: "I designed the direction and approved it; specialised agents carried it out phase by phase.",
+        sections: [
+          {
+            title: "Specialised agents",
+            points: [
+              "**Branding**: the brand foundations, the palette with every contrast pair calculated, the type and the mark.",
+              "**UI lead**: the UI system and a board of every screen and component, approved before any code.",
+              "**Executors**: one phase each, tokens first, then the shell, then the views.",
+              "**QA**: tests, CSP, AA contrast, 44 pt targets and overflow at 390 px, closing every phase.",
+              "**Orchestrator**: audited each session, kept the state and started the next one.",
+            ],
+          },
+          {
+            title: "Chained sessions",
+            body: [
+              "Five sessions, one or two phases each: tokens and shell, Today and capture, the remaining views, icons and cleanup with a final QA, and these mockups. No session reread the history: what mattered lived in a short brief and a living state file, each updated before handing off.",
+              "The rules travelled with them: no hex outside the tokens, animation on transform and opacity only, a version bump with every CSS or JS change, and Doug's confirmation before anything reaches main.",
+            ],
+          },
+          {
+            title: "What did not change",
+            points: [
+              "**The traffic light's math**: the budget module was off limits, and its tests stayed green throughout.",
+              "**Local-first**: data in IndexedDB on the phone; only the AI calls leave it.",
+              "**A strict CSP**: zero inline styles or scripts, even inside SVG.",
+              "**Zero dependencies**: vanilla ES modules across 63 files and no build step.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "Results and learnings",
+        intro: "What shipped, and what this way of working taught.",
+        sections: [
+          {
+            title: "Results",
+            points: [
+              "**A new brand**: palette, type, Ring and Centre, the app icon and the splash, all documented.",
+              "**All 24 views redrawn** in light glass, with the old dark backgrounds, glows and 3D renders removed.",
+              "**647 tests green**, the budget math untouched, AA contrast on states and on the lilac tile.",
+              "**Portfolio-grade captures** at 3x from the real app with demo data, which every image in this case uses.",
+            ],
+          },
+          {
+            title: "Learnings",
+            points: [
+              "**A redesign can subtract.** Most of 2.0 is what left: the dark background, the glows, the multicolour, three typefaces.",
+              "**One accent only works with rules.** \"Once per screen, never as text on light\" is something an agent can check.",
+              "**Two files beat one long memory.** A brief and a living state let every session start clean without losing a decision.",
+              "**Protect the math, change the skin.** Keeping the budget logic off limits is what let the interface change this much.",
+            ],
+          },
+        ],
       },
     ],
     links: [
@@ -294,7 +514,7 @@ export const caseStudies: CaseStudy[] = [
       { label: "Source", href: "https://github.com/dougnuken/bolsillo" },
     ],
     credits:
-      "Design and engineering end to end. Claude worked inside the build and the product; the decisions, and the tests that enforce them, are mine.",
+      "Brand, interface and product direction by Doug Vargas; engineering of 1.0 end to end. Version 2.0 was carried out by specialised AI agents, directed and reviewed phase by phase. The mockup scenes were generated with Higgsfield; every screen in them is a real capture or recording of the app.",
     technologies: [
       "Vanilla JS (ES modules)",
       "PWA & Service Worker",
@@ -302,6 +522,7 @@ export const caseStudies: CaseStudy[] = [
       "node --test",
       "Strict CSP",
       "Claude API",
+      "AI agents",
     ],
     externalLink: { label: "Live app", href: "https://dougnuken.github.io/bolsillo/" },
   },

@@ -12,11 +12,11 @@ for (const theme of ["dark", "light"] as const) {
   });
 }
 
-test("olbo phone frames at 1440 (viewport clip)", async ({ page }) => {
+test("chub phone frames at 1440 (viewport clip)", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await page.goto("/work/chub", { waitUntil: "networkidle" });
   const box = await page.evaluate(() => {
     const el = document.querySelector("[data-phone-frame], [class*='phone']");
     if (!el) return null;
@@ -25,6 +25,6 @@ test("olbo phone frames at 1440 (viewport clip)", async ({ page }) => {
     return true;
   });
   await page.waitForTimeout(900);
-  await page.screenshot({ path: "tests/shots/manual-olbo-frames-1440.png" });
+  await page.screenshot({ path: "tests/shots/manual-chub-frames-1440.png" });
   console.log("frame found:", box);
 });

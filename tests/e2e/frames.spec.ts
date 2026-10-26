@@ -3,11 +3,11 @@ import fs from "node:fs";
 import { setTheme } from "./matrix";
 import { settle } from "./settle";
 
-test("F1 device frame geometry on /work/olbo", async ({ page }) => {
+test("F1 device frame geometry on /work/chub", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await page.goto("/work/chub", { waitUntil: "networkidle" });
   await settle(page);
   const frames = await page.evaluate(() => {
     // a device frame = an element with a 1px border wrapping an <img> or <video>
@@ -45,7 +45,7 @@ test("F1 device frame geometry on /work/olbo", async ({ page }) => {
     if (phone) phone.scrollIntoView({ block: "center", behavior: "auto" });
   });
   await page.waitForTimeout(900);
-  await page.screenshot({ path: "tests/shots/manual-olbo-frames-1440.png" });
+  await page.screenshot({ path: "tests/shots/manual-chub-frames-1440.png" });
 });
 
 test("F2 wordmark strip wrapping at 320", async ({ page }) => {
