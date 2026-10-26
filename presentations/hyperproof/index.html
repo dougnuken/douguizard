@@ -293,6 +293,22 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 .pbtns { margin-top: 26px; display: flex; gap: 10px; }
 .pbtns button { flex: 1; height: 54px; border-radius: 14px; border: 1px solid #444; background: #1c1c1e; color: #fff; font: 600 18px var(--font); cursor: pointer; }
 .pbtns button:active { transform: scale(.97); }
+/* Phone remote: the presenter view laid out for one hand. The laptop never shows it. */
+#p-sync { font: 13px var(--mono); color: #888; margin-top: 6px; }
+#p-sync.is-on { color: #5ee08f; }
+#p-mode { display: none; }
+body.phone #pview { grid-template-columns: 1fr; gap: 14px; padding: 16px 16px calc(116px + env(safe-area-inset-bottom)); min-height: 0; }
+body.phone .ptitle { font-size: 24px; margin: 4px 0 12px; }
+body.phone .pnotes { font-size: 20px; line-height: 1.5; }
+body.phone .pside { border-left: 0; padding-left: 0; border-top: 1px solid #333; padding-top: 14px; }
+body.phone .pclock { font-size: 34px; }
+body.phone .pkeys { display: none; }
+body.phone .pbtns { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(17,17,17,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid #2a2a2a; z-index: 5; }
+body.phone .pbtns button { height: 72px; font-size: 22px; }
+body.phone .pbtns #p-nextbtn { flex: 1.7; background: #3b46ff; border-color: #3b46ff; }
+body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; border: 1px solid #444; color: #bbb; border-radius: 10px; padding: 8px 12px; font: 13px var(--mono); }
+#btn-remote { display: none; }
+@media (hover: none) and (pointer: coarse) { #btn-remote { display: inline-flex; } }
 
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide.is-active, #progress, #drawer { transition: opacity 160ms linear !important; }
@@ -1168,6 +1184,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <button id="prev" aria-label="Previous slide">←</button>
     <button id="next" aria-label="Next slide">→</button>
     <button id="btn-notes" title="Speaker notes (N)">Notes</button>
+    <button id="btn-remote" title="Remote">Remote</button>
     <button id="btn-presenter" title="Presenter window (P)">Presenter</button>
     <a id="btn-lang" href="index.es.html" title="Versión en español">ES</a>
   </span>
@@ -1178,6 +1195,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
 <div id="pview">
   <div>
     <div class="pcur" id="p-cur"></div>
+    <div id="p-sync"></div>
     <div class="ptitle" id="p-title"></div>
     <div class="pnotes" id="p-notes"></div>
   </div>
@@ -1185,8 +1203,9 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     <div class="pclock" id="p-timer">00:00</div>
     <div class="meta" id="p-clock"></div>
     <div class="pnext">Next<b id="p-next"></b></div>
+    <button id="p-mode">Show the slides here</button>
     <div class="pbtns"><button id="p-prev">← Prev</button><button id="p-nextbtn">Next →</button></div>
-    <p class="meta" style="margin-top:18px">Keys: ← → space · R resets the timer</p>
+    <p class="meta pkeys" style="margin-top:18px">Keys: ← → space · R resets the timer</p>
   </div>
 </div>
 
@@ -1222,6 +1241,10 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
   var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
   var N = slides.length, cur = 0;
   var isPresenter = /[?&]presenter\b/.test(location.search);
+  var mode = null; try { mode = localStorage.getItem("dv-mode"); } catch (e) {}
+  var isPhone = !isPresenter && (mode ? mode === "remote" : matchMedia("(hover: none) and (pointer: coarse)").matches && Math.min(screen.width, screen.height) < 900);
+  if (isPhone) isPresenter = true;
+  function setMode(m) { try { localStorage.setItem("dv-mode", m); } catch (e) {} location.reload(); }
   var deck = document.getElementById("deck");
   var presenterWin = null;
 
@@ -1251,7 +1274,7 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     var lang = document.getElementById("btn-lang"); if (lang) lang.href = lang.getAttribute("href").split("#")[0] + "#" + (cur + 1);
     if (history.replaceState) history.replaceState(null, "", location.pathname + location.search + "#" + (cur + 1));
     if (isPresenter) renderPresenter();
-    if (!fromRemote) post({ type: "goto", i: cur });
+    if (!fromRemote) { post({ type: "goto", i: cur }); share(); }
   }
 
   function post(msg) {
@@ -1308,9 +1331,11 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     document.getElementById("p-title").textContent = s.dataset.title || "";
     document.getElementById("p-notes").innerHTML = notesOf(cur);
     document.getElementById("p-next").textContent = nx ? nx.dataset.title : "End";
+    if (isPhone) window.scrollTo(0, 0);
   }
   if (isPresenter) {
     document.body.classList.add("presenter");
+    if (isPhone) document.body.classList.add("phone");
     document.title = "Presenter · " + document.title;
     document.getElementById("p-prev").addEventListener("click", function () { go(cur - 1); });
     document.getElementById("p-nextbtn").addEventListener("click", function () { go(cur + 1); });
@@ -1321,6 +1346,38 @@ body.presenter #pview { display: grid; grid-template-columns: 1fr 360px; gap: 28
     }, 1000);
     if (window.opener) window.opener.postMessage({ type: "hello" }, "*");
   }
+
+
+  // Phone remote: on a phone this page opens as the presenter view (notes, timer, big buttons).
+  // Both screens share the slide through the artifact's live room, so the laptop follows the
+  // phone and the notes never appear on the screen being shared.
+  var room = null;
+  function share() { if (room && room.connected()) room.emit("slide", { i: cur }).catch(function () {}); }
+  function setSync(others) {
+    var el = document.getElementById("p-sync"); if (!el) return;
+    el.classList.toggle("is-on", others > 0);
+    el.textContent = !room ? "Not synced: open this link from claude.ai on both devices" : others > 0 ? "● Synced with your laptop" : "○ Open this same link on your laptop";
+  }
+  if (window.claude && window.claude.use) {
+    window.claude.use("room").then(function (r) {
+      if (!r) { setSync(0); return; }
+      room = r;
+      r.on("slide", function (m) { if (!m.sameTab && m.data && typeof m.data.i === "number") go(m.data.i, true); });
+      r.onPeers(function (c) {
+        setSync(c.peers.filter(function (p) { return !p.sameTab; }).length);
+        if (!isPhone && c.joined.some(function (p) { return !p.sameTab; })) share();
+      });
+    }).catch(function () { setSync(0); });
+  } else setSync(0);
+  var wake = null;
+  function keepAwake() {
+    if (!isPhone || wake || !navigator.wakeLock) return;
+    navigator.wakeLock.request("screen").then(function (w) { wake = w; w.addEventListener("release", function () { wake = null; }); }).catch(function () {});
+  }
+  document.addEventListener("click", keepAwake);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) { wake = null; keepAwake(); } });
+  document.getElementById("p-mode").addEventListener("click", function () { setMode(isPhone ? "slides" : "remote"); });
+  var br = document.getElementById("btn-remote"); if (br) br.addEventListener("click", function () { setMode("remote"); });
 
   var start = parseInt((location.hash || "").slice(1), 10);
   slides[0].classList.add("is-active");

@@ -22,6 +22,12 @@ Lunes 26 de octubre de 2026, 2:00 p. m. · 60 minutos · equipo de diseño de Hy
 | `C` | Oculta la barra inferior y el progreso |
 | `F` | Pantalla completa |
 
+**Control desde el celular (versión publicada en claude.ai):** abre el MISMO enlace del deck en la laptop y en el celular,
+con tu cuenta de claude.ai en los dos. El celular se abre solo como control remoto: guion, cronómetro, "siguiente" y botones
+grandes ← / →. La laptop sigue al celular y nunca muestra el guion (comparte esa pestaña en Meet/Zoom). Arriba del guion debe
+decir «● Synced with your laptop»; si dice otra cosa, recarga las dos. Funciona por internet, no hace falta la misma red Wi-Fi.
+El celular no se apaga mientras lo usas. Con el archivo local (doble clic en `index.html`) esto no funciona: usa el enlace publicado.
+
 **Versión en español:** `index.es.html` (botón `ES`/`EN` abajo a la derecha; conserva la diapositiva en la que estás).
 Es idéntica a la inglesa, para leerla y entenderla antes de presentar.
 
