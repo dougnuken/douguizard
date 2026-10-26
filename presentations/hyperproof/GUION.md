@@ -37,8 +37,8 @@ EN: I have twelve years in product design. My focus is complex products and desi
 ES: Tengo doce años en diseño de producto. Mi enfoque son los productos complejos y los sistemas de diseño.
 EN: Since 2018, I've worked mostly on products with strict rules: a bank, a government platform, a medical clinic.
 ES: Desde 2018 he trabajado sobre todo en productos con reglas estrictas: un banco, una plataforma del gobierno, una clínica médica.
-EN: I also write code, so I build my own prototypes. That'll matter in a moment.
-ES: También escribo código, así que construyo mis propios prototipos. Eso va a importar en un momento.
+EN: I'm not a developer, but I know the basics of HTML and CSS. I build working prototypes by directing AI agents. That'll matter in a moment.
+ES: No soy desarrollador, pero entiendo lo básico de HTML y CSS. Construyo prototipos funcionales dirigiendo agentes de IA. Eso va a importar en un momento.
 EN: [DOUG: one personal detail, for example what you enjoy outside work. Keep it to one short sentence.]
 ES: [DOUG: un detalle personal, por ejemplo lo que disfrutas fuera del trabajo. Una sola frase corta.]
 → EN: Now let me show you my path in one line.
@@ -115,8 +115,8 @@ EN: First, requirements. I start from what already exists. Forms, files and emai
 ES: Primero, los requisitos. Empiezo por lo que ya existe. Los formularios, archivos y correos muestran cómo ocurre realmente el trabajo.
 EN: I also challenge the plan early. At DC Medical, I asked for a hard review of data, security and cost.
 ES: También cuestiono el plan temprano. En DC Medical pedí una revisión exigente de datos, seguridad y costo.
-EN: The plan changed twice before I wrote any code.
-ES: El plan cambió dos veces antes de que yo escribiera código.
+EN: The plan changed twice before we built anything.
+ES: El plan cambió dos veces antes de construir cualquier cosa.
 EN: And I like people to approve something that works. A document can be read in many ways.
 ES: Y me gusta que la gente apruebe algo que funciona. Un documento se puede leer de muchas maneras.
 EN: A prototype shows the problems early, when they're cheap to fix.
@@ -322,8 +322,8 @@ EN: Same pattern as Naowee: I mapped the errors and flows first, then proved the
 ES: El mismo patrón de Naowee: mapeé primero los errores y los flujos, y luego los probé con prototipos.
 EN: I'm showing you this because you'll recognize it. Many teams need the same rules, and someone must keep them.
 ES: Les muestro esto porque lo van a reconocer. Muchos equipos necesitan las mismas reglas, y alguien debe cuidarlas.
-→ EN: So that's the bank. Any questions? If not, now something small: a clinic, where I did everything myself.
-→ ES: Eso es el banco. ¿Hay preguntas? Si no, ahora algo pequeño: una clínica, donde yo hice todo.
+→ EN: So that's the bank. Any questions? If not, now something small: a clinic, where I led the whole product myself.
+→ ES: Eso es el banco. ¿Hay preguntas? Si no, ahora algo pequeño: una clínica, donde yo dirigí todo el producto.
 
 ## 20 · DC Medical · 26:00
 CUE: Antes de avanzar, aclara que usarás datos de demostración. Esta es la apertura del caso 3. Solo un eco corto de la idea central.
@@ -331,10 +331,10 @@ EN: This one is personal: I co-own this clinic with the doctor. It's small, the 
 ES: Este es personal: soy copropietario de esta clínica con el médico. Es pequeña, lo opuesto a un banco en tamaño. Pero las reglas son igual de estrictas.
 EN: It's a web app that runs a medical aesthetics clinic, mostly from the secretary's phone. A treatment can't start until it's paid for.
 ES: Es una aplicación web que maneja una clínica de medicina estética, sobre todo desde el teléfono de la secretaria. Un tratamiento no puede empezar hasta que esté pagado.
-EN: I designed and built it alone. It has been live since September 21, 2026.
-ES: Lo diseñé y lo construí yo solo. Está en producción desde el 21 de septiembre de 2026.
-EN: Here are the numbers. 14 days from first code to the city agenda. 3 steps with locks.
-ES: Aquí están los números. 14 días desde el primer código hasta la agenda por ciudad. 3 pasos con bloqueos.
+EN: I designed it, and I built it by directing AI agents, with no development team. It has been live since September 21, 2026.
+ES: Lo diseñé y lo construí dirigiendo agentes de IA, sin un equipo de desarrollo. Está en producción desde el 21 de septiembre de 2026.
+EN: Here are the numbers. 14 days from the first prototype to the city agenda. 3 steps with locks.
+ES: Aquí están los números. 14 días desde el primer prototipo hasta la agenda por ciudad. 3 pasos con bloqueos.
 EN: 0 new databases, because Google Drive stays the main record. And 12 automated test suites.
 ES: 0 bases de datos nuevas, porque Google Drive sigue siendo el registro principal. Y 12 suites de pruebas automáticas.
 EN: The short version: everything existed, but nothing was connected. So I used locks instead of reminders.
@@ -501,12 +501,12 @@ ES: Los prototipos usan el sistema, así que lo que aprobamos es lo que se const
 
 ## 30 · Tools · 36:30
 CUE: Si vas tarde, dila en 1 minuto o menos. Es la diapositiva que se corta primero.
-EN: A quick word on tools, since they follow what I've shown you. I use Figma to decide, and code to prove it.
-ES: Una palabra rápida sobre herramientas, porque siguen lo que les mostré. Uso Figma para decidir y código para probarlo.
-EN: I design in Figma. I also build prototypes in code with Claude Code and Cursor.
-ES: Diseño en Figma. También construyo prototipos en código con Claude Code y Cursor.
-EN: AI drafts, and a person decides. I use AI to build prototypes and to review design systems.
-ES: La IA hace un borrador y una persona decide. Uso IA para construir prototipos y revisar sistemas de diseño.
+EN: A quick word on tools, since they follow what I've shown you. I use Figma to decide, and a working prototype to prove it.
+ES: Una palabra rápida sobre herramientas, porque siguen lo que les mostré. Uso Figma para decidir y un prototipo funcional para probarlo.
+EN: I design in Figma. Then I direct AI agents in Claude Code and Cursor to build the prototype. I know enough HTML and CSS to review what they make.
+ES: Diseño en Figma. Luego dirijo agentes de IA en Claude Code y Cursor para construir el prototipo. Sé lo suficiente de HTML y CSS para revisar lo que hacen.
+EN: AI drafts, and a person decides. I orchestrate the agents, and I make the decisions.
+ES: La IA hace un borrador y una persona decide. Yo orquesto los agentes y tomo las decisiones.
 EN: In the products I ship, AI can fill a form, but a person confirms before anything is saved.
 ES: En los productos que lanzo, la IA puede llenar un formulario, pero una persona confirma antes de guardar.
 → EN: Now, to close, what I'd bring to your team.

@@ -57,7 +57,7 @@ si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módu
 
 - Into Naowee: *"The biggest rules problem I work on is in government: let me show you Naowee."*
 - Out of Naowee: *"Naowee has 15 roles. The next case is about scale: a bank with many teams."*
-- Into DC: *"The bank taught me governance. Now a small product where I did everything myself."*
+- Into DC: *"The bank taught me governance. Now a small product where I led everything, building it with AI agents."*
 - Out of DC: *"All three cases depend on a design system, so let me talk about that."*
 
 ## Antes de la llamada
@@ -108,7 +108,7 @@ Los números de la diapositiva de saldos (24) están marcados como ilustrativos.
    At DC, the city colors were checked for color blindness, and color never works alone: the name sits beside the dot. Tap targets are at least 44 px. `[DOUG: WCAG level and practice at Mercadolibre or the bank]`
 
 10. **How do you use AI in your work?**
-    I prototype in code with Claude Code and Cursor. At Mercadolibre we used AI audits to catch drift in Figma before release. In products, AI drafts and a person confirms: at DC, the voice note fills the form, but nothing is saved until someone checks it.
+    I'm not a developer: I direct AI agents in Claude Code and Cursor to build working prototypes, and I know enough HTML and CSS to review them. At Mercadolibre we used AI audits to catch drift in Figma before release. In products, AI drafts and a person confirms: at DC, the voice note fills the form, but nothing is saved until someone checks it.
 
 11. **How do you hand off to engineering?**
     The prototype and the design system are the contract: engineering gets a resolved target, not a spec. At DC the business rules are tested functions. `[DOUG: tokens, Storybook, annotations you use]`
