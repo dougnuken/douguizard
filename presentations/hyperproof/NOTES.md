@@ -48,15 +48,15 @@ El texto vive en `GUION.md`; si lo editas, corre `python presentations\hyperproo
 | Proceso y requisitos | 5–6 | 5 |
 | Naowee | 7–12 | 7 |
 | Banco de Occidente | 13–19 | 8 |
-| DC Medical + demo en vivo | 20–28 | 9 |
-| Sistemas, herramientas, cierre | 29–32 | 6 |
-| Preguntas (anexo 33–34 si hace falta) | — | 19 |
+| DC Medical + demo en vivo | 20–27 | 8 |
+| Sistemas, herramientas, cierre | 28–31 | 6 |
+| Preguntas (anexo 32–34 si hace falta) | — | 20 |
 
 **Si te interrumpen con preguntas**, respóndelas ahí: es la mejor señal. Corta en este orden:
-herramientas (29–30 en 1 min) → Occidente a 5 min (salta 16) → DC a 6 min (salta 26).
-Nunca cortes «Your world is already in my work» (4) ni «What I would bring» (31).
+herramientas (28–29 en 1 min) → Occidente a 5 min (salta 16) → DC a 6 min (salta 25).
+Nunca cortes «Your world is already in my work» (4) ni «What I would bring» (30).
 
-**Anexo (33–34):** carga de trabajo y design system de Naowee. Salieron del recorrido para que el caso dure ~7 min;
+**Anexo (32–34):** carga de trabajo y design system de Naowee, y «Never add up balances» de DC. Salieron del recorrido para que el caso dure ~7 min;
 si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módulos, pulsa `O` y salta ahí.
 
 ## Transiciones (dilas tal cual)
@@ -68,7 +68,7 @@ si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módu
 
 ## Antes de la llamada
 
-- [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 11, 13, 17, 20, 23, 25, 26, 34).
+- [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 7, 8, 10, 11, 13, 14, 17, 20, 23, 24, 25, 33).
 - [ ] Demo de DC lista: en `dc-medical-dashboard`, `python tools/demo_server.py 8787` → http://localhost:8787 (editora) y
       http://localhost:8787/?rol=lector (lector). Ten las dos pestañas abiertas. No inicies sesión en el panel real durante la llamada.
 - [ ] Abre en otra pestaña el sistema de diseño de Naowee: https://naowee-tech.github.io/design-naowee-design-system/
@@ -78,11 +78,11 @@ si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módu
 ## Pendientes que solo tú puedes llenar `[DOUG]`
 
 1. Diapositiva 2 (notas): un detalle personal — qué te gusta fuera del trabajo.
-2. Diapositiva 28 (notas): cuánto tarda hoy encontrar el saldo de una paciente (antes eran ~10 min).
+2. Diapositiva 27 (notas): cuánto tarda hoy encontrar el saldo de una paciente (antes eran ~10 min).
 3. Preguntas 3, 4, 6, 8, 9, 11 y 12 abajo: una historia o dato propio en cada una.
 
 Lo demás sale de tu sitio (`src/data/work.ts`, `cv.ts`, `testimonials.ts`); no hay cifras inventadas.
-Los números de la diapositiva de saldos (24) están marcados como ilustrativos.
+Los números de la diapositiva de saldos (34, anexo) están marcados como ilustrativos.
 
 ## Banco de preguntas (respuestas en inglés sencillo)
 

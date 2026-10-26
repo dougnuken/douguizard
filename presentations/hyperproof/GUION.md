@@ -1,6 +1,6 @@
 # GUION · Hyperproof · Teleprompter de Doug
 
-Idea central (la dices completa solo en la 04 y en la 31; en los casos solo un eco corto):
+Idea central (la dices completa solo en la 04 y en la 30; en los casos solo un eco corto):
 **"In complex products, the roles and the statuses are the product. I map them first, then I prove them with a working prototype."**
 
 # Antes de empezar
@@ -9,10 +9,10 @@ Idea central (la dices completa solo en la 04 y en la 31; en los casos solo un e
 - **Fillers y "...":** los "..." son lugares para pausar y respirar. Las muletillas (so, well, you know, I mean) son opcionales: si te estorban, sáltalas y lee la frase limpia.
 - **Pausas:** cuenta "uno, dos" en silencio después de la idea central y después de cada cifra (15 roles, 45+ estados, 30 procesos). Deja que la diapositiva trabaje. Las dos pausas de preguntas son después de Naowee (12) y después de Occidente (19).
 - **Si pierdes el hilo:** mira el título de la diapositiva, di la idea central en una frase y sigue con el conector. Frase de rescate: "Let me come back to the main idea." Si aún no sale, pulsa `P`/`O` y salta a la siguiente.
-- **Si te interrumpen:** sonríe y responde ahí mismo, es buena señal. Luego regresa con "Back to the case." y retoma desde el último punto. Si vas tarde, corta en este orden: herramientas (30) → Occidente a 5 min (salta 16) → DC a 6 min (salta 26). Nunca cortes la 04 ni la 31.
+- **Si te interrumpen:** sonríe y responde ahí mismo, es buena señal. Luego regresa con "Back to the case." y retoma desde el último punto. Si vas tarde, corta en este orden: herramientas (29) → Occidente a 5 min (salta 16) → DC a 6 min (salta 25). Nunca cortes la 04 ni la 30.
 - **Si no entiendes una pregunta:** no adivines. Di: "Sorry, can you say that again, more slowly?" o "Let me check I understand: you're asking about…". Si sigue difícil: "I want to answer well. Can you give me one example?" Responde corto y vuelve a la idea central.
-- **Demo de DC (27):** ten las dos pestañas abiertas (editora y `?rol=lector`). Si falla, quédate en la diapositiva y cuéntalo en voz alta; no depures en la llamada. No entres al panel real.
-- **Anexo (33, 34):** carga de trabajo y design system de Naowee. No los presentes; úsalos solo si preguntan.
+- **Demo de DC (26):** ten las dos pestañas abiertas (editora y `?rol=lector`). Si falla, quédate en la diapositiva y cuéntalo en voz alta; no depures en la llamada. No entres al panel real.
+- **Anexo (32–34):** carga de trabajo y design system de Naowee, y los saldos de DC. No los presentes; úsalos solo si preguntan.
 - **Cada caso es una historia corta:** al abrir (07, 13, 20) di la versión corta; luego problema, decisión y costo. Los conectores cambian de forma a propósito: no los memorices, léelos.
 
 ---
@@ -213,7 +213,7 @@ ES: Piensen en los resultados de pruebas de un control con una fecha de vencimie
 → ES: Junto todo: qué pasó con Naowee.
 
 ## 12 · Naowee · Outcome · 16:45
-CUE: Cierre del caso 1. Habla despacio. Después del conector, PAUSA: 3 segundos de silencio y espera preguntas. Si preguntan por carga de trabajo o por el design system de Naowee, pulsa O y salta al anexo (33, 34).
+CUE: Cierre del caso 1. Habla despacio. Después del conector, PAUSA: 3 segundos de silencio y espera preguntas. Si preguntan por carga de trabajo o por el design system de Naowee, pulsa O y salta al anexo (32, 33).
 EN: So, what happened: thirty legal processes moved from files to one platform, with more than 130 screens on one design system.
 ES: Entonces, qué pasó: treinta procesos legales pasaron de archivos a una sola plataforma, con más de 130 pantallas sobre un solo sistema de diseño.
 EN: And the business team approves the working product, not a document.
@@ -391,34 +391,15 @@ EN: Of course, the admin has more setup. But, you know, nobody sees a button the
 ES: Claro, el administrador tiene más configuración. Pero nadie ve un botón que no puede usar. Y el servidor también verifica, no solo la pantalla.
 EN: For you, this is roles and permissions by type of object, with presets for the usual cases.
 ES: Para ustedes, son roles y permisos por tipo de objeto, con opciones predefinidas para los casos habituales.
-→ EN: Now, a decision about numbers. Let me tell you what went wrong first.
-→ ES: Ahora, una decisión sobre números. Primero les cuento qué salió mal.
+→ EN: Now, the device where this app really lives... the phone.
+→ ES: Ahora, el dispositivo donde esta aplicación realmente vive... el teléfono.
 
-## 24 · DC · Balances · 29:00
-CUE: Señala la tabla con los tres pagos, luego "Adding the column: $1.600.000" y "Latest row: $0". Los números son ilustrativos; dilo si te preguntan. Pausa tras "a debt that did not exist".
-EN: Okay, so this is the decision I learned the most from. Each payment row shows what the patient still owes after that payment.
-ES: De esta decisión fue de la que más aprendí. Cada fila de pago muestra cuánto debe todavía la paciente después de ese pago.
-EN: Look at this example. Three payments. The first version added up the column. It showed a debt that didn't exist...
-ES: Miren este ejemplo. Tres pagos. La primera versión sumó la columna. Mostró una deuda que no existía...
-EN: Thirty-eight million pesos. That's about nine thousand dollars.
-ES: Treinta y ocho millones de pesos. Eso es cerca de nueve mil dólares.
-EN: In the example, adding the column gives 1,600,000. But the patient really owes zero.
-ES: En el ejemplo, sumar la columna da 1.600.000. Pero la paciente en realidad debe cero.
-EN: So decision three: never add up balances. Now the app reads only the latest row, and an automated test protects this rule.
-ES: Así que decisión tres: nunca sumar saldos. Ahora la aplicación lee solo la última fila, y una prueba automática protege esta regla.
-EN: Here's why I'm showing you this. In any product with a lot of data, the worst bug is... a number that looks correct.
-ES: Les muestro esto por una razón. En cualquier producto con muchos datos, el peor error es un número que parece correcto.
-EN: Money rules must be tested, not trusted.
-ES: Las reglas de dinero se prueban, no se les cree.
-→ EN: Now, the device where this app really lives: the phone.
-→ ES: Ahora, el dispositivo donde esta aplicación realmente vive: el teléfono.
-
-## 25 · DC · The phone · 29:50
+## 24 · DC · The phone · 29:00
 CUE: Muestra la captura del teléfono. Habla de la regla de la IA con calma: es la frase que pueden citar después.
 EN: Then I looked at where the work really happens. The secretary runs the clinic from her iPhone... often from the car.
 ES: Luego miré dónde ocurre realmente el trabajo. La secretaria maneja la clínica desde su iPhone, a menudo desde el carro.
-EN: So decision four: the phone changed the design. The app installs on the phone like an app. Tables become cards.
-ES: Así que decisión cuatro: el teléfono cambió el diseño. La aplicación se instala en el teléfono como una app. Las tablas se vuelven tarjetas.
+EN: So decision three: the phone changed the design. The app installs on the phone like an app. Tables become cards.
+ES: Así que decisión tres: el teléfono cambió el diseño. La aplicación se instala en el teléfono como una app. Las tablas se vuelven tarjetas.
 EN: Buttons are big enough for a thumb.
 ES: Los botones son lo bastante grandes para el pulgar.
 EN: She can say who came, for what, and what she paid. A voice note fills the new-patient form.
@@ -428,7 +409,7 @@ ES: Y esta es la regla para la IA. La IA llena el formulario, pero nada se guard
 → EN: One more detail, about color and access for all people.
 → ES: Un detalle más, sobre el color y el acceso para todas las personas.
 
-## 26 · DC · City colors · 30:30
+## 25 · DC · City colors · 29:40
 CUE: Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.
 EN: This one comes from the doctor's calendar. He works in three cities, and it must show where he is at a glance.
 ES: Este viene del calendario del médico. Él trabaja en tres ciudades, y debe mostrar dónde está de un vistazo.
@@ -439,7 +420,7 @@ ES: Probamos los colores para daltonismo. Y el nombre de la ciudad siempre está
 → EN: Now, let me show you the real thing. A live demo, three minutes.
 → ES: Ahora les muestro lo real. Una demostración en vivo, tres minutos.
 
-## 27 · DC · Live demo · 31:00
+## 26 · DC · Live demo · 30:10
 CUE: Cambia a la pestaña de la demo (http://localhost:8787, editora). Antes di la frase de datos de demostración. Orden: tablero 30 s, caso de paciente 60 s, usuarios y acceso 45 s, vista de lector con ?rol=lector 30 s, nota de voz opcional 15 s. Si falla, quédate en esta diapositiva y no depures. No entres al panel real.
 EN: "This is a private product with patient data. I'll show demo data only."
 ES: "Este es un producto privado con datos de pacientes. Solo mostraré datos de demostración."
@@ -462,7 +443,7 @@ ES: Y Google Drive sigue siendo el registro principal. Si la aplicación se cae,
 → EN: That's the demo. Let me go back to the slides and close this case.
 → ES: Esa es la demo. Vuelvo a las diapositivas y cierro este caso.
 
-## 28 · DC · Outcome · 34:00
+## 27 · DC · Outcome · 33:10
 CUE: Vuelve a la pestaña del deck. Respira. Es el cierre del caso 3 y de los tres casos: haz el recap corto.
 EN: So, what happened: each patient case now shows what's owed, next to the next step.
 ES: Entonces, lo que pasó: cada caso de paciente ahora muestra lo que se debe, junto al siguiente paso.
@@ -479,7 +460,7 @@ ES: Y en DC, bloqueos y reglas con pruebas.
 → EN: So that's three cases. What do they share? A design system. Let me talk about that.
 → ES: Esos son tres casos. ¿Qué comparten? Un sistema de diseño. Hablemos de eso.
 
-## 29 · Design systems · 35:00
+## 28 · Design systems · 34:10
 CUE: Señala las tres columnas de izquierda a derecha. Tiempo: 1,5 minutos.
 EN: Let me think... yes, something I noticed in all three cases: the hard part of a design system isn't the button. It's the rules for people.
 ES: Algo que noté en los tres casos: lo difícil de un sistema de diseño no es el botón. Son las reglas para las personas.
@@ -498,7 +479,7 @@ ES: Los prototipos usan el sistema, así que lo que aprobamos es lo que se const
 → EN: Next, the tools I use to decide and to prove.
 → ES: Ahora, las herramientas que uso para decidir y para probar.
 
-## 30 · Tools · 36:30
+## 29 · Tools · 35:40
 CUE: Si vas tarde, dila en 1 minuto o menos. Es la diapositiva que se corta primero.
 EN: Okay, a quick word on tools, since they follow what I've shown you. I use Figma to decide, and a working prototype to prove it.
 ES: Bueno, una palabra rápida sobre herramientas, porque siguen lo que les mostré. Uso Figma para decidir y un prototipo funcional para probarlo.
@@ -511,7 +492,7 @@ ES: En los productos que lanzo, la IA puede llenar un formulario, pero una perso
 → EN: Now, to close, what I'd bring to your team.
 → ES: Ahora, para cerrar, lo que yo traería a su equipo.
 
-## 31 · For Hyperproof · 37:30
+## 30 · For Hyperproof · 36:40
 CUE: Diapositiva que no se corta. Habla lento, mira a la cámara en la última frase. Señala cada punto 01, 02, 03.
 EN: So, to close, let me go back to the beginning. When I read about Hyperproof, I saw controls, evidence, owners, reviewers and audits.
 ES: Entonces, para cerrar, vuelvo al principio. Cuando leí sobre Hyperproof, vi controles, evidencia, responsables, revisores y auditorías.
@@ -530,7 +511,7 @@ ES: Y esto es lo que me llevo de los tres casos. En los productos complejos, los
 → EN: Thank you. Now I'd love to hear your questions.
 → ES: Gracias. Ahora me encantaría escuchar sus preguntas.
 
-## 32 · Thank you · 40:30
+## 31 · Thank you · 39:40
 CUE: Deja esta diapositiva abierta durante las preguntas. Sonríe y espera. Pulsa O para saltar a cualquier diapositiva si una pregunta lo pide. Preguntas con más probabilidad: ver el banco de preguntas en NOTES.md.
 EN: Thank you... I'd love to hear your questions.
 ES: Gracias. Me encantaría escuchar sus preguntas.
@@ -539,7 +520,7 @@ ES: Pueden encontrarme en douguizard.com, en LinkedIn o por correo.
 → EN: Please, go ahead. What would you like to ask?
 → ES: Por favor, adelante. ¿Qué les gustaría preguntar?
 
-## 33 · Backup · Naowee workload
+## 32 · Backup · Naowee workload
 CUE: ANEXO, solo si preguntan (pulsa O para llegar aquí). Haz la asignación en la captura o señala el contador que baja de 6 a 5. Di "from 6 to 5" despacio.
 EN: Well, the last thing I looked at was the coordinator's side. Coordinators assigned new requests without knowing who already had too much work.
 ES: Bueno, lo último que miré fue el lado del coordinador. Los coordinadores asignaban solicitudes nuevas sin saber quién ya tenía demasiado trabajo.
@@ -554,7 +535,7 @@ ES: Es como asignar responsables de controles y revisores mientras ven su carga 
 → EN: Does that answer your question?
 → ES: ¿Eso responde su pregunta?
 
-## 34 · Backup · Naowee design system
+## 33 · Backup · Naowee design system
 CUE: ANEXO, solo si preguntan (pulsa O para llegar aquí). Muestra el campo de texto con sus ocho estados. Opcional: abre el sitio vivo del sistema de diseño (pestaña ya abierta). Si vas tarde, no lo abras.
 EN: So, with eight modules, the question was how to keep them consistent. Here's the system behind it. One design system, not eight different styles.
 ES: Entonces, con ocho módulos, la pregunta era cómo mantenerlos consistentes. Aquí está el sistema que lo sostiene. Un solo sistema de diseño, no ocho estilos distintos.
@@ -568,6 +549,25 @@ EN: Look at the text field: idle, active, loading, validated, caution, error, di
 ES: Miren el campo de texto: en reposo, activo, cargando, validado, advertencia, error, deshabilitado, solo lectura.
 EN: Those are statuses again... even in one small component.
 ES: Son estados otra vez, incluso en un componente pequeño.
+→ EN: Does that answer your question?
+→ ES: ¿Eso responde su pregunta?
+
+## 34 · Backup · DC · Balances
+CUE: ANEXO, solo si preguntan por datos o por errores (pulsa O para llegar aquí). Señala la tabla con los tres pagos, luego "Adding the column: $1.600.000" y "Latest row: $0". Los números son ilustrativos; dilo si te preguntan. Pausa tras "a debt that did not exist".
+EN: Okay, so this is the decision I learned the most from. Each payment row shows what the patient still owes after that payment.
+ES: De esta decisión fue de la que más aprendí. Cada fila de pago muestra cuánto debe todavía la paciente después de ese pago.
+EN: Look at this example. Three payments. The first version added up the column. It showed a debt that didn't exist...
+ES: Miren este ejemplo. Tres pagos. La primera versión sumó la columna. Mostró una deuda que no existía...
+EN: Thirty-eight million pesos. That's about nine thousand dollars.
+ES: Treinta y ocho millones de pesos. Eso es cerca de nueve mil dólares.
+EN: In the example, adding the column gives 1,600,000. But the patient really owes zero.
+ES: En el ejemplo, sumar la columna da 1.600.000. Pero la paciente en realidad debe cero.
+EN: So the rule became: never add up balances. Now the app reads only the latest row, and an automated test protects this rule.
+ES: Así que la regla quedó así: nunca sumar saldos. Ahora la aplicación lee solo la última fila, y una prueba automática protege esta regla.
+EN: Here's why I'm showing you this. In any product with a lot of data, the worst bug is... a number that looks correct.
+ES: Les muestro esto por una razón. En cualquier producto con muchos datos, el peor error es un número que parece correcto.
+EN: Money rules must be tested, not trusted.
+ES: Las reglas de dinero se prueban, no se les cree.
 → EN: Does that answer your question?
 → ES: ¿Eso responde su pregunta?
 
