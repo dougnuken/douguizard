@@ -318,6 +318,10 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
 @media (prefers-reduced-transparency: reduce) {
   #drawer, #overview { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
+/* Cascade: each block of the active slide fades up in reading order (see reveal() in the script). */
+@keyframes rv { from { opacity: 0; translate: 0 18px; filter: blur(6px); } }
+.slide.is-active .rv { animation: rv 640ms var(--ease) var(--d, 0ms) backwards; }
+@media (prefers-reduced-motion: reduce) { .slide.is-active .rv { animation: none; } }
 </style>
 </head>
 <body>
@@ -1258,12 +1262,37 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
   function notesOf(i) { var n = slides[i] && slides[i].querySelector(".notes"); return n ? n.innerHTML : ""; }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
+  // Cascade reveal: title, rows, columns and images enter one after another when a slide opens.
+  var UNITS = ".kicker, .title, .display, .lead, .body, .bridge, .roleline, .statement, .quote, .stage, .moment > div, .kpis > div, .timeline > li, .steps > li, .map > *, .phase, .arrow, .node, .verdicts > div, .systems > *, .tools > div, .bring > *, .ai-rule, .cover-top, .cover-copy > *, .cover-hero, tr, h4, .who, .link";
+  function reveal(s) {
+    var found = Array.prototype.slice.call(s.querySelectorAll(UNITS)).filter(function (el) { return !el.closest(".notes"); });
+    // anything left at the top of the slide or a column gets its own step too
+    s.querySelectorAll(":scope > *, .col > *").forEach(function (el) {
+      if (el.matches(".notes, script") || found.indexOf(el) >= 0) return;
+      if (!found.some(function (u) { return el.contains(u); })) found.push(el);
+    });
+    var units = found.filter(function (el) { return !found.some(function (o) { return o !== el && o.contains(el); }); });
+    units.sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    var step = 0, lastMapRow = null;
+    units.forEach(function (el) {
+      el.classList.remove("rv");
+      if (el.parentElement.classList.contains("map")) {   // a grid row enters together
+        var row = Math.floor(Array.prototype.indexOf.call(el.parentElement.children, el) / 3);
+        if (row !== lastMapRow) { lastMapRow = row; step++; }
+      } else step++;
+      el.style.setProperty("--d", Math.min((step - 1) * 70, 1100) + "ms");
+    });
+    void s.offsetWidth;
+    units.forEach(function (el) { el.classList.add("rv"); });
+  }
+
   function go(i, fromRemote) {
     i = Math.max(0, Math.min(N - 1, i));
     slides[cur].classList.remove("is-active");
     cur = i;
     var s = slides[cur];
     s.classList.add("is-active");
+    if (!isPresenter) reveal(s);
     document.querySelectorAll("video").forEach(function (v) {
       if (s.contains(v)) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause();
     });
