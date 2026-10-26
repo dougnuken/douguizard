@@ -434,7 +434,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
     <li><div class="i">02</div><div class="t">Map roles and statuses</div><div class="b">Who does what, at which step, and what happens next. Before any screen.</div><div class="x">45+ statuses, 15 roles</div></li>
     <li><div class="i">03</div><div class="t">Build a clickable prototype</div><div class="b">With real roles and real data, so people react to something real.</div><div class="x">The team approves the prototype, not a document</div></li>
     <li><div class="i">04</div><div class="t">Add it to the design system</div><div class="b">Anything we repeat becomes a shared component with clear rules.</div><div class="x">38+ shared components</div></li>
-    <li><div class="i">05</div><div class="t">Launch small, then listen</div><div class="b">Release a safe first version. Real use tells us what to build next.</div><div class="x">DC: view-only on day one</div></li>
+    <li><div class="i">05</div><div class="t">Launch small, then listen</div><div class="b">Release a safe first version. Real use tells us what to build next.</div><div class="x">DC: live since Sep 21, 2026</div></li>
   </ol>
   <aside class="notes">
     <p class="hint">Recorre los cinco pasos con el cursor. En el paso 02 haz una pausa y repite la idea central con tus palabras.</p>
@@ -444,7 +444,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
     <p>Step two: I map roles and statuses, before any screen. At Naowee, that was more than 45 statuses and 15 roles, before I drew one screen.</p>
     <p>Step three: a clickable prototype with real roles and real data. Basically, the team approves the prototype, not a document.</p>
     <p>Step four: what repeats goes into the design system. We have more than 38 shared components.</p>
-    <p>Step five: I launch small... then I listen. At DC, the first version was view-only on day one.</p>
+    <p>Step five: I launch small... then I listen. At DC, the app has been live since September 21, and real use tells us what to build next.</p>
     <p>→ But how does this work with other people? Let's talk about requirements and developers.</p>
   </aside>
 </section>
@@ -676,15 +676,10 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
 </section>
 
 <section class="slide" data-title="Occidente · The problem" data-section="Case 2 · Banco de Occidente" data-accent="occidente">
-  <div class="split" style="grid-template-columns: 520px 1fr">
-    <div class="col">
-      <span class="kicker">The problem</span>
-      <h2 class="title">Every team solved the same problem in its own way.</h2>
-      <p class="body" style="margin-top:28px">The online bank was crowded, and people got lost in pages inside pages. Fixing screens one by one would not last. The bank needed a shared system, and someone to own it.</p>
-    </div>
-    <div class="col">
-      <div class="stage tall"><img data-mock="occ-tablet-old" alt="The old online bank: one long page of links, tables and warnings"></div>
-    </div>
+  <div class="statement">
+    <span class="kicker">The problem</span>
+    <h2 class="title">Every team solved the same problem in its own way.</h2>
+    <p class="lead">The online bank was crowded, and people got lost in pages inside pages. Fixing screens one by one would not last. The bank needed a shared system, and someone to own it.</p>
   </div>
   <aside class="notes">
     <p class="hint">Muestra la captura del banco antiguo. Rápido y claro.</p>
@@ -821,7 +816,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Who uses it</b> · the secretary every day; the doctor and the owners to check</p>
       <p class="roleline" style="margin-top:8px"><b>My role</b> · Designed by me, built by directing AI agents · live since Sep 21, 2026 · I co-own the clinic</p>
     </div>
-    <div class="stage"><img data-mock="dc-imac-followup" data-flat="../../public/work/dc-medical/seguimiento-controles.webp" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of follow-up visits" style="object-position:55% 45%"></div>
+    <div class="stage"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-seg.jpg" alt="The clinic's follow-up board on a laptop: counters, tabs, city filters and a table of follow-up visits"></div></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">14</div><div class="l">Days from the first prototype to the city agenda</div><div class="d">Sep 19 → Oct 2, 2026</div></div>
@@ -908,7 +903,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>The trade-off</dt><dd>More setup for the admin, but nobody sees a button they can't use.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-tablet-access" data-flat="../../public/work/dc-medical/usuarios-permisos-v2.webp" alt="Editing a user's access on a tablet: switches to see, create and edit per area, under quick presets" style="object-position:55% 50%"></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-users-edit.jpg" alt="Editing a user's access on a tablet: switches to see, create and edit per area, under quick presets"></div></div>
   </div>
   <p class="bridge"><b>In Hyperproof terms</b> Roles and permissions by type of object, with presets for the usual cases.</p>
   <aside class="notes">
@@ -958,7 +953,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>What we did</dt><dd>Orange for Barranquilla, blue for Bogotá, teal for Medellín, tested for color blindness. The city name always appears next to the color.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-imac-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="The month calendar on a desktop display, appointments colored by city"></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-agenda.jpg" alt="The month calendar on a desktop display, appointments colored by city"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.</p>
@@ -973,30 +968,30 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
   <div class="split even">
     <div class="col">
       <span class="kicker">Live demo · 3 minutes</span>
-      <h2 class="title">First view-only. Editing later.</h2>
-      <p class="body" style="margin-top:24px">The first version could only show information, so it was safe from day one. Editing came later, with a personal login and a security review. Google Drive stays the main record: if the app goes down, nothing is lost.</p>
+      <h2 class="title">The live app, with demo data.</h2>
+      <p class="body" style="margin-top:24px">Three screens the clinic uses every day: the follow-up board, one patient case, and accounting. Google Drive stays the main record: if the app goes down, nothing is lost.</p>
       <p class="private">Private product · demo data only, no real patients</p>
     </div>
     <div class="col">
       <ol class="demo-steps">
         <li>Follow-up board: counters, tabs, filters by city<span>30 s</span></li>
         <li>One patient case: steps, what's missing, what's next<span>60 s</span></li>
-        <li>Users and access: the doctor can only view<span>45 s</span></li>
-        <li>Same app as a viewer: the edit buttons disappear<span>30 s</span></li>
-        <li>Optional: the voice note on the phone<span>15 s</span></li>
+        <li>Accounting: cash in, expenses, net, and who still owes<span>60 s</span></li>
+        <li>Fixed expenses: what's due, marked paid with its receipt<span>30 s</span></li>
       </ol>
     </div>
   </div>
   <aside class="notes">
-    <p class="hint">Cambia a la pestaña de la demo (http://localhost:8787, editora). Antes di la frase de datos de demostración. Orden: tablero 30 s, caso de paciente 60 s, usuarios y acceso 45 s, vista de lector con ?rol=lector 30 s, nota de voz opcional 15 s. Si falla, quédate en esta diapositiva y no depures. No entres al panel real.</p>
-    <p>"This is a private product with patient data. I'll show demo data only."</p>
-    <p>First, the follow-up board. Here are the counters, the tabs, and the filters by city.</p>
-    <p>The counters answer one question... where's the problem?</p>
-    <p>Now, one patient case. Here are the steps. Here's what's missing. And here, at the bottom, is what comes next.</p>
-    <p>Next, users and access. The doctor can only view. This is the grid I showed you: section by action.</p>
-    <p>Now the same app as a viewer. Look: the edit buttons disappear. Nobody sees a button they can't use.</p>
-    <p class="hint">[Optional, if time: the voice note on the phone. The AI fills the form, and a person confirms.]</p>
-    <p>So, this is the first version, view-only. It was safe from day one. Editing came later, with a personal login and a security review.</p>
+    <p class="hint">Cambia a la pestaña de la demo (http://localhost:8787). Primero di la frase de datos de demostración. Orden: tablero 30 s → caso de paciente 60 s → Contabilidad 60 s → Gastos fijos y Por cobrar 30 s. Si algo falla, quédate en esta diapositiva y cuéntalo; no depures. No entres al panel real.</p>
+    <p>Before I share it... this is a private product with patient data, so I'll show demo data only.</p>
+    <p>First, the follow-up board. It's the first screen the secretary opens every morning.</p>
+    <p>The counters on top answer one question: where's the problem today? And I can filter by city.</p>
+    <p>Now, one patient case. Here are the three steps, here's what's missing... and at the bottom, what comes next.</p>
+    <p>Now, accounting. This is the part the owners check.</p>
+    <p>On top, the cash that came in this month, the expenses, and the net.</p>
+    <p>Next to them, what we still have to pay... and what patients still owe us today.</p>
+    <p>Let me open fixed expenses. Each one has its status and its due date. When it's paid, you mark it paid and attach the receipt.</p>
+    <p>And here, who still owes us, patient by patient. Nobody has to open a spreadsheet to find it.</p>
     <p>And Google Drive stays the main record. If the app goes down, nothing is lost.</p>
     <p>→ That's the demo. Let me go back to the slides and close this case.</p>
   </aside>

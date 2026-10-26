@@ -11,7 +11,7 @@ Idea central (la dices completa solo en la 04 y en la 30; en los casos solo un e
 - **Si pierdes el hilo:** mira el título de la diapositiva, di la idea central en una frase y sigue con el conector. Frase de rescate: "Let me come back to the main idea." Si aún no sale, pulsa `P`/`O` y salta a la siguiente.
 - **Si te interrumpen:** sonríe y responde ahí mismo, es buena señal. Luego regresa con "Back to the case." y retoma desde el último punto. Si vas tarde, corta en este orden: herramientas (29) → Occidente a 5 min (salta 16) → DC a 6 min (salta 25). Nunca cortes la 04 ni la 30.
 - **Si no entiendes una pregunta:** no adivines. Di: "Sorry, can you say that again, more slowly?" o "Let me check I understand: you're asking about…". Si sigue difícil: "I want to answer well. Can you give me one example?" Responde corto y vuelve a la idea central.
-- **Demo de DC (26):** ten las dos pestañas abiertas (editora y `?rol=lector`). Si falla, quédate en la diapositiva y cuéntalo en voz alta; no depures en la llamada. No entres al panel real.
+- **Demo de DC (26):** ten abierta http://localhost:8787 y entra una vez a Contabilidad antes de la llamada para que cargue. Si falla, quédate en la diapositiva y cuéntalo en voz alta; no depures en la llamada. No entres al panel real.
 - **Anexo (32–34):** carga de trabajo y design system de Naowee, y los saldos de DC. No los presentes; úsalos solo si preguntan.
 - **Cada caso es una historia corta:** al abrir (07, 13, 20) di la versión corta; luego problema, decisión y costo. Los conectores cambian de forma a propósito: no los memorices, léelos.
 
@@ -103,8 +103,8 @@ EN: Step three: a clickable prototype with real roles and real data. Basically, 
 ES: Paso tres: un prototipo en el que se puede hacer clic, con roles y datos reales. El equipo aprueba el prototipo, no un documento.
 EN: Step four: what repeats goes into the design system. We have more than 38 shared components.
 ES: Paso cuatro: lo que se repite entra al sistema de diseño. Tenemos más de 38 componentes compartidos.
-EN: Step five: I launch small... then I listen. At DC, the first version was view-only on day one.
-ES: Paso cinco: lanzo algo pequeño y luego escucho. En DC, la primera versión era solo de lectura desde el primer día.
+EN: Step five: I launch small... then I listen. At DC, the app has been live since September 21, and real use tells us what to build next.
+ES: Paso cinco: lanzo algo pequeño y luego escucho. En DC, la aplicación está en uso desde el 21 de septiembre, y el uso real nos dice qué construir después.
 → EN: But how does this work with other people? Let's talk about requirements and developers.
 → ES: Pero, ¿cómo funciona esto con otras personas? Hablemos de requisitos y de desarrolladores.
 
@@ -421,23 +421,25 @@ ES: Probamos los colores para daltonismo. Y el nombre de la ciudad siempre está
 → ES: Ahora les muestro lo real. Una demostración en vivo, tres minutos.
 
 ## 26 · DC · Live demo · 30:10
-CUE: Cambia a la pestaña de la demo (http://localhost:8787, editora). Antes di la frase de datos de demostración. Orden: tablero 30 s, caso de paciente 60 s, usuarios y acceso 45 s, vista de lector con ?rol=lector 30 s, nota de voz opcional 15 s. Si falla, quédate en esta diapositiva y no depures. No entres al panel real.
-EN: "This is a private product with patient data. I'll show demo data only."
-ES: "Este es un producto privado con datos de pacientes. Solo mostraré datos de demostración."
-EN: First, the follow-up board. Here are the counters, the tabs, and the filters by city.
-ES: Primero, el tablero de seguimiento. Aquí están los contadores, las pestañas y los filtros por ciudad.
-EN: The counters answer one question... where's the problem?
-ES: Los contadores responden una pregunta: ¿dónde está el problema?
-EN: Now, one patient case. Here are the steps. Here's what's missing. And here, at the bottom, is what comes next.
-ES: Ahora, un caso de paciente. Aquí están los pasos. Aquí está lo que falta. Y aquí, abajo, está lo que sigue.
-EN: Next, users and access. The doctor can only view. This is the grid I showed you: section by action.
-ES: Luego, usuarios y acceso. El médico solo puede ver. Esta es la cuadrícula que les mostré: sección por acción.
-EN: Now the same app as a viewer. Look: the edit buttons disappear. Nobody sees a button they can't use.
-ES: Ahora la misma aplicación como lector. Miren: los botones de edición desaparecen. Nadie ve un botón que no puede usar.
-EN: [Optional, if time: the voice note on the phone. The AI fills the form, and a person confirms.]
-ES: [Opcional, si hay tiempo: la nota de voz en el teléfono. La IA llena el formulario y una persona confirma.]
-EN: So, this is the first version, view-only. It was safe from day one. Editing came later, with a personal login and a security review.
-ES: Entonces, esta es la primera versión, solo de lectura. Fue segura desde el primer día. La edición llegó después, con un acceso personal y una revisión de seguridad.
+CUE: Cambia a la pestaña de la demo (http://localhost:8787). Primero di la frase de datos de demostración. Orden: tablero 30 s → caso de paciente 60 s → Contabilidad 60 s → Gastos fijos y Por cobrar 30 s. Si algo falla, quédate en esta diapositiva y cuéntalo; no depures. No entres al panel real.
+EN: Before I share it... this is a private product with patient data, so I'll show demo data only.
+ES: Antes de compartirla... este es un producto privado con datos de pacientes, así que solo mostraré datos de demostración.
+EN: First, the follow-up board. It's the first screen the secretary opens every morning.
+ES: Primero, el tablero de seguimiento. Es la primera pantalla que la secretaria abre cada mañana.
+EN: The counters on top answer one question: where's the problem today? And I can filter by city.
+ES: Los contadores de arriba responden una pregunta: ¿dónde está el problema hoy? Y puedo filtrar por ciudad.
+EN: Now, one patient case. Here are the three steps, here's what's missing... and at the bottom, what comes next.
+ES: Ahora, un caso de paciente. Aquí están los tres pasos, aquí está lo que falta... y abajo, lo que sigue.
+EN: Now, accounting. This is the part the owners check.
+ES: Ahora, contabilidad. Esta es la parte que revisan los dueños.
+EN: On top, the cash that came in this month, the expenses, and the net.
+ES: Arriba, el dinero que entró este mes, los gastos y el neto.
+EN: Next to them, what we still have to pay... and what patients still owe us today.
+ES: Al lado, lo que todavía tenemos que pagar... y lo que las pacientes todavía nos deben hoy.
+EN: Let me open fixed expenses. Each one has its status and its due date. When it's paid, you mark it paid and attach the receipt.
+ES: Abro los gastos fijos. Cada uno tiene su estado y su fecha de vencimiento. Cuando se paga, se marca como pagado y se adjunta el recibo.
+EN: And here, who still owes us, patient by patient. Nobody has to open a spreadsheet to find it.
+ES: Y aquí, quién nos debe todavía, paciente por paciente. Nadie tiene que abrir una hoja de cálculo para encontrarlo.
 EN: And Google Drive stays the main record. If the app goes down, nothing is lost.
 ES: Y Google Drive sigue siendo el registro principal. Si la aplicación se cae, no se pierde nada.
 → EN: That's the demo. Let me go back to the slides and close this case.

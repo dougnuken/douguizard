@@ -434,7 +434,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
     <li><div class="i">02</div><div class="t">Mapear roles y estados</div><div class="b">Quién hace qué, en qué paso y qué sigue. Antes de cualquier pantalla.</div><div class="x">45+ estados, 15 roles</div></li>
     <li><div class="i">03</div><div class="t">Construir un prototipo navegable</div><div class="b">Con roles y datos reales, para que la gente reaccione a algo real.</div><div class="x">El equipo aprueba el prototipo, no un documento</div></li>
     <li><div class="i">04</div><div class="t">Llevarlo al design system</div><div class="b">Lo que se repite se vuelve un componente compartido con reglas claras.</div><div class="x">38+ componentes compartidos</div></li>
-    <li><div class="i">05</div><div class="t">Lanzar pequeño y escuchar</div><div class="b">Se lanza una primera versión segura. El uso real dice qué sigue.</div><div class="x">DC: solo lectura desde el día uno</div></li>
+    <li><div class="i">05</div><div class="t">Lanzar pequeño y escuchar</div><div class="b">Se lanza una primera versión segura. El uso real dice qué sigue.</div><div class="x">DC: en uso desde el 21 sep 2026</div></li>
   </ol>
   <aside class="notes">
     <p class="hint">Recorre los cinco pasos con el cursor. En el paso 02 haz una pausa y repite la idea central con tus palabras.</p>
@@ -444,7 +444,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
     <p>Paso dos: mapeo roles y estados, antes de cualquier pantalla. En Naowee fueron más de 45 estados y 15 roles, antes de dibujar una sola pantalla.</p>
     <p>Paso tres: un prototipo en el que se puede hacer clic, con roles y datos reales. El equipo aprueba el prototipo, no un documento.</p>
     <p>Paso cuatro: lo que se repite entra al sistema de diseño. Tenemos más de 38 componentes compartidos.</p>
-    <p>Paso cinco: lanzo algo pequeño y luego escucho. En DC, la primera versión era solo de lectura desde el primer día.</p>
+    <p>Paso cinco: lanzo algo pequeño y luego escucho. En DC, la aplicación está en uso desde el 21 de septiembre, y el uso real nos dice qué construir después.</p>
     <p>→ Pero, ¿cómo funciona esto con otras personas? Hablemos de requisitos y de desarrolladores.</p>
   </aside>
 </section>
@@ -676,15 +676,10 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
 </section>
 
 <section class="slide" data-title="Occidente · El problema" data-section="Caso 2 · Banco de Occidente" data-accent="occidente">
-  <div class="split" style="grid-template-columns: 520px 1fr">
-    <div class="col">
-      <span class="kicker">El problema</span>
-      <h2 class="title">Cada equipo resolvió el mismo problema a su manera.</h2>
-      <p class="body" style="margin-top:28px">La banca en línea estaba saturada y la gente se perdía en páginas dentro de páginas. Arreglar pantalla por pantalla no duraría. El banco necesitaba un sistema compartido y alguien responsable.</p>
-    </div>
-    <div class="col">
-      <div class="stage tall"><img data-mock="occ-tablet-old" alt="La banca en línea antigua: una sola página larga de enlaces, tablas y advertencias"></div>
-    </div>
+  <div class="statement">
+    <span class="kicker">El problema</span>
+    <h2 class="title">Cada equipo resolvió el mismo problema a su manera.</h2>
+    <p class="lead">La banca en línea estaba saturada y la gente se perdía en páginas dentro de páginas. Arreglar pantalla por pantalla no duraría. El banco necesitaba un sistema compartido y alguien responsable.</p>
   </div>
   <aside class="notes">
     <p class="hint">Muestra la captura del banco antiguo. Rápido y claro.</p>
@@ -821,7 +816,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
       <p class="roleline"><b>Quién lo usa</b> · la secretaria a diario; el doctor y los dueños para revisar</p>
       <p class="roleline" style="margin-top:8px"><b>Mi rol</b> · la diseñé yo y la construí dirigiendo agentes de IA · en vivo desde el 21 sep 2026 · soy socio de la clínica</p>
     </div>
-    <div class="stage"><img data-mock="dc-imac-followup" data-flat="../../public/work/dc-medical/seguimiento-controles.webp" alt="El tablero de seguimiento de la clínica en un portátil: contadores, pestañas, filtros por ciudad y una tabla de controles" style="object-position:55% 45%"></div>
+    <div class="stage"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-seg.jpg" alt="El tablero de seguimiento de la clínica en un portátil: contadores, pestañas, filtros por ciudad y una tabla de controles"></div></div>
   </div>
   <div class="kpis" style="position:absolute;left:104px;right:104px;bottom:72px">
     <div><div class="n">14</div><div class="l">Días del primer prototipo a la agenda por ciudad</div><div class="d">19 sep → 2 oct de 2026</div></div>
@@ -908,7 +903,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>El trade-off</dt><dd>Más configuración para el administrador, pero nadie ve un botón que no puede usar.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-tablet-access" data-flat="../../public/work/dc-medical/usuarios-permisos-v2.webp" alt="Edición del acceso de un usuario en una tableta: interruptores para ver, crear y editar por área, bajo perfiles rápidos" style="object-position:55% 50%"></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-users-edit.jpg" alt="Edición del acceso de un usuario en una tableta: interruptores para ver, crear y editar por área, bajo perfiles rápidos"></div></div>
   </div>
   <p class="bridge"><b>En términos de Hyperproof</b> Roles y permisos por tipo de objeto, con perfiles para los casos habituales.</p>
   <aside class="notes">
@@ -958,7 +953,7 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
         <div><dt>Qué hicimos</dt><dd>Naranja para Barranquilla, azul para Bogotá, verde azulado para Medellín, probados para daltonismo. El nombre de la ciudad siempre aparece junto al color.</dd></div>
       </dl>
     </div>
-    <div class="stage tall"><img data-mock="dc-imac-agenda" data-flat="../../public/work/dc-medical/agenda-mes.webp" alt="El calendario del mes en un monitor, con citas coloreadas por ciudad"></div>
+    <div class="stage tall"><div class="flatpad"><img class="shot" data-src="assets/captures/dc-agenda.jpg" alt="El calendario del mes en un monitor, con citas coloreadas por ciudad"></div></div>
   </div>
   <aside class="notes">
     <p class="hint">Si vas tarde (corte a 6 min de DC), salta esta diapositiva. Si la muestras, señala los tres puntos de color con su nombre.</p>
@@ -973,30 +968,30 @@ body.phone #p-mode { display: inline-block; margin-top: 14px; background: none; 
   <div class="split even">
     <div class="col">
       <span class="kicker">Demo en vivo · 3 minutos</span>
-      <h2 class="title">Primero solo lectura. Editar después.</h2>
-      <p class="body" style="margin-top:24px">La primera versión solo mostraba información, así que era segura desde el día uno. Editar llegó después, con inicio de sesión personal y una revisión de seguridad. Google Drive sigue siendo el registro principal: si la app se cae, no se pierde nada.</p>
+      <h2 class="title">La app en vivo, con datos de demostración.</h2>
+      <p class="body" style="margin-top:24px">Tres pantallas que la clínica usa todos los días: el tablero de seguimiento, un caso de paciente y la contabilidad. Google Drive sigue siendo el registro principal: si la app se cae, no se pierde nada.</p>
       <p class="private">Producto privado · solo datos de demostración, sin pacientes reales</p>
     </div>
     <div class="col">
       <ol class="demo-steps">
         <li>Tablero de seguimiento: contadores, pestañas, filtros por ciudad<span>30 s</span></li>
         <li>Un caso de paciente: pasos, qué falta, qué sigue<span>60 s</span></li>
-        <li>Usuarios y acceso: el doctor solo puede ver<span>45 s</span></li>
-        <li>La misma app como lector: desaparecen los botones de editar<span>30 s</span></li>
-        <li>Opcional: la nota de voz en el celular<span>15 s</span></li>
+        <li>Contabilidad: lo que entró, gastos, neto y quién debe<span>60 s</span></li>
+        <li>Gastos fijos: qué vence y se marca pagado con su recibo<span>30 s</span></li>
       </ol>
     </div>
   </div>
   <aside class="notes">
-    <p class="hint">Cambia a la pestaña de la demo (http://localhost:8787, editora). Antes di la frase de datos de demostración. Orden: tablero 30 s, caso de paciente 60 s, usuarios y acceso 45 s, vista de lector con ?rol=lector 30 s, nota de voz opcional 15 s. Si falla, quédate en esta diapositiva y no depures. No entres al panel real.</p>
-    <p>"Este es un producto privado con datos de pacientes. Solo mostraré datos de demostración."</p>
-    <p>Primero, el tablero de seguimiento. Aquí están los contadores, las pestañas y los filtros por ciudad.</p>
-    <p>Los contadores responden una pregunta: ¿dónde está el problema?</p>
-    <p>Ahora, un caso de paciente. Aquí están los pasos. Aquí está lo que falta. Y aquí, abajo, está lo que sigue.</p>
-    <p>Luego, usuarios y acceso. El médico solo puede ver. Esta es la cuadrícula que les mostré: sección por acción.</p>
-    <p>Ahora la misma aplicación como lector. Miren: los botones de edición desaparecen. Nadie ve un botón que no puede usar.</p>
-    <p class="hint">[Opcional, si hay tiempo: la nota de voz en el teléfono. La IA llena el formulario y una persona confirma.]</p>
-    <p>Entonces, esta es la primera versión, solo de lectura. Fue segura desde el primer día. La edición llegó después, con un acceso personal y una revisión de seguridad.</p>
+    <p class="hint">Cambia a la pestaña de la demo (http://localhost:8787). Primero di la frase de datos de demostración. Orden: tablero 30 s → caso de paciente 60 s → Contabilidad 60 s → Gastos fijos y Por cobrar 30 s. Si algo falla, quédate en esta diapositiva y cuéntalo; no depures. No entres al panel real.</p>
+    <p>Antes de compartirla... este es un producto privado con datos de pacientes, así que solo mostraré datos de demostración.</p>
+    <p>Primero, el tablero de seguimiento. Es la primera pantalla que la secretaria abre cada mañana.</p>
+    <p>Los contadores de arriba responden una pregunta: ¿dónde está el problema hoy? Y puedo filtrar por ciudad.</p>
+    <p>Ahora, un caso de paciente. Aquí están los tres pasos, aquí está lo que falta... y abajo, lo que sigue.</p>
+    <p>Ahora, contabilidad. Esta es la parte que revisan los dueños.</p>
+    <p>Arriba, el dinero que entró este mes, los gastos y el neto.</p>
+    <p>Al lado, lo que todavía tenemos que pagar... y lo que las pacientes todavía nos deben hoy.</p>
+    <p>Abro los gastos fijos. Cada uno tiene su estado y su fecha de vencimiento. Cuando se paga, se marca como pagado y se adjunta el recibo.</p>
+    <p>Y aquí, quién nos debe todavía, paciente por paciente. Nadie tiene que abrir una hoja de cálculo para encontrarlo.</p>
     <p>Y Google Drive sigue siendo el registro principal. Si la aplicación se cae, no se pierde nada.</p>
     <p>→ Esa es la demo. Vuelvo a las diapositivas y cierro este caso.</p>
   </aside>

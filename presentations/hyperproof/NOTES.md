@@ -69,8 +69,7 @@ si preguntan cómo se asigna el trabajo o cómo mantienes consistentes los módu
 ## Antes de la llamada
 
 - [ ] Correr `fetch-mockups.sh` y abrir el deck: revisa que se vean los dispositivos (portada, 7, 8, 10, 11, 13, 14, 17, 20, 23, 24, 25, 33).
-- [ ] Demo de DC lista: en `dc-medical-dashboard`, `python tools/demo_server.py 8787` → http://localhost:8787 (editora) y
-      http://localhost:8787/?rol=lector (lector). Ten las dos pestañas abiertas. No inicies sesión en el panel real durante la llamada.
+- [ ] Demo de DC lista: en `dc-medical-dashboard`, `python tools/demo_server.py 8787` → http://localhost:8787 y entra una vez a Contabilidad para que cargue. No inicies sesión en el panel real durante la llamada.
 - [ ] Abre en otra pestaña el sistema de diseño de Naowee: https://naowee-tech.github.io/design-naowee-design-system/
 - [ ] Prueba compartir pestaña + ventana de presentador 10 minutos antes.
 - [ ] Llena los `[DOUG]` de abajo.
