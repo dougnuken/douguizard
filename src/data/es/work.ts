@@ -17,100 +17,281 @@ export const workEs: Record<string, CaseCopy> = {
     category: "Producto propio × Ingeniería de diseño",
     roleOverride: "Design Engineer — de punta a punta",
     duration: "Semanas, y sigue en marcha",
-    team: "Solo — diseño, ingeniería, lanzamiento",
+    team: "Doug, dirigiendo agentes de IA especializados",
     tagline:
-      "Una app de finanzas personales que lee tu ritmo de gasto, no tu saldo: diseñada, construida y lanzada en solitario.",
+      "Una app de finanzas personales que lee tu ritmo de gasto, no tu saldo. La versión 2.0 cambia una interfaz oscura y pesada por vidrio claro y en calma.",
     impact:
-      "En vivo y en uso diario: registras un gasto con una foto, la voz, el mensaje del banco o un PDF, y un solo color te dice si el mes va a buen ritmo.",
+      "La 1.0 funcionaba y se había vuelto pesada. La 2.0 es marca e interfaz nuevas, en claro, con tinta y un solo acento lila, rehechas sin tocar la matemática: 647 pruebas en verde.",
     context:
-      "Las apps de presupuesto responden «cuánto te queda», la pregunta que angustia. Construí olbo para mi propio hogar: una PWA local-first en pesos colombianos cuyo semáforo compara el ritmo de gasto con el calendario.",
+      "Las apps de presupuesto responden «cuánto te queda», la pregunta que angustia. olbo es una PWA local-first en pesos colombianos cuyo semáforo compara el ritmo de gasto con el calendario. Funcionaba, pero la interfaz oscura y multicolor se había vuelto ruidosa. Así que rediseñé la marca y la UI, y conservé el producto.",
     contributions: [
-      "**Producto e interfaz**: 24 vistas, del tablero del semáforo a la IA que lee recibos, voz y PDF.",
-      "**Cero dependencias**: módulos ES nativos, sin paso de build; matemática de presupuesto pura, así que 634 pruebas corren en 292\u00a0ms.",
-      "**Privacidad comprobable**: tus datos se quedan en el celular; lo único que sale de él es la llamada a la IA.",
+      "**Marca 2.0**: claro en vez de oscuro, tinta y un solo acento lila, Urbanist y Manrope, y el Anillo Partido convertido en «Anillo y centro».",
+      "**Interfaz 2.0**: vidrio sobre aurora con grano, un bento casi sin espacios, líneas vivas y el FAB como esfera IA, en las 24 vistas.",
+      "**Dirigí la construcción**: agentes especializados en branding, UI, ejecución y QA, en sesiones encadenadas que se pasan el relevo con dos archivos.",
     ],
     kpis: [
-      { label: "Pruebas que pasan", delta: "en 292\u00a0ms" },
+      { label: "Pruebas que pasan", delta: "matemática del presupuesto intacta" },
       { label: "Dependencias", delta: "sin bundler, sin framework" },
-      { label: "Módulos JS", delta: "en 24 vistas" },
-      { value: "1:2,5", label: "Relación pruebas-código", delta: "6.400 líneas de pruebas" },
+      { label: "Sesiones encadenadas", delta: "cada fase cerrada por QA" },
+      { label: "Color de acento", delta: "lila, con avaricia" },
     ],
-    process: [
-      {
-        title: "El problema era mío",
-        body: "Cada app que probé contaba centavos en la moneda de otro. Primero el producto: pesos enteros, mis datos en mi propio celular, una pantalla que me diga si voy bien.",
-      },
-      {
-        title: "Hecho con IA, decidido por las pruebas",
-        body: "Programé en pareja con Claude, pero me negué a que el resultado fuera desechable: una capa de dominio pura, con «hoy» siempre inyectado, así que cada prueba corre en Node sin navegador. La IA escribía rápido; las pruebas decidían qué sobrevivía.",
-      },
-      {
-        title: "Lanzar, y después escuchar",
-        body: "En vivo como PWA instalable y sin conexión, con el service worker en la v150. El uso diario mostró lo que ninguna especificación habría mostrado: un error de zona horaria que dañaba el color de noche y recibos que me negué a volver a digitar.",
-      },
-    ],
-    decisions: [
-      {
-        title: "El semáforo lee ritmo, no saldo",
-        body: "Ritmo de gasto sobre el mes transcurrido: verde hasta 1, ámbar hasta 1,25 y rojo por encima. Gastar el 90\u00a0% el día 28 está bien; el 80\u00a0% el día 10, no.",
-      },
-      {
-        title: "Las facturas variables nunca reservan plata",
-        body: "Luz, agua y gasolina solo cuentan cuando registras lo que de verdad costaron. Un estimado reservado puede pintar un rojo falso, y un solo rojo falso basta para dejar de creerle al color.",
-      },
-      {
-        title: "Privacidad que se puede comprobar, no solo leer",
-        body: "Todos prometen local-first. Aquí el encabezado CSP lo demuestra: nada sale del dispositivo salvo las llamadas a api.anthropic.com. Me costó todos los estilos en línea, incluso dentro de los SVG.",
-      },
-    ],
-    featuresIntro:
-      "La captura es donde mueren las apps de finanzas: si registrar cuesta esfuerzo, nadie registra. Por eso olbo toma un gasto como llegue.",
-    features: [
-      {
-        title: "Fotografía el recibo",
-        body: "Claude lee total, comercio y categoría en una tarjeta que confirmas antes de guardar.",
-      },
-      {
-        title: "Di el gasto en voz alta",
-        body: "«Cincuenta mil en el mercado» se vuelve un movimiento estructurado: Claude responde con una llamada a herramienta forzada, y si la confianza baja de 0,7, queda marcado para revisión.",
-      },
-      {
-        title: "Pega el mensaje del banco",
-        body: "A propósito, sin modelo: un parser exacto lee los dos formatos del banco sin conexión, gratis, sin forma de inventarse un monto.",
-      },
-      {
-        title: "Lee el extracto completo de la tarjeta",
-        body: "Un PDF se vuelve datos: fechas de corte y de pago, tasa mensual, cada compra a cuotas y su plazo restante.",
-      },
-    ],
-    video: {
-      label:
-        "Grabación de olbo: un gasto de 120.000 pesos digitado en el teclado propio de la app, categorizado y guardado; luego el tablero y la lista de movimientos se recalculan.",
-      caption:
-        "Un gasto registrado en cuatro toques; el ritmo del mes se actualiza antes de que se cierre la hoja.",
+    cover: {
+      alt: "olbo 2.0 en un iPhone sostenido por una mano oscura sobre un fondo gris neutro: la pantalla Hoy, con la card de vidrio lila Tu dinero, la regla del mes y las losas lila y negra de Disponible y Gastado.",
     },
-    gallery: [
+    film: {
+      label:
+        "Recorrido de olbo 2.0: Hoy con su card de vidrio y sus losas, la pestaña Análisis con el medidor del semáforo, el FAB abriéndose en Gasto e Ingreso, un gasto de 48.500 pesos digitado en el teclado, categorizado y guardado, Movimientos y el asesor.",
+      caption:
+        "Unos 34 segundos en la app real, servida en local con datos de demo neutros, a tamaño de iPhone. El círculo gris marca cada toque.",
+    },
+    story: [
       {
-        alt: "Tablero de olbo con el semáforo en verde: el ritmo de gasto está en o por debajo de la parte del mes que ya pasó.",
-        caption: "Verde: el ritmo coincide con el calendario.",
+        title: "El problema",
+        intro: "olbo 1.0 cumplía. El uso diario mostró que la interfaz le estorbaba.",
+        sections: [
+          {
+            title: "Una 1.0 que funcionaba",
+            body: [
+              "Cada app que probé contaba centavos en la moneda de otro y respondía «cuánto te queda». olbo responde si el mes va a buen ritmo: el gasto frente a la parte del mes que ya pasó, verde hasta 1, ámbar hasta 1,25 y rojo por encima. Gastar el 90 % el día 28 está bien; el 80 % el día 10, no.",
+              "Es una PWA instalable y sin conexión: módulos ES nativos, sin paso de build, los datos en IndexedDB dentro del celular. Nada sale del dispositivo salvo las llamadas a la IA, y una CSP estricta lo demuestra.",
+            ],
+          },
+          {
+            title: "Se quedó pesado",
+            body: [
+              "La 1.0 era morado oscuro, con un mesh multicolor y mucho glow. Cada pieza tenía su razón; juntas gritaban. El único color que importa, el del semáforo, competía con el gradiente firma del botón, del FAB y del orbe del asesor.",
+              "El encargo que me puse para la 2.0 fue marca e interfaz, no funciones ni flujos: conservar todo lo que funciona y volverlo calmado.",
+            ],
+            figures: [
+              {
+                alt: "Dos iPhone lado a lado sobre gris con la misma pantalla Hoy y los mismos datos de demo: a la izquierda olbo 1.0, morado oscuro con un botón multicolor; a la derecha olbo 2.0, clara, con una card de vidrio lila y losas negra y lila.",
+                caption: "Los mismos datos, antes y después: la 1.0 a la izquierda, la 2.0 a la derecha.",
+              },
+            ],
+          },
+          {
+            title: "Referentes",
+            points: [
+              "**Bento casi sin espacios**: losas contiguas a 4–8 px, radios grandes y radio hijo = padre − espacio.",
+              "**Minimalismo radical de color**: base neutra clara, negro casi puro para el contraste y un solo acento saturado, usado con avaricia.",
+              "**Tipografía delgada y elegante**: cifras display enormes en peso 300 con tracking negativo.",
+              "**Vidrio de verdad**: blanco translúcido sobre gradientes suaves, para que el desenfoque tenga algo que leer.",
+            ],
+          },
+        ],
       },
       {
-        alt: "Tablero de olbo con el semáforo en alerta: el mismo bolsillo leído en un día más temprano del mes cambia el color a advertencia.",
-        caption: "El mismo monto, más temprano en el mes, se lee como alerta.",
+        title: "Marca 2.0",
+        intro: "Papel perla, tinta negra y un solo punto lila: la plata ordenada se ve en calma.",
+        sections: [
+          {
+            title: "Claro, no oscuro",
+            body: [
+              "Las referencias son claras, y la calma se lee mejor sobre papel que sobre neón. olbo 2.0 tiene un solo tema: base perla (#F0EFF2), tinta para el texto y el contraste (#1D1D1F) y el negro como segundo protagonista en las losas, el botón principal y el ítem activo del dock. El texto nunca va directo sobre el degradado; siempre tiene vidrio, papel o negro debajo.",
+            ],
+          },
+          {
+            title: "Lila, con avaricia",
+            body: [
+              "El verde, el ámbar y el rojo ya significan estado. Un acento lima se lee como «vas bien» y uno naranja como «cuidado», así que las únicas familias que no chocan con el semáforo son la azul y la violeta. El azul es el color de todos los bancos; el violeta ya era de olbo.",
+              "En Colombia, Nu tiene el morado profundo y Nequi el magenta sobre berenjena. Un lila claro (#B49CFF) con tinta encima no es de nadie. Aparece una vez por pantalla, nunca como texto sobre claro (2,01:1 no pasa) y siempre con tinta encima (7,33:1).",
+            ],
+            figures: [
+              {
+                alt: "La card Tu dinero de olbo sobre una aurora lila y menta con grano: 9.680.700 pesos en tipografía delgada, los movimientos de hoy y la regla del mes con el chip negro de hoy.",
+                caption: "Tu dinero: la card héroe, la única aurora de la app.",
+              },
+            ],
+          },
+          {
+            title: "Urbanist y Manrope",
+            body: [
+              "Dos familias variables OFL, alojadas en la propia app. Urbanist en peso 300 compone las cifras display y el wordmark: geométrica, con las «o» redondas de verdad. Manrope compone la interfaz y todas las cifras que se alinean o cambian, siempre con números tabulares. El énfasis lo da el peso, nunca el color, y no hay itálicas.",
+            ],
+          },
+          {
+            title: "Anillo y centro",
+            body: [
+              "El Anillo Partido conserva su geometría, dos arcos de 140° que se deslizan uno junto al otro, y pierde las losas violetas y el halo. El trazo se adelgaza para conversar con la tipografía y aparece un punto lila en el medio: los arcos son la plata que entra y sale, y el punto eres tú, quieto en el centro. Es el único color de la marca.",
+            ],
+            figures: [
+              {
+                alt: "El ícono de olbo sobre gris: un cuadrado redondeado negro con dos arcos blancos y un punto lila en el centro, y el wordmark olbo debajo.",
+                caption: "El ícono: losa negra, arcos blancos y el punto lila.",
+              },
+            ],
+          },
+        ],
       },
       {
-        alt: "Pantalla de captura de olbo: un movimiento registrado en pesos colombianos enteros en pocos toques.",
-        caption: "Captura en pesos enteros, en segundos.",
+        title: "Interfaz 2.0",
+        intro: "Las mismas 24 vistas y los mismos flujos, redibujados en el nuevo lenguaje desde los tokens.",
+        sections: [
+          {
+            title: "Vidrio sobre aurora, con grano",
+            body: [
+              "El fondo de la app es un degradado suave de perla a lavanda y menta, y las losas son vidrio blanco encima. La card Tu dinero es el único lugar donde la aurora se intensifica, con un grano fino para que el degradado se lea como material y no como efecto de pantalla.",
+            ],
+            figures: [
+              {
+                alt: "Una mano oscura sostiene un iPhone con la pantalla Hoy de olbo: Hola, Ana. Así va tu octubre, la card Tu dinero, Mi cartera, las pestañas Resumen y Análisis y las losas Disponible y Gastado sobre el dock grafito.",
+                caption: "Hoy: una aurora, una losa lila, una losa negra.",
+              },
+            ],
+          },
+          {
+            title: "Bento y contraste por bloques",
+            body: [
+              "Lo que queda por gastar va en la única losa lila de la pantalla, con tinta encima; lo gastado va en una losa negra con una barra fina por cada uno de los últimos diez días. Son contiguas, como en las referencias, y el contraste entre ellas hace el trabajo que antes hacía el color.",
+            ],
+            figures: [
+              {
+                alt: "Las dos losas de olbo flotando sobre una aurora suave: Disponible en lila con 6.855.700 pesos y 1.142.617 por día, y Gastado en negro con 1.924.300 y barras finas de los últimos días.",
+                caption: "Disponible en lila, Gastado en negro.",
+              },
+            ],
+          },
+          {
+            title: "Líneas vivas",
+            body: [
+              "Las gráficas son trazos finos de 1–2 px: una regla de marcas para el mes con un chip negro en hoy y barras por día en Movimientos en escala de raíz cuadrada, para que el arriendo no aplaste todo lo demás. Se dibujan al aparecer, solo con transform y opacity, y se quedan quietas con Reducir movimiento.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con Movimientos de olbo: búsqueda, filtros por mes, una losa de octubre de 2026 con 3.919.300 pesos y una barra fina por día, y los gastos del día debajo.",
+                caption: "Movimientos: una barra fina por cada día del mes.",
+              },
+            ],
+          },
+          {
+            title: "El FAB, una esfera IA",
+            body: [
+              "El gradiente firma sobrevive en un solo lugar: el FAB, ahora una pequeña esfera al final del dock grafito. Se abre en Gasto e Ingreso sobre papel, y es el único color en movimiento de una pantalla en calma.",
+            ],
+            figures: [
+              {
+                alt: "Plano detalle de la parte inferior de un iPhone: el dock grafito con Hoy activo y la esfera del FAB abierta en las píldoras Gasto e Ingreso, con poca profundidad de campo.",
+                caption: "La esfera se abre en Gasto e Ingreso.",
+              },
+            ],
+          },
+          {
+            title: "La captura sigue primero",
+            body: [
+              "La captura es donde mueren las apps de finanzas: si registrar cuesta esfuerzo, nadie registra. El rediseño conservó todas las entradas y le dio al teclado una cifra delgada en Urbanist con cursor, teclas hundidas y la categoría como píldora lila.",
+            ],
+            points: [
+              "**Fotografía el recibo**: Claude lee total, comercio y categoría en una tarjeta que confirmas.",
+              "**Di el gasto en voz alta**: una llamada a herramienta forzada, marcada para revisión si la confianza baja de 0,7.",
+              "**Pega el mensaje del banco**: a propósito, sin modelo; un parser exacto que no puede inventarse un monto.",
+              "**Lee el extracto de la tarjeta**: un PDF se vuelve fechas, tasa y cada compra a cuotas.",
+            ],
+            figures: [
+              {
+                alt: "Una mano oscura sostiene un iPhone con la hoja Nuevo gasto de olbo: 128.500 pesos en tipografía delgada, el teclado, píldoras de categoría con Supermercado elegida en lila y un botón negro Guardar gasto.",
+                caption: "Nuevo gasto: la cifra, el teclado y una sola píldora lila.",
+              },
+              {
+                alt: "Plano detalle de la parte inferior de un iPhone: la píldora lila de la categoría Supermercado y el botón negro Guardar gasto, con el altavoz y el puerto USB-C del teléfono enfocados debajo.",
+                caption: "Guardar es negro y la categoría lila; nada más tiene color.",
+              },
+            ],
+          },
+          {
+            title: "El semáforo conservó su significado",
+            body: [
+              "El verde, el ámbar y el rojo se re-tonaron para fondo claro y solo aparecen en el medidor, en el chip de estado y en la cifra del ritmo. Ingresos y gastos se distinguen por el signo y el ícono, no por el color, así que un rojo siempre es una advertencia y nunca una simple compra.",
+            ],
+            figures: [
+              {
+                alt: "Una mano sostiene un iPhone con la pestaña Análisis de olbo: un medidor punteado con un arco verde en el 14 % del sueldo y la frase Vas al ritmo del mes.",
+                caption: "Análisis: el medidor es el único lugar donde aparece el verde.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con la pantalla Personas de olbo: lo que cuesta cada persona este mes frente a un tope sano del ingreso neto, cada una con un chip verde Vas bien.",
+                caption: "Personas: cada tope leído contra el mismo ritmo.",
+              },
+            ],
+          },
+          {
+            title: "Asesor y onboarding",
+            body: [
+              "El orbe del asesor pasó a ser el símbolo de la marca, y sus respuestas van en burbujas de tinta y de vidrio. El onboarding perdió los renders 3D naranjas: cada paso es un titular delgado en Urbanist, una losa de vidrio con una pieza real de la app y una losa negra con el botón. Los puntos de progreso van en tinta y el actual en lila.",
+            ],
+            figures: [
+              {
+                alt: "Una mano oscura sostiene un iPhone con el asesor de olbo, Tu conciencia: el símbolo Anillo y centro, la frase Sin filtro. Te digo la verdad de tus números para que reacciones, tres preguntas sugeridas y el campo de texto.",
+                caption: "El asesor: el símbolo es el orbe.",
+              },
+              {
+                alt: "Una mano sostiene un iPhone con el primer paso del onboarding: Que no se te escape ni un peso, una losa de vidrio con un medidor en el 62 % del sueldo y un chip Vas bien, un gasto de ejemplo en café y un botón negro Continuar.",
+                caption: "Onboarding: una pieza real de la app en cada paso.",
+              },
+            ],
+          },
+        ],
       },
       {
-        alt: "Lista de movimientos de olbo: gastos registrados, agrupados y categorizados, guardados localmente en IndexedDB.",
-        caption: "Movimientos, categorizados y guardados en el dispositivo.",
+        title: "Cómo se construyó",
+        intro: "Yo diseñé la dirección y la aprobé; agentes especializados la ejecutaron fase por fase.",
+        sections: [
+          {
+            title: "Agentes especializados",
+            points: [
+              "**Branding**: los fundamentos de marca, la paleta con cada par de contraste calculado, la tipografía y el símbolo.",
+              "**UI lead**: el sistema de UI y un tablero con cada pantalla y componente, aprobado antes de tocar código.",
+              "**Ejecutores**: una fase cada uno; primero los tokens, luego el shell y después las vistas.",
+              "**QA**: pruebas, CSP, contraste AA, objetivos de 44 pt y desborde a 390 px, cerrando cada fase.",
+              "**Orquestador**: auditaba cada sesión, llevaba el estado y arrancaba la siguiente.",
+            ],
+          },
+          {
+            title: "Sesiones encadenadas",
+            body: [
+              "Cinco sesiones, una o dos fases cada una: tokens y shell, Hoy y captura, el resto de vistas, íconos y limpieza con un QA final, y estos mockups. Ninguna sesión releyó el historial: lo necesario vivía en un brief corto y en un archivo de estado vivo, que cada una actualizaba antes de pasar el relevo.",
+              "Las reglas viajaban con ellas: cero hex fuera de los tokens, animación solo con transform y opacity, salto de versión con cada cambio de CSS o JS, y la confirmación de Doug antes de que algo llegue a main.",
+            ],
+          },
+          {
+            title: "Lo que no cambió",
+            points: [
+              "**La matemática del semáforo**: el módulo del presupuesto quedó vedado y sus pruebas siguieron en verde todo el tiempo.",
+              "**Local-first**: los datos en IndexedDB dentro del celular; solo salen las llamadas a la IA.",
+              "**Una CSP estricta**: cero estilos o scripts en línea, incluso dentro de los SVG.",
+              "**Cero dependencias**: módulos ES nativos en 63 archivos y sin paso de build.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Resultados y aprendizajes",
+        intro: "Qué se entregó y qué enseñó esta forma de trabajar.",
+        sections: [
+          {
+            title: "Resultados",
+            points: [
+              "**Una marca nueva**: paleta, tipografía, Anillo y centro, el ícono de la app y el splash, todo documentado.",
+              "**Las 24 vistas redibujadas** en vidrio claro, sin los fondos oscuros, los glows ni los renders 3D de antes.",
+              "**647 pruebas en verde**, la matemática del presupuesto intacta y contraste AA en los estados y en la losa lila.",
+              "**Capturas a 3x de la app real** con datos de demo, las mismas que usa cada imagen de este caso.",
+            ],
+          },
+          {
+            title: "Aprendizajes",
+            points: [
+              "**Un rediseño también resta.** Casi toda la 2.0 es lo que se fue: el fondo oscuro, los glows, el multicolor y tres tipografías.",
+              "**Un solo acento solo funciona con reglas.** «Una vez por pantalla, nunca como texto sobre claro» es algo que un agente puede verificar.",
+              "**Dos archivos le ganan a una memoria larga.** Un brief y un estado vivo dejan que cada sesión empiece limpia sin perder una decisión.",
+              "**Protege la matemática, cambia la piel.** Dejar vedada la lógica del presupuesto es lo que permitió cambiar tanto la interfaz.",
+            ],
+          },
+        ],
       },
     ],
     links: [{ label: "App en vivo" }, { label: "Código fuente" }],
     externalLink: { label: "App en vivo" },
     credits:
-      "Diseño e ingeniería de punta a punta. Claude trabajó dentro del build y del producto; las decisiones, y las pruebas que las hacen cumplir, son mías.",
+      "Marca, interfaz y dirección de producto de Doug Vargas; ingeniería de la 1.0 de punta a punta. La versión 2.0 la ejecutaron agentes de IA especializados, dirigidos y revisados fase por fase. Las escenas de los mockups se generaron con Higgsfield; cada pantalla en ellas es una captura o grabación real de la app.",
     technologies: [
       "Vanilla JS (módulos ES)",
       "PWA y Service Worker",
@@ -118,6 +299,7 @@ export const workEs: Record<string, CaseCopy> = {
       "node --test",
       "CSP estricta",
       "Claude API",
+      "Agentes de IA",
     ],
   },
 

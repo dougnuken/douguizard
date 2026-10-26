@@ -3,11 +3,11 @@ import fs from "node:fs";
 import { setTheme } from "./matrix";
 import { settle } from "./settle";
 
-test("M1 phone/browser frame border, radius, shadow on /work/olbo @1440", async ({ page }) => {
+test("M1 phone/browser frame border, radius, shadow on /work/chub @1440", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await page.goto("/work/chub", { waitUntil: "networkidle" });
   await settle(page);
   const frames = await page.evaluate(() => {
     const out: Record<string, unknown>[] = [];

@@ -99,11 +99,13 @@ for (const theme of THEMES) {
 }
 
 // 5.5 sticky eyebrow clears the header
-test("5.5 sticky eyebrow clears header on /work/olbo @1440", async ({ page }) => {
+// olbo became a long-form case (cover, film, story) and lost its Decisions
+// band; DC Medical keeps one, so the sticky eyebrow is measured there.
+test("5.5 sticky eyebrow clears header on /work/dc-medical @1440", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await page.goto("/work/dc-medical", { waitUntil: "networkidle" });
   await settle(page);
   const info = await page.evaluate(async () => {
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

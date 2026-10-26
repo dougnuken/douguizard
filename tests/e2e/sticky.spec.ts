@@ -7,7 +7,7 @@ test("S1 sticky eyebrow behaviour through its whole band", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await page.goto("/work/dc-medical", { waitUntil: "networkidle" });
   await settle(page);
 
   const info = await page.evaluate(async () => {
