@@ -809,6 +809,10 @@ export const caseStudies: CaseStudy[] = [
       { value: "1", label: "Codebase", delta: "iOS, Android and PWA" },
       { value: "AA", label: "Contrast on every screen", delta: "fixed in the tokens" },
     ],
+    // Production PWA in demo mode: runs without an account or a backend.
+    // Doug sent "www.makeapet.vercel.app"; *.vercel.app has no www host, so
+    // the bare subdomain is the one that resolves.
+    links: [{ label: "Live demo", href: "https://makeapet.vercel.app" }],
     cover: {
       src: "/work/makeapet/00-portada-16x9",
       alt: "MakeaPet on an iPhone held in a dark hand against a neutral grey background: the swipe screen, with an Akita named Candy on a pink card and the LIKE stamp.",
