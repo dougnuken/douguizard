@@ -783,196 +783,11 @@ export const caseStudies: CaseStudy[] = [
       "I co-own the clinic with the doctor and built the panel end to end. He owns the medical protocol; the secretary's daily use shaped the flows. Screens and walkthrough use seeded demo data: no real patient, no clinic figure.",
   },
   {
-    slug: "royal-caribbean",
-    num: "/06",
-    experienceId: "globant",
-    testimonialId: "nicolas",
-    project: "Royal Caribbean Cruises",
-    category: "Travel × Mobile",
-    duration: "1 year",
-    team: "Cross-functional US + LATAM",
-    kind: "client",
-    tagline:
-      "Mobile booking and onboard experiences for cruise guests on Caribbean and Mediterranean routes.",
-    impact:
-      "One mobile journey that follows guests from booking to disembarkation, built to hold up at sea.",
-    context:
-      "Cruise guests of every age and every comfort level with technology spend a week aboard with patchy connectivity. I designed booking and the onboard experience to work for all of them.",
-    contributions: [
-      "**Mobile booking** — flows across destinations and stateroom types.",
-      "**Onboard experience** — schedules, dining, excursions and balances that work on intermittent Wi-Fi.",
-      "**Remote collaboration** — with US product and engineering at Royal Caribbean HQ.",
-    ],
-    // No KPIs: "End-to-end" and "Offline" were words in number slots, and one
-    // figure alone reads as a gap. No external link either: globant.com is the
-    // employer's site and shows none of this work.
-    technologies: ["Sketch", "iOS", "Android", "Prototyping", "Cross-cultural collaboration"],
-  },
-  {
-    slug: "qrvey",
-    num: "/07",
-    experienceId: "qrvey",
-    testimonialId: "arman",
-    project: "Qrvey — AutomatiQ",
-    category: "SaaS × Survey & NPS × Automation",
-    duration: "11 months",
-    team: "Product and engineering",
-    kind: "client",
-    // The kicker names the company; "Survey & NPS Platform" read as a category.
-    clientOverride: "Qrvey",
-    tagline:
-      "A survey automation builder — trigger, condition, action — for people who had never drawn a flow chart.",
-    impact:
-      "A negative answer could trigger its own follow-up — a new survey a week later, results emailed to the team — with nobody watching for it.",
-    context:
-      "Qrvey was a survey and NPS platform; someone still had to act on the answers. As lead UI designer, I designed AutomatiQ, the builder that did.",
-    contributions: [
-      "**A list that reports on itself** — every process shows status, surveys covered, average cycle time and cycles run.",
-      "**Cards, not a canvas** — triggers and conditions open in place, in the product's words; no connectors to draw.",
-      "**The follow-up is the next survey** — emails carry the results and a live survey link in the body.",
-    ],
-    // No KPIs. Nothing here was ever measured in a figure I can source, and
-    // three words in number slots ("Charts", "Embedded", "Native") were worse
-    // than none.
-    // Ordered show-first: the process list is the cover, the condition editor
-    // (trigger, condition and action slot in one frame) comes next, then the
-    // parts in the order a process is built, then the whole scenario.
-    gallery: [
-      {
-        src: "/work/qrvey/process-list.webp",
-        alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a colored status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
-        caption: "Each process: running or paused, and what it has done.",
-        width: 2000,
-        height: 1438,
-      },
-      {
-        src: "/work/qrvey/condition-branching.webp",
-        alt: "A condition under a New Response trigger: two pills, If Answer Is and # of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
-        caption: "Conditions in the product's words: \"If Answer Is\", \"# of Responses\".",
-        width: 2000,
-        height: 1200,
-      },
-      {
-        src: "/work/qrvey/trigger-scheduling.webp",
-        alt: "An expanded Scheduling trigger card: repeat frequency, an interval in days and a time of day, a start date, and an end that is either a number of runs or a specific date.",
-        caption: "Scheduling, with both ways a schedule can end.",
-        width: 2000,
-        height: 682,
-      },
-      {
-        src: "/work/qrvey/trigger-new-response.webp",
-        alt: "A New Response trigger with its survey picker open: a searchable list of surveys, each row carrying an Active or Draft badge and the date it went active.",
-        caption: "Picking the survey whose responses start the process.",
-        width: 2000,
-        height: 583,
-      },
-      {
-        src: "/work/qrvey/action-send-email.webp",
-        alt: "The Send Email action open: recipient chips, a subject with a remaining-character count, a rich-text message with buttons to attach results or insert a survey, a survey link inserted into the body, and an attachment block holding the chosen survey.",
-        caption: "Email: results attached, a survey in the body.",
-        width: 2000,
-        height: 1040,
-      },
-      {
-        src: "/work/qrvey/scenario-end-to-end.webp",
-        alt: "A whole process assembled from one scenario written in plain language at the top: a new-response trigger, a condition on the answer given, and two email actions — one to the respondent with a follow-up survey, one to the team with the results — above a Save Changes button warning that saving resets the process.",
-        caption: "One scenario: trigger, condition, two actions.",
-        width: 2000,
-        height: 3543,
-      },
-    ],
-    galleryKind: "plain",
-    technologies: ["Sketch", "Design Systems", "Interaction Design", "Data Viz"],
-    externalLink: { label: "Visit qrvey.com", href: "https://www.qrvey.com" },
-  },
-  {
-    slug: "ideaware",
-    num: "/08",
-    experienceId: "ideaware",
-    project: "Multi-client UX Design",
-    category: "Agency × Multi-client",
-    duration: "1 year",
-    team: "Distributed agency",
-    kind: "client",
-    tagline:
-      "Wireframes, UI kits and prototypes for US and LATAM clients, across web and mobile.",
-    impact:
-      "Developer-ready design across fintech, marketplaces and B2B — the multi-domain fluency that later made design-systems work feel natural.",
-    context:
-      "A remote-first agency, where the job was learning a client's domain fast and shipping clean design.",
-    contributions: [
-      "**Wireframes and UI kits** — for fintech, consumer and B2B products.",
-      "**High-fidelity prototypes** — for stakeholder validation and developer handoff.",
-      "**Reusable patterns** — applied across clients and tailored to each.",
-    ],
-    // No KPIs: "Agency" and "US + LATAM" were words in number slots. No
-    // external link: the agency's site shows none of this work.
-    technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
-  },
-  {
-    slug: "chub",
-    num: "/09",
-    project: "Chub",
-    category: "iOS × Mobility",
-    kind: "side",
-    clientOverride: "Freelance side project",
-    roleOverride: "Product Designer — end to end",
-    yearOverride: "2018",
-    duration: "2018",
-    team: "Solo designer, handed off to a dev team",
-    // ⚠️ CONFIRMAR DOUG — Doug calls it "Chupp"; the splash screen's wordmark
-    // reads CHUB. Going with the artwork, since that is what a reader sees.
-    tagline:
-      "Book a car by the minute, see the cost up front, then control the cabin.",
-    impact:
-      "A booking flow that answers what rental apps usually hide — what the car is, what the trip costs — before you commit.",
-    // ⚠️ CONFIRMAR DOUG — Doug described it as "an app for requesting services,
-    // Uber-style", but no screen has a driver: pricing is per minute, the
-    // vehicle sheet leads with range and acceleration, and one screen is the
-    // car's own dashboard. Written as what the screens show.
-    context:
-      "Chub books a car, not a ride: pick a vehicle, see its range and per-minute rate, and once the trip starts the app becomes the cabin's controls.",
-    contributions: [
-      "**The decision on one card** — range, acceleration, seats and the per-minute rate, above the button.",
-      "**A priced route** — pickup, destination, estimated time and a fare range, so the last screen holds no surprises.",
-      "**One app, from booking to cabin** — mid-trip it runs climate and ventilated seats, and shows temperature and speed.",
-    ],
-    // Ordered show-first: the vehicle sheet is the cover — the car, its specs
-    // and its price in one frame — then the trip in the order it happens.
-    gallery: [
-      {
-        src: "/work/chub/vehicle.webp",
-        alt: "A vehicle sheet over the map: the model name with its rating, a spec row for acceleration, range and seats, its pick-up address and distance, the saved card, a per-minute price, and a Book Car button.",
-        caption: "Range, rate and distance before the button.",
-      },
-      {
-        src: "/work/chub/route.webp",
-        alt: "The route drawn across a dark map with a distance marker, and a panel below carrying the pick-up and destination, the service class, a fare range, the estimated trip time, the saved card and a Need Assistance button.",
-        caption: "Priced and timed before it starts.",
-      },
-      {
-        src: "/work/chub/cabin.webp",
-        alt: "The in-car panel: chips for air conditioning and ventilated seats, inside and outside temperature, a circular gauge reading 65 km/h with the gear selector around it, and a line saying the air conditioning is on.",
-        caption: "Under way, the app is the cabin.",
-      },
-      {
-        src: "/work/chub/onboarding.webp",
-        alt: "Chub's first run screen: the wordmark over a car rendered on a glowing ring, the line \"Choose a Vehicle and trip with style\", and Get started above a Skip link.",
-        caption: "First run: the product in one screen.",
-      },
-    ],
-    galleryKind: "phone",
-    technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
-    credits:
-      "Product design end to end, handed off to the development team that built it. Never released.",
-  },
-  {
     slug: "makeapet",
-    num: "/10",
+    num: "/06",
     project: "MakeaPet",
-    category: "iOS, Android & PWA × Pets",
-    kind: "side",
-    clientOverride: "Personal product",
+    category: "Personal Product × iOS, Android & PWA",
+    kind: "personal",
     roleOverride: "UX/UI design and product direction",
     yearOverride: "2026",
     duration: "October 2026",
@@ -1315,6 +1130,190 @@ export const caseStudies: CaseStudy[] = [
     ],
     credits:
       "Research, UX/UI design and product direction by Doug Vargas. The code was written by a team of AI agents, directed and reviewed by Doug phase by phase. The mockup scenes were generated with Higgsfield; every screen in them is a real capture or recording of the app.",
+  },
+  {
+    slug: "royal-caribbean",
+    num: "/07",
+    experienceId: "globant",
+    testimonialId: "nicolas",
+    project: "Royal Caribbean Cruises",
+    category: "Travel × Mobile",
+    duration: "1 year",
+    team: "Cross-functional US + LATAM",
+    kind: "client",
+    tagline:
+      "Mobile booking and onboard experiences for cruise guests on Caribbean and Mediterranean routes.",
+    impact:
+      "One mobile journey that follows guests from booking to disembarkation, built to hold up at sea.",
+    context:
+      "Cruise guests of every age and every comfort level with technology spend a week aboard with patchy connectivity. I designed booking and the onboard experience to work for all of them.",
+    contributions: [
+      "**Mobile booking** — flows across destinations and stateroom types.",
+      "**Onboard experience** — schedules, dining, excursions and balances that work on intermittent Wi-Fi.",
+      "**Remote collaboration** — with US product and engineering at Royal Caribbean HQ.",
+    ],
+    // No KPIs: "End-to-end" and "Offline" were words in number slots, and one
+    // figure alone reads as a gap. No external link either: globant.com is the
+    // employer's site and shows none of this work.
+    technologies: ["Sketch", "iOS", "Android", "Prototyping", "Cross-cultural collaboration"],
+  },
+  {
+    slug: "qrvey",
+    num: "/08",
+    experienceId: "qrvey",
+    testimonialId: "arman",
+    project: "Qrvey — AutomatiQ",
+    category: "SaaS × Survey & NPS × Automation",
+    duration: "11 months",
+    team: "Product and engineering",
+    kind: "client",
+    // The kicker names the company; "Survey & NPS Platform" read as a category.
+    clientOverride: "Qrvey",
+    tagline:
+      "A survey automation builder — trigger, condition, action — for people who had never drawn a flow chart.",
+    impact:
+      "A negative answer could trigger its own follow-up — a new survey a week later, results emailed to the team — with nobody watching for it.",
+    context:
+      "Qrvey was a survey and NPS platform; someone still had to act on the answers. As lead UI designer, I designed AutomatiQ, the builder that did.",
+    contributions: [
+      "**A list that reports on itself** — every process shows status, surveys covered, average cycle time and cycles run.",
+      "**Cards, not a canvas** — triggers and conditions open in place, in the product's words; no connectors to draw.",
+      "**The follow-up is the next survey** — emails carry the results and a live survey link in the body.",
+    ],
+    // No KPIs. Nothing here was ever measured in a figure I can source, and
+    // three words in number slots ("Charts", "Embedded", "Native") were worse
+    // than none.
+    // Ordered show-first: the process list is the cover, the condition editor
+    // (trigger, condition and action slot in one frame) comes next, then the
+    // parts in the order a process is built, then the whole scenario.
+    gallery: [
+      {
+        src: "/work/qrvey/process-list.webp",
+        alt: "The Automation tab of Qrvey: a Create Process button over a list of process cards, each with a colored status bar reading Running or Paused, its name and creation date, and three figures — surveys covered, average time and cycles run. A sidebar offers example surveys and tips.",
+        caption: "Each process: running or paused, and what it has done.",
+        width: 2000,
+        height: 1438,
+      },
+      {
+        src: "/work/qrvey/condition-branching.webp",
+        alt: "A condition under a New Response trigger: two pills, If Answer Is and # of Responses, above a panel holding a question and its answer rows with buttons to add or remove each one, and a Select Action row waiting underneath.",
+        caption: "Conditions in the product's words: \"If Answer Is\", \"# of Responses\".",
+        width: 2000,
+        height: 1200,
+      },
+      {
+        src: "/work/qrvey/trigger-scheduling.webp",
+        alt: "An expanded Scheduling trigger card: repeat frequency, an interval in days and a time of day, a start date, and an end that is either a number of runs or a specific date.",
+        caption: "Scheduling, with both ways a schedule can end.",
+        width: 2000,
+        height: 682,
+      },
+      {
+        src: "/work/qrvey/trigger-new-response.webp",
+        alt: "A New Response trigger with its survey picker open: a searchable list of surveys, each row carrying an Active or Draft badge and the date it went active.",
+        caption: "Picking the survey whose responses start the process.",
+        width: 2000,
+        height: 583,
+      },
+      {
+        src: "/work/qrvey/action-send-email.webp",
+        alt: "The Send Email action open: recipient chips, a subject with a remaining-character count, a rich-text message with buttons to attach results or insert a survey, a survey link inserted into the body, and an attachment block holding the chosen survey.",
+        caption: "Email: results attached, a survey in the body.",
+        width: 2000,
+        height: 1040,
+      },
+      {
+        src: "/work/qrvey/scenario-end-to-end.webp",
+        alt: "A whole process assembled from one scenario written in plain language at the top: a new-response trigger, a condition on the answer given, and two email actions — one to the respondent with a follow-up survey, one to the team with the results — above a Save Changes button warning that saving resets the process.",
+        caption: "One scenario: trigger, condition, two actions.",
+        width: 2000,
+        height: 3543,
+      },
+    ],
+    galleryKind: "plain",
+    technologies: ["Sketch", "Design Systems", "Interaction Design", "Data Viz"],
+    externalLink: { label: "Visit qrvey.com", href: "https://www.qrvey.com" },
+  },
+  {
+    slug: "ideaware",
+    num: "/09",
+    experienceId: "ideaware",
+    project: "Multi-client UX Design",
+    category: "Agency × Multi-client",
+    duration: "1 year",
+    team: "Distributed agency",
+    kind: "client",
+    tagline:
+      "Wireframes, UI kits and prototypes for US and LATAM clients, across web and mobile.",
+    impact:
+      "Developer-ready design across fintech, marketplaces and B2B — the multi-domain fluency that later made design-systems work feel natural.",
+    context:
+      "A remote-first agency, where the job was learning a client's domain fast and shipping clean design.",
+    contributions: [
+      "**Wireframes and UI kits** — for fintech, consumer and B2B products.",
+      "**High-fidelity prototypes** — for stakeholder validation and developer handoff.",
+      "**Reusable patterns** — applied across clients and tailored to each.",
+    ],
+    // No KPIs: "Agency" and "US + LATAM" were words in number slots. No
+    // external link: the agency's site shows none of this work.
+    technologies: ["Sketch", "InVision", "Wireframing", "Prototyping"],
+  },
+  {
+    slug: "chub",
+    num: "/10",
+    project: "Chub",
+    category: "iOS × Mobility",
+    kind: "side",
+    clientOverride: "Freelance side project",
+    roleOverride: "Product Designer — end to end",
+    yearOverride: "2018",
+    duration: "2018",
+    team: "Solo designer, handed off to a dev team",
+    // ⚠️ CONFIRMAR DOUG — Doug calls it "Chupp"; the splash screen's wordmark
+    // reads CHUB. Going with the artwork, since that is what a reader sees.
+    tagline:
+      "Book a car by the minute, see the cost up front, then control the cabin.",
+    impact:
+      "A booking flow that answers what rental apps usually hide — what the car is, what the trip costs — before you commit.",
+    // ⚠️ CONFIRMAR DOUG — Doug described it as "an app for requesting services,
+    // Uber-style", but no screen has a driver: pricing is per minute, the
+    // vehicle sheet leads with range and acceleration, and one screen is the
+    // car's own dashboard. Written as what the screens show.
+    context:
+      "Chub books a car, not a ride: pick a vehicle, see its range and per-minute rate, and once the trip starts the app becomes the cabin's controls.",
+    contributions: [
+      "**The decision on one card** — range, acceleration, seats and the per-minute rate, above the button.",
+      "**A priced route** — pickup, destination, estimated time and a fare range, so the last screen holds no surprises.",
+      "**One app, from booking to cabin** — mid-trip it runs climate and ventilated seats, and shows temperature and speed.",
+    ],
+    // Ordered show-first: the vehicle sheet is the cover — the car, its specs
+    // and its price in one frame — then the trip in the order it happens.
+    gallery: [
+      {
+        src: "/work/chub/vehicle.webp",
+        alt: "A vehicle sheet over the map: the model name with its rating, a spec row for acceleration, range and seats, its pick-up address and distance, the saved card, a per-minute price, and a Book Car button.",
+        caption: "Range, rate and distance before the button.",
+      },
+      {
+        src: "/work/chub/route.webp",
+        alt: "The route drawn across a dark map with a distance marker, and a panel below carrying the pick-up and destination, the service class, a fare range, the estimated trip time, the saved card and a Need Assistance button.",
+        caption: "Priced and timed before it starts.",
+      },
+      {
+        src: "/work/chub/cabin.webp",
+        alt: "The in-car panel: chips for air conditioning and ventilated seats, inside and outside temperature, a circular gauge reading 65 km/h with the gear selector around it, and a line saying the air conditioning is on.",
+        caption: "Under way, the app is the cabin.",
+      },
+      {
+        src: "/work/chub/onboarding.webp",
+        alt: "Chub's first run screen: the wordmark over a car rendered on a glowing ring, the line \"Choose a Vehicle and trip with style\", and Get started above a Skip link.",
+        caption: "First run: the product in one screen.",
+      },
+    ],
+    galleryKind: "phone",
+    technologies: ["Sketch", "iOS", "Prototyping", "Developer handoff"],
+    credits:
+      "Product design end to end, handed off to the development team that built it. Never released.",
   },
 ];
 

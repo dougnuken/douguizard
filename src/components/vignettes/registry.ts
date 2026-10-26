@@ -4,10 +4,11 @@ import VignetteNaowee from "./VignetteNaowee";
 import VignetteMercadolibre from "./VignetteMercadolibre";
 import VignetteBanco from "./VignetteBanco";
 import VignetteDc from "./VignetteDc";
+import VignetteMakeapet from "./VignetteMakeapet";
 import type { VignetteProps } from "./VignetteFrame";
 
 /** The dictionary key a vignette's caption and label live under (`work.vignettes`). */
-export type VignetteKey = "olbo" | "naowee" | "andes" | "banco" | "dc";
+export type VignetteKey = "olbo" | "naowee" | "andes" | "banco" | "dc" | "makeapet";
 
 /**
  * The cases that carry a live vignette, by slug. Captions and labels are
@@ -23,4 +24,5 @@ export const VIGNETTES: Record<string, { Component: ComponentType<VignetteProps>
   "mercadolibre-andes": { Component: VignetteMercadolibre, key: "andes" },
   "banco-de-occidente": { Component: VignetteBanco, key: "banco" },
   "dc-medical": { Component: VignetteDc, key: "dc" },
+  makeapet: { Component: VignetteMakeapet, key: "makeapet" },
 };
