@@ -32,7 +32,7 @@ falsos), y capturas del panel real con el diseño actual (C2 de la ronda 7 + R10
 Vidrio: dirección del login del panel (fondo claro, aurora pastel menta/lila/magenta/cian, vidrio blanco, tinta
 #0F172A, acento #4F46E5), no un degradado saturado.
 
-Film (`flow-screen-16x9` y `flow-screen-4x5`, mp4 + webm + póster): la grabación real de la nota de voz en el celular
+Film (`flow-nota-16x9` y `flow-nota-4x5`, mp4 + webm + póster): la nota de voz grabada el 30 oct con el diseño actual (`film/grabar_nota.py`, demo, nombres ficticios; fotogramas por screencast de Chromium a 786×1704) en el celular
 (`nota-de-voz.mp4`, 786×1704) dentro de un iPhone plano sobre el gris del estilo.
 
 Créditos Higgsfield: 11 escenas (8 iMac, 2 iPhone, 1 portada) × 2,75 ≈ 30, más 1 descartada (iMac con pie con la

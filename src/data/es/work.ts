@@ -537,7 +537,7 @@ export const workEs: Record<string, CaseCopy> = {
       label:
         "En el celular: una nota de voz llena el formulario de paciente nueva, la valoración toma una hora libre del calendario de la clínica y, al guardar, se abre el caso en la fase uno.",
       caption:
-        "Unos 20 segundos en el panel real, a tamaño de iPhone. La nota de voz se escribe aquí para la grabación; datos de prueba, y reglas fijas hacen el papel de la IA.",
+        "Unos 19 segundos en el panel real, a tamaño de iPhone: la nota llena el formulario, la valoración toma una hora libre del calendario de la clínica y el caso se abre en la fase uno. La nota se escribe aquí para la grabación; datos de prueba, y reglas fijas hacen el papel de la IA. El círculo gris marca cada toque.",
     },
     story: [
       {
