@@ -879,8 +879,8 @@ export const caseStudies: CaseStudy[] = [
       { value: "12", label: "Test suites", delta: "domain, ledger, worker, browser" },
     ],
     cover: {
-      src: "/work/dc-medical/00-portada-16x9",
-      alt: "DC Medical's panel on a silver iMac against a neutral grey background: the follow-up board, with the sidebar, counters for valuations and procedures, city filters and the list of controls to schedule.",
+      src: "/work/dc-medical/00-portada-ipad",
+      alt: "DC Medical's panel on an iPad held in a dark hand against a light grey background: the case list, with the glass sidebar on a pastel canvas, counters per phase and each patient with a three-step progress indicator.",
       width: 2400,
       height: 1350,
     },
@@ -921,8 +921,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/01-seguimiento",
-                alt: "A silver iMac on grey showing DC Medical's follow-up board: the DC Medical sidebar with Seguimiento selected, counters for valuations, procedures and controls to reschedule, city filters and the list of controls with the days left for each patient.",
+                src: "/work/dc-medical/01-imac-seguimiento",
+                alt: "A silver iMac seen straight on against light grey, showing DC Medical's follow-up board: the glass sidebar with Seguimiento selected in indigo, pastel counters for valuations and procedures, and the list of controls with WhatsApp and Historia buttons.",
                 caption: "Follow-up: the clinic's day on one screen.",
                 width: 1800,
                 height: 2400,
@@ -957,8 +957,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/03-macro-seguimiento",
-                alt: "A close-up of the bottom edge of an iMac display, shallow depth of field: rows of patients due for a control, with their procedure, date, a status chip and green WhatsApp and Historia buttons.",
+                src: "/work/dc-medical/02-macro-whatsapp",
+                alt: "A close-up of the bottom edge of an iPhone lying almost flat, shallow depth of field: a patient due for a control, with a mint WhatsApp button and a Historia button sharp in the foreground and the speaker grille below.",
                 caption: "Each row ends in the action it needs.",
                 width: 1800,
                 height: 2400,
@@ -980,8 +980,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/05-caso",
-                alt: "An iMac on grey with a case open in a side panel: case C-2026-0001, the three steps valuation, payment and procedure, the valuation price and the form to register its payment with method, date and receipt.",
+                src: "/work/dc-medical/04-iphone-caso",
+                alt: "A dark hand holding an iPhone with a case open as a sheet: case C-2026-0001, the three steps valuation, payment and procedure, the procedure and valuation date, and an indigo button to register the valuation payment.",
                 caption: "A case, open on its first phase.",
                 width: 1800,
                 height: 2400,
@@ -1002,16 +1002,16 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/07-movil-seguimiento",
-                alt: "A dark hand holding an iPhone with the follow-up board on the phone: counters as pastel cards for valuations, procedures, controls to reschedule and this week, then tabs and city filters.",
+                src: "/work/dc-medical/06-iphone-seguimiento",
+                alt: "A dark hand holding an iPhone with the follow-up board on the phone: pastel counters for valuations and procedures, the Controles tab in indigo and each patient as a card with Agendar control, WhatsApp and Historia.",
                 caption: "Follow-up on the phone: the same board, as cards.",
                 width: 1800,
                 height: 2400,
               },
               {
-                src: "/work/dc-medical/09-movil-caso",
-                alt: "A hand holding an iPhone with a case open as a sheet: case C-2026-0001, the three steps, the procedure and the valuation date, and an indigo button to register the valuation payment.",
-                caption: "A case on the phone, with the next step as the button.",
+                src: "/work/dc-medical/07-ipad-seguimiento",
+                alt: "Two dark hands holding an iPad in landscape with the follow-up board: the glass sidebar, six counters and the table of controls with their status and WhatsApp buttons.",
+                caption: "On a tablet, the desk layout with the sidebar.",
                 width: 1800,
                 height: 2400,
               },
@@ -1046,8 +1046,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/11-login",
-                alt: "A silver iMac on its stand against grey showing the panel's sign-in page: the DC Medical wordmark on a pastel panel with the line El panel de la clínica, en un solo lugar, and the Acceso al panel form with user, password and an indigo Entrar button.",
+                src: "/work/dc-medical/09-imac-login",
+                alt: "A silver iMac on its stand at a gentle three-quarter angle against light grey, showing the panel's sign-in page: the DC Medical wordmark on a pastel panel with the line El panel de la clínica, en un solo lugar, and the Acceso al panel form with an indigo Entrar button.",
                 caption: "Sign-in: one user per person, permissions by area.",
                 width: 1800,
                 height: 2400,
@@ -1062,8 +1062,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/02-contabilidad",
-                alt: "An iMac on grey with the accounting view for September 2026: net, payables and receivables counters, the month's movements and an Atención column with overdue bills and the patients who still owe.",
+                src: "/work/dc-medical/10-imac-contabilidad",
+                alt: "A silver iMac on light grey, with a person seen from behind out of focus in the foreground, showing the accounting view for September 2026: income, expenses, net, payables and receivables counters, and the month's movements with an Atención column.",
                 caption: "The month in accounting: what came in, what is due, who owes.",
                 width: 1800,
                 height: 2400,
@@ -1077,8 +1077,8 @@ export const caseStudies: CaseStudy[] = [
             ],
             figures: [
               {
-                src: "/work/dc-medical/08-casos",
-                alt: "An iMac on grey with the case list: the sidebar with Casos selected, counters per phase and each patient with her procedure, a three-step progress indicator and the phase she is in.",
+                src: "/work/dc-medical/11-ipad-casos",
+                alt: "An iPad held up in one dark hand, seen over a person's shoulder, showing the case list: counters per phase and each patient with her procedure, a three-step progress indicator and the next step written out.",
                 caption: "Cases: every patient, her phase and what comes next.",
                 width: 1800,
                 height: 2400,
