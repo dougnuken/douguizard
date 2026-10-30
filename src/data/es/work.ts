@@ -531,7 +531,7 @@ export const workEs: Record<string, CaseCopy> = {
       { label: "Suites de pruebas", delta: "dominio, contabilidad, worker, navegador" },
     ],
     cover: {
-      alt: "El panel de DC Medical en un iMac plateado sobre un fondo gris neutro: el tablero de seguimiento, con la barra lateral, los contadores de valoraciones y procedimientos, los filtros por ciudad y la lista de controles por agendar.",
+      alt: "El panel de DC Medical en un iPad sostenido por una mano oscura sobre un fondo gris claro: la lista de casos, con la barra lateral de vidrio sobre un lienzo pastel, contadores por fase y cada paciente con un indicador de tres pasos.",
     },
     film: {
       label:
@@ -552,7 +552,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un iMac plateado sobre gris con el tablero de seguimiento de DC Medical: la barra lateral con Seguimiento seleccionado, contadores de valoraciones, procedimientos y controles por reagendar, filtros por ciudad y la lista de controles con los días que le faltan a cada paciente.",
+                alt: "Un iMac plateado visto de frente sobre gris claro con el tablero de seguimiento de DC Medical: la barra lateral de vidrio con Seguimiento en índigo, contadores pastel de valoraciones y procedimientos y la lista de controles con botones de WhatsApp e Historia.",
                 caption: "Seguimiento: el día de la clínica en una pantalla.",
               },
             ],
@@ -584,7 +584,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un primer plano del borde inferior de la pantalla de un iMac, con poca profundidad de campo: filas de pacientes con control pendiente, su procedimiento, la fecha, una etiqueta de estado y los botones verdes de WhatsApp e Historia.",
+                alt: "Un primer plano del borde inferior de un iPhone casi acostado, con poca profundidad de campo: una paciente con control pendiente y los botones de WhatsApp, en menta, e Historia nítidos en primer plano, con la rejilla del altavoz debajo.",
                 caption: "Cada fila termina en la acción que necesita.",
               },
               {
@@ -601,7 +601,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un iMac sobre gris con un caso abierto en un panel lateral: el caso C-2026-0001, los tres pasos valoración, pago y procedimiento, el precio de la valoración y el formulario para registrar su pago con método, fecha y recibo.",
+                alt: "Una mano oscura sostiene un iPhone con un caso abierto como hoja: el caso C-2026-0001, los tres pasos valoración, pago y procedimiento, el procedimiento y la fecha de valoración, y un botón índigo para registrar el pago de la valoración.",
                 caption: "Un caso, abierto en su primera fase.",
               },
               {
@@ -617,12 +617,12 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Una mano oscura sostiene un iPhone con el tablero de seguimiento en el celular: contadores como tarjetas pastel de valoraciones, procedimientos, controles por reagendar y esta semana, y debajo las pestañas y los filtros por ciudad.",
+                alt: "Una mano oscura sostiene un iPhone con el tablero de seguimiento en el celular: contadores pastel de valoraciones y procedimientos, la pestaña Controles en índigo y cada paciente como tarjeta con Agendar control, WhatsApp e Historia.",
                 caption: "El seguimiento en el celular: el mismo tablero, en tarjetas.",
               },
               {
-                alt: "Una mano sostiene un iPhone con un caso abierto como hoja: el caso C-2026-0001, los tres pasos, el procedimiento y la fecha de valoración, y un botón índigo para registrar el pago de la valoración.",
-                caption: "Un caso en el celular, con el siguiente paso como botón.",
+                alt: "Dos manos oscuras sostienen un iPad horizontal con el tablero de seguimiento: la barra lateral de vidrio, seis contadores y la tabla de controles con su estado y botones de WhatsApp.",
+                caption: "En la tableta, el diseño de escritorio con la barra lateral.",
               },
             ],
           },
@@ -651,7 +651,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un iMac plateado con su pie sobre gris muestra la página de acceso del panel: el logotipo de DC Medical en un panel pastel con la frase El panel de la clínica, en un solo lugar, y el formulario Acceso al panel con usuario, contraseña y un botón índigo Entrar.",
+                alt: "Un iMac plateado con su pie, en un 3/4 suave sobre gris claro, muestra la página de acceso del panel: el logotipo de DC Medical en un panel pastel con la frase El panel de la clínica, en un solo lugar, y el formulario Acceso al panel con un botón índigo Entrar.",
                 caption: "El acceso: un usuario por persona, permisos por área.",
               },
             ],
@@ -664,7 +664,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un iMac sobre gris con la contabilidad de septiembre de 2026: contadores de neto, por pagar y por cobrar, los movimientos del mes y una columna de Atención con las cuentas vencidas y las pacientes que aún deben.",
+                alt: "Un iMac plateado sobre gris claro, con una persona de espaldas desenfocada en primer plano, muestra la contabilidad de septiembre de 2026: contadores de ingresos, gastos, neto, por pagar y por cobrar, y los movimientos del mes con una columna de Atención.",
                 caption: "El mes en contabilidad: lo que entró, lo que vence y quién debe.",
               },
             ],
@@ -676,7 +676,7 @@ export const workEs: Record<string, CaseCopy> = {
             ],
             figures: [
               {
-                alt: "Un iMac sobre gris con la lista de casos: la barra lateral con Casos seleccionado, contadores por fase y cada paciente con su procedimiento, un indicador de tres pasos y la fase en la que está.",
+                alt: "Un iPad sostenido en alto por una mano oscura, visto por encima del hombro de una persona, muestra la lista de casos: contadores por fase y cada paciente con su procedimiento, un indicador de tres pasos y el siguiente paso escrito.",
                 caption: "Casos: cada paciente, su fase y lo que sigue.",
               },
             ],

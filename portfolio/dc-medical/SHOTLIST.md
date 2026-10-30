@@ -11,20 +11,23 @@ Fuente y scripts: `dc-medical-dashboard/portfolio/` (`capturar.py`, `seudonimos.
 Salida: `public/work/dc-medical/NN-nombre.{webp,jpg}` + `-900.webp` (3:4, 1800×2400) o `-1200.webp` (16:9, 2400×1350),
 igual que olbo y MakeaPet.
 
-| Nº | Plano | Dispositivo | Pantalla / componente | Mano |
+| Archivo | Escena | Dispositivo | Pantalla | Mano |
 |---|---|---|---|---|
-| 00 | Portada 16:9, 3/4 | iMac | Seguimiento (izq. 74 %) | — |
-| 01 | Hero 3/4, cortado der. y abajo | iMac | Seguimiento | — |
-| 02 | Frontal, cortado izq. | iMac | Contabilidad · septiembre | — |
-| 03 | **Macro** con DOF | iMac | Filas de Seguimiento con WhatsApp / Historia | — |
-| 04 | **Widget de vidrio** | — | Controles por gestionar + contadores | — |
-| 05 | 3/4 espejo | iMac | Panel del caso C-2026-0001 | — |
-| 06 | **Widget de vidrio** | — | Pasos del caso + deslizador «Registrar primer pago» | — |
-| 07 | Hero en mano | iPhone negro | Seguimiento móvil | izq. |
-| 08 | Frontal espejo | iMac | Lista de casos | — |
-| 09 | Medio en mano | iPhone negro | Caso en el celular | der. |
-| 10 | **Marca** | — | Ícono grafito DC + tarjeta del login en vidrio | — |
-| 11 | Cierre, iMac con pie | iMac | Login del panel | — |
+| 00-portada-ipad (16:9) | `9f7cd36e` | iPad en mano | Casos | der. |
+| 01-imac-seguimiento | `e6cccd01` frontal | iMac con pie | Seguimiento | — |
+| 02-macro-whatsapp | `67158c41` macro, DOF | iPhone acostado | Botones WhatsApp / Historia | — |
+| 04-widget-controles | — | vidrio | Controles por gestionar | — |
+| 04-iphone-caso | `9ef3f38a` medio | iPhone en mano | Caso C-2026-0001 | der. |
+| 06-widget-caso | — | vidrio | Pasos del caso | — |
+| 06-iphone-seguimiento | `3d3b9ed4` hero | iPhone en mano | Seguimiento | izq. |
+| 07-ipad-seguimiento | `4a6075d1` dos manos | iPad | Seguimiento | ambas |
+| 10-widget-marca | — | vidrio | Ícono DC + tarjeta del login | — |
+| 09-imac-login | `810e4366` 3/4 | iMac con pie | Login | — |
+| 10-imac-contabilidad | `0454fff8` de espaldas | iMac con pie | Contabilidad | — |
+| 11-ipad-casos | `5f638122` sobre el hombro | iPad | Casos | der. |
+
+**v3 (30 oct):** escenas con la cámara a escuadra y el dispositivo completo dentro del cuadro (sin recortes ni giros
+falsos), y capturas del panel real con el diseño actual (C2 de la ronda 7 + R10). Fuente: `dc-medical-dashboard/portfolio/v3/`.
 
 Vidrio: dirección del login del panel (fondo claro, aurora pastel menta/lila/magenta/cian, vidrio blanco, tinta
 #0F172A, acento #4F46E5), no un degradado saturado.
