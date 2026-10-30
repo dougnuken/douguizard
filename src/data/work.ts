@@ -889,23 +889,23 @@ export const caseStudies: CaseStudy[] = [
     // note lives. Same recording as before, set in a flat handset on grey.
     film: {
       source: {
-        webm: "/work/dc-medical/flow-screen-16x9.webm",
-        mp4: "/work/dc-medical/flow-screen-16x9.mp4",
-        poster: "/work/dc-medical/flow-screen-16x9.jpg",
+        webm: "/work/dc-medical/flow-nota-16x9.webm",
+        mp4: "/work/dc-medical/flow-nota-16x9.mp4",
+        poster: "/work/dc-medical/flow-nota-16x9.jpg",
         width: 1920,
         height: 1080,
       },
       mobile: {
-        webm: "/work/dc-medical/flow-screen-4x5.webm",
-        mp4: "/work/dc-medical/flow-screen-4x5.mp4",
-        poster: "/work/dc-medical/flow-screen-4x5.jpg",
+        webm: "/work/dc-medical/flow-nota-4x5.webm",
+        mp4: "/work/dc-medical/flow-nota-4x5.mp4",
+        poster: "/work/dc-medical/flow-nota-4x5.jpg",
         width: 1080,
         height: 1350,
       },
       label:
         "On the phone: a voice note fills the new-patient form, the valuation takes a free hour from the clinic's calendar, and saving opens the case on phase one.",
       caption:
-        "About 20 seconds in the real panel, at iPhone size. The voice note is typed here for the recording; demo data, and fixed rules stand in for the AI.",
+        "About 19 seconds in the real panel, at iPhone size: the note fills the form, the valuation takes a free hour from the clinic's calendar and the case opens on phase one. The note is typed here for the recording; demo data, and fixed rules stand in for the AI. The grey circle marks each touch.",
     },
     story: [
       {
