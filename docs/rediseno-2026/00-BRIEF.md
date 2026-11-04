@@ -38,6 +38,13 @@
 - Consecuencia de color: el **rojo láser** pasa a ser un acento de marca posible (junto al azul eléctrico / magenta de
   las referencias). La dirección de arte decide cómo convive sin volverse "gamer".
 
+### Decisión de Doug sobre la máscara (4 nov, después de ver el prototipo)
+
+- **Se descarta la máscara y su revelado por capas**: "no se está logrando algo serio de alto impacto, da algo de risa".
+- El héroe queda en **foto (láser rojo, gorra NY, sin lentes) + vidrio estriado oblicuo**. La única interacción del
+  cursor es el vidrio: se abre/aclara bajo el cursor con un spring y reacciona al scroll. Sobria, nada lúdica.
+- Ítems de la §6 sobre la máscara quedan anulados. `prototipos/revelado-mascara.html` y `heroe/` quedan como exploración.
+
 ## 2. Equipo y fases
 
 | Rol | Qué entrega | Archivo |
@@ -93,7 +100,7 @@ displacement, SDF), **Three.js Scroll Worlds**, **Diagram Design** (para el time
 ## 6. Lista de validación del orquestador
 
 - [ ] Héroe con foto de Doug + vidrio estriado oblicuo que distorsiona.
-- [ ] Revelado de máscara por capas al pasar el mouse por la cara (y equivalente táctil).
+- [x] ~~Revelado de máscara por capas~~ (descartado por Doug) → vidrio que reacciona al cursor y al scroll, con equivalente táctil.
 - [ ] Estética cyberpunk/futurista coherente con RonDesignLab (no neón genérico de videojuego).
 - [ ] Balance oscuro + blanco; dot-matrix en cifras de cards; tipografía display estilizada.
 - [ ] Landing bento con puertas a trabajo, perfil, experiencia/timeline (y contacto/CV).
@@ -101,5 +108,5 @@ displacement, SDF), **Three.js Scroll Worlds**, **Diagram Design** (para el time
 - [ ] Copy mejorado, ES y EN.
 - [ ] Móvil diseñado, no solo encogido.
 - [ ] Dos propuestas distintas de verdad + recomendación argumentada.
-- [ ] Prompts de imagen para Higgsfield (y pares alineados con/sin máscara para el revelado).
+- [ ] Imagen final del héroe: aplazada por Doug (provisional `199598aa`).
 - [ ] Spacing, tipografía y jerarquía revisados al milímetro (puntaje del crítico).
