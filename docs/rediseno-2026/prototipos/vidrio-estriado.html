@@ -12,7 +12,9 @@
     dom    → CSS puro con "rebanadas": N franjas rotadas con overflow:hidden; cada una muestra la foto
              contra-rotada y escalada (scaleX) alrededor de su centro + degradado de brillo por franja.
     svg    → filtro SVG feDisplacementMap con un mapa de desplazamiento generado en canvas + capa de brillos.
-  URL: ?modo=webgl|dom|svg · ?rm=1 simula prefers-reduced-motion · ?cara=1 deja la cara nítida.
+  URL: ?modo=webgl|dom|svg · ?img=199598aa|40fe7690 · ?rm=1 simula prefers-reduced-motion · ?cara=0 · ?linea=0
+  Cualquier foto 3:4 sirve: solo hay que declarar en IMGS el foco, la elipse de la cara y (si la hay) la altura
+  de la línea láser, todo en coordenadas 0–1 de la imagen. Nada más depende del archivo.
   Ábrelo con un servidor estático (Chrome bloquea subir una imagen file:// a WebGL):
     npx http-server docs/rediseno-2026 -p 8080  →  http://localhost:8080/prototipos/vidrio-estriado.html
   Con doble clic (file://) cae solo a "dom" y ofrece cargar la imagen a mano para activar WebGL.
@@ -47,7 +49,7 @@
     box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, .8);
   }
   .card > .layer { position: absolute; inset: 0; width: 100%; height: 100%; }
-  #base { object-fit: cover; object-position: 55% 38%; display: block; }
+  #base { object-fit: cover; object-position: var(--focus); display: block; }
   #gl { opacity: 0; transition: opacity 400ms var(--ease-out); display: block; }
   #gl.on { opacity: 1; }
   .dom, .svgw { display: none; overflow: hidden; }
@@ -59,7 +61,7 @@
   .dom .s { position: absolute; top: 0; overflow: hidden; }
   .dom .s > i {
     position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform;
-    background: url("../retratos-hf/40fe7690.jpg") no-repeat; background-size: cover; background-position: 55% 38%;
+    background: var(--photo) no-repeat; background-size: cover; background-position: var(--focus);
   }
   .dom .s::after {
     content: ""; position: absolute; inset: 0; pointer-events: none; opacity: var(--hl, .8);
@@ -69,7 +71,7 @@
   }
 
   /* ── svg: feDisplacementMap ─────────────────────────────────────── */
-  .svgw .img { position: absolute; inset: 0; background: url("../retratos-hf/40fe7690.jpg") no-repeat; background-size: cover; background-position: 55% 38%; filter: url(#flute); }
+  .svgw .img { position: absolute; inset: 0; background: var(--photo) no-repeat; background-size: cover; background-position: var(--focus); filter: url(#flute); }
   .svgw .hl { position: absolute; top: 0; left: 0; height: 100%; background-repeat: no-repeat; will-change: transform; pointer-events: none; }
 
   .card .tag {
@@ -123,7 +125,7 @@
 <div class="banner" id="banner" role="status">
   Chrome no deja subir una imagen <span class="mono">file://</span> a WebGL, así que estás viendo el modo CSS.
   Ábrelo con <span class="mono">npx http-server docs/rediseno-2026</span> o
-  <label for="pick">elige aquí la foto</label> (<span class="mono">retratos-hf/40fe7690.jpg</span>) para activar WebGL.
+  <label for="pick">elige aquí la foto</label> (<span class="mono">retratos-hf/199598aa.jpg</span>) para activar WebGL.
   <input id="pick" type="file" accept="image/*" hidden>
 </div>
 
@@ -136,7 +138,7 @@
       <div class="chips"><span class="chip">Ver trabajo</span><span class="chip">Perfil</span><span class="chip">CV</span></div>
     </div>
     <figure class="card" id="card" data-mode="webgl">
-      <img class="layer" id="base" src="../retratos-hf/40fe7690.jpg" alt="Retrato de Doug Vargas detrás de un vidrio estriado" width="1073" height="1600" fetchpriority="high" decoding="async">
+      <img class="layer" id="base" alt="Retrato de Doug Vargas detrás de un vidrio estriado" width="880" height="1168" fetchpriority="high" decoding="async">
       <canvas class="layer" id="gl" aria-hidden="true"></canvas>
       <div class="layer dom" id="dom" aria-hidden="true"></div>
       <div class="layer svgw" id="svgw" aria-hidden="true"><div class="img"></div><div class="hl" id="hl"></div></div>
@@ -170,6 +172,7 @@
     <label class="row gl-only"><span>Aberración</span><input type="range" name="ca" min="0" max="1" step="0.01" value="0.45"><output>0.45</output></label>
     <label class="row gl-only"><span>Esmerilado</span><input type="range" name="frost" min="0" max="1" step="0.01" value="0.55"><output>0.55</output></label>
     <label class="check gl-only"><input type="checkbox" name="face"> Cara nítida (estrías por fuera)</label>
+    <label class="check gl-only"><input type="checkbox" name="line"> Proteger la línea láser</label>
     <div class="note" id="note">Mueve el cursor sobre la foto y desplázate.</div>
   </form>
 </details>
@@ -182,11 +185,19 @@
   const card = $("#card"), base = $("#base"), canvas = $("#gl"), domEl = $("#dom"), hl = $("#hl"), tag = $("#tag");
   const fmap = $("#fmap"), fdisp = $("#fdisp"), filterEl = $("#flute");
   const RM = qs.has("rm") || matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const IMG = { w: 1073, h: 1600, fx: 0.55, fy: 0.38 };
-  // La cara en píxeles de la imagen (medida sobre 40fe7690.jpg): centro y radios de la elipse.
-  const FACE = { x: 585, y: 660, rx: 300, ry: 345 };
+  // Presets de imagen. Todo en coordenadas normalizadas (0–1) de la foto: así una foto nueva 3:4 solo
+  // necesita su línea aquí. face = [cx, cy, rx, ry] (rx en fracción del ANCHO, ry del ALTO); line = y del láser.
+  const IMGS = {
+    "199598aa": { src: "../retratos-hf/199598aa.jpg", fx: 0.5, fy: 0.42, face: [0.5, 0.41, 0.19, 0.205], line: 0.418 },
+    "40fe7690": { src: "../retratos-hf/40fe7690.jpg", fx: 0.55, fy: 0.38, face: [0.545, 0.4125, 0.28, 0.216], line: null },
+  };
+  const PRESET = IMGS[qs.get("img")] || IMGS["199598aa"];
+  const IMG = { w: 880, h: 1168, fx: PRESET.fx, fy: PRESET.fy };
+  card.style.setProperty("--photo", `url("${PRESET.src}")`);
+  card.style.setProperty("--focus", `${PRESET.fx * 100}% ${PRESET.fy * 100}%`);
+  base.src = PRESET.src;
 
-  const P = { mode: "webgl", w: 58, ang: 11, str: 0.62, ca: 0.45, frost: 0.55, face: qs.has("cara") };
+  const P = { mode: "webgl", w: 58, ang: 11, str: 0.62, ca: 0.45, frost: 0.55, face: qs.get("cara") !== "0", line: qs.get("linea") !== "0" && PRESET.line != null };
   const S = { tx: 0, ty: 0, mx: 0, my: 0, vx: 0, vy: 0, hoverT: 0, hover: 0, phaseT: 0, phase: 0, scroll: 0, t0: performance.now(), bench: false, inside: false };
   let W = 0, H = 0, DPR = 1, raf = 0, last = performance.now();
   const frameTimes = []; let jsMs = 0;
@@ -210,7 +221,7 @@
   uniform vec2 uRes; uniform float uDpr;
   uniform vec2 uImgScale; uniform vec2 uImgOff;
   uniform float uW, uAng, uStr, uCA, uFrost, uPhase, uTime, uHover, uScroll;
-  uniform vec2 uMouse; uniform vec4 uFace;
+  uniform vec2 uMouse; uniform vec4 uFace; uniform float uLineY, uLineH;
   out vec4 o;
   float hash(float n){ return fract(sin(n * 127.1) * 43758.5453); }
   vec3 samp(vec2 p){ return texture(uTex, (p - uImgOff) * uImgScale).rgb; }
@@ -231,10 +242,14 @@
     float prof = s * 0.75 + 0.45 * s * s * s;
     float jit = (hash(k) - 0.5) * 0.4;            // ninguna estría es idéntica
     float disp = str * uW * (prof + jit);
-    vec2 q = p + dir * disp;
+    // Línea láser: el desplazamiento se vuelve horizontal (una línea horizontal desplazada en X sigue entera)
+    // y, dentro de su banda, se apagan el esmerilado y la aberración, que la ensancharían y la teñirían.
+    float band = uLineH > 0.0 ? 1.0 - smoothstep(uLineH, uLineH * 2.2, abs(p.y - uLineY)) : 0.0;
+    vec2 dd = uLineH > 0.0 ? vec2(1.0, 0.0) : dir;
+    vec2 q = p + dd * disp;
     q.y -= uScroll * 60.0;                        // parallax de la foto con el scroll
-    float ca = uCA * str * uW * 0.10 * (0.3 + abs(s));
-    float fl = uFrost * str * 12.0 * (0.4 + abs(s));
+    float ca = uCA * str * uW * 0.10 * (0.3 + abs(s)) * (1.0 - band);
+    float fl = uFrost * str * 12.0 * (0.4 + abs(s)) * (1.0 - band);
     vec3 col = vec3(0.0);
     for (int i = 0; i < 5; i++) {
       vec2 qq = q + al * ((float(i) - 2.0) * 0.5 * fl);
@@ -269,7 +284,7 @@
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(prog, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ["uTex","uRes","uDpr","uImgScale","uImgOff","uW","uAng","uStr","uCA","uFrost","uPhase","uTime","uHover","uScroll","uMouse","uFace"]
+    ["uTex","uRes","uDpr","uImgScale","uImgOff","uW","uAng","uStr","uCA","uFrost","uPhase","uTime","uHover","uScroll","uMouse","uFace","uLineY","uLineH"]
       .forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
     canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); glReady = false; setMode("dom"); });
     return true;
@@ -292,13 +307,16 @@
     gl.uniform1i(U.uTex, 0);
     gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, DPR);
     gl.uniform2f(U.uImgScale, 1 / c.Dx, 1 / c.Dy); gl.uniform2f(U.uImgOff, c.Ox, c.Oy);
-    gl.uniform1f(U.uW, P.w); gl.uniform1f(U.uAng, (P.ang * Math.PI) / 180);
+    gl.uniform1f(U.uW, P.w * Math.min(1, Math.max(0.65, W / 700)));   // en móvil la estría se estrecha con la card gl.uniform1f(U.uAng, (P.ang * Math.PI) / 180);
     gl.uniform1f(U.uStr, P.str); gl.uniform1f(U.uCA, P.ca); gl.uniform1f(U.uFrost, P.frost);
     gl.uniform1f(U.uPhase, S.phase); gl.uniform1f(U.uTime, (now - S.t0) / 1000);
     gl.uniform1f(U.uHover, S.hover); gl.uniform1f(U.uScroll, S.scroll);
     gl.uniform2f(U.uMouse, S.mx, S.my);
-    if (P.face) gl.uniform4f(U.uFace, c.Ox + FACE.x * c.k, c.Oy + FACE.y * c.k, FACE.rx * c.k, FACE.ry * c.k);
+    const F = PRESET.face;
+    if (P.face) gl.uniform4f(U.uFace, c.Ox + F[0] * c.Dx, c.Oy + F[1] * c.Dy, F[2] * c.Dx, F[3] * c.Dy);
     else gl.uniform4f(U.uFace, 0, 0, 0, 0);
+    if (P.line) { gl.uniform1f(U.uLineY, c.Oy + PRESET.line * c.Dy - S.scroll * 60); gl.uniform1f(U.uLineH, 0.012 * c.Dy); }
+    else { gl.uniform1f(U.uLineY, 0); gl.uniform1f(U.uLineH, 0); }
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     if (!canvas.classList.contains("on")) canvas.classList.add("on");   // la foto estática ya estaba pintada debajo (LCP)
   }
@@ -454,7 +472,7 @@
   }
   document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.m)));
   const form = $("#form");
-  form.querySelector("[name=face]").checked = P.face;
+  form.querySelector("[name=face]").checked = P.face; form.querySelector("[name=line]").checked = P.line;
   form.addEventListener("input", (e) => {
     const el = e.target; if (!el.name) return;
     P[el.name] = el.type === "checkbox" ? el.checked : parseFloat(el.value);
@@ -469,6 +487,7 @@
   try { glOk = initGL(); } catch (err) { console.warn(err); }
   const wanted = qs.get("modo") || "webgl";
   function start(img) {
+    IMG.w = img.naturalWidth; IMG.h = img.naturalHeight;   // cualquier foto: el tamaño se lee, no se declara
     if (glOk) {
       try { upload(img); } catch (err) {
         console.warn("WebGL sin textura:", err.name);
