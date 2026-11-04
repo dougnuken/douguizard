@@ -26,6 +26,18 @@
 - Primera entrega: **dos propuestas** de la nueva web + cuál es la mejor forma de diseñarla + **propuestas de
   imágenes del landing** (con prompts para Higgsfield).
 
+### Decisión de Doug sobre la imagen del héroe (4 nov, después de ver las primeras generaciones)
+
+- **Sin lentes.** Le gustan más sus retratos con la **línea / halo de láser rojo** sobre los ojos
+  (`retratos-hf/199598aa.jpg`; misma serie: `a4ef948f`, `a34aaaf8`, `98153a04` en `indice.tsv`).
+- **Conservar la gorra NY**, que lo caracteriza. Chaqueta de cuero negra, muro de concreto, luz fría.
+- La imagen definitiva (con máscara y sus capas) **se deja para después**: encontrar el modelo perfecto puede llevar
+  muchas rondas. **Prioridad ahora: todo lo demás.** Las propuestas usan `199598aa.jpg` como imagen provisional y
+  diseñan el sistema (vidrio estriado, revelado, acento rojo láser) para que la foto final entre sin rehacer nada.
+- Las generaciones de `heroe/` (estudio lila, andén, escáner) quedan como exploración descartada.
+- Consecuencia de color: el **rojo láser** pasa a ser un acento de marca posible (junto al azul eléctrico / magenta de
+  las referencias). La dirección de arte decide cómo convive sin volverse "gamer".
+
 ## 2. Equipo y fases
 
 | Rol | Qué entrega | Archivo |
