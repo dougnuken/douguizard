@@ -7,8 +7,8 @@ import { getDict } from "@/i18n/dictionaries";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 
 /**
- * The CV download on `/cv`. Four static sheets exist (two languages, with and
- * without the photo), so the button opens a small native `<dialog>` to pick
+ * The download on `/cv`: the CV or the cover letter. Four CV sheets exist (two languages, with and
+ * without the photo) and one letter per language, so the button opens a small native `<dialog>` to pick
  * one: the page's language and the photo come preselected, and the link at the
  * bottom is a plain download of the chosen file. `<dialog>` brings focus
  * trapping, Escape and the backdrop for free; a click on the backdrop closes it.
@@ -22,6 +22,7 @@ export default function PrintButton() {
   const id = useId();
   const [lang, setLang] = useState<Locale>(locale);
   const [photo, setPhoto] = useState(true);
+  const [doc, setDoc] = useState<"cv" | "letter">("cv");
 
   if (!site.cv.pdf) {
     return (
@@ -37,7 +38,12 @@ export default function PrintButton() {
 
   const d = t.downloadDialog;
   const chosen = getSite(lang).cv;
-  const href = (photo ? chosen.pdf : chosen.pdfNoPhoto) ?? chosen.pdf!;
+  // The letter has no photo variant, so choosing it hides that question.
+  const letter = doc === "letter" && !!chosen.letterPdf;
+  const href = letter ? chosen.letterPdf! : ((photo ? chosen.pdf : chosen.pdfNoPhoto) ?? chosen.pdf!);
+  const fileName = letter
+    ? getDict(lang).cv.letterDownloadName(site.name)
+    : getDict(lang).cv.downloadName(site.name, photo);
   const close = () => ref.current?.close();
 
   const option = "flex min-h-11 flex-1 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px]";
@@ -52,6 +58,7 @@ export default function PrintButton() {
         onClick={() => {
           setLang(locale);
           setPhoto(true);
+          setDoc("cv");
           ref.current?.showModal();
         }}
         className="btn-pill h-11 min-h-11 px-5 text-[14px] print:hidden"
@@ -69,6 +76,28 @@ export default function PrintButton() {
           <h2 id={`${id}-title`} className="text-[18px] font-semibold leading-tight">
             {d.title}
           </h2>
+
+          {site.cv.letterPdf ? (
+            <fieldset className="flex flex-col gap-2">
+              <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
+                {d.document}
+              </legend>
+              <div className="flex gap-2">
+                {(["cv", "letter"] as const).map((k) => (
+                  <label key={k} className={`${option} ${doc === k ? on : off}`}>
+                    <input
+                      type="radio"
+                      name={`${id}-doc`}
+                      checked={doc === k}
+                      onChange={() => setDoc(k)}
+                      className="accent-[var(--ink)]"
+                    />
+                    {k === "cv" ? d.cv : d.letter}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : null}
 
           <fieldset className="flex flex-col gap-2">
             <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
@@ -91,7 +120,7 @@ export default function PrintButton() {
             </div>
           </fieldset>
 
-          <fieldset className="flex flex-col gap-2">
+          <fieldset className="flex flex-col gap-2" hidden={letter}>
             <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
               {d.photo}
             </legend>
@@ -124,7 +153,7 @@ export default function PrintButton() {
               href={href}
               // Named, not left to the URL, and in the sheet's own language: a
               // recruiter's downloads folder should say whose CV this is.
-              download={getDict(lang).cv.downloadName(site.name, photo)}
+              download={fileName}
               onClick={close}
               className="btn-pill btn-pill--solid h-11 min-h-11 px-5 text-[14px]"
             >
