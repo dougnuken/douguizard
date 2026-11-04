@@ -27,38 +27,38 @@ export interface CoverLetter {
  * up for the occasion, because the reader can click through and check.
  */
 export const coverLetter: CoverLetter = {
-  kicker: "A letter",
-  updated: "September 2026",
-  salutation: "Hello —",
+  kicker: "Cover letter",
+  updated: "November 2026",
+  salutation: "Hello,",
   paragraphs: [
-    "I'm a product designer who learned to build, and it changed what I'm able to be responsible for. I don't hand over a specification and wait to see what comes back — I hand over something that runs, and then I keep answering for it.",
-    "At Naowee that looks like this: rather than write a document describing how inspection and control should work across ~1,200 sports organizations and their 30 regulatory procedures, I build it, and walk it story by story with the analysts who have to sign it off. A prototype that runs settles the arguments a specification can only postpone.",
-    "The habit came from design systems. When one decision about a token reaches 400+ designers and 2,000+ engineers, you stop designing screens and start designing constraints — and the constraints that hold are the ones you can execute, not the ones you can only describe.",
-    "I work with AI the same way I'd work with anyone fast and new: give it room, then verify. On olbo I let it write quickly and let 634 tests decide what survived. Nothing ships here because it sounded right.",
-    "If you're building something where design and engineering can't afford to be two separate handoffs, I'd like to talk.",
+    "I'm a product designer who also writes code. In practice, that means I rarely hand off a spec and wait to see what comes back. I build a working version, put it in front of the people who will use it, and stay with it after it ships.",
+    "Today I'm Head of Product at Naowee, where we're digitizing how Colombia's sports system is inspected and regulated: about 1,200 organizations and 30 procedures that used to live in Word files and email. Before drawing a single screen, I mapped more than 45 states and 15 roles. Then I built the flows as prototypes and walked through them, story by story, with the analysts who have to sign off. Disagreements came up early, while they were still cheap to fix.",
+    "Before Naowee, I worked on Andes, Mercado Libre's design system, used by more than 400 designers and 2,000 engineers across 18 countries. At that scale, a small change to one component can break dozens of screens you will never see. It taught me to care about the details other people build on, and to only write rules that can actually be enforced in code.",
+    "I use AI every day, and I check its work. On olbo, a budgeting app I designed and built, I rebuilt the whole interface with AI help and didn't touch the budget math: all 647 tests had to stay green before anything shipped.",
+    "If your team needs someone who can take an idea from a rough sketch to something real people can use, I'd love to talk.",
   ],
-  signoff: "Thanks for reading,",
-  note: "This is the general letter. Tell me what you're building and I'll write you a specific one.",
+  signoff: "Best regards,",
+  note: "This is my general letter. Tell me about the role and I'll write one just for it.",
 };
 
 /**
  * The Spanish letter. Written in Spanish, not translated sentence by sentence:
- * the argument is the same, the figures are the same, and every one of them is
- * still one the case data carries.
+ * same story, same figures, and every one of them is still one the case data
+ * carries.
  */
 const coverLetterEs: CoverLetter = {
-  kicker: "Una carta",
-  updated: "octubre de 2026",
-  salutation: "Hola:",
+  kicker: "Carta de presentación",
+  updated: "noviembre de 2026",
+  salutation: "Hola,",
   paragraphs: [
-    "Soy un diseñador de producto que aprendió a construir, y eso cambió aquello de lo que puedo hacerme responsable. No entrego una especificación para quedarme esperando a ver qué vuelve: entrego algo que funciona, y después sigo respondiendo por ello.",
-    "En Naowee se ve así: en lugar de escribir un documento que describa cómo deberían funcionar la inspección, vigilancia y control de ~1.200 organizaciones deportivas y sus 30 trámites regulatorios, lo construyo y lo recorro historia por historia con los analistas que tienen que aprobarlo. Un prototipo que funciona resuelve las discusiones que una especificación solo logra aplazar.",
-    "El hábito viene de los sistemas de diseño. Cuando una sola decisión sobre un token llega a más de 400 diseñadores y más de 2.000 ingenieros, dejas de diseñar pantallas y empiezas a diseñar restricciones; y las restricciones que se sostienen son las que se pueden ejecutar, no las que solo se pueden describir.",
-    "Trabajo con la IA como trabajaría con cualquier persona rápida y nueva: le doy espacio y después verifico. En olbo la dejé escribir rápido y dejé que 634 pruebas decidieran qué sobrevivía. Aquí nada sale porque sonaba bien.",
-    "Si estás construyendo algo donde el diseño y la ingeniería no pueden darse el lujo de ser dos entregas separadas, me gustaría conversar.",
+    "Soy diseñador de producto y también programo. En la práctica, eso significa que casi nunca entrego una especificación y me siento a esperar. Construyo una versión que funciona, la pongo frente a quienes la van a usar y sigo pendiente de ella después del lanzamiento.",
+    "Hoy soy Head of Product en Naowee, donde estamos digitalizando la inspección, vigilancia y control del sistema deportivo colombiano: cerca de 1.200 organizaciones y 30 trámites que vivían en archivos de Word y correos. Antes de dibujar una sola pantalla mapeé más de 45 estados y 15 roles. Después construí los flujos como prototipos y los revisé, historia por historia, con los analistas que tienen que aprobarlos. Los desacuerdos salieron temprano, cuando todavía era barato resolverlos.",
+    "Antes de Naowee trabajé en Andes, el sistema de diseño de Mercado Libre, que usan más de 400 diseñadores y 2.000 ingenieros en 18 países. A esa escala, un cambio pequeño en un componente puede romper decenas de pantallas que nunca vas a ver. Ahí aprendí a cuidar los detalles sobre los que otros construyen, y a escribir solo las reglas que de verdad se pueden cumplir en código.",
+    "Uso IA todos los días y reviso lo que hace. En olbo, una app de presupuesto que diseñé y construí, rehíce toda la interfaz con ayuda de IA sin tocar la lógica del presupuesto: las 647 pruebas tenían que seguir pasando antes de publicar cualquier cosa.",
+    "Si tu equipo necesita a alguien que lleve una idea desde un boceto hasta algo que la gente pueda usar, me encantaría conversar.",
   ],
-  signoff: "Gracias por leer,",
-  note: "Esta es la carta general. Cuéntame qué estás construyendo y te escribo una específica.",
+  signoff: "Un saludo,",
+  note: "Esta es mi carta general. Cuéntame del cargo y te escribo una pensada para él.",
 };
 
 export function getCoverLetter(locale: Locale): CoverLetter {

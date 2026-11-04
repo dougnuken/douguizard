@@ -187,7 +187,7 @@ const en = {
     title: (headline: string) => `CV — ${headline}`,
     description: (p: { name: string; years: number; companies: string }) =>
       `Curriculum vitae of ${p.name}. ${p.years} years of product design and design engineering across ${p.companies}.`,
-    download: "Download PDF",
+    download: "Download CV",
     downloadDialog: {
       title: "Download CV",
       language: "Language",
@@ -200,7 +200,9 @@ const en = {
     },
     downloadName: (name: string, photo = true) => `${name} — CV${photo ? "" : " (no photo)"}.pdf`,
     letterUpdated: (when: string) => `Updated ${when}`,
-    copy: { idle: "Copy letter", copied: "Copied", failed: "Couldn't copy" },
+    copy: { idle: "Copy text", copied: "Copied", failed: "Couldn't copy. Try selecting it." },
+    letterDownload: "Download PDF",
+    letterDownloadName: (name: string) => `${name} — Cover letter.pdf`,
     experience: "Experience",
     earlier: "Earlier",
     seeCase: "See case",
@@ -384,7 +386,7 @@ const es: Dict = {
     title: (headline: string) => `Hoja de vida — ${headline}`,
     description: (p) =>
       `Hoja de vida de ${p.name}. ${p.years} años de diseño de producto e ingeniería de diseño en ${p.companies}.`,
-    download: "Descargar PDF",
+    download: "Descargar hoja de vida",
     downloadDialog: {
       title: "Descargar hoja de vida",
       language: "Idioma",
@@ -397,7 +399,9 @@ const es: Dict = {
     },
     downloadName: (name: string, photo = true) => `${name} — Hoja de vida${photo ? "" : " (sin foto)"}.pdf`,
     letterUpdated: (when: string) => `Actualizada en ${when}`,
-    copy: { idle: "Copiar carta", copied: "Copiada", failed: "No se pudo copiar" },
+    copy: { idle: "Copiar texto", copied: "Copiado", failed: "No se pudo copiar. Selecciónalo a mano." },
+    letterDownload: "Descargar PDF",
+    letterDownloadName: (name: string) => `${name} — Carta de presentación.pdf`,
     experience: "Experiencia",
     earlier: "Antes",
     seeCase: "Ver caso",

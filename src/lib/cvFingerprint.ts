@@ -1,3 +1,4 @@
+import { getCoverLetter } from "@/data/coverLetter";
 import { getCv } from "@/data/cv";
 import { yearsOfExperience } from "@/lib/career";
 import { getSite } from "@/data/site";
@@ -58,7 +59,35 @@ function payload(locale: Locale) {
  * browser without importing anything.
  */
 export function cvFingerprint(locale: Locale = "en"): string {
-  const text = JSON.stringify(payload(locale));
+  return fnv(JSON.stringify(payload(locale)));
+}
+
+/**
+ * The same guard for the cover letter PDF: every word it prints and the
+ * contact block under it. Edit the letter and the test fails until
+ * `npm run cv:pdf` prints it again.
+ */
+export function letterFingerprint(locale: Locale = "en"): string {
+  const site = getSite(locale);
+  const { updated, salutation, paragraphs, signoff } = getCoverLetter(locale);
+  return fnv(
+    JSON.stringify({
+      name: site.name,
+      headline: site.headline,
+      email: site.email,
+      phone: site.phone,
+      domain: site.domain,
+      location: site.location,
+      profiles: site.social.filter((s) => s.onCv).map((s) => s.href),
+      updated,
+      salutation,
+      paragraphs,
+      signoff,
+    }),
+  );
+}
+
+function fnv(text: string): string {
   let hash = 0xcbf29ce484222325n;
   const prime = 0x100000001b3n;
   const mask = 0xffffffffffffffffn;
