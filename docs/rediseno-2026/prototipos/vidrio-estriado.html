@@ -74,6 +74,11 @@
   .svgw .img { position: absolute; inset: 0; background: var(--photo) no-repeat; background-size: cover; background-position: var(--focus); filter: url(#flute); }
   .svgw .hl { position: absolute; top: 0; left: 0; height: 100%; background-repeat: no-repeat; will-change: transform; pointer-events: none; }
 
+  /* Respaldos CSS: la cara (y la banda del láser) se protegen con una copia nítida enmascarada encima. */
+  #sharp { display: none; object-fit: cover; object-position: var(--focus); pointer-events: none;
+    -webkit-mask-image: var(--mFace), var(--mLine); mask-image: var(--mFace), var(--mLine);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+  [data-mode="dom"] #sharp.on, [data-mode="svg"] #sharp.on { display: block; }
   .card .tag {
     position: absolute; left: 16px; bottom: 16px; z-index: 3; padding: 7px 12px; border-radius: 999px;
     background: rgba(10, 10, 11, .55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -142,6 +147,7 @@
       <canvas class="layer" id="gl" aria-hidden="true"></canvas>
       <div class="layer dom" id="dom" aria-hidden="true"></div>
       <div class="layer svgw" id="svgw" aria-hidden="true"><div class="img"></div><div class="hl" id="hl"></div></div>
+      <img class="layer" id="sharp" alt="" aria-hidden="true">
       <div class="tag" id="tag">WEBGL</div>
     </figure>
   </section>
@@ -171,8 +177,8 @@
     <label class="row"><span>Fuerza</span><input type="range" name="str" min="0" max="1" step="0.01" value="0.62"><output>0.62</output></label>
     <label class="row gl-only"><span>Aberración</span><input type="range" name="ca" min="0" max="1" step="0.01" value="0.45"><output>0.45</output></label>
     <label class="row gl-only"><span>Esmerilado</span><input type="range" name="frost" min="0" max="1" step="0.01" value="0.55"><output>0.55</output></label>
-    <label class="check gl-only"><input type="checkbox" name="face"> Cara nítida (estrías por fuera)</label>
-    <label class="check gl-only"><input type="checkbox" name="line"> Proteger la línea láser</label>
+    <label class="check"><input type="checkbox" name="face"> Cara nítida (estrías por fuera)</label>
+    <label class="check"><input type="checkbox" name="line"> Proteger la línea láser</label>
     <div class="note" id="note">Mueve el cursor sobre la foto y desplázate.</div>
   </form>
 </details>
@@ -195,7 +201,7 @@
   const IMG = { w: 880, h: 1168, fx: PRESET.fx, fy: PRESET.fy };
   card.style.setProperty("--photo", `url("${PRESET.src}")`);
   card.style.setProperty("--focus", `${PRESET.fx * 100}% ${PRESET.fy * 100}%`);
-  base.src = PRESET.src;
+  base.src = PRESET.src; document.querySelector("#sharp").src = PRESET.src;
 
   const P = { mode: "webgl", w: 58, ang: 11, str: 0.62, ca: 0.45, frost: 0.55, face: qs.get("cara") !== "0", line: qs.get("linea") !== "0" && PRESET.line != null };
   const S = { tx: 0, ty: 0, mx: 0, my: 0, vx: 0, vy: 0, hoverT: 0, hover: 0, phaseT: 0, phase: 0, scroll: 0, t0: performance.now(), bench: false, inside: false };
@@ -402,6 +408,18 @@
     hl.style.transform = `translateX(${-off}px)`;
   }
 
+  function sharpMask() {
+    const el = $("#sharp"), c = cover(), F = PRESET.face;
+    el.classList.toggle("on", P.face || P.line);
+    el.style.setProperty("--mFace", P.face
+      ? `radial-gradient(${F[2] * c.Dx}px ${F[3] * c.Dy}px at ${c.Ox + F[0] * c.Dx}px ${c.Oy + F[1] * c.Dy}px, #000 78%, transparent 104%)`
+      : "linear-gradient(transparent, transparent)");
+    const y = c.Oy + (PRESET.line ?? 0) * c.Dy, h = 0.012 * c.Dy;
+    el.style.setProperty("--mLine", P.line
+      ? `linear-gradient(to bottom, transparent ${y - 2.2 * h}px, #000 ${y - h}px, #000 ${y + h}px, transparent ${y + 2.2 * h}px)`
+      : "linear-gradient(transparent, transparent)");
+  }
+
   // ── bucle: solo pinta cuando algo cambia ──────────────────────────
   function stepSprings(dt) {
     // Muelles críticamente amortiguados e independientes en X e Y (respuesta ~0.35 s).
@@ -421,7 +439,7 @@
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     stepSprings(dt);
     const t0 = performance.now();
-    if (P.mode === "webgl") drawGL(now); else if (P.mode === "dom") drawDom(now); else drawSvg(now);
+    if (P.mode === "webgl") drawGL(now); else { sharpMask(); if (P.mode === "dom") drawDom(now); else drawSvg(now); }
     jsMs = jsMs * 0.9 + (performance.now() - t0) * 0.1;
     frameTimes.push(now); while (frameTimes.length && now - frameTimes[0] > 1000) frameTimes.shift();
     if (!RM && busy()) raf = requestAnimationFrame(tick);
