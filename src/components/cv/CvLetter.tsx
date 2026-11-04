@@ -7,7 +7,11 @@ import { getDict } from "@/i18n/dictionaries";
 /**
  * The cover letter, on the page and off the sheet.
  *
- * `print:hidden` is deliberate. The PDF is generated from this route, stamped
+ * The letter has its own one-page PDF (`lib/letterSheet`, printed by
+ * `npm run cv:pdf`), offered here beside the copy button: US applications ask
+ * for it as a separate file.
+ *
+ * `print:hidden` is deliberate. The CV PDF is generated from this route, stamped
  * against the data and held to a page budget, and it is a CV — a frozen
  * letter bolted to the front of it would be worse than no letter at all,
  * because the one thing a cover letter has to be is about the reader. Here it
@@ -20,6 +24,7 @@ import { getDict } from "@/i18n/dictionaries";
 export default function CvLetter({ locale }: { locale: Locale }) {
   const coverLetter = getCoverLetter(locale);
   const site = getSite(locale);
+  const t = getDict(locale).cv;
   const [lede, ...rest] = coverLetter.paragraphs;
   return (
     <section
@@ -64,9 +69,22 @@ export default function CvLetter({ locale }: { locale: Locale }) {
 
       <div className="flex flex-col items-start gap-5 lg:pt-[3.4rem]">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
-          {getDict(locale).cv.letterUpdated(coverLetter.updated)}
+          {t.letterUpdated(coverLetter.updated)}
         </p>
-        <CopyLetterButton />
+        <div className="flex flex-wrap items-center gap-2">
+          {site.cv.letterPdf ? (
+            <a
+              href={site.cv.letterPdf}
+              // Named in the page's language, so a recruiter's downloads
+              // folder says whose letter this is.
+              download={t.letterDownloadName(site.name)}
+              className="btn-pill btn-pill--solid h-11 min-h-11 px-5 text-[14px] print:hidden"
+            >
+              {t.letterDownload}
+            </a>
+          ) : null}
+          <CopyLetterButton />
+        </div>
         <p className="max-w-[34ch] text-[length:var(--step-small)] leading-[1.6] text-[var(--ink-muted)]">
           {coverLetter.note}
         </p>

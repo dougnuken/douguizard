@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { cvFingerprint } from "@/lib/cvFingerprint";
+import { cvFingerprint, letterFingerprint } from "@/lib/cvFingerprint";
 
 /**
  * The guard on the downloadable CVs.
@@ -38,4 +38,24 @@ describe.each(SHEETS)("the downloadable CV ($locale)", ({ locale, stamp: path })
 
 it("the two languages are different sheets", () => {
   expect(cvFingerprint("es")).not.toBe(cvFingerprint("en"));
+});
+
+const LETTERS = [
+  { locale: "en", stamp: "public/cv/letter.stamp.json" },
+  { locale: "es", stamp: "public/cv/letter.stamp.es.json" },
+] as const;
+
+describe.each(LETTERS)("the downloadable cover letter ($locale)", ({ locale, stamp: path }) => {
+  const stamp = JSON.parse(readFileSync(path, "utf8"));
+
+  it("was generated from the letter as it stands now", () => {
+    expect(
+      stamp.fingerprint,
+      "The cover letter changed after its PDF was generated. Rebuild it with `npm run cv:pdf`.",
+    ).toBe(letterFingerprint(locale));
+  });
+
+  it("fits on one page", () => {
+    expect(stamp.pages).toBe(1);
+  });
 });

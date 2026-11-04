@@ -122,8 +122,8 @@ test("I6 the CV download offers both languages, with and without the photo", asy
     en: { photo: "/cv/doug-vargas-cv.pdf", plain: "/cv/doug-vargas-cv-no-photo.pdf" },
   } as const;
   for (const [route, own, open, withPhoto, noPhoto, other] of [
-    ["/cv", "es", /descargar pdf/i, /con foto/i, /sin foto/i, "English"],
-    ["/en/cv", "en", /download pdf/i, /with photo/i, /without photo/i, "Español"],
+    ["/cv", "es", /descargar hoja de vida/i, /con foto/i, /sin foto/i, "English"],
+    ["/en/cv", "en", /download cv/i, /with photo/i, /without photo/i, "Español"],
   ] as const) {
     await page.goto(route, { waitUntil: "networkidle" });
     await page.getByRole("button", { name: open }).click();

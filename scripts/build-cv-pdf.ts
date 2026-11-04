@@ -13,23 +13,36 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import type { Locale } from "@/i18n/config";
-import { cvFingerprint } from "@/lib/cvFingerprint";
+import { cvFingerprint, letterFingerprint } from "@/lib/cvFingerprint";
 import { renderCvSheet } from "@/lib/cvSheet";
+import { renderLetterSheet } from "@/lib/letterSheet";
 
 // Two sheets per language, same content: with the photo and without it. The
 // paths are the ones `site.cv` hands out. One stamp per language covers both.
-const SHEETS: { locale: Locale; withPhoto: string; noPhoto: string; stamp: string }[] = [
+// The cover letter rides along: one page per language, its own stamp.
+const SHEETS: {
+  locale: Locale;
+  withPhoto: string;
+  noPhoto: string;
+  stamp: string;
+  letter: string;
+  letterStamp: string;
+}[] = [
   {
     locale: "es",
     withPhoto: "public/cv/doug-vargas-cv-es.pdf",
     noPhoto: "public/cv/doug-vargas-cv-es-sin-foto.pdf",
     stamp: "public/cv/cv.stamp.es.json",
+    letter: "public/cv/doug-vargas-carta-de-presentacion.pdf",
+    letterStamp: "public/cv/letter.stamp.es.json",
   },
   {
     locale: "en",
     withPhoto: "public/cv/doug-vargas-cv.pdf",
     noPhoto: "public/cv/doug-vargas-cv-no-photo.pdf",
     stamp: "public/cv/cv.stamp.json",
+    letter: "public/cv/doug-vargas-cover-letter.pdf",
+    letterStamp: "public/cv/letter.stamp.json",
   },
 ];
 
@@ -62,10 +75,19 @@ const photo = `data:image/jpeg;base64,${readFileSync(resolve("public/portrait/do
 
 const work = mkdtempSync(join(tmpdir(), "cv-pdf-"));
 
-/** Prints one sheet and returns its page count and size. */
+/** Prints one CV sheet and returns its page count and size. */
 function print(locale: Locale, out: string, withPhoto: boolean) {
-  const html = join(work, `cv-${locale}-${withPhoto ? "photo" : "plain"}.html`);
-  writeFileSync(html, renderCvSheet(locale, { fontCss, photo: withPhoto ? photo : undefined }));
+  return printHtml(
+    `cv-${locale}-${withPhoto ? "photo" : "plain"}.html`,
+    renderCvSheet(locale, { fontCss, photo: withPhoto ? photo : undefined }),
+    out,
+    PAGE_TARGET,
+  );
+}
+
+function printHtml(name: string, source: string, out: string, target: number) {
+  const html = join(work, name);
+  writeFileSync(html, source);
   execFileSync(
     CHROME,
     [
@@ -84,7 +106,7 @@ function print(locale: Locale, out: string, withPhoto: boolean) {
   // Chrome leaves the page tree readable enough to count without a parser.
   const pages = (buf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
   console.log(JSON.stringify({ out, pages, bytes: buf.length }));
-  if (pages > PAGE_TARGET) console.error(`WARNING: ${out} printed ${pages} pages. ${PAGE_TARGET} is the target.`);
+  if (pages > target) console.error(`WARNING: ${out} printed ${pages} pages. ${target} is the target.`);
   return { pages, bytes: buf.length };
 }
 
@@ -101,6 +123,15 @@ try {
       paper: "A4",
     };
     writeFileSync(sheet.stamp, `${JSON.stringify(stamp, null, 2)}\n`);
+
+    const l = printHtml(`letter-${sheet.locale}.html`, renderLetterSheet(sheet.locale, { fontCss }), sheet.letter, 1);
+    const letterStamp = {
+      fingerprint: letterFingerprint(sheet.locale),
+      pages: l.pages,
+      bytes: l.bytes,
+      paper: "A4",
+    };
+    writeFileSync(sheet.letterStamp, `${JSON.stringify(letterStamp, null, 2)}\n`);
   }
 } finally {
   rmSync(work, { recursive: true, force: true });
