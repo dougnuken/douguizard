@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revelado de máscara · prototipo 03b</title>
+<!--
+  Prototipo 03b · douguizard 2026 · revelado por capas de la máscara siguiendo el cursor.
+  Capas (de arriba a abajo):  1 · carcasa del respirador   2 · malla / circuito   3 · piel (la foto)
+  El par real con/sin máscara aún no existe: las capas 1 y 2 se DIBUJAN en canvas sobre la foto, alineadas
+  a mano con la cara de 40fe7690.jpg. Lo que se prueba es la mecánica:
+    · un campo de revelado (textura 1/3 de resolución, ping-pong) que el cursor "pinta" y que se cierra solo;
+    · umbrales escalonados por capa → anillos con radios distintos (carcasa > malla > piel);
+    · borde en semitono de puntos + ruido, inercia con muelles X/Y críticamente amortiguados;
+    · vidrio estriado por FUERA de la cara (misma pasada), cara nítida.
+  Táctil: arrastrar el dedo sobre la cara pinta; un toque revela todo por capas; el botón hace lo mismo.
+  Movimiento reducido: sin estela ni ondas; el botón alterna con un fundido de 200 ms.
+  URL: ?modo=webgl|css · ?rm=1 · ?vidrio=0
+  Servir con: npx http-server docs/rediseno-2026 -p 8080 → /prototipos/revelado-mascara.html
+-->
+<style>
+  :root {
+    --bg: #0a0a0b; --raised: #141418; --ink: #f2f1ee; --muted: #a3a29e; --dim: #6f6e6a;
+    --line: rgba(242, 241, 238, .12); --line-strong: rgba(242, 241, 238, .24);
+    --signal: #485ef2; --ease-out: cubic-bezier(.23, 1, .32, 1);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .hero { min-height: 100svh; max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; padding: 56px 56px 40px; }
+  .eyebrow { font: 500 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .copy h1 { font-size: clamp(52px, 7.2vw, 116px); line-height: .9; letter-spacing: -.045em; margin: .22em 0 .3em; font-weight: 800; }
+  .copy p { max-width: 34ch; color: var(--muted); font-size: 18px; margin: 0 0 28px; }
+
+  .card { position: relative; margin: 0; height: calc(100svh - 96px); min-height: 520px; max-height: 960px; border-radius: 28px; overflow: hidden; background: #1a1a22; isolation: isolate; box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0,0,0,.8); touch-action: pan-y; }
+  .card > .layer { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 55% 38%; }
+  #gl { opacity: 0; transition: opacity 400ms var(--ease-out); }
+  #gl.on { opacity: 1; }
+  .cssl { display: none; }
+  [data-mode="css"] .cssl { display: block; }
+  [data-mode="css"] #gl { display: none; }
+  /* Respaldo CSS: carcasa visible = fuera del anillo exterior ∪ (anillo ∩ puntos). */
+  #cssShell, #cssMesh {
+    -webkit-mask-image: var(--mA), var(--dots), var(--mB); mask-image: var(--mA), var(--dots), var(--mB);
+    -webkit-mask-size: 100% 100%, 5px 5px, 100% 100%; mask-size: 100% 100%, 5px 5px, 100% 100%;
+    -webkit-mask-repeat: no-repeat, repeat, no-repeat; mask-repeat: no-repeat, repeat, no-repeat;
+    -webkit-mask-composite: source-over, source-in, source-over; mask-composite: add, intersect, add;
+    --dots: radial-gradient(circle, #000 1.25px, transparent 1.9px);
+  }
+  #cssShell { --mA: radial-gradient(circle at var(--x) var(--y), transparent var(--r1o), #000 calc(var(--r1o) + 1px)); --mB: radial-gradient(circle at var(--x) var(--y), transparent var(--r1i), #000 calc(var(--r1i) + 1px)); transition: opacity 200ms linear; }
+  #cssMesh  { --mA: radial-gradient(circle at var(--x) var(--y), transparent var(--r2o), #000 calc(var(--r2o) + 1px)); --mB: radial-gradient(circle at var(--x) var(--y), transparent var(--r2i), #000 calc(var(--r2i) + 1px)); transition: opacity 200ms linear; }
+
+  .hot { position: absolute; z-index: 2; border-radius: 50%; touch-action: none; cursor: crosshair; }
+  .ui { position: absolute; z-index: 3; left: 16px; right: 16px; bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
+  .hint { padding: 8px 12px; border-radius: 999px; background: rgba(10,10,11,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--line); font: 500 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; }
+  .toggle { pointer-events: auto; all: unset; pointer-events: auto; cursor: pointer; padding: 11px 16px; min-height: 20px; border-radius: 999px; background: var(--ink); color: #0a0a0a; font-weight: 600; font-size: 14px; transition: transform 160ms var(--ease-out); }
+  .toggle:active { transform: scale(.97); }
+  .toggle:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  .panel { position: fixed; right: 16px; bottom: 16px; z-index: 20; width: 272px; background: rgba(16,16,19,.82); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border: 1px solid var(--line-strong); border-radius: 18px; font-size: 12px; }
+  .panel summary { list-style: none; cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; gap: 8px; }
+  .panel summary::-webkit-details-marker { display: none; }
+  .panel .body { padding: 0 14px 14px; display: grid; gap: 10px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; background: rgba(255,255,255,.06); border-radius: 10px; padding: 3px; gap: 3px; }
+  .seg button { all: unset; text-align: center; padding: 7px 0; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #0a0a0a; }
+  .row { display: grid; grid-template-columns: 74px 1fr 34px; align-items: center; gap: 8px; }
+  .row output { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .row input { width: 100%; accent-color: var(--ink); }
+  .check { display: flex; gap: 8px; align-items: center; color: var(--muted); }
+  .fps { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .note { color: var(--dim); line-height: 1.4; }
+  .banner { position: fixed; left: 16px; right: 16px; top: 16px; z-index: 30; display: none; padding: 12px 14px; border-radius: 14px; background: #2a1f0b; border: 1px solid #6b4d12; color: #f6dca6; font-size: 13px; }
+  .banner.show { display: block; }
+  .banner label { text-decoration: underline; cursor: pointer; }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; padding: 16px 16px 24px; min-height: auto; }
+    .card { order: -1; height: 66svh; min-height: 440px; border-radius: 24px; }
+    .copy h1 { font-size: 56px; } .copy p { font-size: 16px; }
+    .panel { left: 16px; right: 16px; width: auto; bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="banner" id="banner" role="status">
+  Chrome no deja subir una imagen <span class="mono">file://</span> a WebGL: estás viendo el respaldo CSS (sin estela ni vidrio).
+  Sirve la carpeta con <span class="mono">npx http-server docs/rediseno-2026</span> o <label for="pick">elige aquí la foto</label>.
+  <input id="pick" type="file" accept="image/*" hidden>
+</div>
+<main>
+  <section class="hero">
+    <div class="copy">
+      <div class="eyebrow">douguizard · 2026</div>
+      <h1>Doug<br>Vargas</h1>
+      <p>Head of Product · Senior Product Designer · Design Engineer. Pasa el cursor por la cara: la máscara se quita por capas.</p>
+    </div>
+    <figure class="card" id="card" data-mode="webgl">
+      <img class="layer" id="base" src="../retratos-hf/40fe7690.jpg" alt="Retrato de Doug Vargas con una máscara futurista sobre la boca" width="1073" height="1600" fetchpriority="high">
+      <img class="layer cssl" id="cssMesh" alt="" aria-hidden="true">
+      <img class="layer cssl" id="cssShell" alt="" aria-hidden="true">
+      <canvas class="layer" id="gl" aria-hidden="true"></canvas>
+      <div class="hot" id="hot" aria-hidden="true"></div>
+      <div class="ui">
+        <span class="hint" id="hint">PASA EL CURSOR POR LA CARA</span>
+        <button class="toggle" id="toggle" type="button" aria-pressed="false">Quitar la máscara</button>
+      </div>
+    </figure>
+  </section>
+</main>
+<details class="panel" id="panel">
+  <summary><strong>Revelado por capas</strong><span class="fps mono" id="fps">—</span></summary>
+  <form class="body" id="form" onsubmit="return false">
+    <div class="seg" role="group" aria-label="Implementación">
+      <button type="button" data-m="webgl">WebGL</button><button type="button" data-m="css">CSS mask</button>
+    </div>
+    <label class="row"><span>Radio</span><input type="range" name="r" min="60" max="240" step="1" value="130"><output>130</output></label>
+    <label class="row"><span>Inercia</span><input type="range" name="inertia" min="0.05" max="0.6" step="0.01" value="0.2"><output>0.2</output></label>
+    <label class="row"><span>Cierre</span><input type="range" name="decay" min="0.1" max="2" step="0.05" value="0.6"><output>0.6</output></label>
+    <label class="check"><input type="checkbox" name="glass" checked> Vidrio estriado por fuera de la cara</label>
+    <label class="check"><input type="checkbox" name="rm"> Simular movimiento reducido</label>
+    <div class="note">La estela se cierra sola: primero vuelve la malla, luego la carcasa.</div>
+  </form>
+</details>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  const card = $("#card"), base = $("#base"), canvas = $("#gl"), hot = $("#hot"), btn = $("#toggle"), hint = $("#hint");
+  const IMG = { w: 1073, h: 1600, fx: 0.55, fy: 0.38 };
+  const FACE = { x: 585, y: 660, rx: 300, ry: 345 };       // elipse de la cara (px de la imagen)
+  const MOUTH = { x: 668, y: 735, rr: 330 };               // centro del revelado global y su alcance
+  // Contorno del respirador, en px de 40fe7690.jpg (de debajo de la nariz a la barbilla).
+  const OUTLINE = [[345,690],[420,640],[540,618],[600,612],[650,624],[720,612],[790,628],[818,662],[824,740],[806,830],[772,900],[716,950],[640,968],[560,956],[470,916],[400,862],[360,800],[345,742]];
+
+  const P = { mode: qs.get("modo") || "webgl", r: 130, inertia: 0.2, decay: 0.6, glass: qs.get("vidrio") !== "0",
+              rm: qs.has("rm") || matchMedia("(prefers-reduced-motion: reduce)").matches };
+  const S = { tx: 0, ty: 0, x: 0, y: 0, vx: 0, vy: 0, px: 0, py: 0, open: 0, openT: 0, reveal: 0, revealFrom: 0, revealTo: 0, revealT0: 0, revealDur: 1, bench: false, lastBrush: -1e9, t0: performance.now() };
+  let W = 0, H = 0, DPR = 1, raf = 0, last = performance.now(), jsMs = 0; const frameTimes = [];
+  $("#panel").open = window.innerWidth >= 900;
+  const coarse = matchMedia("(pointer: coarse)").matches;
+
+  function cover() { const k = Math.max(W / IMG.w, H / IMG.h), Dx = IMG.w * k, Dy = IMG.h * k; return { k, Dx, Dy, Ox: (W - Dx) * IMG.fx, Oy: (H - Dy) * IMG.fy }; }
+  const toCard = (x, y) => { const c = cover(); return [c.Ox + x * c.k, c.Oy + y * c.k]; };
+
+  // ── capas simuladas (canvas 2D, coords de la imagen) ─────────────
+  function outlinePath(ctx, pts, inset = 0) {
+    const cx = 590, cy = 790;
+    const q = pts.map(([x, y]) => [x + (cx - x) * inset, y + (cy - y) * inset]);
+    ctx.beginPath();
+    for (let i = 0; i < q.length; i++) {
+      const p0 = q[(i - 1 + q.length) % q.length], p1 = q[i], p2 = q[(i + 1) % q.length], p3 = q[(i + 2) % q.length];
+      if (i === 0) ctx.moveTo(p1[0], p1[1]);
+      ctx.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
+    }
+    ctx.closePath();
+  }
+  function rng(seed) { return () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646; }
+  function drawShell() {
+    const c = document.createElement("canvas"); c.width = IMG.w; c.height = IMG.h; const x = c.getContext("2d");
+    // correa hacia la oreja
+    x.fillStyle = "#101116"; x.beginPath(); x.moveTo(356, 684); x.lineTo(296, 694); x.lineTo(292, 730); x.lineTo(356, 742); x.fill();
+    x.strokeStyle = "rgba(255,255,255,.10)"; x.setLineDash([3, 4]); x.beginPath(); x.moveTo(352, 692); x.lineTo(300, 700); x.moveTo(352, 734); x.lineTo(298, 724); x.stroke(); x.setLineDash([]);
+    // sombra proyectada sobre la piel (parte de la capa: desaparece con ella)
+    x.save(); x.shadowColor = "rgba(0,0,0,.55)"; x.shadowBlur = 34; x.shadowOffsetX = -8; x.shadowOffsetY = 14;
+    outlinePath(x, OUTLINE); x.fillStyle = "#121318"; x.fill(); x.restore();
+    x.save(); outlinePath(x, OUTLINE); x.clip();
+    let g = x.createLinearGradient(345, 0, 824, 0);
+    g.addColorStop(0, "#07080b"); g.addColorStop(0.45, "#1a1c23"); g.addColorStop(0.78, "#2e313b"); g.addColorStop(1, "#454a59");
+    x.fillStyle = g; x.fillRect(300, 580, 560, 420);
+    g = x.createRadialGradient(742, 690, 10, 742, 690, 190); g.addColorStop(0, "rgba(255,255,255,.26)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(300, 580, 560, 420);
+    // luz azul de recorte por la derecha (coincide con la luz de la foto)
+    x.save(); x.shadowColor = "#485ef2"; x.shadowBlur = 24; x.strokeStyle = "rgba(88,110,255,.75)"; x.lineWidth = 8; outlinePath(x, OUTLINE, -0.01); x.stroke(); x.restore();
+    g = x.createLinearGradient(560, 0, 830, 0); g.addColorStop(0, "rgba(72,94,242,0)"); g.addColorStop(1, "rgba(72,94,242,.35)");
+    x.fillStyle = g; x.fillRect(560, 580, 300, 420);
+    // costura frente / lateral
+    x.strokeStyle = "rgba(0,0,0,.65)"; x.lineWidth = 3; x.beginPath(); x.moveTo(598, 612); x.bezierCurveTo(572, 700, 574, 840, 612, 966); x.stroke();
+    x.strokeStyle = "rgba(255,255,255,.14)"; x.lineWidth = 1.5; x.beginPath(); x.moveTo(601, 612); x.bezierCurveTo(575, 700, 577, 840, 615, 966); x.stroke();
+    // rejilla frontal
+    x.save(); x.translate(708, 742); x.rotate(-0.07);
+    x.fillStyle = "#0a0b0f"; x.strokeStyle = "rgba(255,255,255,.20)"; x.lineWidth = 1.5;
+    x.beginPath(); x.roundRect(-96, -44, 192, 88, 30); x.fill(); x.stroke();
+    for (let i = 0; i < 5; i++) { x.fillStyle = "#000"; x.beginPath(); x.roundRect(-74, -30 + i * 14, 148, 6, 3); x.fill(); x.fillStyle = "rgba(255,255,255,.08)"; x.fillRect(-72, -23 + i * 14, 144, 1); }
+    x.restore();
+    // tira de luz y led magenta
+    x.save(); x.shadowColor = "#485ef2"; x.shadowBlur = 16; x.strokeStyle = "#6f84ff"; x.lineWidth = 4; x.lineCap = "round";
+    x.beginPath(); x.moveTo(418, 712); x.quadraticCurveTo(500, 660, 586, 650); x.stroke();
+    x.shadowColor = "#ff4fa0"; x.fillStyle = "#ff5aa8"; x.beginPath(); x.roundRect(786, 690, 7, 28, 3); x.fill(); x.restore();
+    // filtro lateral
+    g = x.createRadialGradient(410, 790, 6, 418, 805, 70); g.addColorStop(0, "#3a3e4a"); g.addColorStop(1, "#08090c");
+    x.fillStyle = g; x.beginPath(); x.arc(418, 805, 66, 0, Math.PI * 2); x.fill();
+    x.strokeStyle = "rgba(255,255,255,.16)"; x.lineWidth = 2; [58, 44].forEach((r) => { x.beginPath(); x.arc(418, 805, r, 0, Math.PI * 2); x.stroke(); });
+    x.save(); x.shadowColor = "#485ef2"; x.shadowBlur = 12; x.strokeStyle = "rgba(100,124,255,.8)"; x.lineWidth = 2; x.beginPath(); x.arc(418, 805, 51, -2.4, 0.6); x.stroke(); x.restore();
+    for (let i = 0; i < 16; i++) { const a = (i / 16) * Math.PI * 2; x.strokeStyle = "rgba(255,255,255,.22)"; x.beginPath(); x.moveTo(418 + Math.cos(a) * 24, 805 + Math.sin(a) * 24); x.lineTo(418 + Math.cos(a) * 34, 805 + Math.sin(a) * 34); x.stroke(); }
+    x.fillStyle = "#14161c"; x.beginPath(); x.arc(418, 805, 18, 0, Math.PI * 2); x.fill();
+    // matriz de puntos (marca DG·01)
+    x.fillStyle = "rgba(255,255,255,.35)";
+    for (let r = 0; r < 3; r++) for (let q = 0; q < 14; q++) if ((q * 7 + r * 3) % 5) { x.beginPath(); x.arc(492 + q * 8, 884 + r * 8, 1.6, 0, Math.PI * 2); x.fill(); }
+    x.restore();
+    x.strokeStyle = "rgba(255,255,255,.12)"; x.lineWidth = 1.5; outlinePath(x, OUTLINE); x.stroke();
+    return c;
+  }
+  function drawMesh() {
+    const c = document.createElement("canvas"); c.width = IMG.w; c.height = IMG.h; const x = c.getContext("2d");
+    x.save(); outlinePath(x, OUTLINE, 0.015); x.clip();
+    x.fillStyle = "rgba(6,8,24,.66)"; x.fillRect(300, 580, 560, 420);
+    // panal
+    x.strokeStyle = "rgba(96,124,255,.38)"; x.lineWidth = 1; const R = 13, hw = Math.sqrt(3) * R;
+    for (let row = 0; row < 34; row++) for (let col = 0; col < 26; col++) {
+      const cx = 320 + col * hw + (row % 2) * hw / 2, cy = 590 + row * R * 1.5;
+      x.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + (i * Math.PI) / 3; const px = cx + R * Math.cos(a), py = cy + R * Math.sin(a); i ? x.lineTo(px, py) : x.moveTo(px, py); } x.closePath(); x.stroke();
+    }
+    // pistas de circuito
+    const rnd = rng(7);
+    x.lineCap = "round"; x.lineJoin = "round";
+    for (let i = 0; i < 30; i++) {
+      let px = 360 + rnd() * 440, py = 630 + rnd() * 320; const pink = rnd() < 0.15;
+      x.save(); x.shadowColor = pink ? "#ff4fa0" : "#485ef2"; x.shadowBlur = 8;
+      x.strokeStyle = pink ? "rgba(255,110,180,.9)" : "rgba(140,160,255,.9)"; x.lineWidth = 1.6; x.beginPath(); x.moveTo(px, py);
+      let dir = Math.floor(rnd() * 8);
+      for (let s = 0, n = 3 + Math.floor(rnd() * 4); s < n; s++) {
+        dir = (dir + (rnd() < 0.5 ? 1 : 7)) % 8; const a = (dir * Math.PI) / 4, len = 16 + rnd() * 40;
+        px += Math.cos(a) * len; py += Math.sin(a) * len; x.lineTo(px, py);
+      }
+      x.stroke(); x.fillStyle = pink ? "#ffb3d6" : "#c9d2ff"; x.beginPath(); x.arc(px, py, 3, 0, Math.PI * 2); x.fill(); x.restore();
+    }
+    x.restore();
+    x.save(); x.shadowColor = "#485ef2"; x.shadowBlur = 14; x.strokeStyle = "rgba(110,132,255,.9)"; x.lineWidth = 2; outlinePath(x, OUTLINE, 0.015); x.stroke(); x.restore();
+    return c;
+  }
+  const shellCanvas = drawShell(), meshCanvas = drawMesh();
+
+  // ── WebGL ─────────────────────────────────────────────────────────
+  const VS = `#version 300 es
+  in vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
+  const NOISE = `
+  float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(h2(i), h2(i + vec2(1, 0)), f.x), mix(h2(i + vec2(0, 1)), h2(i + vec2(1, 1)), f.x), f.y); }`;
+  // Pasada 1: el campo de revelado. Cada cuadro decae (con ruido, para que se cierre irregular) y el cursor lo repinta.
+  const FS_FIELD = `#version 300 es
+  precision highp float;
+  uniform sampler2D uPrev; uniform vec2 uFieldRes, uRes, uA, uB; uniform float uR, uOpen, uDecay, uDt, uTime;
+  out vec4 o;` + NOISE + `
+  float seg(vec2 p, vec2 a, vec2 b){ vec2 ab = b - a; float t = clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-4), 0.0, 1.0); return length(p - a - ab * t); }
+  void main(){
+    vec2 uv = gl_FragCoord.xy / uFieldRes;
+    vec2 p = vec2(uv.x, 1.0 - uv.y) * uRes;
+    float prev = texture(uPrev, uv).r;
+    float n = vnoise(p * 0.02 + uTime * 0.3);
+    float d = seg(p, uA, uB);
+    float b = (1.0 - smoothstep(uR * 0.15, uR, d)) * uOpen;
+    o = vec4(max(prev - uDecay * uDt * (0.6 + 0.8 * n), b), 0.0, 0.0, 1.0);
+  }`;
+  // Pasada 2: composición. Vidrio fuera de la cara → muestreo común de las tres capas → recorte por umbrales.
+  const FS_COMP = `#version 300 es
+  precision highp float;
+  uniform sampler2D uSkin, uMesh, uShell, uField;
+  uniform vec2 uRes, uImgScale, uImgOff, uMouth; uniform float uDpr, uRR, uReveal, uRM, uGlass, uTime;
+  uniform vec4 uFace; uniform float uW, uAng, uStr;
+  out vec4 o;` + NOISE + `
+  float hash(float n){ return fract(sin(n * 127.1) * 43758.5453); }
+  float cutAt(float f, float th, float band, float n, float dotR){
+    float e = clamp((f - th + (n - 0.5) * 0.16) / band, 0.0, 1.0);
+    return (1.0 - smoothstep(e - 0.12, e + 0.12, dotR)) * smoothstep(0.0, 0.08, e);   // semitono: los puntos crecen con e
+  }
+  void main(){
+    vec2 p = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;
+    float face = 1.0 - smoothstep(0.78, 1.08, length((p - uFace.xy) / uFace.zw));
+    float gk = uGlass * (1.0 - face);
+    vec2 dir = vec2(cos(uAng), sin(uAng));
+    float u = dot(p, dir) + uTime * 4.0 * (1.0 - uRM);
+    float k = floor(u / uW), t = fract(u / uW), s = 2.0 * t - 1.0;
+    float str = uStr * gk;
+    float disp = str * uW * (s * 0.75 + 0.45 * s * s * s + (hash(k) - 0.5) * 0.4);
+    vec2 q = p + dir * disp;
+    vec2 uv = (q - uImgOff) * uImgScale;
+    float ca = str * uW * 0.05 * (0.3 + abs(s)) * uImgScale.x;
+    vec3 skin = vec3(texture(uSkin, uv + vec2(ca, 0)).r, texture(uSkin, uv).g, texture(uSkin, uv - vec2(ca, 0)).b);
+    vec4 mesh = texture(uMesh, uv), shell = texture(uShell, uv);
+    float f = texture(uField, p / uRes).r;
+    float front = clamp((uReveal * 1.35 * uRR - length(p - uMouth)) / (0.35 * uRR), 0.0, 1.0);
+    f = max(f, front * (1.0 - uRM));
+    float n = vnoise(p * 0.045 + vec2(uTime * 0.2, 0.0));
+    float dotR = length(fract(p / 5.0) - 0.5) * 1.414;
+    float e1 = clamp((f - 0.14 + (n - 0.5) * 0.16) / 0.16, 0.0, 1.0);
+    float cut1 = cutAt(f, 0.14, 0.16, n, dotR);            // capa 1 · carcasa: el anillo más ancho
+    float cut2 = cutAt(f, 0.52, 0.20, n, dotR);            // capa 2 · malla: anillo interior
+    float fade = 1.0 - uRM * uReveal;                      // movimiento reducido: fundido simple
+    float sA = shell.a * (1.0 - cut1) * fade, mA = mesh.a * (1.0 - cut2) * fade;
+    float rim = shell.a * smoothstep(0.0, 0.35, e1) * (1.0 - smoothstep(0.35, 0.9, e1)) * (1.0 - uRM);
+    vec3 col = mix(skin, mesh.rgb, mA);
+    col = mix(col, shell.rgb, sA);
+    col += rim * vec3(0.35, 0.45, 1.0) * 0.55;             // borde "caliente" donde se corta la carcasa
+    float sh = 0.3 + str;
+    col = col * (1.0 - 0.22 * str * s * s) + (pow(smoothstep(0.10, 0.0, t), 2.0) * 0.26 * sh) * gk - col * pow(smoothstep(0.80, 1.0, t), 2.0) * 0.32 * sh * gk;
+    o = vec4(col, 1.0);
+  }`;
+
+  let gl = null, PF = null, PC = null, UF = {}, UC = {}, T = {}, FB = [], fieldIdx = 0, FW = 0, FH = 0, glReady = false;
+  function compile(fs, names) {
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.bindAttribLocation(pr, 0, "a"); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+    const U = {}; names.forEach((n) => (U[n] = gl.getUniformLocation(pr, n))); return [pr, U];
+  }
+  function texFrom(src, mip) {
+    const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+    if (mip) gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mip ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return t;
+  }
+  function initGL() {
+    gl = canvas.getContext("webgl2", { antialias: false, alpha: false, powerPreference: "high-performance" });
+    if (!gl) return false;
+    [PF, UF] = compile(FS_FIELD, ["uPrev", "uFieldRes", "uRes", "uA", "uB", "uR", "uOpen", "uDecay", "uDt", "uTime"]);
+    [PC, UC] = compile(FS_COMP, ["uSkin", "uMesh", "uShell", "uField", "uRes", "uImgScale", "uImgOff", "uMouth", "uDpr", "uRR", "uReveal", "uRM", "uGlass", "uTime", "uFace", "uW", "uAng", "uStr"]);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); glReady = false; setMode("css"); });
+    return true;
+  }
+  function uploadAll(img) {
+    T.skin = texFrom(img, true); T.mesh = texFrom(meshCanvas, true); T.shell = texFrom(shellCanvas, true);
+    glReady = true;
+  }
+  function makeField() {
+    FW = Math.max(2, Math.ceil(W / 3)); FH = Math.max(2, Math.ceil(H / 3));
+    FB.forEach((f) => { gl.deleteTexture(f.t); gl.deleteFramebuffer(f.fb); }); FB = [];
+    for (let i = 0; i < 2; i++) {
+      const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, FW, FH, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      const fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+      gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); FB.push({ t, fb });
+    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  }
+  function drawGL(now, dt) {
+    if (!glReady) return;
+    if (!FB.length) makeField();
+    const time = (now - S.t0) / 1000, c = cover(), R = P.r * (W / 700);
+    // 1 · campo
+    const src = FB[fieldIdx], dst = FB[1 - fieldIdx];
+    gl.bindFramebuffer(gl.FRAMEBUFFER, dst.fb); gl.viewport(0, 0, FW, FH); gl.useProgram(PF);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, src.t); gl.uniform1i(UF.uPrev, 0);
+    gl.uniform2f(UF.uFieldRes, FW, FH); gl.uniform2f(UF.uRes, W, H);
+    gl.uniform2f(UF.uA, S.px, S.py); gl.uniform2f(UF.uB, S.x, S.y);
+    gl.uniform1f(UF.uR, R); gl.uniform1f(UF.uOpen, P.rm ? 0 : S.open); gl.uniform1f(UF.uDecay, P.decay); gl.uniform1f(UF.uDt, dt); gl.uniform1f(UF.uTime, time);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    fieldIdx = 1 - fieldIdx;
+    // 2 · composición
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, canvas.width, canvas.height); gl.useProgram(PC);
+    [[T.skin, "uSkin"], [T.mesh, "uMesh"], [T.shell, "uShell"], [dst.t, "uField"]].forEach(([t, n], i) => { gl.activeTexture(gl.TEXTURE0 + i); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(UC[n], i); });
+    gl.uniform2f(UC.uRes, W, H); gl.uniform1f(UC.uDpr, DPR);
+    gl.uniform2f(UC.uImgScale, 1 / c.Dx, 1 / c.Dy); gl.uniform2f(UC.uImgOff, c.Ox, c.Oy);
+    const [mx, my] = toCard(MOUTH.x, MOUTH.y); gl.uniform2f(UC.uMouth, mx, my); gl.uniform1f(UC.uRR, MOUTH.rr * c.k);
+    gl.uniform1f(UC.uReveal, S.reveal); gl.uniform1f(UC.uRM, P.rm ? 1 : 0); gl.uniform1f(UC.uGlass, P.glass ? 1 : 0); gl.uniform1f(UC.uTime, time);
+    const [fx, fy] = toCard(FACE.x, FACE.y); gl.uniform4f(UC.uFace, fx, fy, FACE.rx * c.k, FACE.ry * c.k);
+    gl.uniform1f(UC.uW, 58); gl.uniform1f(UC.uAng, (11 * Math.PI) / 180); gl.uniform1f(UC.uStr, 0.62);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (!canvas.classList.contains("on")) canvas.classList.add("on");
+  }
+
+  // ── respaldo CSS ──────────────────────────────────────────────────
+  const cssShell = $("#cssShell"), cssMesh = $("#cssMesh");
+  cssShell.src = shellCanvas.toDataURL("image/png"); cssMesh.src = meshCanvas.toDataURL("image/png");
+  function drawCss() {
+    const R = P.r * (W / 700) * (P.rm ? 0 : S.open);
+    const g = S.reveal * 1.35 * MOUTH.rr * cover().k * (P.rm ? 0 : 1);   // el revelado global agranda el agujero
+    const r = Math.max(R, g);
+    const st = card.style;
+    st.setProperty("--x", (P.rm ? toCard(MOUTH.x, MOUTH.y)[0] : (g > R ? toCard(MOUTH.x, MOUTH.y)[0] : S.x)) + "px");
+    st.setProperty("--y", (P.rm ? toCard(MOUTH.x, MOUTH.y)[1] : (g > R ? toCard(MOUTH.x, MOUTH.y)[1] : S.y)) + "px");
+    st.setProperty("--r1o", r * 1.0 + "px"); st.setProperty("--r1i", r * 0.66 + "px");
+    st.setProperty("--r2o", r * 0.52 + "px"); st.setProperty("--r2i", r * 0.30 + "px");
+    const op = P.rm ? String(1 - S.reveal) : "1"; cssShell.style.opacity = op; cssMesh.style.opacity = op;
+  }
+
+  // ── animación ─────────────────────────────────────────────────────
+  function step(now, dt) {
+    if (S.drag) { S.x = S.tx; S.y = S.ty; S.vx = S.vy = 0; }          // dedo: 1:1, sin inercia
+    else {
+      const w0 = (2 * Math.PI) / P.inertia;                         // muelles X/Y críticamente amortiguados
+      S.vx += (w0 * w0 * (S.tx - S.x) - 2 * w0 * S.vx) * dt; S.vy += (w0 * w0 * (S.ty - S.y) - 2 * w0 * S.vy) * dt;
+      S.x += S.vx * dt; S.y += S.vy * dt;
+    }
+    S.open += (S.openT - S.open) * (1 - Math.exp(-dt * (S.openT > S.open ? 9 : 5)));
+    if (S.revealDur > 0) {
+      const k = Math.min(1, (now - S.revealT0) / S.revealDur);
+      const e = P.rm ? k : S.revealTo > S.revealFrom ? 1 - Math.pow(1 - k, 3) : 1 - Math.pow(1 - k, 2);
+      S.reveal = S.revealFrom + (S.revealTo - S.revealFrom) * e;
+    }
+    if (S.open > 0.01) S.lastBrush = now;
+  }
+  function busy(now) {
+    return S.bench || S.open > 0.005 || Math.abs(S.openT - S.open) > 0.003 || Math.abs(S.vx) + Math.abs(S.vy) > 0.5 ||
+      Math.abs(S.reveal - S.revealTo) > 0.001 || (P.mode === "webgl" && now - S.lastBrush < (1.4 / P.decay) * 1000 + 300);
+  }
+  function tick(now) {
+    raf = 0; const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    step(now, dt);
+    const t0 = performance.now();
+    if (P.mode === "webgl") drawGL(now, dt); else drawCss();
+    jsMs = jsMs * 0.9 + (performance.now() - t0) * 0.1;
+    S.px = S.x; S.py = S.y;
+    frameTimes.push(now); while (frameTimes.length && now - frameTimes[0] > 1000) frameTimes.shift();
+    if (busy(now)) raf = requestAnimationFrame(tick);
+  }
+  function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  setInterval(() => { const now = performance.now(); while (frameTimes.length && now - frameTimes[0] > 1000) frameTimes.shift();
+    $("#fps").textContent = raf ? `${frameTimes.length} fps · ${jsMs.toFixed(1)} ms js` : "en reposo"; }, 500);
+
+  // ── entrada ───────────────────────────────────────────────────────
+  function local(e) { const r = card.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function inFace(x, y, pad = 1.12) { const c = cover(); const [fx, fy] = toCard(FACE.x, FACE.y); return ((x - fx) / (FACE.rx * c.k * pad)) ** 2 + ((y - fy) / (FACE.ry * c.k * pad)) ** 2 < 1; }
+  card.addEventListener("pointermove", (e) => {
+    if (P.rm || e.pointerType === "touch") return;
+    [S.tx, S.ty] = local(e); S.openT = inFace(S.tx, S.ty) ? 1 : 0; kick();
+  });
+  card.addEventListener("pointerleave", (e) => { if (e.pointerType !== "touch") { S.openT = 0; kick(); } });
+  // táctil: el área de la cara no hace scroll (touch-action: none); arrastrar pinta, tocar revela todo.
+  let down = null;
+  hot.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+    hot.setPointerCapture(e.pointerId); const [x, y] = local(e);
+    down = { x, y, t: performance.now(), moved: 0 };
+    if (!P.rm) { S.drag = true; S.tx = S.x = S.px = x; S.ty = S.y = S.py = y; S.openT = 1; kick(); }
+  });
+  hot.addEventListener("pointermove", (e) => {
+    if (!down) return; const [x, y] = local(e); down.moved = Math.max(down.moved, Math.hypot(x - down.x, y - down.y));
+    if (!P.rm) { S.tx = x; S.ty = y; kick(); }
+  });
+  const up = () => {
+    if (!down) return; const tap = performance.now() - down.t < 250 && down.moved < 10; down = null;
+    S.drag = false; S.openT = 0; if (tap) toggle(); kick();
+  };
+  hot.addEventListener("pointerup", up); hot.addEventListener("pointercancel", up);
+  function toggle(force) {
+    const on = force ?? !(S.revealTo > 0.5);
+    S.revealFrom = S.reveal; S.revealTo = on ? 1 : 0; S.revealT0 = performance.now();
+    S.revealDur = P.rm ? 200 : on ? 1100 : 600;
+    btn.setAttribute("aria-pressed", String(on)); btn.textContent = on ? "Poner la máscara" : "Quitar la máscara";
+    kick();
+  }
+  btn.addEventListener("click", () => toggle());
+  function setHint() {
+    hint.textContent = P.rm ? "MOVIMIENTO REDUCIDO · USA EL BOTÓN" : coarse ? "ARRASTRA EL DEDO POR LA CARA · TOCA PARA REVELAR" : "PASA EL CURSOR POR LA CARA";
+  }
+
+  function resize() {
+    const r = card.getBoundingClientRect(); W = r.width; H = r.height; DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    const c = cover(), [fx, fy] = toCard(FACE.x, FACE.y);
+    Object.assign(hot.style, { left: fx - FACE.rx * c.k + "px", top: fy - FACE.ry * c.k + "px", width: 2 * FACE.rx * c.k + "px", height: 2 * FACE.ry * c.k + "px" });
+    if (!S.tx) { [S.tx, S.ty] = toCard(MOUTH.x, MOUTH.y); S.x = S.px = S.tx; S.y = S.py = S.ty; }
+    if (gl && glReady) FB.length = 0, makeField();
+    kick();
+  }
+  new ResizeObserver(resize).observe(card);
+
+  function setMode(m) {
+    if (m === "webgl" && !glReady) m = "css";
+    P.mode = m; card.dataset.mode = m;
+    document.querySelectorAll(".seg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.m === m)));
+    kick();
+  }
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.m)));
+  const form = $("#form"); form.querySelector("[name=glass]").checked = P.glass; form.querySelector("[name=rm]").checked = P.rm;
+  form.addEventListener("input", (e) => {
+    const el = e.target; if (!el.name) return;
+    P[el.name] = el.type === "checkbox" ? el.checked : parseFloat(el.value);
+    const out = el.parentElement.querySelector("output"); if (out) out.textContent = el.value;
+    if (el.name === "rm") setHint();
+    kick();
+  });
+  setHint();
+
+  let glOk = false; try { glOk = initGL(); } catch (err) { console.warn(err); }
+  function start(img) {
+    if (glOk) { try { uploadAll(img); } catch (err) { console.warn("WebGL sin textura:", err.name); $("#banner").classList.add("show"); } }
+    resize(); setMode(P.mode);
+  }
+  $("#pick").addEventListener("change", (e) => { const f = e.target.files[0]; if (!f) return; const im = new Image();
+    im.onload = () => { $("#banner").classList.remove("show"); uploadAll(im); FB.length = 0; setMode("webgl"); }; im.src = URL.createObjectURL(f); });
+  if (base.complete && base.naturalWidth) start(base); else base.addEventListener("load", () => start(base), { once: true });
+
+  window.__proto = {
+    P, S, setMode, toggle, toCard,
+    bench(ms = 3000) {
+      return new Promise((done) => {
+        const t0 = performance.now(), stamps = []; const [cx, cy] = toCard(MOUTH.x, MOUTH.y); const k = cover().k;
+        S.bench = true; S.openT = 1;
+        const f = (now) => {
+          const t = (now - t0) / 1000; S.tx = cx + 170 * k * Math.sin(t * 2.1); S.ty = cy + 120 * k * Math.sin(t * 1.3); stamps.push(now);
+          if (now - t0 < ms) requestAnimationFrame(f);
+          else { S.bench = false; S.openT = 0;
+            const iv = stamps.slice(1).map((v, i) => v - stamps[i]).sort((a, b) => a - b);
+            done({ mode: P.mode, w: Math.round(W), h: Math.round(H), field: FW + "x" + FH, frames: stamps.length, fps: +(stamps.length / (ms / 1000)).toFixed(1),
+              p50: +iv[Math.floor(iv.length * 0.5)].toFixed(1), p95: +iv[Math.floor(iv.length * 0.95)].toFixed(1), jsMs: +jsMs.toFixed(2) }); }
+        };
+        kick(); requestAnimationFrame(f);
+      });
+    },
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vidrio estriado · prototipo 03a</title>
+<!--
+  Prototipo 03a · douguizard 2026 · vidrio estriado (reeded / fluted glass) oblicuo sobre el retrato.
+  Tres implementaciones del mismo efecto, para comparar:
+    webgl  → fragment shader (WebGL2, sin librerías): refracción por estría, aberración cromática,
+             esmerilado a lo largo de la estría, brillo especular que sigue al cursor, ondulación local.
+    dom    → CSS puro con "rebanadas": N franjas rotadas con overflow:hidden; cada una muestra la foto
+             contra-rotada y escalada (scaleX) alrededor de su centro + degradado de brillo por franja.
+    svg    → filtro SVG feDisplacementMap con un mapa de desplazamiento generado en canvas + capa de brillos.
+  URL: ?modo=webgl|dom|svg · ?rm=1 simula prefers-reduced-motion · ?cara=1 deja la cara nítida.
+  Ábrelo con un servidor estático (Chrome bloquea subir una imagen file:// a WebGL):
+    npx http-server docs/rediseno-2026 -p 8080  →  http://localhost:8080/prototipos/vidrio-estriado.html
+  Con doble clic (file://) cae solo a "dom" y ofrece cargar la imagen a mano para activar WebGL.
+-->
+<style>
+  :root {
+    --bg: #0a0a0b; --raised: #141418; --ink: #f2f1ee; --muted: #a3a29e; --dim: #6f6e6a;
+    --line: rgba(242, 241, 238, .12); --line-strong: rgba(242, 241, 238, .24);
+    --signal: #485ef2; --magenta: #e0468f;
+    --ease-out: cubic-bezier(.23, 1, .32, 1);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .hero {
+    min-height: 100svh; max-width: 1440px; margin: 0 auto;
+    display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 56px; align-items: center;
+    padding: 56px 56px 40px;
+  }
+  .eyebrow { font: 500 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .copy h1 { font-size: clamp(52px, 7.2vw, 116px); line-height: .9; letter-spacing: -.045em; margin: .22em 0 .3em; font-weight: 800; }
+  .copy p { max-width: 34ch; color: var(--muted); font-size: 18px; margin: 0 0 28px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 14px; font-size: 13px; color: var(--ink); }
+
+  .card {
+    position: relative; margin: 0; height: calc(100svh - 96px); min-height: 520px; max-height: 960px;
+    border-radius: 28px; overflow: hidden; background: #1a1a22; isolation: isolate;
+    box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, .8);
+  }
+  .card > .layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #base { object-fit: cover; object-position: 55% 38%; display: block; }
+  #gl { opacity: 0; transition: opacity 400ms var(--ease-out); display: block; }
+  #gl.on { opacity: 1; }
+  .dom, .svgw { display: none; overflow: hidden; }
+  [data-mode="dom"] .dom, [data-mode="svg"] .svgw { display: block; }
+  [data-mode="dom"] #gl, [data-mode="svg"] #gl { display: none; }
+
+  /* ── dom: rebanadas ─────────────────────────────────────────────── */
+  .dom .wrap { position: absolute; transform-origin: 50% 50%; }
+  .dom .s { position: absolute; top: 0; overflow: hidden; }
+  .dom .s > i {
+    position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform;
+    background: url("../retratos-hf/40fe7690.jpg") no-repeat; background-size: cover; background-position: 55% 38%;
+  }
+  .dom .s::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: var(--hl, .8);
+    background: linear-gradient(90deg,
+      rgba(255,255,255,.24) 0%, rgba(255,255,255,.06) 5%, rgba(255,255,255,0) 10%, rgba(0,0,0,0) 45%,
+      rgba(255,255,255,.06) 62%, rgba(0,0,0,0) 78%, rgba(0,0,0,.12) 88%, rgba(0,0,0,.32) 100%);
+  }
+
+  /* ── svg: feDisplacementMap ─────────────────────────────────────── */
+  .svgw .img { position: absolute; inset: 0; background: url("../retratos-hf/40fe7690.jpg") no-repeat; background-size: cover; background-position: 55% 38%; filter: url(#flute); }
+  .svgw .hl { position: absolute; top: 0; left: 0; height: 100%; background-repeat: no-repeat; will-change: transform; pointer-events: none; }
+
+  .card .tag {
+    position: absolute; left: 16px; bottom: 16px; z-index: 3; padding: 7px 12px; border-radius: 999px;
+    background: rgba(10, 10, 11, .55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font: 500 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  .after { max-width: 1440px; margin: 0 auto; padding: 24px 56px 120px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .tile { background: var(--raised); border: 1px solid var(--line); border-radius: 24px; min-height: 220px; padding: 20px; color: var(--muted); }
+  .tile.light { background: #f2f1ee; color: #0a0a0a; }
+  .tile.wide { grid-column: span 2; }
+
+  /* ── panel ──────────────────────────────────────────────────────── */
+  .panel {
+    position: fixed; right: 16px; bottom: 16px; z-index: 20; width: 272px;
+    background: rgba(16, 16, 19, .82); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--line-strong); border-radius: 18px; color: var(--ink); font-size: 12px;
+  }
+  .panel summary { list-style: none; cursor: pointer; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .panel summary::-webkit-details-marker { display: none; }
+  .panel .body { padding: 0 14px 14px; display: grid; gap: 10px; }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); background: rgba(255,255,255,.06); border-radius: 10px; padding: 3px; gap: 3px; }
+  .seg button { all: unset; text-align: center; padding: 7px 0; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #0a0a0a; }
+  .seg button:focus-visible, .panel input:focus-visible, .panel summary:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .row { display: grid; grid-template-columns: 74px 1fr 34px; align-items: center; gap: 8px; }
+  .row output { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .row input[type=range] { width: 100%; accent-color: var(--ink); }
+  .row.dis { opacity: .35; }
+  .check { display: flex; gap: 8px; align-items: center; color: var(--muted); }
+  .fps { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .note { color: var(--dim); line-height: 1.4; }
+  .banner { position: fixed; left: 16px; right: 16px; top: 16px; z-index: 30; display: none; padding: 12px 14px; border-radius: 14px; background: #2a1f0b; border: 1px solid #6b4d12; color: #f6dca6; font-size: 13px; }
+  .banner.show { display: block; }
+  .banner label { text-decoration: underline; cursor: pointer; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; padding: 16px 16px 24px; min-height: auto; }
+    .card { order: -1; height: 64svh; min-height: 420px; border-radius: 24px; }
+    .copy h1 { font-size: 56px; }
+    .copy p { font-size: 16px; }
+    .after { grid-template-columns: 1fr 1fr; padding: 8px 16px 96px; }
+    .panel { left: 16px; right: 16px; width: auto; bottom: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #gl { transition: none; } }
+</style>
+</head>
+<body>
+<div class="banner" id="banner" role="status">
+  Chrome no deja subir una imagen <span class="mono">file://</span> a WebGL, así que estás viendo el modo CSS.
+  Ábrelo con <span class="mono">npx http-server docs/rediseno-2026</span> o
+  <label for="pick">elige aquí la foto</label> (<span class="mono">retratos-hf/40fe7690.jpg</span>) para activar WebGL.
+  <input id="pick" type="file" accept="image/*" hidden>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="copy">
+      <div class="eyebrow">douguizard · 2026</div>
+      <h1>Doug<br>Vargas</h1>
+      <p>Head of Product · Senior Product Designer · Design Engineer. Diseño y construyo productos que se usan en 18 países.</p>
+      <div class="chips"><span class="chip">Ver trabajo</span><span class="chip">Perfil</span><span class="chip">CV</span></div>
+    </div>
+    <figure class="card" id="card" data-mode="webgl">
+      <img class="layer" id="base" src="../retratos-hf/40fe7690.jpg" alt="Retrato de Doug Vargas detrás de un vidrio estriado" width="1073" height="1600" fetchpriority="high" decoding="async">
+      <canvas class="layer" id="gl" aria-hidden="true"></canvas>
+      <div class="layer dom" id="dom" aria-hidden="true"></div>
+      <div class="layer svgw" id="svgw" aria-hidden="true"><div class="img"></div><div class="hl" id="hl"></div></div>
+      <div class="tag" id="tag">WEBGL</div>
+    </figure>
+  </section>
+  <section class="after" aria-label="Relleno para probar el scroll">
+    <div class="tile wide">Trabajo · 01</div><div class="tile light">Perfil</div><div class="tile">Experiencia</div>
+    <div class="tile">Contacto</div><div class="tile wide">Casos</div><div class="tile light">CV</div>
+  </section>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="flute" x="0" y="0" width="1" height="1" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feImage id="fmap" x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map"/>
+    <feDisplacementMap id="fdisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<details class="panel" id="panel">
+  <summary><strong>Vidrio estriado</strong><span class="fps mono" id="fps">— fps</span></summary>
+  <form class="body" id="form" onsubmit="return false">
+    <div class="seg" role="group" aria-label="Implementación">
+      <button type="button" data-m="webgl">WebGL</button>
+      <button type="button" data-m="dom">CSS capas</button>
+      <button type="button" data-m="svg">SVG</button>
+    </div>
+    <label class="row"><span>Ancho</span><input type="range" name="w" min="40" max="90" step="1" value="58"><output>58</output></label>
+    <label class="row"><span>Ángulo</span><input type="range" name="ang" min="-20" max="20" step="0.5" value="11"><output>11</output></label>
+    <label class="row"><span>Fuerza</span><input type="range" name="str" min="0" max="1" step="0.01" value="0.62"><output>0.62</output></label>
+    <label class="row gl-only"><span>Aberración</span><input type="range" name="ca" min="0" max="1" step="0.01" value="0.45"><output>0.45</output></label>
+    <label class="row gl-only"><span>Esmerilado</span><input type="range" name="frost" min="0" max="1" step="0.01" value="0.55"><output>0.55</output></label>
+    <label class="check gl-only"><input type="checkbox" name="face"> Cara nítida (estrías por fuera)</label>
+    <div class="note" id="note">Mueve el cursor sobre la foto y desplázate.</div>
+  </form>
+</details>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  const card = $("#card"), base = $("#base"), canvas = $("#gl"), domEl = $("#dom"), hl = $("#hl"), tag = $("#tag");
+  const fmap = $("#fmap"), fdisp = $("#fdisp"), filterEl = $("#flute");
+  const RM = qs.has("rm") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const IMG = { w: 1073, h: 1600, fx: 0.55, fy: 0.38 };
+  // La cara en píxeles de la imagen (medida sobre 40fe7690.jpg): centro y radios de la elipse.
+  const FACE = { x: 585, y: 660, rx: 300, ry: 345 };
+
+  const P = { mode: "webgl", w: 58, ang: 11, str: 0.62, ca: 0.45, frost: 0.55, face: qs.has("cara") };
+  const S = { tx: 0, ty: 0, mx: 0, my: 0, vx: 0, vy: 0, hoverT: 0, hover: 0, phaseT: 0, phase: 0, scroll: 0, t0: performance.now(), bench: false, inside: false };
+  let W = 0, H = 0, DPR = 1, raf = 0, last = performance.now();
+  const frameTimes = []; let jsMs = 0;
+
+  if (window.innerWidth < 900) $("#panel").open = false; else $("#panel").open = true;
+
+  // ── geometría compartida ──────────────────────────────────────────
+  function cover() {
+    const k = Math.max(W / IMG.w, H / IMG.h);
+    const Dx = IMG.w * k, Dy = IMG.h * k;
+    return { k, Dx, Dy, Ox: (W - Dx) * IMG.fx, Oy: (H - Dy) * IMG.fy };
+  }
+  const hash = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+  // ── WebGL ─────────────────────────────────────────────────────────
+  const VS = `#version 300 es
+  in vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
+  const FS = `#version 300 es
+  precision highp float;
+  uniform sampler2D uTex;
+  uniform vec2 uRes; uniform float uDpr;
+  uniform vec2 uImgScale; uniform vec2 uImgOff;
+  uniform float uW, uAng, uStr, uCA, uFrost, uPhase, uTime, uHover, uScroll;
+  uniform vec2 uMouse; uniform vec4 uFace;
+  out vec4 o;
+  float hash(float n){ return fract(sin(n * 127.1) * 43758.5453); }
+  vec3 samp(vec2 p){ return texture(uTex, (p - uImgOff) * uImgScale).rgb; }
+  void main(){
+    vec2 p = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;   // px CSS, origen arriba-izq.
+    vec2 dir = vec2(cos(uAng), sin(uAng));        // perpendicular a las estrías
+    vec2 al  = vec2(-dir.y, dir.x);               // a lo largo de la estría
+    float along = dot(p, al);
+    float md = length(p - uMouse);
+    float g = exp(-md * md / (2.0 * 170.0 * 170.0)) * uHover;      // ondulación local alrededor del cursor
+    float u = dot(p, dir) + uPhase + g * uW * 0.45 * sin(along * 0.018 - uTime * 2.2);
+    float k = floor(u / uW), t = fract(u / uW), s = t * 2.0 - 1.0;
+    float face = 0.0;
+    if (uFace.z > 0.0) { face = 1.0 - smoothstep(0.78, 1.08, length((p - uFace.xy) / uFace.zw)); }
+    float glass = 1.0 - face;
+    float str = uStr * glass * (1.0 + uScroll * 0.6);
+    // perfil de lente cilíndrica: lineal (escala) + cúbico (los bordes comprimen más, como el vidrio real)
+    float prof = s * 0.75 + 0.45 * s * s * s;
+    float jit = (hash(k) - 0.5) * 0.4;            // ninguna estría es idéntica
+    float disp = str * uW * (prof + jit);
+    vec2 q = p + dir * disp;
+    q.y -= uScroll * 60.0;                        // parallax de la foto con el scroll
+    float ca = uCA * str * uW * 0.10 * (0.3 + abs(s));
+    float fl = uFrost * str * 12.0 * (0.4 + abs(s));
+    vec3 col = vec3(0.0);
+    for (int i = 0; i < 5; i++) {
+      vec2 qq = q + al * ((float(i) - 2.0) * 0.5 * fl);
+      col.r += samp(qq + dir * ca).r;
+      col.g += samp(qq).g;
+      col.b += samp(qq - dir * ca).b;
+    }
+    col /= 5.0;
+    float sh = 0.3 + str;
+    float shade = 1.0 - 0.22 * str * s * s;                          // más oscuro hacia el borde de la estría
+    float L = mix(0.55, clamp(uMouse.x / uRes.x * 2.0 - 1.0, -1.0, 1.0) * 0.9, uHover);
+    float spec = exp(-pow((s - L) * 5.0, 2.0)) * 0.10 * sh;           // brillo que viaja con la luz (cursor)
+    float lip = pow(smoothstep(0.10, 0.0, t), 2.0) * 0.26 * sh;      // labio brillante al empezar la estría
+    float crease = pow(smoothstep(0.80, 1.0, t), 2.0) * 0.32 * sh;   // pliegue oscuro antes de la siguiente
+    float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    col = mix(col, vec3(luma), 0.10 * str) + 0.025 * str;            // el vidrio dispersa: baja un poco el contraste
+    col = col * shade + (spec + lip) * glass - col * crease * glass;
+    o = vec4(col, 1.0);
+  }`;
+
+  let gl = null, prog = null, U = {}, tex = null, glReady = false;
+  function initGL() {
+    gl = canvas.getContext("webgl2", { antialias: false, alpha: false, premultipliedAlpha: false, powerPreference: "high-performance" });
+    if (!gl) return false;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+    gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    ["uTex","uRes","uDpr","uImgScale","uImgOff","uW","uAng","uStr","uCA","uFrost","uPhase","uTime","uHover","uScroll","uMouse","uFace"]
+      .forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
+    canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); glReady = false; setMode("dom"); });
+    return true;
+  }
+  function upload(img) {
+    tex = tex || gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);   // lanza SecurityError en file://
+    gl.generateMipmap(gl.TEXTURE_2D);                                          // las estrías minifican: sin mipmaps hay aliasing
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    glReady = true;
+  }
+  function drawGL(now) {
+    if (!glReady) return;
+    const c = cover();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform1i(U.uTex, 0);
+    gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, DPR);
+    gl.uniform2f(U.uImgScale, 1 / c.Dx, 1 / c.Dy); gl.uniform2f(U.uImgOff, c.Ox, c.Oy);
+    gl.uniform1f(U.uW, P.w); gl.uniform1f(U.uAng, (P.ang * Math.PI) / 180);
+    gl.uniform1f(U.uStr, P.str); gl.uniform1f(U.uCA, P.ca); gl.uniform1f(U.uFrost, P.frost);
+    gl.uniform1f(U.uPhase, S.phase); gl.uniform1f(U.uTime, (now - S.t0) / 1000);
+    gl.uniform1f(U.uHover, S.hover); gl.uniform1f(U.uScroll, S.scroll);
+    gl.uniform2f(U.uMouse, S.mx, S.my);
+    if (P.face) gl.uniform4f(U.uFace, c.Ox + FACE.x * c.k, c.Oy + FACE.y * c.k, FACE.rx * c.k, FACE.ry * c.k);
+    else gl.uniform4f(U.uFace, 0, 0, 0, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (!canvas.classList.contains("on")) canvas.classList.add("on");   // la foto estática ya estaba pintada debajo (LCP)
+  }
+
+  // ── CSS · rebanadas ───────────────────────────────────────────────
+  let D = null;
+  function buildDom() {
+    domEl.innerHTML = "";
+    const a = (P.ang * Math.PI) / 180, ca = Math.abs(Math.cos(a)), sa = Math.abs(Math.sin(a));
+    const Wd = W * ca + H * sa + 2 * P.w, Hd = W * sa + H * ca + 2 * P.w;
+    const wrap = document.createElement("div"); wrap.className = "wrap";
+    Object.assign(wrap.style, { width: Wd + "px", height: Hd + "px", left: (W - Wd) / 2 + "px", top: (H - Hd) / 2 + "px", transform: `rotate(${a}rad)` });
+    const c = cover();
+    const n = Math.ceil(Wd / P.w) + 3, slices = [];
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement("div"); s.className = "s";
+      s.style.width = P.w + "px"; s.style.height = Hd + "px";
+      const im = document.createElement("i");
+      im.style.width = W + "px"; im.style.height = H + "px";
+      s.appendChild(im); wrap.appendChild(s); slices.push({ s, im });
+    }
+    domEl.appendChild(wrap);
+    D = { a, Wd, Hd, slices, c };
+    domEl.style.setProperty("--hl", String(0.35 + P.str));
+  }
+  function drawDom(now) {
+    if (!D) buildDom();
+    const { a, Wd, Hd, slices } = D, w = P.w;
+    const dir = [Math.cos(a), Math.sin(a)];
+    const base = Wd / 2 - S.phase - (dir[0] * W / 2 + dir[1] * H / 2);   // borde de estría n en coords del wrap
+    const n0 = Math.floor(-base / w) - 1;
+    const t = (now - S.t0) / 1000;
+    // cursor en coords del wrap
+    const dx = S.mx - W / 2, dy = S.my - H / 2;
+    const mxw = Wd / 2 + dx * dir[0] + dy * dir[1];
+    for (let i = 0; i < slices.length; i++) {
+      const n = n0 + i, L = n * w + base, cx = L + w / 2;
+      const jit = (hash(n) - 0.5) * 0.4;
+      const g = Math.exp(-((cx - mxw) ** 2) / (2 * 170 * 170)) * S.hover;
+      const str = P.str * (1 + S.scroll * 0.6) * (1 + 0.35 * g * Math.sin(t * 2.2 + n));
+      const sx = 1 / (1 + 2.4 * str);
+      const shift = str * w * jit;
+      const { s, im } = slices[i];
+      s.style.transform = `translateX(${L}px)`;
+      im.style.transform = `translateX(${w / 2 - shift}px) scaleX(${sx}) translate(${Wd / 2 - cx}px, ${Hd / 2 - S.scroll * 60}px) rotate(${-a}rad) translate(${-W / 2}px, ${-H / 2}px)`;
+    }
+  }
+
+  // ── SVG · feDisplacementMap ───────────────────────────────────────
+  let SV = null;
+  function buildSvg() {
+    const a = (P.ang * Math.PI) / 180, dir = [Math.cos(a), Math.sin(a)];
+    const px = P.w / Math.abs(dir[0]);                      // periodo horizontal de las estrías oblicuas
+    const MW = Math.ceil(W + px), MH = Math.ceil(H);
+    const cm = document.createElement("canvas"); cm.width = MW; cm.height = MH;
+    const ch = document.createElement("canvas"); ch.width = MW; ch.height = MH;
+    const xm = cm.getContext("2d"), xh = ch.getContext("2d");
+    const dm = xm.createImageData(MW, MH), dh = xh.createImageData(MW, MH);
+    const sh = 0.3 + P.str;
+    for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
+      const u = x * dir[0] + y * dir[1];
+      const t = ((u / P.w) % 1 + 1) % 1, s = 2 * t - 1;
+      const prof = (s * 0.75 + 0.45 * s * s * s) / 1.2;
+      const i = (y * MW + x) * 4;
+      dm.data[i] = 128 + 127 * prof * dir[0]; dm.data[i + 1] = 128 + 127 * prof * dir[1]; dm.data[i + 2] = 0; dm.data[i + 3] = 255;
+      const lip = Math.max(0, 1 - t / 0.10) ** 2 * 0.26 * sh;
+      const crease = Math.max(0, (t - 0.80) / 0.20) ** 2 * 0.32 * sh + 0.22 * P.str * s * s * 0.6;
+      if (lip > crease) { dh.data[i] = dh.data[i + 1] = dh.data[i + 2] = 255; dh.data[i + 3] = lip * 255; }
+      else { dh.data[i + 3] = crease * 255; }
+    }
+    xm.putImageData(dm, 0, 0); xh.putImageData(dh, 0, 0);
+    fmap.setAttribute("href", cm.toDataURL("image/png"));
+    ["width", "height"].forEach((k) => fmap.setAttribute(k, k === "width" ? MW : MH));
+    filterEl.setAttribute("width", W); filterEl.setAttribute("height", H);
+    fdisp.setAttribute("scale", (2.4 * P.str * P.w).toFixed(2));
+    hl.style.width = MW + "px"; hl.style.backgroundImage = `url(${ch.toDataURL("image/png")})`;
+    SV = { px };
+  }
+  function drawSvg() {
+    if (!SV) buildSvg();
+    const off = (((S.phase / Math.cos((P.ang * Math.PI) / 180)) % SV.px) + SV.px) % SV.px;
+    fmap.setAttribute("x", (-off).toFixed(2));           // re-rasteriza el filtro (CPU) en cada cuadro
+    hl.style.transform = `translateX(${-off}px)`;
+  }
+
+  // ── bucle: solo pinta cuando algo cambia ──────────────────────────
+  function stepSprings(dt) {
+    // Muelles críticamente amortiguados e independientes en X e Y (respuesta ~0.35 s).
+    const w0 = (2 * Math.PI) / 0.35;
+    const ax = w0 * w0 * (S.tx - S.mx) - 2 * w0 * S.vx, ay = w0 * w0 * (S.ty - S.my) - 2 * w0 * S.vy;
+    S.vx += ax * dt; S.vy += ay * dt; S.mx += S.vx * dt; S.my += S.vy * dt;
+    const e = 1 - Math.exp(-dt * 6);
+    S.hover += (S.hoverT - S.hover) * e;
+    S.phase += (S.phaseT - S.phase) * (1 - Math.exp(-dt * 5));
+  }
+  function busy() {
+    return S.bench || Math.abs(S.tx - S.mx) > 0.3 || Math.abs(S.ty - S.my) > 0.3 || Math.abs(S.vx) + Math.abs(S.vy) > 1 ||
+      Math.abs(S.hoverT - S.hover) > 0.002 || S.hover > 0.002 || Math.abs(S.phaseT - S.phase) > 0.05;
+  }
+  function tick(now) {
+    raf = 0;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    stepSprings(dt);
+    const t0 = performance.now();
+    if (P.mode === "webgl") drawGL(now); else if (P.mode === "dom") drawDom(now); else drawSvg(now);
+    jsMs = jsMs * 0.9 + (performance.now() - t0) * 0.1;
+    frameTimes.push(now); while (frameTimes.length && now - frameTimes[0] > 1000) frameTimes.shift();
+    if (!RM && busy()) raf = requestAnimationFrame(tick);
+  }
+  function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  setInterval(() => {
+    const now = performance.now(); while (frameTimes.length && now - frameTimes[0] > 1000) frameTimes.shift();
+    $("#fps").textContent = raf || S.bench ? `${frameTimes.length} fps · ${jsMs.toFixed(1)} ms js` : "en reposo";
+  }, 500);
+
+  // ── entrada ───────────────────────────────────────────────────────
+  function onPointer(e) {
+    if (RM) return;
+    const r = card.getBoundingClientRect();
+    S.tx = e.clientX - r.left; S.ty = e.clientY - r.top;
+    const pad = 80;
+    S.inside = e.clientX > r.left - pad && e.clientX < r.right + pad && e.clientY > r.top - pad && e.clientY < r.bottom + pad;
+    S.hoverT = S.inside ? 1 : 0;
+    S.phaseT = (S.tx - W / 2) * 0.06 + window.scrollY * 0.35;   // las estrías se desplazan con el cursor y el scroll
+    kick();
+  }
+  window.addEventListener("pointermove", onPointer, { passive: true });
+  document.addEventListener("pointerleave", () => { S.hoverT = 0; kick(); });
+  window.addEventListener("scroll", () => {
+    if (RM) return;
+    S.scroll = Math.min(1, window.scrollY / Math.max(1, H));
+    S.phaseT = (S.tx - W / 2) * 0.06 * S.hoverT + window.scrollY * 0.35;
+    kick();
+  }, { passive: true });
+
+  function resize() {
+    const r = card.getBoundingClientRect();
+    W = r.width; H = r.height; DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    if (!S.inside) { S.tx = S.mx = W * 0.6; S.ty = S.my = H * 0.4; }
+    D = null; SV = null; kick();
+  }
+  new ResizeObserver(resize).observe(card);
+
+  // ── modo y panel ──────────────────────────────────────────────────
+  function setMode(m) {
+    if (m === "webgl" && !glReady) m = "dom";
+    P.mode = m; card.dataset.mode = m;
+    tag.textContent = { webgl: "WEBGL · SHADER", dom: "CSS · REBANADAS", svg: "SVG · feDisplacementMap" }[m];
+    document.querySelectorAll(".seg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.m === m)));
+    document.querySelectorAll(".gl-only").forEach((el) => el.classList.toggle("dis", m !== "webgl"));
+    D = null; SV = null; kick();
+  }
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.m)));
+  const form = $("#form");
+  form.querySelector("[name=face]").checked = P.face;
+  form.addEventListener("input", (e) => {
+    const el = e.target; if (!el.name) return;
+    P[el.name] = el.type === "checkbox" ? el.checked : parseFloat(el.value);
+    const out = el.parentElement.querySelector("output"); if (out) out.textContent = el.value;
+    if (el.name === "w" || el.name === "ang" || el.name === "str") { D = null; SV = null; }
+    kick();
+  });
+  if (RM) $("#note").textContent = "Movimiento reducido: el vidrio se pinta una vez y no reacciona al cursor ni al scroll.";
+
+  // ── arranque ──────────────────────────────────────────────────────
+  let glOk = false;
+  try { glOk = initGL(); } catch (err) { console.warn(err); }
+  const wanted = qs.get("modo") || "webgl";
+  function start(img) {
+    if (glOk) {
+      try { upload(img); } catch (err) {
+        console.warn("WebGL sin textura:", err.name);
+        $("#banner").classList.add("show");
+      }
+    }
+    resize(); setMode(wanted);
+  }
+  $("#pick").addEventListener("change", (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const im = new Image(); im.onload = () => { $("#banner").classList.remove("show"); upload(im); setMode("webgl"); }; im.src = URL.createObjectURL(f);
+  });
+  if (base.complete && base.naturalWidth) start(base); else base.addEventListener("load", () => start(base), { once: true });
+
+  // ── medición (Playwright) ─────────────────────────────────────────
+  window.__proto = {
+    setMode, P, S,
+    bench(ms = 3000) {
+      return new Promise((done) => {
+        const r = card.getBoundingClientRect(), t0 = performance.now(), stamps = []; let js = 0;
+        S.bench = true; S.hoverT = 1; S.inside = true;
+        const step = (now) => {
+          const t = (now - t0) / 1000;
+          S.tx = W * (0.5 + 0.35 * Math.sin(t * 1.7)); S.ty = H * (0.45 + 0.3 * Math.sin(t * 1.1));
+          S.phaseT = (S.tx - W / 2) * 0.06;
+          stamps.push(now);
+          if (now - t0 < ms) requestAnimationFrame(step);
+          else {
+            S.bench = false;
+            const iv = stamps.slice(1).map((v, i) => v - stamps[i]).sort((a, b) => a - b);
+            done({ mode: P.mode, w: Math.round(W), h: Math.round(H), dpr: DPR, frames: stamps.length,
+              fps: +(stamps.length / (ms / 1000)).toFixed(1), p50: +iv[Math.floor(iv.length * 0.5)].toFixed(1),
+              p95: +iv[Math.floor(iv.length * 0.95)].toFixed(1), jsMs: +jsMs.toFixed(2) });
+          }
+        };
+        kick(); requestAnimationFrame(step);
+      });
+    },
+  };
+})();
+</script>
+</body>
+</html>
