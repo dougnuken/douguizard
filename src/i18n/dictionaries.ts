@@ -187,9 +187,12 @@ const en = {
     title: (headline: string) => `CV — ${headline}`,
     description: (p: { name: string; years: number; companies: string }) =>
       `Curriculum vitae of ${p.name}. ${p.years} years of product design and design engineering across ${p.companies}.`,
-    download: "Download CV",
+    download: "Download CV or letter",
     downloadDialog: {
-      title: "Download CV",
+      title: "Download",
+      document: "Document",
+      cv: "CV",
+      letter: "Cover letter",
       language: "Language",
       photo: "Photo",
       withPhoto: "With photo",
@@ -386,9 +389,12 @@ const es: Dict = {
     title: (headline: string) => `Hoja de vida — ${headline}`,
     description: (p) =>
       `Hoja de vida de ${p.name}. ${p.years} años de diseño de producto e ingeniería de diseño en ${p.companies}.`,
-    download: "Descargar hoja de vida",
+    download: "Descargar CV o carta",
     downloadDialog: {
-      title: "Descargar hoja de vida",
+      title: "Descargar",
+      document: "Documento",
+      cv: "Hoja de vida",
+      letter: "Carta",
       language: "Idioma",
       photo: "Foto",
       withPhoto: "Con foto",

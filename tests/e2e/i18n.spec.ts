@@ -121,9 +121,13 @@ test("I6 the CV download offers both languages, with and without the photo", asy
     es: { photo: "/cv/doug-vargas-cv-es.pdf", plain: "/cv/doug-vargas-cv-es-sin-foto.pdf" },
     en: { photo: "/cv/doug-vargas-cv.pdf", plain: "/cv/doug-vargas-cv-no-photo.pdf" },
   } as const;
-  for (const [route, own, open, withPhoto, noPhoto, other] of [
-    ["/cv", "es", /descargar hoja de vida/i, /con foto/i, /sin foto/i, "English"],
-    ["/en/cv", "en", /download cv/i, /with photo/i, /without photo/i, "Español"],
+  const letters = {
+    es: "/cv/doug-vargas-carta-de-presentacion.pdf",
+    en: "/cv/doug-vargas-cover-letter.pdf",
+  } as const;
+  for (const [route, own, open, withPhoto, noPhoto, other, letterLabel] of [
+    ["/cv", "es", /descargar cv o carta/i, /con foto/i, /sin foto/i, "English", "Carta"],
+    ["/en/cv", "en", /download cv/i, /with photo/i, /without photo/i, "Español", "Cover letter"],
   ] as const) {
     await page.goto(route, { waitUntil: "networkidle" });
     await page.getByRole("button", { name: open }).click();
@@ -138,10 +142,14 @@ test("I6 the CV download offers both languages, with and without the photo", asy
     await expect(link, `I6 ${route} other language`).toHaveAttribute("href", sheets[foreign].plain);
     await dialog.getByLabel(withPhoto).check();
     await expect(link, `I6 ${route} other language, photo`).toHaveAttribute("href", sheets[foreign].photo);
+    // The cover letter: no photo question, the chosen language's letter.
+    await dialog.getByLabel(letterLabel).check();
+    await expect(link, `I6 ${route} letter`).toHaveAttribute("href", letters[foreign]);
+    await expect(dialog.getByLabel(noPhoto), `I6 ${route} letter hides photo`).toBeHidden();
     await page.keyboard.press("Escape");
     await expect(dialog, `I6 ${route} Escape closes`).toBeHidden();
   }
-  for (const pdf of [...Object.values(sheets.es), ...Object.values(sheets.en)]) {
+  for (const pdf of [...Object.values(sheets.es), ...Object.values(sheets.en), ...Object.values(letters)]) {
     const res = await request.get(pdf);
     expect(res.status(), `I6 ${pdf}`).toBe(200);
     expect(res.headers()["content-type"], `I6 ${pdf}`).toContain("pdf");
