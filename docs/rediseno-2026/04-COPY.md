@@ -930,7 +930,7 @@ the people»
 
 | # | ES | EN |
 |---|---|---|
-| 1 | **La hoja de cálculo sigue siendo la fuente de verdad.** *Tensión:* lo obvio era una base de datos. *Elección:* el panel lee y escribe sobre Drive y Calendar. *Por qué:* quien lleva la contabilidad trabaja en Drive todos los días y la clínica no debe depender de mí: si el panel se apaga mañana, no se pierde nada. | **The spreadsheet stays the source of truth.** *Tension:* a database was the obvious build. *Choice:* the panel reads and writes Drive and Calendar. *Why:* the person who keeps the books lives in Drive, and the clinic shouldn't depend on me: switch the panel off tomorrow and nothing is lost. |
+| 1 | **La hoja de cálculo sigue siendo la fuente de verdad.** *Tensión:* lo obvio era una base de datos. *Elección:* el panel trabaja sobre Drive y Calendar. *Por qué:* quien lleva la contabilidad trabaja en Drive todos los días y la clínica no debe depender de mí: si el panel se apaga mañana, no se pierde nada. | **The spreadsheet stays the source of truth.** *Tension:* a database was the obvious build. *Choice:* the panel works on top of Drive and Calendar. *Why:* the person who keeps the books lives in Drive, and the clinic shouldn't depend on me: switch the panel off tomorrow and nothing is lost. |
 | 2 | **Los saldos se leen, no se suman.** *Tensión:* cada fila de ingresos lleva el saldo que queda después de ese pago. *Elección:* manda la fila más reciente. *Por qué:* sumar contaba la deuda otra vez con cada abono; una versión temprana reportó un saldo fantasma de treinta y ocho millones de pesos. | **Balances are read, not summed.** *Tension:* each income row carries the balance left after that payment. *Choice:* the latest row wins. *Why:* summing counted the debt again with every deposit; an early version reported a phantom thirty-eight million pesos. |
 | 3 | **Un color por ciudad, nunca solo.** *Tensión:* el médico trabaja en tres ciudades y hay que distinguirlas de un vistazo. *Elección:* naranja Barranquilla, azul Bogotá, verde azulado Medellín, validados para daltonismo, y el nombre siempre junto al punto. *Por qué:* nadie tiene que distinguir el verde azulado del azul. | **A colour per city, never on its own.** *Tension:* the doctor works in three cities, and they must read at a glance. *Choice:* orange Barranquilla, blue Bogotá, teal Medellín, checked for colour blindness, with the name always beside the dot. *Why:* nobody has to tell teal from blue. |
 
@@ -1359,7 +1359,7 @@ y no necesita fuente.
   ¿Qué decisión concreta tomaste para la conexión intermitente (qué quedaba en el teléfono sin red)?
 - **P10 · Ideaware:** el caso dice «1 año»; el CV, mar – oct 2016 (y luego Qrvey hasta ago 2017 con Ideaware de
   empleador). ¿Cuál es la duración correcta del caso? ¿Algún cliente se puede nombrar?
-- **P11 · Qrvey:** el caso dice «11 meses»; oct 2016 – ago 2017 son 10. ¿Hay algún dato de uso de AutomatiQ?
+- **P11 · Qrvey:** el caso dice «11 meses»; oct 2016 – ago 2017 son 10 u 11 según se cuente; uso el periodo del CV. ¿Hay algún dato de uso de AutomatiQ?
 - **P12 · DC Medical:** ¿hay una cifra más reciente que «14 días al 2 oct» (versiones, días en vivo, casos
   gestionados)? ¿La secretaria o el médico darían una cita?
 - **P13 · MakeaPet:** sin preguntas de dato; confirma que «No escribí el código» es como quieres decirlo.
