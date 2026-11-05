@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naowee — Plataforma del sector deportivo · Doug Vargas</title>
+<meta name="description" content="El deporte de Colombia salió de Word y correo: 30 trámites en una sola plataforma.">
+<meta name="theme-color" content="#060608">
+<!-- Propuesta B · páginas internas · caso.html. Autocontenido (generado con build.py desde piezas compartidas).
+     Servir la raíz del repo. Parámetros: ?lang=en · ?rm=1 (movimiento reducido) · ?captura=1. -->
+<script>
+  (function () {
+    var d = document.documentElement, q = location.search;
+    var rm = /[?&]rm=1/.test(q) || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    d.classList.add("js"); if (rm) d.classList.add("rm");
+    if (!rm && matchMedia("(min-width: 1024px)").matches) d.classList.add("cine");
+    if (/[?&]captura=1/.test(q)) d.classList.add("captura");
+    if (/[?&]lang=en/.test(q)) d.lang = "en";
+    if (/[?&]modo=hoja/.test(q)) d.classList.add("modo-hoja");
+  })();
+</script>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/urbanist-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/geologica-latin.woff2" crossorigin>
+
+<style>
+/* ── Fuentes · OFL, locales (propuestas/fonts) con Google Fonts de respaldo ─────────────────────────── */
+@font-face { font-family: "Urbanist"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/urbanist-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/urbanist/v18/L0x-DF02iFML4hGCyMqlbS0.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Sans"; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url(../fonts/instrument-sans-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2) format("woff2"); }
+@font-face { font-family: "Doto"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/doto-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/doto/v3/t5tvIRMbNJ6TamLgVg.woff2) format("woff2"); }
+@font-face { font-family: "Geologica"; font-style: normal; font-weight: 100 900; font-display: block;
+  src: url(../fonts/geologica-latin.woff2) format("woff2"); }
+
+@property --dw   { syntax: "<number>"; inherits: true; initial-value: 700; }   /* peso del dot-matrix: 100 apagado → 700 encendido */
+@property --desp { syntax: "<length>"; inherits: true; initial-value: 0px; }   /* corte láser del nombre */
+
+/* ── Tokens (los mismos de la Propuesta B) ──────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+  --vacio: #060608; --losa: #111214; --losa-alta: #1A1B1F; --losa-borde: rgba(255, 255, 255, .08);
+  --claro: #F2F2F4; --niebla: #E4E2EC; --blanco: #FFFFFF;
+  --tinta: #F5F5F7; --tinta-2: #A1A1AB; --tinta-3: #8A8A95; --tinta-osc: #0E0E12; --tinta-osc-2: #55555F;
+  --tinta-2-vidrio: #C2C2CA;
+  --electrico: #2B56F3; --electrico-texto: #5B7CFF; --resplandor: #361976;
+  --azul-etiqueta: #E3EAFF; --magenta-etiqueta: #F0B8D6; --magenta-etiqueta-base: #FCE6F1;
+  --laser: #FF3344; --laser-nucleo: #FFE4E6; --laser-halo: rgba(255, 51, 68, .45);
+  --verde-osc: #0E6B3D;
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, .86) 0%, rgba(18, 19, 20, .86) 10% 90%, rgba(58, 59, 63, .86) 100%);
+  --vidrio-plano: rgba(17, 18, 20, .78);
+  --foco: var(--electrico-texto);
+
+  --e-4: 4px; --e-8: 8px; --e-12: 12px; --e-16: 16px; --e-24: 24px; --e-32: 32px; --e-48: 48px; --e-64: 64px; --e-96: 96px; --e-128: 128px;
+
+  --f-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --f-texto: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --f-dot: "Doto", ui-monospace, monospace;
+  --f-nombre: "Geologica", var(--f-display);
+  --nombre-fvs: "SHRP" 100, "CRSV" 0, "slnt" 0;
+  --t-12: 12px; --t-14: 14px; --t-16: 16px; --t-18: 18px; --t-20: 20px; --t-24: 24px; --t-30: 30px;
+  --t-36: 36px; --t-48: 48px; --t-60: 60px; --t-72: 72px; --t-96: 96px; --t-120: 120px;
+
+  --r-xl: 48px; --r-m: 32px; --r-s: 24px; --r-xs: 16px; --r-pill: 999px;
+  --boton: 56px; --boton-s: 48px; --toque: 44px; --pill-alto: 40px; --rail: 64px;
+  --gap: 16px; --cabecera: 88px; --os-izq: 112px; --fila: 112px;
+
+  --o-05: .05; --o-10: .1; --o-20: .2; --o-40: .4; --o-60: .6; --o-80: .8;
+
+  --bloom-azul: 0 24px 64px -12px rgba(43, 86, 243, .35);
+  --bloom-magenta: 0 24px 64px -12px rgba(161, 47, 106, .38);
+  --sombra-flota: 0 10px 24px rgba(0, 0, 0, .45);
+  --sombra-hoja: 0 -24px 64px rgba(0, 0, 0, .55);
+  --filo: inset 0 1px 0 rgba(255, 255, 255, .10), inset 0 0 0 1px rgba(255, 255, 255, .06);
+  --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 0 0 1px rgba(255, 255, 255, .10), inset 0 0 48px rgba(255, 255, 255, .16);
+  --haz: 0 0 4px 1px var(--laser), 0 0 16px 3px var(--laser-halo);
+
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+  --d-press: 120ms; --d-hover: 200ms; --d-ui: 240ms; --d-hoja: 420ms; --d-hoja-salida: 280ms; --d-entrada: 600ms;
+}
+@media (max-width: 1023px) { :root { --r-xl: 36px; --r-m: 28px; --r-s: 20px; --gap: 12px; --boton: 48px; } }
+
+/* ── Base ──────────────────────────────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--vacio); -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; scroll-padding-top: var(--cabecera); }
+body { margin: 0; background: var(--vacio); color: var(--tinta); font: 400 var(--t-16)/1.5 var(--f-texto); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4, p, ol, ul, dl, dd, figure, blockquote { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.sprite { position: absolute; width: 0; height: 0; }
+:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+.saltar { position: fixed; z-index: 100; left: var(--e-16); top: var(--e-16); padding: var(--e-12) var(--e-16); border-radius: var(--r-pill); background: var(--blanco); color: var(--tinta-osc); font-weight: 500; transform: translateY(-200%); }
+.saltar:focus-visible { transform: none; }
+.ico { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, .06) 1px, transparent 1.4px) 0 0 / 8px 8px;
+  -webkit-mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%); mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%); }
+body::after { content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: var(--o-05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+.resplandor { position: absolute; left: 0; right: 0; top: 0; height: 640px; z-index: 0; pointer-events: none;
+  background: radial-gradient(60% 100% at 55% 0%, rgba(54, 25, 118, .45) 0%, rgba(28, 14, 73, .2) 45%, transparent 75%); }
+
+/* ── Tipos ─────────────────────────────────────────────────────────────────────────────────────────── */
+.dot { font-family: var(--f-dot); font-variation-settings: "ROND" 100, "wght" var(--dw); font-weight: 700; font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em; line-height: 1; transition: --dw var(--d-hover) var(--ease-out); }
+.dot-gigante { font-size: var(--t-120); letter-spacing: -0.06em; }
+.dot-xl { font-size: var(--t-72); letter-spacing: -0.06em; }
+.dot-l  { font-size: var(--t-48); }
+.dot-m  { font-size: var(--t-30); letter-spacing: -0.03em; }
+.dot-s  { font-size: var(--t-24); letter-spacing: -0.03em; }
+.dot-xs { font-size: var(--t-20); letter-spacing: -0.03em; }
+.ceja { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.h1 { font: 600 var(--t-72)/1 var(--f-display); letter-spacing: -0.035em; text-wrap: balance; }
+.h2 { font: 600 var(--t-48)/1.08 var(--f-display); letter-spacing: -0.025em; text-wrap: balance; }
+.h3 { font: 600 var(--t-30)/1.15 var(--f-display); letter-spacing: -0.02em; text-wrap: balance; }
+.t-losa { font: 600 var(--t-24)/1.2 var(--f-display); letter-spacing: -0.01em; color: var(--tinta); text-wrap: balance; }
+.lead { font-size: var(--t-18); line-height: 1.55; color: var(--tinta-2); max-width: 34em; }
+.apoyo { font-size: var(--t-16); line-height: 1.5; color: var(--tinta-2); max-width: 34em; }
+.etiqueta { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.micro { font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-3); }
+.cifra { display: grid; gap: var(--e-8); }
+.mt-8 { margin-top: var(--e-8); } .mt-12 { margin-top: var(--e-12); } .mt-16 { margin-top: var(--e-16); } .mt-24 { margin-top: var(--e-24); } .mt-32 { margin-top: var(--e-32); }
+
+/* ── Botones ───────────────────────────────────────────────────────────────────────────────────────── */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e-8); min-height: var(--boton-s); padding: 0 var(--e-24); border-radius: var(--r-pill);
+  font: 500 var(--t-14)/1.3 var(--f-texto); letter-spacing: .005em; white-space: nowrap;
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.boton:active { scale: .97; }
+.boton-blanco { background: var(--blanco); color: var(--tinta-osc); }
+.boton-tinta { background: var(--tinta-osc); color: var(--blanco); }
+.boton-linea { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .24); color: var(--tinta); }
+.boton-linea-osc { box-shadow: inset 0 0 0 1px rgba(14, 14, 18, .24); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) {
+  .boton-blanco:hover { background: var(--niebla); } .boton-tinta:hover { background: #26262E; }
+  .boton-linea:hover { background: rgba(255, 255, 255, .08); } .boton-linea-osc:hover { background: rgba(14, 14, 18, .06); }
+}
+.circulo { display: grid; place-items: center; width: var(--boton); height: var(--boton); border-radius: 50%; flex: none; background: var(--blanco); color: var(--tinta-osc);
+  transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.circulo:active { scale: .95; }
+.circulo .ico { transition: rotate var(--d-hover) var(--ease-out); }
+.circulo-osc { background: var(--losa-alta); color: var(--tinta); }
+.flecha-tinta { background: var(--tinta-osc); color: var(--blanco); box-shadow: 0 0 0 1px rgba(255, 255, 255, .10); }
+.chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-12); border-radius: var(--r-pill); width: max-content;
+  font: 500 var(--t-14)/1 var(--f-texto); background: var(--losa-alta); color: var(--tinta); box-shadow: var(--filo); }
+.chip-nda { background: rgba(12, 18, 102, .72); color: var(--blanco); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+.enlace-texto { text-decoration: underline; text-decoration-color: rgba(161, 161, 171, .45); text-underline-offset: 4px; display: inline-flex; align-items: center; min-height: var(--toque); }
+.ext::after { content: " ↗"; }
+
+/* ── Cabecera, marca (lockup Geologica), pills, idioma ─────────────────────────────────────────────── */
+.barra { position: fixed; z-index: 30; left: 0; right: 0; top: var(--e-24); height: var(--pill-alto); padding: 0 var(--e-24);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); pointer-events: none; }
+.barra > * { pointer-events: auto; }
+.vidrio { background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%); box-shadow: var(--filo), var(--sombra-flota); }
+.marca { display: inline-flex; align-items: center; gap: var(--e-12); height: var(--pill-alto); padding: 0 var(--e-16) 0 var(--e-4); border-radius: var(--r-pill); }
+.marca-d { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blanco); color: var(--tinta-osc); font: 700 var(--t-16)/1 var(--f-nombre); font-variation-settings: var(--nombre-fvs); }
+.marca-t { font: 600 var(--t-16)/1 var(--f-nombre); letter-spacing: -0.025em; font-variation-settings: var(--nombre-fvs); }
+.pills { position: absolute; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: var(--e-4); height: var(--pill-alto); padding: 0 var(--e-4); border-radius: var(--r-pill); }
+.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-16); border-radius: var(--r-pill); color: var(--tinta-2-vidrio);
+  font: 500 var(--t-14)/1 var(--f-texto); letter-spacing: .005em; transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.pill[aria-current="page"], .pill[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) { .pill:not([aria-current]):hover, .pill[aria-current="false"]:hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
+.acciones { display: flex; align-items: center; gap: var(--e-8); }
+.idioma { display: flex; height: var(--pill-alto); padding: var(--e-4); border-radius: var(--r-pill); }
+.idioma a { display: grid; place-items: center; min-width: 40px; height: 32px; padding: 0 var(--e-8); border-radius: var(--r-pill); font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2-vidrio);
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.idioma a[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+.hablemos { height: var(--pill-alto); min-height: 0; background: var(--electrico); color: var(--blanco); box-shadow: 0 8px 24px -8px rgba(43, 86, 243, .6); }
+@media (hover: hover) and (pointer: fine) { .hablemos:hover { background: #4569F5; } }
+
+/* ── Rail de acciones ──────────────────────────────────────────────────────────────────────────────── */
+.rail { position: fixed; z-index: 30; left: var(--e-24); top: var(--cabecera); width: var(--rail); padding: var(--e-8); display: flex; flex-direction: column; align-items: center; gap: var(--e-8);
+  border-radius: var(--r-pill); background: var(--losa); box-shadow: var(--filo), var(--sombra-flota); }
+.rail-sep { width: 24px; height: 1px; background: var(--losa-borde); margin: var(--e-4) 0; }
+.rail a { position: relative; display: grid; place-items: center; width: var(--boton-s); height: var(--boton-s); border-radius: 50%; color: var(--tinta-2); font: 600 var(--t-14)/1 var(--f-texto);
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.rail .rail-accion { background: var(--losa-alta); color: var(--tinta); }
+.rail a:active { scale: .94; }
+@media (hover: hover) and (pointer: fine) { .rail a:hover { background: var(--losa-alta); color: var(--tinta); } }
+.rail [data-tip]::after { content: attr(data-tip); position: absolute; left: calc(100% + var(--e-12)); top: 50%; translate: -4px -50%; opacity: 0; pointer-events: none; white-space: nowrap;
+  padding: var(--e-8) var(--e-12); border-radius: var(--r-pill); background: var(--blanco); color: var(--tinta-osc); font: 500 var(--t-14)/1 var(--f-texto); transition: opacity 125ms var(--ease-out), translate 125ms var(--ease-out); }
+.rail [data-tip]:hover::after, .rail [data-tip]:focus-visible::after { opacity: 1; translate: 0 -50%; }
+
+/* ── Página y rejilla ──────────────────────────────────────────────────────────────────────────────── */
+main { position: relative; z-index: 1; }
+.pagina { position: relative; padding: var(--cabecera) var(--e-24) var(--e-96) var(--os-izq); }
+.contenido { max-width: 1320px; }
+@media (min-width: 1464px) { .pagina { padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
+.rejilla { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(var(--fila), auto); gap: var(--gap); }
+.seccion { margin-top: var(--e-128); }
+.seccion-cab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; margin-bottom: var(--e-48); }
+.seccion-cab > :first-child { grid-column: 1 / span 7; }
+.seccion-cab > :nth-child(2) { grid-column: 8 / -1; }
+
+/* ── Losas ─────────────────────────────────────────────────────────────────────────────────────────── */
+.tarjeta { position: relative; isolation: isolate; border-radius: var(--r-xl); padding: var(--e-32); overflow: hidden; min-width: 0;
+  transition: translate var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.losa { background: var(--losa); box-shadow: var(--filo); }
+.losa-alta { background: var(--losa-alta); box-shadow: var(--filo); }
+.losa-clara { background: var(--claro); color: var(--tinta-osc); }
+.losa-niebla { background: var(--niebla); color: var(--tinta-osc); }
+.losa-clara :is(.ceja, .apoyo, .etiqueta, .lead), .losa-niebla :is(.ceja, .apoyo, .etiqueta, .lead) { color: var(--tinta-osc-2); }
+.losa-clara .t-losa, .losa-niebla .t-losa, .losa-clara :is(.h2, .h3), .losa-niebla :is(.h2, .h3) { color: var(--tinta-osc); }
+.losa-azul { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-azul);
+  background: linear-gradient(to top, #7C7FD0 0%, transparent 22%), radial-gradient(120% 75% at 50% 46%, #0C1266 0%, #1A2FB8 46%, #3F6BD9 78%, #6F98E6 100%); }
+.losa-magenta { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-magenta);
+  background: linear-gradient(to top, #A84D86 0%, transparent 26%), radial-gradient(110% 90% at 48% 45%, #2A0D2C 0%, #5E1640 40%, #8E1F55 70%, #B4407E 100%); }
+.losa-azul :is(.t-losa, .ceja, .h2, .h3), .losa-magenta :is(.t-losa, .ceja, .h2, .h3) { color: var(--blanco); }
+.losa-azul .etiqueta { color: var(--azul-etiqueta); }
+.losa-magenta .apoyo { color: var(--magenta-etiqueta); }
+.losa-magenta .etiqueta { color: var(--magenta-etiqueta-base); }
+.enlace-tarjeta::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.enlace-tarjeta:focus-visible { outline: none; }
+.tarjeta:has(.enlace-tarjeta:focus-visible) { outline: 2px solid var(--foco); outline-offset: 3px; }
+.flecha { position: absolute; z-index: 2; top: var(--e-24); right: var(--e-24); pointer-events: none; }
+.tarjeta:has(> .flecha) :is(.ceja, .t-losa) { padding-right: calc(var(--boton) + var(--e-8)); }
+.media { overflow: hidden; border-radius: calc(var(--r-xl) - var(--e-16)); background: var(--losa-alta); }
+.media img, .media video { width: 100%; height: 100%; object-fit: cover; transition: scale var(--d-hover) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta:has(.enlace-tarjeta):hover { translate: 0 -2px; }
+  .tarjeta:hover .media img { scale: 1.03; }
+  .tarjeta:hover .flecha .ico { rotate: 45deg; }
+  .tarjeta:has(.enlace-tarjeta):hover { --dw: 900; }
+}
+.tarjeta:has(.enlace-tarjeta:active) { scale: .98; }
+
+/* Estado: el punto de presencia es luz láser */
+.estado { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); line-height: 1.3; }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--laser-nucleo); box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo); }
+/* El hilo: 1 px de luz láser */
+.hilo { height: 1px; background: var(--laser-nucleo); box-shadow: var(--haz); }
+
+/* Lockup «corte láser» del nombre (B-tipo opción 4): Geologica partida por el haz */
+.lockup { font: 600 var(--t-120)/.9 var(--f-nombre); letter-spacing: -0.05em; font-variation-settings: var(--nombre-fvs); color: var(--tinta); --corte: .5em; --desp-max: -0.1em; }
+.lockup .linea { display: block; white-space: nowrap; }
+.lockup .l2 { position: relative; }
+.lockup .m { display: block; }
+.lockup .m.inf { position: absolute; left: 0; top: 0; clip-path: inset(calc(var(--corte) + 1.5px) -1em -1em -1em); translate: calc(var(--desp) * -.6) 0; }
+.lockup .m.sup { clip-path: inset(-1em -1em calc(100% - var(--corte) + 1.5px) -1em); translate: var(--desp) 0; }
+.lockup .l2 .hilo { position: absolute; left: 0; width: var(--hilo-w, 100%); top: var(--corte); z-index: -1; transform-origin: 0 50%; }
+
+/* ── Pie ───────────────────────────────────────────────────────────────────────────────────────────── */
+.pie { position: relative; z-index: 1; margin: 0 var(--e-24) 0 var(--os-izq); max-width: 1320px; padding: var(--e-32) 0 var(--e-48);
+  display: flex; justify-content: space-between; align-items: center; gap: var(--e-16); flex-wrap: wrap; border-top: 1px solid var(--losa-borde); color: var(--tinta-3); font-size: var(--t-14); }
+.pie a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(161, 161, 171, .4); }
+@media (min-width: 1464px) { .pie { margin-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
+
+/* ── Hoja (dialog) ─────────────────────────────────────────────────────────────────────────────────── */
+.hoja { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--tinta); overflow: clip; }
+.hoja::backdrop { background: transparent; }
+.hoja-velo { position: absolute; inset: 0; background: rgba(6, 6, 8, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: 0; transition: opacity var(--d-hoja-salida) var(--ease-out); }
+.hoja-panel { position: absolute; left: 50%; bottom: 0; width: min(1120px, calc(100vw - 2 * var(--os-izq))); height: calc(100svh - var(--e-48)); translate: -50% calc(100% + var(--e-48));
+  display: flex; flex-direction: column; border-radius: var(--r-m) var(--r-m) 0 0; background: var(--losa); box-shadow: var(--filo), var(--sombra-hoja); transition: translate var(--d-hoja-salida) var(--ease-drawer); }
+.hoja.abierta .hoja-velo { opacity: 1; transition-duration: var(--d-hoja); }
+.hoja.abierta .hoja-panel { translate: -50% 0; transition-duration: var(--d-hoja); }
+.hoja-cab { position: relative; flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); padding: var(--e-16) var(--e-24) var(--e-16) var(--e-48);
+  border-bottom: 1px solid var(--losa-borde); touch-action: none; cursor: grab; }
+.hoja-asa { position: absolute; left: 50%; top: var(--e-8); width: 36px; height: 4px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .24); translate: -50% 0; }
+.hoja-cab-acciones { display: flex; gap: var(--e-8); align-items: center; }
+.hoja-progreso { position: absolute; left: 0; bottom: -1px; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.hoja-cuerpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.hoja-cuerpo:focus-visible { outline-offset: -2px; }
+.miga { font-size: var(--t-14); color: var(--tinta-2); display: flex; gap: var(--e-8); align-items: center; }
+.miga a { display: inline-flex; align-items: center; min-height: var(--toque); text-decoration: underline; text-decoration-color: rgba(161, 161, 171, .45); text-underline-offset: 4px; }
+.miga b { color: var(--tinta); font-weight: 500; }
+
+/* ── Dock (móvil) ──────────────────────────────────────────────────────────────────────────────────── */
+.dock { display: none; }
+
+/* ═════════════════════════ Móvil y tableta (< 1024): app con dock inferior ═════════════════════════ */
+@media (max-width: 1023px) {
+  .barra { top: var(--e-12); padding: 0 var(--e-16); }
+  .barra .pills, .barra .hablemos, .rail { display: none; }
+  .marca { height: var(--toque); }
+  .idioma { height: var(--toque); padding: 0; }
+  .idioma a { height: var(--toque); min-width: var(--toque); padding: var(--e-4); background-clip: content-box; }
+  .pagina { padding: 80px var(--e-16) var(--e-64); }
+  .rejilla { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+  .rejilla > * { grid-column: auto !important; grid-row: auto !important; }
+  .tarjeta { padding: var(--e-24); }
+  .seccion { margin-top: var(--e-64); }
+  .seccion-cab { grid-template-columns: 1fr; margin-bottom: var(--e-24); gap: var(--e-12); }
+  .seccion-cab > * { grid-column: auto !important; }
+  .h1 { font-size: var(--t-48); }
+  .h2 { font-size: var(--t-30); }
+  .h3 { font-size: var(--t-24); }
+  .lead { font-size: var(--t-16); }
+  .dot-gigante { font-size: var(--t-72); }
+  .dot-xl { font-size: var(--t-48); }
+  .dot-l { font-size: var(--t-36); }
+  .lockup { font-size: 66px; }
+  .pie { margin: 0 var(--e-16); padding-bottom: calc(var(--e-64) + var(--e-16) + env(safe-area-inset-bottom)); }
+  .dock { position: fixed; z-index: 30; left: 50%; bottom: calc(var(--e-12) + env(safe-area-inset-bottom)); translate: -50% 0; display: flex; gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-pill);
+    transition: translate var(--d-ui) var(--ease-out), opacity var(--d-ui) var(--ease-out); }
+  .dock.escondido { translate: -50% calc(100% + var(--e-24)); opacity: 0; }
+  .dock a, .dock button { display: grid; justify-items: center; align-content: center; gap: 2px; min-width: 64px; height: 52px; padding: 0 var(--e-4); border-radius: var(--r-pill);
+    font: 500 var(--t-12)/1.2 var(--f-texto); color: var(--tinta-2-vidrio); transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+  .dock :is(a, button):active { scale: .95; }
+  .dock [aria-current="page"], .dock [aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+  .hoja-panel { width: 100%; height: calc(100svh - var(--e-16)); }
+  .hoja-cab { padding: var(--e-24) var(--e-16) var(--e-12) var(--e-24); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+  .tarjeta, .boton, .circulo, .pill, .dock, .dock a { transition-property: opacity, background-color, color !important; transition-duration: 150ms !important; }
+  .tarjeta:hover, .tarjeta:has(.enlace-tarjeta:active) { translate: none !important; scale: none !important; }
+  .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear !important; }
+  .hoja.abierta .hoja-panel { opacity: 1; }
+}
+html.rm .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear; }
+html.rm .hoja.abierta .hoja-panel { opacity: 1; }
+@media (prefers-reduced-transparency: reduce) { .vidrio, .hoja-velo { background: var(--losa-alta); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* ═════════════════════════════════════ Página: caso ═════════════════════════════════════ */
+/* Índice de casos: losas protagonistas (largos) + archivo (cortos). Auto-colocación por spans: al filtrar, reflujo sin huecos. */
+.casos { margin-top: var(--e-24); }
+.casos > li { transition: opacity var(--d-ui) var(--ease-out), translate var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.casos > li[hidden], .archivo-w[hidden] { display: none; }
+.ceja .num { margin-right: var(--e-8); vertical-align: -3px; color: inherit; opacity: .9; }
+.c-naowee { grid-column: span 7; grid-row: span 4; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: var(--e-24); padding-right: var(--e-16); }
+.c-naowee .c-texto { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.c-naowee .t-losa { margin-top: var(--e-8); font-size: var(--t-30); }
+.c-naowee .apoyo { margin-top: var(--e-8); }
+.c-naowee .media { margin: calc(var(--e-16) - var(--e-32)) 0; height: calc(100% + 2 * (var(--e-32) - var(--e-16))); }
+.c-naowee .media img { object-position: 0 0; }
+.c-naowee .flecha { top: var(--e-32); right: var(--e-32); }
+.c-andes { grid-column: span 5; grid-row: span 4; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.c-andes .t-losa { font-size: var(--t-30); margin-top: var(--e-8); }
+.c-andes .apoyo { color: var(--blanco); }
+.andes-cifras { display: grid; grid-template-columns: 1fr auto; gap: var(--e-24) var(--e-16); }
+.andes-cifras .ancho { grid-column: 1 / -1; }
+.andes-cifras .cifra:nth-child(2) { text-align: right; justify-items: end; }
+.c-olbo { grid-column: span 4; grid-row: span 4; display: flex; flex-direction: column; justify-content: space-between; }
+.c-olbo .c-col { display: grid; gap: var(--e-8); }
+.c-olbo .apoyo { max-width: 52%; }
+.c-olbo .cifra { position: relative; z-index: 1; max-width: 50%; }
+.olbo-cifra { color: var(--verde-osc); }
+.c-olbo .telefono { position: absolute; z-index: 0; right: var(--e-32); bottom: calc(-1 * var(--e-64)); width: 52%; aspect-ratio: 3 / 4; border-radius: var(--r-s); box-shadow: 0 24px 48px -16px rgba(14, 14, 18, .45); }
+.c-olbo .telefono img { object-position: 50% 0; }
+.c-bdo { grid-column: span 4; grid-row: span 4; display: flex; flex-direction: column; gap: var(--e-16); }
+.c-bdo .media { height: 42%; flex: none; margin: calc(var(--e-16) - var(--e-32)) calc(var(--e-16) - var(--e-32)) 0; }
+.c-bdo .media img { object-position: 0 0; }
+.c-bdo .cifra { margin-top: auto; }
+.c-dc, .c-mp { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-12); }
+.c-dc .c-col { display: grid; gap: var(--e-4); }
+.c-dc .cifra, .c-mp .cifra { grid-auto-flow: column; justify-content: start; align-items: end; gap: var(--e-12); }
+.c-dc .cifra .etiqueta, .c-mp .cifra .etiqueta { max-width: 22ch; padding-bottom: var(--e-4); }
+.leido { display: inline-flex; margin-top: var(--e-12); padding: var(--e-4) var(--e-8); border-radius: var(--r-pill); box-shadow: inset 0 0 0 1px var(--losa-borde); color: var(--tinta-2); }
+.leido[hidden] { display: none; }
+
+.archivo-w { margin-top: var(--gap); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.archivo-cab { grid-column: 1 / span 3; }
+.archivo-w .filas { grid-column: 4 / -1; }
+.filas a { display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) 72px minmax(0, 2fr) auto; align-items: center; gap: var(--e-16);
+  min-height: var(--e-64); padding: var(--e-8) var(--e-16); margin: 0 calc(-1 * var(--e-16)); border-radius: var(--r-xs); border-top: 1px solid var(--losa-borde);
+  transition: background-color var(--d-hover) var(--ease-out); }
+.filas li:first-child a { border-top-color: transparent; }
+.filas b { font: 500 var(--t-16)/1.3 var(--f-texto); }
+.filas .cli, .filas .linea { font-size: var(--t-14); line-height: 1.35; color: var(--tinta-2); }
+.filas .accion { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); font-weight: 500; color: var(--tinta); }
+.filas .accion .ico { transition: rotate var(--d-hover) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .filas a:hover { background: var(--losa-alta); } .filas a:hover .accion .ico { rotate: 45deg; } }
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .c-naowee { grid-column: span 12; grid-row: span 3; }
+  .c-andes, .c-olbo, .c-bdo { grid-column: span 6; }
+  .c-dc, .c-mp { grid-column: span 6; }
+  .filas a { grid-template-columns: 48px minmax(0, 1fr) 64px minmax(0, 1.6fr) auto; }
+  .filas .cli { display: none; }
+}
+@media (max-width: 1023px) {
+  .c-naowee { grid-template-columns: 1fr; grid-template-rows: 180px auto; padding-right: var(--e-24); }
+  .c-naowee .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; height: calc(100% + var(--e-12)); border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .c-naowee .flecha { top: var(--e-24); right: var(--e-24); }
+  .c-naowee .t-losa, .c-andes .t-losa { font-size: var(--t-24); }
+  .c-andes { gap: var(--e-24); }
+  .andes-cifras { grid-template-columns: repeat(3, auto); justify-content: space-between; }
+  .andes-cifras .ancho { grid-column: auto; }
+  .andes-cifras .cifra:nth-child(2) { text-align: left; justify-items: start; }
+  .andes-cifras .dot-l { font-size: var(--t-30); }
+  .c-olbo { min-height: 380px; }
+  .c-olbo .apoyo { max-width: 60%; }
+  .c-olbo .telefono { width: 40%; right: var(--e-24); bottom: calc(-1 * var(--e-96)); }
+  .c-bdo .media { height: 150px; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .archivo-w { grid-template-columns: 1fr; }
+  .archivo-cab, .archivo-w .filas { grid-column: auto; }
+  .filas a { grid-template-columns: 44px minmax(0, 1fr) auto; row-gap: 0; padding: var(--e-12) var(--e-12); margin: 0 calc(-1 * var(--e-12)); }
+  .filas .cli, .filas .linea { display: none; }
+  .filas .accion span { display: none; }
+  .filas .anio { justify-self: end; }
+  .filas .accion { display: none; }
+}
+
+/* Dos contenedores para la misma pieza: página completa (por defecto) o hoja sobre el índice (?modo=hoja). */
+.fondo-indice { display: none; }
+.modo-hoja .fondo-indice { display: block; }
+.modo-hoja .pagina > .contenido > .caso { display: none; }
+.w-cab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); padding-top: var(--e-48); }
+.w-titulo { grid-column: 1 / span 7; }
+.w-titulo .h1 { font-size: var(--t-120); line-height: .92; letter-spacing: -0.045em; }
+
+/* Portada */
+.caso-miga { margin-top: var(--e-24); }
+.caso-portada { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; margin-top: var(--e-32); }
+.caso-titulo { grid-column: 1 / span 7; }
+.caso-h1 { font: 600 var(--t-120)/.92 var(--f-display); letter-spacing: -0.045em; margin: var(--e-12) 0 var(--e-24); }
+.gancho { font-size: var(--t-20); line-height: 1.5; color: var(--tinta-2); max-width: 30em; }
+.ficha { grid-column: 8 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-8); }
+.ficha div { padding: var(--e-16) var(--e-16) var(--e-16) var(--e-24); border-radius: var(--r-s); background: var(--losa-alta); box-shadow: var(--filo); display: grid; gap: var(--e-4); align-content: start; }
+.ficha .ancho { grid-column: 1 / -1; }
+.ficha dt { font-size: var(--t-12); letter-spacing: .02em; color: var(--tinta-3); }
+.ficha dd { font-size: var(--t-18); line-height: 1.4; color: var(--tinta); }
+.caso-cover { margin-top: var(--e-48); border-radius: var(--r-xl); overflow: hidden; aspect-ratio: 16 / 8; background: var(--losa-alta); box-shadow: inset 0 0 0 1px var(--losa-borde); }
+.caso-cover img { width: 100%; height: 100%; object-fit: cover; object-position: 0 0; }
+
+/* Cuerpo con índice lateral fijo (el «TL;DR de 30 segundos») */
+.caso-cuerpo { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--e-64); }
+.indice { grid-column: 1 / span 2; position: sticky; top: var(--e-128); align-self: start; display: grid; grid-template-columns: 1px 1fr; gap: var(--e-16); }
+.indice-hilo { position: relative; background: rgba(255, 255, 255, .14); }
+.indice-hilo i { position: absolute; left: 0; top: 0; width: 1px; height: 100%; transform-origin: 50% 0; transform: scaleY(var(--p, 0)); background: var(--laser-nucleo); box-shadow: var(--haz); }
+.indice a { display: flex; align-items: center; min-height: var(--toque); font-size: var(--t-14); color: var(--tinta-2); transition: color var(--d-hover) var(--ease-out); }
+.indice a[aria-current="true"] { color: var(--tinta); font-weight: 500; }
+.indice a[aria-current="true"]::before { content: ""; width: 6px; height: 6px; border-radius: 50%; margin-left: calc(-1 * var(--e-16) - 3px); margin-right: calc(var(--e-16) - 3px); background: var(--laser-nucleo); box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo); }
+@media (hover: hover) and (pointer: fine) { .indice a:hover { color: var(--tinta); } }
+.caso-secciones { grid-column: 3 / -1; }
+.bloque { margin-top: var(--e-128); scroll-margin-top: var(--e-128); }
+.bloque:first-child { margin-top: 0; }
+.bloque.dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: var(--e-48); }
+.prosa { font-size: var(--t-18); line-height: 1.65; color: var(--tinta-2); max-width: 34em; }
+
+/* Tablero de impacto */
+.tablero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.kpi { padding: var(--e-24); border-radius: var(--r-m); background: var(--losa-alta); box-shadow: var(--filo); display: grid; gap: var(--e-8); align-content: start; min-height: 208px; }
+.kpi .dot { --dw: 100; transition: --dw 400ms var(--ease-out) calc(var(--i) * 60ms); margin-bottom: var(--e-16); }
+.encendido .kpi .dot { --dw: 700; }
+.kpi-et { font-size: var(--t-16); line-height: 1.35; color: var(--tinta); }
+.kpi.blanca { background: var(--claro); color: var(--tinta-osc); box-shadow: none; }
+.kpi.blanca .kpi-et { color: var(--tinta-osc); }
+.kpi.blanca .micro { color: var(--tinta-osc-2); }
+
+/* Mi parte */
+.lista-parte { display: grid; gap: var(--e-16); }
+.lista-parte li { position: relative; padding-left: var(--e-32); font-size: var(--t-18); line-height: 1.55; color: var(--tinta); max-width: 34em; }
+.lista-parte li::before { content: ""; position: absolute; left: 0; top: .72em; width: var(--e-16); height: 1px; background: var(--tinta-3); }
+.lista-parte .con { color: var(--tinta-2); font-size: var(--t-16); }
+
+/* Decisiones: tensión → elección → por qué, con la evidencia al lado */
+.decisiones { display: grid; gap: var(--gap); margin-top: var(--e-32); }
+.decision { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--e-32); padding: var(--e-32); border-radius: var(--r-xl); background: var(--losa); box-shadow: var(--filo); align-items: center; }
+.decision dl { display: grid; gap: var(--e-16); margin-top: var(--e-24); }
+.decision dl div { display: grid; grid-template-columns: 88px 1fr; gap: var(--e-16); }
+.decision dt { font-size: var(--t-14); color: var(--tinta-3); padding-top: 2px; }
+.decision dd { font-size: var(--t-16); line-height: 1.5; color: var(--tinta-2); }
+.decision dl div:last-child dd { color: var(--tinta); }
+.d-media { border-radius: calc(var(--r-xl) - var(--e-16)); overflow: hidden; aspect-ratio: 16 / 10; background: var(--losa-alta); }
+.d-media img { width: 100%; height: 100%; object-fit: cover; object-position: 0 0; }
+
+/* Producto */
+.video { margin-top: var(--e-32); }
+.video video { width: 100%; height: auto; border-radius: var(--r-xl); background: var(--losa-alta); box-shadow: inset 0 0 0 1px var(--losa-borde); }
+figcaption { margin-top: var(--e-12); max-width: 60em; color: var(--tinta-2); }
+.galeria { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--gap); }
+.galeria .media { aspect-ratio: 16 / 10; border-radius: var(--r-m); }
+.galeria .media img { object-position: 0 0; }
+
+/* Proceso: un riel de tres fases, cosidas por el hilo */
+.riel { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--e-32); }
+.riel::before { content: ""; position: absolute; left: 0; right: 0; top: 15px; height: 1px; background: var(--laser-nucleo); box-shadow: var(--haz); opacity: .8; }
+.riel li { position: relative; display: grid; gap: var(--e-12); align-content: start; padding-right: var(--e-24); }
+.riel .dot { background: var(--vacio); padding-right: var(--e-12); width: max-content; color: var(--tinta); }
+
+/* Colofón y siguiente */
+.colofon { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-48); padding-top: var(--e-48); border-top: 1px solid var(--losa-borde); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--e-8); }
+.sig-fila { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); }
+.sig-card { min-height: 280px; display: flex; flex-direction: column; justify-content: space-between; }
+.sig-cifras { display: flex; gap: var(--e-24); flex-wrap: wrap; }
+.sig-contacto { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-24); }
+.sig-cta { display: flex; gap: var(--e-8); flex-wrap: wrap; }
+
+/* La misma pieza dentro de la hoja: sin índice lateral (la hoja ya lleva su progreso), columna única */
+.hoja .caso { padding: var(--e-48) var(--e-48) var(--e-96); }
+.hoja .caso-miga { display: none; }
+.hoja .caso-portada { margin-top: 0; }
+.hoja .caso-h1 { font-size: var(--t-72); }
+.hoja .caso-titulo { grid-column: 1 / span 6; }
+.hoja .ficha { grid-column: 7 / -1; }
+.hoja .caso-cuerpo { display: block; margin-top: var(--e-48); }
+.hoja .indice { display: none; }
+.hoja .bloque { margin-top: var(--e-96); }
+.hoja-mini .hoja-panel { height: auto; max-height: 70svh; width: min(560px, 100vw); }
+.lista-secciones { padding: var(--e-16) var(--e-24) var(--e-32); }
+.lista-secciones a { display: flex; align-items: center; min-height: var(--boton-s); font-size: var(--t-18); border-bottom: 1px solid var(--losa-borde); }
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .indice { display: none; }
+  .caso-secciones { grid-column: 1 / -1; }
+  .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .w-cab { grid-template-columns: 1fr; } .w-titulo { grid-column: auto; } .w-titulo .h1 { font-size: var(--t-72); }
+  .caso-portada { grid-template-columns: 1fr; gap: var(--e-24); margin-top: var(--e-16); }
+  .caso-titulo, .ficha { grid-column: auto; }
+  .caso-h1 { font-size: var(--t-72); margin: var(--e-8) 0 var(--e-16); }
+  .gancho { font-size: var(--t-18); }
+  .ficha dd { font-size: var(--t-16); }
+  .caso-cover { margin-top: var(--e-24); aspect-ratio: 4 / 3; border-radius: var(--r-xl); }
+  .caso-cuerpo { display: block; margin-top: var(--e-48); }
+  .indice { display: none; }
+  .bloque { margin-top: var(--e-64); scroll-margin-top: 80px; }
+  .bloque.dos { grid-template-columns: 1fr; gap: var(--e-16); }
+  .prosa, .lista-parte li { font-size: var(--t-16); }
+  .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-12); }
+  .kpi { padding: var(--e-16); min-height: 150px; border-radius: var(--r-s); }
+  .kpi .dot-l { font-size: var(--t-30); }
+  .kpi-et { font-size: var(--t-14); }
+  .decision { grid-template-columns: 1fr; padding: var(--e-24); gap: var(--e-24); }
+  .decision .d-media { order: -1; border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .decision dl div { grid-template-columns: 1fr; gap: var(--e-4); }
+  .video video { border-radius: var(--r-s); }
+  .galeria { grid-template-columns: 1fr; }
+  .riel { grid-template-columns: 1fr; gap: var(--e-32); padding-left: var(--e-48); }
+  .riel::before { left: 15px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+  .riel li { padding-right: 0; }
+  .riel .dot { position: absolute; left: calc(-1 * var(--e-48)); top: 0; padding: var(--e-4) 0; }
+  .colofon { grid-template-columns: 1fr; gap: var(--e-32); }
+  .sig-fila { grid-template-columns: 1fr; }
+  .hoja .caso { padding: var(--e-24) var(--e-24) var(--e-96); }
+  .hoja .caso-h1 { font-size: var(--t-48); }
+  .hoja .caso-titulo, .hoja .ficha { grid-column: auto; }
+  .hoja-mini .hoja-panel { width: 100%; }
+}
+
+</style>
+</head>
+<body>
+<a class="saltar" href="#contenido" data-t="nav.saltar">Ir al contenido</a>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-flecha" viewBox="0 0 20 20"><path d="M6 14 14 6M7.5 6H14v6.5"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></symbol>
+  <symbol id="i-izq" viewBox="0 0 20 20"><path d="M12 5 7 10l5 5"/></symbol>
+  <symbol id="i-der" viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></symbol>
+  <symbol id="i-correo" viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m3.5 6 6.5 5 6.5-5"/></symbol>
+  <symbol id="i-bajar" viewBox="0 0 20 20"><path d="M10 3.5v9M6 9l4 4 4-4M4 16.5h12"/></symbol>
+  <symbol id="i-arriba" viewBox="0 0 20 20"><path d="M10 16V5M5.5 9.5 10 5l4.5 4.5"/></symbol>
+  <symbol id="i-trabajo" viewBox="0 0 20 20"><rect x="3" y="6.5" width="14" height="10" rx="2"/><path d="M7.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 12.5 5v1.5"/></symbol>
+  <symbol id="i-perfil" viewBox="0 0 20 20"><circle cx="10" cy="7" r="3.2"/><path d="M4 16.5c1.2-3 3.4-4.3 6-4.3s4.8 1.3 6 4.3"/></symbol>
+  <symbol id="i-linea" viewBox="0 0 20 20"><path d="M3 10h14"/><circle cx="6" cy="10" r="1.6"/><circle cx="11" cy="10" r="1.6"/><circle cx="15.5" cy="10" r="1.6"/></symbol>
+  <symbol id="i-cv" viewBox="0 0 20 20"><path d="M5.5 2.5h6l3.5 3.5v11.5h-9.5z"/><path d="M11.5 2.5V6H15M8 10.5h5M8 13.5h5"/></symbol>
+  <symbol id="i-secciones" viewBox="0 0 20 20"><path d="M4 6h12M4 10h12M4 14h8"/></symbol>
+  <symbol id="i-expandir" viewBox="0 0 20 20"><path d="M11.5 3.5h5v5M16.5 3.5 11 9M8.5 16.5h-5v-5M3.5 16.5 9 11"/></symbol>
+  <symbol id="i-play" viewBox="0 0 20 20"><path d="M7 5.5v9l7-4.5z"/></symbol>
+</svg>
+<header class="barra">
+  <a class="marca vidrio" href="../B/index.html" data-int="../B/index.html" aria-label="douguizard, inicio" data-ta="nav.inicio"><span class="marca-d" aria-hidden="true">d</span><span class="marca-t" aria-hidden="true" translate="no">douguizard</span></a>
+  <nav class="pills vidrio" aria-label="Principal" data-ta="nav.principal">
+    <a class="pill" href="work.html" data-int="work.html" aria-current="page" data-t="nav.trabajo">Trabajo</a>
+    <a class="pill" href="about.html" data-int="about.html" data-t="nav.perfil">Perfil</a>
+    <a class="pill" href="experience.html" data-int="experience.html" data-t="nav.experiencia">Experiencia</a>
+    <a class="pill" href="/cv" data-t="nav.cv">CV</a>
+  </nav>
+  <div class="acciones">
+    <div class="idioma vidrio" role="group" aria-label="Idioma" data-ta="idioma.grupo">
+      <a href="?lang=es" lang="es" hreflang="es" aria-label="Español" data-lang="es">ES</a>
+      <a href="?lang=en" lang="en" hreflang="en" aria-label="English" data-lang="en">EN</a>
+    </div>
+    <a class="boton hablemos" href="../B/index.html#contacto" data-int="../B/index.html#contacto" data-t="nav.hablemos">Hablemos</a>
+  </div>
+</header>
+<nav class="rail" id="rail" aria-label="Acciones rápidas" data-ta="rail.label">
+  <a class="rail-accion" href="mailto:hello@douguizard.com" data-tip="hello@douguizard.com" aria-label="Escríbeme: hello@douguizard.com" data-ta="rail.correo"><svg class="ico"><use href="#i-correo"/></svg></a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="/cv/doug-vargas-cv.pdf" download data-tip="Descargar CV (PDF)" data-ttip="cta.cv" aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico"><use href="#i-bajar"/></svg></a>
+  <a href="https://www.linkedin.com/in/douguizard" target="_blank" rel="noopener" data-tip="LinkedIn ↗" aria-label="LinkedIn (se abre en otra pestaña)" data-ta="ext.linkedin">in</a>
+  <a href="https://www.behance.net/douguizard" target="_blank" rel="noopener" data-tip="Behance ↗" aria-label="Behance (se abre en otra pestaña)" data-ta="ext.behance">Bē</a>
+  <a href="https://github.com/dougnuken" target="_blank" rel="noopener" data-tip="GitHub ↗" aria-label="GitHub (se abre en otra pestaña)" data-ta="ext.github">gh</a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="#arriba" data-tip="Volver arriba" data-ttip="pie.arriba" aria-label="Volver arriba" data-ta="pie.arriba"><svg class="ico"><use href="#i-arriba"/></svg></a>
+</nav>
+<main id="contenido">
+<div class="resplandor" aria-hidden="true"></div>
+<div class="pagina">
+<div class="contenido">
+  <!-- Contenedor 2 · hoja: el índice de trabajo queda debajo y el caso sube encima (solo con ?modo=hoja) -->
+  <div class="fondo-indice" id="fondoIndice">
+    <header class="w-cab"><div class="w-titulo"><p class="h1" aria-hidden="true" data-t="w.h1">Trabajo</p></div></header>
+  <ul class="rejilla casos" id="casos" aria-label="Casos" data-ta="w.lista">
+    <!-- Naowee · abre como hoja; con cmd/ctrl, la página completa -->
+    <li class="tarjeta losa c-naowee" data-grupo="escala">
+      <div class="c-texto">
+        <div>
+          <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/02</span><span data-t="k3.ceja">Ahora · Head of Product</span></p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="caso.html" data-int="caso.html" data-hoja="naowee"><span translate="no">Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <p class="apoyo" data-t="k3.apoyo">Los 30 trámites del deporte colombiano, fuera de Word.</p>
+          <span class="leido micro" hidden data-t="w.leido">Leído</span>
+        </div>
+        <div class="cifra" role="group" aria-label="130 o más pantallas en 8 módulos" data-ta="k3.cifra.aria">
+          <span class="dot dot-xl" aria-hidden="true">130+</span><span class="etiqueta" aria-hidden="true" data-t="k3.etq">pantallas en 8 módulos</span>
+        </div>
+      </div>
+      <div class="media"><img src="../../../../public/work/naowee/ivc-workspace-tramite.webp" alt="" width="2880" height="1800" decoding="async"></div>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- Andes · NDA: la cifra es la imagen -->
+    <li class="tarjeta losa-azul c-andes" data-grupo="escala">
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/03</span><span translate="no">Mercadolibre</span> · 2024–2026</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo mt-8" data-t="k4.apoyo">Líder técnico del sistema de diseño de Mercadolibre.</p>
+      </div>
+      <div class="andes-cifras" role="group" aria-label="400 o más diseñadores, 2.000 o más ingenieros, 18 países" data-ta="k4.aria">
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">400+</span><span class="etiqueta" data-t="k4.dis">diseñadores</span></div>
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">18</span><span class="etiqueta" data-t="k4.pai">países</span></div>
+        <div class="cifra ancho" aria-hidden="true"><span class="dot dot-l" data-t="k4.n2">2.000+</span><span class="etiqueta" data-t="k4.ing">ingenieros</span></div>
+      </div>
+      <span class="chip chip-nda" data-t="nda">NDA · Caso a solicitud</span>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- olbo -->
+    <li class="tarjeta losa-niebla c-olbo" data-grupo="propio">
+      <div class="c-col">
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/01</span><span data-t="k7.ceja">Producto propio · Design Engineer</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span translate="no">olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k7.apoyo">Mide tu ritmo de gasto, no tu saldo.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="647 pruebas en verde" data-ta="k7.aria"><span class="dot dot-xl olbo-cifra" aria-hidden="true">647</span><span class="etiqueta" aria-hidden="true" data-t="k7.etq">pruebas en verde</span></div>
+      <div class="media telefono"><img src="../../../../public/work/olbo/01-hoy-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- Banco de Occidente -->
+    <li class="tarjeta losa c-bdo" data-grupo="escala">
+      <div class="media"><img src="../../../../public/work/banco-de-occidente/portal-dashboard.webp" alt="" width="2271" height="1715" loading="lazy" decoding="async"></div>
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/04</span>Aval Digital Labs · 2018–2024</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/banco-de-occidente"><span>Banco de Occidente</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k8.apoyo">Un portal más liviano y Velocity, su sistema de diseño.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="Más de 12 squads en un solo sistema" data-ta="k8.aria"><span class="dot dot-l" aria-hidden="true">12+</span><span class="etiqueta" aria-hidden="true" data-t="k8.etq">squads en un solo sistema</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- DC Medical -->
+    <li class="tarjeta losa c-dc" data-grupo="propio">
+      <div class="c-col">
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/05</span><span data-t="k9.ceja">Producto propio · Socio y constructor</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/dc-medical"><span>DC Medical</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k9.apoyo">Una clínica en tres ciudades, desde un celular.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="14 días del primer commit a la versión del 2 de octubre" data-ta="k9.aria"><span class="dot dot-l" aria-hidden="true">14</span><span class="etiqueta" aria-hidden="true" data-t="k9.etq">días del primer commit a la versión del 2 oct</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- MakeaPet -->
+    <li class="tarjeta losa-magenta c-mp" data-grupo="propio">
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/06</span><span data-t="k10.ceja">Producto propio · iOS, Android y web</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/makeapet"><span>MakeaPet</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k10.apoyo">De cinco pantallas en Figma a una app real.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="Más de 680 pruebas automatizadas" data-ta="k10.aria"><span class="dot dot-l" aria-hidden="true">680+</span><span class="etiqueta" aria-hidden="true" data-t="k10.etq">pruebas automatizadas</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+  </ul>
+
+  <!-- Archivo: los casos cortos como filas ({num} · {proyecto} · {cliente} · {año} · Leer el caso) -->
+  <section class="tarjeta losa archivo-w" id="archivo" data-grupo="anterior" aria-labelledby="hArchivo">
+    <div class="archivo-cab">
+      <p class="ceja" data-t="k16.ceja">Archivo</p>
+      <h2 class="t-losa" id="hArchivo" data-t="k16.titulo">Más trabajo</h2>
+    </div>
+    <ol class="filas">
+      <li><a href="/work/royal-caribbean"><span class="dot dot-xs" aria-hidden="true">/07</span><b>Royal Caribbean</b><span class="cli">Globant</span><span class="dot dot-xs anio">2017</span><span class="linea" data-t="k16.r2">Reservas y vida a bordo, con Globant.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/qrvey"><span class="dot dot-xs" aria-hidden="true">/08</span><b>Qrvey</b><span class="cli">Qrvey</span><span class="dot dot-xs anio">2016</span><span class="linea" data-t="k16.r3">AutomatiQ: encuestas que actúan solas.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/ideaware"><span class="dot dot-xs" aria-hidden="true">/09</span><b>Ideaware</b><span class="cli">Ideaware</span><span class="dot dot-xs anio">2016</span><span class="linea" data-t="k16.r4">Diseño para clientes de EE. UU. y LATAM.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/chub"><span class="dot dot-xs" aria-hidden="true">/10</span><b>Chub</b><span class="cli" data-t="w.chubcli">Proyecto paralelo freelance</span><span class="dot dot-xs anio">2018</span><span class="linea" data-t="k16.r1">Alquiler de carros por minuto, para iOS.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+    </ol>
+  </section>
+
+  </div>
+
+  <!-- Contenedor 1 · página completa. Es la misma pieza: en modo hoja, este <article> se mueve dentro del <dialog>. -->
+  <article class="caso" id="caso" aria-labelledby="casoTitulo">
+    <nav class="miga caso-miga" aria-label="Ruta" data-ta="c.ruta"><a href="work.html" data-int="work.html" data-t="nav.trabajo">Trabajo</a><span aria-hidden="true">/</span><b translate="no">Naowee</b></nav>
+
+    <header class="caso-portada">
+      <div class="caso-titulo">
+        <p class="ceja" data-t="k3.ceja">Ahora · Head of Product</p>
+        <h1 class="caso-h1" id="casoTitulo" translate="no">Naowee</h1>
+        <p class="gancho" data-t="c1.gancho">El deporte de Colombia salió de Word y correo: 30 trámites en una sola plataforma.</p>
+      </div>
+      <dl class="ficha">
+        <div><dt data-t="c.rol">Rol</dt><dd>Head of Product</dd></div>
+        <div><dt data-t="c.duracion">Duración</dt><dd data-t="c1.duracion">Ene 2026 — Hoy</dd></div>
+        <div class="ancho"><dt data-t="c.equipo">Equipo</dt><dd data-t="c1.equipo">Producto: 2 personas, con un diseñador que lidero; analistas de negocio e ingeniería.</dd></div>
+        <div><dt data-t="c.plataformas">Plataformas</dt><dd>Web</dd></div>
+      </dl>
+    </header>
+
+    <figure class="caso-cover"><img src="../../../../public/work/naowee/ivc-workspace-tramite.webp" alt="El espacio de trabajo del profesional en el trámite IVC-2026-005: 18 días de plazo junto a una lista de 7 documentos, cada uno citando el artículo del Decreto 1387/1970 al que responde." data-talt="c1.cover.alt" width="2880" height="1800" fetchpriority="high"></figure>
+
+    <div class="caso-cuerpo">
+      <nav class="indice" aria-label="Secciones del caso" data-ta="c.indice.label">
+        <span class="indice-hilo" aria-hidden="true"><i></i></span>
+        <ol>
+          <li><a href="#impacto" data-t="c.impacto">Impacto</a></li>
+          <li><a href="#problema" data-t="c.problema">Problema</a></li>
+          <li><a href="#parte" data-t="c.parte">Mi parte</a></li>
+          <li><a href="#decisiones" data-t="c.decisiones">Decisiones</a></li>
+          <li><a href="#producto" data-t="c.producto">Producto</a></li>
+          <li><a href="#proceso" data-t="c.proceso">Proceso</a></li>
+        </ol>
+      </nav>
+
+      <div class="caso-secciones">
+        <section id="impacto" class="bloque" aria-labelledby="hImpacto">
+          <h2 class="sr-only" id="hImpacto" data-t="c.impacto">Impacto</h2>
+          <ul class="tablero">
+            <li class="kpi blanca"><span class="dot dot-l" style="--i:0">30</span><span class="kpi-et" data-t="c1.k1">trámites digitalizados</span><span class="micro" data-t="c1.k1n">antes en Word y correo</span></li>
+            <li class="kpi"><span class="dot dot-l" style="--i:1" data-t="c1.k2v">~1.200</span><span class="kpi-et" data-t="c1.k2">organizaciones deportivas en alcance</span></li>
+            <li class="kpi"><span class="dot dot-l" style="--i:2">130+</span><span class="kpi-et" data-t="c1.k3">pantallas entregadas</span><span class="micro" data-t="c1.k3n">en 8 de 13 módulos</span></li>
+            <li class="kpi"><span class="dot dot-l" style="--i:3">38+</span><span class="kpi-et" data-t="c1.k4">componentes compartidos</span><span class="micro" data-t="c1.k4n">un solo sistema de diseño</span></li>
+          </ul>
+        </section>
+
+        <section id="problema" class="bloque dos" aria-labelledby="hProblema">
+          <div><p class="ceja" data-t="c.problema">Problema</p><h2 class="h3 mt-12" id="hProblema" data-t="c1.h2p">Un sector que funcionaba con archivos</h2></div>
+          <p class="prosa" data-t="c1.problema">Los 30 trámites del sistema deportivo colombiano se movían por Word, correo y un gestor documental, GESDOC. Ningún sistema hablaba con otro. Dibujar pantallas era la parte fácil: antes había que entender más de 45 estados, 15 roles y una jerarquía real de comités, federaciones, ligas, clubes y deportistas.</p>
+        </section>
+
+        <section id="parte" class="bloque dos" aria-labelledby="hParte">
+          <div><p class="ceja" data-t="c.parte">Mi parte</p><h2 class="h3 mt-12" id="hParte" data-t="c1.h2m">Dirijo el producto y construyo el prototipo</h2></div>
+          <ul class="lista-parte">
+            <li data-t="c1.m1">Marco la dirección de 8 módulos de negocio, entre ellos la inspección y vigilancia de ~1.200 organizaciones.</li>
+            <li data-t="c1.m2">Construí el sistema de diseño: 38+ componentes, un shell canónico y una sola receta de asistente para 130+ pantallas.</li>
+            <li data-t="c1.m3">Modelé la jerarquía del sector con aprobación en cascada: 45+ estados y 15 roles.</li>
+            <li data-t="c1.m4">Construyo en código, con Claude Code, Cursor y Gemini, los prototipos que los analistas aprueban historia por historia.</li>
+            <li class="con" data-t="c1.m5">Con quién: analistas de negocio, un diseñador que lidero y los equipos de ingeniería.</li>
+          </ul>
+        </section>
+
+        <section id="decisiones" class="bloque" aria-labelledby="hDec">
+          <p class="ceja" data-t="c.decisiones">Decisiones</p><h2 class="h3 mt-12" id="hDec" data-t="c1.h2d">Tres reglas que sostienen la plataforma</h2>
+          <ol class="decisiones">
+            <li class="decision">
+              <div class="d-texto">
+                <h3 class="t-losa" data-t="c1.d1t">Un sistema, no ocho dialectos.</h3>
+                <dl>
+                  <div><dt data-t="c.tension">Tensión</dt><dd data-t="c1.d1a">Ocho módulos, ocho fechas, ocho tentaciones de bifurcar.</dd></div>
+                  <div><dt data-t="c.eleccion">Elección</dt><dd data-t="c1.d1b">Nada a la medida; se extienden los 38+ componentes compartidos.</dd></div>
+                  <div><dt data-t="c.porque">Por qué</dt><dd data-t="c1.d1c">Lo que se ve distinto en revisión es un error, no una preferencia.</dd></div>
+                </dl>
+              </div>
+              <figure class="d-media"><img src="../../../../public/work/naowee/ivc-bandeja.webp" alt="" width="2880" height="1800" loading="lazy" decoding="async"></figure>
+            </li>
+            <li class="decision">
+              <div class="d-texto">
+                <h3 class="t-losa" data-t="c1.d2t">La demo es el requisito.</h3>
+                <dl>
+                  <div><dt data-t="c.tension">Tensión</dt><dd data-t="c1.d2a">Cada quien lee distinto una especificación.</dd></div>
+                  <div><dt data-t="c.eleccion">Elección</dt><dd data-t="c1.d2b">Lo que se firma es un prototipo que funciona, con roles y estados reales.</dd></div>
+                  <div><dt data-t="c.porque">Por qué</dt><dd data-t="c1.d2c">Los desacuerdos salen cuando todavía son baratos e ingeniería recibe un objetivo resuelto.</dd></div>
+                </dl>
+              </div>
+              <figure class="d-media"><img src="../../../../public/work/naowee/project-revision-area-tecnica.webp" alt="" width="2880" height="1800" loading="lazy" decoding="async"></figure>
+            </li>
+            <li class="decision">
+              <div class="d-texto">
+                <h3 class="t-losa" data-t="c1.d3t">La jerarquía es el producto.</h3>
+                <dl>
+                  <div><dt data-t="c.tension">Tensión</dt><dd data-t="c1.d3a">Una tabla plana de deportistas habría salido meses antes.</dd></div>
+                  <div><dt data-t="c.eleccion">Elección</dt><dd data-t="c1.d3b">Vínculos reales, con aprobación en cascada del Ministerio al club.</dd></div>
+                  <div><dt data-t="c.porque">Por qué</dt><dd data-t="c1.d3c">Un deportista aprobado hereda la liga y la federación de su club, y las medallas por liga solo significan algo si esos vínculos son reales.</dd></div>
+                </dl>
+              </div>
+              <figure class="d-media"><img src="../../../../public/work/naowee/escenarios-mapa.webp" alt="" width="2880" height="1800" loading="lazy" decoding="async"></figure>
+            </li>
+          </ol>
+        </section>
+
+        <section id="producto" class="bloque" aria-labelledby="hProd">
+          <p class="ceja" data-t="c.producto">Producto</p><h2 class="h3 mt-12" id="hProd" data-t="c1.h2pr">Así se despeja hoy un trámite vencido</h2>
+          <figure class="video">
+            <video controls muted playsinline preload="none" poster="../../../../public/work/naowee/recorrido-ivc-poster.jpg" width="1920" height="1200" aria-label="IVC: una coordinadora asigna un trámite vencido a un profesional" data-ta="c1.v.label">
+              <source src="../../../../public/work/naowee/recorrido-ivc.webm" type="video/webm"><source src="../../../../public/work/naowee/recorrido-ivc.mp4" type="video/mp4">
+            </video>
+            <figcaption class="micro" data-t="c1.v.cap">Una coordinadora despeja un trámite vencido. El selector marca quién está sobrecargado; los contadores se recalculan en su sitio, de 6 pendientes a 5.</figcaption>
+          </figure>
+          <div class="galeria">
+            <figure><div class="media"><img src="../../../../public/work/naowee/escenarios-perfil-escenario.webp" alt="El perfil del escenario Centro deportivo Norte, con una insignia CAR: un carrusel de fotos sobre pestañas de información general, documentación e historial." data-talt="c1.g1.alt" width="2880" height="1800" loading="lazy" decoding="async"></div><figcaption class="micro" data-t="c1.g1">Un escenario: fotos, documentos y coordenadas.</figcaption></figure>
+            <figure><div class="media"><img src="../../../../public/work/naowee/project-panel-admin.webp" alt="El panel de administración de convocatorias: 1 de 7 convocatorias abierta, 33 postulaciones, 10 en etapa documental y 30,5 millones de pesos en inversión activa." data-talt="c1.g2.alt" width="2880" height="1800" loading="lazy" decoding="async"></div><figcaption class="micro" data-t="c1.g2">Convocatorias de inversión, postulaciones y etapas en un solo panel.</figcaption></figure>
+          </div>
+        </section>
+
+        <section id="proceso" class="bloque" aria-labelledby="hProc">
+          <p class="ceja" data-t="c.proceso">Proceso</p><h2 class="h3 mt-12" id="hProc" data-t="c1.h2pc">Del archivo al prototipo firmado</h2>
+          <ol class="riel">
+            <li><span class="dot dot-m" aria-hidden="true">01</span><h3 class="t-losa" data-t="c1.p1t">Mapear antes de dibujar</h3><p class="apoyo" data-t="c1.p1">Los 30 trámites se movían por Word, correo y un gestor documental, GESDOC. Antes de dibujar una pantalla mapeé más de 45 estados y 15 roles: los estados eran el producto.</p></li>
+            <li><span class="dot dot-m" aria-hidden="true">02</span><h3 class="t-losa" data-t="c1.p2t">Modelar construyendo</h3><p class="apoyo" data-t="c1.p2">Un deportista aprobado hereda la liga y la federación de su club. Eventos, resultados y rankings entran por plantilla .xlsx en 83 deportes: las filas válidas cargan y las que fallan vuelven con su número de fila.</p></li>
+            <li><span class="dot dot-m" aria-hidden="true">03</span><h3 class="t-losa" data-t="c1.p3t">Firmar el prototipo</h3><p class="apoyo" data-t="c1.p3">Cada módulo empieza como un prototipo clicable con roles y estados reales, revisado historia por historia en un recorrido guiado. El sistema de diseño es el contrato; la demo, la firma.</p></li>
+          </ol>
+        </section>
+
+        <section class="bloque colofon" aria-label="Colofón" data-ta="c.colofon">
+          <div><h2 class="ceja" data-t="c.herr">Herramientas y métodos</h2>
+            <ul class="chips mt-12"><li class="chip" data-t="c1.t1">Estrategia de producto</li><li class="chip" data-t="c1.t2">Sistemas de diseño</li><li class="chip">Claude Code</li><li class="chip">Cursor</li><li class="chip">Gemini</li><li class="chip" data-t="c1.t6">UI generativa</li></ul></div>
+          <div><h2 class="ceja" data-t="c.enlaces">Enlaces</h2>
+            <ul class="mt-12"><li><a class="enlace-texto ext" href="https://naowee-tech.github.io/design-naowee-design-system/" target="_blank" rel="noopener" data-t="c1.l1">Sistema de diseño</a></li><li><a class="enlace-texto ext" href="https://naowee-tech.github.io/design-naowee-demos-hub/" target="_blank" rel="noopener" data-t="c1.l2">Hub de demos</a></li></ul></div>
+          <div><h2 class="ceja" data-t="c.autoria">Autoría</h2><p class="apoyo mt-12" data-t="c1.cred">Head of Product en Naowee: marco la dirección de los módulos de negocio y construyo los prototipos que los definen, junto a analistas de negocio, un diseñador que lidero y los equipos de ingeniería.</p></div>
+        </section>
+
+        <section class="bloque siguiente" aria-labelledby="hSig">
+          <h2 class="ceja" id="hSig" data-t="c.sig">Siguiente caso</h2>
+          <div class="sig-fila mt-16">
+            <article class="tarjeta losa-azul sig-card">
+              <div>
+                <p class="ceja"><span translate="no">Mercadolibre</span> · 2024–2026</p>
+                <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+              </div>
+              <div class="cifra" role="group" aria-label="400 o más diseñadores, 2.000 o más ingenieros, 18 países" data-ta="k4.aria">
+                <div class="sig-cifras" aria-hidden="true"><span class="dot dot-l">400+</span><span class="dot dot-l" data-t="k4.n2">2.000+</span><span class="dot dot-l">18</span></div>
+              </div>
+              <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+            </article>
+            <div class="tarjeta losa-clara sig-contacto">
+              <p class="h3" data-t="c.sig.linea">¿Quieres verlo en detalle? Te lo cuento en una llamada.</p>
+              <div class="sig-cta">
+                <a class="boton boton-tinta" href="../B/index.html#contacto" data-int="../B/index.html#contacto" data-t="nav.hablemos">Hablemos</a>
+                <a class="boton boton-linea-osc" href="work.html" data-int="work.html" data-t="c.todo">Todo el trabajo</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </article>
+</div>
+</div>
+
+<dialog class="hoja" id="hoja" aria-labelledby="casoTitulo">
+  <div class="hoja-velo" data-cerrar></div>
+  <div class="hoja-panel">
+    <div class="hoja-cab">
+      <span class="hoja-asa" aria-hidden="true"></span>
+      <p class="miga"><a href="work.html" data-int="work.html" data-t="nav.trabajo">Trabajo</a><span aria-hidden="true">/</span><b translate="no">Naowee</b></p>
+      <div class="hoja-cab-acciones">
+        <a class="circulo circulo-osc" href="caso.html" data-int="caso.html" aria-label="Abrir como página completa" data-ta="c.expandir"><svg class="ico" aria-hidden="true"><use href="#i-expandir"/></svg></a>
+        <button class="circulo circulo-osc" type="button" data-cerrar aria-label="Cerrar" data-ta="hoja.cerrar"><svg class="ico" aria-hidden="true"><use href="#i-cerrar"/></svg></button>
+      </div>
+      <span class="hoja-progreso hilo" aria-hidden="true"></span>
+    </div>
+    <div class="hoja-cuerpo" id="hojaCuerpo" tabindex="-1"></div>
+  </div>
+</dialog>
+
+<dialog class="hoja hoja-mini" id="hojaSecciones" aria-labelledby="hSecciones">
+  <div class="hoja-velo" data-cerrar></div>
+  <div class="hoja-panel">
+    <div class="hoja-cab"><span class="hoja-asa" aria-hidden="true"></span><p class="t-losa" id="hSecciones" data-t="c.secciones">Secciones</p>
+      <button class="circulo circulo-osc" type="button" data-cerrar aria-label="Cerrar" data-ta="hoja.cerrar"><svg class="ico" aria-hidden="true"><use href="#i-cerrar"/></svg></button><span class="hoja-progreso" aria-hidden="true"></span></div>
+    <div class="hoja-cuerpo"><ol class="lista-secciones" id="listaSecciones"></ol></div>
+  </div>
+</dialog>
+
+</main>
+<footer class="pie">
+  <span>© 2026 Doug Vargas · Barranquilla · UTC-5</span>
+  <span data-t="pie.colofon">Diseñado por mí; construido con Next.js y agentes de IA que dirijo.</span>
+  <a href="#arriba" data-t="pie.arriba">Volver arriba</a>
+</footer>
+<nav class="dock vidrio" id="dock" aria-label="Navegación rápida" data-ta="dock.label">
+  <a href="work.html" data-int="work.html" aria-current="page"><svg class="ico" aria-hidden="true"><use href="#i-trabajo"/></svg><span data-t="nav.trabajo">Trabajo</span></a>
+  <a href="about.html" data-int="about.html"><svg class="ico" aria-hidden="true"><use href="#i-perfil"/></svg><span data-t="nav.perfil">Perfil</span></a>
+  <a href="experience.html" data-int="experience.html"><svg class="ico" aria-hidden="true"><use href="#i-linea"/></svg><span data-t="nav.experiencia">Experiencia</span></a>
+  <a href="/cv"><svg class="ico" aria-hidden="true"><use href="#i-cv"/></svg><span>CV</span></a>
+  <button type="button" id="dockSecciones" aria-haspopup="dialog"><svg class="ico" aria-hidden="true"><use href="#i-secciones"/></svg><span data-t="c.secciones">Secciones</span></button>
+</nav>
+<script>
+window.META = {"es": {"title": "Naowee — Plataforma del sector deportivo · Doug Vargas", "desc": "El deporte de Colombia salió de Word y correo: 30 trámites en una sola plataforma."}, "en": {"title": "Naowee — Sports Sector Platform · Doug Vargas", "desc": "Colombia's sports system, off Word and email: 30 procedures on one platform."}};
+</script>
+<script>
+(() => {
+"use strict";
+/* ═════════ Núcleo compartido de las páginas internas de B (idioma, navegación, hoja, corte láser) ═════════ */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const QS = new URLSearchParams(location.search);
+const RM = root.classList.contains("rm");
+const CAPTURA = QS.has("captura");
+const desk = matchMedia("(min-width: 1024px)");
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
+
+/* 1 · Idioma. El ES se lee del propio HTML; el EN llega por página en window.EN (más el común EN_COMUN). */
+const EN_COMUN = {
+  "nav.saltar": "Skip to content", "nav.inicio": "douguizard, home", "nav.principal": "Main", "nav.trabajo": "Work", "nav.perfil": "About",
+  "nav.experiencia": "Experience", "nav.cv": "CV", "nav.hablemos": "Let's talk", "nav.contacto": "Contact", "idioma.grupo": "Language",
+  "rail.label": "Quick actions", "rail.correo": "Get in touch: hello@douguizard.com", "cta.cv": "Download CV (PDF)", "cta.cv.aria": "Download my CV as a PDF",
+  "cta.casos": "See case studies", "ext.linkedin": "LinkedIn (opens in a new tab)", "ext.behance": "Behance (opens in a new tab)", "ext.github": "GitHub (opens in a new tab)",
+  "pie.colofon": "Designed by me; built with Next.js and AI agents I direct.", "pie.arriba": "Back to top", "dock.label": "Quick navigation",
+  "hoja.cerrar": "Close", "k.leer": ", read the case", "k.marcaidioma": "", "nda": "NDA · Case on request",
+};
+const ATTRS = [["data-t", null], ["data-ta", "aria-label"], ["data-talt", "alt"], ["data-tt", "title"], ["data-ttip", "data-tip"]];
+const ES = {};
+ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => { const k = el.getAttribute(a); if (!(k in ES)) ES[k] = target ? el.getAttribute(target) : el.innerHTML; }));
+let lang = "es";
+const alCambiarIdioma = [];
+function t(k) { return (lang === "en" ? (window.EN?.[k] ?? EN_COMUN[k]) : ES[k]) ?? ES[k] ?? k; }
+function setLang(l, push) {
+  lang = l === "en" ? "en" : "es";
+  root.lang = lang;
+  const D = lang === "en" ? { ...EN_COMUN, ...(window.EN || {}) } : ES;
+  ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => {
+    const k = el.getAttribute(a), v = D[k] ?? ES[k]; if (v == null) return;
+    if (target) el.setAttribute(target, v); else el.innerHTML = v;
+  }));
+  $$(".idioma a").forEach((a) => { const on = a.dataset.lang === lang; a.setAttribute("aria-current", String(on));
+    if (on) a.removeAttribute("title"); else a.title = lang === "en" ? "Ver en español" : "Read in English"; });
+  // los enlaces internos conservan el idioma (en producción: / ↔ /en con la misma ruta y el mismo hash)
+  $$("a[data-int]").forEach((a) => { const [base, hash] = a.dataset.int.split("#"); a.href = base + (lang === "en" ? "?lang=en" : "") + (hash ? "#" + hash : ""); });
+  const M = window.META?.[lang]; if (M) { document.title = M.title; $('meta[name="description"]').content = M.desc; }
+  alCambiarIdioma.forEach((f) => f(lang));
+  if (push) history.replaceState(history.state, "", (lang === "en" ? "?lang=en" : location.pathname) + location.hash);
+  if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+$$(".idioma a").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); setLang(a.dataset.lang, true); }));
+
+/* 2 · Volver arriba y dock (aparece al bajar del primer pliegue) */
+$$('a[href="#arriba"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" }); }));
+const dock = $("#dock");
+if (dock) { const f = () => dock.classList.toggle("escondido", window.scrollY < window.innerHeight * 0.35 && document.body.dataset.dockTarde === "1"); window.addEventListener("scroll", f, { passive: true }); f(); }
+
+/* 3 · Hoja (dialog modal): foco atrapado nativo, Esc, Atrás, velo, arrastre por velocidad */
+function hacerHoja(hoja, { onCerrar } = {}) {
+  const panel = $(".hoja-panel", hoja), cuerpo = $(".hoja-cuerpo", hoja), cab = $(".hoja-cab", hoja), prog = $(".hoja-progreso", hoja), cerrar = $("[data-cerrar].circulo", hoja);
+  let abridor = null;
+  const api = {
+    abrir(origen, instantanea) {
+      abridor = origen || document.activeElement; hoja.showModal(); hoja.scrollTop = 0; cerrar && cerrar.focus({ preventScroll: true });
+      document.body.style.overflow = "hidden";
+      if (instantanea) { panel.style.transition = "none"; hoja.classList.add("abierta", "encendida"); requestAnimationFrame(() => (panel.style.transition = "")); return; }
+      requestAnimationFrame(() => requestAnimationFrame(() => { hoja.classList.add("abierta"); setTimeout(() => hoja.classList.add("encendida"), RM ? 0 : 220); }));
+    },
+    cerrar() {
+      if (!hoja.open) return;
+      hoja.classList.remove("abierta", "encendida"); panel.style.translate = "";
+      const fin = () => { hoja.close(); document.body.style.overflow = ""; abridor && abridor.focus && abridor.focus({ preventScroll: true }); onCerrar && onCerrar(); };
+      if (RM) fin(); else setTimeout(fin, 280);
+    },
+  };
+  hoja.addEventListener("cancel", (e) => { e.preventDefault(); api.cerrar(); });
+  hoja.addEventListener("click", (e) => { if (e.target.closest("[data-cerrar]")) api.cerrar(); });
+  cuerpo.addEventListener("scroll", () => { const m = cuerpo.scrollHeight - cuerpo.clientHeight; prog && prog.style.setProperty("--p", m > 0 ? (cuerpo.scrollTop / m).toFixed(3) : 0); }, { passive: true });
+  let arr = null;
+  cab.addEventListener("pointerdown", (e) => { if (e.target.closest("button, a")) return; cab.setPointerCapture(e.pointerId); arr = { y: e.clientY, t: performance.now() }; panel.style.transition = "none"; });
+  cab.addEventListener("pointermove", (e) => { if (!arr) return; const dy = e.clientY - arr.y; const y = dy > 0 ? dy : -(Math.abs(dy) * 40) / (40 + Math.abs(dy)); panel.style.translate = `-50% ${y}px`; });
+  const fin = (e) => { if (!arr) return; const dy = e.clientY - arr.y, v = dy / Math.max(1, performance.now() - arr.t); arr = null; panel.style.transition = ""; if (dy > 120 || v > 0.5) api.cerrar(); else panel.style.translate = ""; };
+  cab.addEventListener("pointerup", fin); cab.addEventListener("pointercancel", fin);
+  return api;
+}
+
+/* 4 · Corte láser del nombre: el corte cae a 0,52 de la altura de x sobre la línea base de «Vargas» */
+function medirCorte(el) {
+  const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs * 0.9;
+  const c = document.createElement("canvas").getContext("2d");
+  c.font = `${cs.fontWeight} ${fs}px Geologica`;
+  const m = c.measureText("Vargas"), x = c.measureText("x");
+  const base = (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+  const k = base - x.actualBoundingBoxAscent * 0.52;
+  el.style.setProperty("--corte", k + "px");
+  return k;
+}
+
+/* 5 · Arranque común */
+function arrancarComun() {
+  setLang(root.lang === "en" ? "en" : "es", false);
+}
+
+/* Copy EN del índice de casos (04 §3 y §6.3) y su comportamiento: filtros, «Leído», Naowee como hoja. */
+const EN_GRID = {
+  "w.lista": "Case studies", "w.leido": "Read", "w.leer": "Read the case", "w.chubcli": "Freelance side project",
+  "k3.ceja": "Now · Head of Product", "k3.apoyo": "Colombia's 30 sports procedures, out of Word and email.", "k3.etq": "screens across 8 modules",
+  "k3.cifra.aria": "130-plus screens across 8 modules",
+  "k4.apoyo": "Tech lead on Mercadolibre's design system.", "k4.aria": "400-plus designers, 2,000-plus engineers, 18 countries",
+  "k4.dis": "designers", "k4.pai": "countries", "k4.ing": "engineers", "k4.n2": "2,000+",
+  "k7.ceja": "Product of my own · Design Engineer", "k7.apoyo": "Reads your spending pace, not your balance.", "k7.etq": "tests passing", "k7.aria": "647 tests passing",
+  "k8.apoyo": "A lighter portal, and Velocity, its design system.", "k8.etq": "squads on one system", "k8.aria": "12-plus squads on one system",
+  "k9.ceja": "Product of my own · Co-owner and builder", "k9.apoyo": "A three-city clinic, run from one phone.", "k9.etq": "days from first commit to the Oct 2 version",
+  "k9.aria": "14 days from first commit to the October 2 version",
+  "k10.ceja": "Product of my own · iOS, Android, web", "k10.apoyo": "From five Figma screens to a real app.", "k10.etq": "automated tests", "k10.aria": "680-plus automated tests",
+  "k16.ceja": "Archive", "k16.titulo": "More work",
+  "k16.r1": "Per-minute car rental, for iOS.", "k16.r2": "Booking and life aboard, with Globant.", "k16.r3": "AutomatiQ: surveys that act on their own.", "k16.r4": "Design for US and LATAM clients.",
+};
+function leidos() {   // «Leído»: per-visitante, en este navegador (no es estado que deba persistir para nadie más)
+  try { if (localStorage.getItem("leido:naowee-suid")) $$('[data-hoja="naowee"]').forEach((a) => a.closest("li").querySelector(".leido")?.removeAttribute("hidden")); } catch {}
+}
+function enlacesHoja() {   // clic simple: la hoja sobre el índice (misma URL de caso); cmd/ctrl/clic medio: la página completa
+  $$("[data-hoja]").forEach((a) => a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    if (window.abrirHojaCaso) { e.preventDefault(); window.abrirHojaCaso(a); return; }
+    e.preventDefault(); location.href = "caso.html?modo=hoja" + (lang === "en" ? "&lang=en" : "");
+  }));
+}
+
+window.EN = {
+  ...EN_GRID,
+  "w.h1": "Work", "c.ruta": "Breadcrumb", "c.secciones": "Sections", "c.indice.label": "Case study sections", "c.expandir": "Open as a full page",
+  "c1.gancho": "Colombia's sports system, off Word and email: 30 procedures on one platform.",
+  "c.rol": "Role", "c.equipo": "Team", "c.duracion": "Duration", "c.plataformas": "Platforms", "c1.duracion": "Jan 2026 — Now",
+  "c1.equipo": "Product: a team of 2, including a designer I lead; business analysts and engineering.",
+  "c1.cover.alt": "The professional's workspace on procedure IVC-2026-005: 18 days left on the deadline beside a checklist of 7 documents, each citing the article of Decreto 1387/1970 it answers.",
+  "c.impacto": "Impact", "c.problema": "Problem", "c.parte": "My part", "c.decisiones": "Decisions", "c.producto": "Product", "c.proceso": "Process",
+  "c1.k1": "procedures digitized", "c1.k1n": "Word and email before", "c1.k2v": "~1,200", "c1.k2": "sports organizations in scope",
+  "c1.k3": "screens shipped", "c1.k3n": "across 8 of 13 modules", "c1.k4": "shared components", "c1.k4n": "one design system",
+  "c1.h2p": "A sector that ran on files",
+  "c1.problema": "Colombia's 30 sports procedures moved through Word, email and a document manager, GESDOC. No system talked to another. Drawing screens was the easy part: first came 45+ states, 15 roles and a real hierarchy of committees, federations, leagues, clubs and athletes.",
+  "c1.h2m": "I set the direction and build the prototype",
+  "c1.m1": "I set direction across 8 business modules, including inspection and oversight of ~1,200 organizations.",
+  "c1.m2": "I built the design system: 38+ components, one canonical shell and a single wizard recipe for 130+ screens.",
+  "c1.m3": "I modeled the sector's hierarchy with cascading approval: 45+ states and 15 roles.",
+  "c1.m4": "I build the prototypes in code, with Claude Code, Cursor and Gemini, and analysts sign them off story by story.",
+  "c1.m5": "With: business analysts, a designer I lead and the engineering teams.",
+  "c1.h2d": "Three rules the platform stands on", "c.tension": "Tension", "c.eleccion": "Choice", "c.porque": "Why",
+  "c1.d1t": "One system, not eight dialects.", "c1.d1a": "Eight modules, eight deadlines, eight temptations to fork.", "c1.d1b": "No custom components; the 38+ shared ones get extended.", "c1.d1c": "Anything off in review is a bug, not a preference.",
+  "c1.d2t": "The demo is the requirement.", "c1.d2a": "Everyone reads a spec differently.", "c1.d2b": "What gets signed is a working prototype with real roles and states.", "c1.d2c": "Disagreement surfaces while it's cheap, and engineering gets a resolved target.",
+  "c1.d3t": "The hierarchy is the product.", "c1.d3a": "A flat athlete table would have shipped months earlier.", "c1.d3b": "Real links, with approval cascading from the Ministry down to the club.",
+  "c1.d3c": "An approved athlete inherits the club's league and federation, and medals by league only mean something if those links are real.",
+  "c1.h2pr": "Clearing an overdue filing, today", "c1.v.label": "IVC: a coordinator assigns an overdue filing to a professional",
+  "c1.v.cap": "A coordinator clears an overdue filing. The picker flags who's overloaded; the counters recompute in place, 6 pending to 5.",
+  "c1.g1": "A single venue: photos, documents and coordinates.", "c1.g1.alt": "The profile of the venue Centro deportivo Norte, carrying a CAR badge: a photo carousel above tabs for general information, documentation and history.",
+  "c1.g2": "Investment calls, applications and stages in one panel.", "c1.g2.alt": "The calls administrator panel: 1 of 7 calls open, 33 applications, 10 at the documentary stage and 30.5 million COP in active investment.",
+  "c1.h2pc": "From files to a signed prototype", "c1.p1t": "Map before drawing", "c1.p2t": "Model by building", "c1.p3t": "Sign the prototype",
+  "c1.p1": "All 30 procedures moved through Word, email and a document manager, GESDOC. Before drawing a screen I mapped 45+ states and 15 roles: the states were the product.",
+  "c1.p2": "An approved athlete inherits the club's league and federation. Events, results and rankings enter by .xlsx template across 83 sports: valid rows load, failures come back by row number.",
+  "c1.p3": "Each module starts as a clickable prototype with real roles and states, walked story by story in a guided tour. The design system is the contract; the demo is how we sign it.",
+  "c.colofon": "Colophon", "c.herr": "Tools & methods", "c.enlaces": "Links", "c.autoria": "Authorship",
+  "c1.t1": "Product Strategy", "c1.t2": "Design Systems", "c1.t6": "Generative UI", "c1.l1": "Design system", "c1.l2": "Demos hub",
+  "c1.cred": "Head of Product at Naowee: I set direction across the business modules and build the prototypes that define them, alongside business analysts, a designer I lead, and engineering teams.",
+  "c.sig": "Next case study", "c.sig.linea": "Want the details? I'll walk you through it on a call.", "c.todo": "All work",
+};
+const caso = $("#caso"), hojaEl = $("#hoja"), cuerpoHoja = $("#hojaCuerpo"), MODO_HOJA = root.classList.contains("modo-hoja");
+try { localStorage.setItem("leido:naowee-suid", "1"); } catch {}
+
+/* Índice lateral: sección actual (punto de luz láser) + progreso de lectura en el hilo */
+const secciones = ["impacto", "problema", "parte", "decisiones", "producto", "proceso"].map((id) => document.getElementById(id));
+function espia(scroller) {
+  const vh = window.innerHeight; let act = null;
+  for (const s of secciones) if (s.getBoundingClientRect().top < vh * 0.4) act = s.id;
+  $$(".indice a").forEach((a) => a.setAttribute("aria-current", String(a.hash === "#" + act)));
+  const r = caso.getBoundingClientRect(); const p = clamp((vh * 0.4 - r.top) / Math.max(1, r.height - vh * 0.6));
+  $(".indice-hilo").style.setProperty("--p", p.toFixed(3));
+}
+window.addEventListener("scroll", () => requestAnimationFrame(espia), { passive: true });
+
+/* El tablero de impacto se enciende al entrar (Doto 100 → 700, 60 ms por cifra) */
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("encendido"); io.unobserve(e.target); } }), { threshold: 0.4 });
+io.observe($("#impacto"));
+if (RM) $("#impacto").classList.add("encendido");
+
+/* Hoja: el mismo <article> se muda al <dialog>. Cerrar vuelve al índice (Atrás si venías de ahí). */
+const hoja = hacerHoja(hojaEl, { onCerrar: () => {
+  if (!MODO_HOJA) return;
+  if (document.referrer.includes("work.html") && history.length > 1) history.back();
+  else location.href = "work.html" + (lang === "en" ? "?lang=en" : "");
+} });
+window.abrirHojaCaso = (origen) => { if (caso.parentElement !== cuerpoHoja) cuerpoHoja.appendChild(caso); hoja.abrir(origen, CAPTURA); };
+if (MODO_HOJA) {
+  cuerpoHoja.appendChild(caso);
+  $$("[data-hoja]").forEach((a) => a.closest("li")?.querySelector(".leido")?.removeAttribute("hidden"));
+  requestAnimationFrame(() => hoja.abrir($('[data-hoja="naowee"]'), CAPTURA));
+  cuerpoHoja.addEventListener("scroll", () => { const io2 = $("#impacto"); if (io2.getBoundingClientRect().top < window.innerHeight * 0.8) io2.classList.add("encendido"); }, { passive: true });
+  setTimeout(() => $("#impacto").classList.add("encendido"), 500);
+}
+
+/* Móvil: «Secciones» abre una hoja corta con los mismos rótulos del índice */
+const mini = hacerHoja($("#hojaSecciones"));
+function pintarSecciones() { $("#listaSecciones").innerHTML = $$(".indice a").map((a) => `<li><a href="${a.hash}">${a.textContent}</a></li>`).join(""); }
+$("#dockSecciones")?.addEventListener("click", (e) => { pintarSecciones(); mini.abrir(e.currentTarget); });
+$("#listaSecciones").addEventListener("click", (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); mini.cerrar();
+  setTimeout(() => document.querySelector(a.hash).scrollIntoView({ behavior: RM ? "auto" : "smooth" }), 300); });
+alCambiarIdioma.push(pintarSecciones);
+arrancarComun(); leidos(); enlacesHoja(); espia();
+
+})();
+</script>
+</body>
+</html>

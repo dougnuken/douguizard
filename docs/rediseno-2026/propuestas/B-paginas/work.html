@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trabajo · Doug Vargas</title>
+<meta name="description" content="10 casos de Doug Vargas: sistemas de diseño en Mercadolibre y Banco de Occidente, la plataforma del deporte en Colombia y tres productos propios.">
+<meta name="theme-color" content="#060608">
+<!-- Propuesta B · páginas internas · work.html. Autocontenido (generado con build.py desde piezas compartidas).
+     Servir la raíz del repo. Parámetros: ?lang=en · ?rm=1 (movimiento reducido) · ?captura=1. -->
+<script>
+  (function () {
+    var d = document.documentElement, q = location.search;
+    var rm = /[?&]rm=1/.test(q) || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    d.classList.add("js"); if (rm) d.classList.add("rm");
+    if (!rm && matchMedia("(min-width: 1024px)").matches) d.classList.add("cine");
+    if (/[?&]captura=1/.test(q)) d.classList.add("captura");
+    if (/[?&]lang=en/.test(q)) d.lang = "en";
+    
+  })();
+</script>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/urbanist-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/geologica-latin.woff2" crossorigin>
+
+<style>
+/* ── Fuentes · OFL, locales (propuestas/fonts) con Google Fonts de respaldo ─────────────────────────── */
+@font-face { font-family: "Urbanist"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/urbanist-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/urbanist/v18/L0x-DF02iFML4hGCyMqlbS0.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Sans"; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url(../fonts/instrument-sans-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2) format("woff2"); }
+@font-face { font-family: "Doto"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/doto-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/doto/v3/t5tvIRMbNJ6TamLgVg.woff2) format("woff2"); }
+@font-face { font-family: "Geologica"; font-style: normal; font-weight: 100 900; font-display: block;
+  src: url(../fonts/geologica-latin.woff2) format("woff2"); }
+
+@property --dw   { syntax: "<number>"; inherits: true; initial-value: 700; }   /* peso del dot-matrix: 100 apagado → 700 encendido */
+@property --desp { syntax: "<length>"; inherits: true; initial-value: 0px; }   /* corte láser del nombre */
+
+/* ── Tokens (los mismos de la Propuesta B) ──────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+  --vacio: #060608; --losa: #111214; --losa-alta: #1A1B1F; --losa-borde: rgba(255, 255, 255, .08);
+  --claro: #F2F2F4; --niebla: #E4E2EC; --blanco: #FFFFFF;
+  --tinta: #F5F5F7; --tinta-2: #A1A1AB; --tinta-3: #8A8A95; --tinta-osc: #0E0E12; --tinta-osc-2: #55555F;
+  --tinta-2-vidrio: #C2C2CA;
+  --electrico: #2B56F3; --electrico-texto: #5B7CFF; --resplandor: #361976;
+  --azul-etiqueta: #E3EAFF; --magenta-etiqueta: #F0B8D6; --magenta-etiqueta-base: #FCE6F1;
+  --laser: #FF3344; --laser-nucleo: #FFE4E6; --laser-halo: rgba(255, 51, 68, .45);
+  --verde-osc: #0E6B3D;
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, .86) 0%, rgba(18, 19, 20, .86) 10% 90%, rgba(58, 59, 63, .86) 100%);
+  --vidrio-plano: rgba(17, 18, 20, .78);
+  --foco: var(--electrico-texto);
+
+  --e-4: 4px; --e-8: 8px; --e-12: 12px; --e-16: 16px; --e-24: 24px; --e-32: 32px; --e-48: 48px; --e-64: 64px; --e-96: 96px; --e-128: 128px;
+
+  --f-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --f-texto: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --f-dot: "Doto", ui-monospace, monospace;
+  --f-nombre: "Geologica", var(--f-display);
+  --nombre-fvs: "SHRP" 100, "CRSV" 0, "slnt" 0;
+  --t-12: 12px; --t-14: 14px; --t-16: 16px; --t-18: 18px; --t-20: 20px; --t-24: 24px; --t-30: 30px;
+  --t-36: 36px; --t-48: 48px; --t-60: 60px; --t-72: 72px; --t-96: 96px; --t-120: 120px;
+
+  --r-xl: 48px; --r-m: 32px; --r-s: 24px; --r-xs: 16px; --r-pill: 999px;
+  --boton: 56px; --boton-s: 48px; --toque: 44px; --pill-alto: 40px; --rail: 64px;
+  --gap: 16px; --cabecera: 88px; --os-izq: 112px; --fila: 112px;
+
+  --o-05: .05; --o-10: .1; --o-20: .2; --o-40: .4; --o-60: .6; --o-80: .8;
+
+  --bloom-azul: 0 24px 64px -12px rgba(43, 86, 243, .35);
+  --bloom-magenta: 0 24px 64px -12px rgba(161, 47, 106, .38);
+  --sombra-flota: 0 10px 24px rgba(0, 0, 0, .45);
+  --sombra-hoja: 0 -24px 64px rgba(0, 0, 0, .55);
+  --filo: inset 0 1px 0 rgba(255, 255, 255, .10), inset 0 0 0 1px rgba(255, 255, 255, .06);
+  --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 0 0 1px rgba(255, 255, 255, .10), inset 0 0 48px rgba(255, 255, 255, .16);
+  --haz: 0 0 4px 1px var(--laser), 0 0 16px 3px var(--laser-halo);
+
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+  --d-press: 120ms; --d-hover: 200ms; --d-ui: 240ms; --d-hoja: 420ms; --d-hoja-salida: 280ms; --d-entrada: 600ms;
+}
+@media (max-width: 1023px) { :root { --r-xl: 36px; --r-m: 28px; --r-s: 20px; --gap: 12px; --boton: 48px; } }
+
+/* ── Base ──────────────────────────────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--vacio); -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; scroll-padding-top: var(--cabecera); }
+body { margin: 0; background: var(--vacio); color: var(--tinta); font: 400 var(--t-16)/1.5 var(--f-texto); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4, p, ol, ul, dl, dd, figure, blockquote { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.sprite { position: absolute; width: 0; height: 0; }
+:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+.saltar { position: fixed; z-index: 100; left: var(--e-16); top: var(--e-16); padding: var(--e-12) var(--e-16); border-radius: var(--r-pill); background: var(--blanco); color: var(--tinta-osc); font-weight: 500; transform: translateY(-200%); }
+.saltar:focus-visible { transform: none; }
+.ico { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, .06) 1px, transparent 1.4px) 0 0 / 8px 8px;
+  -webkit-mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%); mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%); }
+body::after { content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: var(--o-05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+.resplandor { position: absolute; left: 0; right: 0; top: 0; height: 640px; z-index: 0; pointer-events: none;
+  background: radial-gradient(60% 100% at 55% 0%, rgba(54, 25, 118, .45) 0%, rgba(28, 14, 73, .2) 45%, transparent 75%); }
+
+/* ── Tipos ─────────────────────────────────────────────────────────────────────────────────────────── */
+.dot { font-family: var(--f-dot); font-variation-settings: "ROND" 100, "wght" var(--dw); font-weight: 700; font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em; line-height: 1; transition: --dw var(--d-hover) var(--ease-out); }
+.dot-gigante { font-size: var(--t-120); letter-spacing: -0.06em; }
+.dot-xl { font-size: var(--t-72); letter-spacing: -0.06em; }
+.dot-l  { font-size: var(--t-48); }
+.dot-m  { font-size: var(--t-30); letter-spacing: -0.03em; }
+.dot-s  { font-size: var(--t-24); letter-spacing: -0.03em; }
+.dot-xs { font-size: var(--t-20); letter-spacing: -0.03em; }
+.ceja { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.h1 { font: 600 var(--t-72)/1 var(--f-display); letter-spacing: -0.035em; text-wrap: balance; }
+.h2 { font: 600 var(--t-48)/1.08 var(--f-display); letter-spacing: -0.025em; text-wrap: balance; }
+.h3 { font: 600 var(--t-30)/1.15 var(--f-display); letter-spacing: -0.02em; text-wrap: balance; }
+.t-losa { font: 600 var(--t-24)/1.2 var(--f-display); letter-spacing: -0.01em; color: var(--tinta); text-wrap: balance; }
+.lead { font-size: var(--t-18); line-height: 1.55; color: var(--tinta-2); max-width: 34em; }
+.apoyo { font-size: var(--t-16); line-height: 1.5; color: var(--tinta-2); max-width: 34em; }
+.etiqueta { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.micro { font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-3); }
+.cifra { display: grid; gap: var(--e-8); }
+.mt-8 { margin-top: var(--e-8); } .mt-12 { margin-top: var(--e-12); } .mt-16 { margin-top: var(--e-16); } .mt-24 { margin-top: var(--e-24); } .mt-32 { margin-top: var(--e-32); }
+
+/* ── Botones ───────────────────────────────────────────────────────────────────────────────────────── */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e-8); min-height: var(--boton-s); padding: 0 var(--e-24); border-radius: var(--r-pill);
+  font: 500 var(--t-14)/1.3 var(--f-texto); letter-spacing: .005em; white-space: nowrap;
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.boton:active { scale: .97; }
+.boton-blanco { background: var(--blanco); color: var(--tinta-osc); }
+.boton-tinta { background: var(--tinta-osc); color: var(--blanco); }
+.boton-linea { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .24); color: var(--tinta); }
+.boton-linea-osc { box-shadow: inset 0 0 0 1px rgba(14, 14, 18, .24); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) {
+  .boton-blanco:hover { background: var(--niebla); } .boton-tinta:hover { background: #26262E; }
+  .boton-linea:hover { background: rgba(255, 255, 255, .08); } .boton-linea-osc:hover { background: rgba(14, 14, 18, .06); }
+}
+.circulo { display: grid; place-items: center; width: var(--boton); height: var(--boton); border-radius: 50%; flex: none; background: var(--blanco); color: var(--tinta-osc);
+  transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.circulo:active { scale: .95; }
+.circulo .ico { transition: rotate var(--d-hover) var(--ease-out); }
+.circulo-osc { background: var(--losa-alta); color: var(--tinta); }
+.flecha-tinta { background: var(--tinta-osc); color: var(--blanco); box-shadow: 0 0 0 1px rgba(255, 255, 255, .10); }
+.chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-12); border-radius: var(--r-pill); width: max-content;
+  font: 500 var(--t-14)/1 var(--f-texto); background: var(--losa-alta); color: var(--tinta); box-shadow: var(--filo); }
+.chip-nda { background: rgba(12, 18, 102, .72); color: var(--blanco); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+.enlace-texto { text-decoration: underline; text-decoration-color: rgba(161, 161, 171, .45); text-underline-offset: 4px; display: inline-flex; align-items: center; min-height: var(--toque); }
+.ext::after { content: " ↗"; }
+
+/* ── Cabecera, marca (lockup Geologica), pills, idioma ─────────────────────────────────────────────── */
+.barra { position: fixed; z-index: 30; left: 0; right: 0; top: var(--e-24); height: var(--pill-alto); padding: 0 var(--e-24);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); pointer-events: none; }
+.barra > * { pointer-events: auto; }
+.vidrio { background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%); box-shadow: var(--filo), var(--sombra-flota); }
+.marca { display: inline-flex; align-items: center; gap: var(--e-12); height: var(--pill-alto); padding: 0 var(--e-16) 0 var(--e-4); border-radius: var(--r-pill); }
+.marca-d { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blanco); color: var(--tinta-osc); font: 700 var(--t-16)/1 var(--f-nombre); font-variation-settings: var(--nombre-fvs); }
+.marca-t { font: 600 var(--t-16)/1 var(--f-nombre); letter-spacing: -0.025em; font-variation-settings: var(--nombre-fvs); }
+.pills { position: absolute; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: var(--e-4); height: var(--pill-alto); padding: 0 var(--e-4); border-radius: var(--r-pill); }
+.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-16); border-radius: var(--r-pill); color: var(--tinta-2-vidrio);
+  font: 500 var(--t-14)/1 var(--f-texto); letter-spacing: .005em; transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.pill[aria-current="page"], .pill[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) { .pill:not([aria-current]):hover, .pill[aria-current="false"]:hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
+.acciones { display: flex; align-items: center; gap: var(--e-8); }
+.idioma { display: flex; height: var(--pill-alto); padding: var(--e-4); border-radius: var(--r-pill); }
+.idioma a { display: grid; place-items: center; min-width: 40px; height: 32px; padding: 0 var(--e-8); border-radius: var(--r-pill); font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2-vidrio);
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.idioma a[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+.hablemos { height: var(--pill-alto); min-height: 0; background: var(--electrico); color: var(--blanco); box-shadow: 0 8px 24px -8px rgba(43, 86, 243, .6); }
+@media (hover: hover) and (pointer: fine) { .hablemos:hover { background: #4569F5; } }
+
+/* ── Rail de acciones ──────────────────────────────────────────────────────────────────────────────── */
+.rail { position: fixed; z-index: 30; left: var(--e-24); top: var(--cabecera); width: var(--rail); padding: var(--e-8); display: flex; flex-direction: column; align-items: center; gap: var(--e-8);
+  border-radius: var(--r-pill); background: var(--losa); box-shadow: var(--filo), var(--sombra-flota); }
+.rail-sep { width: 24px; height: 1px; background: var(--losa-borde); margin: var(--e-4) 0; }
+.rail a { position: relative; display: grid; place-items: center; width: var(--boton-s); height: var(--boton-s); border-radius: 50%; color: var(--tinta-2); font: 600 var(--t-14)/1 var(--f-texto);
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.rail .rail-accion { background: var(--losa-alta); color: var(--tinta); }
+.rail a:active { scale: .94; }
+@media (hover: hover) and (pointer: fine) { .rail a:hover { background: var(--losa-alta); color: var(--tinta); } }
+.rail [data-tip]::after { content: attr(data-tip); position: absolute; left: calc(100% + var(--e-12)); top: 50%; translate: -4px -50%; opacity: 0; pointer-events: none; white-space: nowrap;
+  padding: var(--e-8) var(--e-12); border-radius: var(--r-pill); background: var(--blanco); color: var(--tinta-osc); font: 500 var(--t-14)/1 var(--f-texto); transition: opacity 125ms var(--ease-out), translate 125ms var(--ease-out); }
+.rail [data-tip]:hover::after, .rail [data-tip]:focus-visible::after { opacity: 1; translate: 0 -50%; }
+
+/* ── Página y rejilla ──────────────────────────────────────────────────────────────────────────────── */
+main { position: relative; z-index: 1; }
+.pagina { position: relative; padding: var(--cabecera) var(--e-24) var(--e-96) var(--os-izq); }
+.contenido { max-width: 1320px; }
+@media (min-width: 1464px) { .pagina { padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
+.rejilla { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(var(--fila), auto); gap: var(--gap); }
+.seccion { margin-top: var(--e-128); }
+.seccion-cab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; margin-bottom: var(--e-48); }
+.seccion-cab > :first-child { grid-column: 1 / span 7; }
+.seccion-cab > :nth-child(2) { grid-column: 8 / -1; }
+
+/* ── Losas ─────────────────────────────────────────────────────────────────────────────────────────── */
+.tarjeta { position: relative; isolation: isolate; border-radius: var(--r-xl); padding: var(--e-32); overflow: hidden; min-width: 0;
+  transition: translate var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.losa { background: var(--losa); box-shadow: var(--filo); }
+.losa-alta { background: var(--losa-alta); box-shadow: var(--filo); }
+.losa-clara { background: var(--claro); color: var(--tinta-osc); }
+.losa-niebla { background: var(--niebla); color: var(--tinta-osc); }
+.losa-clara :is(.ceja, .apoyo, .etiqueta, .lead), .losa-niebla :is(.ceja, .apoyo, .etiqueta, .lead) { color: var(--tinta-osc-2); }
+.losa-clara .t-losa, .losa-niebla .t-losa, .losa-clara :is(.h2, .h3), .losa-niebla :is(.h2, .h3) { color: var(--tinta-osc); }
+.losa-azul { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-azul);
+  background: linear-gradient(to top, #7C7FD0 0%, transparent 22%), radial-gradient(120% 75% at 50% 46%, #0C1266 0%, #1A2FB8 46%, #3F6BD9 78%, #6F98E6 100%); }
+.losa-magenta { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-magenta);
+  background: linear-gradient(to top, #A84D86 0%, transparent 26%), radial-gradient(110% 90% at 48% 45%, #2A0D2C 0%, #5E1640 40%, #8E1F55 70%, #B4407E 100%); }
+.losa-azul :is(.t-losa, .ceja, .h2, .h3), .losa-magenta :is(.t-losa, .ceja, .h2, .h3) { color: var(--blanco); }
+.losa-azul .etiqueta { color: var(--azul-etiqueta); }
+.losa-magenta .apoyo { color: var(--magenta-etiqueta); }
+.losa-magenta .etiqueta { color: var(--magenta-etiqueta-base); }
+.enlace-tarjeta::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.enlace-tarjeta:focus-visible { outline: none; }
+.tarjeta:has(.enlace-tarjeta:focus-visible) { outline: 2px solid var(--foco); outline-offset: 3px; }
+.flecha { position: absolute; z-index: 2; top: var(--e-24); right: var(--e-24); pointer-events: none; }
+.tarjeta:has(> .flecha) :is(.ceja, .t-losa) { padding-right: calc(var(--boton) + var(--e-8)); }
+.media { overflow: hidden; border-radius: calc(var(--r-xl) - var(--e-16)); background: var(--losa-alta); }
+.media img, .media video { width: 100%; height: 100%; object-fit: cover; transition: scale var(--d-hover) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta:has(.enlace-tarjeta):hover { translate: 0 -2px; }
+  .tarjeta:hover .media img { scale: 1.03; }
+  .tarjeta:hover .flecha .ico { rotate: 45deg; }
+  .tarjeta:has(.enlace-tarjeta):hover { --dw: 900; }
+}
+.tarjeta:has(.enlace-tarjeta:active) { scale: .98; }
+
+/* Estado: el punto de presencia es luz láser */
+.estado { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); line-height: 1.3; }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--laser-nucleo); box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo); }
+/* El hilo: 1 px de luz láser */
+.hilo { height: 1px; background: var(--laser-nucleo); box-shadow: var(--haz); }
+
+/* Lockup «corte láser» del nombre (B-tipo opción 4): Geologica partida por el haz */
+.lockup { font: 600 var(--t-120)/.9 var(--f-nombre); letter-spacing: -0.05em; font-variation-settings: var(--nombre-fvs); color: var(--tinta); --corte: .5em; --desp-max: -0.1em; }
+.lockup .linea { display: block; white-space: nowrap; }
+.lockup .l2 { position: relative; }
+.lockup .m { display: block; }
+.lockup .m.inf { position: absolute; left: 0; top: 0; clip-path: inset(calc(var(--corte) + 1.5px) -1em -1em -1em); translate: calc(var(--desp) * -.6) 0; }
+.lockup .m.sup { clip-path: inset(-1em -1em calc(100% - var(--corte) + 1.5px) -1em); translate: var(--desp) 0; }
+.lockup .l2 .hilo { position: absolute; left: 0; width: var(--hilo-w, 100%); top: var(--corte); z-index: -1; transform-origin: 0 50%; }
+
+/* ── Pie ───────────────────────────────────────────────────────────────────────────────────────────── */
+.pie { position: relative; z-index: 1; margin: 0 var(--e-24) 0 var(--os-izq); max-width: 1320px; padding: var(--e-32) 0 var(--e-48);
+  display: flex; justify-content: space-between; align-items: center; gap: var(--e-16); flex-wrap: wrap; border-top: 1px solid var(--losa-borde); color: var(--tinta-3); font-size: var(--t-14); }
+.pie a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(161, 161, 171, .4); }
+@media (min-width: 1464px) { .pie { margin-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
+
+/* ── Hoja (dialog) ─────────────────────────────────────────────────────────────────────────────────── */
+.hoja { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--tinta); overflow: clip; }
+.hoja::backdrop { background: transparent; }
+.hoja-velo { position: absolute; inset: 0; background: rgba(6, 6, 8, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: 0; transition: opacity var(--d-hoja-salida) var(--ease-out); }
+.hoja-panel { position: absolute; left: 50%; bottom: 0; width: min(1120px, calc(100vw - 2 * var(--os-izq))); height: calc(100svh - var(--e-48)); translate: -50% calc(100% + var(--e-48));
+  display: flex; flex-direction: column; border-radius: var(--r-m) var(--r-m) 0 0; background: var(--losa); box-shadow: var(--filo), var(--sombra-hoja); transition: translate var(--d-hoja-salida) var(--ease-drawer); }
+.hoja.abierta .hoja-velo { opacity: 1; transition-duration: var(--d-hoja); }
+.hoja.abierta .hoja-panel { translate: -50% 0; transition-duration: var(--d-hoja); }
+.hoja-cab { position: relative; flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); padding: var(--e-16) var(--e-24) var(--e-16) var(--e-48);
+  border-bottom: 1px solid var(--losa-borde); touch-action: none; cursor: grab; }
+.hoja-asa { position: absolute; left: 50%; top: var(--e-8); width: 36px; height: 4px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .24); translate: -50% 0; }
+.hoja-cab-acciones { display: flex; gap: var(--e-8); align-items: center; }
+.hoja-progreso { position: absolute; left: 0; bottom: -1px; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.hoja-cuerpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.hoja-cuerpo:focus-visible { outline-offset: -2px; }
+.miga { font-size: var(--t-14); color: var(--tinta-2); display: flex; gap: var(--e-8); align-items: center; }
+.miga a { display: inline-flex; align-items: center; min-height: var(--toque); text-decoration: underline; text-decoration-color: rgba(161, 161, 171, .45); text-underline-offset: 4px; }
+.miga b { color: var(--tinta); font-weight: 500; }
+
+/* ── Dock (móvil) ──────────────────────────────────────────────────────────────────────────────────── */
+.dock { display: none; }
+
+/* ═════════════════════════ Móvil y tableta (< 1024): app con dock inferior ═════════════════════════ */
+@media (max-width: 1023px) {
+  .barra { top: var(--e-12); padding: 0 var(--e-16); }
+  .barra .pills, .barra .hablemos, .rail { display: none; }
+  .marca { height: var(--toque); }
+  .idioma { height: var(--toque); padding: 0; }
+  .idioma a { height: var(--toque); min-width: var(--toque); padding: var(--e-4); background-clip: content-box; }
+  .pagina { padding: 80px var(--e-16) var(--e-64); }
+  .rejilla { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+  .rejilla > * { grid-column: auto !important; grid-row: auto !important; }
+  .tarjeta { padding: var(--e-24); }
+  .seccion { margin-top: var(--e-64); }
+  .seccion-cab { grid-template-columns: 1fr; margin-bottom: var(--e-24); gap: var(--e-12); }
+  .seccion-cab > * { grid-column: auto !important; }
+  .h1 { font-size: var(--t-48); }
+  .h2 { font-size: var(--t-30); }
+  .h3 { font-size: var(--t-24); }
+  .lead { font-size: var(--t-16); }
+  .dot-gigante { font-size: var(--t-72); }
+  .dot-xl { font-size: var(--t-48); }
+  .dot-l { font-size: var(--t-36); }
+  .lockup { font-size: 66px; }
+  .pie { margin: 0 var(--e-16); padding-bottom: calc(var(--e-64) + var(--e-16) + env(safe-area-inset-bottom)); }
+  .dock { position: fixed; z-index: 30; left: 50%; bottom: calc(var(--e-12) + env(safe-area-inset-bottom)); translate: -50% 0; display: flex; gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-pill);
+    transition: translate var(--d-ui) var(--ease-out), opacity var(--d-ui) var(--ease-out); }
+  .dock.escondido { translate: -50% calc(100% + var(--e-24)); opacity: 0; }
+  .dock a, .dock button { display: grid; justify-items: center; align-content: center; gap: 2px; min-width: 64px; height: 52px; padding: 0 var(--e-4); border-radius: var(--r-pill);
+    font: 500 var(--t-12)/1.2 var(--f-texto); color: var(--tinta-2-vidrio); transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+  .dock :is(a, button):active { scale: .95; }
+  .dock [aria-current="page"], .dock [aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+  .hoja-panel { width: 100%; height: calc(100svh - var(--e-16)); }
+  .hoja-cab { padding: var(--e-24) var(--e-16) var(--e-12) var(--e-24); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+  .tarjeta, .boton, .circulo, .pill, .dock, .dock a { transition-property: opacity, background-color, color !important; transition-duration: 150ms !important; }
+  .tarjeta:hover, .tarjeta:has(.enlace-tarjeta:active) { translate: none !important; scale: none !important; }
+  .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear !important; }
+  .hoja.abierta .hoja-panel { opacity: 1; }
+}
+html.rm .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear; }
+html.rm .hoja.abierta .hoja-panel { opacity: 1; }
+@media (prefers-reduced-transparency: reduce) { .vidrio, .hoja-velo { background: var(--losa-alta); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* ═════════════════════════════════════ Página: work ═════════════════════════════════════ */
+/* Índice de casos: losas protagonistas (largos) + archivo (cortos). Auto-colocación por spans: al filtrar, reflujo sin huecos. */
+.casos { margin-top: var(--e-24); }
+.casos > li { transition: opacity var(--d-ui) var(--ease-out), translate var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.casos > li[hidden], .archivo-w[hidden] { display: none; }
+.ceja .num { margin-right: var(--e-8); vertical-align: -3px; color: inherit; opacity: .9; }
+.c-naowee { grid-column: span 7; grid-row: span 4; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: var(--e-24); padding-right: var(--e-16); }
+.c-naowee .c-texto { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.c-naowee .t-losa { margin-top: var(--e-8); font-size: var(--t-30); }
+.c-naowee .apoyo { margin-top: var(--e-8); }
+.c-naowee .media { margin: calc(var(--e-16) - var(--e-32)) 0; height: calc(100% + 2 * (var(--e-32) - var(--e-16))); }
+.c-naowee .media img { object-position: 0 0; }
+.c-naowee .flecha { top: var(--e-32); right: var(--e-32); }
+.c-andes { grid-column: span 5; grid-row: span 4; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.c-andes .t-losa { font-size: var(--t-30); margin-top: var(--e-8); }
+.c-andes .apoyo { color: var(--blanco); }
+.andes-cifras { display: grid; grid-template-columns: 1fr auto; gap: var(--e-24) var(--e-16); }
+.andes-cifras .ancho { grid-column: 1 / -1; }
+.andes-cifras .cifra:nth-child(2) { text-align: right; justify-items: end; }
+.c-olbo { grid-column: span 4; grid-row: span 4; display: flex; flex-direction: column; justify-content: space-between; }
+.c-olbo .c-col { display: grid; gap: var(--e-8); }
+.c-olbo .apoyo { max-width: 52%; }
+.c-olbo .cifra { position: relative; z-index: 1; max-width: 50%; }
+.olbo-cifra { color: var(--verde-osc); }
+.c-olbo .telefono { position: absolute; z-index: 0; right: var(--e-32); bottom: calc(-1 * var(--e-64)); width: 52%; aspect-ratio: 3 / 4; border-radius: var(--r-s); box-shadow: 0 24px 48px -16px rgba(14, 14, 18, .45); }
+.c-olbo .telefono img { object-position: 50% 0; }
+.c-bdo { grid-column: span 4; grid-row: span 4; display: flex; flex-direction: column; gap: var(--e-16); }
+.c-bdo .media { height: 42%; flex: none; margin: calc(var(--e-16) - var(--e-32)) calc(var(--e-16) - var(--e-32)) 0; }
+.c-bdo .media img { object-position: 0 0; }
+.c-bdo .cifra { margin-top: auto; }
+.c-dc, .c-mp { grid-column: span 4; grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-12); }
+.c-dc .c-col { display: grid; gap: var(--e-4); }
+.c-dc .cifra, .c-mp .cifra { grid-auto-flow: column; justify-content: start; align-items: end; gap: var(--e-12); }
+.c-dc .cifra .etiqueta, .c-mp .cifra .etiqueta { max-width: 22ch; padding-bottom: var(--e-4); }
+.leido { display: inline-flex; margin-top: var(--e-12); padding: var(--e-4) var(--e-8); border-radius: var(--r-pill); box-shadow: inset 0 0 0 1px var(--losa-borde); color: var(--tinta-2); }
+.leido[hidden] { display: none; }
+
+.archivo-w { margin-top: var(--gap); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.archivo-cab { grid-column: 1 / span 3; }
+.archivo-w .filas { grid-column: 4 / -1; }
+.filas a { display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) 72px minmax(0, 2fr) auto; align-items: center; gap: var(--e-16);
+  min-height: var(--e-64); padding: var(--e-8) var(--e-16); margin: 0 calc(-1 * var(--e-16)); border-radius: var(--r-xs); border-top: 1px solid var(--losa-borde);
+  transition: background-color var(--d-hover) var(--ease-out); }
+.filas li:first-child a { border-top-color: transparent; }
+.filas b { font: 500 var(--t-16)/1.3 var(--f-texto); }
+.filas .cli, .filas .linea { font-size: var(--t-14); line-height: 1.35; color: var(--tinta-2); }
+.filas .accion { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); font-weight: 500; color: var(--tinta); }
+.filas .accion .ico { transition: rotate var(--d-hover) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .filas a:hover { background: var(--losa-alta); } .filas a:hover .accion .ico { rotate: 45deg; } }
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .c-naowee { grid-column: span 12; grid-row: span 3; }
+  .c-andes, .c-olbo, .c-bdo { grid-column: span 6; }
+  .c-dc, .c-mp { grid-column: span 6; }
+  .filas a { grid-template-columns: 48px minmax(0, 1fr) 64px minmax(0, 1.6fr) auto; }
+  .filas .cli { display: none; }
+}
+@media (max-width: 1023px) {
+  .c-naowee { grid-template-columns: 1fr; grid-template-rows: 180px auto; padding-right: var(--e-24); }
+  .c-naowee .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; height: calc(100% + var(--e-12)); border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .c-naowee .flecha { top: var(--e-24); right: var(--e-24); }
+  .c-naowee .t-losa, .c-andes .t-losa { font-size: var(--t-24); }
+  .c-andes { gap: var(--e-24); }
+  .andes-cifras { grid-template-columns: repeat(3, auto); justify-content: space-between; }
+  .andes-cifras .ancho { grid-column: auto; }
+  .andes-cifras .cifra:nth-child(2) { text-align: left; justify-items: start; }
+  .andes-cifras .dot-l { font-size: var(--t-30); }
+  .c-olbo { min-height: 380px; }
+  .c-olbo .apoyo { max-width: 60%; }
+  .c-olbo .telefono { width: 40%; right: var(--e-24); bottom: calc(-1 * var(--e-96)); }
+  .c-bdo .media { height: 150px; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .archivo-w { grid-template-columns: 1fr; }
+  .archivo-cab, .archivo-w .filas { grid-column: auto; }
+  .filas a { grid-template-columns: 44px minmax(0, 1fr) auto; row-gap: 0; padding: var(--e-12) var(--e-12); margin: 0 calc(-1 * var(--e-12)); }
+  .filas .cli, .filas .linea { display: none; }
+  .filas .accion span { display: none; }
+  .filas .anio { justify-self: end; }
+  .filas .accion { display: none; }
+}
+
+.w-cab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; padding-top: var(--e-48); }
+.w-titulo { grid-column: 1 / span 7; padding-bottom: var(--e-16); }
+.w-titulo .h1 { font-size: var(--t-120); line-height: .92; letter-spacing: -0.045em; }
+.w-cifras { grid-column: 8 / -1; display: grid; gap: var(--e-24); }
+.w-cifras-fila { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-16); }
+.w-cifras .dot { color: var(--tinta-osc); }
+.filtros { display: inline-flex; gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-pill); margin-top: var(--e-48); position: sticky; top: 72px; z-index: 5; }
+.filtros .pill { height: 40px; }
+.filtros .pill[aria-pressed="true"] { background: var(--blanco); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) { .filtros .pill[aria-pressed="false"]:hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
+@media (max-width: 1023px) {
+  .w-cab { grid-template-columns: 1fr; padding-top: var(--e-24); gap: var(--e-24); }
+  .w-titulo, .w-cifras { grid-column: auto; }
+  .w-titulo .h1 { font-size: var(--t-72); }
+  .w-cifras .dot-l { font-size: var(--t-36); }
+  .filtros { display: flex; overflow-x: auto; max-width: 100%; scrollbar-width: none; margin-top: var(--e-32); top: 68px; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .filtros .pill { height: var(--toque); flex: none; padding: 0 var(--e-12); }
+}
+
+</style>
+</head>
+<body>
+<a class="saltar" href="#contenido" data-t="nav.saltar">Ir al contenido</a>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-flecha" viewBox="0 0 20 20"><path d="M6 14 14 6M7.5 6H14v6.5"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></symbol>
+  <symbol id="i-izq" viewBox="0 0 20 20"><path d="M12 5 7 10l5 5"/></symbol>
+  <symbol id="i-der" viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></symbol>
+  <symbol id="i-correo" viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m3.5 6 6.5 5 6.5-5"/></symbol>
+  <symbol id="i-bajar" viewBox="0 0 20 20"><path d="M10 3.5v9M6 9l4 4 4-4M4 16.5h12"/></symbol>
+  <symbol id="i-arriba" viewBox="0 0 20 20"><path d="M10 16V5M5.5 9.5 10 5l4.5 4.5"/></symbol>
+  <symbol id="i-trabajo" viewBox="0 0 20 20"><rect x="3" y="6.5" width="14" height="10" rx="2"/><path d="M7.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 12.5 5v1.5"/></symbol>
+  <symbol id="i-perfil" viewBox="0 0 20 20"><circle cx="10" cy="7" r="3.2"/><path d="M4 16.5c1.2-3 3.4-4.3 6-4.3s4.8 1.3 6 4.3"/></symbol>
+  <symbol id="i-linea" viewBox="0 0 20 20"><path d="M3 10h14"/><circle cx="6" cy="10" r="1.6"/><circle cx="11" cy="10" r="1.6"/><circle cx="15.5" cy="10" r="1.6"/></symbol>
+  <symbol id="i-cv" viewBox="0 0 20 20"><path d="M5.5 2.5h6l3.5 3.5v11.5h-9.5z"/><path d="M11.5 2.5V6H15M8 10.5h5M8 13.5h5"/></symbol>
+  <symbol id="i-secciones" viewBox="0 0 20 20"><path d="M4 6h12M4 10h12M4 14h8"/></symbol>
+  <symbol id="i-expandir" viewBox="0 0 20 20"><path d="M11.5 3.5h5v5M16.5 3.5 11 9M8.5 16.5h-5v-5M3.5 16.5 9 11"/></symbol>
+  <symbol id="i-play" viewBox="0 0 20 20"><path d="M7 5.5v9l7-4.5z"/></symbol>
+</svg>
+<header class="barra">
+  <a class="marca vidrio" href="../B/index.html" data-int="../B/index.html" aria-label="douguizard, inicio" data-ta="nav.inicio"><span class="marca-d" aria-hidden="true">d</span><span class="marca-t" aria-hidden="true" translate="no">douguizard</span></a>
+  <nav class="pills vidrio" aria-label="Principal" data-ta="nav.principal">
+    <a class="pill" href="work.html" data-int="work.html" aria-current="page" data-t="nav.trabajo">Trabajo</a>
+    <a class="pill" href="about.html" data-int="about.html" data-t="nav.perfil">Perfil</a>
+    <a class="pill" href="experience.html" data-int="experience.html" data-t="nav.experiencia">Experiencia</a>
+    <a class="pill" href="/cv" data-t="nav.cv">CV</a>
+  </nav>
+  <div class="acciones">
+    <div class="idioma vidrio" role="group" aria-label="Idioma" data-ta="idioma.grupo">
+      <a href="?lang=es" lang="es" hreflang="es" aria-label="Español" data-lang="es">ES</a>
+      <a href="?lang=en" lang="en" hreflang="en" aria-label="English" data-lang="en">EN</a>
+    </div>
+    <a class="boton hablemos" href="../B/index.html#contacto" data-int="../B/index.html#contacto" data-t="nav.hablemos">Hablemos</a>
+  </div>
+</header>
+<nav class="rail" id="rail" aria-label="Acciones rápidas" data-ta="rail.label">
+  <a class="rail-accion" href="mailto:hello@douguizard.com" data-tip="hello@douguizard.com" aria-label="Escríbeme: hello@douguizard.com" data-ta="rail.correo"><svg class="ico"><use href="#i-correo"/></svg></a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="/cv/doug-vargas-cv.pdf" download data-tip="Descargar CV (PDF)" data-ttip="cta.cv" aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico"><use href="#i-bajar"/></svg></a>
+  <a href="https://www.linkedin.com/in/douguizard" target="_blank" rel="noopener" data-tip="LinkedIn ↗" aria-label="LinkedIn (se abre en otra pestaña)" data-ta="ext.linkedin">in</a>
+  <a href="https://www.behance.net/douguizard" target="_blank" rel="noopener" data-tip="Behance ↗" aria-label="Behance (se abre en otra pestaña)" data-ta="ext.behance">Bē</a>
+  <a href="https://github.com/dougnuken" target="_blank" rel="noopener" data-tip="GitHub ↗" aria-label="GitHub (se abre en otra pestaña)" data-ta="ext.github">gh</a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="#arriba" data-tip="Volver arriba" data-ttip="pie.arriba" aria-label="Volver arriba" data-ta="pie.arriba"><svg class="ico"><use href="#i-arriba"/></svg></a>
+</nav>
+<main id="contenido">
+<div class="resplandor" aria-hidden="true"></div>
+<div class="pagina">
+<div class="contenido">
+  <header class="w-cab">
+    <div class="w-titulo">
+      <h1 class="h1" data-t="w.h1">Trabajo</h1>
+      <p class="lead mt-24" data-t="w.intro">12 años de sistemas, productos y equipos: de Mercadolibre a un banco, una naviera y startups, y tres productos propios, diseñados, construidos y lanzados de punta a punta.</p>
+    </div>
+    <div class="tarjeta losa-clara w-cifras" role="group" aria-label="12 años en producto digital, 10 casos publicados, 3 productos propios" data-ta="k12.aria">
+      <p class="ceja" data-t="k12.ceja">En cifras</p>
+      <div class="w-cifras-fila" aria-hidden="true">
+        <div class="cifra"><span class="dot dot-l">12</span><span class="etiqueta" data-t="k12.c1">años en producto digital</span></div>
+        <div class="cifra"><span class="dot dot-l">10</span><span class="etiqueta" data-t="k12.c2">casos publicados</span></div>
+        <div class="cifra"><span class="dot dot-l">3</span><span class="etiqueta" data-t="k12.c3">productos propios</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="filtros vidrio" role="group" aria-label="Filtrar casos" data-ta="w.filtrar">
+    <button type="button" class="pill" aria-pressed="true" data-filtro="todos" data-t="w.f.todos">Todos</button>
+    <button type="button" class="pill" aria-pressed="false" data-filtro="escala" data-t="w.f.escala">Escala</button>
+    <button type="button" class="pill" aria-pressed="false" data-filtro="propio" data-t="w.f.propio">Productos propios</button>
+    <button type="button" class="pill" aria-pressed="false" data-filtro="anterior" data-t="w.f.anterior">Anteriores</button>
+  </div>
+  <p class="sr-only" aria-live="polite" id="filtroEstado"></p>
+
+  <ul class="rejilla casos" id="casos" aria-label="Casos" data-ta="w.lista">
+    <!-- Naowee · abre como hoja; con cmd/ctrl, la página completa -->
+    <li class="tarjeta losa c-naowee" data-grupo="escala">
+      <div class="c-texto">
+        <div>
+          <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/02</span><span data-t="k3.ceja">Ahora · Head of Product</span></p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="caso.html" data-int="caso.html" data-hoja="naowee"><span translate="no">Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <p class="apoyo" data-t="k3.apoyo">Los 30 trámites del deporte colombiano, fuera de Word.</p>
+          <span class="leido micro" hidden data-t="w.leido">Leído</span>
+        </div>
+        <div class="cifra" role="group" aria-label="130 o más pantallas en 8 módulos" data-ta="k3.cifra.aria">
+          <span class="dot dot-xl" aria-hidden="true">130+</span><span class="etiqueta" aria-hidden="true" data-t="k3.etq">pantallas en 8 módulos</span>
+        </div>
+      </div>
+      <div class="media"><img src="../../../../public/work/naowee/ivc-workspace-tramite.webp" alt="" width="2880" height="1800" decoding="async"></div>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- Andes · NDA: la cifra es la imagen -->
+    <li class="tarjeta losa-azul c-andes" data-grupo="escala">
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/03</span><span translate="no">Mercadolibre</span> · 2024–2026</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo mt-8" data-t="k4.apoyo">Líder técnico del sistema de diseño de Mercadolibre.</p>
+      </div>
+      <div class="andes-cifras" role="group" aria-label="400 o más diseñadores, 2.000 o más ingenieros, 18 países" data-ta="k4.aria">
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">400+</span><span class="etiqueta" data-t="k4.dis">diseñadores</span></div>
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">18</span><span class="etiqueta" data-t="k4.pai">países</span></div>
+        <div class="cifra ancho" aria-hidden="true"><span class="dot dot-l" data-t="k4.n2">2.000+</span><span class="etiqueta" data-t="k4.ing">ingenieros</span></div>
+      </div>
+      <span class="chip chip-nda" data-t="nda">NDA · Caso a solicitud</span>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- olbo -->
+    <li class="tarjeta losa-niebla c-olbo" data-grupo="propio">
+      <div class="c-col">
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/01</span><span data-t="k7.ceja">Producto propio · Design Engineer</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span translate="no">olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k7.apoyo">Mide tu ritmo de gasto, no tu saldo.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="647 pruebas en verde" data-ta="k7.aria"><span class="dot dot-xl olbo-cifra" aria-hidden="true">647</span><span class="etiqueta" aria-hidden="true" data-t="k7.etq">pruebas en verde</span></div>
+      <div class="media telefono"><img src="../../../../public/work/olbo/01-hoy-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- Banco de Occidente -->
+    <li class="tarjeta losa c-bdo" data-grupo="escala">
+      <div class="media"><img src="../../../../public/work/banco-de-occidente/portal-dashboard.webp" alt="" width="2271" height="1715" loading="lazy" decoding="async"></div>
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/04</span>Aval Digital Labs · 2018–2024</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/banco-de-occidente"><span>Banco de Occidente</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k8.apoyo">Un portal más liviano y Velocity, su sistema de diseño.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="Más de 12 squads en un solo sistema" data-ta="k8.aria"><span class="dot dot-l" aria-hidden="true">12+</span><span class="etiqueta" aria-hidden="true" data-t="k8.etq">squads en un solo sistema</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- DC Medical -->
+    <li class="tarjeta losa c-dc" data-grupo="propio">
+      <div class="c-col">
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/05</span><span data-t="k9.ceja">Producto propio · Socio y constructor</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/dc-medical"><span>DC Medical</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k9.apoyo">Una clínica en tres ciudades, desde un celular.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="14 días del primer commit a la versión del 2 de octubre" data-ta="k9.aria"><span class="dot dot-l" aria-hidden="true">14</span><span class="etiqueta" aria-hidden="true" data-t="k9.etq">días del primer commit a la versión del 2 oct</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+    <!-- MakeaPet -->
+    <li class="tarjeta losa-magenta c-mp" data-grupo="propio">
+      <div>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/06</span><span data-t="k10.ceja">Producto propio · iOS, Android y web</span></p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/makeapet"><span>MakeaPet</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        <p class="apoyo" data-t="k10.apoyo">De cinco pantallas en Figma a una app real.</p>
+      </div>
+      <div class="cifra" role="group" aria-label="Más de 680 pruebas automatizadas" data-ta="k10.aria"><span class="dot dot-l" aria-hidden="true">680+</span><span class="etiqueta" aria-hidden="true" data-t="k10.etq">pruebas automatizadas</span></div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </li>
+  </ul>
+
+  <!-- Archivo: los casos cortos como filas ({num} · {proyecto} · {cliente} · {año} · Leer el caso) -->
+  <section class="tarjeta losa archivo-w" id="archivo" data-grupo="anterior" aria-labelledby="hArchivo">
+    <div class="archivo-cab">
+      <p class="ceja" data-t="k16.ceja">Archivo</p>
+      <h2 class="t-losa" id="hArchivo" data-t="k16.titulo">Más trabajo</h2>
+    </div>
+    <ol class="filas">
+      <li><a href="/work/royal-caribbean"><span class="dot dot-xs" aria-hidden="true">/07</span><b>Royal Caribbean</b><span class="cli">Globant</span><span class="dot dot-xs anio">2017</span><span class="linea" data-t="k16.r2">Reservas y vida a bordo, con Globant.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/qrvey"><span class="dot dot-xs" aria-hidden="true">/08</span><b>Qrvey</b><span class="cli">Qrvey</span><span class="dot dot-xs anio">2016</span><span class="linea" data-t="k16.r3">AutomatiQ: encuestas que actúan solas.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/ideaware"><span class="dot dot-xs" aria-hidden="true">/09</span><b>Ideaware</b><span class="cli">Ideaware</span><span class="dot dot-xs anio">2016</span><span class="linea" data-t="k16.r4">Diseño para clientes de EE. UU. y LATAM.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+      <li><a href="/work/chub"><span class="dot dot-xs" aria-hidden="true">/10</span><b>Chub</b><span class="cli" data-t="w.chubcli">Proyecto paralelo freelance</span><span class="dot dot-xs anio">2018</span><span class="linea" data-t="k16.r1">Alquiler de carros por minuto, para iOS.</span><span class="accion"><span data-t="w.leer">Leer el caso</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></span></a></li>
+    </ol>
+  </section>
+
+</div>
+</div>
+
+</main>
+<footer class="pie">
+  <span>© 2026 Doug Vargas · Barranquilla · UTC-5</span>
+  <span data-t="pie.colofon">Diseñado por mí; construido con Next.js y agentes de IA que dirijo.</span>
+  <a href="#arriba" data-t="pie.arriba">Volver arriba</a>
+</footer>
+<nav class="dock vidrio" id="dock" aria-label="Navegación rápida" data-ta="dock.label">
+  <a href="work.html" data-int="work.html" aria-current="page"><svg class="ico" aria-hidden="true"><use href="#i-trabajo"/></svg><span data-t="nav.trabajo">Trabajo</span></a>
+  <a href="about.html" data-int="about.html"><svg class="ico" aria-hidden="true"><use href="#i-perfil"/></svg><span data-t="nav.perfil">Perfil</span></a>
+  <a href="experience.html" data-int="experience.html"><svg class="ico" aria-hidden="true"><use href="#i-linea"/></svg><span data-t="nav.experiencia">Experiencia</span></a>
+  <a href="/cv"><svg class="ico" aria-hidden="true"><use href="#i-cv"/></svg><span>CV</span></a>
+  <a href="../B/index.html#contacto" data-int="../B/index.html#contacto"><svg class="ico" aria-hidden="true"><use href="#i-correo"/></svg><span data-t="nav.contacto">Contacto</span></a>
+</nav>
+<script>
+window.META = {"es": {"title": "Trabajo · Doug Vargas", "desc": "10 casos de Doug Vargas: sistemas de diseño en Mercadolibre y Banco de Occidente, la plataforma del deporte en Colombia y tres productos propios."}, "en": {"title": "Work · Doug Vargas", "desc": "10 case studies by Doug Vargas: design systems at Mercadolibre and Banco de Occidente, Colombia's sports platform and three products of my own."}};
+</script>
+<script>
+(() => {
+"use strict";
+/* ═════════ Núcleo compartido de las páginas internas de B (idioma, navegación, hoja, corte láser) ═════════ */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const QS = new URLSearchParams(location.search);
+const RM = root.classList.contains("rm");
+const CAPTURA = QS.has("captura");
+const desk = matchMedia("(min-width: 1024px)");
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
+
+/* 1 · Idioma. El ES se lee del propio HTML; el EN llega por página en window.EN (más el común EN_COMUN). */
+const EN_COMUN = {
+  "nav.saltar": "Skip to content", "nav.inicio": "douguizard, home", "nav.principal": "Main", "nav.trabajo": "Work", "nav.perfil": "About",
+  "nav.experiencia": "Experience", "nav.cv": "CV", "nav.hablemos": "Let's talk", "nav.contacto": "Contact", "idioma.grupo": "Language",
+  "rail.label": "Quick actions", "rail.correo": "Get in touch: hello@douguizard.com", "cta.cv": "Download CV (PDF)", "cta.cv.aria": "Download my CV as a PDF",
+  "cta.casos": "See case studies", "ext.linkedin": "LinkedIn (opens in a new tab)", "ext.behance": "Behance (opens in a new tab)", "ext.github": "GitHub (opens in a new tab)",
+  "pie.colofon": "Designed by me; built with Next.js and AI agents I direct.", "pie.arriba": "Back to top", "dock.label": "Quick navigation",
+  "hoja.cerrar": "Close", "k.leer": ", read the case", "k.marcaidioma": "", "nda": "NDA · Case on request",
+};
+const ATTRS = [["data-t", null], ["data-ta", "aria-label"], ["data-talt", "alt"], ["data-tt", "title"], ["data-ttip", "data-tip"]];
+const ES = {};
+ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => { const k = el.getAttribute(a); if (!(k in ES)) ES[k] = target ? el.getAttribute(target) : el.innerHTML; }));
+let lang = "es";
+const alCambiarIdioma = [];
+function t(k) { return (lang === "en" ? (window.EN?.[k] ?? EN_COMUN[k]) : ES[k]) ?? ES[k] ?? k; }
+function setLang(l, push) {
+  lang = l === "en" ? "en" : "es";
+  root.lang = lang;
+  const D = lang === "en" ? { ...EN_COMUN, ...(window.EN || {}) } : ES;
+  ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => {
+    const k = el.getAttribute(a), v = D[k] ?? ES[k]; if (v == null) return;
+    if (target) el.setAttribute(target, v); else el.innerHTML = v;
+  }));
+  $$(".idioma a").forEach((a) => { const on = a.dataset.lang === lang; a.setAttribute("aria-current", String(on));
+    if (on) a.removeAttribute("title"); else a.title = lang === "en" ? "Ver en español" : "Read in English"; });
+  // los enlaces internos conservan el idioma (en producción: / ↔ /en con la misma ruta y el mismo hash)
+  $$("a[data-int]").forEach((a) => { const [base, hash] = a.dataset.int.split("#"); a.href = base + (lang === "en" ? "?lang=en" : "") + (hash ? "#" + hash : ""); });
+  const M = window.META?.[lang]; if (M) { document.title = M.title; $('meta[name="description"]').content = M.desc; }
+  alCambiarIdioma.forEach((f) => f(lang));
+  if (push) history.replaceState(history.state, "", (lang === "en" ? "?lang=en" : location.pathname) + location.hash);
+  if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+$$(".idioma a").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); setLang(a.dataset.lang, true); }));
+
+/* 2 · Volver arriba y dock (aparece al bajar del primer pliegue) */
+$$('a[href="#arriba"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" }); }));
+const dock = $("#dock");
+if (dock) { const f = () => dock.classList.toggle("escondido", window.scrollY < window.innerHeight * 0.35 && document.body.dataset.dockTarde === "1"); window.addEventListener("scroll", f, { passive: true }); f(); }
+
+/* 3 · Hoja (dialog modal): foco atrapado nativo, Esc, Atrás, velo, arrastre por velocidad */
+function hacerHoja(hoja, { onCerrar } = {}) {
+  const panel = $(".hoja-panel", hoja), cuerpo = $(".hoja-cuerpo", hoja), cab = $(".hoja-cab", hoja), prog = $(".hoja-progreso", hoja), cerrar = $("[data-cerrar].circulo", hoja);
+  let abridor = null;
+  const api = {
+    abrir(origen, instantanea) {
+      abridor = origen || document.activeElement; hoja.showModal(); hoja.scrollTop = 0; cerrar && cerrar.focus({ preventScroll: true });
+      document.body.style.overflow = "hidden";
+      if (instantanea) { panel.style.transition = "none"; hoja.classList.add("abierta", "encendida"); requestAnimationFrame(() => (panel.style.transition = "")); return; }
+      requestAnimationFrame(() => requestAnimationFrame(() => { hoja.classList.add("abierta"); setTimeout(() => hoja.classList.add("encendida"), RM ? 0 : 220); }));
+    },
+    cerrar() {
+      if (!hoja.open) return;
+      hoja.classList.remove("abierta", "encendida"); panel.style.translate = "";
+      const fin = () => { hoja.close(); document.body.style.overflow = ""; abridor && abridor.focus && abridor.focus({ preventScroll: true }); onCerrar && onCerrar(); };
+      if (RM) fin(); else setTimeout(fin, 280);
+    },
+  };
+  hoja.addEventListener("cancel", (e) => { e.preventDefault(); api.cerrar(); });
+  hoja.addEventListener("click", (e) => { if (e.target.closest("[data-cerrar]")) api.cerrar(); });
+  cuerpo.addEventListener("scroll", () => { const m = cuerpo.scrollHeight - cuerpo.clientHeight; prog && prog.style.setProperty("--p", m > 0 ? (cuerpo.scrollTop / m).toFixed(3) : 0); }, { passive: true });
+  let arr = null;
+  cab.addEventListener("pointerdown", (e) => { if (e.target.closest("button, a")) return; cab.setPointerCapture(e.pointerId); arr = { y: e.clientY, t: performance.now() }; panel.style.transition = "none"; });
+  cab.addEventListener("pointermove", (e) => { if (!arr) return; const dy = e.clientY - arr.y; const y = dy > 0 ? dy : -(Math.abs(dy) * 40) / (40 + Math.abs(dy)); panel.style.translate = `-50% ${y}px`; });
+  const fin = (e) => { if (!arr) return; const dy = e.clientY - arr.y, v = dy / Math.max(1, performance.now() - arr.t); arr = null; panel.style.transition = ""; if (dy > 120 || v > 0.5) api.cerrar(); else panel.style.translate = ""; };
+  cab.addEventListener("pointerup", fin); cab.addEventListener("pointercancel", fin);
+  return api;
+}
+
+/* 4 · Corte láser del nombre: el corte cae a 0,52 de la altura de x sobre la línea base de «Vargas» */
+function medirCorte(el) {
+  const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs * 0.9;
+  const c = document.createElement("canvas").getContext("2d");
+  c.font = `${cs.fontWeight} ${fs}px Geologica`;
+  const m = c.measureText("Vargas"), x = c.measureText("x");
+  const base = (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+  const k = base - x.actualBoundingBoxAscent * 0.52;
+  el.style.setProperty("--corte", k + "px");
+  return k;
+}
+
+/* 5 · Arranque común */
+function arrancarComun() {
+  setLang(root.lang === "en" ? "en" : "es", false);
+}
+
+/* Copy EN del índice de casos (04 §3 y §6.3) y su comportamiento: filtros, «Leído», Naowee como hoja. */
+const EN_GRID = {
+  "w.lista": "Case studies", "w.leido": "Read", "w.leer": "Read the case", "w.chubcli": "Freelance side project",
+  "k3.ceja": "Now · Head of Product", "k3.apoyo": "Colombia's 30 sports procedures, out of Word and email.", "k3.etq": "screens across 8 modules",
+  "k3.cifra.aria": "130-plus screens across 8 modules",
+  "k4.apoyo": "Tech lead on Mercadolibre's design system.", "k4.aria": "400-plus designers, 2,000-plus engineers, 18 countries",
+  "k4.dis": "designers", "k4.pai": "countries", "k4.ing": "engineers", "k4.n2": "2,000+",
+  "k7.ceja": "Product of my own · Design Engineer", "k7.apoyo": "Reads your spending pace, not your balance.", "k7.etq": "tests passing", "k7.aria": "647 tests passing",
+  "k8.apoyo": "A lighter portal, and Velocity, its design system.", "k8.etq": "squads on one system", "k8.aria": "12-plus squads on one system",
+  "k9.ceja": "Product of my own · Co-owner and builder", "k9.apoyo": "A three-city clinic, run from one phone.", "k9.etq": "days from first commit to the Oct 2 version",
+  "k9.aria": "14 days from first commit to the October 2 version",
+  "k10.ceja": "Product of my own · iOS, Android, web", "k10.apoyo": "From five Figma screens to a real app.", "k10.etq": "automated tests", "k10.aria": "680-plus automated tests",
+  "k16.ceja": "Archive", "k16.titulo": "More work",
+  "k16.r1": "Per-minute car rental, for iOS.", "k16.r2": "Booking and life aboard, with Globant.", "k16.r3": "AutomatiQ: surveys that act on their own.", "k16.r4": "Design for US and LATAM clients.",
+};
+function leidos() {   // «Leído»: per-visitante, en este navegador (no es estado que deba persistir para nadie más)
+  try { if (localStorage.getItem("leido:naowee-suid")) $$('[data-hoja="naowee"]').forEach((a) => a.closest("li").querySelector(".leido")?.removeAttribute("hidden")); } catch {}
+}
+function enlacesHoja() {   // clic simple: la hoja sobre el índice (misma URL de caso); cmd/ctrl/clic medio: la página completa
+  $$("[data-hoja]").forEach((a) => a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    if (window.abrirHojaCaso) { e.preventDefault(); window.abrirHojaCaso(a); return; }
+    e.preventDefault(); location.href = "caso.html?modo=hoja" + (lang === "en" ? "&lang=en" : "");
+  }));
+}
+
+window.EN = {
+  ...EN_GRID,
+  "w.h1": "Work", "w.filtrar": "Filter case studies",
+  "w.intro": "12 years of systems, products and teams: from Mercadolibre to a bank, a cruise line and startups, plus three products of my own, designed, built and shipped end to end.",
+  "w.f.todos": "All", "w.f.escala": "At scale", "w.f.propio": "Products of my own", "w.f.anterior": "Earlier",
+  "k12.ceja": "By the numbers", "k12.aria": "12 years in digital product, 10 case studies, 3 products of my own",
+  "k12.c1": "years in digital product", "k12.c2": "case studies", "k12.c3": "products of my own",
+};
+/* Filtros: reflujo de la rejilla con View Transitions (si el navegador la tiene; si no, cambio directo) */
+const items = [...$$(".casos > li"), $("#archivo")];
+function filtrar(f) {
+  $$("[data-filtro]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filtro === f)));
+  const aplicar = () => items.forEach((el) => { el.hidden = !(f === "todos" || el.dataset.grupo === f); });
+  if (document.startViewTransition && !RM) document.startViewTransition(aplicar); else aplicar();
+  const n = $$(".casos > li:not([hidden])").length + ($("#archivo").hidden ? 0 : 4);
+  $("#filtroEstado").textContent = lang === "en" ? `${n} case studies` : `${n} casos`;
+}
+$$("[data-filtro]").forEach((b) => b.addEventListener("click", () => filtrar(b.dataset.filtro)));
+$$(".casos > li").forEach((li, i) => (li.style.viewTransitionName = "caso-" + i));
+$("#archivo").style.viewTransitionName = "archivo";
+arrancarComun(); leidos(); enlacesHoja();
+
+})();
+</script>
+</body>
+</html>

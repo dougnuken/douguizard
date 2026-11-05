@@ -66,6 +66,9 @@ async function main() {
             colorScheme: tema as "dark" | "light",
             reducedMotion: rm ? "reduce" : "no-preference",
           });
+          // tsx (esbuild con keepNames) envuelve las funciones en `__name(...)`; las que se mandan a la
+          // página con `page.evaluate` (las de `settle`) llegan sin ese ayudante y fallan sin esto.
+          await context.addInitScript("globalThis.__name = (f) => f;");
           await context.addInitScript(setTheme(tema));
           const page = await context.newPage();
           for (const ruta of rutas) {
