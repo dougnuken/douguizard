@@ -156,3 +156,51 @@ blanco 4,8:1. Tuve que oscurecer el aro de las dos losas jelly: el gradiente de 
 | `shot_A_390_completa.jpg` | 390, página completa |
 | `shot_A_transicion_1…4.jpg` | Card Naowee → caso a los 0, 140, 260 y 420 ms |
 | `shot_A_caso_naowee.jpg` | Página de caso ya asentada |
+| `shot_A_1024.jpg` | 1024, página completa (tableta con colocación explícita) |
+| `shot_A_390x664_pliegue.jpg` | 390×664, Safari con barras: el test de 5 s pasa entero y «Ver casos» asoma |
+
+---
+
+## 7. Cambios tras la crítica (06-CRITICA-A.md, 7,4/10)
+
+Apliqué **todos los P0 y P1** como estaban especificados y casi todos los P2. Después medí de nuevo: contraste en el
+píxel peor a 1440 ES, 1440 EN, 1024 y 390, sin fallos (el único «falla» que devuelve el script es la esquina
+redondeada de `.btn-pri`, que se mide contra la losa blanca: blanco sobre `#2B56F3` da 5,6:1). Toques ≥ 44 px a 390,
+sin desborde horizontal y sin errores de consola en `?rm=1` ni en `?modo=css`.
+
+| # | Qué cambió | Medido después |
+|---|---|---|
+| P0-1 | El «Doug Vargas» de K2 queda solo para lectores, **dentro del H1**. El nombre visible es el de K1. | Un solo nombre en el pliegue. K2 centrado en vertical. |
+| P0-2 | Disponibilidad: un sitio por breakpoint (K5 en ≥ 1280; K1 en tableta y móvil, donde K5 se oculta) y un solo texto: «Abierto a consultoría puntual» / «Open to selected consulting». | — |
+| P0-3 | Tableta (768–1279): colocación explícita en 6 columnas, en el orden del DOM. | Sin huecos ni corte en K2. Página de 4.364 → 4.236 px a 1024. |
+| P0-4 | Vidrio del header `.82` → `.94` en la parada central. | Nav 7,3:1 · EN inactivo 5,8:1. |
+| P1-1 | Móvil: héroe 1:1 y CTA con `margin-top: 16px`. | A 390×664, el claim queda en 474–536, el nivel en 548–585 y «Ver casos» en 661–709 (ES) / 685–733 (EN). |
+| P1-2 · P2-6 | K6 pierde su segundo ES/EN, gana un ↗ y pasa a **losa clara** (gemela de K5). «ES / EN» queda como dato en la línea del lugar. | Sube el claro del pliegue. |
+| P1-3 | La pill NDA se alinea arriba, centrada en el «18». | — |
+| P1-4 | Eyebrows de K4 y K8 en un solo hijo flex (sin espacio doble). | — |
+| P1-5 | K5, K6, K9 y K10 con padding izquierdo de 32 y el ↗ en 24/24: la columna de texto queda alineada. | — |
+| P1-6 | Móvil más corto: K5 oculto, héroe 1:1, K13 de 320, teléfono de olbo de 240, medias de K3 y K8 en 2:1, footer de 76. | 5.961 → 5.437 px (6,4 pantallas). |
+| P1-7 | La nav del header se ve hasta 1024. Por debajo de 1024 aparece el dock. | — |
+| P1-8 | `scroll-padding-top` de 96 px (16 en móvil, más 88 abajo para el dock). | — |
+| P1-9 | «Hablemos» pasa a secundario (`--losa-alta`; azul solo al hover). La única primaria del home es «Ver casos». | 9,5:1 |
+| P1-10 | El radio XL (48) queda solo en K1. K7, K8 y K17 pasan a 32: K8 queda concéntrico (32 − 8 = 24) y las filas comparten silueta. | — |
+| P1-11 | K16: filas de 8 px de padding y sin padding arriba. | Ya no se desborda. |
+| P2-1 | `text-wrap: balance` en títulos, claim, nivel, etiquetas y pasos; `pretty` en apoyos y lead. | — |
+| P2-2 | UI de 14 px: `.005em / 1.3`; etiquetas: `.01em`. | — |
+| P2-3 | Doto de 20–24 px (años de K16, 01–04 de K14) en `--tinta`. | — |
+| P2-4 | Controles de 40 px en el header y de 48 en K2 desde 768. En móvil, el grupo ES/EN mide 48 dentro de un header de 56. | — |
+| P2-5 | Pie de cita de K8: «Francesca Steri · Aval Digital Labs». | — |
+| P2-7 | Los títulos de losa pasan de h3 a h2 (sin salto h1 → h3). | — |
+| P2-8 | `role="region"` y el «carrusel» del carril solo con `max-width: 767px` (por JS). | — |
+| P2-9 | `-webkit-tap-highlight-color: transparent; touch-action: manipulation` en enlaces y botones. | — |
+| P2-10 | `translate="no"` en el wordmark, el nombre y los nombres de producto. | — |
+| P2-11 | Círculo ↗ en tinta sobre las miniaturas claras de K9 y K10. | — |
+| Motion | Se quita el re-encendido de `wght` en cada hover (se queda solo en la entrada). `:active` pasa a .99, y a nada en K1. `materializar` usa `blur(4px)` y escala .98. Se añade una red de seguridad: si el JS falla, `.enter` aparece a los 2 s. | — |
+
+**No aplicado y por qué**
+- **Plegar K12 dentro de K11 en móvil** (≈ −260 px para llegar a ≤ 6 pantallas): es una decisión de contenido y la
+  crítica misma dice «preguntar a Doug». El móvil queda en 6,4 pantallas.
+- **«Cita original en inglés» en K8 (P2-5):** con el pie corto se cae la marca de idioma que pedía 04 para K8. La cita
+  conserva `lang="en"` y la marca sigue visible en K15. Elegí el pie corto porque es el arreglo explícito de la crítica.
+- **La rejilla 5 + 7, la escala, las losas jelly, la regla azul/rojo, la base de accesibilidad, el movimiento reducido
+  y el dock** no se tocaron: la crítica los marcó como «muy bien, no tocar».
