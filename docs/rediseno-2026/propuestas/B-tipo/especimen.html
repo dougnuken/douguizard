@@ -769,6 +769,9 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   :root[data-tipo] .nombre-xl { display: block; left: var(--e-24); font-size: var(--n-fs-m); z-index: 4; }
   :root[data-tipo] .k2 .nombre { display: none; }
   :root[data-tipo="3"] .nombre-xl .linea { display: block; }
+  :root[data-tipo] .nombre-xl.una-linea { white-space: nowrap; }
+  :root[data-tipo] .nombre-xl.una-linea .linea { display: inline-block; vertical-align: top; }
+  :root[data-tipo] .nombre-xl.una-linea .linea:first-child { margin-right: .22em; }
   :root[data-tipo] .k2-fila { justify-content: flex-start; }
   @keyframes subir-linea { from { translate: 0 105%; } }
   :root[data-tipo]:not(.rm) .nombre-xl .linea > span { animation-name: subir-linea; animation-duration: 640ms; animation-timing-function: var(--ease-out); animation-delay: 160ms; animation-fill-mode: both; }
@@ -790,6 +793,8 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 @media (hover: hover) { .tipo-sel a:not([aria-current="true"]):hover { background: rgba(255, 255, 255, .08); } }
 @media (max-width: 1023px) { .tipo-sel { left: 50%; right: auto; translate: -50% 0; bottom: auto; top: 72px; } .tipo-sel span { display: none; } .tipo-sel a { min-width: 40px; padding: 0 var(--e-8); } }
 .limpio .tipo-sel { display: none; }
+.nombre-xl.medir, .nombre-xl.medir * { animation: none !important; visibility: hidden; }
+:root[data-tipo="6"] .nombre-xl.medir .l { font-stretch: 112%; font-weight: 700; }
 
 </style>
 </head>
@@ -1210,7 +1215,27 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     };
   }
   // Móvil: el nombre se apoya sobre K2, encima de la chaqueta
+  // Si K2 crece (EN, pantallas bajas), el nombre se achica para no subir sobre la barbilla: nunca tapa la cara.
   window.__tipoMovil = (o2) => {
+    nx.style.fontSize = "";
+    const k1 = document.getElementById("k1"), h = k1.offsetHeight, W = document.getElementById("escena").clientWidth;
+    const Dy = Math.max(h * 0.95, (W / (880 / 1168)) * 1.02), barbilla = 0.25 * h - 0.418 * Dy + 0.615 * Dy;   // misma colocación que B (modo «movil»)
+    const libre = o2.y - 20 - (barbilla - 6);
+    nx.classList.remove("una-linea");
+    const medir = (una) => {   // se mide un clon en su forma final (sin la entrada a medio camino)
+      const c = nx.cloneNode(true); c.classList.add("medir"); c.classList.toggle("una-linea", una); c.style.top = "0px";
+      c.querySelectorAll(".l").forEach((l) => { l.style.fontStretch = ""; l.style.fontWeight = ""; });
+      nx.parentNode.appendChild(c); const r = { w: c.offsetWidth, h: c.offsetHeight }; c.remove(); return r;
+    };
+    const fs = parseFloat(getComputedStyle(nx).fontSize), dos = medir(false);
+    if (dos.h > libre) {
+      const k = libre / dos.h;
+      if (k >= 0.86) nx.style.fontSize = (fs * k).toFixed(1) + "px";            // poco: se achica apenas
+      else {                                                                      // mucho: pasa a una sola línea a todo el ancho
+        const una = medir(true), kw = (W - 48) / una.w, kh = libre / una.h;
+        nx.classList.add("una-linea"); nx.style.fontSize = (fs * Math.min(kw, kh)).toFixed(1) + "px";
+      }
+    }
     if (T === "4") nx.style.setProperty("--corte", corte() + "px");
     nx.style.left = ""; nx.style.top = Math.round(o2.y - nx.offsetHeight - 20) + "px";
   };
