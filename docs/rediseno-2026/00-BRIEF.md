@@ -53,6 +53,10 @@
 - Imagen del héroe: las exploraciones ilustrada (`heroe/cyberpunk/`) y render (`heroe/render/`) **no lo convencen**;
   gusto de referencia en `referencias/ref-6` y `ref-7` (render 3D hiperdetallado, gear industrial gastado), **fondo
   oscuro, no frambuesa**. Se le dará dirección de arte después; el sistema sigue con la foto provisional.
+- **Landing aprobado:** la vista del OS de B (`referencias/ref-8-landing-elegido-B-os.jpg`) con el nombre en
+  **lockup «corte láser»** (opción 4 de `propuestas/B-tipo/`, Geologica).
+- Siguiente: diseñar las **páginas internas** (Trabajo, Perfil, Experiencia). En **Experiencia**, motion graphics que
+  van **contando los años como línea de tiempo**.
 
 ## 2. Equipo y fases
 
