@@ -24,14 +24,14 @@
     if (!rm && matchMedia("(min-width: 1024px)").matches) d.classList.add("cine");
     if (/[?&]captura=1/.test(q)) d.classList.add("captura");
     if (/[?&]lang=en/.test(q)) d.lang = "en";
-    var tm = q.match(/[?&]tipo=([1-6])/); d.setAttribute("data-tipo", tm ? tm[1] : "1");
+    var tm = q.match(/[?&]tipo=([1-6])/); d.setAttribute("data-tipo", tm ? tm[1] : "1");   // B-tipo
     if (/[?&]limpio=1/.test(q)) d.classList.add("limpio");
   })();
 </script>
 <link rel="preload" as="image" href="../../retratos-hf/199598aa.jpg" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="../fonts/urbanist-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="../fonts/doto-latin.woff2" crossorigin>
-<!-- Espécimen B-tipo: fuentes del nombre (OFL) -->
+<!-- B-tipo: fuentes del nombre (todas OFL); se precarga la de la opción por defecto -->
 <link rel="preload" as="font" type="font/woff2" href="../fonts/mona-sans-latin.woff2" crossorigin>
 <style>
 /* ── Fuentes · OFL. Local primero (propuestas/fonts), Google Fonts como segunda fuente ───────────────── */
@@ -705,7 +705,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   font-size: var(--n-marca-fs, 16px); letter-spacing: var(--n-marca-tr, -0.01em); font-variation-settings: var(--n-fvs); }
 
 /* 1 · Grotesca extendida — Mona Sans Expanded */
-:root[data-tipo="1"] { --n-ff: "Mona Sans", var(--f-display); --n-w: 800; --n-wd: 125%; --n-fs: 128px; --n-fs-m: 68px; --n-tr: -0.055em; --n-lh: .86;
+:root[data-tipo="1"] { --n-ff: "Mona Sans", var(--f-display); --n-w: 800; --n-wd: 125%; --n-fs: 128px; --n-fs-m: 72px; --n-tr: -0.055em; --n-lh: .86;
   --n-marca-ff: "Mona Sans"; --n-marca-w: 700; --n-marca-wd: 125%; --n-marca-fs: 15px; --n-marca-tr: -0.03em; }
 @keyframes t1-abrir { from { font-stretch: 100%; } }
 :root[data-tipo="1"]:not(.rm) .nombre-xl .linea > span { animation: t1-abrir 900ms var(--ease-out) 180ms both; }
@@ -721,22 +721,25 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 :root[data-tipo="2"] .nombre-xl .linea:first-child { padding-bottom: .1em; margin-bottom: -.13em; }
 
 /* 3 · Display técnica — Big Shoulders Stencil (opsz 72) */
-:root[data-tipo="3"] { --n-ff: "Big Shoulders Stencil", var(--f-display); --n-w: 700; --n-fs: 150px; --n-fs-m: 84px; --n-tr: -0.012em; --n-lh: .8; --n-fvs: "opsz" 72;
+:root[data-tipo="3"] { --n-ff: "Big Shoulders Stencil", var(--f-display); --n-w: 640; --n-fs: 148px; --n-fs-m: 84px; --n-tr: -0.01em; --n-lh: .84; --n-fvs: "opsz" 72;
   --n-marca-ff: "Big Shoulders Stencil"; --n-marca-w: 700; --n-marca-fs: 20px; --n-marca-tr: .01em; }
+/* en una sola línea: una banda paralela al láser (en móvil vuelve a dos) */
+:root[data-tipo="3"] .nombre-xl .linea, :root[data-tipo="3"] .k1-nombre .xl-hueco { display: inline-block; vertical-align: top; }
+:root[data-tipo="3"] .nombre-xl .linea:first-child, :root[data-tipo="3"] .k1-nombre .xl-hueco:first-of-type { margin-right: .2em; }
 @keyframes t3-llenar { from { font-weight: 200; } }
 :root[data-tipo="3"]:not(.rm) .nombre-xl .linea > span { animation: t3-llenar 800ms var(--ease-out) 260ms both; }
 :root[data-tipo="3"]:not(.rm) .nombre-xl .linea + .linea > span { animation-delay: 340ms; }
 
 /* 4 · Corte láser — Geologica (SHRP 100) partida por el haz */
 :root[data-tipo="4"] { --n-ff: "Geologica", var(--f-display); --n-w: 600; --n-fs: 128px; --n-fs-m: 66px; --n-tr: -0.05em; --n-lh: .9; --n-fvs: "SHRP" 100, "CRSV" 0, "slnt" 0;
-  --n-marca-ff: "Geologica"; --n-marca-w: 600; --n-marca-fs: 16px; --n-marca-tr: -0.025em; --corte: .5em; --desp-max: -0.07em; }
+  --n-marca-ff: "Geologica"; --n-marca-w: 600; --n-marca-fs: 16px; --n-marca-tr: -0.025em; --corte: .5em; --desp-max: -0.1em; }
 :root[data-tipo="4"] .nombre-xl .linea + .linea { overflow: visible clip; }
 :root[data-tipo="4"] .nombre-xl .m { display: block; }
-:root[data-tipo="4"] .nombre-xl .m.inf { position: absolute; left: 0; top: 0; clip-path: inset(calc(var(--corte) + 1px) -1em -1em -1em); }
-:root[data-tipo="4"] .nombre-xl .m.sup { clip-path: inset(-1em -1em calc(100% - var(--corte) + 1px) -1em); translate: var(--desp) 0; }
+:root[data-tipo="4"] .nombre-xl .m.inf { position: absolute; left: 0; top: 0; clip-path: inset(calc(var(--corte) + 1.5px) -1em -1em -1em); translate: calc(var(--desp) * -.6) 0; }
+:root[data-tipo="4"] .nombre-xl .m.sup { clip-path: inset(-1em -1em calc(100% - var(--corte) + 1.5px) -1em); translate: var(--desp) 0; }
 :root[data-tipo="4"] .nombre-xl .linea + .linea > span { position: relative; }
 @keyframes t4-cortar { to { --desp: var(--desp-max); } }
-:root[data-tipo="4"]:not(.rm) .nombre-xl .m.sup { animation: t4-cortar 520ms var(--ease-out) 880ms both; }
+:root[data-tipo="4"]:not(.rm) .nombre-xl .m { animation: t4-cortar 520ms var(--ease-out) 880ms both; }
 :root[data-tipo="4"].rm .nombre-xl, :root[data-tipo="4"] .nombre-xl.cortado { --desp: var(--desp-max); }
 /* en móvil el haz de la foto queda lejos del nombre: el corte trae su propio hilo de 1 px (el mismo de la línea láser) */
 :root[data-tipo="4"] .nombre-xl .hilo { display: none; }
@@ -748,8 +751,9 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 @keyframes t4-hilo { from { scale: 0 1; } }
 
 /* 5 · Matriz de puntos — Doto (ROND 100) a escala de cartel */
-:root[data-tipo="5"] { --n-ff: "Doto", var(--f-display); --n-w: 800; --n-fs: 134px; --n-fs-m: 66px; --n-tr: -0.075em; --n-lh: .9; --n-fvs: "ROND" 100, "wght" var(--lw);
-  --n-marca-ff: "Doto"; --n-marca-w: 800; --n-marca-fs: 20px; --n-marca-tr: -0.06em; }
+:root[data-tipo="5"] { --n-ff: "Doto", var(--f-display); --n-w: 800; --n-fs: 134px; --n-fs-m: 74px; --n-tr: -0.075em; --n-lh: .9; --n-fvs: "ROND" 100, "wght" var(--lw);
+  --n-marca-ff: "Doto"; --n-marca-w: 900; --n-marca-fs: 22px; --n-marca-tr: -0.06em; }
+:root[data-tipo="5"] .marca > span:last-child { font-variation-settings: "ROND" 100, "wght" 900; }
 :root[data-tipo="5"] .nombre-xl .l { font-style: normal; font-variation-settings: "ROND" 100, "wght" var(--lw); }
 @keyframes t5-encender { from { --lw: 100; opacity: .25; } }
 :root[data-tipo="5"]:not(.rm) .nombre-xl .l { animation: t5-encender 420ms steps(6, end) calc(320ms + var(--i) * 45ms) both; }
@@ -758,11 +762,13 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 :root[data-tipo="6"] { --n-ff: "Anybody", var(--f-display); --n-w: 700; --n-wd: 112%; --n-fs: 128px; --n-fs-m: 66px; --n-tr: -0.04em; --n-lh: .88;
   --n-marca-ff: "Anybody"; --n-marca-w: 700; --n-marca-wd: 120%; --n-marca-fs: 16px; --n-marca-tr: -0.03em; }
 :root[data-tipo="6"] .nombre-xl .l { font-style: normal; display: inline-block; }
+:root[data-tipo="6"] .k1-nombre .xl-hueco { font-stretch: 100%; }   /* el scroll lleva el XL a wdth 100: el FLIP aterriza en la misma forma */
 
 /* ── Móvil (< 1024): el nombre pasa a la foto, sobre la chaqueta y encima de K2 (antes era una etiqueta de 18 px en K2) ── */
 @media (max-width: 1023px) {
   :root[data-tipo] .nombre-xl { display: block; left: var(--e-24); font-size: var(--n-fs-m); z-index: 4; }
   :root[data-tipo] .k2 .nombre { display: none; }
+  :root[data-tipo="3"] .nombre-xl .linea { display: block; }
   :root[data-tipo] .k2-fila { justify-content: flex-start; }
   @keyframes subir-linea { from { translate: 0 105%; } }
   :root[data-tipo]:not(.rm) .nombre-xl .linea > span { animation-name: subir-linea; animation-duration: 640ms; animation-timing-function: var(--ease-out); animation-delay: 160ms; animation-fill-mode: both; }
@@ -1212,23 +1218,27 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   // 6 · cada letra reacciona al cursor (wdth/wght) y se comprime con el scroll anclado
   if (T === "6") {
     const L = [...nx.querySelectorAll(".l")], st = L.map(() => ({ w: RM ? 1 : 0, v: 0, t: 0 }));
-    const BASE = { wd: 112, w: 700 }, CERCA = { wd: 150, w: 900 }, INI = { wd: 50, w: 250 };
+    const BASE = { wd: 112, w: 700 }, CERCA = { wd: 150, w: 860 }, INI = { wd: 50, w: 250 };
     let px = -1e4, py = -1e4, t0 = performance.now() + 380;
     addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") { px = e.clientX; py = e.clientY; } }, { passive: true });
     document.addEventListener("pointerleave", () => { px = py = -1e4; });
     const easeOut = (x) => 1 - Math.pow(1 - x, 4);
     function tick(now) {
       const p = (window.__b && window.__b.S) ? (desk.matches ? Math.min(1, window.__b.S.p / 0.6) : 0) : 0;
+      // cercanía de cada letra al cursor; por línea se resta la media: las letras cercanas se ensanchan y las lejanas
+      // se condensan, así la medida de la línea casi no cambia (no crece hacia la cara)
+      const raw = L.map((el) => { const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const d = Math.hypot(px - cx, (py - cy) * 1.6), R = 170; return p > 0.02 ? 0 : Math.exp(-(d * d) / (R * R)); });
+      const media = (k) => { const g = L.map((el, i) => [el, raw[i]]).filter(([el]) => el.parentNode === L[k].parentNode); return g.reduce((s, [, v]) => s + v, 0) / g.length; };
+      const medias = L.map((_, k) => media(k));
       L.forEach((el, i) => {
-        const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        const d = Math.hypot(px - cx, (py - cy) * 1.4), R = 230;
-        const near = p > 0.02 ? 0 : Math.exp(-(d * d) / (R * R));
+        const near = raw[i] - medias[i] * 0.85;
         // muelle críticamente amortiguado hacia «near» (respuesta ≈ 0,3 s)
         const s = st[i], w0 = (2 * Math.PI) / 0.3, h = 1 / 60;
         s.v += (w0 * w0 * (near - s.t) - 2 * w0 * s.v) * h; s.t += s.v * h;
         const e = RM ? 1 : easeOut(Math.min(1, Math.max(0, (now - t0 - i * 55) / 760)));   // entrada: de condensada a la forma de reposo
         let wd = INI.wd + (BASE.wd - INI.wd) * e, w = INI.w + (BASE.w - INI.w) * e;
-        wd += (CERCA.wd - BASE.wd) * s.t; w += (CERCA.w - BASE.w) * s.t;
+        wd = Math.min(150, Math.max(60, wd + (CERCA.wd - BASE.wd) * s.t)); w = Math.min(900, Math.max(300, w + (CERCA.w - BASE.w) * s.t));
         wd += (100 - BASE.wd) * p;                                   // con el scroll se cierra a wdth 100, la forma de K1
         el.style.fontStretch = wd.toFixed(1) + "%"; el.style.fontWeight = Math.round(w);
       });
@@ -1239,7 +1249,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   // 4 · con el scroll anclado el corte se cierra (el nombre llega entero a K1)
   if (T === "4" && !RM) {
     const loop = () => { const p = window.__b && window.__b.S ? window.__b.S.p : 0;
-      if (desk.matches && p > 0.001) { nx.querySelector(".m.sup").style.animation = "none"; nx.style.setProperty("--desp", (-0.07 * Math.max(0, 1 - p / 0.3)) + "em"); }
+      if (desk.matches && p > 0.001) { nx.querySelectorAll(".m").forEach((m) => { m.style.animation = "none"; }); nx.style.setProperty("--desp", (-0.07 * Math.max(0, 1 - p / 0.3)) + "em"); }
       requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
   }
@@ -1423,7 +1433,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
       // Nombre XL: encima de la línea láser, alineado a 24 px; aterriza en el nombre del panel de K1
       const fs = parseFloat(getComputedStyle(nombreXL).fontSize), nh = nombreXL.offsetHeight;
       const lineA = G.a.pl.Oy + IMG.eye * G.a.pl.Dy;
-      G.nx = { x0: 24, y0: window.__tipoY0 ? window.__tipoY0(lineA, nh, fs) : Math.max(88, lineA - nh - 16) };   // B-tipo: T4 coloca el corte sobre el láser
+      G.nx = { x0: 24, y0: window.__tipoY0 ? window.__tipoY0(lineA, nh, fs) : Math.max(88, lineA - nh - 16) };   // B-tipo: T4 pone el corte sobre el láser
       const on = offsetTo(k1Nombre, esc), fs2 = parseFloat(getComputedStyle(k1Nombre).fontSize);
       G.nx.x1 = on.x; G.nx.y1 = on.y; G.nx.s1 = fs2 / fs;
       nombreXL.style.left = G.nx.x0 + "px"; nombreXL.style.top = G.nx.y0 + "px";

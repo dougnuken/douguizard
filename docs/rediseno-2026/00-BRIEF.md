@@ -45,6 +45,15 @@
   cursor es el vidrio: se abre/aclara bajo el cursor con un spring y reacciona al scroll. Sobria, nada lúdica.
 - Ítems de la §6 sobre la máscara quedan anulados. `prototipos/revelado-mascara.html` y `heroe/` quedan como exploración.
 
+### Decisiones de Doug (5 nov)
+
+- **Elige la Propuesta B «Cine → OS»** ("es más limpia en el landing").
+- La tipografía de su nombre (Urbanist) le parece **sencilla, sin personalidad, genérica** → exploración de lockups
+  en `propuestas/B-tipo/` (pendiente de elegir).
+- Imagen del héroe: las exploraciones ilustrada (`heroe/cyberpunk/`) y render (`heroe/render/`) **no lo convencen**;
+  gusto de referencia en `referencias/ref-6` y `ref-7` (render 3D hiperdetallado, gear industrial gastado), **fondo
+  oscuro, no frambuesa**. Se le dará dirección de arte después; el sistema sigue con la foto provisional.
+
 ## 2. Equipo y fases
 
 | Rol | Qué entrega | Archivo |
