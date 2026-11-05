@@ -146,3 +146,77 @@ la etiqueta de K10 sobre la base lavanda (3,5:1, ahora `#FCE6F1`).
 | `shot_B_390_hoja.jpg` | Móvil, hoja abierta |
 
 Todas a DPR 1, en JPG de calidad 82, con las fuentes reales cargadas (sin la de respaldo) y sin desborde horizontal.
+
+---
+
+## 7. Cambios tras la crítica (06-CRITICA-B.md, 7,3/10)
+
+Estos cambios mandan sobre lo que digan las secciones anteriores.
+
+### P0 · aplicados
+
+**P0-1 · Rejilla en portátiles y tableta**
+- Las filas pasan a `minmax(var(--fila), auto)`: ninguna losa recorta su contenido.
+- Nuevo layout propio para 1024–1279:
+  - K2 de 7 columnas y K1 de 5 × 5.
+  - K3 y K4 debajo; K3 sin la captura (a ese ancho no se lee) y con su flecha blanca.
+  - K4 con cifras de 36 px apiladas.
+  - K5 en fila.
+  - El resto del tablero a 2 × 6 columnas.
+  - Padding de 24 y claim de 30.
+- El nombre XL baja a 96 px con alto ≤ 800 y nunca sube de y = 88.
+- K4: «2.000+» ocupa las dos columnas, para que «18» no se salga a 1280.
+
+**P0-2 · Redimensionar en el OS**
+- `onRefresh` sincroniza `S.p` con el progreso del timeline.
+- El `ResizeObserver` llama a `ScrollTrigger.refresh()`.
+- Medido: de 1440×900 a 1280×800 en el OS, la foto queda en su losa (`shot_B_resize_os.jpg`).
+
+**P0-3 · Rail inerte en el acto 1**
+- El rail queda `inert` mientras p < 0,5. Sin GSAP y con movimiento reducido no es inerte.
+- En las 12 primeras paradas de Tab ninguna es invisible.
+
+### P1 · aplicados
+
+| # | Qué cambió |
+|---|---|
+| P1-1 | El ancla ya no usa blur: las losas solo usan opacidad, y 24 → 0 y escala .96 → 1. Entran con inicio fijo: K3 0,30, K4 0,36 y K5 0,42, en 0,2 cada una, y todo termina antes de 0,72. El blur se queda solo en la entrada por tiempo. |
+| P1-2 | Nueva variable `--mt` para la tinta de K2, que cambia de golpe a p = 0,41. El fondo sigue con `--m`. El contraste ya no cae a 1:1. |
+| P1-3 | `scrub: 0.3`. Snap no direccional: `delay` 0,05 y duración 0,2–0,45 con `power2.out`. |
+| P1-4 | El nombre de K2 se oculta en escritorio. En móvil se queda: allí es el único nombre visible. |
+| P1-5 | K5 y K6 se fusionan en una losa «Contacto». Arriba «BAQ» y la hora en Doto de 72 px; debajo, la ciudad · UTC-5 y «Head of Product en Naowee»; al final, Escríbeme. Se borran el estado duplicado y el ES/EN de K6. |
+| P1-6 | El punto de disponible pasa a luz láser (núcleo claro, aro y halo rojos). Se borra `--verde`. |
+| P1-7 | Vidrio con piso más oscuro (10 % – 90 %). Las pills y el idioma usan `--tinta-2-vidrio #C2C2CA`. |
+| P1-8 | K13 usa ahora `83a47bc7.jpg` (andén, sin láser), con un gradiente más denso y la ceja en `--tinta`. |
+| P1-9 | Móvil: 5.062 px = **6,00 pantallas** de 844. Se recortaron el padding del final, K3, K13, el carrusel y K15; se fusionaron K5 y K6; los externos de K17 quedan en una sola fila; las descripciones de K16 se ocultan en móvil; el título de sección baja a 24. A 390×664 el CTA queda en y = 628. |
+| P1-10 | Los años del timeline vuelven a Doto de 24 px (20 px en móvil). |
+| P1-11 | En móvil, `dot-xl` pasa a 48 px y el teléfono de K7 al 42 %, con bottom −96. |
+| P1-12 | Todos los toques miden ≥ 44 a 390 (medido: 0 por debajo). El segmento ES/EN ocupa 44 × 44 y el pill visible se dibuja con `background-clip: content-box`. |
+| P1-13 | La flecha de K3 va en tinta (nueva clase `.flecha-tinta`, que reemplaza los estilos en línea). |
+| P1-14 | Al saltar al OS con el foco o con «Ver casos», el tween del scrub se completa (`progress(1)`). |
+
+### P2 · aplicados (pulido barato)
+
+| # | Qué cambió |
+|---|---|
+| P2-1 | Pills centradas en el viewport. |
+| P2-2 | K9 con flecha. |
+| P2-3 | Radios concéntricos en las medias en móvil. |
+| P2-4 | Miga de la hoja alineada a 48 y foco del cuerpo hacia dentro. |
+| P2-5 | `text-wrap: balance` en los títulos de losa. |
+| P2-6 | La acción del rail pasa a gris: en el pliegue solo queda «Hablemos» en azul. |
+| P2-7 | Los estilos en línea pasan a clases. Solo queda `--i` de los KPI, que es un dato. |
+| P2-8 | `touch-action: manipulation`, sin resaltado táctil y `translate="no"` en las marcas. |
+| P2-9 | Lista de K16 a 24 px del título. |
+| P2-10 | Indicador de 2 px al 24 % con el micro «Desliza» / «Scroll», que se apaga a p > 0,05. Es copy nuevo, hay que validarlo. |
+| P2-11 | Sin aberración cromática fuera de la foto. |
+
+### Medido después de los cambios
+
+| Viewport | Resultado |
+|---|---|
+| 1920, 1440, 1366, 1280×720 y 1024×768 | Sin recortes de contenido (K7 solo «recorta» el teléfono, que sangra a propósito). Sin desborde horizontal. Nombre XL siempre bajo la cabecera. CTA del acto 1 en pantalla. |
+| 390 | 6,00 pantallas, 0 toques < 44. |
+
+Capturas nuevas: `shot_B_1280x720.jpg`, `shot_B_1280x720_os.jpg`, `shot_B_1024.jpg`, `shot_B_1024_os.jpg`,
+`shot_B_390x664.jpg` y `shot_B_resize_os.jpg`. Las demás `shot_B_*` están regeneradas.

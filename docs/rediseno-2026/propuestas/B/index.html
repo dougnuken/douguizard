@@ -39,6 +39,7 @@
   src: url(../fonts/doto-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/doto/v3/t5tvIRMbNJ6TamLgVg.woff2) format("woff2"); }
 
 @property --m  { syntax: "<number>"; inherits: true; initial-value: 1; }   /* material de K2: 0 vidrio oscuro → 1 losa blanca */
+@property --mt { syntax: "<number>"; inherits: true; initial-value: 1; }   /* tinta de K2: cambia de golpe en el punto medio (nunca 1:1) */
 @property --dw { syntax: "<number>"; inherits: true; initial-value: 700; } /* peso del dot-matrix: 100 apagado → 700 encendido */
 
 /* ── Tokens ─────────────────────────────────────────────────────────────────────────────────────────── */
@@ -53,9 +54,9 @@
   --electrico: #2B56F3; --electrico-texto: #5B7CFF; --resplandor: #361976;
   --azul-etiqueta: #E3EAFF; --magenta-etiqueta: #F0B8D6; --magenta-etiqueta-base: #FCE6F1;
   --laser: #FF3344; --laser-nucleo: #FFE4E6; --laser-halo: rgba(255, 51, 68, .45);
-  --verde: #3FD68C;      /* punto de disponibilidad (gráfico, siempre con texto al lado) */
   --verde-osc: #0E6B3D;  /* «647 pruebas en verde» de olbo, sobre losa niebla (5,14:1) */
-  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, .86) 0%, rgba(18, 19, 20, .82) 18% 82%, rgba(58, 59, 63, .86) 100%);
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, .86) 0%, rgba(18, 19, 20, .86) 10% 90%, rgba(58, 59, 63, .86) 100%);
+  --tinta-2-vidrio: #C2C2CA;   /* secundario sobre vidrio que monta en la foto (AA en el peor punto) */
   --vidrio-plano: rgba(17, 18, 20, .78);
   --foco: var(--electrico-texto);
 
@@ -101,7 +102,11 @@
 
 /* ── Base ──────────────────────────────────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { background: var(--vacio); -webkit-text-size-adjust: 100%; }
+html { background: var(--vacio); -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.sprite { position: absolute; width: 0; height: 0; }
+.mt-8 { margin-top: var(--e-8); }
+.mt-12 { margin-top: var(--e-12); }
+.boton-toque { min-height: var(--toque); }
 body {
   margin: 0; background: var(--vacio); color: var(--tinta);
   font: 400 var(--t-16)/1.5 var(--f-texto); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
@@ -140,7 +145,7 @@ body::after {
 .dot-m  { font-size: var(--t-30); letter-spacing: -0.03em; }
 .dot-s  { font-size: var(--t-24); letter-spacing: -0.03em; }
 .ceja { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
-.t-losa { font: 600 var(--t-24)/1.2 var(--f-display); letter-spacing: -0.01em; color: var(--tinta); }
+.t-losa { font: 600 var(--t-24)/1.2 var(--f-display); letter-spacing: -0.01em; color: var(--tinta); text-wrap: balance; }
 .apoyo { font-size: var(--t-16); line-height: 1.5; color: var(--tinta-2); max-width: 34em; }
 .etiqueta { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
 .micro { font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-3); }
@@ -174,9 +179,9 @@ body::after {
   border-radius: var(--r-pill); background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
   box-shadow: var(--filo), var(--sombra-flota); font: 600 var(--t-16)/1 var(--f-display); letter-spacing: -0.01em; }
 .marca-d { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blanco); color: var(--tinta-osc); font: 700 var(--t-16)/1 var(--f-display); }
-.pills { display: flex; align-items: center; gap: var(--e-4); height: var(--pill-alto); padding: 0 var(--e-4); border-radius: var(--r-pill);
+.pills { position: absolute; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: var(--e-4); height: var(--pill-alto); padding: 0 var(--e-4); border-radius: var(--r-pill);
   background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%); box-shadow: var(--filo), var(--sombra-flota); }
-.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-16); border-radius: var(--r-pill); color: var(--tinta-2);
+.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-16); border-radius: var(--r-pill); color: var(--tinta-2-vidrio);
   font: 500 var(--t-14)/1 var(--f-texto); letter-spacing: .005em; transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
 .pill[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
 @media (hover: hover) and (pointer: fine) { .pill:not([aria-current="true"]):hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
@@ -184,7 +189,7 @@ body::after {
 .idioma { display: flex; height: var(--pill-alto); padding: var(--e-4); border-radius: var(--r-pill); background: var(--vidrio-oscuro);
   -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: var(--filo), var(--sombra-flota); }
 .idioma a { display: grid; place-items: center; min-width: 40px; height: 32px; padding: 0 var(--e-8); border-radius: var(--r-pill);
-  font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2); transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+  font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2-vidrio); transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
 .idioma a[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
 .hablemos { height: var(--pill-alto); min-height: 0; background: var(--electrico); color: var(--blanco); box-shadow: 0 8px 24px -8px rgba(43, 86, 243, .6); }
 @media (hover: hover) and (pointer: fine) { .hablemos:hover { background: #4569F5; } }
@@ -197,7 +202,7 @@ body::after {
 .rail a, .rail button { position: relative; display: grid; place-items: center; width: var(--boton-s); height: var(--boton-s); border-radius: 50%;
   color: var(--tinta-2); font: 600 var(--t-14)/1 var(--f-texto); letter-spacing: -0.01em;
   transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
-.rail .rail-accion { background: var(--electrico); color: var(--blanco); }
+.rail .rail-accion { background: var(--losa-alta); color: var(--tinta); }
 .rail a:active, .rail button:active { scale: .94; }
 @media (hover: hover) and (pointer: fine) { .rail a:not(.rail-accion):hover, .rail button:hover { background: var(--losa-alta); color: var(--tinta); } }
 .rail [data-tip]::after { content: attr(data-tip); position: absolute; left: calc(100% + var(--e-12)); top: 50%; translate: -4px -50%; opacity: 0; pointer-events: none;
@@ -225,18 +230,21 @@ main { position: relative; z-index: 1; }
   --gx: 60%; --gr: 0px;
   -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--gx) - var(--gr)), transparent calc(var(--gx) - var(--gr) * .55), transparent calc(var(--gx) + var(--gr) * .55), #000 calc(var(--gx) + var(--gr)), #000 100%);
   mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--gx) - var(--gr)), transparent calc(var(--gx) - var(--gr) * .55), transparent calc(var(--gx) + var(--gr) * .55), #000 calc(var(--gx) + var(--gr)), #000 100%); }
-.nombre-xl { position: absolute; z-index: 2; left: var(--e-24); top: calc(41svh - 2 * .92 * var(--t-120) - var(--e-16)); transform-origin: 0 0; pointer-events: none; display: none;
+.nombre-xl { position: absolute; z-index: 2; left: var(--e-24); top: max(var(--cabecera), calc(41svh - 1.84em - var(--e-16))); transform-origin: 0 0; pointer-events: none; display: none;
   font: 600 var(--t-120)/.92 var(--f-display); letter-spacing: -0.045em; color: var(--tinta); }
 .nombre-xl .linea { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
 .nombre-xl .linea > span { display: block; }
-.indicador { position: absolute; z-index: 4; right: var(--e-24); top: 50%; width: 1px; height: var(--e-128); translate: 0 -50%; display: none;
-  background: rgba(255, 255, 255, .16); }
+@media (max-height: 800px) { .nombre-xl { font-size: var(--t-96); } }
+.indicador { position: absolute; z-index: 4; right: var(--e-24); top: 50%; width: 2px; height: var(--e-128); translate: 0 -50%; display: none;
+  background: rgba(255, 255, 255, .24); }
+.indicador-txt { position: absolute; right: 0; top: calc(100% + var(--e-12)); font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-2); white-space: nowrap;
+  transition: opacity var(--d-hover) var(--ease-out); }
 .indicador i { position: absolute; inset: 0; transform-origin: 50% 0; transform: scaleY(var(--p, 0)); background: var(--laser); box-shadow: 0 0 8px var(--laser-halo); }
 .cine .nombre-xl, .cine .indicador { display: block; }
 html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 
 /* ── Rejilla del OS ────────────────────────────────────────────────────────────────────────────────── */
-.os { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: var(--fila); gap: var(--gap);
+.os { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(var(--fila), auto); gap: var(--gap);
   max-width: 1320px; }
 .os-top { grid-template-areas:
   "k2 k2 k2 k2 k2 k1 k1 k1 k1 k4 k4 k4"
@@ -244,7 +252,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   "k2 k2 k2 k2 k2 k1 k1 k1 k1 k4 k4 k4"
   "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"
   "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"
-  "k3 k3 k3 k3 k3 k1 k1 k1 k1 k6 k6 k6"; grid-template-rows: repeat(6, var(--fila)); }
+  "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"; grid-template-rows: repeat(6, minmax(var(--fila), auto)); }
 .os-resto { margin: 0 var(--e-24) 0 var(--os-izq); padding-bottom: var(--e-96); grid-template-areas:
   "k7 k7 k7 k7 k8 k8 k8 k8 k9 k9 k9 k9"
   "k7 k7 k7 k7 k8 k8 k8 k8 k9 k9 k9 k9"
@@ -258,7 +266,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"
   "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"
   "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"; }
-.k1 { grid-area: k1; } .k2 { grid-area: k2; } .k3 { grid-area: k3; } .k4 { grid-area: k4; } .k5 { grid-area: k5; } .k6 { grid-area: k6; }
+.k1 { grid-area: k1; } .k2 { grid-area: k2; } .k3 { grid-area: k3; } .k4 { grid-area: k4; } .k5 { grid-area: k5; }
 .k7 { grid-area: k7; } .k8 { grid-area: k8; } .k9 { grid-area: k9; } .k10 { grid-area: k10; } .k11 { grid-area: k11; } .k12 { grid-area: k12; }
 .k13 { grid-area: k13; } .k14 { grid-area: k14; } .k15 { grid-area: k15; } .k16 { grid-area: k16; } .k17 { grid-area: k17; }
 @media (min-width: 1464px) { .escena { padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } .os-resto { margin-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
@@ -305,22 +313,23 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .k2 { z-index: 5; --m: 1; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16);
   background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), var(--vidrio-plano));
   -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
-  color: color-mix(in oklab, var(--tinta-osc) calc(var(--m) * 100%), var(--tinta));
+  color: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--tinta));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, calc(.14 - var(--m) * .14)), inset 0 0 0 1px rgba(255, 255, 255, calc(.08 - var(--m) * .08)); }
-.cine .k2 { --m: 0; transform: translate(calc(var(--e-24) - var(--os-izq)), calc(100svh - var(--e-24) - 3 * var(--fila) - 2 * var(--gap) - var(--cabecera))); }
+.cine .k2 { --m: 0; --mt: 0; transform: translate(calc(var(--e-24) - var(--os-izq)), calc(100svh - var(--e-24) - 3 * var(--fila) - 2 * var(--gap) - var(--cabecera))); }
 .k2-cont { display: flex; flex-direction: column; gap: var(--e-16); }
 .k2-fila { display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); }
 .k2 .nombre { font: 500 var(--t-20)/1.2 var(--f-texto); letter-spacing: 0; }
+@media (min-width: 1024px) { .k2 .nombre { display: none; } .k2-fila { justify-content: flex-start; } }
 .k2 h1 { display: grid; gap: var(--e-8); font-weight: 400; }
 .k2 .claim { font: 600 var(--t-36)/1.08 var(--f-display); letter-spacing: -0.025em; text-wrap: balance; }
-.k2 .nivel, .k2 .sub { font-size: var(--t-14); line-height: 1.45; color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--m) * 100%), var(--tinta-2)); }
+.k2 .nivel, .k2 .sub { font-size: var(--t-14); line-height: 1.45; color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--mt) * 100%), var(--tinta-2)); }
 .k2 .sub { font-size: var(--t-16); }
 .estado { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); line-height: 1.3; white-space: nowrap; }
-.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px rgba(63, 214, 140, .18); }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--laser-nucleo); box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo); }
 .k2-cta { display: flex; gap: var(--e-8); flex-wrap: wrap; }
-.k2 .cta-1 { background: color-mix(in oklab, var(--tinta-osc) calc(var(--m) * 100%), var(--blanco)); color: color-mix(in oklab, var(--blanco) calc(var(--m) * 100%), var(--tinta-osc)); }
-.k2 .cta-2 { color: inherit; box-shadow: inset 0 0 0 1px color-mix(in oklab, rgba(14, 14, 18, .24) calc(var(--m) * 100%), rgba(255, 255, 255, .28)); }
-@media (hover: hover) and (pointer: fine) { .k2 .cta-2:hover { background: color-mix(in oklab, rgba(14, 14, 18, .06) calc(var(--m) * 100%), rgba(255, 255, 255, .08)); } }
+.k2 .cta-1 { background: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--blanco)); color: color-mix(in oklab, var(--blanco) calc(var(--mt) * 100%), var(--tinta-osc)); }
+.k2 .cta-2 { color: inherit; box-shadow: inset 0 0 0 1px color-mix(in oklab, rgba(14, 14, 18, .24) calc(var(--mt) * 100%), rgba(255, 255, 255, .28)); }
+@media (hover: hover) and (pointer: fine) { .k2 .cta-2:hover { background: color-mix(in oklab, rgba(14, 14, 18, .06) calc(var(--mt) * 100%), rgba(255, 255, 255, .08)); } }
 
 /* K1 · la losa de la foto (la foto la pinta el canvas de la escena; la losa solo pone filo y panel) */
 .k1 { padding: 0; background: transparent; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .10), inset 0 1px 0 rgba(255, 255, 255, .18); }
@@ -342,23 +351,24 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .k3 .media { margin: calc(var(--e-16) - var(--e-32)) 0; height: calc(100% + 2 * (var(--e-32) - var(--e-16))); border-radius: calc(var(--r-xl) - var(--e-16)); }
 .k3 .media img { object-position: 0 0; }
 .k3 .flecha { top: var(--e-32); right: var(--e-32); }
+.flecha-tinta { background: var(--tinta-osc); color: var(--blanco); box-shadow: 0 0 0 1px rgba(255, 255, 255, .10); }
 
 /* K4 · Andes */
 .k4 { display: flex; flex-direction: column; justify-content: space-between; }
 .k4-cifras { display: grid; grid-template-columns: 1fr auto; gap: var(--e-24) var(--e-16); }
 .k4-cifras .der { text-align: right; justify-items: end; }
+.k4-cifras > :nth-child(3) { grid-column: 1 / -1; }
 .chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-12); border-radius: var(--r-pill); width: max-content;
   font: 500 var(--t-14)/1 var(--f-texto); background: rgba(12, 18, 102, .72); color: var(--blanco); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
 
-/* K5 · disponibilidad · K6 · hora */
+/* K5 · contacto (hora local + Escríbeme) */
 .k5 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.k5-info { display: grid; gap: var(--e-8); }
+.k5-info .reloj { margin-bottom: var(--e-8); }
 .k5 .boton { width: 100%; }
 .k5 .enlace-tarjeta::after { border-radius: var(--r-xl); }
-.k6 { display: flex; flex-direction: column; justify-content: center; gap: var(--e-8); padding-top: var(--e-24); padding-bottom: var(--e-24); }
-.k6-fila { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); }
-.k6 .idioma { height: 36px; background: var(--losa-alta); box-shadow: none; position: relative; z-index: 2; }
-.k6 .idioma a { height: 28px; min-width: 36px; }
-.reloj { white-space: nowrap; }
+.reloj { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .3em; white-space: nowrap; }
+.k5 .reloj-hora { flex-basis: 100%; font-size: var(--t-72); letter-spacing: -0.06em; margin-top: var(--e-8); }
 .reloj .ampm { font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2); margin-left: var(--e-4); letter-spacing: 0; }
 
 /* K7 · olbo */
@@ -397,7 +407,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .nodo.caso i { background: var(--tinta); }
 .nodo.hoy i { background: var(--laser); box-shadow: 0 0 0 4px rgba(255, 51, 68, .18), 0 0 8px var(--laser-halo); }
 .nodo b { font: 500 var(--t-14)/1.3 var(--f-texto); color: var(--tinta); }
-.nodo span { font-size: var(--t-12); line-height: 1.4; color: var(--tinta-2); }
+.nodo span:not(.dot) { font-size: var(--t-12); line-height: 1.4; color: var(--tinta-2); }
 
 /* K12 · cifras */
 .k12 { display: flex; flex-direction: column; justify-content: space-between; }
@@ -407,8 +417,9 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 /* K13 · perfil */
 .k13 { padding: 0; display: flex; flex-direction: column; justify-content: flex-end; }
 .k13 .retrato { position: absolute; inset: 0; z-index: -1; }
-.k13 .retrato img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; filter: saturate(.85); }
-.k13 .retrato::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(6, 6, 8, .92) 0%, rgba(6, 6, 8, .55) 38%, rgba(6, 6, 8, 0) 62%); }
+.k13 .retrato img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: saturate(.85); }
+.k13 .retrato::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(6, 6, 8, .94) 0%, rgba(6, 6, 8, .80) 45%, rgba(6, 6, 8, 0) 72%); }
+.k13 .ceja { color: var(--tinta); }
 .k13-texto { padding: var(--e-32); display: grid; gap: var(--e-8); }
 .k13-texto .apoyo { color: var(--tinta); }
 
@@ -422,7 +433,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .k15 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
 .k15 blockquote { font: 500 var(--t-20)/1.4 var(--f-display); letter-spacing: -0.005em; color: var(--tinta-osc); }
 .k15 .firma { position: relative; z-index: 2; font-size: var(--t-14); line-height: 1.4; color: var(--tinta-osc-2); }
-.k15 .firma a { color: var(--tinta-osc); font-weight: 500; text-decoration: underline; text-decoration-color: rgba(14, 14, 18, .3); text-underline-offset: 3px; }
+.k15 .firma a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-osc); font-weight: 500; text-decoration: underline; text-decoration-color: rgba(14, 14, 18, .3); text-underline-offset: 3px; }
 .k15-ctrl { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); }
 .k15-ctrl .botones { display: flex; gap: var(--e-8); }
 .k15-ctrl .circulo { width: var(--toque); height: var(--toque); background: var(--tinta-osc); color: var(--blanco); }
@@ -430,8 +441,9 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 
 /* K16 · archivo */
 .k16 { display: flex; flex-direction: column; gap: var(--e-16); }
+.k16 .t-losa a { display: inline-flex; align-items: center; min-height: var(--toque); }
 .k16 .t-losa a::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 96px; z-index: 1; }
-.archivo { display: grid; margin-top: auto; }
+.archivo { display: grid; margin-top: var(--e-24); }
 .archivo a { position: relative; z-index: 2; display: grid; grid-template-columns: 72px minmax(0, 160px) 1fr; align-items: center; gap: var(--e-16);
   min-height: var(--e-48); padding: var(--e-8) var(--e-12); margin: 0 calc(-1 * var(--e-12)); border-radius: var(--r-xs);
   border-top: 1px solid var(--losa-borde); transition: background-color var(--d-hover) var(--ease-out); }
@@ -445,7 +457,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .k17 h2 { font: 600 var(--t-48)/1 var(--f-display); letter-spacing: -0.025em; }
 .k17 .lead { font-size: var(--t-18); line-height: 1.5; color: var(--tinta-osc-2); max-width: 34em; margin-top: var(--e-12); }
 .correo-fila { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
-.correo { font: 500 var(--t-30)/1.1 var(--f-display); letter-spacing: -0.02em; color: var(--tinta-osc); user-select: all; }
+.correo { display: inline-flex; align-items: center; min-height: var(--toque); font: 500 var(--t-30)/1.1 var(--f-display); letter-spacing: -0.02em; color: var(--tinta-osc); user-select: all; }
 .k17-enlaces { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); flex-wrap: wrap; }
 .k17-enlaces .grupo { display: flex; gap: var(--e-8); flex-wrap: wrap; }
 .k17 .externo { min-height: var(--toque); padding: 0 var(--e-16); }
@@ -453,7 +465,7 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 /* Pie */
 .pie { position: relative; z-index: 1; margin: 0 var(--e-24) 0 var(--os-izq); max-width: 1320px; padding: var(--e-32) 0 var(--e-48);
   display: flex; justify-content: space-between; gap: var(--e-16); flex-wrap: wrap; border-top: 1px solid var(--losa-borde); color: var(--tinta-3); font-size: var(--t-14); }
-.pie a { color: var(--tinta-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(161, 161, 171, .4); }
+.pie a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(161, 161, 171, .4); }
 
 /* ── Hoja de caso (dialog) ─────────────────────────────────────────────────────────────────────────── */
 .hoja { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--tinta); overflow: clip; }
@@ -465,13 +477,14 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   background: var(--losa); box-shadow: var(--filo), var(--sombra-hoja); transition: translate var(--d-hoja-salida) var(--ease-drawer); }
 .hoja.abierta .hoja-velo { opacity: 1; transition-duration: var(--d-hoja); }
 .hoja.abierta .hoja-panel { translate: -50% 0; transition-duration: var(--d-hoja); }
-.hoja-cab { position: relative; flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); padding: var(--e-16) var(--e-24) var(--e-16) var(--e-32);
+.hoja-cab { position: relative; flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); padding: var(--e-16) var(--e-24) var(--e-16) var(--e-48);
   border-bottom: 1px solid var(--losa-borde); touch-action: none; cursor: grab; }
 .hoja-asa { position: absolute; left: 50%; top: var(--e-8); width: 36px; height: 4px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .24); translate: -50% 0; }
 .miga { font-size: var(--t-14); color: var(--tinta-2); }
 .miga b { color: var(--tinta); font-weight: 500; }
 .hoja-progreso { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--p, 0));
   background: var(--laser-nucleo); box-shadow: 0 0 4px 1px var(--laser), 0 0 12px 2px var(--laser-halo); }
+.hoja-cuerpo:focus-visible { outline-offset: -2px; }
 .hoja-cuerpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: var(--e-48) var(--e-48) var(--e-96); }
 .hoja-portada { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--e-48); align-items: end; }
 .hoja h2.h1 { font: 600 var(--t-72)/1 var(--f-display); letter-spacing: -0.035em; margin: var(--e-12) 0 var(--e-16); }
@@ -499,6 +512,38 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
 .dock { display: none; }
 .carrusel-ctrl { display: none; }
 
+/* Portátiles chicos y tableta horizontal (1024–1279): layout propio, no el de 1440 apretado */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .os-top { grid-template-areas:
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k5 k5 k5 k5 k5"; }
+  .os-resto { grid-template-areas:
+    "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8"
+    "k9 k9 k9 k9 k9 k9 k10 k10 k10 k10 k10 k10" "k9 k9 k9 k9 k9 k9 k10 k10 k10 k10 k10 k10"
+    "k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11" "k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11"
+    "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13" "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13" "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13"
+    "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15" "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15" "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15"
+    "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17" "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17" "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"; }
+  .tarjeta { padding: var(--e-24); }
+  .k2 .claim { font-size: var(--t-30); }
+  .k4 .dot-l { font-size: var(--t-36); }
+  .k4-cifras { grid-template-columns: 1fr; gap: var(--e-16); }
+  .k4-cifras .der { text-align: left; justify-items: start; }
+  .k4-cifras > :nth-child(3) { grid-column: auto; }
+  .k3 { grid-template-columns: 1fr; padding-right: var(--e-24); }
+  .k3 .media { display: none; }
+  .k3 .flecha { top: var(--e-24); right: var(--e-24); background: var(--blanco); color: var(--tinta-osc); box-shadow: none; }
+  .k5 { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .k5 .reloj { font-size: var(--t-30); }
+  .k5 .reloj-hora { flex-basis: auto; font-size: inherit; letter-spacing: inherit; margin-top: 0; }
+  .k5 .boton { width: auto; margin-left: auto; }
+  .k17 h2 { font-size: var(--t-36); }
+}
+
 /* ═════════════════════════════════ Móvil y tableta (< 1024): el OS se vuelve app ════════════════════════════ */
 @media (max-width: 1023px) {
   .barra { top: var(--e-12); padding: 0 var(--e-16); }
@@ -509,11 +554,18 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   .os-top { grid-template-areas: "hero" "k3" "k4" "k5" ; grid-template-rows: none; margin: 0; }
   .os-top .k1, .os-top .k2 { grid-area: hero; }
   .os-top .k1 { height: 100svh; min-height: 640px; border-radius: 0; box-shadow: none; }
-  .os-top .k2 { align-self: end; margin: 0 var(--e-12) var(--e-12); --m: 0; padding: var(--e-24); gap: var(--e-16);
+  .os-top .k2 { align-self: end; margin: 0 var(--e-12) var(--e-12); --m: 0; --mt: 0; padding: var(--e-24); gap: var(--e-16);
     animation: materializar var(--d-entrada) var(--ease-out) 120ms both; }
   .os-top > .tarjeta:not(.k1):not(.k2) { margin: 0 var(--e-16); }
-  .os-top .k5, .os-top .k6 { grid-area: auto; }
-  .os-top { grid-template-areas: "hero" "titulo" "k3" "k4" "k5" "k6"; }
+  .os-top .k5 { grid-area: auto; }
+  .os-top { grid-template-areas: "hero" "titulo" "k3" "k4" "k5"; }
+  .marca { height: var(--toque); }
+  .idioma { height: var(--toque); padding: 0; }
+  .idioma a { height: var(--toque); min-width: var(--toque); padding: var(--e-4); background-clip: content-box; }
+  .k3 .media, .k8 .media, .k9 .media { border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .dot-xl { font-size: var(--t-48); }
+  .k5 .reloj { font-size: var(--t-30); }
+  .k5 .reloj-hora { flex-basis: auto; font-size: inherit; letter-spacing: inherit; margin-top: 0; }
   .k1-panel, .k1 .enlace-tarjeta { display: none; }
   .k2 .claim { font-size: var(--t-30); }
   .k2 .nombre { font-size: var(--t-18); }
@@ -521,35 +573,37 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   .k2-fila { flex-wrap: wrap; gap: var(--e-8); }
   .k2-cta .boton { flex: 1 1 0; padding: 0 var(--e-16); }
   .tarjeta { padding: var(--e-24); }
-  .seccion-titulo { display: block; grid-area: titulo; margin: var(--e-32) var(--e-16) var(--e-4); font: 600 var(--t-20)/1.2 var(--f-display); }
-  .k3 { grid-template-columns: 1fr; grid-template-rows: 180px auto; gap: var(--e-16); padding-right: var(--e-24); }
+  .seccion-titulo { display: block; grid-area: titulo; margin: var(--e-24) var(--e-16) var(--e-4); font: 600 var(--t-20)/1.2 var(--f-display); }
+  .k3 { grid-template-columns: 1fr; grid-template-rows: 144px auto; gap: var(--e-16); padding-right: var(--e-24); }
   .k3 .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; height: calc(100% + var(--e-12)); }
   .k3 .flecha { top: var(--e-24); right: var(--e-24); }
   .k4 { gap: var(--e-24); }
   .k4-cifras { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: var(--e-16); }
   .k4-cifras .der { text-align: left; justify-items: start; }
+  .k4-cifras > :nth-child(3) { grid-column: auto; }
   .k4 .dot-l { font-size: var(--t-30); }
-  .k5, .k6 { margin: 0 var(--e-16); }
+  .k5 { margin: 0 var(--e-16); }
   .k5 .boton { width: auto; }
-  .k5 { flex-direction: row; align-items: center; flex-wrap: wrap; }
-  .k6 { padding: var(--e-24); }
-  .os-resto { margin: var(--gap) 0 0; padding-bottom: var(--e-128); grid-template-areas: none; display: flex; flex-direction: column; gap: var(--gap); }
+  .k5 { flex-direction: row; align-items: center; flex-wrap: nowrap; gap: var(--e-16); }
+  .k5-info { flex: 1; gap: var(--e-4); }
+  .k5-info .reloj { margin-bottom: var(--e-4); }
+  .k5 .boton { flex: none; }
+  .os-resto { margin: var(--gap) 0 0; padding-bottom: var(--e-32); grid-template-areas: none; display: flex; flex-direction: column; gap: var(--gap); }
   .os-resto > .tarjeta, .os-resto > .seccion-titulo { margin-left: var(--e-16); margin-right: var(--e-16); }
   .carrusel { display: flex; gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--e-16); padding: 0 var(--e-16) var(--e-4);
     scrollbar-width: none; overscroll-behavior-x: contain; }
   .carrusel::-webkit-scrollbar { display: none; }
-  .carrusel > .tarjeta { flex: 0 0 82%; scroll-snap-align: start; min-height: 400px; }
+  .carrusel > .tarjeta { flex: 0 0 82%; scroll-snap-align: start; min-height: 360px; }
   .carrusel-ctrl { display: flex; align-items: center; justify-content: space-between; margin: 0 var(--e-16); }
   .carrusel-ctrl .botones { display: flex; gap: var(--e-8); }
   .carrusel-ctrl .circulo { width: var(--toque); height: var(--toque); }
-  .k7 .telefono { width: 46%; right: var(--e-24); }
+  .k7 .telefono { width: 42%; right: var(--e-24); bottom: calc(-1 * var(--e-96)); }
   .k7-texto { max-width: none; }
   .k7 .apoyo { max-width: 60%; }
   .linea-tiempo { grid-template-columns: repeat(4, auto); justify-content: space-between; gap: var(--e-12); }
   .nodo span:not(.dot) { display: none; }
   .nodo b { font-size: var(--t-12); }
-  .k13 .retrato img { object-position: 50% 0%; }
-  .k7 { min-height: 400px; }
+  .k7 { min-height: 360px; }
   .k8 .media { height: 150px; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; }
   .k9 { grid-template-columns: 1fr; grid-template-rows: 150px auto; }
   .k9 .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; }
@@ -558,20 +612,22 @@ html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
   .nodo .dot-s { font-size: var(--t-20); }
   .k12 { gap: var(--e-24); }
   .k12 .dot-l { font-size: var(--t-36); }
-  .k13 { min-height: 460px; }
+  .k13 { min-height: 320px; }
   .k13-texto { padding: var(--e-24); }
   .k14 { gap: var(--e-24); }
-  .k15 { gap: var(--e-24); }
+  .k15 { gap: var(--e-16); }
   .k16 .archivo a { grid-template-columns: 56px 1fr; row-gap: 0; }
-  .k16 .archivo a span:last-child { grid-column: 2; }
+  .k16 .archivo a span:last-child { display: none; }
   .k16 .t-losa a::after { height: 72px; }
   .k17 { gap: var(--e-24); }
   .k17 h2 { font-size: var(--t-36); }
   .k17 .lead { font-size: var(--t-16); }
   .correo { font-size: var(--t-24); }
   .k17-enlaces { flex-direction: column; align-items: stretch; }
+  .k17-enlaces .grupo:first-child { flex-wrap: nowrap; }
+  .k17-enlaces .grupo:first-child .boton { flex: 1 1 0; padding: 0 var(--e-12); }
   .k17-enlaces .boton { flex: 1; }
-  .pie { margin: 0 var(--e-16); padding-bottom: var(--e-128); }
+  .pie { margin: 0 var(--e-16); padding-bottom: calc(var(--e-64) + var(--e-16) + env(safe-area-inset-bottom)); }
   .dock { position: fixed; z-index: 30; left: 50%; bottom: calc(var(--e-12) + env(safe-area-inset-bottom)); translate: -50% 0; display: flex; gap: var(--e-4);
     padding: var(--e-4); border-radius: var(--r-pill); background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
     box-shadow: var(--filo), var(--sombra-flota); transition: translate var(--d-ui) var(--ease-out), opacity var(--d-ui) var(--ease-out); }
@@ -621,7 +677,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 <body>
 <a class="saltar" href="#os" data-t="nav.saltar">Ir al contenido</a>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<svg class="sprite" aria-hidden="true" focusable="false">
   <symbol id="i-flecha" viewBox="0 0 20 20"><path d="M6 14 14 6M7.5 6H14v6.5"/></symbol>
   <symbol id="i-cerrar" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></symbol>
   <symbol id="i-izq" viewBox="0 0 20 20"><path d="M12 5 7 10l5 5"/></symbol>
@@ -636,7 +692,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 </svg>
 
 <header class="barra">
-  <a class="marca" href="#" data-ta="nav.inicio" aria-label="douguizard, inicio"><span class="marca-d" aria-hidden="true">d</span><span aria-hidden="true">douguizard</span></a>
+  <a class="marca" href="#" data-ta="nav.inicio" aria-label="douguizard, inicio"><span class="marca-d" aria-hidden="true">d</span><span aria-hidden="true" translate="no">douguizard</span></a>
   <nav class="pills" data-ta="nav.principal" aria-label="Principal">
     <a class="pill" href="#trabajo" data-sec="trabajo" data-t="nav.trabajo">Trabajo</a>
     <a class="pill" href="#perfil" data-sec="perfil" data-t="nav.perfil">Perfil</a>
@@ -652,7 +708,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   </div>
 </header>
 
-<nav class="rail" data-ta="rail.label" aria-label="Acciones rápidas">
+<nav class="rail" id="rail" data-ta="rail.label" aria-label="Acciones rápidas">
   <a class="rail-accion" href="mailto:hello@douguizard.com" data-tip="hello@douguizard.com" aria-label="Escríbeme: hello@douguizard.com" data-ta="rail.correo"><svg class="ico"><use href="#i-correo"/></svg></a>
   <span class="rail-sep" aria-hidden="true"></span>
   <a href="/cv/doug-vargas-cv.pdf" download data-tip="Descargar CV (PDF)" data-ttip="cta.cv" aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico"><use href="#i-bajar"/></svg></a>
@@ -677,7 +733,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     <div class="velo" id="velo" aria-hidden="true"></div>
     <div class="laser" id="laser" aria-hidden="true"></div>
     <div class="nombre-xl" id="nombreXL" aria-hidden="true"><span class="linea"><span>Doug</span></span><span class="linea"><span>Vargas</span></span></div>
-    <div class="indicador" id="indicador" aria-hidden="true"><i></i></div>
+    <div class="indicador" id="indicador" aria-hidden="true"><i></i><span class="indicador-txt" id="indicadorTxt" data-t="ind.desliza">Desliza</span></div>
 
     <div class="os os-top" id="os">
       <!-- K2 · claim + rol: en el acto 1 es el panel de vidrio oscuro; en el OS, la losa blanca -->
@@ -714,7 +770,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
         <div class="k3-texto">
           <div>
             <p class="ceja" data-t="k3.ceja">Ahora · Head of Product</p>
-            <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/naowee-suid" data-hoja="naowee"><span>Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+            <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/naowee-suid" data-hoja="naowee"><span translate="no">Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
             <p class="apoyo" data-t="k3.apoyo">Los 30 trámites del deporte colombiano, fuera de Word.</p>
           </div>
           <div class="cifra" role="group" aria-label="130 o más pantallas en 8 módulos" data-ta="k3.cifra.aria">
@@ -723,14 +779,14 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
           </div>
         </div>
         <div class="media"><img src="../../../../public/work/naowee/ivc-workspace-tramite.webp" alt="" width="2880" height="1800" decoding="async"></div>
-        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+        <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
       </article>
 
       <!-- K4 · Andes · Mercadolibre (NDA, la cifra es la imagen) -->
       <article class="tarjeta losa-azul k4" data-grupo="trabajo">
         <div>
-          <p class="ceja">Mercadolibre · 2024–2026</p>
-          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span>Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <p class="ceja"><span translate="no">Mercadolibre</span> · 2024–2026</p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
         </div>
         <div class="k4-cifras" role="group" aria-label="400 o más diseñadores, 2.000 o más ingenieros, 18 países" data-ta="k4.aria">
           <div class="cifra" aria-hidden="true"><span class="dot dot-l">400+</span><span class="etiqueta" data-t="k4.dis">diseñadores</span></div>
@@ -741,25 +797,14 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
         <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
       </article>
 
-      <!-- K5 · disponibilidad -->
+      <!-- K5 · contacto: hora local + datos + Escríbeme (fusiona K5 y K6; la disponibilidad ya está en K2) -->
       <article class="tarjeta losa k5" data-grupo="contacto">
-        <div>
-          <p class="estado" data-t="k5.estado">Abierto a consultoría puntual</p>
-          <p class="etiqueta" style="margin-top: var(--e-8)" data-t="k5.linea">Head of Product en Naowee</p>
+        <div class="k5-info">
+          <span class="dot dot-l reloj" id="reloj" role="img" aria-label="Hora local en Barranquilla">BAQ 14:32</span>
+          <p class="etiqueta">Barranquilla, Colombia · UTC-5</p>
+          <p class="etiqueta" data-t="k5.linea">Head of Product en Naowee</p>
         </div>
-        <a class="boton boton-blanco enlace-tarjeta" href="#contacto" data-ir="contacto" aria-label="Escríbeme: abierto a consultoría puntual" data-ta="k5.aria"><span data-t="k5.boton">Escríbeme</span></a>
-      </article>
-
-      <!-- K6 · hora local -->
-      <article class="tarjeta losa k6" data-grupo="contacto">
-        <div class="k6-fila">
-          <span class="dot dot-m reloj" id="reloj" role="img" aria-label="Hora local en Barranquilla">BAQ 14:32</span>
-          <div class="idioma" role="group" data-ta="idioma.grupo" aria-label="Idioma">
-            <a href="?lang=es" lang="es" hreflang="es" aria-label="Español" data-lang="es">ES</a>
-            <a href="?lang=en" lang="en" hreflang="en" aria-label="English" data-lang="en">EN</a>
-          </div>
-        </div>
-        <p class="etiqueta"><a class="enlace-tarjeta" href="#contacto" data-ir="contacto"><span class="sr-only" data-t="k6.link">Barranquilla, hora local</span></a><span aria-hidden="true">Barranquilla, Colombia · UTC-5</span></p>
+        <a class="boton boton-blanco enlace-tarjeta" href="#contacto" data-ir="contacto"><span data-t="k5.boton">Escríbeme</span></a>
       </article>
     </div>
   </section>
@@ -770,7 +815,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
       <article class="tarjeta losa-niebla k7" data-grupo="trabajo">
         <div class="k7-texto">
           <p class="ceja" data-t="k7.ceja">Producto propio · Design Engineer</p>
-          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span>olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span translate="no">olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
           <p class="apoyo" data-t="k7.apoyo">Mide tu ritmo de gasto, no tu saldo.</p>
         </div>
         <div class="cifra" role="group" aria-label="647 pruebas en verde" data-ta="k7.aria">
@@ -778,7 +823,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
           <span class="etiqueta" aria-hidden="true" data-t="k7.etq">pruebas en verde</span>
         </div>
         <div class="media telefono"><img src="../../../../public/work/olbo/01-hoy-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
-        <span class="flecha circulo circulo-osc" style="background: var(--tinta-osc); color: var(--blanco)" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+        <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
       </article>
 
       <!-- K8 · Banco de Occidente -->
@@ -808,6 +853,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
           <div class="fila-cifra" role="group" aria-label="14 días del primer commit a la versión del 2 de octubre" data-ta="k9.aria"><span class="dot dot-l" aria-hidden="true">14</span><span class="etiqueta" aria-hidden="true" data-t="k9.etq">días del primer commit a la versión del 2 oct</span></div>
         </div>
         <div class="media"><img src="../../../../public/work/dc-medical/01-imac-seguimiento-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
+        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
       </article>
 
       <!-- K10 · MakeaPet -->
@@ -856,13 +902,13 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
         <div class="cifra" aria-hidden="true"><span class="dot dot-l">10</span><span class="etiqueta" data-t="k12.c2">casos publicados</span></div>
         <div class="cifra" aria-hidden="true"><span class="dot dot-l">3</span><span class="etiqueta" data-t="k12.c3">productos propios</span></div>
       </div>
-      <span class="flecha circulo" style="background: var(--tinta-osc); color: var(--blanco)" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
     </article>
 
     <h2 class="seccion-titulo" data-t="nav.perfil">Perfil</h2>
     <!-- K13 · perfil -->
     <article class="tarjeta losa k13" id="perfil" data-grupo="perfil">
-      <div class="retrato"><img src="../../retratos-hf/98153a04.jpg" alt="" width="880" height="1168" loading="lazy" decoding="async"></div>
+      <div class="retrato"><img src="../../retratos-hf/83a47bc7.jpg" alt="" width="880" height="1168" loading="lazy" decoding="async"></div>
       <div class="k13-texto">
         <p class="ceja" data-t="k13.ceja">Perfil</p>
         <h3 class="t-losa"><a class="enlace-tarjeta" href="/about"><span data-t="k13.titulo">Diseñador de producto que construye.</span><span class="sr-only" data-t="k13.accion">: ver el perfil</span></a></h3>
@@ -888,7 +934,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
       <p class="ceja" data-t="k15.ceja">En sus palabras</p>
       <div aria-live="polite">
         <blockquote lang="en" id="citaTexto">“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”</blockquote>
-        <p class="firma" style="margin-top: var(--e-12)"><span id="citaFirma">Arman Eshraghi · Fundador y CEO, Qrvey</span><br><a id="citaLink" href="/work/qrvey">Leer el caso de Qrvey</a><span class="solo-es" data-t="k.marcaidioma2"> · Cita original en inglés</span></p>
+        <p class="firma mt-12"><span id="citaFirma">Arman Eshraghi · Fundador y CEO, Qrvey</span><br><a id="citaLink" href="/work/qrvey">Leer el caso de Qrvey</a><span class="solo-es" data-t="k.marcaidioma2"> · Cita original en inglés</span></p>
       </div>
       <div class="k15-ctrl">
         <span class="contador" id="citaCont">1 de 3</span>
@@ -923,7 +969,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
       </div>
       <div class="correo-fila">
         <a class="correo" href="mailto:hello@douguizard.com">hello@douguizard.com</a>
-        <button class="boton boton-linea-osc" type="button" id="copiar" style="min-height: var(--toque)"><svg class="ico" aria-hidden="true"><use href="#i-copiar"/></svg><span id="copiarTxt" data-t="k17.copiar">Copiar correo</span></button>
+        <button class="boton boton-linea-osc boton-toque" type="button" id="copiar"><svg class="ico" aria-hidden="true"><use href="#i-copiar"/></svg><span id="copiarTxt" data-t="k17.copiar">Copiar correo</span></button>
       </div>
       <div class="k17-enlaces">
         <div class="grupo">
@@ -1025,7 +1071,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     "k3.etq": "screens across 8 modules", "k3.cifra.aria": "130-plus screens across 8 modules",
     "k4.aria": "400-plus designers, 2,000-plus engineers, 18 countries", "k4.dis": "designers", "k4.pai": "countries", "k4.ing": "engineers", "k4.n2": "2,000+",
     "k4.chip": "NDA · Case on request",
-    "k5.estado": "Open to selected consulting", "k5.linea": "Head of Product at Naowee", "k5.boton": "Get in touch", "k5.aria": "Get in touch: open to selected consulting",
+    "ind.desliza": "Scroll", "k5.linea": "Head of Product at Naowee", "k5.boton": "Get in touch", "k5.aria": "Get in touch: open to selected consulting",
     "k6.link": "Barranquilla, local time",
     "k7.ceja": "Product of my own · Design Engineer", "k7.apoyo": "Reads your spending pace, not your balance.", "k7.etq": "tests passing", "k7.aria": "647 tests passing",
     "k8.etq": "squads on one system", "k8.aria": "12-plus squads on one system", "k8.firma": "Francesca Steri · Design Director, Aval Digital Labs",
@@ -1098,12 +1144,12 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     if (lang === "en") {
       const t = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "numeric", minute: "2-digit", hour12: true }).formatToParts(now);
       const h = t.find((p) => p.type === "hour").value, m = t.find((p) => p.type === "minute").value, ap = t.find((p) => p.type === "dayPeriod").value;
-      elReloj.innerHTML = `BAQ ${h}:${m}<span class="ampm">${ap}</span>`;
+      elReloj.innerHTML = `<span>BAQ</span><span class="reloj-hora">${h}:${m}<span class="ampm">${ap}</span></span>`;
       elReloj.setAttribute("aria-label", `Local time in Barranquilla: ${h}:${m} ${ap}`);
     } else {
       const s = new Intl.DateTimeFormat("es-CO", { timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
       const s12 = new Intl.DateTimeFormat("es-CO", { timeZone: tz, hour: "numeric", minute: "2-digit", hour12: true }).format(now);
-      elReloj.textContent = `BAQ ${s}`; elReloj.setAttribute("aria-label", `Hora local en Barranquilla: ${s12}`);
+      elReloj.innerHTML = `<span>BAQ</span><span class="reloj-hora">${s}</span>`; elReloj.setAttribute("aria-label", `Hora local en Barranquilla: ${s12}`);
     }
   }
   setInterval(reloj, 60 * 1000);
@@ -1140,6 +1186,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 
   /* ═════════════ 6 · Escena: retrato + vidrio estriado (WebGL con respaldo CSS) ═════════════ */
   const esc = $("#escena"), foto = $("#foto"), canvas = $("#vidrio"), poster = $("#poster"), clip = $("#fotoClip"), vCss = $("#vidrioCss");
+  const rail = $("#rail"), indicadorTxt = $("#indicadorTxt");
   const laser = $("#laser"), nombreXL = $("#nombreXL"), k1 = $("#k1"), k2 = $("#k2"), k1Nombre = $("#k1Nombre"), indicador = $("#indicador");
   const IMG = { w: 880, h: 1168, eye: 0.418, face: [0.5, 0.41, 0.19, 0.205] };   // la foto final solo cambia esta línea
   const S = { p: RM ? 1 : 0, tx: 0, ty: 0, mx: 0, my: 0, vx: 0, vy: 0, lens: 0, lensT: 0, drift: 0, t0: performance.now(), drag: false };
@@ -1168,7 +1215,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
       // Nombre XL: encima de la línea láser, alineado a 24 px; aterriza en el nombre del panel de K1
       const fs = parseFloat(getComputedStyle(nombreXL).fontSize), nh = nombreXL.offsetHeight;
       const lineA = G.a.pl.Oy + IMG.eye * G.a.pl.Dy;
-      G.nx = { x0: 24, y0: lineA - nh - 16 };
+      G.nx = { x0: 24, y0: Math.max(88, lineA - nh - 16) };
       const on = offsetTo(k1Nombre, esc), fs2 = parseFloat(getComputedStyle(k1Nombre).fontSize);
       G.nx.x1 = on.x; G.nx.y1 = on.y; G.nx.s1 = fs2 / fs;
       nombreXL.style.left = G.nx.x0 + "px"; nombreXL.style.top = G.nx.y0 + "px";
@@ -1232,7 +1279,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     vec2 uv = (q - uOff) / uSize;
     float fuera = max(max(-uv.x, uv.x - 1.0), max(-uv.y, uv.y - 1.0));
     float bias = clamp(fuera * 16.0, 0.0, 4.5) + str * 1.1 * (0.35 + abs(s)) * (1.0 - band);
-    float ca = str * uW * 0.03 * (0.3 + abs(s)) / uSize.x * (1.0 - band);
+    float ca = fuera > 0.0 ? 0.0 : str * uW * 0.03 * (0.3 + abs(s)) / uSize.x * (1.0 - band);
     vec3 col = vec3(texture(uTex, uv + vec2(ca, 0.0), bias).r, texture(uTex, uv, bias).g, texture(uTex, uv - vec2(ca, 0.0), bias).b);
     col *= mix(1.0, 0.62, smoothstep(0.0, 0.3, fuera));
     float sh = 0.3 + str, g = 1.0 - lens;
@@ -1343,39 +1390,40 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   function irAlOS(cb) {   // el ancla nunca atrapa: «Ver casos», Tab o el skip link saltan al tablero armado
     if (!st || S.p > 0.99) { cb && cb(); return; }
     window.scrollTo({ top: finDelAncla() + 1, behavior: RM ? "auto" : "smooth" });
+    st.getTween && st.getTween() && st.getTween().progress(1);
     if (cb) { const t0 = performance.now(); const w = () => (S.p > 0.995 || performance.now() - t0 > 1800 ? cb() : requestAnimationFrame(w)); requestAnimationFrame(w); }
   }
 
   function montarCine() {
     if (!window.gsap || !window.ScrollTrigger) {   // sin CDN: el tablero aparece armado, igual que con movimiento reducido
-      root.classList.remove("cine"); cine = false; esc.classList.remove("oculta");
+      root.classList.remove("cine"); cine = false; esc.classList.remove("oculta"); rail.inert = false;
       if (desk.matches) S.p = 1; layout(); return;
     }
     gsap.registerPlugin(ScrollTrigger);
     const mm = gsap.matchMedia();
     mm.add({ cine: "(min-width: 1024px) and (prefers-reduced-motion: no-preference)" }, (ctx) => {
       if (RM) return;
-      root.classList.add("cine"); cine = true; layout();
-      const centro = { x: G.slot.x + G.slot.w / 2, y: G.slot.y + G.slot.h / 2 };
-      const dist = tarjetasTop.map((el) => { const o = offsetTo(el, esc); return Math.hypot(o.x + el.offsetWidth / 2 - centro.x, o.y + el.offsetHeight / 2 - centro.y); });
-      const dMax = Math.max(...dist);
+      root.classList.add("cine"); cine = true; rail.inert = true; layout();
       const tl = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: {
           id: "ensamblaje", trigger: esc, pin: true, start: "top top", end: () => "+=" + Math.round(window.innerHeight),
-          scrub: CAPTURA ? true : 0.6, invalidateOnRefresh: true, anticipatePin: 1,
-          snap: CAPTURA ? false : { snapTo: [0, 1], duration: { min: 0.25, max: 0.6 }, delay: 0.12, ease: "power2.inOut", directional: true },
+          scrub: CAPTURA ? true : 0.3, invalidateOnRefresh: true, anticipatePin: 1,
+          snap: CAPTURA ? false : { snapTo: [0, 1], directional: false, delay: 0.05, duration: { min: 0.2, max: 0.45 }, ease: "power2.out" },
           onRefreshInit: layout,
+          onRefresh: (self) => { S.p = self.animation.progress(); esc.classList.toggle("oculta", S.p < 0.98); rail.inert = S.p < 0.5; kick(); },
         },
         onUpdate() {
           S.p = tl.progress(); kick();
           esc.classList.toggle("oculta", S.p < 0.98);
+          rail.inert = S.p < 0.5;
+          indicadorTxt.style.opacity = S.p > 0.05 ? "0" : "";
         },
       });
       st = tl.scrollTrigger;
-      tl.fromTo(k2, { x: () => G.k2.dx, y: () => G.k2.dy, "--m": 0 }, { x: 0, y: 0, ease: "power2.inOut", duration: 0.6 }, 0)
+      tl.fromTo(k2, { x: () => G.k2.dx, y: () => G.k2.dy, "--m": 0, "--mt": 0 }, { x: 0, y: 0, ease: "power2.inOut", duration: 0.6 }, 0)
         .to(k2, { "--m": 1, ease: "power1.inOut", duration: 0.22 }, 0.3)
-        .fromTo(".k2-cont, .k2-cta", { filter: "blur(0px)" }, { keyframes: [{ filter: "blur(2px)" }, { filter: "blur(0px)" }], duration: 0.24 }, 0.29)
+        .to(k2, { "--mt": 1, duration: 0.001 }, 0.41)   // la tinta cambia en el punto medio: el contraste nunca cae a 1:1
         .fromTo(nombreXL, { x: 0, y: 0, scale: 1 }, { x: () => G.nx.x1 - G.nx.x0, y: () => G.nx.y1 - G.nx.y0, scale: () => G.nx.s1, ease: "power2.inOut", duration: 0.72 }, 0)
         .fromTo("#velo", { opacity: 1 }, { opacity: 0, duration: 0.4 }, 0)
         .fromTo(indicador, { opacity: 1 }, { opacity: 0, duration: 0.12 }, 0.8)
@@ -1383,9 +1431,11 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
         .fromTo(nombreXL, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, 0.66)
         .fromTo(".k1-nombre .xl-hueco", { opacity: 0 }, { opacity: 1, duration: 0.12 }, 0.68)
         .fromTo(".rail", { x: () => -112, opacity: 0 }, { x: 0, opacity: 1, ease: "power2.out", duration: 0.3 }, 0.5);
-      tarjetasTop.forEach((el, i) => {
-        tl.fromTo(el, { opacity: 0, scale: 0.94, y: 24, filter: "blur(8px)", "--dw": 100 },
-          { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", "--dw": 700, ease: "power2.out", duration: 0.3 }, 0.2 + 0.42 * (dist[i] / dMax));
+      const INICIO = { k3: 0.30, k4: 0.36, k5: 0.42 };   // sin blur: un fotograma congelado nunca parece un error de carga
+      tarjetasTop.forEach((el) => {
+        const k = [...el.classList].find((c) => INICIO[c]);
+        tl.fromTo(el, { opacity: 0, scale: 0.96, y: 24, "--dw": 100 },
+          { opacity: 1, scale: 1, y: 0, "--dw": 700, ease: "power2.out", duration: 0.2 }, INICIO[k] ?? 0.42);
       });
       tl.to({}, { duration: 0.04 }, 0.96);   // reposo al final: el tablero ya armado antes de soltar el ancla
 
@@ -1397,7 +1447,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
           .fromTo(k2, { opacity: 0, scale: 0.96, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, clearProps: "filter" }, 0.4)
           .fromTo(indicador, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.6);
       }
-      return () => { st = null; cine = false; root.classList.remove("cine"); S.p = 1; esc.classList.remove("oculta"); gsap.set([nombreXL, ".k1-nombre .xl-hueco"], { clearProps: "opacity" }); layout(); };
+      return () => { st = null; cine = false; rail.inert = false; root.classList.remove("cine"); S.p = 1; esc.classList.remove("oculta"); gsap.set([nombreXL, ".k1-nombre .xl-hueco"], { clearProps: "opacity" }); layout(); };
     });
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
@@ -1414,6 +1464,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     if (!cine || S.p > 0.98) return;
     if (k2.contains(e.target)) return;
     window.scrollTo({ top: finDelAncla() + 1, behavior: "auto" });
+    requestAnimationFrame(() => { const t = st && st.getTween && st.getTween(); if (t) t.progress(1); });   // el foco nunca cae en una losa a opacidad 0
   });
 
   /* ═════════════ 8 · Navegación: pills (dónde estoy) · spotlight de grupo · dock ═════════════ */
@@ -1504,7 +1555,8 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     if (location.hash === "#/work/naowee-suid") abrirHoja($(".k3 .enlace-tarjeta"));
   };
   if (poster.complete && poster.naturalWidth) arrancar(); else poster.addEventListener("load", arrancar, { once: true });
-  new ResizeObserver(() => { if (!cine) layout(); }).observe(esc);
+  let roRaf = 0;
+  new ResizeObserver(() => { cancelAnimationFrame(roRaf); roRaf = requestAnimationFrame(() => { if (!cine) layout(); else if (window.ScrollTrigger) ScrollTrigger.refresh(); }); }).observe(esc);
   desk.addEventListener("change", () => { layout(); scrollMovil(); });
   window.__b = { S, get G() { return G; }, get st() { return st; }, setLang, abrirHoja, cerrarHoja, frame };
 })();
