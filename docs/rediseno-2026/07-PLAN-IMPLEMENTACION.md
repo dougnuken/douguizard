@@ -6,7 +6,93 @@
 > `06-CRITICA-B.md`, y el código de `src/`, `tests/`, `next.config.ts`, `package.json`.
 > Este documento no cambia código. Lo revisa el orquestador y otro agente lo contrasta con el repo antes de ejecutar.
 > En cada fase, la columna **«Verificar antes»** lista lo que este plan no pudo comprobar (en el contenedor no hay
-> `node_modules`: no se corrió `npm test` ni Playwright al escribirlo).
+> `node_modules`: no se corrió `npm test` ni Playwright al escribirlo). **Actualizado por el revisor:** lo verificable
+> ya se verificó; ver la sección siguiente.
+
+---
+
+## Revisión contra el código (5 nov 2026)
+
+> Revisor del plan. Se instaló el repo (`npm ci`, `node_modules` queda instalado y está en `.gitignore`), se midió la
+> línea de base **antes de cualquier cambio** y se contrastó cada ruta, archivo y prueba citada. Las correcciones ya
+> están hechas en el cuerpo; esta sección dice qué cambió y por qué. No se tocó `src/` ni se hizo commit.
+
+### Línea de base medida (next 16.3.5, react 19.2.6, Node 22.23.4, npm 10.9.9)
+
+| Paso | Resultado |
+|---|---|
+| `npm ci` | OK, 422 paquetes en ~1 min (npm audit informa 17 vulnerabilidades; no se tocan en este plan). |
+| `npm run lint` | Verde, sin avisos. |
+| `npm test` (vitest 4.1.11) | **10 archivos, 149 pruebas, todas verdes** (el plan decía 9 archivos). Solo un aviso de Vite por `configLoader`. |
+| `npx tsc --noEmit` | Verde. |
+| `npm run build` | **Verde.** `next/font/google` **sí** alcanza Google Fonts desde el contenedor (Archivo y Geist Mono se bajan). 30 páginas estáticas/SSG. Único aviso: `Cache-Control` propio en `/_next/static/:path*` (preexistente). No imprime «First Load JS». |
+| `npx playwright test` (Chromium 1243 de `/opt/pw-browsers`, que es el de `@playwright/test` 1.63.0; `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`) | **261 de 267 verdes, 6 rojas**, 18,8 min con 2 workers. Las 6 son el mismo síntoma: `page.goto("/work/qrvey", { waitUntil: "networkidle" })` supera 90 s (`layout 5.1-5.2 @1024`, `security S4`, `seo E1` ES y EN, `visual qrvey 1024` dark y light). Reejecutadas aisladas, **las 29 pruebas de qrvey pasan** (45,8 s), y una carga en frío de `/work/qrvey` llega a `networkidle` en 1,3–2 s a 1024/1280/1440. Parte de la corrida coincidió con el build de la prueba mínima de §1.2 en el mismo contenedor de 4 núcleos → se tratan como **intermitentes por carga**, no como defecto; F0 lo confirma con dos corridas limpias. |
+
+### Versiones reales en npm (5 nov)
+
+`next` 16.4.5 (latest; existe toda la serie 16.4.0–16.4.5) · `react`/`react-dom` 19.3.1 · `@types/react(-dom)` 19.3.0 ·
+`eslint-config-next` 16.4.5 · `gsap` 3.15.1 · `@gsap/react` 2.1.2 (el plan no lo añade; correcto) · `sharp` 0.35.5 ·
+`@playwright/test` 1.64.1 (se queda en 1.63.0 por el navegador del contenedor). `<ViewTransition>` es **estable** en
+React 19.3.1 y la guía de Next 16.4.5 lo da por soportado sin configuración. `experimental.globalNotFound` sigue
+experimental en 16.4.5 con la misma forma. Detalle en §1.9.
+
+### Prueba mínima de rutas interceptadas + paralelas (copia temporal, borrada)
+
+Con los dos layouts raíz reales: `(es)/@modal` en el layout raíz ES y `(en)/en/layout.tsx` anidado con su
+`@modal`. **Funciona**: build verde, hoja en navegación blanda, página completa en carga directa/recarga, Atrás
+cierra, `router.replace` cambia de caso, los cuatro 404 de E5 y `global-not-found` intactos, `/cv` y `/en/cv` sin
+hoja. Hace falta un `default.tsx` en **cada** `@modal`. Hallazgos que cambian el plan: el slot se queda «rancio» tras
+navegar a otra ruta (el auto-ocultado por pathname es obligatorio), `/cv` intercepta, y `notFound()` en el slot basta
+para el slug inexistente. Detalle en §1.2.
+
+### Correcciones al plan
+
+1. **§0 conteos:** vitest 10 archivos/149 pruebas; Playwright 267 pruebas. Se marca qué specs solo registran (`R1`,
+   `R6`, `F2`, `F3`, `M1–M4`, `hero320`, `visual`, `contrast-detail`): no pueden ser criterio de aceptación sin añadirles
+   aserción. El plan usaba «`R1` verde» como criterio en F6 → cambiado a `a11y 3.2–3.4` + aserción en `hoja.spec`.
+2. **§0 `data.singleSource`:** «Dribbble» está prohibido en todo `src/` y en `README.md` (también en `src/data`); los
+   años en palabras que vigila son solo en inglés; también prohíbe `company: "…"` literal en componentes.
+3. **§0 nuevas reglas que el plan no listaba:** `a11y 3.2–3.4` exige **un solo `<footer>`** por documento (hoy:
+   `Contact.tsx`, `CaseColophon`, `.cv-colophon`) → `SiteFooter` **no** va en `RootDocument`, solo en las páginas B;
+   la primera parada de Tab es siempre el skip link (`3.5`, `R2`, `R2b`, `6.1`); `print 8.1`/`R3` ocultan todo
+   `[class*='glow']`; `content 10.5` pide el chip NDA **exactamente una vez** en el home; `I2/I4/6.6` leen la cabecera
+   por selectores concretos (también en `/cv` a 320 px).
+4. **§1.2 hoja:** verificado lo que el plan pedía verificar (se reemplaza el «Verificar antes» por los resultados).
+   Slug inexistente → `notFound()` en la página del slot (no `window.location.replace`). **Nuevo:** `CvExperience`
+   enlaza los casos con `<Link>` y abriría la hoja sobre el CV → D22: pasan a `<a>` (única excepción al «no se toca»
+   de `/cv`, sin cambio visual). **Nuevo:** `CaseBody` en la hoja daría 2 `h1` y 2 `<footer>` en el documento → prop
+   `enHoja` (título `h2` con id, colofón sin `<footer>`, `<article>`).
+5. **§1.3 `NameLockup`:** las dos tipografías recomendadas (00-BRIEF → `B-tipo/TIPO.md`) no son «cambiar una línea»:
+   la 4 «corte láser» (Geologica, SHRP 100) necesita una construcción partida con copia `aria-hidden` y medida en
+   cliente; la 3 «banda» (Big Shoulders Stencil, opsz 72) es de una línea. `decisiones.nombreLockup` pasa a
+   `{ fuente, construccion }` y el FLIP mide `[data-lockup]` del DOM. **§1.7:** se corrige la lista de opciones (Bodoni
+   Moda fue descartada) y se confirma que Geologica, Big Shoulders Stencil, Mona Sans y Doto existen en
+   `next/font/google` con sus ejes.
+6. **§1.3/§1.4 dependencias ocultas:** `SectionIndex` es hoy el único que escribe `setActiveSection` (el scroll-spy
+   nuevo debe hacerlo o `I3` cae); `stepSpring` queda huérfano al retirar `SectionIndex`/`RailLabel`; `CaseNda` solo
+   usa la viñeta de Andes (las otras cinco viven en el home viejo); `/#craft` deja de existir.
+7. **§1.9 upgrade:** versiones exactas y comando; la verificación `require('react').ViewTransition` mira el React
+   equivocado (el App Router usa el de `next/dist/compiled/react`, que en 16.3.5 **ya** trae `ViewTransition`) →
+   se verifica con tsc + build de un componente de prueba.
+8. **F0:** `tests/out/` y `tests/shots/` están en `.gitignore` → la línea de base se copia a
+   `docs/rediseno-2026/baseline-F0.json`; dos corridas limpias para despejar los 6 rojos intermitentes de qrvey.
+9. **F1:** `/lab` es estática: `DG_LAB` se lee en el **build**, no en `next start`; el primer `:root {` está en la
+   línea 48 (no 87) y los tokens nuevos van después del bloque de la 86.
+10. **F2/F3/F4 imágenes:** las fotos de `retratos-hf/` miden **880×1168** → no hay 1080/1600/1920 de la foto; el
+    retrato de K13 sale a 640/880; el póster se mide en su ancho mayor; el estado `cine` a pantalla completa amplía
+    la provisional ×1,6–2,2 (aceptado; la imagen final, D7, debe traer máster ≥ 1920 px).
+11. **F3 pruebas que faltaban en la lista:** `keyboard 6.3` y `6.6`, `motion 7.2` (mide viñetas en `/`), `i18n I2/I4`,
+    `a11y 3.2–3.4` (footer único), `content 10.1/10.5`, y las de solo registro.
+12. **F8:** `playwright.config.ts` no tiene `projects` y en el contenedor solo hay Chromium → hay que añadir los
+    proyectos e instalar WebKit/Firefox (o dejar el smoke a Doug); `perf.spec` (CDP) solo en Chromium.
+13. **§4:** se añade **D22** (enlaces a casos desde `/cv` → página completa).
+
+**Orden de fases:** se mantiene. Las dependencias reales coinciden con §3 (F2 necesita `sharp` de F0, ya implícito;
+F6 depende de `BentoCard` de F3 y de `CaseBody`; F7 de F6). Cada fase deja el sitio funcionando: F1–F2 son aditivas,
+F3 reemplaza el home de una vez con sus pruebas, F4–F7 se montan sobre un OS ya completo sin JS.
+
+**¿Listo para F0?** Sí. F0 no depende de ninguna decisión pendiente; lo único a vigilar es despejar los rojos
+intermitentes de `/work/qrvey` antes de dar la línea de base por buena.
 
 ---
 
@@ -22,7 +108,7 @@
 | Tokens | `src/app/globals.css` (1.357 líneas): `@theme` que reinicia colores/fuentes/sombras/easing, `:root` oscuro + `:root[data-theme="light"]`, `@custom-variant light`. El CV y los casos usan `--paper/--ink/--signal/--ease-out`. |
 | Fuentes | `next/font/google`: Archivo + Geist Mono en `RootDocument`. El CV y su PDF usan Archivo/Geist (`scripts/cv-fonts/`). |
 | CSP | `script-src 'self' 'unsafe-inline'`, `img-src 'self' data:` (sin `blob:`), `connect-src 'self'`, `font-src 'self'`. Permissions-Policy sin giroscopio. |
-| Pruebas | vitest: 9 archivos (`data.*`, `i18n.parity`, `theme.tokens`, `career.*`, `caseMedia`, `cv*`). Playwright: 17 specs en `tests/e2e`, `next start -p 3131` (requiere `npm run build` antes). |
+| Pruebas | vitest: **10 archivos, 149 pruebas** (`data.integrity`, `data.singleSource`, `i18n.parity`, `theme.tokens`, `work.getCaseMeta`, `career.formatPeriod`, `career.yearsOfExperience`, `caseMedia`, `cvFingerprint`, `cvSheet`). Playwright: 17 specs, **267 pruebas** en `tests/e2e`, `next start -p 3131` (requiere `npm run build` antes). Varias specs solo **registran** (no afirman nada): `R1`, `R6`, `F2`, `F3`, `M1–M4`, `hero320`, `visual`, `contrast-detail`. |
 
 Reglas de prueba existentes que condicionan el diseño (no se relajan sin motivo escrito):
 
@@ -36,13 +122,32 @@ Reglas de prueba existentes que condicionan el diseño (no se relajan sin motivo
   `/`. Los «fundidos de 150 ms en reduced-motion» de 02 §4.4 y de NOTAS §2 **no caben en reposo**: en el tablero, los
   cambios de estado con RM son instantáneos; solo la hoja (que no está en el DOM en reposo) lleva su fundido.
 - `data.singleSource`: fuera de `src/data` y `src/lib` no puede aparecer «Head of Product», «Senior Product
-  Designer», «Tech Lead», años en palabras ni «Dribbble». **`dictionaries.ts` está fuera** → «Head of Product ·
-  Barranquilla» (K1) y «Head of Product en Naowee» (K5) salen de `site.ts`, no del diccionario ni del JSX.
+  Designer», «Tech Lead», «Technical Lead», «Design System Gatekeeper» ni años en palabras **en inglés**
+  (`Twelve|Eleven|Ten years`, `A decade`); ningún componente puede tener `company: "…"` literal. «Dribbble»
+  está prohibido **en todo `src/` y en `README.md`**, también en `src/data`. **`dictionaries.ts` está fuera** →
+  «Head of Product · Barranquilla» (K1) y «Head of Product en Naowee» (K5) salen de `site.ts`, no del diccionario ni
+  del JSX. (`content 10.1` además exige que el texto del home contenga «Head of Product».)
+- `a11y 3.2–3.4`: en **cada** ruta de `ROUTES` hay exactamente **un `h1`**, un `<header>` de nivel superior (fuera de
+  `article, aside, main, nav, section`), **un `main#main`** y **un solo `<footer>` en todo el documento**
+  (`querySelectorAll("footer").length === 1`, sin importar dónde esté). Hoy ese footer es: `Contact.tsx` en el home,
+  `CaseColophon` en los casos y `.cv-colophon` en `/cv`. → `SiteFooter` **no** va en `RootDocument` (daría 2 footers
+  en casos y en `/cv`); va solo en las páginas B (home, `/work`, `/about`, `/experience`), y K17 no lleva `<footer>`.
+- `a11y 3.5`, `R2`, `R2b`, `keyboard 6.1`: la **primera** parada de Tab en todas las rutas es el skip link `a[href="#main"]`
+  y es visible al enfocarse. Nada (rail, `sceneInit`, escena) puede ir antes en el orden de foco.
+- `print 8.1` y `recheck R3`: en impresión, todo `.glow-corner, [data-glow], [class*='glow']` queda `display: none` →
+  ninguna clase nueva de B contiene «glow» (o se oculta en `@media print`).
 - `theme.tokens`: el primer bloque `:root {` debe declarar `--paper` igual a `theme-colors.json`; no puede existir
   `--color-accent` ni las clases `.glass`, `.cosmic-`, `.btn-accent`, `.btn-outline`, `theme-dark`. → El vidrio de B
   se llama **`.vidrio`** (nunca `.glass`) y los tokens nuevos se añaden **después** del primer `:root {`.
-- `content 10.5`: «Caso disponible a solicitud» / «Case study available on request» aparece en el home → es el chip
-  NDA de K4. `content 10.7`: «Francesca Steri» solo en el caso BdO → **K8 no muestra su cita** (ver decisión D10).
+- `content 10.5`: «Caso disponible a solicitud» / «Case study available on request» aparece **exactamente una vez**
+  en el `innerText` del home (ES y EN) y una vez en `/work/mercadolibre-andes` → es el chip NDA de K4, y ningún otro
+  texto del home (rail, carrusel, `sr-only` visible) puede repetirlo. `content 10.7`: «Francesca Steri» solo en el
+  caso BdO y en `/cv` → **K8 no muestra su cita** (ver decisión D10).
+- `i18n I2/I4` leen la cabecera por selector: `header a[hreflang="en|es"]` (con el `href` de la otra versión),
+  `header [aria-current="true"]` con el código del idioma, y en `/cv` a < 360 px `header button[aria-expanded]` que
+  abre `nav[data-menu]` con el enlace de idioma. `keyboard 6.6` exige en `/` a 375 px un `header button[aria-expanded]`
+  con `aria-controls`, que Esc cierra devolviendo el foco. El `SiteHeader` reescrito **conserva esos selectores** o la
+  fase que lo cambie reescribe esas pruebas con motivo (ver F3).
 - `seo E3`: el sitemap lista exactamente las URLs indexables → se actualiza cuando entran `/work`, `/about`, `/experience`.
 - `seo E5`: `/this-page-was-never-here` y `/en/…` dan 404 → condiciona el diseño del slot `@modal` (§1.2).
 
@@ -110,34 +215,56 @@ src/app/
   1. `CaseNext` en página completa navega como documento (`<a href>`, con `@view-transition` de F7 es un fundido).
   2. `CaseNext` dentro de la hoja usa `<Link replace>`: cambia de caso dentro de la hoja y «Cerrar» vuelve al tablero.
   3. Desde `/work` (índice), `/about` y `/experience` la hoja **sí** se abre (coherente con el OS) — decisión D21.
-  4. Slug inexistente en navegación blanda: la página del slot hace `window.location.replace(href)` → 404 real.
+  4. Slug inexistente en navegación blanda: la página del slot llama `notFound()` (como `CasePage`). **Verificado** en
+     la prueba mínima: la navegación blanda a `/work/not-a-case` pinta el mismo 404 de caso que la carga directa
+     (h1 de `CaseNotFound`, sin hoja). `window.location.replace(href)` queda solo como respaldo si eso cambiara.
+  5. **`/cv` también intercepta** (verificado): `CvExperience.tsx` enlaza cada caso con `<Link>`, así que desde `/cv`
+     un clic abriría la hoja (oscura, B) encima del CV. Por defecto (D22) esos enlaces pasan a `<a href>` (navegación
+     de documento → página completa); es un cambio de una etiqueta en `src/components/cv/CvExperience.tsx`, sin
+     cambio visual, y es la **única** excepción al «no se toca» de `/cv` (se hace en F6 y se anota el motivo).
+  6. Los demás `<Link>` que salen de una página con hoja posible y **no** van a un caso (`CaseHeader` → `/#work`,
+     `NotFoundContent`, `CaseNotFound`) no interceptan, pero dejan el slot rancio: verificado que tras hoja → `/` o
+     hoja → `/cv` por navegación blanda el slot **sigue pintando la hoja**. El auto-ocultado por `usePathname()` de
+     arriba es obligatorio, no opcional.
 - **Cierre**: X, Esc, clic en el velo, arrastre (móvil) → animación de salida 280 ms → `router.back()`. Atrás del
   navegador → la hoja desaparece (sin animación de salida, aceptado). El foco vuelve al enlace de origen (guardado en
   `hoja/origen.ts` en el `onClick` de la card). Cmd/Ctrl/clic medio → pestaña nueva con la página completa (nativo).
 - **Una sola `<main>`**: `CasePage` se parte en `CaseBody` (sin `<main>`, sin JSON-LD) + envoltorio. La hoja es
   `<dialog aria-labelledby>` con `CaseBody` dentro; JSON-LD del caso solo en la página completa.
+- **Ni dos `h1` ni dos `<footer>` con la hoja abierta.** `CaseBody` trae el `h1` de `CaseHeader` (vía
+  `RevealText as="h1"`) y el `<footer>` de `CaseColophon`; dentro de la hoja, sobre el home, darían 2 `h1` y 2
+  footers (rompe la idea de `a11y 3.2–3.4` y axe marca el `contentinfo` duplicado). → `CaseBody` recibe
+  `enHoja: boolean`: en la hoja el título es `h2` con el `id` que usa `aria-labelledby`, el colofón es `<div>`, y todo
+  va dentro de `<article>`. En la página completa no cambia nada.
 
-**Verificar antes (agente de contraste):** con next ≥ 16.4 instalado, leer
-`node_modules/next/dist/docs/01-app/**/{parallel-routes,intercepting-routes}.md` y
-`node_modules/next/dist/lib/generate-interception-routes-rewrites.js` y confirmar: (a) `(.)` con route groups como
-arriba; (b) la regla `Next-Url` del nivel raíz; (c) que `default.tsx` en el slot del root layout no cambia el 404 de
-una URL inexistente (E5).
+**Verificado (revisor, 5 nov, next 16.3.5 y docs/código de 16.4.5)** con una prueba mínima en una copia temporal del
+repo (borrada): `(es)/layout.tsx` con `{children, modal}`, `(es)/@modal/{default.tsx,(.)work/[slug]/page.tsx}`,
+`(en)/en/layout.tsx` anidado y `(en)/en/@modal/{…}`. `next build` verde (las rutas salen como `/(.)work/[slug]` y
+`/en/(.)work/[slug]`, SSG con `generateStaticParams`). Resultados en Chromium:
+(a) `(.)` atraviesa `(es)` y `@modal`: blanda `/` → `/work/olbo` pinta la hoja y conserva el home (1 `main#main`);
+Atrás la quita; recarga → página completa sin hoja. (b) La regla del nivel raíz usa `Next-Url` `/.*` (código de
+`generate-interception-routes-rewrites.js`): blanda caso → caso abre hoja sobre la página completa, y `/cv` → caso
+también (ver 5). La de `/en` usa `/en(?:/.*)?`. (c) `default.tsx` → `null` **no** cambia los 404: `/this-page-was-never-here`
+y `/en/this-page-was-never-here` → 404 con `global-not-found`; `/work/not-a-case` y `/en/work/not-a-case` → 404 con
+`CaseNotFound`; `/cv` y `/en/cv` → 200 sin hoja. (d) `router.replace` dentro de la hoja cambia de caso y Atrás vuelve
+al home. (e) El cambio de idioma desde `/en/work/olbo` (`<a>`) cae en la página completa ES. Hace falta **un
+`default.tsx` en cada `@modal`** (ES y EN); `children` no necesita `default.tsx` propio.
 
 ### 1.3 Componentes nuevos
 
 | Carpeta | Componente | Tipo | Qué hace |
 |---|---|---|---|
-| `components/marca/` | `NameLockup.tsx` | server | **Único lugar** donde se compone «Doug / Vargas». Props `escala: "xl" \| "losa" \| "movil"`. Lee `decisiones.nombreLockup`; aplica `data-lockup` y la variable de fuente del archivo `app/fonts/lockup.ts`. Estructura fija (`.linea > span`) para que el FLIP del acto 1 mida cualquier fuente. |
+| `components/marca/` | `NameLockup.tsx` | server (+ isla cliente solo para «corte») | **Único lugar** donde se compone «Doug / Vargas». Props `escala: "xl" \| "losa" \| "movil"`. Lee `decisiones.nombreLockup` = `{ fuente, construccion }` con `construccion: "dos-lineas" \| "banda" \| "corte"`; aplica `data-lockup` y la variable de fuente de `app/fonts/lockup.ts`. Las dos recomendadas de `B-tipo/TIPO.md` **no son solo un cambio de fuente**: la 4 «corte láser» (Geologica SHRP 100) parte «Vargas» en dos mitades (copia `aria-hidden`, corte medido con `measureText`, desplazamiento que el ancla cierra entre p 0–0,3) y la 3 «banda» (Big Shoulders Stencil opsz 72) va en **una línea**. Contrato para el FLIP: el elemento raíz `[data-lockup]` es lo que se mide (alto/ancho del DOM, nunca constantes); el nombre real va en el `h1`/`sr-only`. |
 | | `Wordmark.tsx` | server | «douguizard» de la cabecera (nombre accesible `meta.homeLabel`). |
 | `components/sistema/` | `Losa.tsx` | server | Superficie (`vacio`, `losa`, `clara`, `niebla`, `azul`, `magenta`, `vidrio`) con radio, padding y filo de 1 px. |
 | | `BentoCard.tsx` | server | `Losa` + capa de enlace a tamaño de card (`aria-labelledby` del título, nombre que empieza por el texto visible) + `Flecha`; enlaces secundarios encima con `z-index`. Hover/foco/pressed de NOTAS §2 con `translate`/`scale` (propiedades individuales, no chocan con GSAP). |
 | | `DotMatrix.tsx` | server | Cifras/fechas en Doto (`ROND 100`, ≥ 20 px, `tabular-nums`, `data-dot`), texto real con `aria-label` por grupo. |
 | | `Estado.tsx` | server | Punto de disponible en **luz láser** (núcleo claro + aro y halo rojos; P1-6) + texto. |
 | | `Boton.tsx`, `Flecha.tsx`, `Etiqueta.tsx`, `Iconos.tsx` (sprite SVG) | server | Botones (≥ 48 px), flecha circular (blanca / `.flecha-tinta`), etiquetas tintadas. |
-| `components/chrome/` | `SiteHeader.tsx` (reescrito) | client | Pastilla de B: wordmark · pills · ES/EN (44×44, `background-clip: content-box`) · «Hablemos». En el home, pills = anclas con scroll-spy (`lib/activeSection.ts`); fuera, rutas. Pills centradas al viewport (P2-1). |
+| `components/chrome/` | `SiteHeader.tsx` (reescrito) | client | Pastilla de B: wordmark · pills · ES/EN (44×44, `background-clip: content-box`) · «Hablemos». En el home, pills = anclas con scroll-spy (`lib/activeSection.ts`); fuera, rutas. Pills centradas al viewport (P2-1). Hoy el **único que escribe** `setActiveSection` es `SectionIndex` (se retira en F3): el scroll-spy nuevo tiene que llamarlo, o `LanguageSwitch` pierde el `#ancla` (`i18n I3`). Conserva `header a[hreflang]`, `[aria-current="true"]` y, a < 1024 px, un `button[aria-expanded][aria-controls]` con `nav[data-menu]` (lo usan `I4` en `/cv` y `6.6`). |
 | | `RailAcciones.tsx` | client | Rail de escritorio (Escríbeme, CV, LinkedIn, Behance, GitHub, Volver arriba). `inert` mientras p < 0,5 del ancla (P0-3); nunca inerte sin GSAP o con RM. |
 | | `DockMovil.tsx` | client | Trabajo · Perfil · CV · Contacto, aparece al salir del héroe, `env(safe-area-inset-bottom)`. |
-| | `SiteFooter.tsx` | server | © · Barranquilla · UTC-5 · colofón (D11) · Volver arriba (≥ 44 px). |
+| | `SiteFooter.tsx` | server | © · Barranquilla · UTC-5 · colofón (D11) · Volver arriba (≥ 44 px). Se monta en `HomePage`, `WorkIndexPage`, `AboutPage`, `ExperiencePage` — **no** en `RootDocument` (casos y `/cv` ya tienen su `<footer>`; `a11y 3.4` exige uno solo). |
 | `components/tablero/` | `Tablero.tsx` | server | Orden del DOM = orden visual = Tab: K2, K1, K3, K4, K5, [carrusel K7–K10], K11, K12, K13, K14, K15, K16, K17. `grid-template-areas` por breakpoint (≥ 1280, 1024–1279 de P0-1, < 1024). Filas `minmax(var(--fila), auto)`. |
 | | `K1Retrato.tsx`, `K2Claim.tsx`, `CardCaso.tsx` (variantes K3/K4/K7–K10), `CardContacto.tsx` (K5+K6 fusionadas, P1-5), `CardExperiencia.tsx` (K11), `CardCifras.tsx` (K12), `CardPerfil.tsx` (K13), `CardOficio.tsx` (K14), `CardArchivo.tsx` (K16), `Contacto.tsx` (K17) | server | Leen de `src/data` (single source). |
 | | `CardTestimonio.tsx` (K15), `CarruselMovil.tsx`, `RelojBaq.tsx`, `CopiarCorreo.tsx` | client (islas) | Rotación manual · scroll-snap con contador y botones · reloj por minuto (`suppressHydrationWarning`) · copiar correo con error de 04 §4.5. |
@@ -150,7 +277,7 @@ una URL inexistente (E5).
 | | `useLente.ts` | client | Lente del cursor con muelles X/Y críticamente amortiguados (respuesta 0,35 s; entra k = 7, sale k = 4); táctil 1:1 con `touch-action: pan-y`. |
 | `components/hoja/` | `CaseSheet.tsx` | client | `<dialog>` + `showModal()`, `overflow: clip`, foco inicial en Cerrar, línea láser de progreso, «Ver página completa», auto-oculta por pathname. |
 | | `useArrastreHoja.ts`, `origen.ts` | client | Arrastre para cerrar (> 120 px o > 0,5 px/ms, banda elástica) · enlace de origen para devolver el foco. |
-| `components/case/` | `CaseBody.tsx` | server | Cuerpo del caso extraído de `CasePage` (sin `<main>`, sin JSON-LD). |
+| `components/case/` | `CaseBody.tsx` | server | Cuerpo del caso extraído de `CasePage` (sin `<main>`, sin JSON-LD; el `notFound()` se queda en `CasePage` y en la página del slot). Prop `enHoja`: título `h2` con `id`, colofón sin `<footer>`, envoltorio `<article>` (§1.2). |
 | `components/pages/` | `HomePage.tsx` (reescrito), `WorkIndexPage.tsx`, `AboutPage.tsx`, `ExperiencePage.tsx` | server | Páginas por idioma, como las actuales. |
 | `lib/` | `gl/{programa,textura}.ts`, `gl/vidrioShader.ts` | lib | Compilar/enlazar, subir textura con mipmaps, fuentes GLSL. `failIfMajorPerformanceCaveat: true`, `webglcontextlost` → respaldo. |
 | | `escena.ts` | lib (pura) | `placement()`, `frame(p)`, `eio()` y el layout de NOTAS (sin DOM) → testeable en vitest. |
@@ -164,8 +291,14 @@ una URL inexistente (E5).
 `home.secciones`). **Antes de borrar `Craft.tsx` y `About.tsx`, su copy se mueve a `src/data/perfil.ts`** (04 §0 los
 cita como fuente). Se conservan: `text/RevealText.tsx` y `text/useInView.ts` (los usan los casos y `work/*`),
 `ThemeToggle.tsx` (solo en `/cv`, D4), `LanguageSwitch.tsx`, `lib/activeSection.ts` (scroll-spy de las pills),
-`vignettes/*` (los usa `CaseNda`). Del CSS: el bloque `.rail-*`/shell de `globals.css` se borra en F3 (el rail nuevo
-usa `.rail-acciones` para no chocar).
+`vignettes/*`. Ojo: `CaseNda` solo pinta la viñeta del **único** caso NDA (`mercadolibre-andes`); las otras cinco
+(`olbo`, `naowee`, `banco`, `dc`, `makeapet`) hoy solo viven en el home (`sections/Work.tsx`) → si el tablero no las
+reutiliza, quedan muertas tras F3 y se borran en F8 (y `motion 7.2`, que las mide en `/`, se reescribe en F3).
+`lib/spring.ts`: `stepSpring` solo lo usan `SectionIndex` y `RailLabel` (se retiran en F3) y no tiene prueba propia;
+`stepCritical` se añade al lado y en F8 se borra lo que quede huérfano. Del CSS: el bloque `.rail-*`/shell de
+`globals.css` se borra en F3 (el rail nuevo usa `.rail-acciones` para no chocar). Los ids de sección pasan de
+`home, work, craft, about, contact` a `work, about, experience, contact`: `/#craft` deja de llegar (aceptado; nadie lo
+enlaza fuera del shell).
 
 ### 1.5 Capa de datos
 
@@ -209,20 +342,20 @@ Capa **aditiva** con los nombres en español de B (NOTAS §3), en un `:root` pos
 | Urbanist (variable, 600) | display de losas y titulares | SIL OFL 1.1 | `next/font/google`, `display: swap`, preload | ~28 KB |
 | Instrument Sans (400/500) | texto y UI | SIL OFL 1.1 | `next/font/google`, `swap`, preload | ~30 KB |
 | Doto (variable `wght` + eje `ROND`) | cifras, fechas, reloj (≥ 20 px) | SIL OFL 1.1 | `next/font/google` con `axes: ["ROND"]`, `display: optional`, sin preload | ~6–10 KB |
-| Lockup del nombre (pendiente, D6) | solo `NameLockup` | todas las opciones de `B-tipo` son OFL (Mona Sans, Instrument Serif, Big Shoulders Stencil, Geologica, Doto, Anybody, Bodoni Moda) | `app/fonts/lockup.ts` reexporta **una** definición (`lockup-urbanist.ts` por defecto); cambiarla = una línea | 0 KB extra con Urbanist; Mona Sans ~98 KB (subconjunto/peso fijo si se elige) |
+| Lockup del nombre (pendiente, D6) | solo `NameLockup` | las seis opciones de `B-tipo/TIPO.md` son OFL: 1 Mona Sans (wdth 125) · 2 Instrument Serif Italic + Mona · **3 Big Shoulders Stencil** (opsz 72) · **4 Geologica** (SHRP 100) · 5 Doto (ROND 100) · 6 Anybody. Recomendadas: 4 y luego 3. (Bodoni Moda fue **descartada** en TIPO.md.) | `app/fonts/lockup.ts` reexporta **una** definición (`lockup-urbanist.ts` por defecto) + la `construccion` de §1.3; cambiar de opción = cambiar `lockup.ts` y `decisiones.nombreLockup`. Todas existen en `next/font/google` de 16.3.5 y 16.4.5 con sus ejes: Geologica `axes: ["SHRP"]` (ejes CRSV/SHRP/slnt/wght), Big Shoulders Stencil `axes: ["opsz"]`, Mona Sans `axes: ["wdth"]`; con `axes` el peso va variable (sin `weight`). | 0 KB extra con Urbanist; Mona Sans ~98 KB (subconjunto/peso fijo si se elige) |
 | Archivo + Geist Mono | **solo /cv y su PDF** (y casos hasta F7) | OFL (ya en `scripts/cv-fonts/OFL-*.txt`) | sin cambios | — |
 
 - Se copia el texto OFL de cada familia nueva a `src/app/fonts/licencias/` (requisito de redistribución al autoalojar).
-- **Verificar antes:** que el build del contenedor y de Vercel alcanza `fonts.googleapis.com` (hoy Archivo ya se baja
-  así). **Plan B:** `next/font/local` con woff2 variables (latin + latin-ext) en `src/app/fonts/`, comprobando el eje
+- **Verificado (5 nov):** el `npm run build` del contenedor baja Archivo y Geist Mono de Google Fonts sin error (build
+  verde). Vercel ya lo hace hoy. **Plan B** (si un día falla la red del build): `next/font/local` con woff2 variables (latin + latin-ext) en `src/app/fonts/`, comprobando el eje
   `ROND` de Doto con fontTools (`fvar`). Los woff2 de `propuestas/fonts/` no se reutilizan sin esa comprobación.
 
 ### 1.8 Dependencias nuevas y su peso
 
 | Paquete | Tipo | Peso | Dónde carga |
 |---|---|---|---|
-| `gsap@^3.15` (incluye ScrollTrigger) | dependencia | **45,3 KB gz** (core + ScrollTrigger, medido en 03 §2.1) | `import()` diferido **solo** en `/` y `/en`, ≥ 1024 px, sin RM, tras el LCP. Licencia «Standard no-charge» de GSAP (uso comercial gratis; no OSI). Empaquetado (CSP: nada de CDN). |
-| `sharp` | devDependency | 0 KB en cliente | `scripts/build-hero-poster.ts` (AVIF/WebP del póster horneado y del retrato de K13). |
+| `gsap@^3.15` (incluye ScrollTrigger; en npm hoy **3.15.1**) | dependencia | **45,3 KB gz** (core + ScrollTrigger, medido en 03 §2.1) | `import()` diferido **solo** en `/` y `/en`, ≥ 1024 px, sin RM, tras el LCP. Licencia «Standard no-charge» de GSAP (uso comercial gratis; no OSI). Empaquetado (CSP: nada de CDN). |
+| `sharp` (hoy **0.35.5**) | devDependency | 0 KB en cliente | `scripts/build-hero-poster.ts` (AVIF/WebP del póster horneado y del retrato de K13). |
 | Código propio WebGL (`VidrioGL` + `lib/gl`) | — | ~5 KB gz | diferido (`dynamic`, `ssr: false`). |
 | `@gsap/react` | **no se añade** | — | `gsap.context()` + `gsap.matchMedia()` en `useScrollScene` cubren lo mismo. |
 | framer-motion / three / R3F / Lenis / OGL | **no** | — | Descartados en 03 §2. |
@@ -232,15 +365,29 @@ dock). GSAP y WebGL no cuentan porque no se piden antes del LCP; se verifica en 
 
 ### 1.9 Upgrade de next / react
 
-- `next 16.3.5 → 16.4.x` (último parche), `react` y `react-dom 19.2.6 → 19.3.x`, `eslint-config-next → 16.4.x`,
-  `@types/react(-dom)` al par. Motivo: `<ViewTransition>` de React 19.3 (03 §2.2) para el morph de página y los
-  fundidos de entrada/salida de rutas. **La hoja no depende del upgrade** (anima con CSS, B no usa morph).
-- Riesgos: (1) cambio de forma de `experimental.globalNotFound` (¿estable en 16.4?) → E5 y los dos 404 lo vigilan;
-  (2) `next/image`: en Next 16 `priority` está deprecado a favor de `preload` → revisar avisos del build; (3) cambios
-  de lint de `eslint-config-next`; (4) la salida de `next build` ya no imprime «First Load JS» → el presupuesto se mide
+- Versiones **verificadas en npm (5 nov)**: `next` latest **16.4.5** (existen 16.4.0–16.4.5), `react`/`react-dom`
+  latest **19.3.1**, `@types/react` y `@types/react-dom` **19.3.0**, `eslint-config-next` **16.4.5**. Comando exacto:
+  `npm i next@16.4.5 react@19.3.1 react-dom@19.3.1 && npm i -D eslint-config-next@16.4.5 @types/react@19.3.0 @types/react-dom@19.3.0`.
+  `next@16.4.5` pide `react ^18.2 || ^19` (peer OK). `@playwright/test` se queda en **1.63.0**: el Chromium del
+  contenedor (`/opt/pw-browsers/chromium-1243`) es el de 1.63; 1.64.1 pediría otro navegador.
+- `<ViewTransition>` **está estable**: `react@19.3.1` exporta `ViewTransition` (y `addTransitionType`), y la guía de
+  16.4.5 (`next/dist/docs/01-app/02-guides/view-transitions.md`) dice que funciona en el App Router «sin
+  configuración» con `import { ViewTransition } from 'react'`. Matiz: el App Router usa **el React que trae Next**
+  (`next/dist/compiled/react`), no el de `node_modules/react`; el de 16.3.5 (19.3.0-canary) **ya exporta
+  `ViewTransition`**, así que el upgrade no es estrictamente necesario para el runtime; sí para los tipos
+  (`@types/react` 19.2 solo lo declara en `react/canary`) y para alinear el lock. Motivo del upgrade, igual: el morph
+  de página y los fundidos (03 §2.2). **La hoja no depende del upgrade** (anima con CSS, B no usa morph).
+- Riesgos: (1) `experimental.globalNotFound` **sigue siendo experimental en 16.4.5** con la misma forma (está en su
+  `config-schema`): no hay que tocar `next.config.ts`; E5 y los dos 404 lo vigilan; (2) `next/image`: `priority`
+  deprecado a favor de `preload` (confirmado en la doc de 16.4.5) → revisar avisos del build; (3) cambios de lint de
+  `eslint-config-next`; (4) `next build` ya no imprime «First Load JS» (confirmado en 16.3.5) → el presupuesto se mide
   en Playwright.
-- **Verificar antes:** `node -e "console.log(typeof require('react').ViewTransition)"` ≠ `undefined` tras el upgrade.
-- **Plan B:** quedarse en 16.3.5/19.2.6 sin `<ViewTransition>`: navegación instantánea + `@view-transition
+- **Verificar tras el upgrade** (no basta `require('react').ViewTransition`, que mira el React equivocado):
+  `npx tsc --noEmit` y `npm run build` verdes con un componente de prueba que haga
+  `import { ViewTransition } from "react"` y lo renderice (se borra después), más
+  `grep -c "exports.ViewTransition" node_modules/next/dist/compiled/react/cjs/react.production.js` = 1.
+- **Plan B:** quedarse en 16.3.5/19.2.6 y usar `ViewTransition` del React de Next con
+  `/// <reference types="react/canary" />`, o sin `<ViewTransition>`: navegación instantánea + `@view-transition
   { navigation: auto }` para las duras. Nada de B depende de esto.
 
 ---
@@ -269,19 +416,29 @@ línea de base medida.
 **Archivos.**
 - Modificar: `package.json` y `package-lock.json` (upgrade §1.9; `gsap`; `sharp` dev; scripts `test:e2e`
   = `next build && playwright test`, `shots:rediseno`, `hero:poster`), `next.config.ts` (cabecera
-  `/hero/:rest*` → `public, max-age=31536000, immutable`, porque los nombres irán versionados; revisar
-  `experimental.globalNotFound` en 16.4).
-- Crear: `scripts/shots-rediseno.ts` (matriz de capturas), `tests/e2e/perf.spec.ts` (mide LCP con
-  `PerformanceObserver`, elemento LCP, CLS, bytes de JS/imagen transferidos antes de `load`, con CDP: Slow 4G y CPU ×4
-  en móvil), `tests/out/baseline-F0.json` (resultado).
+  `/hero/:rest*` → `public, max-age=31536000, immutable`, porque los nombres irán versionados;
+  `experimental.globalNotFound` no cambia en 16.4.5, ver §1.9).
+- Crear: `scripts/shots-rediseno.ts` (matriz de capturas; se corre con `tsx`, ya instalado, e importa `chromium` de
+  `@playwright/test`), `tests/e2e/perf.spec.ts` (mide LCP con `PerformanceObserver`, elemento LCP, CLS, bytes de
+  JS/imagen transferidos antes de `load`, con CDP —solo Chromium—: Slow 4G y CPU ×4 en móvil). El resultado se escribe
+  en `tests/out/baseline-F0.json` **y se copia a `docs/rediseno-2026/baseline-F0.json`**: `tests/out/` y
+  `tests/shots/` están en `.gitignore`, así que lo que quede ahí no llega al commit (las capturas siguen siendo
+  artefactos de QA; la línea de base medida sí tiene que versionarse).
 - No se borra nada.
 
 **Criterios de aceptación.**
-- `npm test` (vitest, 9 archivos) y los 17 specs de Playwright **verdes antes y después del upgrade** (si alguno ya
-  estaba rojo en la rama, se documenta en `tests/out/baseline-F0.json` y no cuenta como regresión).
+- `npm test` (vitest, 10 archivos / 149 pruebas) y los 17 specs / 267 pruebas de Playwright **verdes antes y después
+  del upgrade** (si alguno ya estaba rojo en la rama, se documenta en `docs/rediseno-2026/baseline-F0.json` y no cuenta
+  como regresión). Línea de base del revisor: 261/267, con 6 *timeouts* de `networkidle` en `/work/qrvey` que pasan
+  aislados (ver «Revisión contra el código»). F0 hace **dos** corridas completas limpias (sin otros procesos): si qrvey
+  vuelve a fallar, se diagnostica (trace de `test-results/`) y se corrige la espera en la prueba con motivo, antes del
+  upgrade, para que la línea de base sea verde de verdad.
 - Capturas «antes» de `/`, `/en`, `/work/olbo`, `/cv` a 390/1024/1440.
 - Baseline registrado: LCP de `/` móvil y escritorio, JS inicial de `/` (KB gz), CLS.
-- `typeof React.ViewTransition !== "undefined"` (o se activa el plan B y se anota).
+- `<ViewTransition>` compila y renderiza con el componente de prueba de §1.9 (tsc + build verdes) y el React de Next
+  lo exporta (o se activa el plan B y se anota).
+- `npm run lint`, `npx tsc --noEmit` y `npm run build` verdes tras el upgrade, sin avisos nuevos (hoy el build solo
+  avisa del `Cache-Control` propio de `/_next/static`, preexistente).
 
 **Pruebas nuevas.** `perf.spec.ts` (solo mide y escribe JSON en F0; aserciones desde F3).
 
@@ -306,7 +463,10 @@ las rutas públicas**.
   `src/components/marca/{NameLockup,Wordmark}.tsx`, `src/components/sistema/{Losa,BentoCard,DotMatrix,Estado,Boton,Flecha,Etiqueta,Iconos}.tsx`,
   `src/data/{decisiones,home,hero,perfil}.ts`, `src/lib/spring.ts` (+ `stepCritical`),
   `src/app/(es)/lab/page.tsx` (catálogo: superficies, tipos, Doto, botones, card en reposo/hover/foco, `NameLockup` en
-  sus tres escalas; `notFound()` salvo `process.env.DG_LAB === "1"`; `robots: noindex`; fuera del sitemap).
+  sus tres escalas; `notFound()` salvo `process.env.DG_LAB === "1"`; `robots: noindex`; fuera del sitemap). Ojo: la
+  página es estática, así que `DG_LAB` se lee **en el build**, no en `next start`: el QA corre
+  `DG_LAB=1 npm run build && npx next start -p 3131` (o `npm run dev` con `DG_LAB=1`), y el build normal de la puerta
+  común se hace **sin** `DG_LAB` (comprobar que `/lab` da 404 ahí).
 - Pruebas: `src/data/__tests__/{decisiones,home,hero,copy.sinMarcadores}.test.ts`,
   `src/lib/__tests__/spring.critical.test.ts`.
 
@@ -320,8 +480,9 @@ las rutas públicas**.
   del FLIP (alto y ancho se leen del DOM).
 - vitest: `theme.tokens`, `data.singleSource` e `i18n.parity` verdes sin cambiarlos; nuevas verdes.
 
-**Riesgos / plan B.** El primer `:root {` cambia por accidente y rompe `theme.tokens` → los tokens van en un bloque
-nuevo después de la línea 87. Descarga de Google Fonts bloqueada en el build → `next/font/local` (§1.7).
+**Riesgos / plan B.** El primer `:root {` (línea 48 de `globals.css`, el que declara `--paper`) cambia por accidente y
+rompe `theme.tokens` → los tokens van en un bloque `:root {` nuevo **después** del de la línea 86 (escala fluida),
+nunca antes del de la 48; `theme.tokens` busca la cadena exacta `:root {` y `:root[data-theme="light"] {`. Descarga de Google Fonts bloqueada en el build → `next/font/local` (§1.7).
 
 **QA.** Visual: lab a 390/1024/1440 (ES). Crítico: escala tipográfica, radios concéntricos, contraste, materiales.
 
@@ -340,8 +501,9 @@ actual sigue intacto; las páginas nuevas ya se pueden visitar por URL.
   pin, móvil vertical con año sticky; 02 §5.5).
 - Modificar: `src/lib/metadata.ts` (`workMetadata`, `aboutMetadata`, `experienceMetadata` con títulos/descripciones de
   04 §4.6, descripciones compuestas con datos), `src/lib/personJsonLd.ts` (+ `ProfilePage` para `/about`, `ItemList`
-  para `/work`; mismo `@id` de Person), `src/app/sitemap.ts`, `public/portrait/` (+ `perfil-83a47bc7-v1-{640,1080}.avif/webp`
-  generado con `sharp` desde `retratos-hf/83a47bc7.jpg`).
+  para `/work`; mismo `@id` de Person), `src/app/sitemap.ts`, `public/portrait/` (+ `perfil-83a47bc7-v1-{640,880}.avif/webp`
+  generado con `sharp` desde `docs/rediseno-2026/retratos-hf/83a47bc7.jpg`, que mide 880×1168: no hay 1080).
+  `sharp` entra como devDependency en F0, así que F2 depende de F0 (ya es así).
 - Pruebas: `tests/e2e/matrix.ts` (+ `/work`, `/about`, `/experience` a `ROUTES`), `tests/e2e/seo.spec.ts` (E3
   esperado + 6 URLs; E1 por ruta; E2 `ProfilePage` en `/about`, `ItemList` en `/work`).
 
@@ -380,15 +542,30 @@ fase que retira el shell y reescribe sus pruebas.
 - Pruebas que se reescriben (motivo: el shell horizontal ya no existe):
   - `keyboard 6.2–6.5` → nuevas `6.2` orden de Tab = orden del DOM (K2, K1, K3…), `6.3` Enter en una card navega,
     `6.4` cada sección tiene un tabulable, `6.5` las pills con Enter llevan el foco a su sección.
-  - `recheck R4/R5`, `recheck2 R4b` → retirados (cubiertos por los nuevos 6.x); `R1` conserva el conteo de landmarks.
+  - `recheck R4/R5`, `recheck2 R4b` → retirados (cubiertos por los nuevos 6.x); `R1` conserva el conteo de landmarks
+    (solo lo registra; quien lo afirma es `a11y 3.2–3.4`).
   - `i18n I3` → «el switch conserva el **ancla** de la sección» (`/#work` → `/en#work`) usando las pills.
   - `layout 5.3–5.4` (geometría del shell) → `5.3` el OS a 1440×900 cabe en el pliegue (6 filas), `5.4` ninguna
     `.tarjeta` recorta (`scrollHeight ≤ clientHeight + 1`) a 1024×768, 1280×720, 1366×768, 1440×900, 1920×1080.
   - `measure M2` (resplandor del héroe viejo) → retirada; `M3` (rojos) se queda como medida informativa.
-  - `hero320.spec` → foto a sangre + K2 sin desborde a 320.
+  - `hero320.spec` (hoy solo toma capturas) → se le añaden aserciones: foto a sangre + K2 sin desborde a 320.
   - `settle.ts` → quitar la caminata de `[data-hshell]`.
   - `content X2` → se mantiene en F3 (la card de olbo lleva a la página completa); se reescribe en F6.
   - `visual.spec` → regenerar (no tiene línea base comprometida).
+  - `keyboard 6.3` (ArrowDown dentro del panel Work, usa `[data-hshell]`/`[data-panel]`) → retirada con las 6.2–6.5.
+  - `keyboard 6.6` (menú móvil en `/` a 375: `header button[aria-expanded]` + Esc) → se conserva si el header B
+    mantiene un botón de menú a < 1024; si el dock lo reemplaza en el home, se reescribe como «el dock y el menú de
+    `/cv` responden a Esc y devuelven el foco» (motivo: el home móvil navega por dock).
+  - `motion 7.2` (viñeta de Naowee con «5» y «4» en `/`) → se reescribe sobre `/work/mercadolibre-andes` (la viñeta
+    de `CaseNda`, estado final con RM), salvo que el tablero reutilice las viñetas; con el home nuevo pasaría por
+    casualidad («n de 4»), que es peor que fallar.
+  - `i18n I2` y `I4` (selectores de la cabecera, también en `/cv`) → verdes **sin cambiarlas** si el header conserva
+    los selectores de §1.3; si no, se reescriben con motivo (y es un cambio en la cabecera de `/cv`).
+  - `a11y 3.2–3.4` (un `h1`, un banner, un `main#main`, **un** `<footer>`) en `/` → verde sin cambiarla:
+    `SiteFooter` es el único `<footer>` del home y el `Contact.tsx` viejo se va con el shell.
+  - `content 10.1` y `10.5` → verdes sin cambiarlas («Head of Product» en el texto del home; el chip NDA una vez).
+  - `frames F2/F3`, `measure M3/M4`, `R1`, `hero320` solo registran: se dejan, y donde el plan les pide un criterio
+    («R1 verde», «hero320 sin desborde») se les **añade** la aserción con motivo.
 - Pruebas nuevas: `tests/e2e/tablero.spec.ts` (orden DOM, K5 fusionada, reloj con `aria-label`, carrusel móvil con
   contador y botones, dock aparece al salir del héroe, pills con `aria-current`, «Ver casos» y skip link llevan al OS).
 
@@ -402,7 +579,7 @@ fase que retira el shell y reescribe sus pruebas.
 - Un solo nombre visible por pantalla en escritorio (P1-4); disponibilidad una vez en el pliegue (P1-5).
 - `motion 7.1/7.5` verdes; `a11y 3.1` ≥ 7:1; `content 10.1/10.5/10.7` verdes; axe limpio en `/` y `/en`.
 - `perf.spec`: LCP = póster; LCP < 2,0 s móvil (Slow 4G, CPU ×4) y < 1,2 s escritorio; CLS < 0,02; JS inicial ≤
-  baseline + 15 KB gz; póster ≤ 120 KB a 1080 px.
+  baseline + 15 KB gz; póster ≤ 120 KB en su ancho mayor (880 px con la foto provisional de 880×1168).
 - `/cv` y los PDFs sin cambios (el header nuevo se oculta al imprimir: `print 8.1–8.3`, `recheck R3`).
 
 **Riesgos / plan B.** Las pruebas del shell son muchas: el ejecutor entrega la lista de cada prueba cambiada con su
@@ -423,7 +600,11 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
   `cine`/`losa`/`movil`, `frame(p)`), `src/components/hero/{VidrioGL,useLente}.ts(x)`,
   `scripts/build-hero-poster.ts` (Playwright abre un arnés con el mismo shader y la foto de `hero.ts`, toma el canvas
   en estado `losa`/`movil` y `cine` a 1440×900; `sharp` → AVIF q 55–60 y WebP q 78 en 640/1080/1600/1920, sin pasar
-  del ancho nativo de la foto; escribe `public/hero/<id>-<version>/…` y un `manifest.json`),
+  del ancho nativo de la foto; escribe `public/hero/<id>-<version>/…` y un `manifest.json`). **Medido:** las fotos
+  de `retratos-hf/` (`199598aa`, `83a47bc7`, `a4ef948f`) miden **880×1168**: con la provisional solo salen 640 y 880
+  de la foto; el póster del **estado `cine`** (canvas horneado a 1440/1920, con las estrías) sí puede salir a esos
+  anchos, pero es la foto de 880 ampliada ×1,6–2,2 → aceptado mientras sea provisional; la imagen final (D7) debe
+  llegar con un máster ≥ 1920 px de ancho (se anota en `hero.ts` y en 08-ENTREGA).
   `src/lib/__tests__/escena.test.ts`.
 - Modificar: `HeroPoster.tsx` (usa el póster horneado), `K1Retrato.tsx` y la cabecera móvil del tablero (montan
   `VidrioGL` diferido), `src/data/hero.ts` (rutas reales del manifest).
@@ -434,7 +615,8 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
   solo cuadro, sin bucle rAF tras 1 s (contador expuesto en `data-cuadros` del canvas), `getAnimations()` vacío;
   (d) `hasTouch` → arrastre vertical hace scroll, horizontal mueve la lente; (e) `webglcontextlost` simulado
   (`WEBGL_lose_context`) → respaldo CSS. Una prueba de **cambio de foto**: un preset de prueba con otra imagen 3:4 del
-  repo (`retratos-hf/a4ef948f.jpg` en un fixture) renderiza sin tocar componentes.
+  repo (`docs/rediseno-2026/retratos-hf/a4ef948f.jpg` copiada a un fixture de `tests/`) renderiza sin tocar
+  componentes.
 
 **Criterios de aceptación.**
 - Capturas 1440 (cursor sobre la cara y fuera), 1024, 390 (con arrastre): ojos limpios, láser continuo de lado a lado
@@ -522,6 +704,9 @@ crítico. Crítico: coreografía (≤ ⅓ de elementos moviéndose a la vez), cu
 - Modificar: `src/app/(es)/layout.tsx` (`{ children, modal }`), `src/components/pages/CasePage.tsx` (envuelve
   `CaseBody` en `<main id="main">` + JSON-LD), `src/components/case/CaseNext.tsx` (prop `enHoja`: `<Link replace>` en
   hoja, `<a>` en página completa; §1.2), `src/components/sistema/BentoCard.tsx` (guarda el origen del foco),
+  `src/components/cv/CvExperience.tsx` (**solo** `<Link>` → `<a>` en «Ver caso», D22; sin cambio visual: `print`,
+  `I6` y la captura de `/cv` lo vigilan), `CaseBody` con `enHoja` (§1.2: `h2`, colofón sin `<footer>`, `<article>`),
+  las dos páginas del slot con `notFound()` para slug inexistente,
   `globals.css` (hoja: entra 420 ms `--curva-hoja` con velo blur 8, sale 280 ms; `@starting-style` +
   `transition-behavior: allow-discrete`; RM → fundido 150 ms; `html:has(dialog[open]) { overflow: hidden }` con
   `scrollbar-gutter: stable` para no mover el pin; móvil: desde abajo con arrastre).
@@ -532,17 +717,23 @@ crítico. Crítico: coreografía (≤ ⅓ de elementos moviéndose a la vez), cu
   abierta → página completa con una sola `<main>`; Ctrl/Cmd+clic abre pestaña con la página completa; «Siguiente» en la
   hoja reemplaza (Cerrar vuelve al tablero, no al caso anterior); «Siguiente» en página completa no abre hoja; EN igual
   bajo `/en`; slug inexistente → 404 real; `seo E5` verde; arrastre de 140 px en móvil cierra; RM → fundido.
+  Más, por lo verificado en §1.2: con la hoja abierta sobre el home hay **1** `main#main`, **1** `h1` y **1**
+  `<footer>` en el documento (el dialog no aporta ninguno); hoja → enlace del caso a `/#work` → no queda hoja pintada
+  (slot rancio oculto); desde `/cv`, clic en «Ver caso» → página completa, sin `dialog`.
 
 **Criterios de aceptación.**
 - Capturas: hoja de Naowee, Andes (NDA), olbo, DC Medical a 1440 y 390, ES y EN (comparar con `shot_B_1440_hoja.jpg`,
   `shot_B_390_hoja.jpg`); página completa de los mismos por URL directa sin cambios frente a F5.
-- `hoja.spec` y X2a/X2b verdes; axe sin violaciones con la hoja abierta; `R1` (una `main#main`) verde en página completa
-  y en el home con hoja abierta (la hoja no tiene `<main>`).
+- `hoja.spec` y X2a/X2b verdes; axe sin violaciones con la hoja abierta; `a11y 3.2–3.4` verde en página completa y la
+  aserción equivalente de `hoja.spec` en el home con hoja abierta (1 `main#main`, 1 `h1`, 1 `<footer>`; la hoja no
+  tiene `<main>`). (`R1` solo registra: no sirve de criterio.)
+- `/cv` con «Ver caso» → página completa; `print 8.x`, `I6` y la captura de `/cv` idénticos a F5.
 - La hoja no rompe el pin ni la lente (al cerrar, el tablero sigue en el mismo progreso).
 - Sin peticiones extra al abrir (la ruta del slot está prerenderizada; prefetch de `Link`).
 
-**Riesgos / plan B.** Conducta de la interceptación distinta a §1.2 en la versión instalada (ver «Verificar antes» de
-§1.2). Plan B: la hoja como **componente cliente** abierto por el `onClick` de la card con `history.pushState` a
+**Riesgos / plan B.** Conducta de la interceptación distinta a §1.2 en la versión instalada: §1.2 quedó verificado
+en 16.3.5 (código de reescrituras idéntico en 16.4.5); el ejecutor de F6 repite las cinco comprobaciones de §1.2 como
+primeras pruebas de `hoja.spec` tras el upgrade de F0. Plan B: la hoja como **componente cliente** abierto por el `onClick` de la card con `history.pushState` a
 `/work/[slug]` (URL real y compartible; recarga → página completa) y `popstate` para cerrar; el contenido de la hoja se
 pide con el payload RSC de la ruta o con un `fetch` a un JSON estático generado en build. Peor que el patrón de Next,
 pero sin dependencias de su router.
@@ -608,6 +799,10 @@ limpieza del andamiaje.
 - Borrar: `src/app/(es)/lab/page.tsx`, código muerto (grep de imports huérfanos), CSS sin uso.
 - Pruebas: `seo E1/E2` con OG nuevo; `perf.spec` con aserciones finales; navegadores: proyectos de Playwright
   `webkit` y `firefox` para `/`, `/en`, hoja y `/work/olbo` (smoke: sin errores, OS visible, hoja abre/cierra).
+  Hoy `playwright.config.ts` no declara `projects` (solo Chromium) y en `/opt/pw-browsers` **solo está Chromium 1243**:
+  hay que añadir los proyectos y correr `npx playwright install webkit firefox` (WebKit 2359, Firefox 1543 para 1.63);
+  si el proxy no deja bajarlos, el smoke de WebKit/Firefox queda en el checklist de Doug. `perf.spec` usa CDP:
+  se limita al proyecto Chromium.
 
 **Criterios de aceptación.**
 - Lighthouse móvil (Moto G Power, Slow 4G) en `/`, `/en`, `/work/naowee-suid`, `/about`: Performance ≥ 90,
@@ -675,6 +870,7 @@ Todas viven en `src/data/decisiones.ts` (o en el dato que se indica) y ninguna b
 | D19 | «Siguiente caso» | sigue `num` (no `ordenCasos`) | `getNextCaseStudy` | casos |
 | D20 | Doto mínimo | 20 px (B) en vez de 32 (02 §7.1) | token `--t-*` + prueba | cifras |
 | D21 | Hoja desde `/work`, `/about`, `/experience` | sí, abre hoja | `decisiones.hojaDesdeIndices` | navegación |
+| D22 | Enlaces a casos desde `/cv` (hoy `<Link>`, que interceptaría) | página completa (`<a>` en `CvExperience.tsx`); la hoja oscura no se abre sobre el CV | `cv/CvExperience.tsx` | `/cv`, F6 |
 
 ---
 
