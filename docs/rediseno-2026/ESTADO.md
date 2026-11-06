@@ -1,0 +1,63 @@
+# Rediseño douguizard 2026 · ESTADO y protocolo de sesiones
+
+> Archivo de traspaso. Una sesión nueva (orquestador o fase) lee **este archivo primero** y nada del historial de chat.
+> Actualízalo al cerrar cada fase. Rama de trabajo: `claude/douguizard-portfolio-redesign-9ivnau` (nunca `main`;
+> no se despliega sin Doug).
+
+## Protocolo para ahorrar contexto y tokens (pedido de Doug)
+
+1. **Una sesión por fase.** El orquestador abre una sesión nueva para cada fase (diseño, ejecución F1…F8, QA,
+   crítica) con un prompt corto que apunta a archivos; no retoma agentes viejos ni pega historial.
+2. **Los archivos son la memoria.** Cada sesión lee solo lo que su fase necesita (lista abajo) y deja su salida en
+   `docs/rediseno-2026/` + este `ESTADO.md` actualizado + commit y push a la rama.
+3. **Lectura acotada.** Nada de leer archivos enteros grandes: `grep -n` y rangos. Capturas: solo las necesarias.
+4. **Modelo y esfuerzo:** diseño, crítica y ejecución → Opus, esfuerzo alto; tareas mecánicas (capturas, codemods,
+   verificación) → Sonnet, esfuerzo medio.
+5. **Cierre de fase:** el orquestador valida contra `00-BRIEF.md` §6 y el criterio de aceptación de la fase en
+   `07-PLAN-IMPLEMENTACION.md`, hace commit/push y actualiza este archivo.
+6. Si una sesión se corta por límite de uso, la siguiente retoma desde este archivo y `git log`, no desde el chat.
+
+## Decisiones de Doug (vigentes)
+
+- **Propuesta B «Cine → OS»** aprobada. Landing de referencia: `referencias/ref-8-landing-elegido-B-os.jpg`.
+- **Nombre:** lockup **«corte láser»** (opción 4 de `propuestas/B-tipo/`, Geologica; el láser parte «Vargas» y el
+  corte se cierra cuando la foto se encoge). Resto: Urbanist + Instrument Sans + Doto (solo cifras/fechas).
+- **Sin máscara** ni revelado. Héroe = foto + vidrio estriado oblicuo; el cursor solo abre/aclara el vidrio.
+- **Imagen del héroe en pausa.** Provisional `retratos-hf/199598aa.jpg` (láser rojo, gorra NY, sin lentes, 880×1168).
+  Lo explorado no convenció (`heroe/`). Gusto: `referencias/ref-6`, `ref-7` (render 3D hiperdetallado, gear gastado)
+  pero **fondo oscuro**. Se le dará dirección de arte después.
+- **Experiencia:** motion graphics que cuentan los años como línea de tiempo (maqueta en `propuestas/B-paginas/`).
+- Casos: hoja sobre el tablero **con URL real** (rutas interceptadas `@modal/(.)work/[slug]` + página completa).
+
+## Estado (6 nov 2026, 00:30 UTC)
+
+| Bloque | Estado | Dónde |
+|---|---|---|
+| Brief, fundamentos, UX, técnica, copy | ✓ | `00`–`04` |
+| Propuestas A/B, críticas, comparación | ✓ | `propuestas/A`, `propuestas/B`, `05`, `06-CRITICA-*` |
+| Lockups del nombre | ✓ (elegido 4) | `propuestas/B-tipo/` |
+| Páginas internas (Trabajo, caso, Perfil, Experiencia) | maquetas y capturas ✓; NOTAS y corrección «~1.200» en cierre; **falta crítica** | `propuestas/B-paginas/` |
+| Plan de implementación (revisado contra el código) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
+| **F0** base técnica | upgrade next 16.4.5 / react 19.3.1 / gsap aplicado (lint, tsc, build ✓; 2 corridas Playwright previas 267/267 ✓); falta Playwright post-upgrade, diff de capturas, perf y `F0-INFORME.md` | repo + `baseline-F0.json` |
+| F1–F8 | pendiente | `07` §2 |
+
+## Siguiente (en orden)
+
+1. Cerrar F0 (si `F0-INFORME.md` no existe: sesión nueva de ejecución F0 que corra Playwright post-upgrade, diff de
+   capturas, perf, informe).
+2. Crítica de las páginas internas (sesión nueva: crítico con refactoring-ui + web-design-guidelines, mismo formato
+   que `06-CRITICA-B.md`) → sesión del diseñador que aplica P0/P1 → mostrar a Doug.
+3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`).
+4. F1 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+
+## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
+
+Disponibilidad (consultoría vs roles) · orden de casos · titular EN «direct/lead» · retirar toggle claro/oscuro ·
+datos faltantes de `04-COPY.md §7` · imagen final del héroe.
+
+## Entorno
+
+- Red bloquea `dribbble.com`, `instagram.com`, `upload.higgsfield.ai` (no se pueden subir referencias a Higgsfield).
+- Higgsfield: ~65 créditos (5 nov). Soul `Urban Swagger Vibe` deriva de identidad; mejor referencia: `199598aa`.
+- Chromium en `/opt/pw-browsers`; `node_modules` puede no existir en una sesión nueva → `npm ci`.
+- Límites de uso de la API cortan agentes largos: por eso fases cortas en sesiones nuevas.
