@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
+import sharp from "sharp";
 
 /**
  * F4 · vidrio estriado WebGL2 (07 F4, pruebas a–e + cambio de foto). El canvas
@@ -32,6 +33,20 @@ const conCanvas = async (page: Page, sel: string) => {
 
 const cuadros = (page: Page, sel: string) =>
   page.locator(`${sel} canvas[data-vidrio='gl']`).evaluate((c) => Number((c as HTMLElement).dataset.cuadros ?? 0));
+
+/**
+ * Rugosidad horizontal de un parche de 40×40 centrado en (x, y): media de |ΔL| entre
+ * píxeles vecinos en x. Sobre pared lisa casi toda viene de las aristas de las estrías,
+ * así que mide lo que se pinta (F4 P1-1), no un atributo.
+ */
+const rugosidad = async (page: Page, x: number, y: number) => {
+  const png = await page.screenshot({ clip: { x: x - 20, y: y - 20, width: 40, height: 40 } });
+  const { data, info } = await sharp(png).greyscale().raw().toBuffer({ resolveWithObject: true });
+  let suma = 0;
+  for (let j = 0; j < info.height; j++)
+    for (let i = 0; i + 1 < info.width; i++) suma += Math.abs(data[j * info.width + i + 1] - data[j * info.width + i]);
+  return suma / (info.height * (info.width - 1));
+};
 
 const errores = (page: Page) => {
   const e: string[] = [];
@@ -82,6 +97,22 @@ test.describe("(a) Chromium con WebGL2", () => {
     await page.mouse.move(k1.x + k1.width * 0.3, k1.y + k1.height * 0.7, { steps: 4 });
     const lente = page.locator(".k1 canvas");
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
+
+    // Lo que se pinta: sobre la pared (arriba a la izquierda de la foto) la lente quita ≥ 50 % de las estrías.
+    await page.mouse.move(20, 450, { steps: 4 });
+    await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
+    const pared = async () => {
+      const b = (await lente.boundingBox())!;
+      return { x: b.x + b.width * 0.2, y: b.y + b.height * 0.3 };
+    };
+    const p0 = await pared();
+    const cerrada = await rugosidad(page, p0.x, p0.y);
+    await page.mouse.move(p0.x, p0.y, { steps: 4 });
+    await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
+    await page.waitForTimeout(300); // la tarjeta sube 2 px con el hover: se mide donde quedó la foto
+    const p1 = await pared();
+    const abierta = await rugosidad(page, p1.x, p1.y);
+    expect(abierta, `rugosidad ${cerrada.toFixed(2)} → ${abierta.toFixed(2)}`).toBeLessThanOrEqual(cerrada * 0.5);
     await page.mouse.move(20, 450, { steps: 4 });
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
     const tras = await cuadros(page, ".k1");
@@ -170,6 +201,17 @@ test.describe("(d) táctil", () => {
     const lente = page.locator(".k1 canvas");
     await expect(lente).toHaveAttribute("data-lente", /^(0\.[5-9]\d|1\.00)$/, { timeout: 3000 });
     await toque("touchEnd", 300, 302);
+    await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
+
+    // Lo que se pinta: con el dedo quieto sobre la pared (izquierda, altura del pecho) las estrías bajan ≥ 50 %.
+    const cerrada = await rugosidad(page, 60, 302);
+    await toque("touchStart", 280, 302);
+    for (let x = 265; x >= 60; x -= 15) await toque("touchMove", x, 302);
+    await toque("touchMove", 60, 302);
+    await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
+    const abierta = await rugosidad(page, 60, 302);
+    expect(abierta, `rugosidad ${cerrada.toFixed(2)} → ${abierta.toFixed(2)}`).toBeLessThanOrEqual(cerrada * 0.5);
+    await toque("touchEnd", 60, 302);
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
 
     // Vertical: el navegador se queda el gesto y la página baja.

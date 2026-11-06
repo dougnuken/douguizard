@@ -50,7 +50,7 @@ void main() {
   float aa = max(fwidth(u), 1e-4);
   float face = 1.0 - smoothstep(0.78, 1.1, length((p - uFace.xy) / uFace.zw));
   float md = length(p - uMouse);
-  float lens = uLensR > 0.0 ? (1.0 - smoothstep(uLensR * 0.5, uLensR * 1.2, md)) * uLens : 0.0;
+  float lens = uLensR > 0.0 ? (1.0 - smoothstep(uLensR * 0.6, uLensR * 1.2, md)) * uLens : 0.0;
   float str = uStr * (1.0 - uProt * face) * (1.0 - lens);
   float band = uLineH > 0.0 ? 1.0 - smoothstep(uLineH, uLineH * 2.4, abs(p.y - uLineY)) : 0.0;
   float g = 1.0 - lens;
@@ -59,7 +59,7 @@ void main() {
   float w = smoothstep(0.0, aa * 1.5, t);
   // En el borde de entrada se funde con la estría anterior (solo en esa franja: dos lecturas más).
   if (w < 1.0) col = mix(franja(p, dir, k - 1.0, t + 1.0, str, band, g, lipW), col, w);
-  col *= 1.0 + 0.06 * lens;
+  col *= 1.0 + 0.04 * lens;
   o = vec4(col, 1.0);
 }`;
 
