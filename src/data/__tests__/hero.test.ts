@@ -63,6 +63,7 @@ describe("foto del héroe", () => {
       expect(p.lente).toBeGreaterThanOrEqual(0);
     }
     expect(vidrio.movil.angulo).toBe(vidrio.cine.angulo);
+    expect(vidrio.losa.angulo).toBe(vidrio.cine.angulo);
     expect(vidrio.movil.angulo).toBeGreaterThan(0);
   });
 

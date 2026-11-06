@@ -84,7 +84,7 @@ export function foto(
 
 export const fotos: FotoHeroe[] = [
   // Provisional (D7): máster de 880 px; la imagen final debe llegar con ≥ 1920 px de ancho.
-  foto("199598aa", 2, {
+  foto("199598aa", 3, {
     tamano: { w: 880, h: 1168 },
     foco: [0.5, 0.41],
     cara: [0.5, 0.41, 0.19, 0.205],
@@ -108,12 +108,12 @@ export function getFotoActiva(): FotoHeroe {
 /**
  * Parámetros del vidrio por estado (portados de `propuestas/B/index.html`):
  * `cine` = la foto grande de `/about` (oblicuo 12°), `losa` = K1 en el tablero
- * de escritorio (vertical, fiel a ref-8), `movil` = la foto a sangre (< 1024,
- * oblicuo 12°: F3 P2-3).
+ * de escritorio, `movil` = la foto a sangre (< 1024). Los tres oblicuos a 12°:
+ * decisión de Doug (vidrio estriado oblicuo; F3 P2-3, F4 P0-1).
  */
 export const vidrio: Record<EstadoVidrio, ParametrosVidrio> = {
   cine: { angulo: 12, estria: 0.05, fuerza: 0.62, lente: 240, proteccionCara: 0.68, dprMax: 1.5 },
-  losa: { angulo: 0, estria: 0.042, fuerza: 0.55, lente: 150, proteccionCara: 0.68, dprMax: 1.5 },
+  losa: { angulo: 12, estria: 0.042, fuerza: 0.55, lente: 150, proteccionCara: 0.68, dprMax: 1.5 },
   movil: { angulo: 12, estria: 0.04, fuerza: 0.55, lente: 130, proteccionCara: 0.75, dprMax: 1.5 },
 };
 
