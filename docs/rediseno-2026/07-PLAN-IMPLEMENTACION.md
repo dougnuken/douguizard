@@ -8,6 +8,8 @@
 > En cada fase, la columna **«Verificar antes»** lista lo que este plan no pudo comprobar (en el contenedor no hay
 > `node_modules`: no se corrió `npm test` ni Playwright al escribirlo). **Actualizado por el revisor:** lo verificable
 > ya se verificó; ver la sección siguiente.
+> **Actualizado el 6 nov 2026** con lo aprobado por Doug: lockup «corte láser» (F1) y páginas internas
+> `propuestas/B-paginas/` (F2 y F7). Ver «Correcciones del 6 nov 2026».
 
 ---
 
@@ -96,6 +98,47 @@ intermitentes de `/work/qrvey` antes de dar la línea de base por buena.
 
 ---
 
+## Correcciones del 6 nov 2026 · lockup «corte láser» y páginas internas aprobadas
+
+> Planificador. Fuentes: `ESTADO.md` (decisiones vigentes), `propuestas/B-paginas/NOTAS.md` §1–§6 y **§7** (los 14
+> arreglos tras `06-CRITICA-PAGINAS.md`; maquetas **aprobadas por Doug el 6 nov**), `propuestas/B-tipo/TIPO.md`
+> (opción 4) y el código de `src/` (cada nombre citado se verificó con `grep`; lo que no existe va marcado **NUEVO**).
+> No cambia código. Los 12 P2 de la crítica no entran salvo P2-1 y P2-6, que ya están en las maquetas.
+
+**Decisiones que el plan da por tomadas** (dejan de ser valores por defecto):
+
+1. **Lockup = opción 4 «corte láser»**: Geologica (`next/font/google`, `axes: ["SHRP"]`, SHRP 100, peso 600).
+   `decisiones.nombreLockup = { fuente: "geologica", construccion: "corte" }`. D6 queda como decidida en §4. Especificación,
+   medida y criterios en F1 (`NameLockup`).
+2. **Un solo láser en móvil** (P1-7, opción a): por debajo de 1024 px el nombre va **entero**, sin corte, sin copia
+   y sin hilo propio; el único láser es el de la foto. Vale para todas las páginas (también el home: se descarta el
+   hilo propio de móvil que proponía `TIPO.md` §4).
+3. **Páginas internas** = `B-paginas/{work,about,experience}.html` (F2) y `caso.html` (F7), con los arreglos de
+   NOTAS §7. Lo que antes era «opcional, separable» en F7 (reordenar la plantilla, índice lateral fijo) pasa a ser
+   alcance de F7.
+4. **Una sola cuenta** (P1-4): años, casos publicados, productos propios y empresas salen de funciones puras de
+   `src/lib/cuentas.ts` (**NUEVO**) que leen `cv.ts` y `work.ts`. Las usan «En cifras» de `/work`, K12 del home y los
+   acumulados de `/experience`. Valores de hoy: **12 · 10 · 3** y **6 empresas**.
+5. **Dock móvil de 5 destinos**: Trabajo · Perfil · Experiencia · CV · Contacto (NOTAS §1). En el caso, «Contacto»
+   cede su lugar a «Secciones», que abre una hoja corta con el índice.
+6. **Numeración visible de `/work` = posición en `home.ordenCasos` + `home.archivo`** (P1-1: /01 Naowee, /02 Andes,
+   /03 olbo… /10 Chub). `CaseStudy.num` no cambia y sigue mandando en `getNextCaseStudy` (D19).
+7. **Filtros de `/work` en el flujo**, sin `sticky` (P1-2). **Ficha del caso** en 2 columnas sin cajas ni escalera
+   (P1-5). **Tablero de impacto** con la cifra a `min(72px, 100cqi / k)` (P1-6).
+8. `/about` reutiliza el héroe de B (foto, vidrio, lente, corte) con **sticky + scrub, sin pin** (la rueda siempre
+   mueve la página). `/experience` **sí** ancla (pin de 3,6 viewports) y reparte el scroll **por hito** (P1-9).
+
+**Qué cambió en este documento:** §1.1 (`app/fonts/`), §1.3 (fila `NameLockup` reescrita, `NameLockupCorte` y
+carpetas `trabajo/`, `perfil/`, `trayectoria/` nuevas, filas nuevas en `case/`, `DockMovil` con 5 destinos,
+`Wordmark` en Geologica), §1.5 (`cuentas.ts`, `trayectoria.ts`, `perfil.ts` con logros por hito, campo opcional
+`platforms`), §1.7 (lockup fijo), F1, F2 y F7 (especificación y criterios por página), F3 (reutiliza lo que crea F2),
+§3 (F2 → F3/F4 para el vidrio de `/about`; F7 depende de F2) y §4 (D6 decidida; D17 con el microcopy de NOTAS §4).
+
+**Reversión del lockup (una línea):** `decisiones.nombreLockup = { fuente: "big-shoulders", construccion: "banda" }`
+(opción 3) + reexportar su definición en `app/fonts/lockup.ts`; nada más cambia (el FLIP mide el DOM).
+
+---
+
 ## 0. Estado de partida (verificado en el repo)
 
 | Tema | Hoy |
@@ -167,6 +210,7 @@ losa blanca y el tablero (OS) aparece alrededor, con rail de acciones y pills de
 ```
 src/app/
 ├─ globals.css                      ← + capa de tokens B (aditiva), − CSS del shell horizontal (F3)
+├─ fonts/                           ← NUEVO (F1): urbanist, instrument, doto, lockup (Geologica SHRP) + licencias/
 ├─ global-not-found.tsx             ← sin cambios (copy 404 nuevo en F7 vía diccionario)
 ├─ sitemap.ts                       ← + /work, /about, /experience (F2)
 ├─ (es)/
@@ -176,10 +220,10 @@ src/app/
 │  │  ├─ default.tsx                ← null (carga directa / recarga de cualquier ruta)
 │  │  └─ (.)work/[slug]/page.tsx    ← <CaseSheet slug> + generateStaticParams (F6)
 │  ├─ work/
-│  │  ├─ page.tsx                   ← NUEVA: índice de casos (F2)
+│  │  ├─ page.tsx                   ← NUEVA: índice de casos con filtros y archivo (F2)
 │  │  └─ [slug]/{page,not-found}.tsx← página completa existente (CasePage → CaseBody, F6)
-│  ├─ about/page.tsx                ← NUEVA (F2)
-│  ├─ experience/page.tsx           ← NUEVA (F2)
+│  ├─ about/page.tsx                ← NUEVA: perfil con portada de vidrio + corte (F2)
+│  ├─ experience/page.tsx           ← NUEVA: trayectoria anclada por hito (F2)
 │  ├─ cv/page.tsx                   ← NO SE TOCA
 │  └─ lab/page.tsx                  ← TEMPORAL F1–F7: catálogo del sistema; notFound() salvo DG_LAB=1; se borra en F8
 └─ (en)/
@@ -254,8 +298,9 @@ al home. (e) El cambio de idioma desde `/en/work/olbo` (`<a>`) cae en la página
 
 | Carpeta | Componente | Tipo | Qué hace |
 |---|---|---|---|
-| `components/marca/` | `NameLockup.tsx` | server (+ isla cliente solo para «corte») | **Único lugar** donde se compone «Doug / Vargas». Props `escala: "xl" \| "losa" \| "movil"`. Lee `decisiones.nombreLockup` = `{ fuente, construccion }` con `construccion: "dos-lineas" \| "banda" \| "corte"`; aplica `data-lockup` y la variable de fuente de `app/fonts/lockup.ts`. Las dos recomendadas de `B-tipo/TIPO.md` **no son solo un cambio de fuente**: la 4 «corte láser» (Geologica SHRP 100) parte «Vargas» en dos mitades (copia `aria-hidden`, corte medido con `measureText`, desplazamiento que el ancla cierra entre p 0–0,3) y la 3 «banda» (Big Shoulders Stencil opsz 72) va en **una línea**. Contrato para el FLIP: el elemento raíz `[data-lockup]` es lo que se mide (alto/ancho del DOM, nunca constantes); el nombre real va en el `h1`/`sr-only`. |
-| | `Wordmark.tsx` | server | «douguizard» de la cabecera (nombre accesible `meta.homeLabel`). |
+| `components/marca/` | `NameLockup.tsx` | server | **Único lugar** donde se compone «Doug / Vargas». **Decidido (6 nov): opción 4 «corte láser»**, Geologica SHRP 100, 600, tracking −0,05 em, leading 0,9. Props `escala: "xl" \| "losa" \| "movil"` y `corte?: boolean` (solo `xl`: acto 1 del home y portada de `/about`). Lee `decisiones.nombreLockup = { fuente: "geologica", construccion: "corte" }` y la variable `--font-nombre` de `app/fonts/lockup.ts`. Marcado con corte: raíz `[data-lockup][data-corte]` = `h1` (o `div aria-hidden` en el home, donde el `h1` es K2) con `<span class="sr-only">Doug Vargas</span>` + dos líneas `aria-hidden`; la segunda lleva `.m.sup` («Vargas»), `.m.inf` (copia) y `.hilo`. **El estado de partida en el HTML es «cerrado»** (`--desp: 0`, sin `clip-path`, `.m.inf` oculta): sin JS, sin GSAP, con RM, a < 1024 px y en `losa`/`movil` el nombre es una palabra entera. Contrato del FLIP: se mide `[data-lockup]` del DOM, nunca constantes. Detalle y criterios en F1. |
+| | `NameLockupCorte.tsx` (**NUEVO**) | client (isla) | Solo con `corte` y ≥ 1024 px sin RM. Mide `--corte` (`lib/corte.ts`), coloca el nombre para que el láser de la foto pase por el corte (y corrige tras el primer layout), hace la entrada **una sola vez** (separa las mitades a los 880 ms en 520 ms `--curva-salida`) y deja `--desp` en manos del dueño del scroll (`EscenaCliente` en F5, `PortadaPerfilCliente` en F2), que lo lleva a 0 entre p 0 y 0,3. Vuelve a medir con `ResizeObserver` y `document.fonts.ready`. |
+| | `Wordmark.tsx` | server | «douguizard» de la cabecera, en Geologica 600 SHRP 100 (la voz del lockup, NOTAS §1), con el disco «d»; nombre accesible `meta.homeLabel`. |
 | `components/sistema/` | `Losa.tsx` | server | Superficie (`vacio`, `losa`, `clara`, `niebla`, `azul`, `magenta`, `vidrio`) con radio, padding y filo de 1 px. |
 | | `BentoCard.tsx` | server | `Losa` + capa de enlace a tamaño de card (`aria-labelledby` del título, nombre que empieza por el texto visible) + `Flecha`; enlaces secundarios encima con `z-index`. Hover/foco/pressed de NOTAS §2 con `translate`/`scale` (propiedades individuales, no chocan con GSAP). |
 | | `DotMatrix.tsx` | server | Cifras/fechas en Doto (`ROND 100`, ≥ 20 px, `tabular-nums`, `data-dot`), texto real con `aria-label` por grupo. |
@@ -263,10 +308,10 @@ al home. (e) El cambio de idioma desde `/en/work/olbo` (`<a>`) cae en la página
 | | `Boton.tsx`, `Flecha.tsx`, `Etiqueta.tsx`, `Iconos.tsx` (sprite SVG) | server | Botones (≥ 48 px), flecha circular (blanca / `.flecha-tinta`), etiquetas tintadas. |
 | `components/chrome/` | `SiteHeader.tsx` (reescrito) | client | Pastilla de B: wordmark · pills · ES/EN (44×44, `background-clip: content-box`) · «Hablemos». En el home, pills = anclas con scroll-spy (`lib/activeSection.ts`); fuera, rutas. Pills centradas al viewport (P2-1). Hoy el **único que escribe** `setActiveSection` es `SectionIndex` (se retira en F3): el scroll-spy nuevo tiene que llamarlo, o `LanguageSwitch` pierde el `#ancla` (`i18n I3`). Conserva `header a[hreflang]`, `[aria-current="true"]` y, a < 1024 px, un `button[aria-expanded][aria-controls]` con `nav[data-menu]` (lo usan `I4` en `/cv` y `6.6`). |
 | | `RailAcciones.tsx` | client | Rail de escritorio (Escríbeme, CV, LinkedIn, Behance, GitHub, Volver arriba). `inert` mientras p < 0,5 del ancla (P0-3); nunca inerte sin GSAP o con RM. |
-| | `DockMovil.tsx` | client | Trabajo · Perfil · CV · Contacto, aparece al salir del héroe, `env(safe-area-inset-bottom)`. |
-| | `SiteFooter.tsx` | server | © · Barranquilla · UTC-5 · colofón (D11) · Volver arriba (≥ 44 px). Se monta en `HomePage`, `WorkIndexPage`, `AboutPage`, `ExperiencePage` — **no** en `RootDocument` (casos y `/cv` ya tienen su `<footer>`; `a11y 3.4` exige uno solo). |
+| | `DockMovil.tsx` | client | **5 destinos** (6 nov, NOTAS §1): Trabajo · Perfil · Experiencia · CV · Contacto, con `aria-current="page"` en el de la página; en el caso, «Contacto» → «Secciones» (abre `HojaSecciones`). Aparece al salir del héroe (en las páginas internas, desde el inicio), `env(safe-area-inset-bottom)`, toques ≥ 44 px. |
+| | `SiteFooter.tsx` (lo crea **F2**) | server | © · Barranquilla · UTC-5 · colofón (D11) · Volver arriba (≥ 44 px). Se monta en `HomePage`, `WorkIndexPage`, `AboutPage`, `ExperiencePage` — **no** en `RootDocument` (casos y `/cv` ya tienen su `<footer>`; `a11y 3.4` exige uno solo). |
 | `components/tablero/` | `Tablero.tsx` | server | Orden del DOM = orden visual = Tab: K2, K1, K3, K4, K5, [carrusel K7–K10], K11, K12, K13, K14, K15, K16, K17. `grid-template-areas` por breakpoint (≥ 1280, 1024–1279 de P0-1, < 1024). Filas `minmax(var(--fila), auto)`. |
-| | `K1Retrato.tsx`, `K2Claim.tsx`, `CardCaso.tsx` (variantes K3/K4/K7–K10), `CardContacto.tsx` (K5+K6 fusionadas, P1-5), `CardExperiencia.tsx` (K11), `CardCifras.tsx` (K12), `CardPerfil.tsx` (K13), `CardOficio.tsx` (K14), `CardArchivo.tsx` (K16), `Contacto.tsx` (K17) | server | Leen de `src/data` (single source). |
+| | `K1Retrato.tsx`, `K2Claim.tsx`, `CardCaso.tsx` (variantes K3/K4/K7–K10), `CardContacto.tsx` (K5+K6 fusionadas, P1-5), `CardExperiencia.tsx` (K11), `CardCifras.tsx` (K12), `CardPerfil.tsx` (K13), `CardOficio.tsx` (K14), `CardArchivo.tsx` (K16), `Contacto.tsx` (K17) | server | Leen de `src/data` (single source). **`CardCaso`, `CardCifras` y `CardArchivo` los crea F2** (son las losas de `/work`, «En cifras» y el archivo); F3 los reutiliza en el tablero. `CardCaso` acepta `variante` (`oscura-captura`, `jelly-azul-cifras`, `niebla-telefono`, `oscura`, `magenta`) y `numero` visible (lo calcula la página, P1-1). |
 | | `CardTestimonio.tsx` (K15), `CarruselMovil.tsx`, `RelojBaq.tsx`, `CopiarCorreo.tsx` | client (islas) | Rotación manual · scroll-snap con contador y botones · reloj por minuto (`suppressHydrationWarning`) · copiar correo con error de 04 §4.5. |
 | `components/escena/` | `Escena.tsx` | server | Contenedor del acto 1 + OS: `data-escena`, póster, velo, láser, `NameLockup` XL (`aria-hidden`), indicador «Desliza». |
 | | `EscenaCliente.tsx` + `useScrollScene.ts` | client | `import("gsap")` + `ScrollTrigger` diferido; timeline de NOTAS §2 corregido por §7; `gsap.context()` + `gsap.matchMedia()`; limpieza al desmontar. |
@@ -275,12 +320,23 @@ al home. (e) El cambio de idioma desde `/en/work/olbo` (`<a>`) cae en la página
 | | `VidrioGL.tsx` | client (`dynamic`, `ssr:false`) | WebGL2 de un pase portado de `propuestas/B/index.html` (FS del vidrio, SDF de losa, cara protegida, banda láser, lente). Monta en `requestIdleCallback`/`load`, fundido de 200–400 ms tras el primer cuadro. |
 | | `VidrioCss.tsx` | server | Respaldo de franjas CSS (rebanadas) + copia nítida con `mask-image` (cara ∪ banda láser). |
 | | `useLente.ts` | client | Lente del cursor con muelles X/Y críticamente amortiguados (respuesta 0,35 s; entra k = 7, sale k = 4); táctil 1:1 con `touch-action: pan-y`. |
-| `components/hoja/` | `CaseSheet.tsx` | client | `<dialog>` + `showModal()`, `overflow: clip`, foco inicial en Cerrar, línea láser de progreso, «Ver página completa», auto-oculta por pathname. |
+| `components/trabajo/` (**NUEVO**, F2) | `FiltroCasos.tsx` | client | Grupo `role="group"` (Todos · Escala · Productos propios · Anteriores) con `aria-pressed` y anuncio `aria-live="polite"` («N casos»). Oculta con `hidden` lo que no pertenece; reflujo con `document.startViewTransition` (`view-transition-name: caso-<slug>` por losa); sin la API o con RM, cambio directo. **En el flujo, sin `sticky`** (P1-2). Sin JS no se pinta (todo visible). |
+| | `Leido.tsx` | client | `MarcaLeido` (chip «Leído» en la losa si `localStorage["leido:<slug>"]`) y `RegistrarLeido` (lo escribe al montar `CaseBody`). `try/catch`; es solo una comodidad por visitante (04 §6.3). |
+| `components/perfil/` (**NUEVO**, F2) | `PortadaPerfil.tsx` + `PortadaPerfilCliente.tsx` | server + client | Portada de `/about`: escenario sticky de 210 svh con la foto de `hero.ts` (`HeroPoster`), velo, láser, `NameLockup escala="xl" corte` (es el `h1`) y bio de tres frases. El cliente (`import("gsap")` diferido, ≥ 1024, sin RM) liga a un `ScrollTrigger` **sin pin** (scrub 0,3): corte p 0–0,3, foto a losa col 8–12 p 0–0,7 (cúbica in-out), vidrio .62 → .08 p 0–0,85, bio p 0,5–0,8. El material del vidrio es un hueco: F3 monta `VidrioCss`, F4 `VidrioGL`. |
+| | `LoQueHago.tsx`, `ComoTrabajo.tsx`, `DatosPerfil.tsx`, `Marcas.tsx`, `Citas.tsx` | server | «Lo que hago» (3 losas, Sistemas en jelly azul; rejilla `auto · 64px · título · párrafo`, P1-13), «Cómo trabajo» (losa clara, 4 nodos cosidos por el hilo), «Datos» + «Con qué trabajo» (`getCv(locale).tools`), «Dónde he trabajado» (`getWordmarks()` en Geologica, 2 filas de 4), citas verbatim de `testimonials.ts` con `lang="en"`. |
+| `components/trayectoria/` (**NUEVO**, F2) | `Trayectoria.tsx` | server | `<section>` con ceja, `h1`, intro, contador `aria-hidden` (`Odometro`), era `aria-hidden`, `<dl>` de acumulados, `<ol>` **completo** de hitos (`Hito`: `h2` empresa, rol del CV, periodo `formatPeriod`, logro, «Ver caso» con `sr-only` de la empresa) y eje `aria-hidden` (eras, línea láser + cabezal, tramos con duración proporcional, años en Doto, pista «Productos propios» de 140 px a la derecha). |
+| | `TrayectoriaCliente.tsx`, `Odometro.tsx` | client | Pin de 3,6 viewports con scrub 0,5 (≥ 1024, sin RM, con GSAP); año = `yDe(p)` de `lib/trayectoria.ts`; `focusin` en un hito → `scrollTo` instantáneo a su tramo + `progress(1)` (P0-1); móvil: activo = el hito que cruza el 55 % del viewport, barra fija con contador de 48 px. Odómetro de 4 columnas, giro de 260 ms `--curva-salida`; acumulados con «encendido» de 360 ms. |
+| `components/hoja/` | `CaseSheet.tsx` | client | `<dialog>` + `showModal()`, `overflow: clip`, foco inicial en Cerrar, línea láser de progreso, «Abrir como página completa» (NOTAS §1), auto-oculta por pathname. |
 | | `useArrastreHoja.ts`, `origen.ts` | client | Arrastre para cerrar (> 120 px o > 0,5 px/ms, banda elástica) · enlace de origen para devolver el foco. |
-| `components/case/` | `CaseBody.tsx` | server | Cuerpo del caso extraído de `CasePage` (sin `<main>`, sin JSON-LD; el `notFound()` se queda en `CasePage` y en la página del slot). Prop `enHoja`: título `h2` con `id`, colofón sin `<footer>`, envoltorio `<article>` (§1.2). |
+| `components/case/` | `CaseBody.tsx` | server | Cuerpo del caso extraído de `CasePage` (sin `<main>`, sin JSON-LD; el `notFound()` se queda en `CasePage` y en la página del slot). Prop `enHoja`: título `h2` con `id`, colofón sin `<footer>`, envoltorio `<article>` (§1.2). En F7 sigue el orden de `caso.html` (ver F7). |
+| | `CaseIndice.tsx` (**NUEVO**, F7) | client | Índice lateral fijo (≥ 1280, solo página completa): `<nav aria-label>` + `<ol>` de las secciones **presentes**; hilo de 1 px que se llena de láser (`scaleY` = progreso de lectura) y `aria-current="true"` con el punto de presencia en la actual. |
+| | `HojaSecciones.tsx` (**NUEVO**, F7) | client | < 1024: «Secciones» del dock abre un `<dialog>` corto con los mismos rótulos; elegir uno cierra y lleva el foco al `h2`. |
 | `components/pages/` | `HomePage.tsx` (reescrito), `WorkIndexPage.tsx`, `AboutPage.tsx`, `ExperiencePage.tsx` | server | Páginas por idioma, como las actuales. |
 | `lib/` | `gl/{programa,textura}.ts`, `gl/vidrioShader.ts` | lib | Compilar/enlazar, subir textura con mipmaps, fuentes GLSL. `failIfMajorPerformanceCaveat: true`, `webglcontextlost` → respaldo. |
 | | `escena.ts` | lib (pura) | `placement()`, `frame(p)`, `eio()` y el layout de NOTAS (sin DOM) → testeable en vitest. |
+| | `corte.ts` (**NUEVO**, F1) | lib (pura) | `corteDesdeMetricas({ lineHeight, fontAscent, fontDescent, xHeight })` = base − 0,52 × altura de x; `desplazamientos(t)` → `{ sup: −0,10 em × t, inf: +0,06 em × t, rendija: 1,5 px × t }`. La isla le pasa las métricas de `measureText`. |
+| | `cuentas.ts` (**NUEVO**, F2) | lib (pura) | **La única cuenta** (P1-4): `aniosEnProducto()` (= `yearsOfExperience()`), `casosPublicados()` (= `caseStudies.length`), `productosPropios()` (`kind === "personal"`), `empresas()` (empleador de registro distinto, `employer ?? company.name`, sin `freelance`) y `grupoCaso(slug)` (`propio` / `anterior` si está en `home.archivo` / `escala`). |
+| | `trayectoria.ts` (**NUEVO**, F2) | lib (pura) | Hitos en orden desde `education` + `experiences` de `cv.ts` + el hito paralelo «Freelance · Chub» (`work.ts`, `kind: "side"`, sin tramo propio), con año decimal de inicio/fin; eras (de `perfil.ts`); `yDe(p)` (cada hito recibe 1/n del recorrido; el año interpola dentro de su tramo), `pDe(i)` = (i + 0,08)/n, `acumuladosEn(y)` (en y = hoy da lo mismo que `cuentas.ts`). |
 | | `spring.ts` (+ `stepCritical`) | lib | Muelle críticamente amortiguado por eje, aditivo: no cambia `stepSpring` ni sus constantes. |
 
 ### 1.4 Componentes que se retiran (F3, salvo indicación)
@@ -304,10 +360,12 @@ enlaza fuera del shell).
 
 | Archivo | Contenido | Pruebas |
 |---|---|---|
-| `src/data/decisiones.ts` (nuevo) | **Todas** las decisiones pendientes de Doug con su valor por defecto (§4), tipadas y comentadas: `disponibilidad`, `ordenCasos`, `rutasPerfil`, `temaClaroEn`, `titularEn`, `nombreLockup`, `pdfPorIdioma`, `colofon`, `telefonoEnHome`, `nombreK1`, `citaFrancescaEnHome`, `hojaDesdeIndices`. Cambiar una decisión = cambiar una línea. | `decisiones.test.ts`: valores dentro de su unión de tipos. |
+| `src/data/decisiones.ts` (nuevo) | **Todas** las decisiones pendientes de Doug con su valor por defecto (§4), tipadas y comentadas: `disponibilidad`, `ordenCasos`, `rutasPerfil`, `temaClaroEn`, `titularEn`, `nombreLockup`, `pdfPorIdioma`, `colofon`, `telefonoEnHome`, `nombreK1`, `citaFrancescaEnHome`, `hojaDesdeIndices`. Cambiar una decisión = cambiar una línea. `nombreLockup` ya no es un valor por defecto sino la decisión tomada el 6 nov (`{ fuente: "geologica", construccion: "corte" }`); se queda aquí para que la reversión sea de una línea. | `decisiones.test.ts`: valores dentro de su unión de tipos; `nombreLockup` igual a la decisión del 6 nov. |
 | `src/data/home.ts` (nuevo) | `ordenCasos` (slugs), `archivo` (RC · Qrvey · Ideaware · Chub), mapeo K → slug/superficie/KPI (por **índice o id del KPI** de `work.ts`, nunca la cifra escrita), ids de sección **en inglés en los dos idiomas** (`work`, `about`, `experience`, `contact`) para que `/#work` y `/#contact` de hoy sigan llegando. | `home.test.ts`: cada slug existe; el KPI referido existe en ES y EN; los ids no cambian por idioma. |
 | `src/data/hero.ts` (nuevo) | Un objeto por foto: `id`, `version`, `rutas` (master, póster AVIF/WebP por ancho, texturas 1600/1024), `tamano` (w, h), `foco [fx, fy]`, `cara [cx, cy, rx, ry]`, `laser { y, h }` (opcional), `alt` por idioma (o clave de diccionario). Parámetros del vidrio por estado (`cine`, `losa`, `movil`): ángulo, ancho de estría, fuerza, joroba, radio de lente, protección de cara, DPR máx. **Provisional:** `199598aa` con `{ w: 880, h: 1168, eye: 0.418, face: [0.5, 0.41, 0.19, 0.205] }` de la maqueta. | `hero.test.ts`: todo normalizado en [0, 1]; la foto activa tiene todas las rutas; `version` en el nombre de archivo. |
-| `src/data/perfil.ts` (nuevo) | Oficio (3), pasos de «Cómo trabajo» (4), datos (base, zona, idiomas), eras de `/experience` (04 §6.2), migrados de `sections/{Craft,About}.tsx` y 04 §6. ES/EN. | `i18n.parity` extendido. |
+| `src/data/perfil.ts` (nuevo) | Oficio (3), pasos de «Cómo trabajo» (4), datos (base, zona, idiomas), contexto (2 párrafos) y bio de tres frases de `/about`, eras de `/experience` (Base · Producto · Sistemas · Escala · Dirección con su año de inicio, 04 §6.2), **logro por hito** (`logros: Record<ExperienceId \| "uac" \| "chub", string>`, 04 §6.2) y textos de `h1`/intro de `/experience`, migrados de `sections/{Craft,About}.tsx` y 04 §6. ES/EN. Fechas, roles y empresas **no** van aquí: salen de `cv.ts` (`data.singleSource`). | `i18n.parity` extendido; `trayectoria.test.ts`: cada hito de `lib/trayectoria.ts` tiene logro en ES y EN. |
+| `src/lib/cuentas.ts` + `src/lib/trayectoria.ts` (**NUEVOS**, F2) | Derivados puros (§1.3). Ningún componente cuenta casos, propios, años ni empresas por su cuenta. | `cuentas.test.ts`: 12 · 10 · 3 · 6 con la fecha fija de hoy (nov 2026); `productosPropios()` = slugs con `kind: "personal"`; la suma de los grupos de `grupoCaso` = `casosPublicados()`. `trayectoria.test.ts`: hitos en orden, `acumuladosEn(hoy)` = `cuentas`, `yDe`/`pDe` (F2). |
+| `src/data/work.ts` (+ `es/work.ts`) | **Campo opcional NUEVO** `platforms?: string` (p. ej. «Web», «iOS · Android») para la ficha del caso (F7). Sin dato, la celda no se pinta: no se inventa. | `data.integrity`: si existe, no vacío y con su par ES. |
 | `src/data/site.ts` | + `rolCorto` («Head of Product · Barranquilla», derivado del cargo actual de `cv.ts` si se puede) y `availability.modo`. | `data.singleSource` sigue verde. |
 | `src/i18n/dictionaries.ts` | + `home.*`, `hoja.*`, `trabajo.*`, `perfil.*`, `trayectoria.*`, `carrusel.*`, `dock.*`; − `shell.*`, `index.*` al retirar el shell. Copy de 04 (ES/EN). Sin roles ni años. | `i18n.parity` (misma forma); **nuevo** `copy.sinMarcadores.test.ts`: ningún `[DATO A CONFIRMAR`, `⚠️ CONFIRMAR` ni `TODO` en diccionario ni datos visibles. |
 
@@ -320,12 +378,14 @@ Capa **aditiva** con los nombres en español de B (NOTAS §3), en un `:root` pos
   `--tinta-2`, `--tinta-2-vidrio #C2C2CA` (P1-7), `--tinta-3`, `--tinta-osc`, `--tinta-osc-2` (≥ 7:1 sobre claro, ver §0),
   `--electrico #2B56F3`, `--electrico-texto #5B7CFF`, `--laser #FF3344`, `--laser-nucleo #FFE4E6`, `--laser-halo`,
   `--verde-osc #0E6B3D` (solo el 647 de olbo), `--azul-etiqueta #E3EAFF`, `--magenta-etiqueta #FCE6F1`,
-  `--magenta-etiqueta-base`, gradientes `--jelly-azul`, `--jelly-magenta`, `--vidrio-oscuro` (P1-7). **Sin `--verde`.**
+  `--magenta-etiqueta-base`, gradientes `--jelly-azul`, `--jelly-magenta`, `--vidrio-oscuro` (P1-7), `--losa-borde`
+  (filete de 1 px de la ficha, el archivo y los hitos inactivos; páginas internas, 6 nov). **Sin `--verde`.**
 - **Espacio:** la escala 4…128 coincide con la de Tailwind v4 (`--spacing: .25rem`): `p-1…p-32`. Estructurales:
   `--cabecera 88px`, `--rail 64px`, `--os-izq 112px`, `--gap 16px`, `--fila clamp(96px, …, 128px)`.
 - **Tipo:** `--t-12 … --t-120` (+ `--t-96` para alto ≤ 800, P0-1). **Radios:** `--r-losa 48/36`, `--r-m 32/28`,
   `--r-s 24/20`, `--r-xs 16`, pill 999 (concéntricos: radio interno = externo − inset).
-- **Sombras:** `--bloom-azul`, `--bloom-magenta`, `--sombra-flota`, `--sombra-hoja`, `--filo`, `--filo-jelly`.
+- **Sombras:** `--bloom-azul`, `--bloom-magenta`, `--sombra-flota`, `--sombra-hoja`, `--filo`, `--filo-jelly`, `--haz`
+  (núcleo + halo del hilo láser de 1 px: lockup, índice del caso, eje de `/experience`).
 - **Motion:** `--curva-salida (.23,1,.32,1)`, `--curva-io (.77,0,.175,1)`, `--curva-hoja (.32,.72,0,1)`;
   `--d-press 120ms`, `--d-hover 200ms`, `--d-ui 240ms`, `--d-hoja 420ms`, `--d-hoja-salida 280ms`, `--d-entrada 600ms`.
   **No se redefine `--ease-out`** (hoy `(.16,1,.3,1)`, lo usan casos y CV); en F7 los casos migran a `--curva-*`.
@@ -342,7 +402,7 @@ Capa **aditiva** con los nombres en español de B (NOTAS §3), en un `:root` pos
 | Urbanist (variable, 600) | display de losas y titulares | SIL OFL 1.1 | `next/font/google`, `display: swap`, preload | ~28 KB |
 | Instrument Sans (400/500) | texto y UI | SIL OFL 1.1 | `next/font/google`, `swap`, preload | ~30 KB |
 | Doto (variable `wght` + eje `ROND`) | cifras, fechas, reloj (≥ 20 px) | SIL OFL 1.1 | `next/font/google` con `axes: ["ROND"]`, `display: optional`, sin preload | ~6–10 KB |
-| Lockup del nombre (pendiente, D6) | solo `NameLockup` | las seis opciones de `B-tipo/TIPO.md` son OFL: 1 Mona Sans (wdth 125) · 2 Instrument Serif Italic + Mona · **3 Big Shoulders Stencil** (opsz 72) · **4 Geologica** (SHRP 100) · 5 Doto (ROND 100) · 6 Anybody. Recomendadas: 4 y luego 3. (Bodoni Moda fue **descartada** en TIPO.md.) | `app/fonts/lockup.ts` reexporta **una** definición (`lockup-urbanist.ts` por defecto) + la `construccion` de §1.3; cambiar de opción = cambiar `lockup.ts` y `decisiones.nombreLockup`. Todas existen en `next/font/google` de 16.3.5 y 16.4.5 con sus ejes: Geologica `axes: ["SHRP"]` (ejes CRSV/SHRP/slnt/wght), Big Shoulders Stencil `axes: ["opsz"]`, Mona Sans `axes: ["wdth"]`; con `axes` el peso va variable (sin `weight`). | 0 KB extra con Urbanist; Mona Sans ~98 KB (subconjunto/peso fijo si se elige) |
+| **Geologica** (variable `wght` + eje `SHRP`) · lockup «corte láser» (**decidido 6 nov**) | `NameLockup` y `Wordmark` (cabecera: está en todas las páginas B) | SIL OFL 1.1 | `app/fonts/lockup.ts`: `Geologica({ subsets: ["latin"], axes: ["SHRP"], variable: "--font-nombre", display: "swap" })` (con `axes`, sin `weight`; `adjustFontFallback` por defecto para no tener CLS), preload; en CSS `font-variation-settings: "SHRP" 100, "CRSV" 0, "slnt" 0` y `font-weight: 600`. Existe así en `next/font/google` de 16.4.5. Reversión: `lockup.ts` reexporta Big Shoulders Stencil (`axes: ["opsz"]`) y `decisiones.nombreLockup` pasa a `banda`. | ~48 KB (`propuestas/fonts/geologica-latin.woff2`, latin con todos los ejes); el de Google con `axes: ["SHRP"]` debe quedar ≤ 50 KB (se mide en F1) |
 | Archivo + Geist Mono | **solo /cv y su PDF** (y casos hasta F7) | OFL (ya en `scripts/cv-fonts/OFL-*.txt`) | sin cambios | — |
 
 - Se copia el texto OFL de cada familia nueva a `src/app/fonts/licencias/` (requisito de redistribución al autoalojar).
@@ -459,16 +519,51 @@ las rutas públicas**.
 - Modificar: `src/app/globals.css` (capa §1.6, aditiva), `src/components/pages/RootDocument.tsx` (variables de las
   fuentes nuevas en `<html>`; Archivo/Geist siguen), `src/data/site.ts` (`rolCorto`, `availability.modo`),
   `src/i18n/dictionaries.ts` (claves nuevas de §1.5, ES/EN).
-- Crear: `src/app/fonts/{urbanist,instrument,doto,lockup,lockup-urbanist}.ts`, `src/app/fonts/licencias/*.txt`,
-  `src/components/marca/{NameLockup,Wordmark}.tsx`, `src/components/sistema/{Losa,BentoCard,DotMatrix,Estado,Boton,Flecha,Etiqueta,Iconos}.tsx`,
-  `src/data/{decisiones,home,hero,perfil}.ts`, `src/lib/spring.ts` (+ `stepCritical`),
+- Crear: `src/app/fonts/{urbanist,instrument,doto,lockup}.ts` (`lockup.ts` = Geologica SHRP, §1.7; ya no hace falta
+  `lockup-urbanist.ts`), `src/app/fonts/licencias/*.txt` (incluida la OFL de Geologica),
+  `src/components/marca/{NameLockup,NameLockupCorte,Wordmark}.tsx`, `src/components/sistema/{Losa,BentoCard,DotMatrix,Estado,Boton,Flecha,Etiqueta,Iconos}.tsx`
+  (`DotMatrix` trae el arreglo del punto de miles de NOTAS §6: el «.» de las cifras ES va envuelto en `span.punto`,
+  glifo transparente + punto redondo con `::after`; el texto real no cambia), `src/data/{decisiones,home,hero,perfil}.ts`,
+  `src/lib/spring.ts` (+ `stepCritical`), `src/lib/corte.ts`,
   `src/app/(es)/lab/page.tsx` (catálogo: superficies, tipos, Doto, botones, card en reposo/hover/foco, `NameLockup` en
-  sus tres escalas; `notFound()` salvo `process.env.DG_LAB === "1"`; `robots: noindex`; fuera del sitemap). Ojo: la
+  sus tres escalas y, en `xl`, con un control de rango 0–1 que escribe `--desp` para ver el corte abierto/cerrado;
+  `notFound()` salvo `process.env.DG_LAB === "1"`; `robots: noindex`; fuera del sitemap). Ojo: la
   página es estática, así que `DG_LAB` se lee **en el build**, no en `next start`: el QA corre
   `DG_LAB=1 npm run build && npx next start -p 3131` (o `npm run dev` con `DG_LAB=1`), y el build normal de la puerta
   común se hace **sin** `DG_LAB` (comprobar que `/lab` da 404 ahí).
 - Pruebas: `src/data/__tests__/{decisiones,home,hero,copy.sinMarcadores}.test.ts`,
-  `src/lib/__tests__/spring.critical.test.ts`.
+  `src/lib/__tests__/{spring.critical,corte}.test.ts`, `tests/e2e/lockup.spec.ts` (**NUEVO**, contra `/lab` con
+  `DG_LAB=1`; en F2 se le suma `/about` y en F5 el acto 1 del home).
+
+**`NameLockup` · opción 4 «corte láser» (decidida el 6 nov).** Fuente de verdad: `B-tipo/TIPO.md` §4,
+`B-tipo/especimen.html` (`corte()`, `__tipoY0`) y `B-paginas/about.html` (`medirCorte`, `aplicarTexto`, P1-7).
+- **Tipo.** Geologica 600, SHRP 100 (CRSV 0, slnt 0), tracking −0,05 em, leading 0,9. Escalas: `xl` = `--t-120`
+  (portada de `/about`; acto 1 del home a 128 px como en TIPO) · `losa` = la de K1 (una sola palabra por línea, sin
+  corte) · `movil` = la del héroe móvil (sin corte). El `Wordmark` usa la misma familia a 16 px/600.
+- **Construcción.** «Doug» en la línea 1; «Vargas» en la 2 como `.m.sup` (original) + `.m.inf` (copia exacta,
+  `aria-hidden`, `position: absolute; inset: 0`) + `.hilo` (1 px `--laser-nucleo` con `--haz`, `z-index: -1`).
+  Abierto: `.m.sup { clip-path: inset(-1em -1em calc(100% - var(--corte) + var(--rendija)) -1em); translate: var(--desp) 0 }`
+  y `.m.inf { clip-path: inset(calc(var(--corte) + var(--rendija)) -1em -1em -1em); translate: calc(var(--desp) * -.6) 0 }`.
+- **Cómo se mide el corte.** En la isla, tras `document.fonts.load('600 1em "Geologica"')`: un `<canvas>` 2D con la
+  fuente computada del elemento; `measureText("Vargas")` da `fontBoundingBoxAscent/Descent` y `measureText("x")`
+  la altura de x (`actualBoundingBoxAscent`). Línea base dentro de la caja = (lineHeight − (asc + desc)) / 2 + asc;
+  **`--corte` = base − 0,52 × altura de x** (un pelo por encima de la mitad del ojo medio). Es `corteDesdeMetricas()`
+  de `lib/corte.ts`, en px, y se recalcula en cada `ResizeObserver` del lockup.
+- **Cómo se coloca sobre el láser.** El dueño de la escena da la y del láser en la foto (`lineaLaser = Oy + eye × Dy`,
+  con `eye`/`laser.y` de `hero.ts` y `placement()` de `lib/escena.ts`). Primer pase: `top = lineaLaser − offsetTop(l2)
+  − --corte` (mínimo 88 px, la cabecera). **Segundo pase, tras el primer layout:** se mide la y real del corte con
+  `getBoundingClientRect()` y se suma la diferencia (corrige redondeos y el `swap` de la fuente).
+- **Cómo se abre y se cierra.** `desplazamientos(t)` con t ∈ [0, 1]: `--desp = −0,10 em × t` (la mitad de arriba sale
+  hacia afuera, la de abajo +0,06 em hacia la cara), `--rendija = 1,5 px × t` (3 px de luz en total). Entrada **una
+  sola vez**: el nombre sube entero, el láser de la foto se enciende (700 ms) y a los **880 ms** t va de 0 a 1 en
+  **520 ms** `--curva-salida`. Con el scroll, el dueño escribe **t = 1 − clamp(p / 0,3)**: a p ≥ 0,3 el corte está
+  cerrado y la isla pone `data-corte="cerrado"` (quita los `clip-path`, oculta `.m.inf` y `.hilo`): el nombre que
+  llega a K1 es la palabra entera, no dos mitades juntas. Nunca en bucle ni con rebote (sería glitch, 01 §8).
+- **Variante móvil sin corte (P1-7).** A < 1024 px (y en `losa`/`movil`) no se monta la isla y el CSS deja
+  `.m.inf`, `.hilo` y los `clip-path` fuera: «Vargas» entero y un solo láser en pantalla, el de la foto. Lo mismo
+  sin JS, sin GSAP y con RM (el HTML ya sale «cerrado»).
+- **Accesibilidad.** El nombre accesible es el `sr-only` «Doug Vargas» (una sola vez por página); las dos líneas
+  visibles y la copia son `aria-hidden`. En el acto 1 del home todo el lockup XL es `aria-hidden` (el `h1` es K2).
 
 **Criterios de aceptación.**
 - Rutas públicas **sin cambio visual** (capturas F0 = F1 en `/`, `/work/olbo`, `/cv`).
@@ -476,8 +571,23 @@ las rutas públicas**.
   `propuestas/B/shot_B_1440_os.jpg` por superficie); sin `DG_LAB` → 404.
 - Contraste medido en el lab: todos los pares de NOTAS §3 ≥ lo que dicen; párrafos > 40 car. ≥ 7:1 (§0).
 - Doto nunca < 20 px (`[data-dot]` medido en el lab a 390 y 1440).
-- `NameLockup`: cambiar `lockup.ts` a otra opción de `B-tipo` (prueba local, sin commit) no rompe el lab ni la medida
-  del FLIP (alto y ancho se leen del DOM).
+- `NameLockup` (`lockup.spec.ts` en `/lab` a 1440×900 y 1280×720, y `corte.test.ts`):
+  - Fuente: `document.fonts.check('600 16px "Geologica"')` es `true`; el `font-variation-settings` computado del
+    lockup contiene `"SHRP" 100`; un solo woff2 de Geologica en la red, ≤ 50 KB; CLS del lab = 0 con la carga de la
+    fuente (fallback ajustado).
+  - Medida: `--corte` = base − 0,52 × altura de x calculada en la página con `measureText`, ±1 px; tras un resize
+    1440 → 1280 `--corte` se recalcula (cambia en proporción al `font-size`, ±1 px).
+  - Abierto (t = 1): rendija de 3 ± 0,5 px (distancia entre el borde visible de `.m.sup` y el de `.m.inf`);
+    `translate` de `.m.sup` = −0,10 em y de `.m.inf` = +0,06 em, ±0,5 px.
+  - Cerrado (t = 0): `data-corte="cerrado"`, sin `clip-path`, `.m.inf` y `.hilo` no visibles, y una captura de la
+    línea «Vargas» difiere ≤ 0,5 % de los píxeles de la misma palabra pintada sin construcción.
+  - Entrada: tras 1,5 s, `--desp` = −0,10 em y `getAnimations()` del lockup vacío (no hay bucle). Con RM: cerrado
+    desde el primer cuadro y ninguna animación.
+  - 390×844: sin isla montada, `.m.inf`/`.hilo` no visibles, ningún `clip-path`, nombre entero.
+  - Sin JS (`javaScriptEnabled: false`): nombre entero, sin rendija.
+  - Accesibilidad: el nombre accesible «Doug Vargas» aparece una vez; axe limpio.
+  - Reversión: cambiar `lockup.ts` + `decisiones.nombreLockup` a la opción 3 (prueba local, sin commit) no rompe el
+    lab ni la medida del FLIP (alto y ancho se leen del DOM).
 - vitest: `theme.tokens`, `data.singleSource` e `i18n.parity` verdes sin cambiarlos; nuevas verdes.
 
 **Riesgos / plan B.** El primer `:root {` (línea 48 de `globals.css`, el que declara `--paper`) cambia por accidente y
@@ -490,37 +600,151 @@ nunca antes del de la 48; `theme.tokens` busca la cadena exacta `:root {` y `:ro
 
 ### F2 · Rutas nuevas: `/work`, `/about`, `/experience` (ES/EN)
 
-**Objetivo.** Que existan y sean buenas las puertas del tablero antes de construirlo, con el sistema de F1. El home
-actual sigue intacto; las páginas nuevas ya se pueden visitar por URL.
+**Objetivo.** Que existan y sean buenas las puertas del tablero antes de construirlo, con el sistema de F1 y según las
+maquetas **aprobadas por Doug el 6 nov** (`propuestas/B-paginas/{work,about,experience}.html`, con los arreglos de
+NOTAS §7). El home actual sigue intacto; las páginas nuevas ya se pueden visitar por URL.
 
 **Archivos.**
-- Crear: `src/app/(es)/{work,about,experience}/page.tsx`, `src/app/(en)/en/{work,about,experience}/page.tsx`,
-  `src/components/pages/{WorkIndexPage,AboutPage,ExperiencePage}.tsx`, `src/components/trabajo/FiltroCasos.tsx`
-  (cliente: chips «Escala · Producto propio · Anteriores» con `aria-pressed`; sin JS se ven todos; sin query params),
-  `src/components/trayectoria/{LineaTiempo,Era}.tsx` (`<ol>` accesible, línea `aria-hidden`, escritorio horizontal sin
-  pin, móvil vertical con año sticky; 02 §5.5).
+- Crear: `src/app/(es)/{work,about,experience}/page.tsx`, `src/app/(en)/en/{work,about,experience}/page.tsx`
+  (`(es)/work/` y `(en)/en/work/` ya existen con `[slug]`; se añade solo `page.tsx`),
+  `src/components/pages/{WorkIndexPage,AboutPage,ExperiencePage}.tsx`,
+  `src/components/trabajo/{FiltroCasos,Leido}.tsx`, `src/components/perfil/*` y `src/components/trayectoria/*` (§1.3),
+  `src/components/tablero/{CardCaso,CardCifras,CardArchivo}.tsx` (F3 los reutiliza), `src/components/chrome/SiteFooter.tsx`,
+  `src/components/hero/HeroPoster.tsx` (`<picture>` de la foto activa de `hero.ts`, **sin hornear**: `sharp` → AVIF/WebP
+  640/880 en `public/hero/199598aa-v1/`; F4 lo cambia por el póster horneado), `src/lib/{cuentas,trayectoria}.ts`,
+  `src/lib/escena.ts` (solo `placement()` para `cine`/`losa`/`movil`, lo que necesita la portada de `/about`; F4 lo
+  completa con `frame(p)` y su prueba; si F4 llega antes, F2 lo reutiliza).
 - Modificar: `src/lib/metadata.ts` (`workMetadata`, `aboutMetadata`, `experienceMetadata` con títulos/descripciones de
-  04 §4.6, descripciones compuestas con datos), `src/lib/personJsonLd.ts` (+ `ProfilePage` para `/about`, `ItemList`
-  para `/work`; mismo `@id` de Person), `src/app/sitemap.ts`, `public/portrait/` (+ `perfil-83a47bc7-v1-{640,880}.avif/webp`
-  generado con `sharp` desde `docs/rediseno-2026/retratos-hf/83a47bc7.jpg`, que mide 880×1168: no hay 1080).
-  `sharp` entra como devDependency en F0, así que F2 depende de F0 (ya es así).
+  04 §4.6; las descripciones de `/work` y `/experience` se componen con `cuentas.ts`), `src/lib/personJsonLd.ts`
+  (+ `ProfilePage` para `/about`, `ItemList` para `/work`; mismo `@id` de Person), `src/app/sitemap.ts`,
+  `src/data/perfil.ts` (logros por hito, eras, bio, contexto), `src/i18n/dictionaries.ts` (`trabajo.*`, `perfil.*`,
+  `trayectoria.*`; microcopy de NOTAS §4 en D17), `src/components/case/CasePage.tsx` (monta `RegistrarLeido`).
+  El retrato `perfil-83a47bc7-v1-{640,880}` de `public/portrait/` pasa a **F3** (lo usa K13, no `/about`).
 - Pruebas: `tests/e2e/matrix.ts` (+ `/work`, `/about`, `/experience` a `ROUTES`), `tests/e2e/seo.spec.ts` (E3
-  esperado + 6 URLs; E1 por ruta; E2 `ProfilePage` en `/about`, `ItemList` en `/work`).
+  esperado + 6 URLs; E1 por ruta; E2 `ProfilePage` en `/about`, `ItemList` en `/work`), **nuevas**
+  `tests/e2e/{work,about,experience}.spec.ts`, `lockup.spec.ts` (+ `/about`), `src/lib/__tests__/{cuentas,trayectoria}.test.ts`.
+
+**Común a las tres páginas.**
+- Un `<main id="main">`, un `h1`, un `<footer>` (`SiteFooter`) por documento (`a11y 3.2–3.4`). La cabecera es aún el
+  `SiteHeader` actual; la pastilla de B, el rail y el dock de 5 destinos llegan con F3 (que los verifica aquí también).
+- Todo de datos: años, roles, periodos, empresas y cifras desde `cv.ts`/`work.ts`/`perfil.ts`/`cuentas.ts`; ningún
+  literal en componentes (`data.singleSource`). Cifras Doto con miles por idioma (ES `2.000+`, EN `2,000+`).
+- Movimiento: GSAP solo por `import("gsap")` tras `load`, solo ≥ 1024 px, sin RM. Sin JS, sin GSAP o con RM, cada página
+  se pinta en su **estado final estático** (no hay contenido que dependa de una animación para verse).
+- Las cards de caso son `BentoCard` y enlazan a `/work/[slug]` (página completa; la hoja llega en F6, D21).
+
+**`/work` · `WorkIndexPage` (`work.html`).**
+- Orden (DOM = visual = Tab): cabecera de 12 columnas → `h1` «Trabajo» (96 px, P2-1) + intro de 04 §6.3 en col 1–7 y
+  `CardCifras` «En cifras» (losa clara: `aniosEnProducto()` · `casosPublicados()` · `productosPropios()`, copy de K12) en
+  col 8–12 → `FiltroCasos` en el flujo a 32 px del bloque (P1-2) → `<ul>` de **losas protagonistas** (los 6 de
+  `home.ordenCasos`, un solo protagonista cada una: Naowee 7 × 4 oscura con captura; Andes 5 × 4 jelly azul con las cifras
+  y el chip «NDA · Caso a solicitud»; olbo niebla con el teléfono; Banco de Occidente; DC Medical; MakeaPet, la única
+  magenta) → `<section>` **archivo** con los 4 de `home.archivo` (Royal Caribbean, Qrvey, Ideaware, Chub) en filas
+  `{número} · proyecto · cliente · año · Leer el caso` (`CardArchivo`, el mismo de K16).
+- Rejilla por `grid-column/row: span` (sin `grid-template-areas`) para que el filtro refluya sin huecos.
+  1024–1279: Naowee a 12 columnas y el resto a 6. < 1024: una columna.
+- Numeración visible = posición en `ordenCasos` ++ `archivo` (/01 … /10, P1-1). Grupo de filtro = `grupoCaso(slug)`.
+- «Leído» = `MarcaLeido` (aparece en la losa del caso abierto antes, en este navegador).
+- **Móvil:** «En cifras» en fila compacta (padding 12/16, cifras a 30 px, etiquetas a 12, sin ceja visible: el
+  `aria-label` del grupo se queda), `h1` a 60, filtros a 16 (P1-3). La captura de Naowee entra entera en el pliegue.
+
+**`/about` · `AboutPage` (`about.html`).**
+- Portada (`PortadaPerfil`): la foto activa de `hero.ts` a pantalla completa con velo y láser; el `h1` es
+  `NameLockup escala="xl" corte`, colocado para que el láser pase por el corte de «Vargas» (F1). ≥ 1024: escenario
+  sticky de 210 svh + `ScrollTrigger` scrub 0,3 **sin pin**: corte cerrado p 0–0,3; foto a losa en col 8–12 (radio 48)
+  p 0–0,7; vidrio .62 → .08 p 0–0,85 (conocer a Doug es verlo sin estrías); bio de tres frases p 0,5–0,8; el hilo deja de
+  cruzar el nombre y se recorta hacia la losa. Entrada: textos +16 px en 600 ms `expo.out` (60 ms de escalonado), láser
+  `scaleX` 700 ms, corte a 880 ms. El vidrio es un hueco en F2 (foto limpia); F3 monta `VidrioCss` y F4 `VidrioGL`.
+- Luego, en este orden: contexto (2 párrafos) → «Lo que hago» (3 losas, Sistemas en jelly azul; rejilla
+  `auto · 64px · título · párrafo`, 32 px en móvil, P1-13) → «Cómo trabajo» (losa clara, 4 nodos cosidos por el hilo) →
+  «Datos» y «Con qué trabajo» (`getCv(locale).tools`) → «Dónde he trabajado» (`getWordmarks()` en Geologica, 2 filas de 4
+  a 18 px; 2 columnas en móvil) → «Lo que dicen…» (las 3 citas verbatim de `testimonials.ts` con `lang="en"`, la del
+  centro en magenta; «Citas originales en inglés» solo en ES, en la línea base del H2) → cierre «Lo demás está en el
+  trabajo.» con «Ver casos» y «Descargar CV (PDF)» (`decisiones.pdfPorIdioma`).
+- **Móvil (< 1024):** sin sticky ni scrub; foto a 100 svh con velo inferior; nombre entero, **un solo láser** (P1-7);
+  la lente del vidrio sigue el arrastre (F4).
+- **RM:** estado final (foto en losa, corte cerrado, bio visible), sin lente ni entrada.
+
+**`/experience` · `ExperiencePage` (`experience.html`).**
+- Estructura: ceja «Trayectoria», `h1` «De freelance a Head of Product», intro con años derivados; contador
+  (`Odometro` Doto 120 px, 4 columnas, chip «Hoy») y era, ambos `aria-hidden`; `<dl>` de acumulados (años en producto
+  digital · empresas · casos publicados); `<ol>` con los **10 hitos** de `lib/trayectoria.ts` (UAC 2006–2009, Freelance,
+  Smartbiz, Ideaware, Qrvey vía Ideaware, Globant · Royal Caribbean, Freelance · Chub en paralelo, Aval Digital Labs ·
+  Banco de Occidente, Mercadolibre · Andes, Naowee), **siempre completo en el DOM**; eje `aria-hidden` con eras,
+  tramos proporcionales (`scaleX` ligado al año), años en Doto, recorrido láser con cabezal y la pista «Productos
+  propios · 2026» como columna de 140 px a la derecha del eje (punto + nombre, sin año propio, P1-12).
+- **Una sola cuenta (P1-4):** los propios de la pista son `productosPropios()` (olbo, DC Medical, MakeaPet) y Chub es
+  un hito, no un propio; «casos publicados» al final = 7 hitos con caso + 3 propios = `casosPublicados()` = el 10 de
+  `/work`; «empresas» = `empresas()` = 6; años = `aniosEnProducto()` = 12.
+- **Escritorio ≥ 1024 (con GSAP, sin RM):** `pin` de **3,6 viewports**, scrub 0,5. **Scroll por hito** (P1-9): el año
+  es `yDe(p)` (1/n del recorrido por hito); el eje sigue dibujando duraciones reales, solo cambia la velocidad del
+  cabezal. El hito activo entra con fundido + 12 px en 240 ms; los demás quedan apilados con opacidad 0 pero en el árbol
+  accesible. **Foco por Tab (P0-1):** `focusin` en un hito → `scrollTo` instantáneo a `st.start + pDe(i) × (st.end −
+  st.start)` + `progress(1)` del scrub: la escena llega a ese hito y el foco se ve. **Odómetro sin «0 · 0 · 0»**
+  (P1-8): mientras un acumulado vale 0, su `dd` va vacío y dibuja un guion largo (`--tinta-3`), y la losa queda a
+  opacidad .6 hasta el primer valor ≥ 1. **Cabe a 1280×720** (P1-10): con `max-height: 820px`, `.exp-izq` y `.hitos`
+  a `calc(100svh − 360px)`, eje sin `padding-top`, tramos y años más bajos y la pista a la derecha del eje.
+- **Móvil:** línea vertical sin pin; barra fija con el contador a 48 px y los acumulados; activo = el hito que cruza
+  el 55 % del viewport, que fija el año; barra de duración de 40 px por año (mínimo 8). Hitos inactivos (`.fuera`):
+  **opacidad 1**; baja el material (fondo transparente + filo `--losa-borde`), no el texto (P1-11).
+- **RM / sin GSAP / sin JS:** línea completa y estática, todos los tramos dibujados, contador en el año actual,
+  acumulados en su total y todos los hitos visibles en rejilla.
 
 **Criterios de aceptación.**
-- Las 6 rutas responden 200, con `<html lang>` correcto, `title`/`description` de 04 §4.6, `hreflang` y canonical.
-- Contenido 100 % de datos: orden de casos = `home.ordenCasos` en `/work`; `/experience` = `cv.ts` con `formatPeriod`;
-  ningún marcador (`copy.sinMarcadores`).
-- Capturas 390/1024/1440 ES y EN, con y sin RM. axe sin violaciones en las 6. `a11y 3.1` (≥ 7:1) y `3.6` (≥ 44 px) verdes.
-- Cada card de `/work` enlaza a `/work/[slug]` (página completa: aún no hay hoja); los casos NDA muestran «NDA».
-- Lighthouse (o `perf.spec`) en `/about`: LCP < 2,0 s móvil, CLS < 0,02.
+- **Comunes:** las 6 rutas responden 200 con `<html lang>` correcto, `title`/`description` de 04 §4.6, `hreflang` y
+  canonical; sitemap con las 6; JSON-LD de E2; 1 `main#main`, 1 `h1`, 1 `<footer>` en cada una; ningún marcador
+  (`copy.sinMarcadores`); axe sin violaciones (ES y EN, con y sin RM); `a11y 3.1` (≥ 7:1 en párrafos) y `3.6` (≥ 44 px)
+  verdes; sin desborde 320–1920; capturas 390/1024/1280×720/1440 ES y EN, con y sin RM, comparadas con las `shot_P_*`.
+  `cuentas.test.ts` y `trayectoria.test.ts` verdes.
+- **`/work` (`work.spec.ts`):**
+  - a 390×844 la losa de Naowee está entera dentro del viewport (`bottom ≤ 844`; desde F3, ≤ 844 − alto del dock);
+    a 1440×900, `h1`, «En cifras» y los filtros están en el primer pliegue;
+  - los filtros **no** son `sticky`/`fixed` (estilo computado) y tras `scrollTo(0, 1300)` no están en el viewport;
+  - «Productos propios» → `productosPropios().length` (3) losas visibles, `aria-pressed="true"` solo en ese botón y el
+    `aria-live` dice «3 casos»; «Anteriores» → solo el archivo (4 filas); «Todos» → 10; sin JS → 10 visibles y ningún
+    botón de filtro;
+  - los `/NN` visibles, en orden del DOM, son `/01 … /10` consecutivos; cada card enlaza a `/work/<slug>` y la de Andes
+    muestra «NDA»;
+  - «En cifras» muestra exactamente `aniosEnProducto()`, `casosPublicados()` y `productosPropios().length`
+    (la prueba importa `src/lib/cuentas.ts`, como `seo.spec` importa de `src/data`).
+- **`/about` (`about.spec.ts` + `lockup.spec.ts`):**
+  - nombre accesible «Doug Vargas» una sola vez (el `h1`);
+  - ≥ 1024 (1280×720, 1440×900, 1920×1080), en p = 0 tras la entrada: la y del `.laser` de la foto cae dentro de la
+    rendija del corte (±2 px); en p ≥ 0,3, `data-corte="cerrado"`;
+  - la rueda siempre mueve la página: no existe `.pin-spacer` y `scrollY` crece en cada paso de rueda;
+  - en p = 0,7 la foto ocupa el rectángulo de col 8–12 (±2 px); en p ≥ 0,8 la bio tiene opacidad 1;
+  - 390×844: hay **un** solo elemento láser visible (el de la foto), `.m.inf` no visible y ningún `clip-path` en el
+    nombre;
+  - «Lo que hago»: los tres títulos con el mismo `top` (±1 px) a 1440; marcas: ninguna fila con una sola marca a
+    1440 y a 390;
+  - citas con `lang="en"` y texto idéntico a `testimonials.ts`;
+  - `perf.spec`: LCP (la foto) < 2,0 s móvil, CLS < 0,02 incluida la carga de Geologica; RM → estado final sin sticky.
+- **`/experience` (`experience.spec.ts`):**
+  - **Tab sin focos invisibles:** a 1440×900, 1280×720 y 390×844, se pulsa Tab hasta volver al inicio; en cada parada,
+    420 ms después, el elemento enfocado tiene opacidad acumulada 1, es visible y está dentro del viewport (la prueba
+    de NOTAS §7: 0 paradas invisibles); al enfocar el «Ver caso» del hito i, ese hito es el activo;
+  - **contraste de hitos inactivos ≥ 4,5:1** a 390×844: para cada `li` no activo, rol, periodo, título y logro medidos
+    con su color efectivo (opacidad acumulada incluida) contra el fondo real (`contrast-detail` + axe `color-contrast`);
+  - **la escena cabe:** a 1280×720, 1366×768 y 1440×900, en p = 0, 0,5 y 1, `eje.getBoundingClientRect().bottom ≤
+    innerHeight` y la losa del hito no desborda (`scrollHeight ≤ clientHeight + 1`);
+  - **scroll por hito:** avanzar el scroll en pasos de 3,6 × vh / 10 activa los hitos 0 → 9 en orden, sin saltarse
+    ninguno (vitest: `yDe((i + 0,5)/n)` cae dentro del tramo del hito i y `pDe(i)` lo activa, para todo i);
+  - **odómetro sin ceros:** en p = 0 ningún `dd` de acumulados contiene el texto «0» y su losa está a opacidad .6;
+  - **una sola cuenta:** en p = 1 (y con RM) los acumulados son `aniosEnProducto()` · `empresas()` · `casosPublicados()`
+    (12 · 6 · 10); la pista tiene `productosPropios().length` (3) nombres, los mismos que el filtro «Productos propios»
+    de `/work`; ningún nombre de la pista se monta sobre la fila de años (sin intersección de cajas);
+  - RM: sin `.pin-spacer`, los 10 hitos visibles, el contador en el año actual; sin JS: el `<ol>` con 10 `li` visibles.
 
 **Riesgos / plan B.** Duplicar `ProfilePage` (`/cv` ya lo tiene, E2) → mantener los dos con el mismo `mainEntity`. Si
-Doug prefiere `/experience` dentro de `/about` (D3): la ruta pasa a `redirect` permanente a `/about#experience`.
+Doug prefiere `/experience` dentro de `/about` (D3): la ruta pasa a `redirect` permanente a `/about#experience`. El pin
+de `/experience` y el sticky de `/about` conviven con la cabecera fija: si `ScrollTrigger` calcula mal tras la carga de
+Geologica, `ScrollTrigger.refresh()` en `document.fonts.ready` (como la maqueta). Sin GSAP en una red lenta, la página
+ya está completa (estado final).
 
-**Paralelo.** Puede correr a la vez que **F4** (archivos disjuntos).
+**Paralelo.** Puede correr a la vez que **F4** (archivos disjuntos: F4 no toca `perfil/`; F2 no toca `lib/gl`).
 
-**QA.** Visual: 6 rutas × 3 anchos × ES/EN × RM. Crítico: jerarquía de `/about`, legibilidad del timeline, filtro.
+**QA.** Visual: 6 rutas × 4 anchos × ES/EN × RM, y los fotogramas 0/25/50/75/100 % de `/experience` y de la portada de
+`/about`. Crítico: jerarquía de `/about`, legibilidad y ritmo del timeline, filtro, contra las `shot_P_*` aprobadas.
 
 ---
 
@@ -531,9 +755,13 @@ pill, rail, dock, footer y móvil «app». El retrato es el póster provisional 
 fase que retira el shell y reescribe sus pruebas.
 
 **Archivos.**
-- Crear: `src/components/tablero/*` (§1.3), `src/components/chrome/{RailAcciones,DockMovil,SiteFooter}.tsx`,
-  `src/components/hero/{HeroPoster,VidrioCss}.tsx` (póster = `199598aa` convertido a AVIF/WebP versionado en
-  `public/hero/199598aa-v1/`, sin hornear aún), `src/components/escena/Escena.tsx` (solo estado OS).
+- Crear: `src/components/tablero/*` (§1.3; **reutiliza** `CardCaso`, `CardCifras` y `CardArchivo` de F2),
+  `src/components/chrome/{RailAcciones,DockMovil}.tsx` (`SiteFooter` ya existe desde F2),
+  `src/components/hero/VidrioCss.tsx` (`HeroPoster` ya existe desde F2, con la foto `199598aa` en AVIF/WebP en
+  `public/hero/199598aa-v1/`, sin hornear aún), `src/components/escena/Escena.tsx` (solo estado OS),
+  `public/portrait/perfil-83a47bc7-v1-{640,880}.avif/webp` (K13, con `sharp`; la foto mide 880×1168: no hay 1080).
+- Integrar en las páginas de F2: cromo nuevo (pastilla con pill activa `aria-current="page"`, rail, dock de 5
+  destinos) en `/work`, `/about`, `/experience`, y `VidrioCss` en la portada de `/about`.
 - Reescribir: `src/components/pages/HomePage.tsx`, `src/components/SiteHeader.tsx` → `components/chrome/SiteHeader.tsx`
   (actualizar import en `RootDocument`), `src/components/LanguageSwitch.tsx` (conserva ruta **y hash**; usa
   `activeSection`).
@@ -581,6 +809,10 @@ fase que retira el shell y reescribe sus pruebas.
 - `perf.spec`: LCP = póster; LCP < 2,0 s móvil (Slow 4G, CPU ×4) y < 1,2 s escritorio; CLS < 0,02; JS inicial ≤
   baseline + 15 KB gz; póster ≤ 120 KB en su ancho mayor (880 px con la foto provisional de 880×1168).
 - `/cv` y los PDFs sin cambios (el header nuevo se oculta al imprimir: `print 8.1–8.3`, `recheck R3`).
+- Páginas de F2 con el cromo nuevo: a 390×844 el dock tiene 5 destinos (Trabajo · Perfil · Experiencia · CV ·
+  Contacto) con `aria-current="page"` en el de la página; la losa de Naowee de `/work` sigue entera sobre el dock; los
+  criterios de `work/about/experience.spec` siguen verdes; `/about` sin WebGL muestra `VidrioCss` en la portada.
+- K12 del home usa `CardCifras` con `cuentas.ts`: mismos valores que «En cifras» de `/work` (misma prueba).
 
 **Riesgos / plan B.** Las pruebas del shell son muchas: el ejecutor entrega la lista de cada prueba cambiada con su
 motivo. Si el layout 1024–1279 no cabe con el copy EN, se aplica el `--t-30` del claim y el K3 sin captura (P0-1).
@@ -597,7 +829,7 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
 
 **Archivos.**
 - Crear: `src/lib/gl/{programa,textura,vidrioShader}.ts`, `src/lib/escena.ts` (geometría pura: `placement` para
-  `cine`/`losa`/`movil`, `frame(p)`), `src/components/hero/{VidrioGL,useLente}.ts(x)`,
+  `cine`/`losa`/`movil`, `frame(p)`; si F2 ya creó `placement()`, F4 lo completa), `src/components/hero/{VidrioGL,useLente}.ts(x)`,
   `scripts/build-hero-poster.ts` (Playwright abre un arnés con el mismo shader y la foto de `hero.ts`, toma el canvas
   en estado `losa`/`movil` y `cine` a 1440×900; `sharp` → AVIF q 55–60 y WebP q 78 en 640/1080/1600/1920, sin pasar
   del ancho nativo de la foto; escribe `public/hero/<id>-<version>/…` y un `manifest.json`). **Medido:** las fotos
@@ -606,8 +838,9 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
   anchos, pero es la foto de 880 ampliada ×1,6–2,2 → aceptado mientras sea provisional; la imagen final (D7) debe
   llegar con un máster ≥ 1920 px de ancho (se anota en `hero.ts` y en 08-ENTREGA).
   `src/lib/__tests__/escena.test.ts`.
-- Modificar: `HeroPoster.tsx` (usa el póster horneado), `K1Retrato.tsx` y la cabecera móvil del tablero (montan
-  `VidrioGL` diferido), `src/data/hero.ts` (rutas reales del manifest).
+- Modificar: `HeroPoster.tsx` (usa el póster horneado), `K1Retrato.tsx`, la cabecera móvil del tablero y
+  `PortadaPerfil` de `/about` (montan `VidrioGL` diferido; en `/about` la fuerza va de .62 a .08 con el `p` del
+  sticky, F2), `src/data/hero.ts` (rutas reales del manifest). `vidrio.spec` cubre también `/about`.
 - Borrar: `src/components/hero/{HeroField,Velaris}.tsx` (su ciclo de vida —DPR ≤ 1,5, `IntersectionObserver`,
   `visibilitychange`, RM— queda en `VidrioGL`).
 - Pruebas nuevas: `tests/e2e/vidrio.spec.ts` con proyectos de lanzamiento: (a) Chromium normal (canvas visible tras el
@@ -653,8 +886,9 @@ material del vidrio, que la lente no sea lúdica (decisión de Doug: sobria).
   `tests/e2e/settle.ts` (si existe `[data-escena-fin]`, deja la página al final del ancla en vez de en 0).
 - Timeline (NOTAS §2 con los cambios de §7, que mandan): pin de 1 viewport, `scrub: 0.3`, snap **no direccional**
   `{ snapTo: [0, 1], delay: 0.05, duration: { min: 0.2, max: 0.45 }, ease: "power2.out" }`; foto 0 → 0,72 `eio`;
-  K2 viaja 0 → 0,6 y cambia material con `--m` 0,30 → 0,52 y `--mt` de golpe en 0,41 (P1-2); nombre XL por FLIP a
-  K1, escala medida, `y0 = max(88, …)` y 96 px con alto ≤ 800 (P0-1); losas solo con opacidad, `y 24 → 0`, escala
+  K2 viaja 0 → 0,6 y cambia material con `--m` 0,30 → 0,52 y `--mt` de golpe en 0,41 (P1-2); nombre XL
+  (`NameLockup escala="xl" corte` + `NameLockupCorte` de F1, colocado sobre el láser de la foto; el corte se cierra
+  entre p 0 y 0,3 y llega entero) por FLIP a K1, escala medida, `y0 = max(88, …)` y 96 px con alto ≤ 800 (P0-1); losas solo con opacidad, `y 24 → 0`, escala
   .96 → 1 y `--dw`, **sin blur**, inicios fijos K3 0,30, K4 0,36, K5 0,42 y todo antes de 0,72 (P1-1); rail 0,5 → 0,8.
 - Robustez (P0-2, P1-14): `invalidateOnRefresh`, `onRefresh` sincroniza el progreso, `ResizeObserver` →
   `ScrollTrigger.refresh()` con debounce; `gsap.matchMedia("(min-width: 1024px) and (prefers-reduced-motion:
@@ -676,6 +910,8 @@ material del vidrio, que la lente no sea lúdica (decisión de Doug: sobria).
 - Capturas de fotogramas 0 / 25 / 60 / 100 % a 1440 (como `shot_B_1440_scroll_*`), primer pliegue a 1920×1080,
   1440×900, 1366×768, 1280×720, 1024×768, ES y EN: sin recortes, nombre XL nunca bajo la cabecera.
 - Todas las pruebas de `escena.spec` verdes; `motion 7.1/7.5`, `keyboard 6.x`, `a11y` verdes.
+- `lockup.spec` en el acto 1 a 1280×720, 1440×900 y 1920×1080: en p = 0 el láser cae en la rendija (±2 px); en
+  p ≥ 0,3 `data-corte="cerrado"`; en K1 la palabra entera; a 390 sin corte (P1-7).
 - LCP sin regresión frente a F4 (el pin no se monta antes del LCP; el póster del acto 1 es el LCP).
 
 **Riesgos / plan B.** El pin es la parte frágil de B (06: robustez 6). Si a fin de fase no pasa la matriz de resize y
@@ -745,44 +981,108 @@ teclado y lector de pantalla (VoiceOver en Safari en F8).
 
 ### F7 · Casos, páginas y transiciones al sistema B
 
-**Objetivo.** Que la página completa del caso, la hoja y las páginas nuevas compartan el lenguaje de B (tokens,
-tipografía, losas) sin perder la plantilla actual, y que las navegaciones tengan sus transiciones. Aplica las
-decisiones de tema y 404.
+**Objetivo.** Que la página completa del caso y la hoja sean **la misma pieza** de `propuestas/B-paginas/caso.html`
+(aprobada por Doug el 6 nov, con P1-5 y P1-6 de NOTAS §7), con los tokens y la tipografía de B, sin perder contenido de
+la plantilla actual, y que las navegaciones tengan sus transiciones. Aplica las decisiones de tema y 404.
+
+**Plantilla del caso (orden de 02 §5.3; es el orden del DOM y del Tab).** Un bloque sin datos no se pinta, y su
+entrada del índice tampoco.
+1. **Miga** `Trabajo / {proyecto}` (`<nav aria-label>`): `CaseHeader` enlaza a `localePath(locale, "/work")` en vez de
+   `"/#work"` (hoy línea 67).
+2. **Portada** (`CaseHeader` + `CaseMeta`): ceja (estado · rol), `h1` a 120 px (72 a < 1024), gancho (`tagline`) en
+   col 1–7 y **ficha** en col 8–12 (ver abajo).
+3. **Captura a sangre** (`CaseShowcase`/`CaseCover`, 16:8, radio `--r-losa`, `fetchpriority="high"`: es el LCP de la
+   página completa). Caso NDA → `CaseNda` con el jelly azul de K4, sin galería.
+4. **Tablero de impacto** (`CaseImpact`, ver abajo; `h2` «Impacto» `sr-only`).
+5. **Problema** (`context`) y 6. **Mi parte** (`contributions`): bloques de dos columnas (ceja + `h2` | prosa 18 px,
+   ≤ 34 em).
+7. **Decisiones** (`CaseDecisions`): cada una con su título y cuerpo (y su evidencia al lado si el caso trae figura).
+8. **Producto**: `video` con póster, `controls`, `muted playsinline`, **sin autoplay**, `preload="none"`, y la galería
+   con los captions de `work.ts` (`CaseGallery`). Los capítulos `story`/`film` y las `features` de los casos largos van
+   en este bloque, en su orden actual.
+9. **Proceso** (`CaseProcess`): riel de 3 fases cosido por el hilo láser.
+10. **Testimonio** (`CaseTestimonial`) solo si `testimonialId` (Naowee no tiene).
+11. **Colofón** (`CaseColophon`): herramientas (`technologies`), enlaces (`links`/`externalLink`: salen de la ficha) y
+    autoría (`credits`). `<footer>` en página completa, `<div>` en la hoja (§1.2).
+12. **Siguiente caso** (`CaseNext`, `getNextCaseStudy`, D19) + «Hablemos».
+
+**Ficha 2 × 2 sin escalera (P1-5, `CaseMeta`).** `<dl>` en 2 columnas, **sin cajas**: cada celda es `dt` (12 px,
+`--tinta-3`) + `dd` (18 px, `--tinta`) con un filete superior de 1 px `--losa-borde`. Orden: **Rol · Duración ·
+Plataformas · Equipo**, con Equipo a todo el ancho y al final. Todas las celdas caen en las dos columnas (nunca se
+desplazan en escalera) y el bloque se alinea abajo con el gancho. «Año» sale de la ficha (Duración ya lo lleva; si la
+duración es solo el año, se muestra el año, como hoy). Plataformas viene del campo opcional **NUEVO** `platforms` de
+`work.ts` (§1.5); si falta, no se pinta. Móvil: `gap` 12/16, `dd` a 16 px, y la portada entra en el pliegue.
+
+**Tablero de impacto con tope por ancho (P1-6, `CaseImpact`).** `<ul>` de 4 columnas ≥ 1280 y 2 por debajo; cada KPI
+es una losa (`--losa-alta`, `--filo`, radio `--r-m`, `min-height: 0`: mide lo que lleva) con `container-type:
+inline-size`. La cifra va en `DotMatrix` (Doto, `white-space: nowrap`, tracking −0,06 em) a
+**`font-size: min(72px, 100cqi / k)`** (48 px en lugar de 72 a < 1024), donde **k es el ancho en em de la cifra más larga
+del caso**, el mismo para las cuatro losas. Se reutiliza `figureSize()` de `CaseImpact.tsx` (hoy calcula
+`min(clamp(…), 100/ancho cqi)` con los avances de Archivo) recalibrado con los avances de Doto: para «~1.200», k ≈ 3,05
+(69 px a 1440). La primera losa es la **clara** (`--claro`, etiqueta en `--tinta-osc-2`); en las demás la etiqueta va
+en `--tinta-2` a 16 px y el `delta` como nota pequeña. Encendido al entrar al 40 %: Doto de 100 a 700 en 400 ms
+`--curva-salida` con 60 ms de escalonado; con RM, 700 sin transición. Punto de miles con el arreglo de NOTAS §6.
+
+**Índice lateral (página completa, ≥ 1280).** `CaseIndice` en col 1–2, sticky a 128 px: rótulos Impacto · Problema ·
+Mi parte · Decisiones · Producto · Proceso (solo los presentes), hilo de 1 px que se llena de láser con la lectura y
+punto de presencia en la sección actual (`aria-current="true"`, sin transición). Ni en la hoja ni a < 1280.
+
+**Hoja (sobre F6, URL real de §1.2).** El mismo `CaseBody` con `enHoja`: sin índice lateral, una sola columna, título
+`h2` a 72 px (48 a < 1024), progreso en el hilo láser de la cabecera de la hoja, «Abrir como página completa»
+(`aria-label`, `href` = `/work/<slug>`) y Cerrar. En móvil, el dock del caso cambia «Contacto» por «Secciones»
+(`HojaSecciones`).
 
 **Archivos.**
 - Modificar: `src/components/case/*` (migrar `--paper/--ink/--signal/--ease-out` a los tokens B; títulos en Urbanist,
-  texto en Instrument Sans, KPIs en `DotMatrix`; `CaseImpact` como tablero de cifras en losas; `CaseNda` con el jelly
-  azul de K4), `src/components/work/*` (marcos sobre losas), `src/components/pages/{CaseNotFound,NotFoundContent}.tsx`
+  texto en Instrument Sans, KPIs en `DotMatrix`; `CaseHeader` con miga a `/work`; `CaseMeta` como ficha; `CaseImpact`
+  como tablero; `CaseColophon` con los enlaces; `CaseNda` con el jelly azul de K4), `src/components/pages/CasePage.tsx`
+  y `CaseBody.tsx` (orden de arriba), `src/components/work/*` (marcos sobre losas),
+  `src/data/work.ts` + `src/data/es/work.ts` (`platforms`, solo donde Doug lo confirme o ya se desprenda del caso:
+  Web / iOS / Android; sin dato, se omite), `src/components/pages/{CaseNotFound,NotFoundContent}.tsx`
   + diccionario (copy 404 de 04 §4.5; el chiste de la máscara se retira porque ya no hay máscara → «Aquí no hay nada.»
   / «Nothing here.» como valor por defecto, D17), `globals.css` (`@view-transition { navigation: auto; }` para es ↔ en
   y para el `<a>` de `CaseNext`; `::view-transition-*` para `<ViewTransition>`), `WorkIndexPage.tsx` (card → página
   completa con `<ViewTransition name={"caso-" + slug}>` en la media cuando la hoja no aplica: Cmd+clic no, solo
-  enlaces «Ver página completa» de la hoja), `SiteHeader.tsx` (D4: `ThemeToggle` solo en `/cv`),
-  `src/app/(es|en)/layout.tsx` (`themeColor` `#060608` en rutas B si D4 se confirma; actualizar `theme.tokens` con
-  motivo).
-- **Opcional, separable (02 §5.3):** reordenar la plantilla (decisiones antes de la galería, índice lateral fijo con
-  progreso, pastilla con hoja en móvil). Se hace solo si el orquestador lo aprueba; si no, queda como fase posterior.
-- **No se toca:** `src/components/cv/*`, `CvPage.tsx`, `public/cv/*`, `scripts/build-cv-pdf.ts`, `scripts/cv-fonts/*`,
-  el bloque de impresión de `globals.css`.
-- Pruebas: `layout 5.5` y `sticky S1` (ojo sticky de «Decisiones clave») → revisar con la plantilla re-maquetada;
-  `frames F1–F3`, `measure M1` (marcos de `/work/chub`) → actualizar medidas si cambian radio/sombra, con motivo;
-  `motion 7.4` verde; `visual` regenerada; `theme.tokens` actualizada si cambia `themeColor` o el primer `:root`.
+  enlaces «Abrir como página completa» de la hoja), `components/chrome/SiteHeader.tsx` (D4: `ThemeToggle` solo en
+  `/cv`), `DockMovil.tsx` (variante «Secciones» en casos), `src/app/(es)/layout.tsx` y `src/app/(en)/layout.tsx`
+  (`themeColor` `#060608` en rutas B si D4 se confirma; actualizar `theme.tokens` con motivo).
+- Crear: `src/components/case/{CaseIndice,HojaSecciones}.tsx`.
+- **No se toca:** `src/components/cv/*` (salvo D22, F6), `CvPage.tsx`, `public/cv/*`, `scripts/build-cv-pdf.ts`,
+  `scripts/cv-fonts/*`, el bloque de impresión de `globals.css`.
+- Pruebas: **nueva** `tests/e2e/caso.spec.ts` (abajo); `layout 5.5` y `sticky S1` (ojo sticky de «Decisiones clave»)
+  → revisar con la plantilla nueva; `frames F1–F3`, `measure M1` (marcos de `/work/chub`) → actualizar medidas si cambian
+  radio/sombra, con motivo; `motion 7.4` verde; `visual` regenerada; `theme.tokens` actualizada si cambia `themeColor`
+  o el primer `:root`; `data.integrity` con `platforms`.
 
 **Criterios de aceptación.**
-- Capturas de `ROUTES` completas (los 5 casos de la matriz + `/work`, `/about`, `/experience`) a 390/1024/1440,
-  ES/EN, RM: mismo sistema que el tablero; ningún caso pierde contenido frente a F0 (conteo de `h2`, imágenes y KPIs
-  por caso igual al baseline).
+- **Ficha** (`caso.spec`, los 10 casos a 1440, 1024 y 390): las celdas no tienen fondo ni sombra y sí `border-top` de
+  1 px; sus bordes izquierdos toman **solo 2 valores** de x (las dos columnas); las celdas de una misma fila comparten
+  `top` (±1 px); Equipo es la última y ocupa el ancho de la ficha (±1 px); el orden de los `dt` es Rol · Duración ·
+  Plataformas · Equipo (sin los ausentes); a 390×844 el borde inferior de la ficha ≤ 844 − alto del dock.
+- **Tablero** (los 10 casos a 1440, 1280, 1024 y 390, ES y EN): cada cifra en **una línea** (alto ≤ 1,1 × `font-size`)
+  y sin desborde (`scrollWidth ≤ clientWidth`); todas las cifras de un caso con el **mismo** `font-size`, ≤ 72 px
+  (≤ 48 a 390); ninguna losa con alto mayor que su contenido + padding (±1 px); la primera losa es la clara;
+  etiquetas ≥ 4,5:1 (axe); en Naowee, «~1.200» (ES) y «~1,200» (EN) con `span.punto` solo en ES.
+- **Índice** (≥ 1280): al llevar cada sección al centro del viewport, su enlace tiene `aria-current="true"` y el
+  `scaleY` del hilo crece de forma monótona; cada `href="#id"` existe en la página; no está en la hoja ni a 1024/390.
+- **Hoja** (sobre `hoja.spec` de F6): mismo conteo de `h2`, imágenes y KPIs en la hoja y en la página completa; sin
+  índice lateral; título a 72 px (48 a 390); «Abrir como página completa» con `href` = URL real del caso; dock a 390
+  con «Secciones», que abre `HojaSecciones` y, al elegir una sección, lleva el foco a su `h2`.
+- **Contenido:** capturas de `ROUTES` completas (los 5 casos de la matriz + `/work`, `/about`, `/experience`) a
+  390/1024/1280×720/1440, ES/EN, RM, comparadas con `shot_P_caso_*`; ningún caso pierde contenido frente a F0 (conteo
+  de `h2`, imágenes y KPIs por caso igual al baseline); el vídeo no se reproduce solo (`paused` tras 2 s).
 - `/cv` a 1440 en tema claro y oscuro y su impresión: idénticos a F0 salvo la cabecera; `print 8.0–8.5` verdes.
 - Morph de la media al pasar de `/work` a un caso (Chromium) en 400 ms `--curva-io`; RM → fundido 200 ms; navegador
   sin API → navegación instantánea.
 - `a11y` completo verde en tema `dark` y `light` (las superficies B ignoran `data-theme`; `/cv` sigue respondiendo).
 
-**Riesgos / plan B.** La re-maquetación de casos es la fase más larga en archivos: si no cabe en una ronda, se divide en
-F7a (tokens y tipografía, sin mover bloques) y F7b (orden de 02 §5.3). Si `<ViewTransition>` no está (plan B de §1.9),
-se omite el morph.
+**Riesgos / plan B.** Es la fase más larga en archivos: se divide en **F7a** (tokens, tipografía, ficha y tablero, sin
+mover bloques) y **F7b** (orden de 02 §5.3, índice lateral, «Secciones» del dock, colofón con enlaces), cada una con
+sus criterios de arriba. El orden ya no es opcional: está aprobado. Si `<ViewTransition>` no está (plan B de §1.9),
+se omite el morph. Casos sin `platforms` confirmado: la ficha queda en Rol · Duración · Equipo (sigue sin escalera).
 
-**QA.** Visual: matriz completa de `ROUTES`. Crítico: plantilla de caso con la lente de reclutador (02 §2) y director
-de diseño.
+**QA.** Visual: matriz completa de `ROUTES` y la hoja de 4 casos. Crítico: plantilla de caso con la lente de
+reclutador (02 §2) y director de diseño, contra `shot_P_caso_*`.
 
 ---
 
@@ -831,12 +1131,12 @@ F0 ──► F1 ──┬──► F2 ──┐
 |---|---|---|---|
 | F0 | — | — | Bloquea todo (upgrade y línea de base). |
 | F1 | F0 | — | Bloquea todo lo visual. |
-| F2 | F1 | **F4** | F3 enlaza a sus rutas: F3 empieza cuando F2 está aprobada. |
-| F4 | F1 | **F2**, y F3 en su tramo final | Archivos disjuntos (`hero/*`, `lib/gl`, `scripts/`). Se integra en K1 al cerrar F3. |
-| F3 | F1, F2 | F4 | Fase que reescribe las pruebas del shell. |
+| F2 | F1 (y `sharp` de F0) | **F4** | F3 enlaza a sus rutas: F3 empieza cuando F2 está aprobada. F2 crea `HeroPoster`, `SiteFooter`, `CardCaso`, `CardCifras`, `CardArchivo` y `lib/cuentas.ts`, que F3 reutiliza. La portada de `/about` sale en F2 sin vidrio (foto limpia + corte). |
+| F4 | F1 (y `HeroPoster` de F2) | **F2**, y F3 en su tramo final | Archivos disjuntos (`hero/VidrioGL`, `lib/gl`, `scripts/`). Se integra en K1 al cerrar F3 y en la portada de `/about`. |
+| F3 | F1, F2 | F4 | Fase que reescribe las pruebas del shell. Monta el cromo nuevo (dock de 5) y `VidrioCss` también en las páginas de F2. |
 | F5 | F3, F4 | **F6** (con dueños de archivos de §F5) | F5 se integra primero. |
 | F6 | F3 | F5 | — |
-| F7 | F6 (y F5 integrada) | — | Divisible en F7a/F7b. |
+| F7 | F6 (y F5 integrada), F2 (`RegistrarLeido`, numeración y `/work` de destino de la miga) | — | Divisible en F7a/F7b; el orden de 02 §5.3 ya no es opcional. |
 | F8 | todas | — | Cierre. |
 
 QA visual y crítico de F2 y F4 pueden correr a la vez. Cada integración vuelve a pasar la puerta común completa.
@@ -854,7 +1154,7 @@ Todas viven en `src/data/decisiones.ts` (o en el dato que se indica) y ninguna b
 | D3 | `/about` y `/experience` | dos páginas separadas | `decisiones.rutasPerfil` | rutas, sitemap |
 | D4 | Toggle claro/oscuro | retirado de las superficies B (home, `/work`, `/about`, `/experience`, casos, hoja); `/cv` conserva claro/oscuro y su toggle | `decisiones.temaClaroEn` | header, `themeColor` |
 | D5 | Titular EN (P18) | «I direct the product. Then I build it.» | diccionario `home.claim` | K2, OG |
-| D6 | Tipografía del nombre | Urbanist 600 (la de B) hasta elegir una opción de `B-tipo` (1–6) | `src/app/fonts/lockup.ts` + `decisiones.nombreLockup` | `NameLockup` |
+| ~~D6~~ | Tipografía del nombre | **Decidida el 6 nov:** opción 4 «corte láser» (Geologica SHRP 100), sin corte en móvil (P1-7). Ya no es un valor por defecto; reversión de una línea en «Correcciones del 6 nov» | `src/app/fonts/lockup.ts` + `decisiones.nombreLockup` | `NameLockup`, `Wordmark` |
 | D7 | Imagen del héroe | `199598aa` provisional; K13 `83a47bc7` | `src/data/hero.ts` + `npm run hero:poster` | K1, acto 1, OG |
 | D8 | Datos faltantes (04 §7 P5–P15) | la línea se omite; años = 12 (derivado actual); sin cifras nuevas | `src/data/*` | casos, K12, `/experience` |
 | D9 | PDF del CTA del héroe (P3) | ES → con foto; EN → sin foto | `decisiones.pdfPorIdioma` | K2, rail, K17 |
@@ -865,7 +1165,7 @@ Todas viven en `src/data/decisiones.ts` (o en el dato que se indica) y ninguna b
 | D14 | `title` del home en ES (P19) | `site.titleHeadline` (en inglés, como hoy) | `site.ts` | SEO |
 | D15 | «Tinder para mascotas» (P21) | se queda como está en los datos | `work.ts` | MakeaPet |
 | D16 | Pills del header en el home | anclas con scroll-spy y spotlight (B); fuera del home, rutas | `SiteHeader` | nav |
-| D17 | Microcopy nuevo de B no validado | «Cerrar/Close», «Anterior/Siguiente», «n de 4 / n of 4», «Desliza/Scroll», K13 «Diseñador de producto que construye.», 404 sin máscara «Aquí no hay nada.» | diccionario | varias |
+| D17 | Microcopy nuevo de B no validado | «Cerrar/Close», «Anterior/Siguiente», «n de 4 / n of 4», «Desliza/Scroll», K13 «Diseñador de producto que construye.», 404 sin máscara «Aquí no hay nada.»; de las páginas internas (NOTAS §4): «Abrir como página completa / Open as a full page», «Hoy / Now», «N casos / N case studies», «Secciones / Sections», «Leído / Read» | diccionario | varias |
 | D18 | KPI de olbo (P14) | se mantiene el actual | `work.ts` | K7, caso |
 | D19 | «Siguiente caso» | sigue `num` (no `ordenCasos`) | `getNextCaseStudy` | casos |
 | D20 | Doto mínimo | 20 px (B) en vez de 32 (02 §7.1) | token `--t-*` + prueba | cifras |
