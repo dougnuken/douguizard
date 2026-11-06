@@ -163,3 +163,14 @@ Cruises» en el archivo, que es el `project` de `work.ts` (la maqueta abreviaba)
 - Doto `display: optional`: en la primera visita en frío el odómetro y las cifras salen con el respaldo (P2-8 de F1, F3).
 - Doug: marcas de `/about` (desvío 5), título de DC Medical (desvío 14), Chub (P15 de 04).
 - `docs/rediseno-2026/baseline-F0.json` no se tocó; `ESTADO.md` tampoco (lo cierra el orquestador).
+
+## Arreglos tras la crítica
+
+| Punto | Cambio | Verificación |
+|---|---|---|
+| **P1-1** `/about` ≥ 1024 | `.perfil-cine .poster`: `mask-image` con `--pluma` 18 %; la isla lo lleva a 0 entre p 0 y 0,6; atmósfera a `blur(28px) brightness(0.72) saturate(1.05)`. El láser no se tocó. | Capturas a 1280×720, 1440×900 y 1920×1080 en p 0 / 0,3 / 0,7 (`F2-capturas/about-*`): en p 0 sin costuras (salto máx. de columna 6,7–10,4 %, en el texto, no en bordes del póster); en p 0,3 y 0,7 solo el borde de la losa. `about.spec` verde (láser en la rendija). |
+| **P2-2** «Desliza» | Se apaga con `1 - clamp((p - 0.15) / 0.2)`. | Captura p 0,7 sin indicador sobre la losa. |
+| **P2-1** `/experience` | Saliente 120 ms; entrante 240 ms con 100 ms de retraso; `:focus-within` sin transición. | `experience.spec` verde. |
+| **P2-4** `/work` (< 1024) | Filtro con `mask-image` de 32 px al borde y `scroll-padding-inline: 16px`. | `work.spec` verde; sin desborde en `layout.spec`. |
+
+Lint, tsc, vitest (222) y Playwright (`about`, `experience`, `lockup`, `layout`, `work`, `a11y`: 176) en verde.
