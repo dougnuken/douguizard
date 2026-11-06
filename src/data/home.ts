@@ -38,10 +38,25 @@ export interface CardCaso {
 
 /** Mapeo K → caso (NOTAS de B §1). El KPI va por índice, nunca por la cifra escrita. */
 export const cardsCaso: CardCaso[] = [
-  { k: "K3", slug: "naowee-suid", superficie: "losa", kpi: 0 },
+  // 04 §3 K3: la cifra de la card es «130+ pantallas» (índice 2), no los 30 trámites.
+  { k: "K3", slug: "naowee-suid", superficie: "losa", kpi: 2 },
   { k: "K4", slug: "mercadolibre-andes", superficie: "azul", kpi: 0 },
   { k: "K7", slug: "olbo", superficie: "niebla", kpi: 0 },
   { k: "K8", slug: "banco-de-occidente", superficie: "losa", kpi: 0 },
   { k: "K9", slug: "dc-medical", superficie: "losa", kpi: null },
   { k: "K10", slug: "makeapet", superficie: "magenta", kpi: null },
 ];
+
+/**
+ * Cifras de cada losa de `/work` (y de las cards del tablero en F3), por
+ * **índice** del KPI en `caseStudies[].kpis` (04 §3): la cifra escrita se lee
+ * de `work.ts`. Andes lleva tres (diseñadores · ingenieros · países).
+ */
+export const cifrasCaso: Record<(typeof ordenCasos)[number], number[]> = {
+  "naowee-suid": [2],
+  "mercadolibre-andes": [0, 1, 2],
+  olbo: [0],
+  "banco-de-occidente": [0],
+  "dc-medical": [0],
+  makeapet: [0],
+};

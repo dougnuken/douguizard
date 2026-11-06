@@ -160,13 +160,16 @@ export function getBio(locale: Locale): { bio: string; contexto: [string, string
   };
 }
 
-/** Hitos de la trayectoria: cada experiencia del CV más la formación (`uac`). */
-export type Hito = ExperienceId | "uac";
+/**
+ * Hitos de la trayectoria: cada experiencia del CV, la formación (`uac`) y el
+ * proyecto paralelo `chub` (P1-4: un hito «Freelance · Chub», no un propio).
+ */
+export type Hito = ExperienceId | "uac" | "chub";
 
 /**
  * Logro de cada hito (≤ 140 caracteres, 04 §6.2), condensado del `impact[]` /
  * `summary` de `cv.ts`. Fechas, cargos y empresas salen de `cv.ts`, no de aquí.
- * Chub (pista paralela) no tiene logro en 04: F2 lo pide a Doug o lo omite.
+ * Chub usa la línea de su fila en el archivo (04 §3, K16).
  */
 export const logros: Record<Hito, { es: string; en: string }> = {
   uac: {
@@ -200,6 +203,10 @@ export const logros: Record<Hito, { es: string; en: string }> = {
   mercadolibre: {
     es: "Líder técnico del sistema que usan 400+ diseñadores y 2.000+ ingenieros en 18 países.",
     en: "Tech lead on the system used by 400+ designers and 2,000+ engineers in 18 countries.",
+  },
+  chub: {
+    es: "Alquiler de carros por minuto, para iOS.",
+    en: "Per-minute car rental, for iOS.",
   },
   naowee: {
     es: "Dirijo SUID: 8 módulos de negocio, ~1.200 organizaciones y 130+ pantallas en un solo sistema.",
