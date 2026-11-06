@@ -36,7 +36,7 @@ CLS medido: 0,0002 (móvil) y 0 (escritorio) en `/about`; 0,0001 / 0,0008 en `/e
 | `npm run lint` | verde (0 avisos) |
 | `npm test` (vitest) | **21 archivos, 222/222** (base 197 + 25: `cuentas`, `trayectoria`, `escena`, `paginas.parity`, `home` +1) |
 | `npm run build` | verde (mismo y único aviso de `Cache-Control` de F0); 6 rutas nuevas estáticas |
-| `npx playwright test` (build normal) | PENDIENTE_PW |
+| `npx playwright test` (build normal) | **389/389** en 17,1 min = 270 de base + 119 nuevas (87 de la matriz con las 3 rutas, `work` 9, `about` 10, `experience` 11, `lockup` +2); sin fallos, reintentos ni pruebas saltadas |
 
 **Pruebas nuevas** (todas sin `test.skip`):
 
@@ -94,7 +94,14 @@ respaldo). Por página: `{pagina}-390-pliegue`, `-390-completa` (RM), `-1280x720
 `about-1440-p{030,070,100}`, `about-1440-en`, `experience-1440-{000,025,050,075,100}`, `experience-1280x720-{000,050,100}`,
 `experience-390-scroll` y `experience-1440-en`.
 
-**Comparación con las `shot_P_*` aprobadas:** COMPARACION_CAPTURAS
+**Comparación con las `shot_P_*` aprobadas:** composición, rejilla, superficies, cifras y orden coinciden en
+las tres páginas (`work-1440-completa` ↔ `shot_P_work_1440_completa`, `about-1440-completa` ↔
+`shot_P_about_1440_completa`, `experience-1440-050` ↔ `shot_P_experience_1440_050`, y sus pares a 1280×720 y 390).
+Diferencias esperadas: (a) la cabecera, el rail y el dock son los actuales hasta F3 (con el tema claro del sistema la
+barra sale clara); (b) sin vidrio estriado en la portada de `/about` (hueco de F2; F3/F4); (c) a 1280×720 el nombre
+va a 96 px por la regla ≤ 800 px de alto de `NameLockup` (F1), la maqueta lo dejaba en 120; (d) años del eje en
+Instrument y `/NN` sin Doto (desvío 3); (e) «DC Medical Aesthetics» y «Diseño UX multicliente» / «Royal Caribbean
+Cruises» en el archivo, que es el `project` de `work.ts` (la maqueta abreviaba).
 
 ## Desvíos del plan y por qué
 
