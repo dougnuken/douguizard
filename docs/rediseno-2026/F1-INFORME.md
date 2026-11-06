@@ -45,7 +45,7 @@
 | `npm run lint` | verde (0 avisos) |
 | `npm test` (vitest) | **17 archivos, 197/197** (base 149 + 48 nuevas: `decisiones`, `home`, `hero`, `copy.sinMarcadores`, `sistema.parity`, `spring.critical`, `corte`). `theme.tokens`, `data.singleSource` e `i18n.parity` sin tocar y verdes. |
 | `npm run build` (sin `DG_LAB`) | verde; mismo y único aviso de F0 (`Cache-Control` en `/_next/static`); `/lab` → **404** |
-| `npx playwright test` (build normal) | **270/270** (13,5 min) = 269 de base + `lockup.spec` «sin DG_LAB, /lab da 404 y no está en el sitemap» |
+| `npx playwright test` (build normal) | **270/270** = 269 de base + `lockup.spec` «sin DG_LAB, /lab da 404 y no está en el sitemap». Dos corridas: 13,5 min y, sobre el código final (tras el arreglo de peso), 13,2 min; sin fallos ni reintentos. |
 | `DG_LAB=1 npm run build` + `DG_LAB=1 npx playwright test lockup` | **11/11**, dos corridas seguidas |
 
 `lockup.spec.ts` define un bloque u otro según el build (no usa `test.skip`, así que no hay pruebas saltadas en ninguno
