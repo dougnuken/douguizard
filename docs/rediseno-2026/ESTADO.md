@@ -42,7 +42,7 @@
 | **F1** sistema de diseño en código | ✓ ejecutor: vitest 197/197, Playwright 270/270, lockup.spec 11/11; JS / 158,4 KB gz (= base), LCP sin cambio · QA ✓ · P0+P1 arreglados ✓ (Doto pinta; lockup.spec 17/17) · 7 P2 van con F2/F3 · **F1 ✓** | `F1-INFORME.md`, `F1-capturas/`, `06-CRITICA-F1.md` |
 | F2 rutas /work /about /experience | ✓ ejecutor: vitest 222/222, Playwright 389/389; JS / 158,4 KB gz (= base); LCP móvil /about 2,56 s (meta 2,0 → F4/F8, registrado en 07) · QA ✓ 8,2/10: 0 P0, 2 P1, 6 P2 · P1-1 (bordes de la foto) + P2-1/2/4 arreglados ✓ · **F2 ✓** | `F2-INFORME.md`, `F2-capturas/` |
 | F3 tablero OS + cromo nuevo | ✓ ejecutor: vitest 227/227, Playwright 404/404 (shell retirado, pruebas reescritas); JS / 152,3→**−6,1 KB gz** vs base; LCP móvil / 2,97 s (−1,5 s; meta 2,0 → F4/F8) · QA ✓ 8,3/10: 0 P0, 3 P1, 7 P2 · P1 arreglados ✓ (vitest 227/227, Playwright 414/415: `experience.spec.ts:173` intermitente → se arregla al inicio de F4) · **F3 ✓** | `F3-INFORME.md`, `F3-capturas/` |
-| F4 vidrio WebGL2 + póster horneado | en curso (ejecutor; Doug dio el sí) | `F4-INFORME.md`, `F4-capturas/` |
+| F4 vidrio WebGL2 + póster horneado | ✓ ejecutor: vitest 236/236, Playwright 424/424 ×2 corridas (`experience.spec:173` estable); JS / 151,9 KB gz; **LCP móvil / 1,00 s ✓** (CSS en línea); `/about` móvil 2,95 s → F8 · **QA en curso** | `F4-INFORME.md`, `F4-capturas/` |
 | F5–F8 | pendiente | `07` §2 |
 
 ## Siguiente (en orden)
@@ -51,7 +51,7 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → arreglos ✓ → **F1 cerrada**. F2 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F2.md`) → arreglo P1-1 ✓ → **F2 cerrada** · F3 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F3.md`) → arreglos ✓ → **F3 cerrada**. **F4 en curso** (`session_0115FVo8YwiyfSEvrrNrgM1o`; paso 0: estabilizar `experience.spec.ts:173`) → QA F4 → F5…F8 (`session_0115FVo8yBzjXsUeECw4PfTN`) → QA F3 → F4…F8 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → arreglos ✓ → **F1 cerrada**. F2 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F2.md`) → arreglo P1-1 ✓ → **F2 cerrada** · F3 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F3.md`) → arreglos ✓ → **F3 cerrada**. F4 ✓ (ejecutor) → **QA de F4 en curso** (ojo: estrías ¿oblicuas o verticales?) → F5…F8 (`session_0115FVo8yBzjXsUeECw4PfTN`) → QA F3 → F4…F8 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
