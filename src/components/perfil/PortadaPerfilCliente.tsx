@@ -113,7 +113,7 @@ export default function PortadaPerfilCliente() {
       bio.style.translate = `0 ${16 * (1 - b)}px`;
       velo.style.opacity = String(1 - 0.4 * clamp(p / 0.7));
       indicador.style.setProperty("--p", clamp(p).toFixed(3));
-      indicador.style.opacity = String(1 - clamp((p - 0.8) / 0.15));
+      indicador.style.opacity = String(1 - clamp((p - 0.15) / 0.2));
       seccion.dataset.p = p.toFixed(3);
       if (corteListo) fijarCorte(lockup, aperturaDesdeProgreso(p));
     };
