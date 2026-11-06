@@ -855,7 +855,7 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
   componentes.
 
 **Criterios de aceptación.**
-- **Heredado de F2 (6 nov):** `/about` móvil LCP (póster) < 2,0 s en `perf.spec` (en F2: 2.560 ms). Si no se alcanza con el póster horneado, queda para F8 con CDN.
+- **Heredado de F2/F3 (6 nov):** `/about` y `/` móvil LCP < 2,0 s en `perf.spec` (F2 `/about`: 2.560 ms; F3 `/`: 2.970 ms, y el LCP es el claim de K2, no el póster). Si no se alcanza con el póster horneado, queda para F8 con CDN.
 - Capturas 1440 (cursor sobre la cara y fuera), 1024, 390 (con arrastre): ojos limpios, láser continuo de lado a lado
   (zona nítida + banda horizontal), sin aberración fuera de la foto (P2-11).
 - 0 fps en reposo (el bucle se detiene); en SwiftShader `failIfMajorPerformanceCaveat` deja el respaldo (comportamiento
