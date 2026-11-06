@@ -39,7 +39,7 @@
 | Páginas internas (Trabajo, caso, Perfil, Experiencia) | maquetas ✓ · crítica ✓ · P0+P1 aplicados ✓ (`NOTAS.md` §7; Tab sin focos invisibles; cabe a 1280×720) · 12 P2 pendientes · **aprobadas por Doug** (6 nov) | `propuestas/B-paginas/`, `06-CRITICA-PAGINAS.md` |
 | Plan de implementación (revisado contra el código; lockup y páginas internas integrados 6 nov) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
 | **F0** base técnica | ✓ next 16.4.5 · react 19.3.1 · gsap 3.15.1 · sharp; vitest 149/149, Playwright 269/269; LCP / móvil 4.456 ms, escritorio 1.576 ms, JS 157,6 KB gz | `F0-INFORME.md`, `baseline-F0.json` |
-| **F1** sistema de diseño en código | ✓ ejecutor: vitest 197/197, Playwright 270/270, lockup.spec 11/11; JS / 158,4 KB gz (= base), LCP sin cambio · **QA visual en curso** | `F1-INFORME.md`, `F1-capturas/`, `06-CRITICA-F1.md` |
+| **F1** sistema de diseño en código | ✓ ejecutor: vitest 197/197, Playwright 270/270, lockup.spec 11/11; JS / 158,4 KB gz (= base), LCP sin cambio · QA ✓: 1 P0 (Doto no carga), 3 P1, 8 P2 · **arreglando P0+P1** | `F1-INFORME.md`, `F1-capturas/`, `06-CRITICA-F1.md` |
 | F2–F8 | pendiente | `07` §2 |
 
 ## Siguiente (en orden)
@@ -48,7 +48,7 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1 ✓ (ejecutor) → **QA/crítica de F1 en curso** → arreglos P0/P1 si hay → F2 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → **arreglos P0+P1 en curso** → F2 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
