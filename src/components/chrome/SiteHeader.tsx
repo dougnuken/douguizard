@@ -78,6 +78,12 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const { path } = splitLocale(pathname || "/");
   const isHome = path === "/";
   const isCv = path === "/cv" || path.startsWith("/cv/");
+  // La navegación en el cliente no vuelve a ejecutar el script de tema: /cv marca el <html>.
+  useEffect(() => {
+    const r = document.documentElement;
+    if (isCv) r.setAttribute("data-ruta", "cv");
+    else r.removeAttribute("data-ruta");
+  }, [isCv]);
   const menuId = useId();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);

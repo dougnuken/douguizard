@@ -83,6 +83,12 @@
   color-scheme: light;
 }
 
+/* Las superficies B ignoran el tema (07 §F7): el navegador debe pintar barras y
+   controles nativos en oscuro. Solo /cv (`<html data-ruta="cv">`) sigue el tema. */
+:root:not([data-ruta="cv"]) {
+  color-scheme: dark;
+}
+
 /* ── Fluid type scale, easings, durations ────────────────────────────────── */
 :root {
   /* The hero only. One step above `--step-display`, because the headline there

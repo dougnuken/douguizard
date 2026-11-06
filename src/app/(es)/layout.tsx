@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "../globals.css";
-import themeColors from "../theme-colors.json";
 import RootDocument from "@/components/pages/RootDocument";
 import { rootMetadata } from "@/lib/metadata";
 
@@ -13,10 +12,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: themeColors.dark },
-    { media: "(prefers-color-scheme: light)", color: themeColors.light },
-  ],
+  colorScheme: "dark",
+  themeColor: "#060608",
 };
 
 export const metadata: Metadata = rootMetadata("es");

@@ -27,11 +27,11 @@ const geistMono = Geist_Mono({
  * Resolution order: stored choice → `prefers-color-scheme: light` → dark.
  * Runs before the first paint, so a stored light theme never shows a dark frame.
  */
-const THEME_INIT = `(function(){try{
+const THEME_INIT = `(function(){if(/^(\\/en)?\\/cv(\\/|$)/.test(location.pathname))document.documentElement.setAttribute("data-ruta","cv");try{
 var s=localStorage.getItem("dg-theme");
 var t=(s==="light"||s==="dark")?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
-var r=document.documentElement;r.setAttribute("data-theme",t);r.style.colorScheme=t;
-}catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");r.style.colorScheme="dark";}})();`;
+var r=document.documentElement;r.setAttribute("data-theme",t);
+}catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");}})();`;
 
 /**
  * The document both languages share.
