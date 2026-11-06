@@ -151,10 +151,12 @@ test("la losa de Naowee de /work sigue entera sobre el dock a 390×844", async (
   expect(r.mediaBottom, JSON.stringify(r)).toBeLessThanOrEqual(r.dockTop);
 });
 
-test("/about sin WebGL muestra VidrioCss en la portada; el home lo lleva en K1", async ({ page }) => {
+test("con RM: el respaldo VidrioCss está en la portada de /about y en K1, inactivo, y no hay canvas (póster solo)", async ({ page }) => {
   await abrir(page, "/about", 1440, 900);
   await expect(page.locator(".portada [data-vidrio='css']")).toHaveCount(1);
   await page.goto("/", { waitUntil: "networkidle" });
   await expect(page.locator(".k1 [data-vidrio='css']")).toHaveCount(1);
-  expect(await page.locator("canvas").count(), "sin WebGL en F3").toBe(0);
+  await page.waitForTimeout(600);
+  expect(await page.locator("canvas").count(), "con RM no se pide WebGL").toBe(0);
+  await expect(page.locator("[data-vidrio='css'][data-activo]")).toHaveCount(0);
 });
