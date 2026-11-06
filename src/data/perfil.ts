@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { currentExperience } from "@/lib/career";
 import { getSite } from "./site";
-import { getCv } from "./cv";
+import { getCv, type ExperienceId } from "./cv";
 import { getCaseStudy } from "./work";
 
 /**
@@ -135,3 +135,95 @@ export const eras: Era[] = [
   { id: "escala", nombre: { es: "Escala", en: "Scale" }, desde: 2024, hasta: 2026 },
   { id: "direccion", nombre: { es: "Dirección", en: "Direction" }, desde: 2026, hasta: null },
 ];
+
+/**
+ * Bio de tres frases y dos párrafos de contexto de `/about` (04 §6.1). Cargo y
+ * empresa actuales salen de `cv.ts`; el resto es copy de 04.
+ */
+export function getBio(locale: Locale): { bio: string; contexto: [string, string] } {
+  const actual = currentExperience();
+  if (locale === "es") {
+    return {
+      bio: `Soy diseñador de producto y construyo lo que diseño. Hoy dirijo el producto de ${actual.company.name}, la plataforma del sistema deportivo de Colombia, y hago en código los prototipos que lo definen. Antes fui líder técnico de Andes, el sistema de diseño de Mercadolibre en 18 países, y durante 5 años y 2 meses guardián del sistema de diseño del Banco de Occidente.`,
+      contexto: [
+        "Lo que me ha mantenido aquí no es una pantalla en particular: son los sistemas de abajo. Los tokens, el gobierno y el lenguaje compartido que permite que cientos de diseñadores y miles de ingenieros entreguen un solo producto.",
+        "Hace rato dejé de separar diseñar de construir. Prototipo en código, entrego interfaces reales y dejo que el sistema y los modelos carguen el trabajo repetitivo. olbo y DC Medical son la prueba: una app de finanzas y el panel de una clínica que diseñé, construí y lancé, los dos en uso diario.",
+      ],
+    };
+  }
+  return {
+    bio: `I'm a product designer who builds what he designs. Today I lead product at ${actual.company.name}, the platform for Colombia's sports system, and build the prototypes in code that define it. Before that I was tech lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months the gatekeeper of Banco de Occidente's design system.`,
+    contexto: [
+      "What has kept me here isn't any single screen. It's the systems underneath: the tokens, the governance and the shared language that let hundreds of designers and thousands of engineers ship one product.",
+      "I stopped separating designing from building a while ago. I prototype in code, ship real interfaces and let the system and the models carry the repetitive work. olbo and DC Medical are the proof: a finance app and a clinic's operating panel I designed, built and shipped, both in daily use.",
+    ],
+  };
+}
+
+/** Hitos de la trayectoria: cada experiencia del CV más la formación (`uac`). */
+export type Hito = ExperienceId | "uac";
+
+/**
+ * Logro de cada hito (≤ 140 caracteres, 04 §6.2), condensado del `impact[]` /
+ * `summary` de `cv.ts`. Fechas, cargos y empresas salen de `cv.ts`, no de aquí.
+ * Chub (pista paralela) no tiene logro en 04: F2 lo pide a Doug o lo omite.
+ */
+export const logros: Record<Hito, { es: string; en: string }> = {
+  uac: {
+    es: "Formación en diseño gráfico, en Barranquilla.",
+    en: "Graphic design degree, in Barranquilla.",
+  },
+  freelance: {
+    es: "Sistemas de marca, impresos y los primeros trabajos web para clientes locales.",
+    en: "Brand systems, print and early web work for local clients.",
+  },
+  smartbiz: {
+    es: "Primer rol de UI, y la primera vez dentro de una librería de componentes compartida.",
+    en: "First UI role, and the first time inside a shared component library.",
+  },
+  ideaware: {
+    es: "Wireframes, UI kits y prototipos para clientes internacionales; Pool Botball para iOS.",
+    en: "Wireframes, UI kits and prototypes for international clients; Pool Botball for iOS.",
+  },
+  qrvey: {
+    es: "Promovido a liderar la UI: el lenguaje visual de Qrvey y AutomatiQ, de punta a punta.",
+    en: "Promoted to lead UI: Qrvey's visual language and AutomatiQ, end to end.",
+  },
+  globant: {
+    es: "Reserva y vida a bordo en móvil y web, con producto e ingeniería en EE. UU.",
+    en: "Booking and life aboard on mobile and web, with product and engineering in the US.",
+  },
+  aval: {
+    es: "Construí Velocity y goberné el sistema de 12+ squads; rediseñé la banca digital en tres dispositivos.",
+    en: "Built Velocity and governed the system for 12+ squads; redesigned digital banking on three devices.",
+  },
+  mercadolibre: {
+    es: "Líder técnico del sistema que usan 400+ diseñadores y 2.000+ ingenieros en 18 países.",
+    en: "Tech lead on the system used by 400+ designers and 2,000+ engineers in 18 countries.",
+  },
+  naowee: {
+    es: "Dirijo SUID: 8 módulos de negocio, ~1.200 organizaciones y 130+ pantallas en un solo sistema.",
+    en: "I lead SUID: 8 business modules, ~1,200 organizations and 130+ screens on one system.",
+  },
+};
+
+/**
+ * Portada de `/experience` (04 §6.2). Años y empresas se pasan ya contados
+ * (`lib/cuentas.ts`, F2): aquí no se cuenta nada.
+ */
+export function getTrayectoriaPortada(locale: Locale, cuentas: { anos: number; empresas: number }) {
+  const cargo = currentExperience().role;
+  const palabras = { es: ["cero", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"], en: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"] }[locale];
+  const empresas = palabras[cuentas.empresas] ?? String(cuentas.empresas);
+  return locale === "es"
+    ? {
+        ceja: "Trayectoria",
+        h1: `De freelance a ${cargo}`,
+        intro: `${cuentas.anos} años en producto digital, ${empresas} empresas y un sistema de diseño en 18 países. Cada etapa con caso se abre.`,
+      }
+    : {
+        ceja: "Experience",
+        h1: `From freelance to ${cargo}`,
+        intro: `${cuentas.anos} years in digital product, ${empresas} companies and a design system in 18 countries. Every stage with a case study opens it.`,
+      };
+}

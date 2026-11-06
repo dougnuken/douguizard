@@ -53,13 +53,20 @@
 .lab-escena {
   position: relative;
   overflow: hidden;
+  min-height: 340px;
   padding: 48px 24px;
   border-radius: var(--r-losa);
   background: var(--losa);
   box-shadow: var(--filo);
 }
+.lab-escena .lab-xl {
+  position: absolute;
+  left: 24px;
+  top: 48px;
+}
 .lab-escena .lab-laser {
   position: absolute;
+  top: 62%;
   left: 0;
   right: 0;
   height: 1px;

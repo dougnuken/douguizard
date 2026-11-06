@@ -52,6 +52,22 @@
     line-height: 1;
     transition: --dw var(--d-hover) var(--curva-salida);
   }
+  .dot .punto {
+    position: relative;
+    display: inline-block;
+    width: 0.32em;
+    -webkit-text-fill-color: transparent;
+  }
+  .dot .punto::after {
+    content: "";
+    position: absolute;
+    left: 0.1em;
+    bottom: 0.17em;
+    width: 0.1em;
+    height: 0.1em;
+    border-radius: 50%;
+    background: currentColor;
+  }
   .dot--s {
     font-size: var(--t-24);
     letter-spacing: -0.03em;

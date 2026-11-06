@@ -39,10 +39,16 @@ describe("decisiones de Doug", () => {
     expect(getSite("en").availability.modo).toBe(decisiones.disponibilidad);
   });
 
+  it("el lockup es el decidido el 6 nov: opción 4, «corte láser»", () => {
+    expect(decisiones.nombreLockup).toEqual({ fuente: "geologica", construccion: "corte" });
+  });
+
   it("lockup.ts carga la fuente que dice decisiones.nombreLockup", () => {
     const lockup = readFileSync(join(process.cwd(), "src/app/fonts/lockup.ts"), "utf8");
-    const reexporta = lockup.match(/from "\.\/lockup-([a-z-]+)"/)?.[1];
-    expect(reexporta).toBe(decisiones.nombreLockup.fuente);
+    const familia = { geologica: "Geologica", "big-shoulders": "Big_Shoulders_Stencil" }[
+      decisiones.nombreLockup.fuente as "geologica" | "big-shoulders"
+    ];
+    expect(lockup).toMatch(new RegExp(`import \\{ ${familia} \\} from "next/font/google"`));
   });
 
   it("rolCorto se deriva del cargo actual del CV", () => {

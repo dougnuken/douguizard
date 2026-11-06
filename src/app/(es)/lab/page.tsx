@@ -69,18 +69,26 @@ export default function LabPage() {
         <section className="lab-seccion" aria-labelledby="lab-nombre">
           <h2 id="lab-nombre">Nombre · «corte láser»</h2>
           <div className="lab-escena" data-lab="escena-xl">
-            <NameLockup escala="xl" />
+            <div className="lab-laser" aria-hidden="true" />
+            <NameLockup
+              escala="xl"
+              corte
+              as="h2"
+              laser=".lab-laser"
+              className="lab-xl"
+              style={{ "--lockup-xl": "clamp(48px, 14vw, var(--t-120))" } as React.CSSProperties}
+            />
           </div>
           <LabCorte />
           <div className="lab-rejilla">
             <Losa superficie="vidrio" className="lab-pila">
               <p className="ceja">escala losa (K1)</p>
-              <NameLockup escala="losa" />
+              <NameLockup escala="losa" decorativo />
               <p className="etiqueta">{site.rolCorto}</p>
             </Losa>
             <Losa superficie="losa" className="lab-pila">
               <p className="ceja">escala móvil</p>
-              <NameLockup escala="movil" />
+              <NameLockup escala="movil" decorativo />
             </Losa>
             <Losa superficie="losa" className="lab-pila">
               <p className="ceja">wordmark de la cabecera</p>
@@ -164,7 +172,7 @@ export default function LabPage() {
           <div className="lab-fila">
             <DotMatrix valor="2026" tamano="s" />
             <DotMatrix valor="18" tamano="m" etiqueta="18 países" />
-            <DotMatrix valor="400+" tamano="l" />
+            <DotMatrix valor="2.000+" tamano="l" etiqueta="2.000+ ingenieros" />
             <DotMatrix valor="12" tamano="xl" etiqueta="12 años" />
           </div>
         </section>

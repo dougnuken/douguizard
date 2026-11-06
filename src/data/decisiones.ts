@@ -31,7 +31,7 @@ export const FUENTES_LOCKUP = [
   "urbanist",
   "mona-sans",
   "instrument-serif-mona",
-  "big-shoulders-stencil",
+  "big-shoulders",
   "geologica",
   "doto",
   "anybody",
@@ -82,7 +82,8 @@ export const decisiones: Decisiones = {
   rutasPerfil: "separadas",
   temaClaroEn: "solo-cv",
   titularEn: "diccionario",
-  // Doug eligió la 4 «corte láser» (ESTADO.md). Si cambia, cambiar también lockup.ts.
+  // Decidido el 6 nov: opción 4 «corte láser». Reversión: { fuente: "big-shoulders",
+  // construccion: "banda" } + reexportar su fuente en app/fonts/lockup.ts.
   nombreLockup: { fuente: "geologica", construccion: "corte" },
   pdfPorIdioma: { es: "con-foto", en: "sin-foto" },
   colofon: "A",
