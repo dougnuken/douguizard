@@ -79,6 +79,15 @@ no): por eso (a), (d) y (e) corren de verdad; si en otro entorno no hubiera WebG
 - Pósters: `losa` 13–32 KB AVIF, `movil`/`cine` 18–53 KB (las franjas oblicuas comprimen peor que la foto limpia: el
   880 móvil pasó de 32 a 53 KB). Textura 56 KB, después del `load`.
 
+## Arreglos tras la crítica (`06-CRITICA-F4.md`)
+
+| Punto | Cambio | Prueba / captura |
+|---|---|---|
+| **P0-1** estrías verticales en K1 | `losa.angulo` 0 → **12** en `src/data/hero.ts` (los tres héroes a 12°, decisión de Doug); foto `version` 2 → **3**, póster rehorneado en `public/hero/199598aa-v3/` (se retira `-v2`). El respaldo CSS usa el mismo póster, así que hereda el ángulo. | `hero.test`: `losa.angulo === cine.angulo`. `home-1440x900-cursor-*`, `home-1024x768-*`, `-rm-poster`, `-sin-webgl-*`: franjas oblicuas. Sin moaré con el borde redondeado a 1440 ni a 1024. |
+| **P1-2** aristas dentadas | `vidrioShader.ts`: la franja pasa a una función `franja()`; antialias analítico con `aa = fwidth(u)` (un píxel de dispositivo en unidades de estría) y mezcla con la estría `k−1` en `smoothstep(0, 1,5·aa, t)` (las dos lecturas extra solo en ese borde); `lip` con ancho `max(0,10, 2·aa)` (≥ 2 px). | Pósters `losa`/`movil`/`cine` v3 y `home-390x844-reposo`, `about-1440x900-p0-cursor`: arista continua, sin escalera ni gorra «rasgada». |
+| **P1-1** la lente no se percibía | Las capturas viejas no demostraban nada; medida en `next start`: sobre pared la lente quita 70–79 % de la rugosidad horizontal, sobre la cara 43 % (la protección ya deja poco que quitar), sobre el cuero 11 % por el detalle propio de la foto (a ojo, la chaqueta queda nítida). Aun así se aplica el ajuste sobrio de la crítica: radio pleno 0,5 → **0,6·uLensR** y brillo +6 % → **+4 %**. | `vidrio.spec` (a) y (d): parche de 40×40 bajo cursor/dedo sobre la pared, rugosidad con lente abierta ≤ 50 % de la cerrada (aserción sobre lo pintado, no sobre `data-lente`). `home-1440x900-cursor-pared`, `-hombro`, `-cara`, `home-390x844-arrastre` con punto rojo de 8 px en el cursor/dedo. |
+| **P1-3** matriz de QA incompleta | Capturas rehechas con `npm run build` + `next start`, esperando `canvas.on` y `data-cuadros > 0` (+700 ms tras el fundido). Nuevas: `home-1024x768-cursor-cara`, `home-1440x900-cursor-pared`, `home-1440x900-sin-webgl-reposo`/`-lente`, `home-390x844-sin-webgl-reposo`/`-lente` (Chromium con `--disable-webgl --disable-webgl2`). | `F4-capturas/` (17 JPG, DPR 1, q82). Sin WebGL: póster oblicuo y círculo de foto limpia bajo el cursor/dedo, borde suave (no lee como linterna). |
+
 ## Verificación final
 
 lint y `tsc` en verde; vitest **236/236**; `next build` en verde; Playwright completo **424/424 en dos corridas
