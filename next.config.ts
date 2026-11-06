@@ -99,6 +99,11 @@ const nextConfig: NextConfig = {
     // root `not-found.tsx` to render inside. `app/global-not-found.tsx` is the
     // 404 for an address that matches neither tree.
     globalNotFound: true,
+    // F4: el CSS va en línea en el HTML. En Slow 4G (562 ms por viaje) el
+    // `<link rel=stylesheet>` costaba un viaje entero antes del primer pintado:
+    // LCP móvil de / 2,94 → 1,00 s (perf-F4.json). Cuesta caché del CSS entre
+    // páginas (cada HTML lo trae, ≈ +25 KB gz).
+    inlineCss: true,
   },
   // `poweredByHeader` off: `X-Powered-By: Next.js` tells an attacker which
   // stack to bring exploits for and tells a visitor nothing.

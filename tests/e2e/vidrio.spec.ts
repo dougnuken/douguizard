@@ -161,7 +161,7 @@ test.describe("(d) táctil", () => {
     test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
     expect(await page.locator(".k1").evaluate((k) => getComputedStyle(k).touchAction)).toBe("pan-y pinch-zoom");
     const cdp = await page.context().newCDPSession(page);
-    const toque = (type: string, x: number, y: number) =>
+    const toque = (type: "touchStart" | "touchMove" | "touchEnd", x: number, y: number) =>
       cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x, y }] });
 
     // Horizontal, a la altura del pecho (encima de la foto, fuera de K2).
