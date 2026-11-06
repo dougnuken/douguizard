@@ -106,3 +106,10 @@
 .lab-verde {
   color: var(--verde-osc);
 }
+.lab-deslizador > .ceja {
+  flex-basis: 100%;
+}
+/* Tres líneas reservadas: la lista se llena tras cargar las fuentes y no debe empujar nada. */
+[data-lab="medidas"] {
+  min-height: calc(3 * 1.4 * var(--t-12));
+}

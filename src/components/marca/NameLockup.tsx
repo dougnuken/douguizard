@@ -64,6 +64,7 @@ export default function NameLockup({
       data-escala={escala}
       data-construccion={construccion}
       data-corte={conCorte ? "cerrado" : undefined}
+      data-espera-laser={conCorte && laser ? "" : undefined}
       className={["lockup", lockup.fuente.variable, className].filter(Boolean).join(" ")}
       style={estilo}
       aria-hidden={decorativo || undefined}

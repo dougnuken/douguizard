@@ -64,6 +64,7 @@ export default function NameLockupCorte({ laser, entrada = true }: { laser?: str
       const yCorte = l2.getBoundingClientRect().top + corte - padre.getBoundingClientRect().top;
       const delta = yLaser() - yCorte;
       if (Math.abs(delta) > 0.25) lockup.style.top = `${parseFloat(lockup.style.top) + delta}px`;
+      lockup.dataset.colocado = "";
     };
 
     const abrir = () => {
@@ -104,6 +105,7 @@ export default function NameLockupCorte({ laser, entrada = true }: { laser?: str
           if (!vivo || !mq.matches) return;
           lockup.dataset.corteIsla = "activa";
           preparar();
+          lockup.dataset.colocado = "";
           if (entrada && !entro) {
             entro = true;
             temporizador = window.setTimeout(abrir, ENTRADA.retrasoMs);
