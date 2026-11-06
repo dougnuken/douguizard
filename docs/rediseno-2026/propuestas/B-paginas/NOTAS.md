@@ -3,7 +3,7 @@
 Doug aprobó B: la vista del OS (`referencias/ref-8-landing-elegido-B-os.jpg`) con el lockup «corte láser» de
 `B-tipo` (opción 4). Estas son las páginas que siguen, con el mismo sistema de B: tokens, rejilla de 12 columnas,
 rail de acciones, pills (la activa es la pill blanca), Doto solo para cifras y fechas, rojo láser = presencia (luz,
-nunca relleno) y azul o magenta solo como material de una losa por página.
+nunca relleno) y, como en la landing, como mucho una losa azul, una magenta y una clara por bloque (P2-6).
 
 | Archivo | Qué es |
 |---|---|
@@ -43,8 +43,8 @@ Hay que servir la **raíz del repo** (`python3 -m http.server` en `/home/user/do
 
 - Arriba, «Trabajo» a 120 px con el intro de 04 §6.3 y una losa blanca «En cifras» (12 · 10 · 3, copy de K12): es el
   respiro claro del pliegue.
-- Filtros (Todos · Escala · Productos propios · Anteriores). Es un grupo de botones con `aria-pressed`, fijo bajo la
-  cabecera, con anuncio en `aria-live`. El reflujo usa la View Transitions API (cada losa tiene `view-transition-name`).
+- Filtros (Todos · Escala · Productos propios · Anteriores). Es un grupo de botones con `aria-pressed`, en el flujo
+  (sin `sticky`, ver §7), con anuncio en `aria-live`. El reflujo usa la View Transitions API (cada losa tiene `view-transition-name`).
   Sin la API, el cambio es directo.
 - **Los largos van como losas protagonistas**, cada una con un solo protagonista (captura o cifra):
   - Naowee (7 × 4, oscura con captura)
@@ -111,8 +111,8 @@ Hay que servir la **raíz del repo** (`python3 -m http.server` en `/home/user/do
 
 ### `/experience`: motion graphics de la trayectoria
 
-- **La línea láser es el eje.** La escena se ancla (`pin`) durante 4,2 viewports con `scrub: 0.5`. El progreso lleva un
-  año continuo de 2006,0 a 2026,83 (hoy, nov 2026).
+- **La línea láser es el eje.** La escena se ancla (`pin`) durante 3,6 viewports con `scrub: 0.5`. El scroll se reparte
+  por hito (cada uno recibe 1/10 del recorrido) y el año interpola dentro del tramo, de 2006,0 a 2026,83 (hoy, nov 2026).
   - Un **odómetro Doto de 120 px** rueda año a año: cuatro columnas de dígitos, y cada cambio es un giro de 260 ms
     `--ease-out`.
   - La **era** (Base · Producto · Sistemas · Escala · Dirección, de 04 §6.2) cambia de nombre y se ilumina en el eje.
@@ -121,8 +121,10 @@ Hay que servir la **raíz del repo** (`python3 -m http.server` en `/home/user/do
   - Cada **tramo** se dibuja sobre el eje con su duración proporcional (`scaleX` ligado al año).
   - El recorrido del eje es luz láser y el cabezal es el punto de presencia.
   - Los **acumulados** suben en Doto con un «encendido» de peso: años en producto digital (desde Smartbiz, oct 2014),
-    empresas (las 6 de 04 §6.2) y casos publicados (los 6 hitos con caso más 4 productos propios = 10).
-  - Debajo va la **pista de productos propios**: Chub 2018, y olbo, DC Medical y MakeaPet en 2026.
+    empresas (las 6 de 04 §6.2) y casos publicados (los 7 hitos con caso, Chub incluido, más 3 productos propios = 10,
+    la misma cuenta que `/work`). Antes del primer valor muestran un guion, no «0».
+  - A la derecha del eje va la **pista de productos propios**: olbo, DC Medical y MakeaPet, de 2026. Chub es un hito
+    («Freelance · Chub», 2018, en paralelo), como en el archivo de `/work`.
 - **Móvil:** la línea es vertical y no hay ancla. Arriba hay una barra fija con el contador de 48 px y los acumulados.
   El hito que cruza el 55 % de la pantalla es el activo y fija el año. La línea se llena de láser con el scroll y cada
   hito lleva una barra de duración (40 px por año).
@@ -146,7 +148,7 @@ Hay que servir la **raíz del repo** (`python3 -m http.server` en `/home/user/do
 | `/about`: entrada | Carga | Textos con opacidad y +16 px, 600 ms `expo.out`, 60 ms de escalonado. Láser con `scaleX`, 700 ms `power3.inOut`. Corte de «Vargas» a los 880 ms, en 520 ms `--ease-out` |
 | `/about`: portada a losa | Scroll (sticky, scrub 0,3) | Foto en cúbica in-out entre p 0 y 0,7. Vidrio de .62 a .08 entre p 0 y 0,85. Corte cerrado entre 0 y 0,3. Bio entre 0,5 y 0,8 |
 | Lente del vidrio | Cursor o arrastre | Muelles X/Y críticamente amortiguados (respuesta 0,35 s). Entra con k = 7 y sale con k = 4 |
-| `/experience`: año | Scroll (pin de 4,2 vh, scrub 0,5) | Lineal en años. Odómetro en 260 ms `--ease-out`. Hito en 240 ms. Acumulados con encendido de 360 ms |
+| `/experience`: año | Scroll (pin de 3,6 vh, scrub 0,5) | Por hito (1/n del recorrido cada uno), lineal en años dentro del tramo. Odómetro en 260 ms `--ease-out`. Hito en 240 ms. Acumulados con encendido de 360 ms |
 | Movimiento reducido | — | Sin pin, sin sticky, sin lente ni entrada. Fundidos de 150 ms |
 
 ---
@@ -208,3 +210,48 @@ de idioma; el EN usa coma y no se toca.
 
 El mismo arreglo (unas líneas de CSS y JS) se aplicó en `propuestas/B/index.html`, donde K4 mostraba «2.000+» como
 «2,000+». Las capturas `shot_B_*` de B no se regeneraron.
+
+## 7. Cambios tras la crítica (`06-CRITICA-PAGINAS.md` §4, 6 nov)
+
+Los 14 puntos de §4 (P0-1 y los 13 P1), en el orden de la lista. Se respetó §3 y las decisiones de Doug: lockup
+«corte láser» en escritorio, Geologica / Urbanist / Instrument Sans / Doto solo en cifras, héroe sin máscara. Los
+archivos se editaron a mano (el `build.py` del scratchpad ya no existe): las piezas comunes no cambiaron.
+
+| # | Arreglo | Qué cambió | Archivo |
+|---|---|---|---|
+| 1 | **P0-1** Tab en hitos invisibles | `focusin` en cada `<li>` del `<ol>`: el foco lleva la escena al tramo de ese hito (`scrollTo` instantáneo + `progress(1)` del scrub), el hito se activa y el foco se ve. El `<ol>` sigue completo para teclado y lectores; no hizo falta `inert`. | `experience.html` (JS de `montar`) |
+| 2 | **P1-4** Una sola cuenta de propios | `PROPIOS` = olbo, DC Medical, MakeaPet (3, como `/work`). Chub pasa a ser un hito «Freelance · Chub» (2018, en paralelo, con «Ver caso»), sin tramo propio en el eje para no pisar a Globant. «Casos publicados» = 7 hitos con caso + 3 propios = 10, el mismo total que `/work`. | `experience.html` |
+| 3 | **P1-8** No abre en «0 · 0 · 0» | Mientras el valor es 0 el `dd` va vacío y dibuja un guion largo (barra en `--tinta-3`, no depende del subconjunto de Doto); la losa queda a opacidad .6 hasta el primer valor ≥ 1. | `experience.html` (`ponerAc`, CSS de `.acumulados`) |
+| 4 | **P1-9** Scroll por hito | `yDe(p)`: cada hito recibe 1/n del recorrido y el año interpola dentro de su tramo. El eje sigue con duraciones proporcionales; solo cambia la velocidad del cabezal. Pin de 4,2 → 3,6 viewports. | `experience.html` |
+| 5 | **P1-10** Escena completa en portátiles | En `max-height: 820px`: `.exp-izq` y `.hitos` a `calc(100svh - 360px)`, eje sin `padding-top`, tramos y años más bajos, y la pista de propios a la derecha del eje (misma franja) en vez de debajo. Medido: el eje acaba en y = 868/900 (1440), 744/768 (1366) y 696/720 (1280), y la losa del hito no desborda. | `experience.html` |
+| 6 | **P1-11** Hitos inactivos legibles en móvil | `.hito.fuera`: opacidad 1; baja el material (fondo transparente + filo `--losa-borde`), no el texto. Medido sobre el vacío: rol y periodo **7,91:1**, título y logro **18,59:1** (antes 1,93:1 y 3,03:1). | `experience.html` (móvil) |
+| 7 | **P1-12** Pista sin choques | La pista es una columna de 140 px a la derecha del eje («Productos propios · 2026»): punto + nombre a la derecha del punto, apilados hacia abajo, sin año propio (2026 ya está en el eje). Nada se monta sobre la fila de años. | `experience.html` |
+| 8 | **P1-7** Un solo láser en `/about` móvil | Opción (a): en móvil, sin hilo en el nombre y «Vargas» entero (sin `clip-path` ni mitad inferior); el láser queda solo en la foto. Escritorio intacto. | `about.html` (móvil) |
+| 9 | **P1-5** Ficha sin escalera | Lista de definición sin cajas: 2 × 2 con filete superior, orden Rol · Duración · Plataformas · Equipo (ancha al final). Cierra en rectángulo. En móvil `gap` 12/16 y `dd` a 16: la portada del caso entra en el pliegue (y = 575 de 844; antes quedaba fuera). | `caso.html` |
+| 10 | **P1-6** Tablero que remata | Cifra a 72 px (`min(72px, 100cqi / 3,05)` para que «~1.200» no se parta: 69 px a 1440, igual en las cuatro), etiqueta en `--tinta-2` (`--tinta-osc-2` en la blanca), `min-height: 0`: la losa mide lo que lleva. En móvil 48 px con el mismo tope. | `caso.html` |
+| 11 | **P1-1** Numeración en orden | Naowee /01, Andes /02, olbo /03; el resto ya seguía (/04…/10). | `work.html` |
+| 12 | **P1-2** Filtros sin flotar | Sin `sticky` en escritorio ni en móvil: los filtros van en el flujo bajo «En cifras». Con P2-1 (misma línea): `h1` a 96 y filtros a 32 px del bloque. | `work.html` |
+| 13 | **P1-3** Un caso en el pliegue móvil | «En cifras» en fila compacta (padding 12/16, cifras a 30, etiquetas a 12, sin ceja visible; el `aria-label` del grupo sigue), `h1` a 60 y filtros a 16. La captura de Naowee entra entera sobre el dock (`shot_P_work_390_pliegue`). | `work.html` (móvil) |
+| 14 | **P1-13** Alineaciones de `/about` | «Lo que hago»: rejilla `auto · 64 px · título · párrafo`, los tres títulos a la misma altura (medido: los tres en y = 1421). Marca «Citas originales en inglés» a la derecha, en la línea base del H2 (`flex` + `last baseline`). Marcas en 2 filas de 4 a 18 px (2 columnas en móvil): ninguna huérfana. | `about.html` |
+
+**P2 aplicados de paso:** P2-1 (h1 de `/work` a 96, en la misma regla que P1-2) y P2-6 (la nota de la intro de este
+archivo, corregida). El resto de P2 queda pendiente.
+
+**Lo que no quedó al pie de la letra y por qué:**
+- P1-3 pedía etiquetas de «En cifras» en una línea: a 390 «años en producto digital» no cabe en un tercio a 12 px.
+  Quedan en 2 líneas; aun así la captura de Naowee entra entera.
+- P1-6 pedía 72 px exactos: «~1.200» mide ≈ 3 em y a 72 no cabe en una losa de 211 px sin partirse en dos líneas
+  (se vio en la revisión). Se dejó el tope por ancho de contenedor, igual para las cuatro cifras.
+- P1-13 proponía `grid-template-rows: auto 1fr auto auto`: con párrafos de largo distinto eso no alinea los títulos
+  (el `1fr` absorbe la diferencia). Se usó una distancia fija (64 px; 32 en móvil) entre número y título.
+
+**Verificación (Chromium, DPR 1, GSAP 3.12.5 desde npm):**
+- Prueba de Tab en las 4 páginas a 1440×900, 1280×720 y 390×844 táctil: **291 paradas, 0 en elementos invisibles**
+  (opacidad acumulada 1, visibles, dentro del viewport; 420 ms tras cada Tab). La misma prueba sobre el
+  `experience.html` anterior reproduce el P0: 6 paradas con opacidad 0.
+- Sin desborde horizontal ni errores de consola en ninguna captura; las cuatro familias en `loaded`.
+
+Capturas nuevas o regeneradas en esta ronda (todas las `shot_P_*` de §5, más): `work_1440_scroll` (scroll 1300, donde
+antes flotaban los filtros), `work_1366_pliegue`, `work_1280_pliegue`, `caso_1440_tablero`, `caso_1366_pliegue`,
+`caso_1280_pliegue`, `about_1440_hago`, `about_1366_pliegue`, `about_1280_pliegue`, `experience_1366_000/050/100` y
+`experience_1280_000/050/100`.

@@ -411,8 +411,9 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .caso-titulo { grid-column: 1 / span 7; }
 .caso-h1 { font: 600 var(--t-120)/.92 var(--f-display); letter-spacing: -0.045em; margin: var(--e-12) 0 var(--e-24); }
 .gancho { font-size: var(--t-20); line-height: 1.5; color: var(--tinta-2); max-width: 30em; }
-.ficha { grid-column: 8 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-8); }
-.ficha div { padding: var(--e-16) var(--e-16) var(--e-16) var(--e-24); border-radius: var(--r-s); background: var(--losa-alta); box-shadow: var(--filo); display: grid; gap: var(--e-4); align-content: start; }
+/* P1-5 · la ficha es una lista de definición sin cajas: 2 × 2 con Equipo ancha al final, cierra en rectángulo */
+.ficha { grid-column: 8 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-24) var(--e-32); align-content: end; }
+.ficha div { padding: var(--e-12) 0 0; border-top: 1px solid var(--losa-borde); display: grid; gap: var(--e-4); align-content: start; }
 .ficha .ancho { grid-column: 1 / -1; }
 .ficha dt { font-size: var(--t-12); letter-spacing: .02em; color: var(--tinta-3); }
 .ficha dd { font-size: var(--t-18); line-height: 1.4; color: var(--tinta); }
@@ -436,12 +437,14 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 
 /* Tablero de impacto */
 .tablero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
-.kpi { padding: var(--e-24); border-radius: var(--r-m); background: var(--losa-alta); box-shadow: var(--filo); display: grid; gap: var(--e-8); align-content: start; min-height: 208px; }
-.kpi .dot { --dw: 100; transition: --dw 400ms var(--ease-out) calc(var(--i) * 60ms); margin-bottom: var(--e-16); }
+/* P1-6 · la cifra es el primario (72) y la etiqueta el secundario (gris); la losa mide lo que lleva, sin vacío */
+.kpi { padding: var(--e-24); border-radius: var(--r-m); background: var(--losa-alta); box-shadow: var(--filo); display: grid; gap: var(--e-8); align-content: start; min-height: 0; container-type: inline-size; }
+/* 72 px, salvo que la cifra más larga («~1.200», ≈ 3 em) no quepa en la losa: entonces baja igual en las cuatro */
+.kpi .dot { --dw: 100; transition: --dw 400ms var(--ease-out) calc(var(--i) * 60ms); margin-bottom: var(--e-8); font-size: min(var(--t-72), calc(100cqi / 3.05)); letter-spacing: -0.06em; line-height: 1; white-space: nowrap; }
 .encendido .kpi .dot { --dw: 700; }
-.kpi-et { font-size: var(--t-16); line-height: 1.35; color: var(--tinta); }
+.kpi-et { font-size: var(--t-16); line-height: 1.35; color: var(--tinta-2); }
 .kpi.blanca { background: var(--claro); color: var(--tinta-osc); box-shadow: none; }
-.kpi.blanca .kpi-et { color: var(--tinta-osc); }
+.kpi.blanca .kpi-et { color: var(--tinta-osc-2); }
 .kpi.blanca .micro { color: var(--tinta-osc-2); }
 
 /* Mi parte */
@@ -510,6 +513,8 @@ figcaption { margin-top: var(--e-12); max-width: 60em; color: var(--tinta-2); }
   .caso-h1 { font-size: var(--t-72); margin: var(--e-8) 0 var(--e-16); }
   .gancho { font-size: var(--t-18); }
   .ficha dd { font-size: var(--t-16); }
+  .ficha { gap: var(--e-12) var(--e-16); }
+  .ficha div { padding-top: var(--e-8); gap: 2px; }
   .caso-cover { margin-top: var(--e-24); aspect-ratio: 4 / 3; border-radius: var(--r-xl); }
   .caso-cuerpo { display: block; margin-top: var(--e-48); }
   .indice { display: none; }
@@ -517,8 +522,8 @@ figcaption { margin-top: var(--e-12); max-width: 60em; color: var(--tinta-2); }
   .bloque.dos { grid-template-columns: 1fr; gap: var(--e-16); }
   .prosa, .lista-parte li { font-size: var(--t-16); }
   .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-12); }
-  .kpi { padding: var(--e-16); min-height: 150px; border-radius: var(--r-s); }
-  .kpi .dot-l { font-size: var(--t-30); }
+  .kpi { padding: var(--e-16); min-height: 0; border-radius: var(--r-s); }
+  .kpi .dot-l { font-size: min(var(--t-48), calc(100cqi / 3.05)); }
   .kpi-et { font-size: var(--t-14); }
   .decision { grid-template-columns: 1fr; padding: var(--e-24); gap: var(--e-24); }
   .decision .d-media { order: -1; border-radius: calc(var(--r-xl) - var(--e-12)); }
@@ -695,8 +700,8 @@ figcaption { margin-top: var(--e-12); max-width: 60em; color: var(--tinta-2); }
       <dl class="ficha">
         <div><dt data-t="c.rol">Rol</dt><dd>Head of Product</dd></div>
         <div><dt data-t="c.duracion">Duración</dt><dd data-t="c1.duracion">Ene 2026 — Hoy</dd></div>
-        <div class="ancho"><dt data-t="c.equipo">Equipo</dt><dd data-t="c1.equipo">Producto: 2 personas, con un diseñador que lidero; analistas de negocio e ingeniería.</dd></div>
         <div><dt data-t="c.plataformas">Plataformas</dt><dd>Web</dd></div>
+        <div class="ancho"><dt data-t="c.equipo">Equipo</dt><dd data-t="c1.equipo">Producto: 2 personas, con un diseñador que lidero; analistas de negocio e ingeniería.</dd></div>
       </dl>
     </header>
 

@@ -353,8 +353,14 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .sin-cab { padding-top: var(--e-48); }
 .contexto { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-48); }
 .contexto p { font-size: var(--t-18); line-height: 1.65; color: var(--tinta-2); max-width: 34em; }
-.hago > li { grid-column: span 4; grid-row: span 3; display: flex; flex-direction: column; gap: var(--e-16); }
-.hago .t-losa { margin-top: auto; }
+/* P1-13 · número arriba, título a una distancia fija y párrafo debajo: los tres títulos alinean por arriba,
+   sin depender del largo de cada párrafo (antes `margin-top: auto` los empujaba a alturas distintas). */
+.hago > li { grid-column: span 4; grid-row: span 3; display: grid; grid-template-rows: auto var(--e-64) auto 1fr; }
+.hago > li > .dot { grid-row: 1; }
+.hago .t-losa { grid-row: 3; }
+.hago .apoyo { grid-row: 4; margin-top: var(--e-16); }
+/* P1-13 · la marca de idioma se alinea a la base del H2, a la derecha */
+.seccion-cab:has(> .etiqueta) { display: flex; justify-content: space-between; align-items: last baseline; gap: var(--e-24); }
 .losa-azul .apoyo { color: var(--blanco); }
 .craft { padding: var(--e-48); }
 .pasos { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e-32); margin-top: var(--e-48); }
@@ -375,7 +381,8 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .grupos dt { font-size: var(--t-14); color: var(--tinta-3); }
 .chips { display: flex; flex-wrap: wrap; gap: var(--e-8); }
 .empresas { margin-top: var(--e-48); display: grid; grid-template-columns: 200px 1fr; gap: var(--e-24); align-items: center; padding: var(--e-24) 0; border-top: 1px solid var(--losa-borde); border-bottom: 1px solid var(--losa-borde); }
-.marcas { display: flex; flex-wrap: wrap; gap: var(--e-12) var(--e-32); font: 600 var(--t-20)/1.2 var(--f-nombre); font-variation-settings: var(--nombre-fvs); letter-spacing: -0.02em; color: var(--tinta-2); }
+/* P1-13 · 8 marcas en 2 filas de 4: ninguna queda huérfana en la segunda línea */
+.marcas { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: var(--e-12) var(--e-48); font: 600 var(--t-18)/1.2 var(--f-nombre); font-variation-settings: var(--nombre-fvs); letter-spacing: -0.02em; color: var(--tinta-2); }
 .testimonios > li { grid-column: span 4; grid-row: span 3; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-24); }
 .testimonios blockquote { font: 500 var(--t-20)/1.45 var(--f-display); letter-spacing: -0.005em; }
 .firma { display: grid; gap: var(--e-4); font-size: var(--t-14); line-height: 1.4; }
@@ -402,8 +409,13 @@ html[lang="en"] .solo-es { display: none; }
   .foto { height: 100svh; bottom: auto; }
   .velo { height: 100svh; background: linear-gradient(0deg, rgba(6, 6, 8, 1) 0%, rgba(6, 6, 8, .7) 30%, rgba(6, 6, 8, 0) 55%); }
   .laser { display: none; }
+  /* P1-7 · un solo láser: en móvil el haz es el de la foto. El nombre va entero (corte cerrado desde el inicio). */
+  .lockup .l2 .hilo { display: none !important; }
+  .lockup .m.inf { display: none; }
+  .lockup .m.sup { clip-path: none; translate: none; }
   .heroe-texto { position: relative; left: auto; top: auto; width: auto; padding: calc(100svh - 300px) var(--e-16) 0; }
-  .lockup .l2 .hilo { display: block; left: calc(-1 * var(--e-16)); width: 100vw; }
+>>>
+
   .nivel { margin-top: var(--e-24); font-size: var(--t-14); }
   .bio { margin-top: var(--e-48); font-size: var(--t-20); }
   .sin-cab { padding-top: var(--e-48); }
@@ -417,7 +429,9 @@ html[lang="en"] .solo-es { display: none; }
   .pasos .nodo { left: calc(-1 * var(--e-32)); top: 4px; }
   .lista-datos div, .grupos div { grid-template-columns: 1fr; gap: var(--e-4); }
   .empresas { grid-template-columns: 1fr; gap: var(--e-12); }
-  .marcas { font-size: var(--t-16); gap: var(--e-8) var(--e-16); }
+  .marcas { grid-template-columns: repeat(2, auto); font-size: var(--t-16); gap: var(--e-8) var(--e-24); }
+  .seccion-cab:has(> .etiqueta) { flex-direction: column; align-items: start; gap: var(--e-8); }
+  .hago > li { grid-template-rows: auto var(--e-32) auto 1fr; }
   .testimonios blockquote { font-size: var(--t-18); }
   .cierre-linea { font-size: var(--t-36); }
   .cierre-cta .boton { flex: 1 1 auto; }

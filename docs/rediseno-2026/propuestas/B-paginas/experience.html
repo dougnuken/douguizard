@@ -339,6 +339,11 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .acumulados div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: var(--e-8); padding: var(--e-16) var(--e-16) var(--e-16) var(--e-24); border-radius: var(--r-s); background: var(--losa); box-shadow: var(--filo); }
 .acumulados dt { font-size: var(--t-14); line-height: 1.3; color: var(--tinta-2); }
 .acumulados dd { color: var(--tinta); }
+/* P1-8 · antes del primer valor, la cifra no se pinta: un guion largo dibujado (no depende del subconjunto de Doto) */
+.acumulados div { transition: opacity var(--d-ui) var(--ease-out); }
+.acumulados div.cero { opacity: .6; }
+.acumulados dd:empty { min-height: 1em; display: flex; align-items: center; }
+.acumulados dd:empty::before { content: ""; width: .9em; height: max(2px, .08em); border-radius: 1px; background: var(--tinta-3); }
 .acumulados dd.sube { animation: encender 360ms var(--ease-out); }
 @keyframes encender { from { --dw: 200; } }
 
@@ -377,11 +382,14 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .anios span { position: absolute; top: 0; translate: -50% 0; color: var(--tinta-3); }
 .anios span:first-child { translate: 0 0; }
 .anios span:last-child { translate: -100% 0; }
-.propios { position: relative; height: var(--e-64); margin-top: var(--e-8); border-top: 1px dashed rgba(255, 255, 255, .16); }
-.propios-et { position: absolute; left: 0; top: var(--e-8); font-size: var(--t-12); color: var(--tinta-3); }
-.propio { position: absolute; top: -6px; translate: -6px 0; display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-12); color: var(--tinta-3); white-space: nowrap; transition: color var(--d-ui) var(--ease-out); }
-.propio::before { content: ""; width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; background: var(--vacio); }
-.propio.fin { translate: calc(-100% + 6px) 0; flex-direction: row-reverse; }
+/* P1-10 / P1-12 · La pista de productos propios vive a la derecha del eje, en la franja de tramos y años (no debajo):
+   no suma alto a la escena y nada se monta sobre la fila de años. Los tres son de 2026, el final de la línea. */
+.eje { display: grid; grid-template-columns: minmax(0, 1fr) 140px; column-gap: var(--e-24); align-items: start; }
+.eje-pista { min-width: 0; }
+.propios { display: grid; align-content: start; gap: var(--e-8); padding-top: var(--e-24); }
+.propios-et { font-size: var(--t-12); line-height: 1.2; color: var(--tinta-2); padding-bottom: var(--e-4); border-bottom: 1px dashed rgba(255, 255, 255, .16); }
+.propio { display: flex; align-items: center; gap: var(--e-8); height: 12px; font-size: var(--t-12); color: var(--tinta-3); white-space: nowrap; transition: color var(--d-ui) var(--ease-out); }
+.propio::before { content: ""; flex: none; width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; background: var(--vacio); }
 .propio.on { color: var(--tinta); }
 .propio.on::before { background: var(--tinta); }
 
@@ -406,6 +414,16 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
   .dot-gigante { font-size: var(--t-96); }
   .exp-izq .apoyo { display: none; }
   .hito { padding: var(--e-24); } .logro { font-size: var(--t-16); margin-top: var(--e-8); }
+  /* P1-10 · la escena anclada entra completa a 1366×768 y 1280×720 */
+  .escena-t { row-gap: var(--e-24); padding-bottom: var(--e-24); }
+  .exp-izq, .cine .hitos { max-height: calc(100svh - 360px); }
+  .hitos { min-height: 0; }
+  .exp-der { gap: var(--e-16); }
+  .eje { padding-top: 0; }
+  .tramos { height: var(--e-32); }
+  .anios { height: var(--e-24); }
+  .hito .t-losa { font-size: var(--t-24); }
+  .ver-caso { margin-top: var(--e-8); }
 }
 
 /* Móvil: la línea es vertical. Contador fijo arriba; cada hito entra cuando llega al centro; el tramo mide su duración. */
@@ -435,8 +453,9 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
   .hito.activo::before { background: var(--laser-nucleo); box-shadow: 0 0 0 2px var(--laser), 0 0 12px 3px var(--laser-halo); }
   .hito .duracion { position: absolute; left: calc(-1 * var(--e-32) + 4px); top: calc(var(--e-24) + 13px); width: 5px; height: var(--dur); border-radius: var(--r-pill); background: rgba(255, 255, 255, .24); }
   .hito.paso .duracion, .hito.activo .duracion { background: var(--tinta-2); }
-  .js:not(.rm) .hito.fuera { opacity: .35; translate: 0 8px; transition: opacity var(--d-ui) var(--ease-out), translate var(--d-ui) var(--ease-out); }
-  .js:not(.rm) .hito { transition: opacity var(--d-ui) var(--ease-out), translate var(--d-ui) var(--ease-out); }
+  /* P1-11 · el inactivo baja el material, no el texto: texto a opacidad 1 sobre el vacío (≥ 4,5:1) */
+  .js:not(.rm) .hito.fuera { opacity: 1; background: transparent; box-shadow: inset 0 0 0 1px var(--losa-borde); translate: 0 8px; }
+  .js:not(.rm) .hito { transition: background-color var(--d-ui) var(--ease-out), box-shadow var(--d-ui) var(--ease-out), translate var(--d-ui) var(--ease-out); }
   .hito .t-losa { font-size: var(--t-24); }
   .logro { font-size: var(--t-16); }
   html:not(.cine) .hitos { grid-template-columns: 1fr; }
@@ -509,9 +528,9 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
 
     <div class="exp-der">
       <dl class="acumulados" id="acumulados">
-        <div><dt data-t="e.ac1">años en producto digital</dt><dd class="dot dot-l" data-ac="anios">0</dd></div>
-        <div><dt data-t="e.ac2">empresas</dt><dd class="dot dot-l" data-ac="empresas">0</dd></div>
-        <div><dt data-t="e.ac3">casos publicados</dt><dd class="dot dot-l" data-ac="casos">0</dd></div>
+        <div class="cero"><dt data-t="e.ac1">años en producto digital</dt><dd class="dot dot-l" data-ac="anios"></dd></div>
+        <div class="cero"><dt data-t="e.ac2">empresas</dt><dd class="dot dot-l" data-ac="empresas"></dd></div>
+        <div class="cero"><dt data-t="e.ac3">casos publicados</dt><dd class="dot dot-l" data-ac="casos"></dd></div>
       </dl>
       <ol class="hitos" id="hitos" aria-label="Etapas de mi trayectoria, de la más antigua a la actual" data-ta="e.lista">
         <li class="hito" data-ini="2006" data-fin="2010">
@@ -547,6 +566,12 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
           <p class="logro" data-t="e.h5l">Reserva y vida a bordo en móvil y web, con producto e ingeniería en EE. UU.</p>
           <a class="ver-caso" href="/work/royal-caribbean"><span data-t="e.ver">Ver caso</span><span class="sr-only">: Royal Caribbean</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></a>
         </li>
+        <li class="hito paralelo" data-ini="2018" data-fin="2018.5" data-caso>
+          <p class="periodo" data-t="e.hcp">2018 · En paralelo</p>
+          <h2 class="t-losa" data-t="e.hcc">Freelance · Chub</h2><p class="rol" data-t="e.hcr">Proyecto paralelo freelance</p>
+          <p class="logro" data-t="e.hcl">Alquiler de carros por minuto, para iOS.</p>
+          <a class="ver-caso" href="/work/chub"><span data-t="e.ver">Ver caso</span><span class="sr-only">: Chub</span><svg class="ico" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+        </li>
         <li class="hito" data-ini="2018.833" data-fin="2024" data-empresa data-caso>
           <p class="periodo" data-t="e.h6p">Nov 2018 — Ene 2024</p>
           <h2 class="t-losa">Aval Digital Labs · Banco de Occidente</h2><p class="rol">Senior Product Designer · Design System Gatekeeper</p>
@@ -570,11 +595,13 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
 
     <!-- El eje: eras arriba, tramos con duración proporcional, años en Doto, y la pista de productos propios -->
     <div class="eje" id="eje" aria-hidden="true">
-      <div class="eras" id="eras"></div>
-      <div class="linea-eje"><i class="recorrido hilo" id="recorrido"></i><span class="cabezal" id="cabezal"></span></div>
-      <div class="tramos" id="tramos"></div>
-      <div class="anios" id="anios"></div>
-      <div class="propios" id="propios"><span class="propios-et" data-t="e.propios">Productos propios</span></div>
+      <div class="eje-pista">
+        <div class="eras" id="eras"></div>
+        <div class="linea-eje"><i class="recorrido hilo" id="recorrido"></i><span class="cabezal" id="cabezal"></span></div>
+        <div class="tramos" id="tramos"></div>
+        <div class="anios" id="anios"></div>
+      </div>
+      <div class="propios" id="propios"><span class="propios-et" data-t="e.propios">Productos propios · 2026</span></div>
     </div>
   </div>
 </section>
@@ -718,13 +745,14 @@ window.EN = {
   "e.ceja": "Experience", "e.h1": "From freelance to Head of Product", "e.hoy": "Now",
   "e.intro": "12 years in digital product, six companies and a design system in 18 countries. Every stage with a case study opens it.",
   "e.ac1": "years in digital product", "e.ac2": "companies", "e.ac3": "case studies", "e.lista": "Stages of my career, oldest to current",
-  "e.ver": "See case", "e.vernda": "See case · NDA", "e.propios": "Products of my own", "e.cierre.label": "Close",
+  "e.ver": "See case", "e.vernda": "See case · NDA", "e.propios": "Products of my own · 2026", "e.cierre.label": "Close",
   "e.h0r": "Professional Graphic Designer", "e.h0": "Graphic design degree, in Barranquilla.",
   "e.h1p": "Feb 2010 — Oct 2014", "e.h1r": "Graphic & Interface Designer", "e.h1l": "Brand systems, print and early web work for local clients.",
   "e.h2p": "Oct 2014 — Feb 2016", "e.h2l": "First UI role, and the first time inside a shared component library.",
   "e.h3p": "Mar 2016 — Oct 2016", "e.h3l": "Wireframes, UI kits and prototypes for international clients; Pool Botball for iOS.",
   "e.h4p": "Oct 2016 — Aug 2017", "e.h4c": "Qrvey (via Ideaware)", "e.h4l": "Promoted to lead UI: Qrvey's visual language and AutomatiQ, end to end.",
   "e.h5p": "Aug 2017 — Nov 2018", "e.h5l": "Booking and life aboard on mobile and web, with product and engineering in the US.",
+  "e.hcp": "2018 · On the side", "e.hcc": "Freelance · Chub", "e.hcr": "Freelance side project", "e.hcl": "Per-minute car rental, for iOS.",
   "e.h6p": "Nov 2018 — Jan 2024", "e.h6l": "Built Velocity and governed the system for 12+ squads; redesigned digital banking on three devices.",
   "e.h7p": "Jan 2024 — Jan 2026", "e.h7l": "Tech lead on the system used by 400+ designers and 2,000+ engineers in 18 countries.",
   "e.h8p": "Jan 2026 — Now", "e.h8l": "I lead SUID: 8 business modules, ~1,200 organizations and 130+ screens on one system.",
@@ -737,9 +765,9 @@ const ERAS = [   // 04 §6.2 · los nombres de era en display, los años en Doto
 const HOY = 2026 + 10 / 12;            // noviembre de 2026
 const T0 = 2006, T1 = HOY;
 const ANCLA = 2014 + 9 / 12;           // CAREER_ANCHOR = smartbiz (oct 2014), como `yearsOfExperience()`
-const PROPIOS = [{ n: "Chub", y: 2018 }, { n: "olbo", y: 2026 }, { n: "DC Medical", y: 2026 }, { n: "MakeaPet", y: 2026 }];
+const PROPIOS = [{ n: "olbo", y: 2026 }, { n: "DC Medical", y: 2026 }, { n: "MakeaPet", y: 2026 }];   // P1-4: la misma cuenta que /work (3 propios)
 const CORTOS = { "Freelance": "Freelance", "Universidad Autónoma del Caribe": "UAC" };
-const hitos = $$(".hito").map((li) => ({ li, ini: +li.dataset.ini, fin: li.dataset.fin === "hoy" ? HOY : +li.dataset.fin, empresa: li.hasAttribute("data-empresa"), caso: li.hasAttribute("data-caso"),
+const hitos = $$(".hito").map((li) => ({ li, ini: +li.dataset.ini, fin: li.dataset.fin === "hoy" ? HOY : +li.dataset.fin, empresa: li.hasAttribute("data-empresa"), caso: li.hasAttribute("data-caso"), paralelo: li.classList.contains("paralelo"),
   nombre: li.querySelector(".t-losa").textContent }));
 const x = (y) => (y - T0) / (T1 - T0);   // 0–1 a lo largo del eje
 
@@ -747,15 +775,14 @@ const x = (y) => (y - T0) / (T1 - T0);   // 0–1 a lo largo del eje
 function construirEje() {
   $("#eras").innerHTML = ERAS.map((e, i) => `<span data-i="${i}" style="left:${(x(i === ERAS.length - 1 ? T1 : e.ini) * 100).toFixed(3)}%">${e[lang]}</span>`).join("");
   $("#anios").innerHTML = [2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024, 2026].map((a) => `<span class="dot dot-xs" style="left:${(x(a) * 100).toFixed(3)}%">${a}</span>`).join("");
-  $("#tramos").innerHTML = hitos.map((h, i) => { const w = x(h.fin) - x(h.ini);
+  $("#tramos").innerHTML = hitos.map((h, i) => { if (h.paralelo) return "";   // Chub corre en paralelo: no ocupa tramo
+    const w = x(h.fin) - x(h.ini);
     const nom = (h.nombre.split(" · ")[0].replace(" (vía Ideaware)", "").replace(" (via Ideaware)", ""));
     return `<span class="tramo${w < 0.045 ? " corto" : ""}" data-i="${i}" style="left:${(x(h.ini) * 100).toFixed(3)}%;width:${(w * 100).toFixed(3)}%"><i></i><b>${CORTOS[nom] || nom}</b></span>`; }).join("");
   $$(".propio").forEach((p) => p.remove());
-  let n2026 = 0;
-  PROPIOS.forEach((p) => { const off = p.y === 2026 ? n2026++ : 0;
-    const fin = x(p.y) > 0.85 ? " fin" : "";
-    $("#propios").insertAdjacentHTML("beforeend", `<span class="propio${fin}" data-y="${p.y}" style="left:${(x(p.y) * 100).toFixed(3)}%;top:${-6 + off * 20}px">${off ? "" : `<span class="dot dot-xs" aria-hidden="true">${p.y}</span>`}${p.n}</span>`); });
-  // en el eje, los tres productos de 2026 se apilan hacia abajo; el rótulo de la pista queda a la izquierda de ellos
+  // P1-12: los tres son de 2026, que ya es un año del eje: solo punto + nombre, apilados hacia abajo y a la derecha
+  // del punto, en el margen que queda tras «hoy». Nada se monta sobre la fila de años.
+  PROPIOS.forEach((p) => $("#propios").insertAdjacentHTML("beforeend", `<span class="propio" data-y="${p.y}">${p.n}</span>`));
 }
 /* Odómetro: cuatro columnas de dígitos que ruedan (cada cambio de año es un giro de 260 ms ease-out) */
 const odo = $("#odometro");
@@ -767,7 +794,9 @@ function ponerAnio(a) {
   String(a).split("").forEach((d, i) => (tiras[i].style.transform = `translateY(${-d}em)`));
 }
 const ac = { anios: $('[data-ac="anios"]'), empresas: $('[data-ac="empresas"]'), casos: $('[data-ac="casos"]') };
-function ponerAc(k, v) { const el = ac[k]; if (el.textContent === String(v)) return; el.textContent = v; if (!RM) { el.classList.remove("sube"); void el.offsetWidth; el.classList.add("sube"); } }
+function ponerAc(k, v) {   // P1-8: mientras el valor sea 0, la losa queda en reposo con un guion, nunca «0»
+  const el = ac[k], txt = v >= 1 ? String(v) : ""; el.parentElement.classList.toggle("cero", !txt);
+  if (el.textContent === txt) return; el.textContent = txt; if (!RM && txt) { el.classList.remove("sube"); void el.offsetWidth; el.classList.add("sube"); } }
 
 /* Estado en un año (float): qué hito está activo, cuánto de cada tramo está dibujado, acumulados */
 let ultimoActivo = -1;
@@ -792,17 +821,33 @@ function enAnio(y) {
   $$(".propio").forEach((p) => p.classList.toggle("on", y >= +p.dataset.y));
 }
 
-/* Escritorio: ancla + scrub. 1 viewport ≈ 4,8 años; la rueda siempre mueve la página. */
+/* P1-9 · El scroll se reparte por hito, no por año: cada hito recibe 1/n del recorrido y el año interpola dentro de
+   su tramo. El eje sigue dibujando duraciones proporcionales; solo cambia la velocidad del cabezal. */
+const N = hitos.length;
+const yDe = (p) => { const k = clamp(p) * N, i = Math.min(N - 1, Math.floor(k)), f = k - i;
+  return lerp(hitos[i].ini, i < N - 1 ? hitos[i + 1].ini : T1, f); };
+const pDe = (i) => (i + 0.08) / N;     // un poco dentro del tramo del hito i: ya es el activo
+
+/* Escritorio: ancla + scrub. 3,6 viewports para todos los hitos; la rueda siempre mueve la página. */
 let st = null;
 function montar() {
   if (RM || !window.gsap || !window.ScrollTrigger || !desk.matches) { root.classList.remove("cine"); enAnio(HOY); return; }
   gsap.registerPlugin(ScrollTrigger);
-  const estado = { y: T0 };
-  const tl = gsap.timeline({ scrollTrigger: { trigger: "#escenaT", pin: true, start: "top top", end: () => "+=" + Math.round(window.innerHeight * 4.2),
-    scrub: CAPTURA ? true : 0.5, invalidateOnRefresh: true, anticipatePin: 1 }, onUpdate: () => enAnio(estado.y) });
-  tl.to(estado, { y: T1, ease: "none", duration: 1 });
-  st = tl.scrollTrigger; window.__exp = { st, enAnio };
+  const estado = { p: 0 };
+  const tl = gsap.timeline({ scrollTrigger: { trigger: "#escenaT", pin: true, start: "top top", end: () => "+=" + Math.round(window.innerHeight * 3.6),
+    scrub: CAPTURA ? true : 0.5, invalidateOnRefresh: true, anticipatePin: 1 }, onUpdate: () => enAnio(yDe(estado.p)) });
+  tl.to(estado, { p: 1, ease: "none", duration: 1 });
+  st = tl.scrollTrigger; window.__exp = { st, enAnio, yDe, pDe };
   enAnio(T0);
+  /* P0-1 · Los hitos inactivos son invisibles (opacidad 0) pero el <ol> sigue completo para teclado y lectores.
+     Si el foco entra en un hito, la escena salta a su tramo: el hito se activa y el foco se ve. */
+  hitos.forEach((h, i) => h.li.addEventListener("focusin", () => {
+    if (!desk.matches || !root.classList.contains("cine")) return;
+    const y = st.start + pDe(i) * (st.end - st.start);
+    window.scrollTo({ top: Math.round(y), behavior: "instant" });
+    st.update(); const tw = st.getTween && st.getTween(); if (tw) tw.progress(1);
+    estado.p = pDe(i); enAnio(yDe(estado.p));
+  }));
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 }
 /* Móvil: línea vertical; el contador sigue al hito que cruza el centro de la pantalla */
@@ -827,7 +872,7 @@ function movil() {
   };
   window.addEventListener("scroll", () => requestAnimationFrame(f), { passive: true }); f();
 }
-alCambiarIdioma.push(() => { construirEje(); anioMostrado = null; ultimoActivo = -1; enAnio(st ? T0 + st.progress * (T1 - T0) : HOY); });
+alCambiarIdioma.push(() => { construirEje(); anioMostrado = null; ultimoActivo = -1; enAnio(st ? yDe(st.progress) : HOY); });
 arrancarComun();
 document.fonts.ready.then(() => { montar(); movil(); });
 

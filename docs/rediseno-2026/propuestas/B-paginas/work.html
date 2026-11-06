@@ -399,11 +399,13 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 
 .w-cab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; padding-top: var(--e-48); }
 .w-titulo { grid-column: 1 / span 7; padding-bottom: var(--e-16); }
-.w-titulo .h1 { font-size: var(--t-120); line-height: .92; letter-spacing: -0.045em; }
+.w-titulo .h1 { font-size: var(--t-96); line-height: .92; letter-spacing: -0.045em; }   /* P2-1: la cifra de Naowee entra en el pliegue */
 .w-cifras { grid-column: 8 / -1; display: grid; gap: var(--e-24); }
 .w-cifras-fila { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-16); }
 .w-cifras .dot { color: var(--tinta-osc); }
-.filtros { display: inline-flex; gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-pill); margin-top: var(--e-48); position: sticky; top: 72px; z-index: 5; }
+/* P1-2 · sin `sticky`: el índice cabe en 2 pantallas y los filtros se alcanzan con un scroll corto. Así ningún cromo
+   flota sobre una losa ni choca con la cabecera (en la landing tampoco pasa). */
+.filtros { display: inline-flex; gap: var(--e-4); padding: var(--e-4); border-radius: var(--r-pill); margin-top: var(--e-32); }
 .filtros .pill { height: 40px; }
 .filtros .pill[aria-pressed="true"] { background: var(--blanco); color: var(--tinta-osc); }
 @media (hover: hover) and (pointer: fine) { .filtros .pill[aria-pressed="false"]:hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
@@ -411,8 +413,17 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
   .w-cab { grid-template-columns: 1fr; padding-top: var(--e-24); gap: var(--e-24); }
   .w-titulo, .w-cifras { grid-column: auto; }
   .w-titulo .h1 { font-size: var(--t-72); }
-  .w-cifras .dot-l { font-size: var(--t-36); }
-  .filtros { display: flex; overflow-x: auto; max-width: 100%; scrollbar-width: none; margin-top: var(--e-32); top: 68px; }
+  /* P1-3 · «En cifras» pasa a una fila compacta: la primera losa (Naowee) entra entera en el pliegue */
+  .w-titulo { padding-bottom: 0; }
+  .w-titulo .h1 { font-size: var(--t-60); }
+  .w-titulo .lead { margin-top: var(--e-12); }
+  .w-cifras { padding: var(--e-12) var(--e-16); gap: 0; border-radius: var(--r-s); }
+  .w-cifras > .ceja { display: none; }
+  .w-cifras-fila { gap: var(--e-12); }
+  .w-cifras .cifra { gap: var(--e-4); }
+  .w-cifras .dot-l { font-size: var(--t-30); }
+  .w-cifras .etiqueta { font-size: var(--t-12); line-height: 1.25; }
+  .filtros { display: flex; overflow-x: auto; max-width: 100%; scrollbar-width: none; margin-top: var(--e-16); }
   .filtros::-webkit-scrollbar { display: none; }
   .filtros .pill { height: var(--toque); flex: none; padding: 0 var(--e-12); }
 }
@@ -495,7 +506,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     <li class="tarjeta losa c-naowee" data-grupo="escala">
       <div class="c-texto">
         <div>
-          <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/02</span><span data-t="k3.ceja">Ahora · Head of Product</span></p>
+          <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/01</span><span data-t="k3.ceja">Ahora · Head of Product</span></p>
           <h3 class="t-losa"><a class="enlace-tarjeta" href="caso.html" data-int="caso.html" data-hoja="naowee"><span translate="no">Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
           <p class="apoyo" data-t="k3.apoyo">Los 30 trámites del deporte colombiano, fuera de Word.</p>
           <span class="leido micro" hidden data-t="w.leido">Leído</span>
@@ -510,7 +521,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     <!-- Andes · NDA: la cifra es la imagen -->
     <li class="tarjeta losa-azul c-andes" data-grupo="escala">
       <div>
-        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/03</span><span translate="no">Mercadolibre</span> · 2024–2026</p>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/02</span><span translate="no">Mercadolibre</span> · 2024–2026</p>
         <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
         <p class="apoyo mt-8" data-t="k4.apoyo">Líder técnico del sistema de diseño de Mercadolibre.</p>
       </div>
@@ -525,7 +536,7 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     <!-- olbo -->
     <li class="tarjeta losa-niebla c-olbo" data-grupo="propio">
       <div class="c-col">
-        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/01</span><span data-t="k7.ceja">Producto propio · Design Engineer</span></p>
+        <p class="ceja"><span class="dot dot-xs num" aria-hidden="true">/03</span><span data-t="k7.ceja">Producto propio · Design Engineer</span></p>
         <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span translate="no">olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
         <p class="apoyo" data-t="k7.apoyo">Mide tu ritmo de gasto, no tu saldo.</p>
       </div>
