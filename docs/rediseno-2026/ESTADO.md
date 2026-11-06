@@ -40,7 +40,7 @@
 | Plan de implementación (revisado contra el código; lockup y páginas internas integrados 6 nov) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
 | **F0** base técnica | ✓ next 16.4.5 · react 19.3.1 · gsap 3.15.1 · sharp; vitest 149/149, Playwright 269/269; LCP / móvil 4.456 ms, escritorio 1.576 ms, JS 157,6 KB gz | `F0-INFORME.md`, `baseline-F0.json` |
 | **F1** sistema de diseño en código | ✓ ejecutor: vitest 197/197, Playwright 270/270, lockup.spec 11/11; JS / 158,4 KB gz (= base), LCP sin cambio · QA ✓ · P0+P1 arreglados ✓ (Doto pinta; lockup.spec 17/17) · 7 P2 van con F2/F3 · **F1 ✓** | `F1-INFORME.md`, `F1-capturas/`, `06-CRITICA-F1.md` |
-| F2 rutas /work /about /experience | en curso (ejecutor) | `F2-INFORME.md`, `F2-capturas/` |
+| F2 rutas /work /about /experience | ✓ ejecutor: vitest 222/222, Playwright 389/389; JS / 158,4 KB gz (= base); LCP móvil /about 2,56 s (meta 2,0 → F4/F8) · **QA en curso** | `F2-INFORME.md`, `F2-capturas/` |
 | F3–F8 | pendiente | `07` §2 |
 
 ## Siguiente (en orden)
@@ -49,14 +49,16 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → arreglos ✓ → **F1 cerrada**. **F2 en curso** (Doug dio el sí; sesión `session_0115FVo7hux9smBkRVFXnrDJ`), luego QA de F2, F3…F8 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → arreglos ✓ → **F1 cerrada**. F2 ✓ (ejecutor) → **QA de F2 en curso** (`06-CRITICA-F2.md`) → arreglos P0/P1 → F3…F8 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
 Disponibilidad (consultoría vs roles) · orden de casos · titular EN «direct/lead» · retirar toggle claro/oscuro ·
-datos faltantes de `04-COPY.md §7` · imagen final del héroe · plataformas por caso (ficha F7; solo las confirmadas).
+datos faltantes de `04-COPY.md §7` · imagen final del héroe · plataformas por caso (ficha F7; solo las confirmadas) · marcas de `/about` (8 vs 7), título «DC Medical Aesthetics», Chub (F2-INFORME desvíos 5, 14).
 
 ## Entorno
+
+- **Límite semanal de uso en aviso** (6 nov): sesiones más cortas y acotadas; QA con pocas capturas.
 
 - Red bloquea `dribbble.com`, `instagram.com`, `upload.higgsfield.ai` (no se pueden subir referencias a Higgsfield).
 - Higgsfield: ~65 créditos (5 nov). Soul `Urban Swagger Vibe` deriva de identidad; mejor referencia: `199598aa`.
