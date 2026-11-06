@@ -4,6 +4,9 @@ import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import SiteHeader from "@/components/SiteHeader";
 import { personJsonLd } from "@/lib/personJsonLd";
+import { urbanist } from "@/app/fonts/urbanist";
+import { instrument } from "@/app/fonts/instrument";
+import { doto } from "@/app/fonts/doto";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -55,7 +58,7 @@ export default function RootDocument({
   return (
     <html
       lang={htmlLang[locale]}
-      className={`${archivo.variable} ${geistMono.variable}`}
+      className={`${archivo.variable} ${geistMono.variable} ${urbanist.variable} ${instrument.variable} ${doto.variable}`}
       suppressHydrationWarning
     >
       {/* This IS the root layout's document — both `app/(es)/layout.tsx` and

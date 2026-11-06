@@ -132,6 +132,169 @@
   }
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+   Sistema B «Cine → OS» (rediseño 2026, F1). Capa ADITIVA: nombres en español,
+   solo oscuro e independiente de [data-theme] (D4). Nada de lo de arriba se
+   redefine — `--ease-out`, `--paper`, `--ink`… siguen siendo de casos y CV
+   hasta F7. Fuente: docs/rediseno-2026/propuestas/B/NOTAS.md §3 y 07 §1.6.
+   ════════════════════════════════════════════════════════════════════════════ */
+@property --m {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --mt {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --dw {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 700;
+}
+/* Apertura del corte láser del nombre: 0 cerrado (estado de partida) → 1 abierto. */
+@property --apertura {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@theme inline {
+  --color-vacio: var(--vacio);
+  --color-losa: var(--losa);
+  --color-losa-alta: var(--losa-alta);
+  --color-claro: var(--claro);
+  --color-niebla: var(--niebla);
+  --color-blanco: var(--blanco);
+  --color-tinta: var(--tinta);
+  --color-tinta-2: var(--tinta-2);
+  --color-tinta-3: var(--tinta-3);
+  --color-tinta-osc: var(--tinta-osc);
+  --color-tinta-osc-2: var(--tinta-osc-2);
+  --color-electrico: var(--electrico);
+  --color-electrico-texto: var(--electrico-texto);
+  --color-laser: var(--laser);
+  --color-verde-osc: var(--verde-osc);
+
+  --font-display-b: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
+  --font-texto: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-dot: var(--font-doto), ui-monospace, monospace;
+}
+
+:root {
+  /* color · superficies */
+  --vacio: #060608;
+  --losa: #111214;
+  --losa-alta: #1a1b1f;
+  --losa-borde: rgba(255, 255, 255, 0.08);
+  --claro: #f2f2f4;
+  --niebla: #e4e2ec;
+  --blanco: #ffffff;
+  /* color · texto. `--tinta-osc-2` se oscurece respecto a la maqueta (#55555F,
+     6,6:1 sobre claro) a #48484F: 8,1:1 sobre claro y 7,1:1 sobre niebla, para
+     que los párrafos largos cumplan `a11y 3.1` (≥ 7:1). */
+  --tinta: #f5f5f7;
+  --tinta-2: #a1a1ab;
+  --tinta-2-vidrio: #c2c2ca;
+  --tinta-3: #8a8a95;
+  --tinta-osc: #0e0e12;
+  --tinta-osc-2: #48484f;
+  /* color · acentos. Materiales (rellenos): azul y magenta. Luz (solo línea de
+     1 px, nunca relleno ni texto): láser. Sin `--verde`: el estado es luz láser. */
+  --electrico: #2b56f3;
+  --electrico-texto: #5b7cff;
+  --resplandor-b: #361976;
+  --laser: #ff3344;
+  --laser-nucleo: #ffe4e6;
+  --laser-halo: rgba(255, 51, 68, 0.45);
+  --verde-osc: #0e6b3d; /* solo el «647» de olbo, sobre niebla (5,1:1) */
+  --azul-etiqueta: #e3eaff;
+  --magenta-etiqueta: #f0b8d6;
+  --magenta-etiqueta-base: #fce6f1;
+  --jelly-azul: linear-gradient(to top, #7c7fd0 0%, transparent 22%),
+    radial-gradient(120% 75% at 50% 46%, #0c1266 0%, #1a2fb8 46%, #3f6bd9 78%, #6f98e6 100%);
+  --jelly-magenta: linear-gradient(to top, #a84d86 0%, transparent 26%),
+    radial-gradient(110% 90% at 48% 45%, #2a0d2c 0%, #5e1640 40%, #8e1f55 70%, #b4407e 100%);
+  /* Peor punto de cada gradiente (para el color de fondo sólido que leen las pruebas). */
+  --jelly-azul-peor: #3f6bd9;
+  --jelly-magenta-peor: #8e1f55;
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, 0.86) 0%, rgba(18, 19, 20, 0.86) 10% 90%, rgba(58, 59, 63, 0.86) 100%);
+  --vidrio-plano: rgba(17, 18, 20, 0.78);
+  --foco: var(--electrico-texto);
+
+  /* espacio estructural (la escala 4…128 es la de Tailwind: p-1…p-32) */
+  --cabecera: 88px;
+  --rail: 64px;
+  --os-izq: 112px;
+  --gap: 16px;
+  --fila: clamp(96px, calc((100svh - var(--cabecera) - var(--gap) - 5 * var(--gap)) / 6), 128px);
+  --toque: 44px;
+  --boton-s: 48px;
+  --boton: 56px;
+  --pill-alto: 40px;
+
+  /* tipo */
+  --t-12: 12px;
+  --t-14: 14px;
+  --t-16: 16px;
+  --t-18: 18px;
+  --t-20: 20px;
+  --t-24: 24px;
+  --t-30: 30px;
+  --t-36: 36px;
+  --t-48: 48px;
+  --t-60: 60px;
+  --t-72: 72px;
+  --t-96: 96px; /* alto ≤ 800 px (P0-1) */
+  --t-120: 120px;
+
+  /* radios (concéntricos: interno = externo − inset) */
+  --r-losa: 48px;
+  --r-m: 32px;
+  --r-s: 24px;
+  --r-xs: 16px;
+  --r-pill: 999px;
+
+  /* sombras: del color de la losa, nunca grises genéricas */
+  --bloom-azul: 0 24px 64px -12px rgba(43, 86, 243, 0.35);
+  --bloom-magenta: 0 24px 64px -12px rgba(161, 47, 106, 0.38);
+  --sombra-flota: 0 10px 24px rgba(0, 0, 0, 0.45);
+  --sombra-hoja: 0 -24px 64px rgba(0, 0, 0, 0.55);
+  --filo: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 0 48px rgba(255, 255, 255, 0.16);
+
+  /* motion. `--ease-out` NO se redefine (casos y CV); B usa `--curva-*`. */
+  --curva-salida: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --curva-hoja: cubic-bezier(0.32, 0.72, 0, 1);
+  --d-press: 120ms;
+  --d-hover: 200ms;
+  --d-ui: 240ms;
+  --d-hoja: 420ms;
+  --d-hoja-salida: 280ms;
+  --d-entrada: 600ms;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --r-losa: 36px;
+    --r-m: 28px;
+    --r-s: 20px;
+    --gap: 12px;
+    --boton: 48px;
+  }
+}
+
+/* Los vidrios oscuros pasan a sólido si el sistema pide menos transparencia. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --vidrio-oscuro: linear-gradient(#141518, #141518);
+    --vidrio-plano: #141518;
+  }
+}
+
 @layer base {
   *,
   *::before,
