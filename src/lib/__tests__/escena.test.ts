@@ -72,11 +72,11 @@ describe("escena · vidrio (F4)", () => {
   });
 
   it("cara, ojo y banda láser en px de la foto pintada; sin banda si se pide", () => {
-    const u = uniformesVidrio({ caja: { w: 880, h: 1168 }, foto: fv, params: vidrio.cine });
-    expect(u.face[0]).toBeCloseTo(f.cara[0] * 880);
-    expect(u.lineY).toBeCloseTo((f.laser?.y ?? f.ojo) * 1168);
+    const u = uniformesVidrio({ caja: { w: fv.w, h: fv.h }, foto: fv, params: vidrio.cine });
+    expect(u.face[0]).toBeCloseTo(f.cara[0] * fv.w);
+    expect(u.lineY).toBeCloseTo((f.laser?.y ?? f.ojo) * fv.h);
     expect(u.lineH).toBeGreaterThan(0);
-    expect(uniformesVidrio({ caja: { w: 880, h: 1168 }, foto: fv, params: vidrio.cine, laser: false }).lineH).toBe(0);
+    expect(uniformesVidrio({ caja: { w: fv.w, h: fv.h }, foto: fv, params: vidrio.cine, laser: false }).lineH).toBe(0);
   });
 
   it("la fuerza se sobrescribe (/about: .62 → .08) y se acota a [0, 1]; la fase solo se mueve con la lente abierta", () => {
