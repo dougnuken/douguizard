@@ -26,7 +26,7 @@ const PILLS = [
 
 /**
  * Scroll-spy del home: la sección activa es la última cuyo borde superior ya
- * cruzó el 60 % del viewport; antes de la primera, «home». Es el **único** que
+ * cruzó el 35 % del viewport; antes de la primera, «home». Es el **único** que
  * escribe `setActiveSection` (lo leen las pills, el dock y `LanguageSwitch`, que
  * así conserva el `#ancla` al cambiar de idioma: `i18n I3`).
  */
@@ -38,7 +38,7 @@ function useEspiaSecciones(activo: boolean) {
     let raf = 0;
     const medir = () => {
       raf = 0;
-      const corte = window.innerHeight * 0.6;
+      const corte = window.innerHeight * 0.35;
       let id = "home";
       for (const s of secciones) if (s.getBoundingClientRect().top <= corte) id = s.dataset.seccion!;
       // Al fondo de la página, la última sección (contacto) aunque no llegue al corte.
@@ -183,6 +183,11 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
               {s.hablemos}
             </a>
           </li>
+          {isCv && (
+            <li className="cab-menu-tema">
+              <ThemeToggle />
+            </li>
+          )}
           <li>
             <LanguageMenuLink onNavigate={() => setOpen(false)} className="cab-menu-fila" />
           </li>

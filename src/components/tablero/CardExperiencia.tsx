@@ -1,24 +1,11 @@
 import Link from "next/link";
 import DotMatrix from "@/components/sistema/DotMatrix";
 import Flecha from "@/components/sistema/Flecha";
+import { nodosK11 as NODOS } from "@/data/home";
 import { localePath, type Locale } from "@/i18n/config";
 import { tableroDict } from "@/i18n/tablero";
 import { currentExperience } from "@/lib/career";
 import { hitosTrayectoria } from "@/lib/trayectoria";
-
-/**
- * Nodos de K11 (04 §3): año de inicio (de `cv.ts` vía `lib/trayectoria`),
- * empresa corta y cargo corto. `movil`: los cuatro que caben a 390.
- */
-const NODOS: { ids: string[]; empresa?: string; cargo?: string; movil?: boolean; caso?: boolean }[] = [
-  { ids: ["freelance"], movil: true },
-  { ids: ["smartbiz"], empresa: "Smartbiz", cargo: "Junior UI" },
-  { ids: ["ideaware", "qrvey"], empresa: "Ideaware · Qrvey", cargo: "Senior UX/UI → Lead UI", caso: true },
-  { ids: ["globant"], cargo: "Senior PD", caso: true },
-  { ids: ["aval"], empresa: "Aval · BdO", cargo: "Senior PD · DS Gatekeeper", movil: true, caso: true },
-  { ids: ["mercadolibre"], cargo: "Tech Lead · DS", movil: true, caso: true },
-  { ids: ["naowee"], movil: true, caso: true },
-];
 
 /** K11 · trayectoria (8 × 2) → `/experience`. La línea es decorativa (`aria-hidden`). */
 export default function CardExperiencia({ locale }: { locale: Locale }) {

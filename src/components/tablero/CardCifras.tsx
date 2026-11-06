@@ -1,3 +1,5 @@
+import Link from "next/link";
+import Flecha from "@/components/sistema/Flecha";
 import DotMatrix from "@/components/sistema/DotMatrix";
 import Losa from "@/components/sistema/Losa";
 import { aniosEnProducto, casosPublicados, productosPropios } from "@/lib/cuentas";
@@ -9,7 +11,16 @@ import { paginasDict } from "@/i18n/paginas";
  * `lib/cuentas.ts`, en Doto, sobre la losa clara. Una lista de definición:
  * el lector oye «años en producto digital, 12».
  */
-export default function CardCifras({ locale, className }: { locale: Locale; className?: string }) {
+export default function CardCifras({
+  locale,
+  className,
+  enlace,
+}: {
+  locale: Locale;
+  className?: string;
+  /** K12 del home: la card entera lleva a `/experience` (`sr-only` = el resto del nombre). */
+  enlace?: { href: string; resto: string };
+}) {
   const t = paginasDict[locale].trabajo;
   const cifras = [
     { k: "anios", v: aniosEnProducto(), et: t.cifras.anios },
@@ -18,9 +29,18 @@ export default function CardCifras({ locale, className }: { locale: Locale; clas
   ];
   return (
     <Losa superficie="clara" className={["card-cifras", className].filter(Boolean).join(" ")}>
-      <p className="ceja" aria-hidden="true">
-        {t.enCifras}
-      </p>
+      {enlace ? (
+        <p className="ceja">
+          <Link href={enlace.href} className="enlace-tarjeta">
+            {t.enCifras}
+            <span className="sr-only">{enlace.resto}</span>
+          </Link>
+        </p>
+      ) : (
+        <p className="ceja" aria-hidden="true">
+          {t.enCifras}
+        </p>
+      )}
       <dl className="card-cifras-fila" aria-label={t.enCifras}>
         {cifras.map((c) => (
           <div key={c.k} className="cifra">
@@ -31,6 +51,7 @@ export default function CardCifras({ locale, className }: { locale: Locale; clas
           </div>
         ))}
       </dl>
+      {enlace && <Flecha variante="tinta" />}
     </Losa>
   );
 }

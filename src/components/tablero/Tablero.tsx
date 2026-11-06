@@ -15,6 +15,7 @@ import K2Claim from "./K2Claim";
 import { getCaseMeta } from "@/data/work";
 import { getTestimonial } from "@/data/testimonials";
 import { localePath, type Locale } from "@/i18n/config";
+import { getDict } from "@/i18n/dictionaries";
 import { sistemaDict } from "@/i18n/sistema";
 import { paginasDict } from "@/i18n/paginas";
 import { citasHome, oracionDe, tableroDict } from "@/i18n/tablero";
@@ -34,7 +35,8 @@ export function TableroArriba({ locale }: { locale: Locale }) {
       <K1Retrato locale={locale} />
       <h2 className="seccion-titulo">{t.secciones.trabajo}</h2>
       <CardCaso slug="naowee-suid" locale={locale} como="div" className="k3" seccion="work" />
-      <CardCaso slug="mercadolibre-andes" locale={locale} como="div" className="k4" />
+      {/* El chip dice lo mismo que el caso («Caso disponible a solicitud», `content 10.5`). */}
+      <CardCaso slug="mercadolibre-andes" locale={locale} como="div" className="k4" chipNda={`NDA · ${getDict(locale).case.nda}`} />
       <CardContacto locale={locale} />
     </div>
   );
@@ -68,7 +70,7 @@ export function TableroResto({ locale }: { locale: Locale }) {
 
       <h2 className="seccion-titulo">{t.secciones.experiencia}</h2>
       <CardExperiencia locale={locale} />
-      <CardCifras locale={locale} className="tarjeta k12" />
+      <CardCifras locale={locale} className="tarjeta k12" enlace={{ href: localePath(locale, "/experience"), resto: t.k12.link }} />
 
       <h2 className="seccion-titulo">{t.secciones.perfil}</h2>
       <CardPerfil locale={locale} />

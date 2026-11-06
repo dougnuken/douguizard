@@ -23,7 +23,12 @@ export function getDatos(locale: Locale) {
   return {
     base: `${s.location.city}, ${s.location.country}`,
     zona: s.location.timezone,
-    idiomas: getCv(locale).languages.map((l) => ({ nombre: l.name, nivel: l.level })),
+    // F2 P2-6: «Español (nativo)», en minúscula tras el paréntesis en ES. El CV
+    // conserva su «Nativo» (no se toca `cv.ts`: lo leen /cv y los PDF).
+    idiomas: getCv(locale).languages.map((l) => ({
+      nombre: l.name,
+      nivel: locale === "es" && /^[A-ZÁÉÍÓÚ][a-záéíóúñ]/.test(l.level) ? l.level[0].toLowerCase() + l.level.slice(1) : l.level,
+    })),
   };
 }
 

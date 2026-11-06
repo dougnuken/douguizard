@@ -60,41 +60,54 @@ for (const width of WIDTHS) {
   }
 }
 
-// 5.3 / 5.4 home shell on desktop
+// 5.3 / 5.4 · F3: el shell horizontal ya no existe (07 F3). Su geometría se
+// reemplaza por la del tablero OS: el pliegue a 1440×900 tiene las 6 filas de
+// `os-top`, y ninguna `.tarjeta` recorta su contenido en los anchos de escritorio.
 for (const theme of THEMES) {
-  test(`5.3-5.4 home shell @1440 ${theme}`, async ({ page }) => {
+  test(`5.3 el OS cabe en el pliegue @1440x900 ${theme}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addInitScript(setTheme(theme));
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(250);
-    const early = await page.evaluate(() => {
-      const s = document.querySelector("[data-hshell]");
-      return {
-        shellWidth: s ? +s.getBoundingClientRect().width.toFixed(1) : -1,
-        shellScrollWidth: s ? s.scrollWidth : -1,
-        innerWidth: window.innerWidth,
-        panels: document.querySelectorAll("[data-panel]").length,
-      };
+    await page.goto("/", { waitUntil: "networkidle" });
+    const r = await page.evaluate(() => {
+      const top = document.querySelector<HTMLElement>(".os-top")!;
+      const filas = getComputedStyle(top).gridTemplateRows.split(" ").length;
+      const cards = Array.from(top.querySelectorAll<HTMLElement>(":scope > .tarjeta, :scope > .losa-caso"));
+      return { filas, bottom: Math.max(...cards.map((c) => c.getBoundingClientRect().bottom)), n: cards.length, ih: innerHeight };
     });
-    expect(early.shellWidth, "5.3 shell width >= 1400 at 250ms").toBeGreaterThanOrEqual(1400);
-    expect(early.shellScrollWidth, "5.3 scrollWidth === 5 * innerWidth").toBe(
-      5 * early.innerWidth,
-    );
-    expect(early.panels, "5.4 five panels").toBe(5);
+    expect(r.filas, "5.3 seis filas en os-top").toBe(6);
+    expect(r.n, "5.3 K1–K5 en os-top").toBe(5);
+    expect(r.bottom, `5.3 la última fila acaba en ${r.bottom} ≤ ${r.ih}`).toBeLessThanOrEqual(r.ih);
+  });
+}
 
-    await page.waitForLoadState("networkidle");
+for (const [w, h] of [[1024, 768], [1280, 720], [1366, 768], [1440, 900], [1920, 1080]] as const) {
+  test(`5.4 ninguna .tarjeta recorta @${w}x${h}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.addInitScript(setTheme("dark"));
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto("/", { waitUntil: "networkidle" });
     await settle(page);
-    const after = await page.evaluate(() => ({
-      bodyScrollHeight: document.body.scrollHeight,
-      innerHeight: window.innerHeight,
-      panels: document.querySelectorAll("[data-panel]").length,
-    }));
-    expect(
-      after.bodyScrollHeight,
-      `5.3 page not vertically scrollable: ${after.bodyScrollHeight} <= ${after.innerHeight}+2`,
-    ).toBeLessThanOrEqual(after.innerHeight + 2);
-    expect(after.panels, "5.4 five panels after settle").toBe(5);
+    const malas = await page.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLElement>(".tarjeta"))
+        .map((c) => {
+          // La medida de 07 es `scrollHeight ≤ clientHeight + 1`, salvo lo que la
+          // card deja salir a propósito: medios decorativos (`aria-hidden`, como
+          // el teléfono de olbo, que sangra por el borde en la maqueta).
+          const r = c.getBoundingClientRect();
+          let fondo = r.top;
+          for (const el of Array.from(c.querySelectorAll<HTMLElement>("*"))) {
+            if (el.closest("[aria-hidden='true']") || getComputedStyle(el).display === "none") continue;
+            const b = el.getBoundingClientRect();
+            if (b.height > 0 && el.children.length === 0) fondo = Math.max(fondo, b.bottom);
+          }
+          const decorativo = c.querySelector("[aria-hidden='true'].telefono, .losa-media.telefono");
+          const scroll = decorativo ? 0 : c.scrollHeight - c.clientHeight;
+          return { k: c.className.slice(0, 48), scroll, salida: +(fondo - r.bottom).toFixed(1) };
+        })
+        .filter((x) => x.scroll > 1 || x.salida > 1),
+    );
+    expect(malas, JSON.stringify(malas)).toEqual([]);
   });
 }
 

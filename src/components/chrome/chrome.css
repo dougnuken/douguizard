@@ -190,6 +190,18 @@
     .cab-marca .wordmark {
       block-size: 44px;
     }
+    /* En `/cv`, el tema pasa al menú: la fila no cabe a 375 con él. */
+    .cab-acciones .theme-toggle {
+      display: none;
+    }
+  }
+  .cab-menu-tema {
+    padding: 4px 8px;
+  }
+  @media (min-width: 1024px) {
+    .cab-menu-tema {
+      display: none;
+    }
   }
   /* A 320–359 el wordmark se queda en el disco: su nombre accesible sigue entero. */
   @media (max-width: 359px) {

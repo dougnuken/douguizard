@@ -15,8 +15,11 @@ describe("microcopy del sistema B", () => {
     expect(shape(sistemaDict.es).sort()).toEqual(shape(sistemaDict.en).sort());
   });
 
-  it("no choca con ninguna clave del diccionario actual (F3 las fusiona)", () => {
-    for (const k of Object.keys(sistemaDict.en)) expect(Object.keys(dictionaries.en)).not.toContain(k);
+  // F3 la fusionó en el diccionario: cada clave llega tal cual (ninguna clave
+  // del diccionario base la pisa ni la pisa a ella).
+  it("está fusionada en el diccionario sin choques (F3)", () => {
+    for (const l of ["es", "en"] as const)
+      for (const [k, v] of Object.entries(sistemaDict[l])) expect(dictionaries[l][k as keyof typeof dictionaries.en]).toBe(v);
   });
 
   it("el dock tiene los 5 destinos de 07 (más «Secciones» en el caso)", () => {

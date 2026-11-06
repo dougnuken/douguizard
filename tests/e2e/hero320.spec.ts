@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { setTheme } from "./matrix";
 
 for (const theme of ["dark", "light"] as const) {
@@ -9,6 +9,25 @@ for (const theme of ["dark", "light"] as const) {
     await page.goto("/", { waitUntil: "networkidle" });
     await page.waitForTimeout(900);
     await page.screenshot({ path: `tests/shots/manual-hero-320-${theme}.png` });
+    // F3 (07): antes solo tomaba la captura; ahora afirma la foto a sangre y K2
+    // sin desborde a 320.
+    const r = await page.evaluate(() => {
+      const k1 = document.querySelector<HTMLElement>(".k1")!.getBoundingClientRect();
+      const k2 = document.querySelector<HTMLElement>(".k2")!;
+      const b = k2.getBoundingClientRect();
+      return {
+        k1: { left: k1.left, right: k1.right, top: k1.top, w: document.body.clientWidth },
+        k2: { left: b.left, right: b.right, scroll: k2.scrollWidth - k2.clientWidth },
+        doc: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+    expect(r.k1.left, "foto a sangre: borde izquierdo").toBe(0);
+    expect(r.k1.top, "foto a sangre: arriba").toBe(0);
+    expect(Math.round(r.k1.right), "foto a sangre: borde derecho").toBe(r.k1.w);
+    expect(r.k2.left, "K2 dentro del viewport").toBeGreaterThanOrEqual(0);
+    expect(r.k2.right, "K2 dentro del viewport").toBeLessThanOrEqual(r.k1.w);
+    expect(r.k2.scroll, "K2 sin desborde interno").toBeLessThanOrEqual(0);
+    expect(r.doc, "sin scroll horizontal a 320").toBeLessThanOrEqual(0);
   });
 }
 

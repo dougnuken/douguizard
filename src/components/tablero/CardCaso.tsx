@@ -52,6 +52,7 @@ export default function CardCaso({
   como: Envoltura = "li",
   className,
   seccion,
+  chipNda,
 }: {
   slug: Slug;
   /** Número visible `/NN` (lo calcula la página, P1-1). El tablero no lo lleva. */
@@ -63,6 +64,8 @@ export default function CardCaso({
   className?: string;
   /** Id de sección del home (`home.secciones`) que abre esta card: K3 = `work`. */
   seccion?: string;
+  /** Texto del chip NDA si la página lo pide distinto (el tablero usa el de los casos, `10.5`). */
+  chipNda?: string;
 }) {
   const c = getCaseStudy(slug, locale)!;
   const t = paginasDict[locale].trabajo;
@@ -127,7 +130,7 @@ export default function CardCaso({
             </div>
             {c.nda && (
               <Etiqueta forma="chip" className="chip-nda">
-                {t.nda}
+                {chipNda ?? t.nda}
               </Etiqueta>
             )}
           </>

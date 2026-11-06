@@ -51,7 +51,7 @@ export default function DockMovil() {
   }, [isHome]);
 
   return (
-    <nav className="dock" aria-label={t.label} data-escondido={escondido || undefined} inert={escondido || undefined}>
+    <nav className="dock" aria-label={t.label} data-escondido={escondido ? "" : undefined} inert={escondido || undefined}>
       {DESTINOS.map((d) => {
         const contenido = (
           <>

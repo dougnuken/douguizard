@@ -20,28 +20,30 @@ test("7.1 no running animations on / under reduced motion", async ({ page }) => 
   expect(anims, `7.1 ${JSON.stringify(anims, null, 2)}`).toEqual([]);
 });
 
-test("7.2 vignettes render final state under reduced motion", async ({ page }) => {
+// 7.2 · F3: las viñetas del home se fueron con `sections/Work.tsx`; con el
+// tablero nuevo, «5» y «4» saldrían por casualidad («1 de 4»), que es peor que
+// fallar (07 F3). Se mide la única viñeta viva: la de `CaseNda` en el caso NDA.
+test("7.2 la viñeta del caso NDA pinta su estado final con reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/", { waitUntil: "networkidle" });
+  await page.goto("/work/mercadolibre-andes", { waitUntil: "networkidle" });
   await settle(page);
   const r = await page.evaluate(() => {
-    const text = document.body.innerText;
-    return {
-      hasNaoweeFive: /\b5\b/.test(text),
-      hasNaoweeFour: /\b4\b/.test(text),
-      // olbo bars: any element with a non-zero height inside the olbo vignette
-      olboBars: Array.from(document.querySelectorAll("[data-vignette='olbo'] *"))
-        .map((e) => +(e as HTMLElement).getBoundingClientRect().height.toFixed(1))
-        .filter((h) => h > 0).length,
-      vignettes: Array.from(document.querySelectorAll("[data-vignette]")).map((e) =>
-        e.getAttribute("data-vignette"),
-      ),
-    };
+    const v = Array.from(document.querySelectorAll<HTMLElement>("[role='img'][aria-label]")).find((e) =>
+      /component|componente/i.test(e.getAttribute("aria-label") || ""),
+    );
+    if (!v) return null;
+    v.scrollIntoView();
+    const running = v.getAnimations({ subtree: true }).filter((a) => a.playState === "running").length;
+    const ocultos = Array.from(v.querySelectorAll<HTMLElement>("*")).filter((e) => parseFloat(getComputedStyle(e).opacity) < 0.99).length;
+    return { label: v.getAttribute("aria-label"), running, ocultos, texto: v.innerText };
   });
   console.log("7.2", JSON.stringify(r));
-  expect(r.hasNaoweeFive && r.hasNaoweeFour, "7.2 Naowee vignette shows 5 and 4").toBe(true);
+  expect(r, "7.2 la viñeta de Andes existe").not.toBeNull();
+  expect(r!.running, "7.2 sin animaciones en curso").toBe(0);
+  expect(r!.ocultos, "7.2 nada a medio aparecer").toBe(0);
+  expect(r!.texto, "7.2 las variantes están pintadas").toMatch(/Solid/i);
 });
 
 test("7.5 no transition-duration above 1ms under reduced motion", async ({ page }) => {
