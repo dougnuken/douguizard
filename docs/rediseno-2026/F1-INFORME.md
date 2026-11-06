@@ -137,3 +137,22 @@ Resultado: **sin cambio visual en las rutas públicas.** Las capturas quedan en 
 - Doto es `display: optional`: en la primera visita en frío las cifras pueden salir con la de respaldo (es lo que
   pide 07 §1.7; las capturas se tomaron tras una recarga).
 - `docs/rediseno-2026/baseline-F0.json` no se tocó; las mediciones de F1 están en este informe.
+
+## Arreglos tras la crítica (`06-CRITICA-F1.md`)
+
+Un commit por punto, en orden. Todas las pruebas nuevas viven en `tests/e2e/lockup.spec.ts`, en el bloque `DG_LAB=1`
+(el build normal sigue con su única prueba de 404, así que el total de Playwright no cambia).
+
+| Punto | Cambio | Prueba |
+|---|---|---|
+| **P0-1** Doto no pintaba | `--font-display-b`, `--font-texto` y `--font-dot` salen de `@theme inline` y pasan al `:root` de tokens B (`globals.css`). Ninguna clase Tailwind usaba `font-dot`/`font-texto`/`font-display-b`, así que no hace falta `@theme static`. | «toda var() de sistema, marca y lab resuelve en :root»: lee las tres hojas, saca cada `var(--x)` (menos las locales `--corte`, `--lockup-*`, `--font-nombre`, `--fin-nombre`) y exige un valor no vacío en `<html>`. «Doto pinta las cifras» a 390 y 1440 en segunda visita: los ≥ 7 `[data-dot]` tienen familia que empieza por `Doto` y `fonts.check('700 48px Doto')` da `true`. |
+| **P1-1** nombre invisible sin isla | Dentro del mismo `@media (scripting: enabled)…`, `.lockup[data-espera-laser]:not([data-colocado])` lleva `animation: lockup-mostrar 0s 1200ms forwards` (`to { visibility: visible }`). Al colocarse, la regla deja de aplicar: «ninguna animación viva tras 1,5 s» sigue verde. | «si los chunks JS no llegan, el nombre XL se ve entero a los 1,5 s»: `route(/_next/static/chunks/*.js, abort)`, 1440×900; XL y sus dos líneas `visible`, `data-corte="cerrado"`, sin isla ni `clip-path`. Falla sobre el build anterior (`hidden`). |
+| **P1-2** el corte no se leía | `.hilo` queda en 1 px de `--laser-nucleo` **sin** `box-shadow`. En el lab, el filo de 1 px de la escena pasa detrás del nombre (va antes en el DOM) y el halo rojo pasa a un `::before` con `mask-image` que se apaga hasta `--fin-nombre` + 24 px (borde derecho del lockup; lo escribe `LabCorte` con el `ResizeObserver` que ya tenía). Comparado con `tipo_4_1440.jpg` a 1440×900 y 1280×720 (DPR 2): se leen dos mitades desplazadas y una rendija oscura con un filo claro; el rojo vive a la derecha, lejos de las letras. | «filo legible»: `.hilo` con `box-shadow: none` y, en una franja de 24 px centrada en el corte a lo ancho de «Vargas», ≤ 1 % de píxeles rojos saturados. |
+| **P1-3** el corte no seguía al láser | `NameLockupCorte` observa con el mismo `ResizeObserver` el lockup, el láser y `lockup.offsetParent`, y escucha `resize`; todo pasa por un solo `requestAnimationFrame`. La escena del lab pasa a `min-height: max(340px, 40svh)`. **P2-4** (trivial, en la misma rama del código): al salir de `CONSULTA_CORTE` también se quita `lockup.style.top`. | «resize vertical 1440×900 → 1440×1100»: el `font-size` no cambia, el láser se mueve > 10 px y \|y láser − y corte\| ≤ 1 px antes y después. |
+
+Los demás P2 no se tocaron (van con F2/F3, según la crítica). Tampoco se tocó §3 «Lo que está bien»: los dos pases de
+colocación, el cierre exacto, la ruta sin JS, móvil y movimiento reducido, y la accesibilidad siguen igual y en verde.
+
+**Capturas** `F1-capturas/lab-{390,1024,1440}[-pliegue].jpg` rehechas igual que antes (DPR 1, JPG 82), en **segunda
+visita**: en las tres medidas, `[data-dot]` da `Doto, "Doto Fallback", …` y `fonts.check` da `true`. El «647» y la
+sección Doto ya salen en matriz de puntos.
