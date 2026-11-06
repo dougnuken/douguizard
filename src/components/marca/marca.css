@@ -63,7 +63,9 @@
     clip-path: inset(calc(var(--corte, 0.5em) + var(--rendija, 0px)) -1em -1em -1em);
     translate: calc(var(--desp, 0em) * -0.6) 0;
   }
-  /* El hilo: 1 px de luz láser detrás de la rendija. */
+  /* El hilo: el filo de 1 px detrás de la rendija, **sin halo** (06-CRITICA-F1
+     P1-2: el brillo rojo tapaba la rendija y el corte se leía como borrón). La
+     luz roja la pone la escena, lejos de las letras; aquí solo queda el filo. */
   .lockup[data-corte="abierto"] .hilo {
     display: block;
     position: absolute;
@@ -73,9 +75,6 @@
     height: 1px;
     z-index: -1;
     background: var(--laser-nucleo);
-    box-shadow:
-      0 0 4px 1px var(--laser),
-      0 0 16px 3px var(--laser-halo);
   }
   /* Con `laser`, el nombre espera oculto (visibility: no cuenta como salto de
      maquetación) hasta que la isla lo coloca. Solo con JS y donde hay corte:

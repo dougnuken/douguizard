@@ -18,6 +18,9 @@ export default function LabCorte() {
       setMedidas(
         [...document.querySelectorAll<HTMLElement>("[data-lockup]")].map((el) => {
           const r = el.getBoundingClientRect();
+          // El halo del láser de la escena se apaga sobre la caja del nombre.
+          const escena = el.closest<HTMLElement>(".lab-escena");
+          if (escena) escena.style.setProperty("--fin-nombre", `${r.right - escena.getBoundingClientRect().left}px`);
           const corte = el.style.getPropertyValue("--corte");
           return `${el.dataset.escala}: ${Math.round(r.width)}×${Math.round(r.height)} px${corte ? ` · corte ${parseFloat(corte).toFixed(1)} px` : ""}`;
         }),

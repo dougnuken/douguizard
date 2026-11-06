@@ -64,6 +64,11 @@
   left: 24px;
   top: 48px;
 }
+/* El láser de la escena hace de foto (como en el home): el filo de 1 px cruza
+   todo el ancho y pasa **detrás** del nombre (va antes en el DOM), y el halo
+   rojo se apaga sobre la caja del nombre con una máscara que arranca en
+   `--fin-nombre` (borde derecho del lockup, lo escribe `LabCorte`). Así la
+   rendija se lee como cuchillo y no como raya con brillo (06-CRITICA-F1 P1-2). */
 .lab-escena .lab-laser {
   position: absolute;
   top: 62%;
@@ -71,10 +76,25 @@
   right: 0;
   height: 1px;
   background: var(--laser-nucleo);
-  box-shadow:
-    0 0 4px 1px var(--laser),
-    0 0 16px 3px var(--laser-halo);
   pointer-events: none;
+}
+.lab-escena .lab-laser::before {
+  content: "";
+  position: absolute;
+  inset: -16px 0;
+  background:
+    linear-gradient(to bottom, transparent calc(50% - 3px), var(--laser) 50%, transparent calc(50% + 3px)),
+    linear-gradient(to bottom, transparent, var(--laser-halo) 50%, transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent calc(var(--fin-nombre, 520px) + 24px),
+    #000 calc(var(--fin-nombre, 520px) + 200px)
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent calc(var(--fin-nombre, 520px) + 24px),
+    #000 calc(var(--fin-nombre, 520px) + 200px)
+  );
 }
 .lab-controles {
   display: grid;

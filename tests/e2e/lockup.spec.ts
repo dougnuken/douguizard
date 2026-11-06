@@ -17,10 +17,11 @@ const XL = '[data-lockup][data-escala="xl"]';
 /**
  * Cada `var(--x)` de las hojas que no pasan por Tailwind. Las locales del
  * lockup (`--corte`, `--lockup-*`, `--font-nombre`) se definen en el propio
- * elemento y no en `:root`, así que quedan fuera.
+ * elemento y no en `:root` (como `--fin-nombre` en la escena del lab), así que
+ * quedan fuera.
  */
 const HOJAS = ["src/components/sistema/sistema.css", "src/components/marca/marca.css", "src/app/(es)/lab/lab.css"];
-const LOCALES = /^--(corte|lockup-[a-z]+|font-nombre)$/;
+const LOCALES = /^--(corte|lockup-[a-z]+|font-nombre|fin-nombre)$/;
 const variablesDeHojas = () =>
   [...new Set(HOJAS.flatMap((f) => [...readFileSync(f, "utf8").matchAll(/var\((--[\w-]+)/g)].map((m) => m[1])))]
     .filter((v) => !LOCALES.test(v))
@@ -181,6 +182,31 @@ if (LAB) test.describe("lab del sistema B", () => {
     const b = await leer();
     expect(b.fs).toBeLessThan(a.fs);
     expect(Math.abs(b.corte - (a.corte * b.fs) / a.fs)).toBeLessThanOrEqual(1);
+  });
+
+  test("filo legible: sin halo rojo sobre la caja del nombre (P1-2)", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrirLab(page);
+    await esperarEntrada(page);
+    const caja = await page.evaluate((sel) => {
+      const el = document.querySelector(sel) as HTMLElement;
+      const l2 = el.querySelector(".l2") as HTMLElement;
+      const r = l2.getBoundingClientRect();
+      const corte = parseFloat(el.style.getPropertyValue("--corte"));
+      return {
+        sombraHilo: getComputedStyle(el.querySelector(".hilo")!).boxShadow,
+        clip: { x: r.left, y: r.top + corte - 12, width: r.width, height: 24 },
+      };
+    }, XL);
+    expect(caja.sombraHilo).toBe("none");
+    // Franja de 24 px centrada en el corte, a lo ancho de «Vargas»: el filo es
+    // claro (casi blanco) y lo demás, letras o fondo; nada de rojo saturado.
+    const png = await page.screenshot({ clip: caja.clip });
+    const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
+    let rojos = 0;
+    for (let i = 0; i < data.length; i += info.channels)
+      if (data[i] > 120 && data[i] - data[i + 1] > 60 && data[i] - data[i + 2] > 60) rojos++;
+    expect(rojos / (info.width * info.height)).toBeLessThanOrEqual(0.01);
   });
 
   test("cerrado (t = 0): sin clip-path ni copia, y «Vargas» igual a la palabra sin construcción", async ({ page }) => {
