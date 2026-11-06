@@ -719,6 +719,9 @@ NOTAS §7). El home actual sigue intacto; las páginas nuevas ya se pueden visit
     1440 y a 390;
   - citas con `lang="en"` y texto idéntico a `testimonials.ts`;
   - `perf.spec`: LCP (la foto) < 2,0 s móvil, CLS < 0,02 incluida la carga de Geologica; RM → estado final sin sticky.
+    **(6 nov, orquestador, P1-2 de `06-CRITICA-F2.md`):** en F2 se midió 2.560 ms (Slow 4G, 562 ms por viaje: el límite son
+    los viajes, no el peso). En F2 el criterio queda en LCP = póster y < 3,0 s; el «< 2,0 s» de `/about` móvil pasa a **F4**
+    (póster horneado) y se cierra en **F8** (presupuesto en `perf.spec` + CDN).
 - **`/experience` (`experience.spec.ts`):**
   - **Tab sin focos invisibles:** a 1440×900, 1280×720 y 390×844, se pulsa Tab hasta volver al inicio; en cada parada,
     420 ms después, el elemento enfocado tiene opacidad acumulada 1, es visible y está dentro del viewport (la prueba
@@ -852,6 +855,7 @@ cursor y equivalente táctil, respaldo CSS y póster horneado como LCP. La foto 
   componentes.
 
 **Criterios de aceptación.**
+- **Heredado de F2 (6 nov):** `/about` móvil LCP (póster) < 2,0 s en `perf.spec` (en F2: 2.560 ms). Si no se alcanza con el póster horneado, queda para F8 con CDN.
 - Capturas 1440 (cursor sobre la cara y fuera), 1024, 390 (con arrastre): ojos limpios, láser continuo de lado a lado
   (zona nítida + banda horizontal), sin aberración fuera de la foto (P2-11).
 - 0 fps en reposo (el bucle se detiene); en SwiftShader `failIfMajorPerformanceCaveat` deja el respaldo (comportamiento
