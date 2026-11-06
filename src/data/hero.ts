@@ -95,3 +95,18 @@ export const vidrio: Record<EstadoVidrio, ParametrosVidrio> = {
   losa: { angulo: 102, estria: 28, fuerza: 0.4, joroba: 0.5, lente: 0.12, proteccionCara: 0.68, dprMax: 2 },
   movil: { angulo: 102, estria: 24, fuerza: 0.35, joroba: 0.45, lente: 0, proteccionCara: 0.75, dprMax: 1.5 },
 };
+
+/**
+ * K13 · Retrato de la card de Perfil del home (07 F3): `retratos-hf/83a47bc7`,
+ * 880 × 1168 (no hay 1080: no se inventan anchos). Lo hornea
+ * `npm run hero:poster` junto con el póster; `version` va en el nombre.
+ */
+export const retratoPerfil = {
+  id: "83a47bc7",
+  version: 1,
+  tamano: { w: 880, h: 1168 },
+  rutas: {
+    avif: { 640: "/portrait/perfil-83a47bc7-v1-640.avif", 880: "/portrait/perfil-83a47bc7-v1-880.avif" },
+    webp: { 640: "/portrait/perfil-83a47bc7-v1-640.webp", 880: "/portrait/perfil-83a47bc7-v1-880.webp" },
+  },
+} as const;

@@ -1,3 +1,4 @@
+import VidrioCss from "@/components/hero/VidrioCss";
 import HeroPoster from "@/components/hero/HeroPoster";
 import NameLockup from "@/components/marca/NameLockup";
 import Estado from "@/components/sistema/Estado";
@@ -20,7 +21,7 @@ const INICIO = `try{if(matchMedia("(min-width: 1024px) and (prefers-reduced-moti
  * Portada de `/about` (07 F2, `about.html`): la foto activa de `hero.ts` con
  * velo y láser; el `h1` es el `NameLockup` XL con corte. ≥ 1024 con GSAP: un
  * escenario sticky de 210 svh que la isla liga al scroll (sin pin). El vidrio
- * es un hueco en F2: F3 monta `VidrioCss` y F4 `VidrioGL`.
+ * es `VidrioCss` desde F3 (franjas CSS, cara y láser nítidos); F4 pone `VidrioGL`.
  */
 export default function PortadaPerfil({ locale }: { locale: Locale }) {
   const s = getSite(locale);
@@ -34,6 +35,8 @@ export default function PortadaPerfil({ locale }: { locale: Locale }) {
         <div className="foto">
           <div className="foto-clip" style={{ "--foto-atm": `url(${atm})` } as React.CSSProperties}>
             <HeroPoster locale={locale} className="poster" sizes="(min-width: 1024px) 880px, 160vw" />
+            {/* La foto no llena la caja (atmósfera y losa): la cara se protege donde cae en la losa. */}
+            <VidrioCss angulo={12} cara={[0.5, 0.31, 0.24, 0.2]} laser={null} />
           </div>
         </div>
         <div className="velo" aria-hidden="true" />

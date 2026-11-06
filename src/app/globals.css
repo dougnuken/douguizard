@@ -709,78 +709,6 @@
     box-shadow: inset 0 -2px 0 0 var(--signal);
   }
 
-  /* ── `SectionIndex`: the picker wheel ───────────────────────────────────
-     The rail used to be a glass capsule with its labels hanging off the left
-     edge — ~90px INTO the panel's text column, which is exactly where they
-     crossed the Contact rows in the light theme. Both are gone: no plate, and
-     the standing label stands on end inside the gutter, where it costs 13px
-     of width and can never reach the content's right margin. */
-  /* The reels lay each letter in a cell exactly `1ch + 0.2em` tall, which is
-     only true of a monospace face. `--font-mono` falls back to next/font's
-     "Geist Mono Fallback" — Arial with its size adjusted, i.e. proportional —
-     and while that is showing (a slow first load, a blocked font) W and M
-     overrun their cells and the word collides with itself. So the label skips
-     that fallback and falls straight to the system's monospace instead. */
-  .rail-vlabel {
-    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    animation: rail-label-in var(--dur) var(--ease-out) both;
-  }
-
-  .rail-vlabel-strip {
-    transition: transform var(--dur-slow) var(--ease-out);
-  }
-
-  /* The drum's ends are masked rather than cut, so a row leaves the wheel
-     instead of hitting a border. Rows also fade by angle in JS; this is the
-     last few per cent, and the reason there is no container to draw. */
-  /* The fade is written frame by frame as an inline style, so the one thing
-     that has to beat it — a row the pointer or the keyboard is on — needs
-     `!important`. Nothing else in the file does. */
-  .rail-drum a:hover,
-  .rail-drum a:focus-visible {
-    opacity: 1 !important;
-  }
-
-  .rail-drum {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 9%,
-      #000 91%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 9%,
-      #000 91%,
-      transparent 100%
-    );
-  }
-
-  @keyframes rail-label-in {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rail-vlabel {
-      animation: none;
-    }
-
-    .rail-vlabel-strip {
-      transition: none;
-    }
-  }
-
   /* The hero's noise field.
   
      The shader mixes its colours into an opaque ground, so what lands on the
@@ -831,41 +759,6 @@
     transform: translateY(0);
   }
 
-  .site-header {
-    position: fixed;
-    inset-block-start: 0;
-    inset-inline: 0;
-    z-index: 60;
-    block-size: var(--header-h);
-    /* Thin enough that the blur is the thing you see. At 86% the plate was
-       doing the work and the blur was decoration; at 72% the page passes
-       through it. */
-    background: color-mix(in srgb, var(--paper) 72%, transparent);
-    border-block-end: 1px solid var(--line);
-  }
-
-  /* The header has NOT been glass in Chrome for some time, and this is why.
-     Under this project's default browser targets Lightning CSS compiles
-     `backdrop-filter` down to `-webkit-backdrop-filter` ALONE — and Chrome
-     152 has dropped that alias (`CSS.supports("-webkit-backdrop-filter",
-     "blur(9px)")` is now false), so the declaration reached the browser and
-     did nothing. Inside a feature query on the standard property the standard
-     property survives the compiler. Verify with a build, not by reading:
-     `grep -o "backdrop-filter:[^;}]*" .next/static/chunks/*.css` must show
-     the unprefixed form. */
-  @supports (backdrop-filter: blur(1px)) {
-    .site-header {
-      backdrop-filter: blur(18px) saturate(150%);
-    }
-
-    /* The mobile menu hangs off the same bar, so it takes the same glass —
-       otherwise opening it drops an opaque panel out of a translucent one. */
-    .site-header nav[data-menu] {
-      background: color-mix(in srgb, var(--paper) 82%, transparent);
-      backdrop-filter: blur(18px) saturate(150%);
-    }
-  }
-
   .theme-toggle {
     display: inline-flex;
     flex: none;
@@ -908,72 +801,6 @@
 
   :root[data-theme="light"] .theme-toggle [data-glyph="moon"] {
     display: none;
-  }
-
-  /* ── The language switch. Same hairline and the same 44px as the theme
-     toggle beside it, so the two read as one row of controls. The current
-     language is the filled half — ink on paper, the one inversion the header
-     allows itself — and it is not a link: there is nowhere for it to go. */
-  .lang-switch {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    gap: 2px;
-    block-size: 44px;
-    padding: 3px;
-    border-radius: 9999px;
-    border: 1px solid var(--line);
-  }
-
-  .lang-switch__item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-inline-size: 40px;
-    block-size: 36px;
-    padding-inline: 0.65rem;
-    border-radius: 9999px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    line-height: 1;
-    color: var(--ink-muted);
-    text-decoration: none;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      background-color var(--dur-fast) var(--ease-out);
-  }
-
-  a.lang-switch__item:hover {
-    color: var(--ink);
-    background: color-mix(in srgb, var(--ink) 8%, transparent);
-  }
-
-  .lang-switch__item--current {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .lang-switch-compact {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    inline-size: 44px;
-    block-size: 44px;
-    border-radius: 9999px;
-    border: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    line-height: 1;
-    color: var(--ink);
-    text-decoration: none;
-    transition: opacity var(--dur-fast) var(--ease-out);
-  }
-
-  .lang-switch-compact:hover {
-    opacity: 0.8;
   }
 
   /* The CV download dialog: frosted glass over the page, with a lit edge that

@@ -19,8 +19,8 @@ export default function CardArchivo({
   className,
 }: {
   locale: Locale;
-  /** Número visible de la primera fila (7 en `/work`). */
-  numeroDesde: number;
+  /** Número visible de la primera fila (7 en `/work`). Sin él (tablero), sin `/NN`. */
+  numeroDesde?: number;
   className?: string;
 }) {
   const t = paginasDict[locale].trabajo;
@@ -40,9 +40,11 @@ export default function CardArchivo({
           return (
             <li key={slug} data-grupo={grupoCaso(slug)} data-slug={slug} style={{ viewTransitionName: `caso-${slug}` }}>
               <Link href={localePath(locale, `/work/${slug}`)}>
-                <span className="num" data-num="">
-                  /{String(numeroDesde + i).padStart(2, "0")}
-                </span>
+                {numeroDesde !== undefined && (
+                  <span className="num" data-num="">
+                    /{String(numeroDesde + i).padStart(2, "0")}
+                  </span>
+                )}
                 <b>{c.project.split(" — ")[0]}</b>
                 <span className="cli">{meta.client}</span>
                 <span className="anio">

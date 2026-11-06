@@ -11,5 +11,6 @@ export const urbanist = Urbanist({
   subsets: ["latin", "latin-ext"],
   variable: "--font-urbanist",
   display: "swap",
-  preload: false,
+  // F3: la cabecera, el rail y el dock B las usan en todas las rutas.
+  preload: true,
 });

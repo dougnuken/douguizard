@@ -1,5 +1,7 @@
 import "./paginas-b.css";
 import "@/components/trabajo/trabajo.css";
+import DockMovil from "@/components/chrome/DockMovil";
+import RailAcciones from "@/components/chrome/RailAcciones";
 import SiteFooter from "@/components/chrome/SiteFooter";
 import { IconosSprite } from "@/components/sistema/Iconos";
 import CardArchivo from "@/components/tablero/CardArchivo";
@@ -23,6 +25,7 @@ export default function WorkIndexPage({ locale }: { locale: Locale }) {
   const total = casosPublicados();
   return (
     <>
+      <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
         <div className="resplandor" aria-hidden="true" />
@@ -64,6 +67,7 @@ export default function WorkIndexPage({ locale }: { locale: Locale }) {
         />
       </main>
       <SiteFooter locale={locale} />
+      <DockMovil />
     </>
   );
 }

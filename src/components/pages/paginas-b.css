@@ -194,5 +194,9 @@
     .pie-b {
       padding: 0 16px;
     }
+    /* F3: el dock (52 + 8 px, a 12 px del borde) no tapa la última fila del pie. */
+    .pie-b-fila {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
   }
 }

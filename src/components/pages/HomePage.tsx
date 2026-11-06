@@ -1,32 +1,31 @@
-import { getSections } from "@/data/sections";
+import "./paginas-b.css";
+import { dotoHome } from "@/app/fonts/doto";
+import DockMovil from "@/components/chrome/DockMovil";
+import RailAcciones from "@/components/chrome/RailAcciones";
+import SiteFooter from "@/components/chrome/SiteFooter";
+import Escena from "@/components/escena/Escena";
+import { IconosSprite } from "@/components/sistema/Iconos";
+import { TableroResto } from "@/components/tablero/Tablero";
 import type { Locale } from "@/i18n/config";
-import SectionIndex from "@/components/SectionIndex";
-import HorizontalShell from "@/components/HorizontalShell";
-import Hero from "@/components/sections/Hero";
-import Work from "@/components/sections/Work";
-import Craft from "@/components/sections/Craft";
-import About from "@/components/sections/About";
-import Contact from "@/components/sections/Contact";
 
 /**
- * Five panels, in the order `src/data/sections.ts` declares:
- * home · work · craft · about · contact. The same page in both languages;
- * `app/(es)/page.tsx` and `app/(en)/en/page.tsx` only say which.
- *
- * Keep one element per line with no trailing text: the shell maps over its
- * children, so a stray JSX whitespace node would become an empty sixth panel.
+ * El home B (07 F3): el OS en su estado final, con la cabecera pastilla (en
+ * `RootDocument`), el rail (≥ 1024), el dock (< 1024) y el pie B. El mismo en
+ * los dos idiomas; `app/(es)/page.tsx` y `app/(en)/en/page.tsx` dicen cuál.
+ * `dotoHome` precarga Doto solo aquí (06-CRITICA-F1 P2-8).
  */
 export default function HomePage({ locale }: { locale: Locale }) {
   return (
-    <main id="main" tabIndex={-1}>
-      <SectionIndex />
-      <HorizontalShell labels={getSections(locale).map((s) => s.label)}>
-        <Hero locale={locale} />
-        <Work locale={locale} />
-        <Craft locale={locale} />
-        <About locale={locale} />
-        <Contact locale={locale} />
-      </HorizontalShell>
-    </main>
+    <>
+      <RailAcciones locale={locale} />
+      <main id="main" tabIndex={-1} className={`pagina-b tablero-home ${dotoHome.variable}`}>
+        <IconosSprite />
+        <div className="resplandor" aria-hidden="true" />
+        <Escena locale={locale} />
+        <TableroResto locale={locale} />
+      </main>
+      <SiteFooter locale={locale} />
+      <DockMovil />
+    </>
   );
 }

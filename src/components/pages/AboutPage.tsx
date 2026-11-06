@@ -1,5 +1,7 @@
 import "./paginas-b.css";
 import "@/components/perfil/perfil.css";
+import DockMovil from "@/components/chrome/DockMovil";
+import RailAcciones from "@/components/chrome/RailAcciones";
 import SiteFooter from "@/components/chrome/SiteFooter";
 import PortadaPerfil from "@/components/perfil/PortadaPerfil";
 import { Citas, ComoTrabajo, DatosPerfil, LoQueHago, Marcas } from "@/components/perfil/Secciones";
@@ -22,6 +24,7 @@ export default function AboutPage({ locale }: { locale: Locale }) {
   const { contexto } = getBio(locale);
   return (
     <>
+      <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
         <div className="resplandor" aria-hidden="true" />
@@ -59,6 +62,7 @@ export default function AboutPage({ locale }: { locale: Locale }) {
         />
       </main>
       <SiteFooter locale={locale} />
+      <DockMovil />
     </>
   );
 }

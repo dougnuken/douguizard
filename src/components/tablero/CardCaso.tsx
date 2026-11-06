@@ -45,7 +45,25 @@ const SUPERFICIE = {
  * enlace a tamaño de card, nombrado por el título. Cifras por índice de KPI
  * (`home.cifrasCaso`), copy de 04 §3 (`i18n/paginas.ts`).
  */
-export default function CardCaso({ slug, numero, locale }: { slug: Slug; numero: number; locale: Locale }) {
+export default function CardCaso({
+  slug,
+  numero,
+  locale,
+  como: Envoltura = "li",
+  className,
+  seccion,
+}: {
+  slug: Slug;
+  /** Número visible `/NN` (lo calcula la página, P1-1). El tablero no lo lleva. */
+  numero?: number;
+  locale: Locale;
+  /** `li` en la lista de `/work`; `div` en la rejilla del tablero (F3). */
+  como?: "li" | "div";
+  /** Clase extra de la envoltura (el área `kN` del tablero). */
+  className?: string;
+  /** Id de sección del home (`home.secciones`) que abre esta card: K3 = `work`. */
+  seccion?: string;
+}) {
   const c = getCaseStudy(slug, locale)!;
   const t = paginasDict[locale].trabajo;
   const copy = t.losas[slug];
@@ -61,13 +79,13 @@ export default function CardCaso({ slug, numero, locale }: { slug: Slug; numero:
   const titulo = c.project.split(" — ")[0];
   const id = `caso-${slug}`;
   const cifras = cifrasCaso[slug].map((i, k) => ({ valor: c.kpis![i].value, etiqueta: copy.etiquetas[k] }));
-  const num = `/${String(numero).padStart(2, "0")}`;
-
   const ceja = (
     <>
-      <span className="num" data-num="" aria-hidden="true">
-        {num}
-      </span>
+      {numero !== undefined && (
+        <span className="num" data-num="" aria-hidden="true">
+          /{String(numero).padStart(2, "0")}
+        </span>
+      )}
       {resto}
     </>
   );
@@ -82,8 +100,10 @@ export default function CardCaso({ slug, numero, locale }: { slug: Slug; numero:
   );
 
   return (
-    <li
-      className={`losa-caso ${d.clase}`}
+    <Envoltura
+      className={["losa-caso", d.clase, className].filter(Boolean).join(" ")}
+      id={seccion}
+      data-seccion={seccion}
       data-grupo={grupoCaso(slug)}
       data-slug={slug}
       style={{ viewTransitionName: `caso-${slug}` }}
@@ -94,6 +114,7 @@ export default function CardCaso({ slug, numero, locale }: { slug: Slug; numero:
         tituloId={id}
         ceja={ceja}
         superficie={SUPERFICIE[d.variante]}
+        className="tarjeta"
         flecha={d.variante === "oscura-captura" || d.variante === "niebla-telefono" ? "tinta" : "blanca"}
       >
         <p className="apoyo">{copy.apoyo}</p>
@@ -126,6 +147,6 @@ export default function CardCaso({ slug, numero, locale }: { slug: Slug; numero:
           </div>
         )}
       </BentoCard>
-    </li>
+    </Envoltura>
   );
 }

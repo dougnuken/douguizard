@@ -1,0 +1,29 @@
+/* Vidrio estriado en CSS (respaldo de F4; en F3, el único). Va encima de la foto
+   (`position: absolute; inset: 0` en su contenedor). Franjas de 44 px con un filo
+   de luz y una sombra; la máscara deja nítidas la cara y la banda del láser. */
+@layer components {
+  .vidrio-css {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      var(--v-ang, 90deg),
+      rgba(255, 255, 255, 0.14) 0 1px,
+      rgba(255, 255, 255, 0.03) 2px 8px,
+      transparent 12px 32px,
+      rgba(0, 0, 0, 0.24) 38px 44px
+    );
+    --v-mascara-cara: radial-gradient(var(--v-rx) var(--v-ry) at var(--v-cx) var(--v-cy), transparent 62%, #000 100%);
+    --v-mascara-laser: linear-gradient(
+      #000 calc(var(--v-ly) - 1.5%),
+      transparent calc(var(--v-ly) - 1.5%) calc(var(--v-ly) + 1.5%),
+      #000 calc(var(--v-ly) + 1.5%)
+    );
+    -webkit-mask-image: var(--v-mascara-cara), var(--v-mascara-laser);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--v-mascara-cara), var(--v-mascara-laser);
+    mask-composite: intersect;
+    opacity: 0.9;
+  }
+}

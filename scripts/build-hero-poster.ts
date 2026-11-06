@@ -7,7 +7,7 @@
 import { mkdirSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { getFotoActiva } from "../src/data/hero";
+import { getFotoActiva, retratoPerfil } from "../src/data/hero";
 
 const foto = getFotoActiva();
 const master = path.join("docs/rediseno-2026/retratos-hf", `${foto.id}.jpg`);
@@ -22,5 +22,15 @@ async function main() {
     await sharp(master).resize({ width: Number(w) }).webp({ quality: 74, effort: 6 }).toFile(salida(ruta));
   }
   console.log(`póster de ${foto.id} v${foto.version} listo en public/hero/`);
+  // K13 (F3): el retrato de la card de Perfil del home.
+  const k13 = path.join("docs/rediseno-2026/retratos-hf", `${retratoPerfil.id}.jpg`);
+  mkdirSync(path.join("public", "portrait"), { recursive: true });
+  for (const [w, ruta] of Object.entries(retratoPerfil.rutas.avif)) {
+    await sharp(k13).resize({ width: Number(w) }).avif({ quality: 50, effort: 6 }).toFile(salida(ruta));
+  }
+  for (const [w, ruta] of Object.entries(retratoPerfil.rutas.webp)) {
+    await sharp(k13).resize({ width: Number(w) }).webp({ quality: 72, effort: 6 }).toFile(salida(ruta));
+  }
+  console.log(`retrato K13 ${retratoPerfil.id} v${retratoPerfil.version} listo en public/portrait/`);
 }
 main();

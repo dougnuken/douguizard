@@ -12,3 +12,17 @@ export const doto = Doto({
   display: "optional",
   preload: false,
 });
+
+/**
+ * La misma Doto **con preload**, solo para el home (06-CRITICA-F1 P2-8): en K4
+ * las cifras son el contenido. Se importa únicamente en `HomePage`, así que el
+ * `<link rel="preload">` sale solo en `/` y `/en`; el archivo es el mismo que el
+ * de `doto` (misma URL, misma caché). Redefine `--font-doto` en el `<main>`.
+ */
+export const dotoHome = Doto({
+  subsets: ["latin"],
+  axes: ["ROND"],
+  variable: "--font-doto",
+  display: "optional",
+  preload: true,
+});

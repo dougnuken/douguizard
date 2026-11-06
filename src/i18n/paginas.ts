@@ -70,7 +70,8 @@ const es = {
     empresas: "Dónde he trabajado",
     citas: "Lo que dicen quienes trabajaron conmigo",
     citasMarca: "Citas originales en inglés",
-    leerCasoDe: (cliente: string) => `Leer el caso de ${cliente}`,
+    // F2 P2-3: «del Banco de Occidente», «de Qrvey» (el artículo va con el nombre común).
+    leerCasoDe: (cliente: string) => `Leer el caso ${/^(Banco|Grupo)\b/.test(cliente) ? "del" : "de"} ${cliente}`,
     cierre: "Lo demás está en el trabajo.",
     verCasos: "Ver casos",
     descargarCv: "Descargar CV (PDF)",

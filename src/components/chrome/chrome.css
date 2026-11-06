@@ -1,0 +1,394 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Cromo del sistema B (F3): cabecera pastilla, rail de acciones y dock móvil.
+   Valores de `propuestas/B/index.html` (barra, rail, dock) y NOTAS §1.
+   La cabecera viaja en todas las rutas (RootDocument); rail y dock, solo con el
+   home y las páginas B.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ── Cabecera ─────────────────────────────────────────────────────────── */
+  /* La caja mide `--header-h` (64 / 56): lo que leen los `sticky` de los casos
+     (`layout 5.5`). Las pastillas flotan dentro; el resto de la franja deja
+     pasar los clics. */
+  .cab-b {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    block-size: var(--header-h);
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    pointer-events: none;
+    font-family: var(--font-texto);
+  }
+  .cab-b > * {
+    pointer-events: auto;
+  }
+  .cab-marca .wordmark {
+    block-size: var(--pill-alto);
+  }
+  .cab-pills {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    block-size: var(--pill-alto);
+    padding: 0 4px;
+    border-radius: var(--r-pill);
+    background: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    box-shadow: var(--filo), var(--sombra-flota);
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    block-size: 32px;
+    padding: 0 16px;
+    border-radius: var(--r-pill);
+    color: var(--tinta-2-vidrio);
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    letter-spacing: 0.005em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--d-hover) var(--curva-salida),
+      color var(--d-hover) var(--curva-salida);
+  }
+  .pill[aria-current] {
+    background: var(--blanco);
+    color: var(--tinta-osc);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pill:not([aria-current]):hover {
+      color: var(--tinta);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+  .cab-acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* ES · EN: 44 × 44 por opción; el relleno se recorta al contenido (32 px). */
+  .idioma {
+    display: flex;
+    block-size: 44px;
+    padding: 0 2px;
+    border-radius: var(--r-pill);
+    background: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    box-shadow: var(--filo), var(--sombra-flota);
+  }
+  .idioma-op {
+    display: grid;
+    place-items: center;
+    min-inline-size: 44px;
+    block-size: 44px;
+    padding: 6px 2px;
+    background-clip: content-box;
+    border-radius: var(--r-pill);
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    color: var(--tinta-2-vidrio);
+    text-decoration: none;
+    transition: color var(--d-hover) var(--curva-salida);
+  }
+  .idioma-op[aria-current] {
+    background-color: var(--blanco);
+    color: var(--tinta-osc);
+  }
+  a.idioma-op:hover {
+    color: var(--tinta);
+  }
+  .idioma-op:focus-visible,
+  .pill:focus-visible,
+  .cab-menu:focus-visible,
+  .hablemos:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+  .hablemos {
+    block-size: 44px;
+    min-height: 0;
+    background: var(--electrico);
+    color: var(--blanco);
+    box-shadow: 0 8px 24px -8px rgba(43, 86, 243, 0.6);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hablemos:hover {
+      background: #4569f5;
+    }
+  }
+  .cab-menu {
+    display: none;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    box-shadow: var(--filo), var(--sombra-flota);
+    color: var(--tinta);
+    cursor: pointer;
+  }
+  .cab-menu svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    transition: rotate var(--d-ui) var(--curva-salida);
+  }
+  .cab-menu svg[data-abierto] {
+    rotate: 90deg;
+  }
+  .cab-menu-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 16px;
+    left: 16px;
+    padding: 8px;
+    border-radius: var(--r-s);
+    background: var(--losa-alta);
+    box-shadow: var(--filo), var(--sombra-flota);
+  }
+  .cab-menu-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cab-menu-fila {
+    display: flex;
+    align-items: center;
+    min-block-size: 48px;
+    padding: 0 16px;
+    border-radius: var(--r-xs);
+    color: var(--tinta);
+    font: 500 var(--t-16) / 1.2 var(--font-texto);
+    text-decoration: none;
+  }
+  .cab-menu-fila[aria-current] {
+    background: var(--blanco);
+    color: var(--tinta-osc);
+  }
+
+  @media (max-width: 1023px) {
+    .cab-b {
+      padding: 12px 16px 0;
+    }
+    .cab-b .cab-pills,
+    .cab-b .hablemos {
+      display: none;
+    }
+    .cab-b .cab-menu {
+      display: grid;
+    }
+    .cab-marca .wordmark {
+      block-size: 44px;
+    }
+  }
+  /* A 320–359 el wordmark se queda en el disco: su nombre accesible sigue entero. */
+  @media (max-width: 359px) {
+    .cab-marca .wordmark > span:last-child {
+      display: none;
+    }
+    .cab-marca .wordmark {
+      padding-inline-end: 6px;
+    }
+  }
+
+  /* ── Rail de acciones (≥ 1024) ────────────────────────────────────────── */
+  .rail-acciones {
+    position: fixed;
+    z-index: 30;
+    left: 24px;
+    top: var(--cabecera);
+    inline-size: var(--rail);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--r-pill);
+    background: var(--losa);
+    box-shadow: var(--filo), var(--sombra-flota);
+    font-family: var(--font-texto);
+  }
+  .rail-sep {
+    inline-size: 24px;
+    block-size: 1px;
+    background: var(--losa-borde);
+    margin: 4px 0;
+  }
+  .rail-acciones a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: var(--boton-s);
+    block-size: var(--boton-s);
+    border-radius: 50%;
+    color: var(--tinta-2);
+    font: 600 var(--t-14) / 1 var(--font-texto);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition:
+      background-color var(--d-hover) var(--curva-salida),
+      color var(--d-hover) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
+  }
+  .rail-acciones .rail-accion {
+    background: var(--losa-alta);
+    color: var(--tinta);
+  }
+  .rail-acciones a:active {
+    scale: 0.94;
+  }
+  .rail-acciones a:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rail-acciones a:not(.rail-accion):hover {
+      background: var(--losa-alta);
+      color: var(--tinta);
+    }
+  }
+  .rail-acciones [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    translate: -4px -50%;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: var(--r-pill);
+    background: var(--blanco);
+    color: var(--tinta-osc);
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    transition:
+      opacity 125ms var(--curva-salida),
+      translate 125ms var(--curva-salida);
+  }
+  .rail-acciones [data-tip]:hover::after,
+  .rail-acciones [data-tip]:focus-visible::after {
+    opacity: 1;
+    translate: 0 -50%;
+  }
+  @media (max-width: 1023px) {
+    .rail-acciones {
+      display: none;
+    }
+  }
+
+  /* ── Dock móvil (< 1024) ──────────────────────────────────────────────── */
+  .dock {
+    display: none;
+  }
+  @media (max-width: 1023px) {
+    .dock {
+      position: fixed;
+      z-index: 30;
+      left: 50%;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      translate: -50% 0;
+      display: flex;
+      gap: 2px;
+      padding: 4px;
+      border-radius: var(--r-pill);
+      background: var(--vidrio-plano);
+      background-image: var(--vidrio-oscuro);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      backdrop-filter: blur(24px) saturate(140%);
+      box-shadow: var(--filo), var(--sombra-flota);
+      font-family: var(--font-texto);
+      transition:
+        translate var(--d-ui) var(--curva-salida),
+        opacity var(--d-ui) var(--curva-salida);
+    }
+    .dock[data-escondido] {
+      translate: -50% calc(100% + 24px);
+      opacity: 0;
+    }
+    .dock a {
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 2px;
+      min-inline-size: 64px;
+      block-size: 52px;
+      padding: 0 4px;
+      border-radius: var(--r-pill);
+      font: 500 var(--t-12) / 1.2 var(--font-texto);
+      color: var(--tinta-2-vidrio);
+      text-decoration: none;
+      transition:
+        background-color var(--d-hover) var(--curva-salida),
+        scale var(--d-press) var(--curva-salida);
+    }
+    .dock a:active {
+      scale: 0.95;
+    }
+    .dock a[aria-current] {
+      background: var(--blanco);
+      color: var(--tinta-osc);
+    }
+    .dock a:focus-visible {
+      outline: 2px solid var(--foco);
+      outline-offset: 2px;
+    }
+  }
+  @media (max-width: 359px) {
+    .dock a {
+      min-inline-size: 56px;
+    }
+  }
+  @media (scripting: none) {
+    .dock[data-escondido] {
+      translate: -50% 0;
+      opacity: 1;
+    }
+  }
+
+  /* Secciones del home: el ancla deja sitio a la cabecera fija. */
+  [data-seccion] {
+    scroll-margin-top: var(--cabecera);
+  }
+  [data-seccion]:focus {
+    outline: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .dock,
+  .dock a,
+  .rail-acciones a,
+  .cab-menu svg {
+    transition-duration: 1ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cab-pills,
+  .idioma,
+  .cab-menu,
+  .dock {
+    background: var(--losa-alta);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media print {
+  .site-header,
+  .rail-acciones,
+  .dock {
+    display: none !important;
+  }
+}

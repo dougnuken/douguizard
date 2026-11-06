@@ -2,7 +2,8 @@ import { Archivo, Geist_Mono } from "next/font/google";
 import { htmlLang, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/chrome/SiteHeader";
+import Wordmark from "@/components/marca/Wordmark";
 import { personJsonLd } from "@/lib/personJsonLd";
 import { urbanist } from "@/app/fonts/urbanist";
 import { instrument } from "@/app/fonts/instrument";
@@ -73,7 +74,7 @@ export default function RootDocument({
           <a href="#main" className="skip-link">
             {t.meta.skip}
           </a>
-          <SiteHeader />
+          <SiteHeader marca={<Wordmark locale={locale} />} />
           {children}
         </LocaleProvider>
         {!lost && (

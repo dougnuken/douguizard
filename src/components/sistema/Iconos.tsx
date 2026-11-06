@@ -38,6 +38,16 @@ const TRAZOS = {
       <path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6a1.5 1.5 0 0 0 1.5 1.5H7" />
     </>
   ),
+  // F3 · dock: Experiencia (tramos de una línea de tiempo) y Contacto (globo).
+  experiencia: (
+    <>
+      <path d="M3 10h14" />
+      <circle cx="5.5" cy="10" r="1.6" />
+      <circle cx="10" cy="10" r="1.6" />
+      <circle cx="14.5" cy="10" r="1.6" />
+    </>
+  ),
+  contacto: <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h9A1.5 1.5 0 0 1 16 5.5v6a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3h0A1.5 1.5 0 0 1 4 11.5z" />,
 } as const;
 
 export type NombreIcono = keyof typeof TRAZOS;

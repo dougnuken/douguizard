@@ -1,5 +1,7 @@
 import "./paginas-b.css";
 import "@/components/trayectoria/trayectoria.css";
+import DockMovil from "@/components/chrome/DockMovil";
+import RailAcciones from "@/components/chrome/RailAcciones";
 import SiteFooter from "@/components/chrome/SiteFooter";
 import Boton from "@/components/sistema/Boton";
 import { IconosSprite } from "@/components/sistema/Iconos";
@@ -13,6 +15,7 @@ export default function ExperiencePage({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].trayectoria;
   return (
     <>
+      <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
         <div className="resplandor" aria-hidden="true" />
@@ -26,6 +29,7 @@ export default function ExperiencePage({ locale }: { locale: Locale }) {
         </div>
       </main>
       <SiteFooter locale={locale} />
+      <DockMovil />
     </>
   );
 }
