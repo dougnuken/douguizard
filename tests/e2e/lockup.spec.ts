@@ -258,6 +258,30 @@ if (LAB) test.describe("lab del sistema B", () => {
     expect(m).toEqual({ isla: null, clip: "none", inf: "none", hilo: "none", desborde: false });
   });
 
+  test("si los chunks JS no llegan, el nombre XL se ve entero a los 1,5 s (P1-1)", async ({ page }) => {
+    await page.route(/\/_next\/static\/chunks\/.*\.js/, (r) => r.abort());
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/lab", { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(1_500);
+    const m = await page.evaluate((sel) => {
+      const el = document.querySelector(sel) as HTMLElement;
+      return {
+        visibilidad: getComputedStyle(el).visibility,
+        lineas: [...el.querySelectorAll<HTMLElement>(".linea")].map((l) => getComputedStyle(l).visibility),
+        estado: el.dataset.corte,
+        isla: el.dataset.corteIsla ?? null,
+        clip: getComputedStyle(el.querySelector(".m.sup")!).clipPath,
+      };
+    }, XL);
+    expect(m).toEqual({
+      visibilidad: "visible",
+      lineas: ["visible", "visible"],
+      estado: "cerrado",
+      isla: null,
+      clip: "none",
+    });
+  });
+
   test("sin JS: nombre entero, sin rendija", async ({ browser }) => {
     const ctx = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();

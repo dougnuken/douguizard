@@ -83,6 +83,16 @@
   @media (scripting: enabled) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
     .lockup[data-espera-laser]:not([data-colocado]) {
       visibility: hidden;
+      /* Salida de emergencia (06-CRITICA-F1 P1-1): si la isla no llega (chunk
+         caído, error de hidratación, `fonts.load` colgado), a los 1,2 s el
+         nombre aparece entero y cerrado donde esté. Al colocarse, la regla
+         deja de aplicar y no queda ninguna animación viva. */
+      animation: lockup-mostrar 0s 1200ms forwards;
+    }
+  }
+  @keyframes lockup-mostrar {
+    to {
+      visibility: visible;
     }
   }
 
