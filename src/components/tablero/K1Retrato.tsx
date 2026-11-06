@@ -24,7 +24,9 @@ export default function K1Retrato({ locale }: { locale: Locale }) {
         <HeroPoster
           locale={locale}
           className="k1-poster"
-          sizes="(min-width: 1280px) 30vw, (min-width: 1024px) 40vw, 100vw"
+          // La foto llena el alto de la losa (cover): su ancho pintado es alto × 0,753,
+          // más que el de la columna (≈ 595 px a 1440×900). En móvil, alto de pantalla.
+          sizes="(min-width: 1024px) 640px, 75vh"
         />
         <VidrioCss />
         <div className="k1-laser" aria-hidden="true" />

@@ -34,7 +34,7 @@ export function TableroArriba({ locale }: { locale: Locale }) {
       <K2Claim locale={locale} />
       <K1Retrato locale={locale} />
       <h2 className="seccion-titulo">{t.secciones.trabajo}</h2>
-      <CardCaso slug="naowee-suid" locale={locale} como="div" className="k3" seccion="work" />
+      <CardCaso slug="naowee-suid" locale={locale} como="div" className="k3" seccion="work" prioridad={false} />
       {/* El chip dice lo mismo que el caso («Caso disponible a solicitud», `content 10.5`). */}
       <CardCaso slug="mercadolibre-andes" locale={locale} como="div" className="k4" chipNda={`NDA · ${getDict(locale).case.nda}`} />
       <CardContacto locale={locale} />

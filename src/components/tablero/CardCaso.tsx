@@ -53,6 +53,7 @@ export default function CardCaso({
   className,
   seccion,
   chipNda,
+  prioridad = true,
 }: {
   slug: Slug;
   /** Número visible `/NN` (lo calcula la página, P1-1). El tablero no lo lleva. */
@@ -66,6 +67,8 @@ export default function CardCaso({
   seccion?: string;
   /** Texto del chip NDA si la página lo pide distinto (el tablero usa el de los casos, `10.5`). */
   chipNda?: string;
+  /** `false` en el tablero: el LCP del home es el póster de K1, no la captura de Naowee. */
+  prioridad?: boolean;
 }) {
   const c = getCaseStudy(slug, locale)!;
   const t = paginasDict[locale].trabajo;
@@ -145,7 +148,7 @@ export default function CardCaso({
               width={d.medio.w}
               height={d.medio.h}
               sizes="(min-width: 1024px) 480px, 100vw"
-              priority={d.variante === "oscura-captura"}
+              priority={prioridad && d.variante === "oscura-captura"}
             />
           </div>
         )}
