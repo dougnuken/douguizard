@@ -33,7 +33,7 @@ export default function PortadaPerfil({ locale }: { locale: Locale }) {
       <div className="escenario">
         <div className="foto">
           <div className="foto-clip" style={{ "--foto-atm": `url(${atm})` } as React.CSSProperties}>
-            <HeroPoster locale={locale} className="poster" sizes="(min-width: 1024px) 880px, 100vw" />
+            <HeroPoster locale={locale} className="poster" sizes="(min-width: 1024px) 880px, 160vw" />
           </div>
         </div>
         <div className="velo" aria-hidden="true" />

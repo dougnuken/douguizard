@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { getFotoActiva } from "@/data/hero";
 import type { Locale } from "@/i18n/config";
 
@@ -26,6 +27,14 @@ export default function HeroPoster({
       .map(([w, src]) => `${src} ${w}w`)
       .join(", ");
   const anchos = Object.keys(f.rutas.poster.webp).map(Number);
+  // Es el LCP: la descarga arranca desde el <head>, en paralelo con el CSS.
+  preload(f.rutas.poster.avif[Math.max(...anchos)], {
+    as: "image",
+    type: "image/avif",
+    imageSrcSet: srcset(f.rutas.poster.avif),
+    imageSizes: sizes,
+    fetchPriority: "high",
+  });
   return (
     <picture>
       <source type="image/avif" srcSet={srcset(f.rutas.poster.avif)} sizes={sizes} />
