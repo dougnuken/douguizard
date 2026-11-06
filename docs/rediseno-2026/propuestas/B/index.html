@@ -141,6 +141,8 @@ body::after {
 .dot { font-family: var(--f-dot); font-variation-settings: "ROND" 100, "wght" var(--dw); font-weight: 700;
   font-variant-numeric: tabular-nums; letter-spacing: -0.04em; line-height: 1; transition: --dw var(--d-hover) var(--ease-out); }
 .dot-xl { font-size: var(--t-72); letter-spacing: -0.06em; }
+.dot .punto { position: relative; display: inline-block; width: .32em; -webkit-text-fill-color: transparent; }
+.dot .punto::after { content: ""; position: absolute; left: .1em; bottom: .17em; width: .1em; height: .1em; border-radius: 50%; background: currentColor; }
 .dot-l  { font-size: var(--t-48); }
 .dot-m  { font-size: var(--t-30); letter-spacing: -0.03em; }
 .dot-s  { font-size: var(--t-24); letter-spacing: -0.03em; }
@@ -1132,6 +1134,9 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
     document.title = META[lang].title; $('meta[name="description"]').content = META[lang].desc;
     $(".k15").setAttribute("aria-roledescription", lang === "en" ? "carousel" : "carrusel");
     pintarCita(); reloj(); contarCarrusel();
+    // el punto de miles de Doto tiene cola y se lee como coma: se dibuja un punto redondo (el «.» real queda en el texto)
+    $$(".dot").forEach((el) => { if (el.children.length || !/\.\d/.test(el.textContent)) return;
+      el.innerHTML = el.textContent.replace(/\.(?=\d)/g, '<span class="punto">.</span>'); });
     if (push) history.replaceState(history.state, "", lang === "en" ? "?lang=en" + location.hash : location.pathname + location.hash);
     if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
   }

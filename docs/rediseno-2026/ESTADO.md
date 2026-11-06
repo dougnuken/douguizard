@@ -29,22 +29,21 @@
 - **Experiencia:** motion graphics que cuentan los años como línea de tiempo (maqueta en `propuestas/B-paginas/`).
 - Casos: hoja sobre el tablero **con URL real** (rutas interceptadas `@modal/(.)work/[slug]` + página completa).
 
-## Estado (6 nov 2026, 00:30 UTC)
+## Estado (6 nov 2026)
 
 | Bloque | Estado | Dónde |
 |---|---|---|
 | Brief, fundamentos, UX, técnica, copy | ✓ | `00`–`04` |
 | Propuestas A/B, críticas, comparación | ✓ | `propuestas/A`, `propuestas/B`, `05`, `06-CRITICA-*` |
 | Lockups del nombre | ✓ (elegido 4) | `propuestas/B-tipo/` |
-| Páginas internas (Trabajo, caso, Perfil, Experiencia) | maquetas y capturas ✓; NOTAS y corrección «~1.200» en cierre; **falta crítica** | `propuestas/B-paginas/` |
+| Páginas internas (Trabajo, caso, Perfil, Experiencia) | maquetas, capturas y NOTAS ✓ (mostradas a Doug, sin respuesta aún); **falta crítica** | `propuestas/B-paginas/` |
 | Plan de implementación (revisado contra el código) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
-| **F0** base técnica | upgrade next 16.4.5 / react 19.3.1 / gsap aplicado (lint, tsc, build ✓; 2 corridas Playwright previas 267/267 ✓); falta Playwright post-upgrade, diff de capturas, perf y `F0-INFORME.md` | repo + `baseline-F0.json` |
+| **F0** base técnica | ✓ next 16.4.5 · react 19.3.1 · gsap 3.15.1 · sharp; vitest 149/149, Playwright 269/269; LCP / móvil 4.456 ms, escritorio 1.576 ms, JS 157,6 KB gz | `F0-INFORME.md`, `baseline-F0.json` |
 | F1–F8 | pendiente | `07` §2 |
 
 ## Siguiente (en orden)
 
-1. Cerrar F0 (si `F0-INFORME.md` no existe: sesión nueva de ejecución F0 que corra Playwright post-upgrade, diff de
-   capturas, perf, informe).
+1. ~~Cerrar F0~~ ✓
 2. Crítica de las páginas internas (sesión nueva: crítico con refactoring-ui + web-design-guidelines, mismo formato
    que `06-CRITICA-B.md`) → sesión del diseñador que aplica P0/P1 → mostrar a Doug.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`).

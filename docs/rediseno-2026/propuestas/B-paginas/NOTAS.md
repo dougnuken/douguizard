@@ -197,3 +197,14 @@ Hay que servir la **raíz del repo** (`python3 -m http.server` en `/home/user/do
 
 En todas las capturas cargaron Urbanist, Instrument Sans, Doto y Geologica (estado `loaded`), sin desborde horizontal
 ni errores de consola. Se esperó a que no hubiera ninguna corrida de Playwright del ejecutor de F0.
+
+## 6. Corrección del punto de miles en Doto (6 nov)
+
+En el subconjunto de Doto, el glifo «.» tiene cola y se lee como coma: «~1.200» se veía como «~1,200» en ES. El texto
+siempre fue correcto. Ahora `puntosDoto()` envuelve el «.» de miles de cada cifra Doto en un `span.punto`. El glifo
+queda transparente y un `::after` dibuja un solo punto redondo, del tamaño de los de la matriz, sobre la línea base.
+El «.» real sigue en el texto, así que copiar y los lectores de pantalla no cambian. Se aplica después de cada cambio
+de idioma; el EN usa coma y no se toca.
+
+El mismo arreglo (unas líneas de CSS y JS) se aplicó en `propuestas/B/index.html`, donde K4 mostraba «2.000+» como
+«2,000+». Las capturas `shot_B_*` de B no se regeneraron.
