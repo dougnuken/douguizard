@@ -175,7 +175,9 @@ test("una sola cuenta: en p = 1 y con RM los acumulados son 12 · 6 · 10; la pi
   await page.goto("/experience", { waitUntil: "networkidle" });
   await escenaLista(page);
   await aProgreso(page, 1);
-  expect(await totales(page)).toEqual(esperados());
+  // El scrub (0,5) asienta a su ritmo: bajo carga, 900 ms no bastan y se leía el mes previo
+  // (11 años). Se espera el estado final real en vez de leer una vez.
+  await expect.poll(() => totales(page), { timeout: 8000 }).toEqual(esperados());
   const pista = await page.locator(".propio").allTextContents();
   expect(pista).toHaveLength(productosPropios().length);
 
@@ -190,7 +192,7 @@ test("una sola cuenta: en p = 1 y con RM los acumulados son 12 · 6 · 10; la pi
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/experience", { waitUntil: "networkidle" });
-  expect(await totales(page)).toEqual(esperados());
+  await expect.poll(() => totales(page), { timeout: 8000 }).toEqual(esperados());
 
   await page.goto("/work", { waitUntil: "networkidle" });
   await page.locator('[data-filtro="propio"]').click();
