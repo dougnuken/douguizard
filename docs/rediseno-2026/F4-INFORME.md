@@ -79,6 +79,12 @@ no): por eso (a), (d) y (e) corren de verdad; si en otro entorno no hubiera WebG
 - Pósters: `losa` 13–32 KB AVIF, `movil`/`cine` 18–53 KB (las franjas oblicuas comprimen peor que la foto limpia: el
   880 móvil pasó de 32 a 53 KB). Textura 56 KB, después del `load`.
 
+## Verificación final
+
+lint y `tsc` en verde; vitest **236/236**; `next build` en verde; Playwright completo **424/424 en dos corridas
+completas seguidas** (14,3 min cada una; 415 de base + 9 de `vidrio.spec`), con `experience.spec.ts:173` en verde
+en las dos.
+
 ## Capturas (`F4-capturas/`, `next build` + `next start`, DPR 1, JPG 82)
 
 `home-1440x900-cursor-cara`, `-cursor-hombro`, `-cursor-fuera`, `home-1280x720-cursor-fuera`,
