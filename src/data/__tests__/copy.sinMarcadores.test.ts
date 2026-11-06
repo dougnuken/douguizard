@@ -29,7 +29,7 @@ function sinComentarios(fuente: string): string {
     .replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1");
 }
 
-const archivos = [join(ROOT, "src/i18n/dictionaries.ts"), ...walk(join(ROOT, "src/data"))];
+const archivos = [join(ROOT, "src/i18n/dictionaries.ts"), join(ROOT, "src/i18n/sistema.ts"), ...walk(join(ROOT, "src/data"))];
 
 describe("copy sin marcadores de borrador", () => {
   for (const archivo of archivos) {

@@ -1,5 +1,4 @@
 import type { Locale } from "@/i18n/config";
-import { experiences } from "./cv";
 
 export interface SocialLink {
   label: string;
@@ -44,11 +43,7 @@ export interface Site {
      */
     modo: "consultoria" | "roles" | "ambas" | "no-disponible";
   };
-  /**
-   * Cargo actual · ciudad, para K1 y el pie del sistema B («Head of Product ·
-   * Barranquilla»). Se deriva del cargo actual de `cv.ts`: nunca se escribe.
-   */
-  rolCorto: string;
+
   social: SocialLink[];
   /**
    * Per language: each CV page hands out the sheets in its own language. `pdf`
@@ -63,16 +58,6 @@ export interface Site {
     keywords: string[];
     ogImage: string;
   };
-}
-
-/**
- * «Cargo · Ciudad» del rol en curso (el único sin `end`). Lee `cv.ts` directo
- * y no `lib/career`, para no cerrar un ciclo de imports con `work.ts`.
- */
-function rolCorto(): string {
-  const actual = experiences.find((e) => !e.end);
-  if (!actual) throw new Error("site.ts: cv.ts no tiene un rol en curso.");
-  return `${actual.roleShort ?? actual.role} · ${actual.location.city ?? "Barranquilla"}`;
 }
 
 const social: SocialLink[] = [
@@ -118,7 +103,6 @@ export const site: Site = {
     note: "Selected consulting on design systems and AI-native product",
     modo: "consultoria",
   },
-  rolCorto: rolCorto(),
   social,
   // Generated from /cv itself by `npm run cv:pdf`, never hand-made — that is
   // how the last one ended up two jobs out of date. A test compares the file's

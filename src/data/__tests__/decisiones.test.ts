@@ -13,6 +13,7 @@ import {
   TEMAS_CLARO_EN,
 } from "@/data/decisiones";
 import { getSite } from "@/data/site";
+import { rolCorto } from "@/lib/career";
 
 describe("decisiones de Doug", () => {
   it("cada valor está dentro de su unión", () => {
@@ -52,6 +53,6 @@ describe("decisiones de Doug", () => {
   });
 
   it("rolCorto se deriva del cargo actual del CV", () => {
-    expect(getSite("es").rolCorto).toMatch(/^Head of Product · Barranquilla$/);
+    expect(rolCorto()).toMatch(/^Head of Product · Barranquilla$/);
   });
 });

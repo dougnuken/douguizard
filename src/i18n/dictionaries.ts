@@ -227,27 +227,6 @@ const en = {
     work: "Selected work",
     cv: "CV",
   },
-  /* ── Sistema B (rediseño 2026). Lo consumen F3–F6; 04 §4 y D17. ── */
-  sistema: {
-    nav: { label: "Main", trabajo: "Work", perfil: "About", experiencia: "Experience", cv: "CV", hablemos: "Let's talk" },
-    idioma: { label: "Language", leerEnOtro: "Ver en español" },
-    pie: {
-      lugar: (city: string, tz: string) => `${city} · ${tz}`,
-      colofonA: "Designed by me; built with Next.js and AI agents I direct.",
-      colofonB: "Designed and built by Doug Vargas.",
-      volverArriba: "Back to top",
-    },
-    escena: { desliza: "Scroll" },
-    disponible: "Available",
-  },
-  dock: { label: "Quick navigation", trabajo: "Work", perfil: "About", cv: "CV", contacto: "Contact" },
-  hoja: { cerrar: "Close", verCompleta: "View full page", progreso: "Reading progress" },
-  carrusel: {
-    anterior: "Previous",
-    siguiente: "Next",
-    contador: (n: number, total: number) => `${n} of ${total}`,
-    rol: "carousel",
-  },
 };
 
 export type Dict = typeof en;
@@ -449,26 +428,6 @@ const es: Dict = {
     home: "Inicio",
     work: "Trabajo seleccionado",
     cv: "CV",
-  },
-  sistema: {
-    nav: { label: "Principal", trabajo: "Trabajo", perfil: "Perfil", experiencia: "Experiencia", cv: "CV", hablemos: "Hablemos" },
-    idioma: { label: "Idioma", leerEnOtro: "Read in English" },
-    pie: {
-      lugar: (city: string, tz: string) => `${city} · ${tz}`,
-      colofonA: "Diseñado por mí; construido con Next.js y agentes de IA que dirijo.",
-      colofonB: "Diseñado y construido por Doug Vargas.",
-      volverArriba: "Volver arriba",
-    },
-    escena: { desliza: "Desliza" },
-    disponible: "Disponible",
-  },
-  dock: { label: "Navegación rápida", trabajo: "Trabajo", perfil: "Perfil", cv: "CV", contacto: "Contacto" },
-  hoja: { cerrar: "Cerrar", verCompleta: "Ver página completa", progreso: "Progreso de lectura" },
-  carrusel: {
-    anterior: "Anterior",
-    siguiente: "Siguiente",
-    contador: (n: number, total: number) => `${n} de ${total}`,
-    rol: "carrusel",
   },
 };
 

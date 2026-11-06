@@ -11,8 +11,8 @@ import Etiqueta from "@/components/sistema/Etiqueta";
 import Flecha from "@/components/sistema/Flecha";
 import { Icono, IconosSprite, NOMBRES_ICONO } from "@/components/sistema/Iconos";
 import Losa, { type Superficie } from "@/components/sistema/Losa";
-import { getSite } from "@/data/site";
-import { getDict } from "@/i18n/dictionaries";
+import { rolCorto } from "@/lib/career";
+import { sistemaDict } from "@/i18n/sistema";
 import LabCorte from "./LabCorte";
 
 /**
@@ -51,8 +51,7 @@ const TIPOS = [12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96, 120] as const;
 
 export default function LabPage() {
   if (process.env.DG_LAB !== "1") notFound();
-  const site = getSite("es");
-  const t = getDict("es");
+  const t = sistemaDict.es;
 
   return (
     <main id="main" className="lab">
@@ -84,7 +83,7 @@ export default function LabPage() {
             <Losa superficie="vidrio" className="lab-pila">
               <p className="ceja">escala losa (K1)</p>
               <NameLockup escala="losa" decorativo />
-              <p className="etiqueta">{site.rolCorto}</p>
+              <p className="etiqueta">{rolCorto()}</p>
             </Losa>
             <Losa superficie="losa" className="lab-pila">
               <p className="ceja">escala móvil</p>
