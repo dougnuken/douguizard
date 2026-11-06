@@ -1,0 +1,101 @@
+/* Solo /lab: maquetación del catálogo. No es parte del sistema. */
+.lab {
+  min-height: 100svh;
+  padding: 120px 24px 96px;
+  background: var(--vacio);
+  color: var(--tinta);
+  font-family: var(--font-texto);
+}
+.lab-ancho {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  gap: 64px;
+}
+.lab-seccion {
+  display: grid;
+  gap: 24px;
+}
+.lab-seccion > h2 {
+  font: 600 var(--t-30) / 1.1 var(--font-display-b);
+  letter-spacing: -0.02em;
+}
+.lab-rejilla {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.lab-rejilla--cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  grid-auto-rows: minmax(var(--fila), auto);
+}
+.lab-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.lab-pila {
+  display: grid;
+  gap: 12px;
+}
+.lab-escala {
+  display: grid;
+  gap: 8px;
+}
+.lab-escala > div {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: baseline;
+  gap: 16px;
+  overflow: hidden;
+}
+.lab-escena {
+  position: relative;
+  overflow: hidden;
+  padding: 48px 24px;
+  border-radius: var(--r-losa);
+  background: var(--losa);
+  box-shadow: var(--filo);
+}
+.lab-escena .lab-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--laser-nucleo);
+  box-shadow:
+    0 0 4px 1px var(--laser),
+    0 0 16px 3px var(--laser-halo);
+  pointer-events: none;
+}
+.lab-controles {
+  display: grid;
+  gap: 12px;
+}
+.lab-deslizador {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.lab-deslizador input {
+  width: min(320px, 100%);
+  min-height: 44px;
+  accent-color: var(--electrico);
+}
+.lab-concentrico {
+  padding: 16px;
+}
+.lab-concentrico > div {
+  height: 120px;
+  border-radius: calc(var(--r-losa) - 16px);
+  background: var(--losa-alta);
+}
+.lab-muestra {
+  display: grid;
+  gap: 8px;
+}
+.lab-verde {
+  color: var(--verde-osc);
+}
