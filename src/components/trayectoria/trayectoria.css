@@ -407,9 +407,14 @@
       opacity: 0;
       translate: 0 12px;
       transition:
-        opacity var(--d-ui) var(--curva-salida),
-        translate var(--d-ui) var(--curva-salida);
+        opacity 120ms var(--curva-salida),
+        translate 120ms var(--curva-salida);
       pointer-events: none;
+    }
+    .exp-cine .hito.activo {
+      transition:
+        opacity var(--d-ui) var(--curva-salida) 100ms,
+        translate var(--d-ui) var(--curva-salida) 100ms;
     }
     .exp-cine .hito.activo,
     .exp-cine .exp:not([data-montado]) .hito:first-child {
