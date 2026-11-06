@@ -1,38 +1,21 @@
 import "./vidrio.css";
-import { getFotoActiva } from "@/data/hero";
 
 /**
- * Respaldo del vidrio estriado sin WebGL (07 §1.3): franjas CSS sobre la foto,
- * con la cara y la banda del láser **protegidas** (la máscara las deja nítidas:
- * la elipse `cara` y la línea `laser` de `hero.ts`). F3 lo monta en K1 y en la
- * portada de `/about`; F4 pone `VidrioGL` encima y lo deja como respaldo (sin
- * WebGL, contexto perdido o `failIfMajorPerformanceCaveat`).
- *
- * `angulo`: 0 en el OS (estrías verticales), 12 en el acto 1 (F5).
+ * Respaldo del vidrio sin WebGL (07 §1.3). El póster ya trae el vidrio
+ * horneado (con la cara y el láser nítidos), así que este respaldo no repite
+ * franjas encima: es la **lente** en CSS. Sin WebGL2 (o con el contexto
+ * perdido), `LenteCss` le pone la foto limpia de fondo y la deja ver por una
+ * máscara circular bajo el cursor (o el dedo): el vidrio se abre y aclara
+ * igual que en WebGL, sin refracción. Con RM no se activa: queda el póster solo.
+ * `className`: `vidrio-llena` (cubre la caja, K1) o `poster` (sigue a la foto, `/about`).
  */
-export default function VidrioCss({
-  angulo = 0,
-  className,
-  cara,
-  laser,
-}: {
-  angulo?: number;
-  className?: string;
-  /** La elipse de la cara **en la caja del vidrio**, si la foto no la llena (portada de `/about`). */
-  cara?: [number, number, number, number];
-  /** Altura de la banda láser en la caja; `null` = sin banda. Por defecto, la de la foto. */
-  laser?: number | null;
-}) {
-  const f = getFotoActiva();
-  const [cx, cy, rx, ry] = cara ?? f.cara;
-  const ly = laser === undefined ? (f.laser?.y ?? f.ojo) : laser;
-  const estilo = {
-    "--v-ang": `${90 + angulo}deg`,
-    "--v-cx": `${cx * 100}%`,
-    "--v-cy": `${cy * 100}%`,
-    "--v-rx": `${rx * 100}%`,
-    "--v-ry": `${ry * 100}%`,
-    "--v-ly": ly === null ? "-10%" : `${ly * 100}%`,
-  } as React.CSSProperties;
-  return <div className={className ? `vidrio-css ${className}` : "vidrio-css"} style={estilo} aria-hidden="true" data-vidrio="css" />;
+export default function VidrioCss({ className = "vidrio-llena", pos = "50% 0" }: { className?: string; pos?: string }) {
+  return (
+    <div
+      className={`vidrio-css ${className}`}
+      style={{ "--v-pos": pos } as React.CSSProperties}
+      aria-hidden="true"
+      data-vidrio="css"
+    />
+  );
 }

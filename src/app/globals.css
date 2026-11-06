@@ -721,7 +721,7 @@
      page is a rectangle — and a rectangle is exactly what a hero like this one
      must not have. The mask takes it to nothing well before its own edges,
      which leaves a soft body of light in the right-hand band and no seam. The
-     ground itself is the paper colour, passed in per theme by `HeroField`, so
+     ground itself is the paper colour, passed in per theme (the old hero field), so
      what the mask fades into is the page it is already standing on.
   
      The radii are 50/50 from dead centre for a reason: an ellipse wider than

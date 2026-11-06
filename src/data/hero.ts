@@ -3,22 +3,20 @@
  *
  * D7 · La imagen final está en pausa (ESTADO.md): se usa la provisional
  * `199598aa` (láser rojo, gorra NY, 880×1168). Cambiar de foto = añadir un
- * objeto aquí, cambiar `fotoActiva` y correr `npm run hero:poster` (F4).
+ * objeto aquí, cambiar `fotoActiva` y correr `npm run hero:poster`.
  * Todo lo geométrico va normalizado a [0, 1] respecto a la foto.
  */
 
 export type EstadoVidrio = "cine" | "losa" | "movil";
 
 export interface ParametrosVidrio {
-  /** Ángulo de las estrías en grados (oblicuo). */
+  /** Inclinación de las estrías, en grados desde la vertical (0 = verticales; oblicuo > 0). */
   angulo: number;
-  /** Ancho de cada estría en px CSS. */
+  /** Ancho de cada estría, en fracción del alto de la foto pintada (así el póster horneado y el WebGL coinciden). */
   estria: number;
   /** Fuerza de la refracción, 0–1. */
   fuerza: number;
-  /** Joroba (curvatura) de cada estría, 0–1. */
-  joroba: number;
-  /** Radio de la lente del cursor, en fracción del lado menor del viewport. */
+  /** Radio de la lente del cursor, en px CSS (0 = sin lente). */
   lente: number;
   /** Cuánto se protege la cara (1 = sin vidrio sobre la cara). */
   proteccionCara: number;
@@ -28,47 +26,65 @@ export interface ParametrosVidrio {
 
 export interface FotoHeroe {
   id: string;
-  /** Sube con cada cambio del máster: va en el nombre de cada archivo (caché inmutable). */
+  /** Sube con cada cambio del máster o de los parámetros: va en la carpeta de cada archivo (caché inmutable). */
   version: number;
+  /** Máster en el repo (no se publica): de aquí hornea `npm run hero:poster`. Ideal ≥ 1920 px de ancho (D7). */
+  master: string;
   rutas: {
-    master: string;
-    poster: { avif: Record<number, string>; webp: Record<number, string> };
-    textura: Record<1600 | 1024, string>;
+    /** Póster horneado (foto + vidrio con la lente cerrada) por estado: el LCP y lo único que se ve con RM. */
+    poster: Record<EstadoVidrio, { avif: Record<number, string>; webp: Record<number, string> }>;
+    /** La foto limpia que el WebGL usa de textura (y el respaldo CSS para abrir el vidrio). */
+    textura: string;
+    /** Lo que escribe el script: debe coincidir con estas rutas (`hero.test.ts`). */
+    manifest: string;
   };
   tamano: { w: number; h: number };
   /** Punto focal [fx, fy]. */
   foco: [number, number];
   /** Elipse de la cara [cx, cy, rx, ry]: el vidrio la respeta. */
   cara: [number, number, number, number];
-  /** Línea del ojo (donde pasa el láser en el acto 1). */
+  /** Línea del ojo (donde pasa el láser). */
   ojo: number;
-  /** Banda láser de la foto, si la trae. */
+  /** Banda láser de la foto, si la trae: el vidrio la deja legible de lado a lado. */
   laser?: { y: number; h: number };
   alt: { es: string; en: string };
 }
 
-const ruta = (id: string, v: number, sufijo: string) => `/hero/${id}-v${v}-${sufijo}`;
+export const ESTADOS: EstadoVidrio[] = ["cine", "losa", "movil"];
 
-function foto(id: string, version: number, resto: Omit<FotoHeroe, "id" | "version" | "rutas">): FotoHeroe {
-  // La foto mide 880 px de ancho: no se inventan anchos mayores (07, corrección 10).
-  const anchos = [440, 640, 880];
+/** Anchos del póster: nunca mayores que el máster (07, corrección 10). */
+export const anchosPoster = (w: number) => [440, 640, 880, 1080, 1600, 1920].filter((x) => x <= w);
+
+export function foto(
+  id: string,
+  version: number,
+  resto: Omit<FotoHeroe, "id" | "version" | "rutas" | "master"> & { master?: string },
+): FotoHeroe {
+  // `resto` puede venir de otra foto (prueba de cambio de foto): sus rutas no se heredan.
+  const { rutas: _ignoradas, id: _i, version: _v, ...datos } = resto as Partial<FotoHeroe> & typeof resto;
+  void _ignoradas;
+  void _i;
+  void _v;
+  const dir = `/hero/${id}-v${version}`;
+  const anchos = anchosPoster(datos.tamano.w);
+  const set = (estado: EstadoVidrio, ext: "avif" | "webp") =>
+    Object.fromEntries(anchos.map((w) => [w, `${dir}/${estado}-${w}.${ext}`]));
   return {
+    ...datos,
     id,
     version,
+    master: datos.master ?? `docs/rediseno-2026/retratos-hf/${id}.jpg`,
     rutas: {
-      master: ruta(id, version, "master.jpg"),
-      poster: {
-        avif: Object.fromEntries(anchos.map((w) => [w, ruta(id, version, `${w}.avif`)])),
-        webp: Object.fromEntries(anchos.map((w) => [w, ruta(id, version, `${w}.webp`)])),
-      },
-      textura: { 1600: ruta(id, version, "tex-1600.jpg"), 1024: ruta(id, version, "tex-1024.jpg") },
+      poster: Object.fromEntries(ESTADOS.map((e) => [e, { avif: set(e, "avif"), webp: set(e, "webp") }])) as FotoHeroe["rutas"]["poster"],
+      textura: `${dir}/textura.webp`,
+      manifest: `${dir}/manifest.json`,
     },
-    ...resto,
   };
 }
 
 export const fotos: FotoHeroe[] = [
-  foto("199598aa", 1, {
+  // Provisional (D7): máster de 880 px; la imagen final debe llegar con ≥ 1920 px de ancho.
+  foto("199598aa", 2, {
     tamano: { w: 880, h: 1168 },
     foco: [0.5, 0.41],
     cara: [0.5, 0.41, 0.19, 0.205],
@@ -89,12 +105,26 @@ export function getFotoActiva(): FotoHeroe {
   return f;
 }
 
-/** Parámetros del vidrio por estado. Provisionales: F4 los ajusta al portar el shader de `propuestas/B/index.html`. */
+/**
+ * Parámetros del vidrio por estado (portados de `propuestas/B/index.html`):
+ * `cine` = la foto grande de `/about` (oblicuo 12°), `losa` = K1 en el tablero
+ * de escritorio (vertical, fiel a ref-8), `movil` = la foto a sangre (< 1024,
+ * oblicuo 12°: F3 P2-3).
+ */
 export const vidrio: Record<EstadoVidrio, ParametrosVidrio> = {
-  cine: { angulo: 102, estria: 44, fuerza: 0.55, joroba: 0.6, lente: 0.16, proteccionCara: 0.68, dprMax: 2 },
-  losa: { angulo: 102, estria: 28, fuerza: 0.4, joroba: 0.5, lente: 0.12, proteccionCara: 0.68, dprMax: 2 },
-  movil: { angulo: 102, estria: 24, fuerza: 0.35, joroba: 0.45, lente: 0, proteccionCara: 0.75, dprMax: 1.5 },
+  cine: { angulo: 12, estria: 0.05, fuerza: 0.62, lente: 240, proteccionCara: 0.68, dprMax: 1.5 },
+  losa: { angulo: 0, estria: 0.042, fuerza: 0.55, lente: 150, proteccionCara: 0.68, dprMax: 1.5 },
+  movil: { angulo: 12, estria: 0.04, fuerza: 0.55, lente: 130, proteccionCara: 0.75, dprMax: 1.5 },
 };
+
+/** Variables CSS de la foto activa (para que ningún número de la foto viva en el CSS). */
+export function varsFoto(f: FotoHeroe = getFotoActiva()): Record<string, string> {
+  return {
+    "--foto-ojo": String(f.ojo),
+    "--foto-ar": String(f.tamano.w / f.tamano.h),
+    "--foto-ar-inv": String(f.tamano.h / f.tamano.w),
+  };
+}
 
 /**
  * K13 · Retrato de la card de Perfil del home (07 F3): `retratos-hf/83a47bc7`,

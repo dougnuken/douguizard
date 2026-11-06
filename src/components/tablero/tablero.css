@@ -256,7 +256,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 41.8%;
+    top: calc(var(--foto-ojo) * 100%);
     z-index: 2;
     height: 1px;
     background: var(--laser-nucleo);
@@ -828,6 +828,8 @@
       grid-area: hero;
     }
     .os-top .k1 {
+      /* El arrastre horizontal mueve la lente del vidrio; el vertical hace scroll. */
+      touch-action: pan-y pinch-zoom;
       height: 100svh;
       min-height: 600px;
       border-radius: 0;
@@ -838,7 +840,7 @@
       display: none;
     }
     .os-top .k1-laser {
-      top: calc(41.8% - 0px);
+      top: calc(var(--foto-ojo) * 100%);
     }
     /* K2: vidrio oscuro sobre la foto. */
     .os-top .k2 {

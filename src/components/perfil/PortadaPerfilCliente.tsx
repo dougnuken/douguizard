@@ -105,6 +105,8 @@ export default function PortadaPerfilCliente() {
         translate: "none",
       });
       poster.style.setProperty("--pluma", `${(18 * (1 - clamp(p / 0.6))).toFixed(2)}%`);
+      // F4: el vidrio (WebGL) se aclara al llegar a la losa: .62 → .08 en p 0–0,85.
+      poster.style.setProperty("--vidrio-f", lerp(0.62, 0.08, clamp(p / 0.85)).toFixed(3));
       laser.style.top = `${pl.Oy + foto.ojo * pl.Dy}px`;
       laser.style.opacity = String(lerp(1, 0.6, q));
       laser.style.clipPath = `inset(-12px 0 -12px ${Math.max(0, lerp(0, r.x - 24, q))}px)`;

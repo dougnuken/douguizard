@@ -21,7 +21,7 @@ export default function CardPerfil({ locale }: { locale: Locale }) {
         <picture>
           <source type="image/avif" srcSet={srcset(retratoPerfil.rutas.avif)} sizes={sizes} />
           <img
-            src={retratoPerfil.rutas.webp[880]}
+            src={retratoPerfil.rutas.webp[retratoPerfil.tamano.w]}
             srcSet={srcset(retratoPerfil.rutas.webp)}
             sizes={sizes}
             width={retratoPerfil.tamano.w}

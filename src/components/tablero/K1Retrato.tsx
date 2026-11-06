@@ -1,7 +1,9 @@
 import Link from "next/link";
 import HeroPoster from "@/components/hero/HeroPoster";
 import VidrioCss from "@/components/hero/VidrioCss";
+import VidrioDiferido from "@/components/hero/VidrioDiferido";
 import Flecha from "@/components/sistema/Flecha";
+import { varsFoto } from "@/data/hero";
 import { getSite } from "@/data/site";
 import { localePath, type Locale } from "@/i18n/config";
 import { tableroDict } from "@/i18n/tablero";
@@ -9,7 +11,8 @@ import { rolCorto } from "@/lib/career";
 
 /**
  * K1 · la losa del retrato (04 §2.3), en su estado OS: la foto activa de
- * `hero.ts` (es el LCP), el vidrio en CSS (F4 pone el WebGL), la línea láser
+ * `hero.ts` horneada con el vidrio (es el LCP), el vidrio vivo en WebGL2 tras el
+ * `load` (respaldo: la lente en CSS), la línea láser
  * sobre los ojos y el panel de vidrio con el nombre (el único visible en
  * escritorio, P1-4) → `/about`. En móvil es la foto a sangre detrás de K2; el
  * panel y su enlace no se pintan (el perfil va en K13).
@@ -20,7 +23,7 @@ export default function K1Retrato({ locale }: { locale: Locale }) {
   const [nombre, apellido] = s.name.split(" ");
   return (
     <article className="tarjeta k1" id="k1">
-      <div className="k1-foto">
+      <div className="k1-foto" style={varsFoto() as React.CSSProperties}>
         <HeroPoster
           locale={locale}
           className="k1-poster"
@@ -28,7 +31,9 @@ export default function K1Retrato({ locale }: { locale: Locale }) {
           // más que el de la columna (≈ 595 px a 1440×900). En móvil, alto de pantalla.
           sizes="(min-width: 1024px) 640px, 75vh"
         />
-        <VidrioCss />
+        <VidrioDiferido estados={{ escritorio: "losa", movil: "movil" }} className="vidrio-llena" pos={[0.5, 0]}>
+          <VidrioCss />
+        </VidrioDiferido>
         <div className="k1-laser" aria-hidden="true" />
       </div>
       <div className="k1-panel">

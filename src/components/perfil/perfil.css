@@ -124,7 +124,7 @@
       width: auto;
       left: 50%;
       translate: -50% 0;
-      top: calc(30% - 0.418 * 121%);
+      top: calc(30% - var(--foto-ojo) * 121%);
     }
     .velo {
       opacity: 0.6;
@@ -190,7 +190,7 @@
       mask-image: linear-gradient(90deg, transparent 0, #000 var(--pluma), #000 calc(100% - var(--pluma)), transparent 100%);
       height: 130%;
       left: 62%;
-      top: calc(41% - 0.418 * 130%);
+      top: calc(41% - var(--foto-ojo) * 130%);
     }
     .perfil-cine .velo {
       opacity: 1;
@@ -224,6 +224,9 @@
 
   /* ── Móvil (< 1024): sin sticky ni scrub; un solo láser (P1-7) ─────────── */
   @media (max-width: 1023px) {
+    .portada .escenario {
+      touch-action: pan-y pinch-zoom;
+    }
     .foto {
       height: 100svh;
       bottom: auto;
@@ -232,12 +235,12 @@
       inset: 0;
     }
     .poster {
-      --dy: max(95svh, 135.4vw);
+      --dy: max(95svh, calc(var(--foto-ar-inv) * 102vw));
       height: var(--dy);
       width: auto;
       left: 50%;
       translate: -50% 0;
-      top: calc(22svh - 0.418 * var(--dy));
+      top: calc(22svh - var(--foto-ojo) * var(--dy));
     }
     .velo {
       height: 100svh;

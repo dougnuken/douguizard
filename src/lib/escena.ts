@@ -59,3 +59,84 @@ export function losaPerfil(W: number, H: number): Rect {
 export function eio(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
+
+/* ── F4 · vidrio estriado ──────────────────────────────────────────────────
+   Todo en px CSS del canvas. Las estrías viven en el espacio de la FOTO
+   (origen y ancho relativos a la foto pintada), así el póster horneado (canvas
+   = foto) y el WebGL en vivo (canvas = caja, foto en `cover`) coinciden. */
+
+/** `object-fit: cover` con `object-position` [px, py] ∈ [0, 1]. */
+export function cubrir(caja: { w: number; h: number }, ar: number, pos: [number, number] = [0.5, 0.5]): Colocacion {
+  const Dy = Math.max(caja.h, caja.w / ar);
+  const Dx = Dy * ar;
+  return { Dx, Dy, Ox: (caja.w - Dx) * pos[0], Oy: (caja.h - Dy) * pos[1] };
+}
+
+export interface FotoVidrio {
+  w: number;
+  h: number;
+  cara: [number, number, number, number];
+  ojo: number;
+  laser?: { y: number; h: number };
+}
+
+export interface ParamsVidrio {
+  angulo: number;
+  estria: number;
+  fuerza: number;
+  lente: number;
+  proteccionCara: number;
+}
+
+export interface UniformesVidrio {
+  off: [number, number];
+  size: [number, number];
+  /** Ancho de la estría (px). */
+  w: number;
+  /** Ángulo del eje que cruza las estrías (rad). */
+  ang: number;
+  str: number;
+  phase: number;
+  face: [number, number, number, number];
+  lineY: number;
+  /** 0 = sin banda láser. */
+  lineH: number;
+  lensR: number;
+  prot: number;
+}
+
+/**
+ * Uniformes del shader para una caja dada. `col` = dónde se pinta la foto (por
+ * defecto, `cover` con `pos`); `fuerza` sobrescribe la del estado (`/about` la
+ * baja con el scroll); `mx` + `lente` desplazan levemente la fase con el cursor.
+ */
+export function uniformesVidrio(o: {
+  caja: { w: number; h: number };
+  foto: FotoVidrio;
+  params: ParamsVidrio;
+  pos?: [number, number];
+  col?: Colocacion;
+  fuerza?: number;
+  laser?: boolean;
+  mx?: number;
+  lente?: number;
+}): UniformesVidrio {
+  const { caja, foto, params } = o;
+  const c = o.col ?? cubrir(caja, foto.w / foto.h, o.pos);
+  const [cx, cy, rx, ry] = foto.cara;
+  const banda = o.laser !== false && foto.laser ? foto.laser : null;
+  const lente = o.lente ?? 0;
+  return {
+    off: [c.Ox, c.Oy],
+    size: [c.Dx, c.Dy],
+    w: Math.max(4, params.estria * c.Dy),
+    ang: (params.angulo * Math.PI) / 180,
+    str: Math.max(0, Math.min(1, o.fuerza ?? params.fuerza)),
+    phase: o.mx === undefined ? 0 : (o.mx - caja.w / 2) * 0.04 * lente,
+    face: [c.Ox + cx * c.Dx, c.Oy + cy * c.Dy, rx * c.Dx, ry * c.Dy],
+    lineY: c.Oy + (banda ? banda.y : foto.ojo) * c.Dy,
+    lineH: banda ? banda.h * c.Dy : 0,
+    lensR: params.lente,
+    prot: params.proteccionCara,
+  };
+}
