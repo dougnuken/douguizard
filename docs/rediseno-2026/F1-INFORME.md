@@ -156,3 +156,13 @@ colocación, el cierre exacto, la ruta sin JS, móvil y movimiento reducido, y l
 **Capturas** `F1-capturas/lab-{390,1024,1440}[-pliegue].jpg` rehechas igual que antes (DPR 1, JPG 82), en **segunda
 visita**: en las tres medidas, `[data-dot]` da `Doto, "Doto Fallback", …` y `fonts.check` da `true`. El «647» y la
 sección Doto ya salen en matriz de puntos.
+
+**Pruebas tras los arreglos:** `tsc` y `lint` en verde; vitest **197/197**; `npm run build` en verde (mismo y único aviso
+de `Cache-Control`); `npx playwright test` (build normal) **270/270** en 13,4 min, sin fallos, reintentos ni pruebas
+saltadas; `DG_LAB=1 npx playwright test lockup` **17/17** (11 de antes + 6 nuevas: var() en `:root`, Doto a 390 y 1440,
+chunks bloqueados, filo sin rojo y resize vertical). Una primera corrida completa dio 269 + 1 falla porque reutilizó un
+`next-server` del build de laboratorio que había quedado vivo (`/lab` respondió 200). Se repitió con el servidor del
+build normal.
+
+**Peso de `/`** (`perf.spec`, mediana de 3): JS **158,4 KB gz / 170,3 KB** transferidos (9 archivos), sin cambio. LCP
+móvil 4.544 ms (4.532 · 4.544 · 4.660) y escritorio 1.556 ms, dentro del ruido de la tabla de arriba. CLS 0,0058 / 0.
