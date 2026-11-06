@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import sharp from "sharp";
 
 /**
@@ -12,6 +13,18 @@ import sharp from "sharp";
  */
 const LAB = process.env.DG_LAB === "1";
 const XL = '[data-lockup][data-escala="xl"]';
+
+/**
+ * Cada `var(--x)` de las hojas que no pasan por Tailwind. Las locales del
+ * lockup (`--corte`, `--lockup-*`, `--font-nombre`) se definen en el propio
+ * elemento y no en `:root`, así que quedan fuera.
+ */
+const HOJAS = ["src/components/sistema/sistema.css", "src/components/marca/marca.css", "src/app/(es)/lab/lab.css"];
+const LOCALES = /^--(corte|lockup-[a-z]+|font-nombre)$/;
+const variablesDeHojas = () =>
+  [...new Set(HOJAS.flatMap((f) => [...readFileSync(f, "utf8").matchAll(/var\((--[\w-]+)/g)].map((m) => m[1])))]
+    .filter((v) => !LOCALES.test(v))
+    .sort();
 
 async function abrirLab(page: Page) {
   await page.goto("/lab", { waitUntil: "networkidle" });
@@ -71,6 +84,35 @@ if (LAB) test.describe("lab del sistema B", () => {
     expect(geologica[0].bytes).toBeLessThanOrEqual(50 * 1024);
     expect(r.cls).toBe(0);
   });
+
+  test("toda var() de sistema, marca y lab resuelve en :root (P0-1)", async ({ page }) => {
+    const vars = variablesDeHojas();
+    expect(vars.length).toBeGreaterThan(40);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrirLab(page);
+    const vacias = await page.evaluate((vs) => {
+      const cs = getComputedStyle(document.documentElement);
+      return vs.filter((v) => cs.getPropertyValue(v).trim() === "");
+    }, vars);
+    expect(vacias).toEqual([]);
+  });
+
+  for (const ancho of [390, 1440]) {
+    test(`Doto pinta las cifras a ${ancho} (segunda visita, P0-1)`, async ({ page }) => {
+      await page.setViewportSize({ width: ancho, height: 900 });
+      await abrirLab(page);
+      // `display: optional`: la primera visita puede caer en el respaldo; la segunda, ya en caché, no.
+      await page.reload({ waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+      const r = await page.evaluate(() => ({
+        familias: [...document.querySelectorAll<HTMLElement>("[data-dot]")].map((d) => getComputedStyle(d).fontFamily),
+        cargada: document.fonts.check("700 48px Doto"),
+      }));
+      expect(r.familias.length).toBeGreaterThanOrEqual(7);
+      expect(r.familias.filter((f) => !/^"?Doto\b/.test(f))).toEqual([]);
+      expect(r.cargada).toBe(true);
+    });
+  }
 
   for (const [w, h] of [
     [1440, 900],

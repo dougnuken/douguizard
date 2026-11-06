@@ -181,13 +181,16 @@
   --color-electrico-texto: var(--electrico-texto);
   --color-laser: var(--laser);
   --color-verde-osc: var(--verde-osc);
-
-  --font-display-b: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
-  --font-texto: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-dot: var(--font-doto), ui-monospace, monospace;
 }
 
 :root {
+  /* familias B. Van aquí y no en `@theme inline`: Tailwind solo emite una
+     variable de `@theme` si una regla que procesa la usa, y `sistema.css` /
+     `marca.css` no pasan por Tailwind (06-CRITICA-F1 P0-1: `--font-dot` se
+     podaba y Doto nunca pintaba). */
+  --font-display-b: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
+  --font-texto: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-dot: var(--font-doto), ui-monospace, monospace;
   /* color · superficies */
   --vacio: #060608;
   --losa: #111214;
