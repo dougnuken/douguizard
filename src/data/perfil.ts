@@ -234,3 +234,86 @@ export function getTrayectoriaPortada(locale: Locale, cuentas: { anos: number; e
         intro: `${cuentas.anos} years in digital product, ${empresas} companies and a design system in 18 countries. Every stage with a case study opens it.`,
       };
 }
+
+/**
+ * «Lo que hago» y «Cómo trabajo» de `/about`, en la versión de 04 §6.1 (cuerpo
+ * ≤ 45 palabras). `getOficio()` sigue sirviendo el texto largo al panel del
+ * home actual hasta que F3 lo retire (F2 no cambia el home). Empresa y cifras
+ * se leen de `cv.ts` y del caso de Andes, nunca se reescriben.
+ */
+export function getOficioPerfil(locale: Locale): { hago: Entrada[]; pasos: Entrada[] } {
+  const company = currentExperience().company.name;
+  const andes = getCaseStudy("mercadolibre-andes", locale);
+  const k = (i: number) => andes?.kpis?.[i]?.value ?? "";
+  const [disenadores, ingenieros, paises] = [k(0), k(1), k(2)];
+  if (locale === "es") {
+    return {
+      hago: [
+        {
+          title: "Dirección de producto",
+          body: `Decido qué debe ser un producto y respondo por él hasta que sale. En ${company}: ocho módulos de negocio, sus estados y roles, y una revisión donde lo construido tiene que coincidir con la demo.`,
+        },
+        {
+          title: "Sistemas de diseño",
+          body: `Tokens, componentes, gobierno y la documentación aburrida que hace repetible el buen diseño. Construí uno para un banco y mantuve otro que usan ${disenadores} diseñadores y ${ingenieros} ingenieros en ${paises} países.`,
+        },
+        {
+          title: "Ingeniería de diseño con IA",
+          body: "Prototipo en código con Claude Code, Cursor y Gemini haciendo el trabajo repetitivo. Lo que entrego es un producto que funciona, no un mockup, y el negocio aprueba contra él, no contra un documento.",
+        },
+      ],
+      pasos: [
+        {
+          title: "Leer el dominio antes de dibujar.",
+          body: `Antes de que exista una pantalla, mapeo cómo funciona la cosa de verdad. En la inspección de ${company} fueron más de 45 estados y 15 roles: los estados eran el producto.`,
+        },
+        {
+          title: "El lenguaje antes que las pantallas.",
+          body: "La falla típica son ocho módulos con ocho dialectos. Construyo primero el sistema y hago que todos lo respeten, yo incluido: si le falta algo, se extiende el sistema.",
+        },
+        {
+          title: "El prototipo es la especificación.",
+          body: "Lo que el negocio firma es un prototipo con roles y estados reales, recorrido una historia a la vez. Los desacuerdos salen cuando todavía son baratos.",
+        },
+        {
+          title: "Lanzar, y después escuchar.",
+          body: "El uso diario muestra lo que ninguna especificación mostró. En olbo fue un error de zona horaria que dañaba el color de noche: se volvió una decisión, una prueba y una versión nueva.",
+        },
+      ],
+    };
+  }
+  return {
+    hago: [
+      {
+        title: "Product direction",
+        body: `I decide what a product should be and stay accountable until it ships. At ${company}: eight business modules, their states and roles, and a review where what gets built has to match the demo.`,
+      },
+      {
+        title: "Design systems",
+        body: `Tokens, components, governance and the boring documentation that makes good design repeatable. I built one for a bank and maintained one used by ${disenadores} designers and ${ingenieros} engineers in ${paises} countries.`,
+      },
+      {
+        title: "Design engineering with AI",
+        body: "I prototype in code, with Claude Code, Cursor and Gemini doing the repetitive work. What I hand over is a running product, not a mockup, and business signs off against it, not against a document.",
+      },
+    ],
+    pasos: [
+      {
+        title: "Read the domain before drawing.",
+        body: `Before a screen exists, I map how the thing actually works. For ${company}'s inspection flow that was 45+ states and 15 roles: the states were the product.`,
+      },
+      {
+        title: "The language before the screens.",
+        body: "The usual failure is eight modules with eight dialects. I build the system first and hold everyone to it, me included: if something's missing, the system gets extended.",
+      },
+      {
+        title: "The prototype is the spec.",
+        body: "What business signs is a working prototype with real roles and states, walked one story at a time. Disagreement surfaces while it's still cheap.",
+      },
+      {
+        title: "Ship, then listen.",
+        body: "Daily use shows what no spec did. In olbo it was a timezone bug that broke the colour after dark: it became a decision, a test and a new version.",
+      },
+    ],
+  };
+}

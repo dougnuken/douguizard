@@ -74,7 +74,6 @@ const es = {
     cierre: "Lo demás está en el trabajo.",
     verCasos: "Ver casos",
     descargarCv: "Descargar CV (PDF)",
-    descargarCvAria: "Descargar mi hoja de vida en PDF",
     rotulos: {
       base: "Base",
       zona: "Zona horaria",
@@ -83,7 +82,6 @@ const es = {
       idiomas: "Idiomas",
     },
     zonaValor: "UTC-5, sin horario de verano",
-    disponibleValor: "Consultoría puntual en sistemas de diseño y producto nativo de IA",
     meta: {
       titulo: "Perfil",
       descripcion: (cargo: string, empresa: string) =>
@@ -178,7 +176,6 @@ const en: DictPaginas = {
     cierre: "The rest is in the work.",
     verCasos: "See case studies",
     descargarCv: "Download CV (PDF)",
-    descargarCvAria: "Download my CV as a PDF",
     rotulos: {
       base: "Based in",
       zona: "Time zone",
@@ -187,7 +184,6 @@ const en: DictPaginas = {
       idiomas: "Languages",
     },
     zonaValor: "UTC-5, no daylight saving (same as New York in winter)",
-    disponibleValor: "Selected consulting on design systems and AI-native product",
     meta: {
       titulo: "About",
       descripcion: (cargo: string, empresa: string) =>

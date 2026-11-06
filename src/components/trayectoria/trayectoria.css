@@ -1,0 +1,680 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   `/experience` (F2): la línea láser es el eje. Fuente:
+   `propuestas/B-paginas/experience.html` con los arreglos de NOTAS §7.
+   Sin clase: **estado final** (hoy) en rejilla, que es lo que se ve sin JS, sin
+   GSAP y con RM. `html.exp-cine` (≥ 1024, script inline): la escena anclada,
+   con los valores de p = 0 en CSS hasta que la isla toma el control.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .exp {
+    position: relative;
+  }
+  .escena-t {
+    position: relative;
+    min-height: 100svh;
+    padding: var(--cabecera) 24px 32px var(--os-izq);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    column-gap: var(--gap);
+    row-gap: 32px;
+    max-width: calc(1320px + 136px);
+  }
+  @media (min-width: 1464px) {
+    .escena-t {
+      margin: 0 auto;
+    }
+  }
+  .exp-izq {
+    grid-column: 1 / span 6;
+    display: flex;
+    flex-direction: column;
+  }
+  .exp-h1 {
+    margin-top: 12px;
+    max-width: 12em;
+  }
+  .exp-intro {
+    margin-top: 16px;
+    max-width: 30em;
+  }
+  .contador {
+    margin-top: 32px;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .odometro {
+    display: inline-flex;
+    overflow: hidden;
+    height: 1em;
+    font-size: var(--t-120);
+    letter-spacing: -0.06em;
+    line-height: 1;
+    color: var(--tinta);
+  }
+  .odometro .col {
+    display: block;
+    height: 1em;
+    overflow: hidden;
+  }
+  .odometro .tira {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--d) * -1em));
+    transition: transform 260ms var(--curva-salida);
+  }
+  .odometro .tira span {
+    display: block;
+    height: 1em;
+    text-align: center;
+  }
+  .hoy-chip {
+    margin-bottom: 16px;
+    color: var(--tinta);
+    transition: opacity var(--d-ui) var(--curva-salida);
+  }
+  .era {
+    margin-top: 12px;
+    font: 600 var(--t-30) / 1.1 var(--font-display-b);
+    letter-spacing: -0.02em;
+    color: var(--tinta-2);
+    min-height: 1.1em;
+  }
+  .era span:not(.hoy) {
+    display: none;
+  }
+
+  .exp-der {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .acumulados {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 220px));
+    gap: var(--gap);
+  }
+  .acumulados div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 16px 16px 24px;
+    border-radius: var(--r-s);
+    background: var(--losa);
+    box-shadow: var(--filo);
+    transition: opacity var(--d-ui) var(--curva-salida);
+  }
+  .acumulados dt {
+    font-size: var(--t-14);
+    line-height: 1.3;
+    color: var(--tinta-2);
+  }
+  .acumulados dd {
+    color: var(--tinta);
+    min-height: 1em;
+  }
+  /* P1-8: antes del primer valor la cifra no se pinta: un guion largo dibujado. */
+  .acumulados div.cero {
+    opacity: 0.6;
+  }
+  .acumulados dd:empty {
+    display: flex;
+    align-items: center;
+  }
+  .acumulados dd:empty::before {
+    content: "";
+    width: 0.9em;
+    height: max(2px, 0.08em);
+    border-radius: 1px;
+    background: var(--tinta-3);
+  }
+  .acumulados dd.sube {
+    animation: acumulado-encender 360ms var(--curva-salida);
+  }
+  @keyframes acumulado-encender {
+    from {
+      --dw: 200;
+    }
+  }
+
+  /* Hitos: un <ol> real, siempre completo. Sin escena: rejilla de 3. */
+  .hitos {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+  }
+  .hito {
+    position: relative;
+    padding: 32px;
+    border-radius: var(--r-losa);
+    background: var(--losa);
+    box-shadow: var(--filo);
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  .hito .duracion {
+    display: none;
+  }
+  .periodo {
+    font-size: var(--t-14);
+    color: var(--tinta-2);
+  }
+  .hito .t-losa {
+    font-size: var(--t-30);
+    margin-top: 4px;
+  }
+  .rol {
+    font-size: var(--t-16);
+    color: var(--tinta-2);
+  }
+  .logro {
+    margin-top: 16px;
+    font-size: var(--t-18);
+    line-height: 1.5;
+    color: var(--tinta);
+    max-width: 30em;
+  }
+  .ver-caso {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--toque);
+    width: max-content;
+    padding: 0 16px 0 24px;
+    border-radius: var(--r-pill);
+    background: var(--blanco);
+    color: var(--tinta-osc) !important;
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    transition: scale var(--d-press) var(--curva-salida);
+  }
+  .ver-caso:active {
+    scale: 0.97;
+  }
+  .ver-caso:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+  .ver-caso .icono {
+    transition: rotate var(--d-hover) var(--curva-salida);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ver-caso:hover .icono {
+      rotate: 45deg;
+    }
+  }
+
+  /* ── El eje ─────────────────────────────────────────────────────────────── */
+  .eje {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 168px;
+    column-gap: 24px;
+    align-items: start;
+    padding-top: 32px;
+  }
+  .eje-pista {
+    min-width: 0;
+  }
+  .eras {
+    position: relative;
+    height: 32px;
+  }
+  .eras span {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    padding-left: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.24);
+    font-size: var(--t-14);
+    color: var(--tinta-2);
+    white-space: nowrap;
+    transition: color var(--d-ui) var(--curva-salida);
+  }
+  .eras span.activa {
+    color: var(--tinta);
+  }
+  .eras span:last-child {
+    translate: -100% 0;
+    border-left: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.24);
+    padding: 0 8px 0 0;
+  }
+  .linea-eje {
+    position: relative;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .recorrido {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    transform-origin: 0 50%;
+    transform: scaleX(var(--p, 1));
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 4px 1px var(--laser),
+      0 0 12px 2px var(--laser-halo);
+  }
+  .cabezal {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    translate: -6px -6px;
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 0 2px var(--laser),
+      0 0 16px 4px var(--laser-halo);
+  }
+  .tramos {
+    position: relative;
+    height: 48px;
+    margin-top: 12px;
+  }
+  .tramo {
+    position: absolute;
+    top: 0;
+    height: 8px;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .tramo i {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 50%;
+    transform: scaleX(var(--f, 1));
+    background: var(--tinta-3);
+    border-radius: inherit;
+  }
+  .tramo.activo i {
+    background: var(--tinta);
+  }
+  .tramo b {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    font: 500 var(--t-12) / 1.2 var(--font-texto);
+    color: var(--tinta-2);
+    white-space: nowrap;
+  }
+  .tramo.corto b {
+    display: none;
+  }
+  .anios {
+    position: relative;
+    height: 32px;
+  }
+  .anios span {
+    position: absolute;
+    top: 0;
+    translate: -50% 0;
+    color: var(--tinta-3);
+  }
+  .anios span:first-child {
+    translate: 0 0;
+  }
+  .anios span:last-child {
+    translate: -100% 0;
+  }
+  /* P1-12: la pista de propios a la derecha del eje, sin montarse en los años. */
+  .propios {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding-top: 24px;
+  }
+  .propios-et {
+    font-size: var(--t-12);
+    line-height: 1.2;
+    color: var(--tinta-2);
+    padding-bottom: 4px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.16);
+  }
+  .propio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 12px;
+    font-size: var(--t-12);
+    line-height: 1.2;
+    color: var(--tinta);
+    white-space: nowrap;
+    transition: color var(--d-ui) var(--curva-salida);
+  }
+  .propio::before {
+    content: "";
+    flex: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+    background: var(--tinta);
+  }
+
+  .exp-cierre {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Escena anclada (≥ 1024, con JS, sin RM) ───────────────────────────── */
+  @media (min-width: 1024px) {
+    .exp-cine .escena-t {
+      grid-template-rows: 1fr auto;
+      min-height: 100svh;
+      height: 100svh;
+    }
+    .exp-cine .exp-der {
+      grid-column: 8 / -1;
+      grid-row: 1;
+    }
+    .exp-cine .eje {
+      grid-row: 2;
+    }
+    .exp-cine .exp-izq .contador {
+      margin-top: auto;
+    }
+    .exp-cine .acumulados {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .exp-cine .hitos {
+      display: block;
+      flex: 1;
+      min-height: 300px;
+    }
+    .exp-cine .hito {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      translate: 0 12px;
+      transition:
+        opacity var(--d-ui) var(--curva-salida),
+        translate var(--d-ui) var(--curva-salida);
+      pointer-events: none;
+    }
+    .exp-cine .hito.activo,
+    .exp-cine .exp:not([data-montado]) .hito:first-child {
+      opacity: 1;
+      translate: 0 0;
+      pointer-events: auto;
+    }
+    /* Valores de p = 0 hasta que la isla escribe los suyos. */
+    .exp-cine .odometro .tira {
+      transform: translateY(calc(var(--d0) * -1em));
+    }
+    .exp-cine .hoy-chip {
+      opacity: 0;
+    }
+    .exp-cine .hoy-chip.on {
+      opacity: 1;
+    }
+    .exp-cine .exp:not([data-montado]) .era span {
+      display: none;
+    }
+    .exp-cine .exp:not([data-montado]) .era span:first-child {
+      display: inline;
+    }
+    .exp-cine .tramo i {
+      transform: scaleX(var(--f, 0));
+      background: var(--tinta-3);
+    }
+    .exp-cine .tramo b {
+      color: var(--tinta-3);
+    }
+    .exp-cine .tramo.activo b,
+    .exp-cine .tramo.hecho b {
+      color: var(--tinta-2);
+    }
+    .exp-cine .recorrido {
+      transform: scaleX(var(--p, 0));
+    }
+    .exp-cine .cabezal {
+      left: 0;
+    }
+    .exp-cine .exp:not([data-montado]) .acumulados div {
+      opacity: 0.6;
+    }
+    .exp-cine .exp:not([data-montado]) .acumulados dd {
+      color: transparent;
+    }
+    .exp-cine .propio {
+      color: var(--tinta-3);
+    }
+    .exp-cine .propio::before {
+      background: var(--vacio);
+    }
+    .exp-cine .propio.on {
+      color: var(--tinta);
+    }
+    .exp-cine .propio.on::before {
+      background: var(--tinta);
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .exp-cine .exp-der {
+      grid-column: 7 / -1;
+    }
+    .tramo b {
+      display: none;
+    }
+    .hitos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  /* P1-10: la escena entra completa a 1366×768 y 1280×720. */
+  @media (max-height: 820px) and (min-width: 1024px) {
+    .exp-cine .odometro {
+      font-size: var(--t-96);
+    }
+    .exp-cine .exp-intro {
+      display: none;
+    }
+    .exp-cine .hito {
+      padding: 24px;
+    }
+    .exp-cine .logro {
+      font-size: var(--t-16);
+      margin-top: 8px;
+    }
+    .exp-cine .escena-t {
+      row-gap: 24px;
+      padding-bottom: 24px;
+    }
+    .exp-cine .exp-izq,
+    .exp-cine .hitos {
+      max-height: calc(100svh - 360px);
+    }
+    .exp-cine .hitos {
+      min-height: 0;
+    }
+    .exp-cine .exp-der {
+      gap: 16px;
+    }
+    .exp-cine .eje {
+      padding-top: 0;
+    }
+    .exp-cine .tramos {
+      height: 32px;
+    }
+    .exp-cine .anios {
+      height: 24px;
+    }
+    .exp-cine .hito .t-losa {
+      font-size: var(--t-24);
+    }
+    .exp-cine .ver-caso {
+      margin-top: 8px;
+    }
+  }
+
+  /* ── Móvil (< 1024): línea vertical, barra fija con contador y acumulados ─ */
+  @media (max-width: 1023px) {
+    .escena-t {
+      display: block;
+      padding: 88px 16px 32px;
+      min-height: 0;
+    }
+    .exp-izq,
+    .exp-der {
+      display: contents;
+    }
+    .exp-h1 {
+      font-size: var(--t-36);
+    }
+    .contador {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      margin: 24px -16px 0;
+      padding: 72px 16px 8px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--vacio);
+    }
+    .odometro {
+      font-size: var(--t-48);
+    }
+    .hoy-chip {
+      margin: 0;
+    }
+    .exp[data-montado] .hoy-chip:not(.on) {
+      opacity: 0;
+    }
+    .era {
+      display: none;
+    }
+    .acumulados {
+      position: sticky;
+      top: 128px;
+      z-index: 5;
+      margin: 0 -16px;
+      padding: 0 16px 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      background: linear-gradient(180deg, var(--vacio) 0%, var(--vacio) calc(100% - 12px), rgba(6, 6, 8, 0) 100%);
+    }
+    .acumulados div {
+      padding: 8px 12px;
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px;
+    }
+    .acumulados dd.dot--l {
+      font-size: var(--t-24);
+    }
+    .acumulados dt {
+      font-size: var(--t-12);
+    }
+    .eje {
+      display: none;
+    }
+    .hitos {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+      padding-left: 32px;
+    }
+    .hitos::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+    .hitos::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      width: 1px;
+      height: var(--fill, 100%);
+      background: var(--laser-nucleo);
+      box-shadow:
+        0 0 4px 1px var(--laser),
+        0 0 12px 2px var(--laser-halo);
+    }
+    .hito {
+      padding: 24px;
+      transition:
+        background-color var(--d-ui) var(--curva-salida),
+        box-shadow var(--d-ui) var(--curva-salida);
+    }
+    .hito::before {
+      content: "";
+      position: absolute;
+      left: -32px;
+      top: 24px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--tinta);
+    }
+    .hito .duracion {
+      display: block;
+      position: absolute;
+      left: -28px;
+      top: 37px;
+      width: 5px;
+      height: var(--dur);
+      border-radius: var(--r-pill);
+      background: var(--tinta-2);
+    }
+    .exp[data-montado] .hito:not(.paso, .activo)::before {
+      background: var(--vacio);
+      box-shadow: inset 0 0 0 1.5px var(--tinta-3);
+    }
+    .exp[data-montado] .hito:not(.paso, .activo) .duracion {
+      background: rgba(255, 255, 255, 0.24);
+    }
+    .hito.activo::before {
+      background: var(--laser-nucleo);
+      box-shadow:
+        0 0 0 2px var(--laser),
+        0 0 12px 3px var(--laser-halo);
+    }
+    /* P1-11: el inactivo baja el material, no el texto (opacidad 1, ≥ 4,5:1). */
+    .hito.fuera {
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--losa-borde);
+    }
+    .hito .t-losa {
+      font-size: var(--t-24);
+    }
+    .logro {
+      font-size: var(--t-16);
+    }
+    .exp-cierre .boton {
+      flex: 1 1 auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odometro .tira,
+    .hito,
+    .acumulados div,
+    .ver-caso {
+      transition: none;
+    }
+    .acumulados dd.sube {
+      animation: none;
+    }
+  }
+}

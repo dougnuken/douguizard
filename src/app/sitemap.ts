@@ -22,6 +22,9 @@ function entry(path: string): MetadataRoute.Sitemap {
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...entry("/"),
+    ...entry("/work"),
+    ...entry("/about"),
+    ...entry("/experience"),
     ...entry("/cv"),
     ...caseStudies.flatMap((c) => entry(`/work/${c.slug}`)),
   ];

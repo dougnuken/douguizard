@@ -20,6 +20,7 @@ import CaseProcess from "@/components/case/CaseProcess";
 import CaseDecisions from "@/components/case/CaseDecisions";
 import CaseColophon from "@/components/case/CaseColophon";
 import CaseNext from "@/components/case/CaseNext";
+import { RegistrarLeido } from "@/components/trabajo/Leido";
 import { CaseChapter, CaseCover, CaseFilm } from "@/components/case/CaseStory";
 import type { BandProps } from "@/components/case/primitives";
 
@@ -159,6 +160,8 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
     <div className="min-h-svh">
       <main id="main" tabIndex={-1}>
         <CaseHeader study={study} meta={meta} />
+        {/* «Leído» en `/work`: una comodidad por visitante (04 §6.3). */}
+        <RegistrarLeido slug={study.slug} />
 
         {/* Whatever stands in the showcase's slot — the product, the NDA
             notice or the testimonial — sits on the raised tone, so the first

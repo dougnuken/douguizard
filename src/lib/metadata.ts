@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { getSite, site as baseSite } from "@/data/site";
 import { getCv } from "@/data/cv";
 import { getCaseMeta, getCaseStudy } from "@/data/work";
-import { yearsOfExperience } from "@/lib/career";
+import { currentExperience, yearsOfExperience } from "@/lib/career";
+import { casosPublicados, productosPropios } from "@/lib/cuentas";
+import { enPalabras, paginasDict } from "@/i18n/paginas";
 import { alternatesFor, localePath, ogLocale, otherLocale, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 
@@ -136,4 +138,64 @@ export function caseMetadata(locale: Locale, slug: string): Metadata {
     },
     twitter: { card: "summary_large_image", title, description: study.tagline },
   };
+}
+
+/** Lo común de las páginas B: canonical + hreflang, Open Graph y tarjeta. */
+function paginaMetadata(locale: Locale, path: string, titulo: string, descripcion: string): Metadata {
+  const site = getSite(locale);
+  const full = `${titulo} · ${site.name}`;
+  return {
+    title: titulo,
+    description: descripcion,
+    alternates: alternatesFor(locale, path),
+    openGraph: {
+      type: "profile",
+      locale: ogLocale[locale],
+      alternateLocale: [ogLocale[otherLocale(locale)]],
+      url: localePath(locale, path),
+      siteName: site.brand,
+      title: full,
+      description: descripcion,
+      images: [{ url: site.seo.ogImage, width: 1200, height: 630, alt: full }],
+    },
+    twitter: { card: "summary_large_image", title: full, description: descripcion },
+  };
+}
+
+/** `/work` (04 §4.6): la descripción se compone con `cuentas.ts`. */
+export function workMetadata(locale: Locale): Metadata {
+  const t = paginasDict[locale].trabajo.meta;
+  return paginaMetadata(
+    locale,
+    "/work",
+    t.titulo,
+    t.descripcion(casosPublicados(), enPalabras(productosPropios().length, locale)),
+  );
+}
+
+/** `/about` (04 §4.6): cargo y empresa actuales de `cv.ts`. */
+export function aboutDescripcion(locale: Locale): string {
+  const actual = currentExperience();
+  return paginasDict[locale].perfil.meta.descripcion(actual.role, actual.company.name);
+}
+export function aboutMetadata(locale: Locale): Metadata {
+  return paginaMetadata(locale, "/about", paginasDict[locale].perfil.meta.titulo, aboutDescripcion(locale));
+}
+
+/**
+ * `/experience` (04 §4.6): las empresas, de la más reciente hacia atrás, sin la
+ * actual (va en «a Head of Product»), sin las primeras (`earlier`) y sin repetir
+ * el empleador de registro (Qrvey va dentro de Ideaware).
+ */
+export function experienceMetadata(locale: Locale): Metadata {
+  const actual = currentExperience();
+  const vistas = new Set<string>();
+  const nombres = getCv(locale)
+    .experiences.filter((e) => e.era === "core")
+    .map((e) => e.company.name)
+    .filter((n) => (vistas.has(n) ? false : (vistas.add(n), true)));
+  const y = locale === "es" ? " e " : " and ";
+  const lista = nombres.length > 1 ? `${nombres.slice(0, -1).join(", ")}${y}${nombres.at(-1)}` : nombres.join("");
+  const t = paginasDict[locale].trayectoria.meta;
+  return paginaMetadata(locale, "/experience", t.titulo, t.descripcion(actual.role, lista));
 }

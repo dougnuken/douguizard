@@ -1,0 +1,542 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   `/work` (F2): cabecera (h1 + «En cifras»), filtro en el flujo, losas
+   protagonistas por `span` (reflujo sin huecos al filtrar) y archivo.
+   Fuente: `propuestas/B-paginas/work.html` con los arreglos de NOTAS §7.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .w-cab {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gap);
+    align-items: end;
+    padding-top: 48px;
+  }
+  .w-titulo {
+    grid-column: 1 / span 7;
+    padding-bottom: 16px;
+  }
+  .w-titulo .lead {
+    margin-top: 24px;
+  }
+  .card-cifras {
+    grid-column: 8 / -1;
+    display: grid;
+    gap: 24px;
+  }
+  .card-cifras-fila {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .card-cifras .cifra {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .card-cifras .dot {
+    color: var(--tinta-osc);
+  }
+
+  /* ── Filtro (P1-2: en el flujo, nunca sticky) ──────────────────────────── */
+  .filtros-zona {
+    margin-top: 32px;
+  }
+  .filtros {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--r-pill);
+    background-color: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    box-shadow: var(--filo), var(--sombra-flota);
+  }
+  .filtro {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--tinta-2-vidrio);
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color var(--d-hover) var(--curva-salida),
+      color var(--d-hover) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
+  }
+  .filtro:active {
+    scale: 0.96;
+  }
+  .filtro[aria-pressed="true"] {
+    background: var(--blanco);
+    color: var(--tinta-osc);
+  }
+  .filtro:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .filtro[aria-pressed="false"]:hover {
+      color: var(--tinta);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+  /* Sin JS no hay filtro: todo queda visible. */
+  @media (scripting: none) {
+    .filtros-zona {
+      display: none;
+    }
+  }
+
+  /* ── Losas protagonistas ───────────────────────────────────────────────── */
+  .casos {
+    margin-top: 24px;
+  }
+  .losa-caso > .bento {
+    height: 100%;
+  }
+  .losa-caso[hidden],
+  .card-archivo[hidden],
+  .filas li[hidden] {
+    display: none;
+  }
+  .losa-caso .ceja .num,
+  .filas .num {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .losa-caso .ceja .num {
+    margin-right: 8px;
+    opacity: 0.9;
+  }
+  .losa-caso .losa-media:not(.telefono) {
+    position: relative;
+  }
+  .losa-caso .losa-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale var(--d-hover) var(--curva-salida);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .losa-caso .bento:hover .losa-media img {
+      scale: 1.03;
+    }
+  }
+  .leido {
+    display: inline-flex;
+    width: max-content;
+    padding: 4px 8px;
+    border-radius: var(--r-pill);
+    box-shadow: inset 0 0 0 1px var(--losa-borde);
+    font: 400 var(--t-12) / 1.2 var(--font-texto);
+    letter-spacing: 0.02em;
+    color: var(--tinta-2);
+  }
+  :is(.losa--clara, .losa--niebla) .leido {
+    color: var(--tinta-osc-2);
+    box-shadow: inset 0 0 0 1px rgba(14, 14, 18, 0.2);
+  }
+
+  /* Naowee: 7 × 4, texto a la izquierda y la captura a la derecha. */
+  .c-naowee {
+    grid-column: span 7;
+    grid-row: span 4;
+  }
+  .c-naowee .bento {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: auto auto auto 1fr auto;
+    column-gap: 24px;
+    row-gap: 8px;
+    padding-right: 16px;
+  }
+  .c-naowee .bento > :first-child,
+  .c-naowee .apoyo,
+  .c-naowee .leido,
+  .c-naowee .cifra {
+    grid-column: 1;
+  }
+  .c-naowee .cifra {
+    grid-row: 5;
+  }
+  .c-naowee .t-losa,
+  .c-andes .t-losa {
+    font-size: var(--t-30);
+  }
+  .c-naowee .losa-media {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    margin: -16px 0;
+    min-height: 0;
+  }
+  .c-naowee .losa-media img {
+    object-position: 0 0;
+  }
+  .c-naowee .bento > .flecha {
+    top: 32px;
+    right: 32px;
+  }
+  .c-naowee .bento:has(> .flecha) :is(.ceja, .t-losa) {
+    padding-right: 0;
+  }
+
+  /* Andes: 5 × 4, jelly azul con las cifras como imagen. El texto vive en la
+     parte honda del gradiente: el fondo sólido es el peor punto bajo el texto
+     (`a11y 3.1`, blanco 9,8:1). */
+  .c-andes {
+    grid-column: span 5;
+    grid-row: span 4;
+  }
+  .c-andes .losa--azul {
+    background-color: #1a2fb8;
+    background-image: linear-gradient(to top, #7c7fd0 0%, transparent 20%),
+      radial-gradient(125% 85% at 38% 22%, #0c1266 0%, #1a2fb8 52%, #3f6bd9 86%, #6f98e6 108%);
+  }
+  .c-andes .apoyo,
+  .c-andes .etiqueta {
+    color: var(--blanco);
+  }
+  .andes-cifras {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px 16px;
+    margin-top: auto;
+  }
+  .andes-cifras .cifra:nth-child(2) {
+    text-align: right;
+    justify-items: end;
+  }
+  .andes-cifras .ancho {
+    grid-column: 1 / -1;
+  }
+  .c-andes .chip-nda {
+    background: rgba(12, 18, 102, 0.72);
+  }
+
+  /* olbo: 4 × 4, niebla con el teléfono. */
+  .c-olbo {
+    grid-column: span 4;
+    grid-row: span 4;
+  }
+  .c-olbo .apoyo {
+    max-width: 52%;
+  }
+  .c-olbo .cifra {
+    position: relative;
+    z-index: 1;
+    max-width: 50%;
+    margin-top: auto;
+  }
+  .c-olbo .dot {
+    color: var(--verde-osc);
+  }
+  .c-olbo .telefono {
+    position: absolute;
+    z-index: 0;
+    right: 32px;
+    bottom: -64px;
+    width: 52%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--r-s);
+    box-shadow: 0 24px 48px -16px rgba(14, 14, 18, 0.45);
+  }
+  .c-olbo .telefono img {
+    object-position: 50% 0;
+  }
+
+  /* Banco de Occidente: 4 × 4, la captura arriba. */
+  .c-bdo {
+    grid-column: span 4;
+    grid-row: span 4;
+  }
+  .c-bdo .bento {
+    justify-content: flex-start;
+  }
+  .c-bdo .losa-media {
+    order: -1;
+    height: 42%;
+    flex: none;
+    margin: -16px -16px 0;
+  }
+  .c-bdo .losa-media img {
+    object-position: 0 0;
+  }
+  .c-bdo .cifra {
+    margin-top: auto;
+  }
+
+  /* DC Medical y MakeaPet: 4 × 2, cifra y etiqueta en fila. */
+  .c-dc,
+  .c-mp {
+    grid-column: span 4;
+    grid-row: span 2;
+  }
+  .c-dc .cifra,
+  .c-mp .cifra {
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: end;
+    gap: 12px;
+    margin-top: auto;
+  }
+  .c-dc .cifra .etiqueta,
+  .c-mp .cifra .etiqueta {
+    max-width: 22ch;
+    padding-bottom: 4px;
+  }
+  /* Sobre el magenta, un apoyo de más de 40 caracteres va en blanco (8,5:1). */
+  .c-mp .apoyo {
+    color: var(--blanco);
+  }
+
+  /* ── Archivo ───────────────────────────────────────────────────────────── */
+  .card-archivo {
+    margin-top: var(--gap);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gap);
+  }
+  .archivo-cab {
+    grid-column: 1 / span 3;
+  }
+  .archivo-cab .t-losa {
+    margin-top: 8px;
+  }
+  .card-archivo .filas {
+    grid-column: 4 / -1;
+  }
+  .filas a {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) 80px minmax(0, 2fr) auto;
+    align-items: center;
+    gap: 16px;
+    min-height: 64px;
+    padding: 8px 16px;
+    margin: 0 -16px;
+    border-radius: var(--r-xs);
+    border-top: 1px solid var(--losa-borde);
+    transition: background-color var(--d-hover) var(--curva-salida);
+  }
+  .filas li:first-child a {
+    border-top-color: transparent;
+  }
+  .filas a:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+  .filas .num {
+    font-size: var(--t-14);
+    color: var(--tinta-2);
+  }
+  .filas b {
+    font: 500 var(--t-16) / 1.3 var(--font-texto);
+  }
+  .filas .cli,
+  .filas .linea {
+    font-size: var(--t-14);
+    line-height: 1.35;
+    color: var(--tinta-2);
+  }
+  .filas .anio {
+    color: var(--tinta-2);
+  }
+  .filas .accion {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--t-14);
+    font-weight: 500;
+  }
+  .filas .accion .icono {
+    transition: rotate var(--d-hover) var(--curva-salida);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .filas a:hover {
+      background: var(--losa-alta);
+    }
+    .filas a:hover .accion .icono {
+      rotate: 45deg;
+    }
+  }
+
+  /* ── 1024–1279 (P0-1 de la landing): Naowee a lo ancho, el resto a 6 ───── */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .c-naowee {
+      grid-column: span 12;
+      grid-row: span 3;
+    }
+    .c-andes,
+    .c-olbo,
+    .c-bdo,
+    .c-dc,
+    .c-mp {
+      grid-column: span 6;
+    }
+    .filas a {
+      grid-template-columns: 48px minmax(0, 1fr) 72px minmax(0, 1.6fr) auto;
+    }
+    .filas .cli {
+      display: none;
+    }
+  }
+
+  /* ── Móvil (< 1024): una columna; «En cifras» compacta (P1-3) ──────────── */
+  @media (max-width: 1023px) {
+    .w-cab {
+      grid-template-columns: 1fr;
+      padding-top: 24px;
+      gap: 24px;
+    }
+    .w-titulo,
+    .card-cifras {
+      grid-column: auto;
+    }
+    .w-titulo {
+      padding-bottom: 0;
+    }
+    .w-titulo .lead {
+      margin-top: 12px;
+    }
+    .losa.card-cifras {
+      padding: 12px 16px;
+      gap: 0;
+      border-radius: var(--r-s);
+    }
+    .card-cifras > .ceja {
+      display: none;
+    }
+    .card-cifras-fila {
+      gap: 12px;
+    }
+    .card-cifras .cifra {
+      gap: 4px;
+    }
+    .card-cifras .dot--l {
+      font-size: var(--t-30);
+    }
+    .card-cifras .etiqueta {
+      font-size: var(--t-12);
+      line-height: 1.25;
+    }
+    .filtros-zona {
+      margin-top: 16px;
+    }
+    .filtros {
+      display: flex;
+      overflow-x: auto;
+      max-width: 100%;
+      scrollbar-width: none;
+    }
+    .filtros::-webkit-scrollbar {
+      display: none;
+    }
+    .filtro {
+      flex: none;
+      padding: 0 12px;
+    }
+    .casos {
+      margin-top: 16px;
+    }
+    .losa-caso > .bento {
+      padding: 24px;
+    }
+    .c-naowee .bento {
+      grid-template-columns: 1fr;
+      grid-template-rows: 180px auto;
+      padding-right: 24px;
+    }
+    .c-naowee .losa-media {
+      grid-column: 1;
+      grid-row: 1;
+      margin: -12px -12px 0;
+      height: calc(100% + 12px);
+      border-radius: calc(var(--r-losa) - 12px);
+    }
+    .c-naowee .bento > :first-child,
+    .c-naowee .apoyo,
+    .c-naowee .leido,
+    .c-naowee .cifra {
+      grid-row: auto;
+    }
+    .c-naowee .bento > .flecha {
+      top: 24px;
+      right: 24px;
+    }
+    .c-naowee .t-losa,
+    .c-andes .t-losa {
+      font-size: var(--t-24);
+    }
+    .andes-cifras {
+      grid-template-columns: repeat(3, auto);
+      justify-content: space-between;
+    }
+    .andes-cifras .ancho {
+      grid-column: auto;
+    }
+    .andes-cifras .cifra:nth-child(2) {
+      text-align: left;
+      justify-items: start;
+    }
+    .andes-cifras .dot--l {
+      font-size: var(--t-30);
+    }
+    .c-olbo .bento {
+      min-height: 380px;
+    }
+    .c-olbo .apoyo {
+      max-width: 60%;
+    }
+    .c-olbo .telefono {
+      width: 40%;
+      right: 24px;
+      bottom: -96px;
+    }
+    .c-bdo .losa-media {
+      height: 150px;
+      margin: -12px -12px 0;
+      border-radius: calc(var(--r-losa) - 12px);
+    }
+    .losa.card-archivo {
+      grid-template-columns: 1fr;
+      padding: 24px;
+    }
+    .archivo-cab,
+    .card-archivo .filas {
+      grid-column: auto;
+    }
+    .filas a {
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      padding: 12px;
+      margin: 0 -12px;
+    }
+    .filas .cli,
+    .filas .linea,
+    .filas .accion {
+      display: none;
+    }
+    .filas .anio {
+      justify-self: end;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .filtro,
+    .losa-caso .losa-media img {
+      transition: none;
+    }
+  }
+}
+
+/* El reflujo del filtro con View Transitions: un fundido corto. */
+::view-transition-group(*) {
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
