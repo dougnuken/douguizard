@@ -360,11 +360,12 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .eras { position: relative; height: var(--e-32); }
 .eras span { position: absolute; top: 0; height: 100%; padding-left: var(--e-8); border-left: 1px solid rgba(255, 255, 255, .24); font-size: var(--t-14); color: var(--tinta-2); white-space: nowrap; transition: color var(--d-ui) var(--ease-out); }
 .eras span.activa { color: var(--tinta); }
+.eras span:last-child { translate: -100% 0; border-left: 0; border-right: 1px solid rgba(255, 255, 255, .24); padding: 0 var(--e-8) 0 0; }
 .linea-eje { position: relative; height: 1px; background: rgba(255, 255, 255, .16); }
 .recorrido { position: absolute; left: 0; top: 0; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
 .cabezal { position: absolute; top: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; translate: -6px -6px; background: var(--laser-nucleo); box-shadow: 0 0 0 2px var(--laser), 0 0 16px 4px var(--laser-halo); }
 .tramos { position: relative; height: var(--e-48); margin-top: var(--e-12); }
-.tramo { position: absolute; top: 0; height: 8px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .08); overflow: hidden; }
+.tramo { position: absolute; top: 0; height: 8px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .08); }
 .tramo i { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(var(--f, 0)); background: var(--tinta-3); border-radius: inherit; }
 .tramo.activo i { background: var(--tinta); }
 .tramo b { position: absolute; top: 16px; left: 0; font: 500 var(--t-12)/1.2 var(--f-texto); color: var(--tinta-3); white-space: nowrap; }
@@ -372,6 +373,8 @@ html.rm .hoja.abierta .hoja-panel { opacity: 1; }
 .tramo.corto b { display: none; }
 .anios { position: relative; height: var(--e-32); }
 .anios span { position: absolute; top: 0; translate: -50% 0; color: var(--tinta-3); }
+.anios span:first-child { translate: 0 0; }
+.anios span:last-child { translate: -100% 0; }
 .propios { position: relative; height: var(--e-64); margin-top: var(--e-8); border-top: 1px dashed rgba(255, 255, 255, .16); }
 .propios-et { position: absolute; left: 0; top: var(--e-8); font-size: var(--t-12); color: var(--tinta-3); }
 .propio { position: absolute; top: -6px; translate: -6px 0; display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-12); color: var(--tinta-3); white-space: nowrap; transition: color var(--d-ui) var(--ease-out); }
@@ -406,15 +409,19 @@ html:not(.cine) .contador { margin-top: var(--e-32); }
 /* Móvil: la línea es vertical. Contador fijo arriba; cada hito entra cuando llega al centro; el tramo mide su duración. */
 @media (max-width: 1023px) {
   .escena-t { display: block; padding: 80px var(--e-16) var(--e-32); min-height: 0; }
+  .exp-izq, .exp-der { display: contents; }   /* el contador fijo vive en la escena entera, no solo en su columna */
+  .contador { flex-wrap: wrap; row-gap: var(--e-8); }
+  .contador .acumulados { flex: 1 0 100%; margin-top: 0; }
   .exp-h1 { font-size: var(--t-36); }
-  .contador { position: sticky; top: 64px; z-index: 5; margin: var(--e-24) calc(-1 * var(--e-16)) 0; padding: var(--e-12) var(--e-16); align-items: center; justify-content: space-between;
-    background: linear-gradient(180deg, rgba(6, 6, 8, .96) 70%, rgba(6, 6, 8, 0)); }
+  .contador { position: sticky; top: 0; z-index: 5; margin: var(--e-24) calc(-1 * var(--e-16)) 0; padding: 68px var(--e-16) var(--e-16); align-items: center; justify-content: space-between;
+    background: linear-gradient(180deg, var(--vacio) 0%, var(--vacio) calc(100% - var(--e-16)), rgba(6, 6, 8, 0) 100%); }
   .dot-gigante { font-size: var(--t-48); }
   .hoy-chip { margin: 0; }
   .era { display: none; }
   .acumulados { margin-top: var(--e-8); gap: var(--e-8); }
-  .acumulados div { padding: var(--e-12); }
-  .acumulados dd.dot-l { font-size: var(--t-30); }
+  .acumulados div { padding: var(--e-8) var(--e-12); flex-direction: row-reverse; justify-content: flex-start; align-items: center; gap: var(--e-8); }
+  .hitos { margin-top: var(--e-24) !important; }
+  .acumulados dd.dot-l { font-size: var(--t-24); }
   .acumulados dt { font-size: var(--t-12); }
   .eje { display: none; }
   .hitos { position: relative; display: grid; gap: var(--e-24); margin-top: var(--e-32); padding-left: var(--e-32); min-height: 0; }
@@ -727,7 +734,7 @@ const x = (y) => (y - T0) / (T1 - T0);   // 0–1 a lo largo del eje
 
 /* Construcción del eje: eras, años (Doto), tramos proporcionales y la pista de productos propios */
 function construirEje() {
-  $("#eras").innerHTML = ERAS.map((e, i) => `<span data-i="${i}" style="left:${(x(e.ini) * 100).toFixed(3)}%">${e[lang]}</span>`).join("");
+  $("#eras").innerHTML = ERAS.map((e, i) => `<span data-i="${i}" style="left:${(x(i === ERAS.length - 1 ? T1 : e.ini) * 100).toFixed(3)}%">${e[lang]}</span>`).join("");
   $("#anios").innerHTML = [2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024, 2026].map((a) => `<span class="dot dot-xs" style="left:${(x(a) * 100).toFixed(3)}%">${a}</span>`).join("");
   $("#tramos").innerHTML = hitos.map((h, i) => { const w = x(h.fin) - x(h.ini);
     const nom = (h.nombre.split(" · ")[0].replace(" (vía Ideaware)", "").replace(" (via Ideaware)", ""));
@@ -788,6 +795,12 @@ function montar() {
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 }
 /* Móvil: línea vertical; el contador sigue al hito que cruza el centro de la pantalla */
+function colocarAcumulados() {   // móvil: los acumulados suben a la barra fija del contador; escritorio: arriba a la derecha
+  const a = $("#acumulados");
+  if (!desk.matches) { if (a.parentElement !== $(".contador")) $(".contador").appendChild(a); }
+  else if (a.parentElement !== $(".exp-der")) $(".exp-der").prepend(a);
+}
+desk.addEventListener("change", colocarAcumulados); colocarAcumulados();
 function movil() {
   if (desk.matches) return;
   hitos.forEach((h) => { if (!h.li.querySelector(".duracion")) h.li.insertAdjacentHTML("afterbegin", '<span class="duracion" aria-hidden="true"></span>');

@@ -733,6 +733,8 @@ function layout() {
     const k = medirCorte(nombre), lineA = G.a.pl.Oy + IMG.eye * G.a.pl.Dy;
     const off = nombre.offsetTop + $(".l2", nombre).offsetTop;
     texto.style.setProperty("--txt-top", Math.max(88, lineA - off - k) + "px");
+    const real = $(".l2", nombre).getBoundingClientRect().top - esc.getBoundingClientRect().top + k;   // corrección medida
+    texto.style.setProperty("--txt-top", Math.max(88, lineA - off - k + (lineA - real)) + "px");
   } else {
     medirCorte(nombre);
     const r = { x: 0, y: 0, w: W, h: H }, pl = placement(r, "movil");
@@ -827,6 +829,7 @@ function dibujar(F) {
   if (G.isDesk) {
     laser.style.transform = `translateY(${F.lineY}px)`; laser.style.setProperty("--gx", F.face[0] + "px"); laser.style.setProperty("--gr", F.face[2] * 1.15 + "px");
     laser.style.opacity = String(lerp(1, 0.6, F.q));
+    laser.style.clipPath = `inset(-8px 0 -8px ${Math.max(0, lerp(0, F.rect.x - 24, F.q))}px)`;
   }
 }
 let raf = 0, last = performance.now();
