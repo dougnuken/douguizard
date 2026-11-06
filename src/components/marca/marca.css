@@ -1,0 +1,109 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Marca: el lockup del nombre y el wordmark. Igual que `sistema.css`, viaja
+   solo con las rutas que lo usan. Especificación de la opción 4 «corte láser»:
+   docs/rediseno-2026/propuestas/B-tipo/TIPO.md §4.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .lockup {
+    display: inline-block;
+    font-family: var(--font-nombre), var(--font-display-b);
+    font-kerning: normal;
+    font-size: var(--lockup-losa);
+    color: var(--tinta);
+    white-space: nowrap;
+  }
+  .lockup[data-escala="xl"] {
+    font-size: var(--lockup-xl);
+  }
+  .lockup[data-escala="movil"] {
+    font-size: var(--lockup-movil);
+  }
+  @media (max-height: 800px) {
+    .lockup[data-escala="xl"] {
+      font-size: calc(var(--lockup-xl) * 0.8);
+    }
+  }
+  .lockup-linea {
+    display: block;
+  }
+  /* Opción 3 «banda»: una sola línea, paralela al láser. */
+  .lockup[data-construccion="banda"] .lockup-linea {
+    display: inline;
+  }
+
+  /* ── Corte láser ───────────────────────────────────────────────────────── */
+  .lockup-vargas {
+    position: relative;
+  }
+  .lockup-mitad {
+    display: block;
+  }
+  /* Sin JS, en móvil, con movimiento reducido o en `losa`: no hay corte. La
+     copia de abajo no existe para nadie y la de arriba se ve entera. */
+  .lockup-inf {
+    display: none;
+  }
+  .lockup[data-corte="activo"] {
+    --rendija: calc(1.5px * var(--apertura));
+  }
+  .lockup[data-corte="activo"] .lockup-sup {
+    clip-path: inset(-1em -1em calc(100% - var(--corte, 0.5em) + var(--rendija)) -1em);
+    translate: calc(-0.1em * var(--apertura)) 0;
+  }
+  .lockup[data-corte="activo"] .lockup-inf {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    clip-path: inset(calc(var(--corte, 0.5em) + var(--rendija)) -1em -1em -1em);
+    translate: calc(0.06em * var(--apertura)) 0;
+  }
+  /* Red de seguridad: aunque el atributo quedara puesto tras un resize, por
+     debajo de 1024 px o con movimiento reducido el nombre va entero. */
+  @media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+    .lockup[data-corte="activo"] .lockup-sup {
+      clip-path: none;
+      translate: none;
+    }
+    .lockup[data-corte="activo"] .lockup-inf {
+      display: none;
+    }
+  }
+
+  /* ── Wordmark de la cabecera ───────────────────────────────────────────── */
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: var(--toque);
+    padding: 0 16px 0 4px;
+    border-radius: var(--r-pill);
+    background-color: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+    box-shadow: var(--filo), var(--sombra-flota);
+    font-family: var(--font-nombre), var(--font-display-b);
+    font-size: var(--t-16);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+  .wordmark-d {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--blanco);
+    color: var(--tinta-osc);
+    font-weight: 700;
+  }
+  .wordmark:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+}

@@ -1,0 +1,395 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Primitivas del sistema B (F1). Se importa desde los componentes de
+   `components/sistema/` y `components/marca/`, no desde `globals.css`: así solo
+   viaja a las rutas que las usan (hoy, solo `/lab`) y las páginas actuales no
+   cargan ni un byte más de CSS. Los tokens viven en `globals.css`.
+   Valores: `docs/rediseno-2026/propuestas/B/index.html` y NOTAS §2–§3.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ── Tipos ──────────────────────────────────────────────────────────────── */
+  .b-texto {
+    font-family: var(--font-texto);
+    font-size: var(--t-16);
+    line-height: 1.5;
+    color: var(--tinta);
+    -webkit-font-smoothing: antialiased;
+  }
+  .ceja {
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    letter-spacing: 0.01em;
+    color: var(--tinta-2);
+  }
+  .t-losa {
+    font: 600 var(--t-24) / 1.2 var(--font-display-b);
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+    text-wrap: balance;
+  }
+  .t-titular {
+    font: 600 var(--t-36) / 1.08 var(--font-display-b);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .apoyo {
+    font: 400 var(--t-16) / 1.5 var(--font-texto);
+    color: var(--tinta-2);
+    max-width: 34em;
+  }
+  .micro {
+    font: 400 var(--t-12) / 1.4 var(--font-texto);
+    letter-spacing: 0.02em;
+    color: var(--tinta-3);
+  }
+
+  /* ── Doto: cifras y fechas. Nunca < 20 px (D20): el tamaño más chico es 24. ── */
+  .dot {
+    font-family: var(--font-dot);
+    font-weight: 700;
+    font-variation-settings: "ROND" 100, "wght" var(--dw);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    transition: --dw var(--d-hover) var(--curva-salida);
+  }
+  .dot--s {
+    font-size: var(--t-24);
+    letter-spacing: -0.03em;
+  }
+  .dot--m {
+    font-size: var(--t-30);
+    letter-spacing: -0.03em;
+  }
+  .dot--l {
+    font-size: var(--t-48);
+  }
+  .dot--xl {
+    font-size: var(--t-72);
+    letter-spacing: -0.06em;
+  }
+
+  /* ── Losas (superficies) ────────────────────────────────────────────────── */
+  .losa {
+    position: relative;
+    isolation: isolate;
+    min-width: 0;
+    border-radius: var(--r-losa);
+    padding: 32px;
+    overflow: hidden;
+    color: var(--tinta);
+  }
+  .losa--r-m {
+    border-radius: var(--r-m);
+    padding: 24px;
+  }
+  .losa--r-s {
+    border-radius: var(--r-s);
+    padding: 16px;
+  }
+  .losa--vacio {
+    background-color: var(--vacio);
+    box-shadow: inset 0 0 0 1px var(--losa-borde);
+  }
+  .losa--losa {
+    background-color: var(--losa);
+    box-shadow: var(--filo);
+  }
+  .losa--clara,
+  .losa--niebla {
+    color: var(--tinta-osc);
+  }
+  .losa--clara {
+    background-color: var(--claro);
+  }
+  .losa--niebla {
+    background-color: var(--niebla);
+  }
+  :is(.losa--clara, .losa--niebla) :is(.ceja, .apoyo, .etiqueta) {
+    color: var(--tinta-osc-2);
+  }
+  :is(.losa--clara, .losa--niebla) .t-losa {
+    color: var(--tinta-osc);
+  }
+  /* Gradientes «jelly»: el color de fondo sólido es su peor punto, que es lo que
+     lee la prueba de contraste (07 §0, `a11y 3.1`). */
+  .losa--azul,
+  .losa--magenta {
+    color: var(--blanco);
+  }
+  .losa--azul {
+    background-color: var(--jelly-azul-peor);
+    background-image: var(--jelly-azul);
+    box-shadow: var(--filo-jelly), var(--bloom-azul);
+  }
+  .losa--magenta {
+    background-color: var(--jelly-magenta-peor);
+    background-image: var(--jelly-magenta);
+    box-shadow: var(--filo-jelly), var(--bloom-magenta);
+  }
+  :is(.losa--azul, .losa--magenta) :is(.t-losa, .ceja) {
+    color: var(--blanco);
+  }
+  .losa--azul .etiqueta {
+    color: var(--azul-etiqueta);
+  }
+  /* Sobre jelly no caben párrafos largos (blanco da 4,9:1 en el peor punto del
+     azul; `a11y 3.1` pide 7:1 a > 40 caracteres): solo apoyos cortos. */
+  .losa--azul .apoyo {
+    color: var(--blanco);
+  }
+  .losa--magenta .apoyo {
+    color: var(--magenta-etiqueta);
+  }
+  .losa--magenta .etiqueta {
+    color: var(--magenta-etiqueta-base);
+  }
+  .losa--vidrio {
+    background-color: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+    box-shadow: var(--filo), var(--sombra-flota);
+  }
+  .losa--vidrio :is(.ceja, .apoyo, .etiqueta) {
+    color: var(--tinta-2-vidrio);
+  }
+  /* Lo que va dentro de una losa con inset es concéntrico: radio − inset. */
+  .losa-media {
+    overflow: hidden;
+    border-radius: calc(var(--r-losa) - 16px);
+    background: var(--losa-alta);
+  }
+
+  /* ── BentoCard: capa de enlace a tamaño de card ─────────────────────────── */
+  .bento {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    transition:
+      translate var(--d-hover) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
+  }
+  .bento-capa {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .bento-capa:focus-visible {
+    outline: none;
+  }
+  .bento:has(.bento-capa:focus-visible),
+  .bento[data-forzar="foco"] {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+  /* Enlaces secundarios por encima de la capa. */
+  .bento-sobre {
+    position: relative;
+    z-index: 2;
+  }
+  .bento > .flecha {
+    position: absolute;
+    z-index: 2;
+    top: 24px;
+    right: 24px;
+    pointer-events: none;
+  }
+  .bento:has(> .flecha) :is(.ceja, .t-losa) {
+    padding-right: calc(var(--boton) + 8px);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .bento:has(.bento-capa):hover {
+      translate: 0 -2px;
+      --dw: 900;
+    }
+    .bento:hover > .flecha .icono {
+      rotate: 45deg;
+    }
+  }
+  .bento[data-forzar="hover"] {
+    translate: 0 -2px;
+    --dw: 900;
+  }
+  .bento[data-forzar="hover"] > .flecha .icono {
+    rotate: 45deg;
+  }
+  .bento:has(.bento-capa:active) {
+    scale: 0.98;
+  }
+
+  /* ── Flecha circular ────────────────────────────────────────────────────── */
+  .flecha {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--boton);
+    height: var(--boton);
+    border-radius: 50%;
+    background: var(--blanco);
+    color: var(--tinta-osc);
+  }
+  .flecha .icono {
+    transition: rotate var(--d-hover) var(--curva-salida);
+  }
+  .flecha--tinta {
+    background: var(--tinta-osc);
+    color: var(--blanco);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .flecha--osc {
+    background: var(--losa-alta);
+    color: var(--tinta);
+  }
+
+  /* ── Iconos (sprite) ────────────────────────────────────────────────────── */
+  .icono {
+    width: 20px;
+    height: 20px;
+    flex: none;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .icono-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Botones (≥ 48 px) ──────────────────────────────────────────────────── */
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--boton-s);
+    padding: 0 24px;
+    border-radius: var(--r-pill);
+    font: 500 var(--t-14) / 1.3 var(--font-texto);
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--d-hover) var(--curva-salida),
+      color var(--d-hover) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
+  }
+  .boton:active {
+    scale: 0.97;
+  }
+  .boton--grande {
+    min-height: var(--boton);
+    padding: 0 28px;
+    font-size: var(--t-16);
+  }
+  .boton--blanco {
+    background: var(--blanco);
+    color: var(--tinta-osc);
+  }
+  .boton--tinta {
+    background: var(--tinta-osc);
+    color: var(--blanco);
+  }
+  .boton--electrico {
+    background: var(--electrico);
+    color: var(--blanco);
+    box-shadow: 0 8px 24px -8px rgba(43, 86, 243, 0.6);
+  }
+  .boton--linea {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+    color: var(--tinta);
+  }
+  .boton--linea-osc {
+    box-shadow: inset 0 0 0 1px rgba(14, 14, 18, 0.24);
+    color: var(--tinta-osc);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .boton--blanco:hover {
+      background: var(--niebla);
+    }
+    .boton--tinta:hover {
+      background: #26262e;
+    }
+    .boton--electrico:hover {
+      background: #4569f5;
+    }
+    .boton--linea:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .boton--linea-osc:hover {
+      background: rgba(14, 14, 18, 0.06);
+    }
+  }
+  .boton:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+
+  /* ── Estado: el punto de disponible es luz láser (P1-6), no verde ───────── */
+  .estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    white-space: nowrap;
+  }
+  .estado::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 0 1px var(--laser),
+      0 0 8px 2px var(--laser-halo);
+  }
+
+  /* ── Etiquetas tintadas y chip ──────────────────────────────────────────── */
+  .etiqueta {
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    letter-spacing: 0.01em;
+    color: var(--tinta-2);
+  }
+  .etiqueta--azul {
+    color: var(--azul-etiqueta);
+  }
+  .etiqueta--magenta {
+    color: var(--magenta-etiqueta-base);
+  }
+  .etiqueta--osc {
+    color: var(--tinta-osc-2);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--r-pill);
+    font: 500 var(--t-14) / 1 var(--font-texto);
+    background: rgba(12, 18, 102, 0.72);
+    color: var(--blanco);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  }
+  .chip--losa {
+    background: var(--losa-alta);
+    color: var(--tinta);
+    box-shadow: var(--filo);
+  }
+}
+
+/* Con movimiento reducido los cambios de estado son instantáneos (`motion 7.5`). */
+@media (prefers-reduced-motion: reduce) {
+  .bento,
+  .boton,
+  .flecha .icono,
+  .dot {
+    transition: none;
+  }
+}
