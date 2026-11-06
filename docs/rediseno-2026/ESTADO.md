@@ -37,7 +37,7 @@
 | Propuestas A/B, críticas, comparación | ✓ | `propuestas/A`, `propuestas/B`, `05`, `06-CRITICA-*` |
 | Lockups del nombre | ✓ (elegido 4) | `propuestas/B-tipo/` |
 | Páginas internas (Trabajo, caso, Perfil, Experiencia) | maquetas ✓ · crítica ✓ · P0+P1 aplicados ✓ (`NOTAS.md` §7; Tab sin focos invisibles; cabe a 1280×720) · 12 P2 pendientes · **aprobadas por Doug** (6 nov) | `propuestas/B-paginas/`, `06-CRITICA-PAGINAS.md` |
-| Plan de implementación (revisado contra el código) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
+| Plan de implementación (revisado contra el código; lockup y páginas internas integrados 6 nov) | ✓ | `07-PLAN-IMPLEMENTACION.md` |
 | **F0** base técnica | ✓ next 16.4.5 · react 19.3.1 · gsap 3.15.1 · sharp; vitest 149/149, Playwright 269/269; LCP / móvil 4.456 ms, escritorio 1.576 ms, JS 157,6 KB gz | `F0-INFORME.md`, `baseline-F0.json` |
 | F1–F8 | pendiente | `07` §2 |
 
@@ -46,13 +46,13 @@
 1. ~~Cerrar F0~~ ✓
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
-3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). **En curso.**
-4. F1 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
+4. **Siguiente: F1** (espera el «dale» de Doug) → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
 Disponibilidad (consultoría vs roles) · orden de casos · titular EN «direct/lead» · retirar toggle claro/oscuro ·
-datos faltantes de `04-COPY.md §7` · imagen final del héroe.
+datos faltantes de `04-COPY.md §7` · imagen final del héroe · plataformas por caso (ficha F7; solo las confirmadas).
 
 ## Entorno
 
