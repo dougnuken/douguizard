@@ -208,7 +208,8 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 24px 16px;
-    margin-top: auto;
+    /* F2 P2-5: las cifras siguen al texto (como la maqueta); el chip NDA va al fondo. */
+    margin-top: 48px;
   }
   .andes-cifras .cifra:nth-child(2) {
     text-align: right;
@@ -219,6 +220,7 @@
   }
   .c-andes .chip-nda {
     background: rgba(12, 18, 102, 0.72);
+    margin-top: auto;
   }
 
   /* olbo: 4 × 4, niebla con el teléfono. */

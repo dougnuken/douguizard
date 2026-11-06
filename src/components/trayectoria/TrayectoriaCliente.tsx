@@ -113,7 +113,10 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
       recorrido?.style.setProperty("--p", clamp(x(y)).toFixed(4));
       if (cabezal) cabezal.style.left = `${(clamp(x(y)) * 100).toFixed(3)}%`;
       const k = Math.max(0, Math.min(datos.acumulados.length - 1, Math.floor((y - t0) * 12 + 1e-6)));
-      const ac = y >= hoy - 1e-6 ? datos.acumulados[datos.acumulados.length - 1] : datos.acumulados[k];
+      // F3: medio mes de tolerancia. En p = 1, `y` puede quedar una fracción por debajo de
+      // `hoy` y caer en el mes anterior; si el ancla de carrera es este mes (noviembre),
+      // eso restaba un año (11 en vez de 12).
+      const ac = y >= hoy - 1 / 24 ? datos.acumulados[datos.acumulados.length - 1] : datos.acumulados[k];
       dd.forEach((el, i) => ponerAcumulado(el, ac[i]));
       propios.forEach((p, i) => p.classList.toggle("on", y >= datos.propios[i] - 1e-6));
       raiz.dataset.anio = y.toFixed(3);
