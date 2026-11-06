@@ -138,3 +138,11 @@ es 4.797 px (maqueta 5.062).
 - Las viñetas `olbo`, `naowee`, `banco`, `dc`, `makeapet` quedan sin uso (solo vive la de Andes en `CaseNda`) → F8.
   `lib/spring.ts` (`stepSpring`) también queda huérfano → F8. `HeroField`/`Velaris` → F4.
 - Doug: título de K13 (desvío 8) y si el chip NDA del home puede ser el corto (desvío 3, cambiaría `10.5`).
+
+## Arreglos tras la crítica
+
+| Punto | Cambio | Prueba |
+|---|---|---|
+| **P1-1** cabecera | `.cab-b` con `align-items: center`; wordmark, pills, idioma y «Hablemos» a 40 px visibles (`--pill-alto`), `y 24` común; destino táctil de 44 px por `::before { inset: -2px 0 }` (`chrome.css`). | `f3-arreglos.spec.ts` · «P1-1 cabecera alineada» mide cajas (mismo `y`, alto 40) en `/`, `/about`, `/cv`. |
+| **P1-2** `color-scheme` | `:root:not(:has([data-ruta-cv])) { color-scheme: dark }` (`globals.css`), el script de tema ya no fija `color-scheme` inline, `viewport.colorScheme: "dark"` y `themeColor: #060608` en ambos layouts; `/cv` (es/en) lo sobrescribe con `"dark light"` y sus dos `themeColor`. | «P1-2» en `/`, `/work`, `/about`, `/experience`, `/en`: `colorScheme === "dark"` y `<meta name="color-scheme">` sin preferencia; en `/cv` sigue su tema. |
+| **P1-3** rejilla 1280–1439 | `.os-top` con columnas `5×0.9fr · 4×1fr · 3×1.2fr` y `white-space: nowrap` en `.ceja` (años y eyebrow). K4 (Andes): 270 → 316 px a 1280 y 341 px a 1366; el título ya no choca con la flecha. | «P1-3» K4 ≥ 300 px y cejas en una línea a 1280×720 y 1366×768; `layout 5.4` en verde; capturas nuevas `F3-capturas/home-1280x720-pliegue.jpg` y `home-1366x768-pliegue.jpg`. |
