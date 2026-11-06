@@ -114,6 +114,12 @@ test("E2 structured data parses and says what it should", async ({ page }) => {
 
   expect(await readTypes("/work/olbo"), "E2 case breadcrumb").toContain("BreadcrumbList");
 
+  expect(await readTypes("/about"), "E2 /about ProfilePage").toContain("ProfilePage");
+  expect(await readTypes("/about"), "E2 /about Person").toContain("Person");
+  expect(await readTypes("/work"), "E2 /work ItemList").toContain("ItemList");
+  expect(await readTypes("/en/about"), "E2 /en/about ProfilePage").toContain("ProfilePage");
+  expect(await readTypes("/en/work"), "E2 /en/work ItemList").toContain("ItemList");
+
   expect(await readTypes("/en"), "E2 /en").toContain("Person");
   expect(await readTypes("/en/cv"), "E2 /en/cv ProfilePage").toContain("ProfilePage");
   expect(await readTypes("/en/work/olbo"), "E2 /en case breadcrumb").toContain("BreadcrumbList");
@@ -130,6 +136,7 @@ test("E3 sitemap lists every indexable URL and nothing else", async ({ request }
     `${ORIGIN}/en`,
     `${ORIGIN}/cv`,
     `${ORIGIN}/en/cv`,
+    ...["/work", "/about", "/experience"].flatMap((r) => [`${ORIGIN}${r}`, `${ORIGIN}/en${r}`]),
     ...caseStudies.flatMap((c) => [`${ORIGIN}/work/${c.slug}`, `${ORIGIN}/en/work/${c.slug}`]),
   ];
   expect(urls.slice().sort(), `E3 sitemap:\n${urls.join("\n")}`).toEqual(expected.slice().sort());

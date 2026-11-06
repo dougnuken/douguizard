@@ -3,13 +3,13 @@ import DotMatrix from "@/components/sistema/DotMatrix";
 import Estado from "@/components/sistema/Estado";
 import Losa from "@/components/sistema/Losa";
 import { getCv } from "@/data/cv";
-import { getDatos, getOficioPerfil } from "@/data/perfil";
+import { getDatos, getMarcasPerfil, getOficioPerfil } from "@/data/perfil";
 import { getSite } from "@/data/site";
 import { getTestimonial, testimonials } from "@/data/testimonials";
 import { getCaseMeta } from "@/data/work";
 import { localePath, type Locale } from "@/i18n/config";
 import { paginasDict } from "@/i18n/paginas";
-import { currentExperience, getWordmarks } from "@/lib/career";
+import { currentExperience } from "@/lib/career";
 
 /**
  * Las secciones de `/about` bajo la portada (07 F2, `about.html`), en orden:
@@ -131,7 +131,7 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
   );
 }
 
-/** «Dónde he trabajado»: `getWordmarks()` en la voz Geologica, en 2 filas de 4. */
+/** «Dónde he trabajado»: `getMarcasPerfil()` en la voz Geologica, en 2 filas de 4. */
 export function Marcas({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   return (
@@ -140,7 +140,7 @@ export function Marcas({ locale }: { locale: Locale }) {
         {t.empresas}
       </h2>
       <ul className={`marcas ${lockup.fuente.variable}`} translate="no">
-        {getWordmarks().map((m) => (
+        {getMarcasPerfil().map((m) => (
           <li key={m}>{m}</li>
         ))}
       </ul>

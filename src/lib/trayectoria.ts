@@ -170,12 +170,12 @@ export interface Acumulados {
  */
 export function acumuladosEn(y: number, hs: HitoTrayectoria[]): Acumulados {
   const ancla = decimal(getExperience(CAREER_ANCHOR).start);
+  // Tolerancia de una fracción de mes: los años decimales (k / 12) no son exactos en coma flotante.
+  const e = 1e-3;
   return {
-    anios: Math.max(0, Math.floor(y - ancla + 1e-6)),
-    empresas: empleadores().filter((e) => decimal(e.desde as YearMonth) <= y + 1e-6).length,
-    casos:
-      hs.filter((h) => h.caso && h.inicio <= y + 1e-6).length +
-      propiosConAnio().filter((a) => a <= y + 1e-6).length,
+    anios: Math.max(0, Math.floor(y - ancla + e)),
+    empresas: empleadores().filter((x) => decimal(x.desde as YearMonth) <= y + e).length,
+    casos: hs.filter((h) => h.caso && h.inicio <= y + e).length + propiosConAnio().filter((a) => a <= y + e).length,
   };
 }
 

@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
-import { currentExperience } from "@/lib/career";
+import { currentExperience, getWordmarks } from "@/lib/career";
 import { getSite } from "./site";
 import { getCv, type ExperienceId } from "./cv";
 import { getCaseStudy } from "./work";
@@ -316,4 +316,28 @@ export function getOficioPerfil(locale: Locale): { hago: Entrada[]; pasos: Entra
       },
     ],
   };
+}
+
+/**
+ * «Dónde he trabajado» de `/about`: la tira de `getWordmarks()` más el cliente
+ * final de Globant (Royal Caribbean, con caso propio), como en la maqueta
+ * aprobada (`B-paginas/about.html`, 8 marcas en 2 filas de 4; P1-13). Solo
+ * aquí: la tira del home no cambia. ⚠️ CONFIRMAR DOUG si la quiere también allí.
+ */
+const CLIENTES_EN_PERFIL: ReadonlySet<ExperienceId> = new Set(["globant"]);
+
+export function getMarcasPerfil(): string[] {
+  return getCv("en")
+    .experiences.filter((e) => e.era !== "earlier")
+    .flatMap((e) => {
+      const marcas = getWordmarksDe(e.id);
+      return e.client && CLIENTES_EN_PERFIL.has(e.id) ? [...marcas, e.client] : marcas;
+    });
+}
+
+/** Las marcas que `getWordmarks()` da para una experiencia (empresa y, si aplica, su cliente). */
+function getWordmarksDe(id: ExperienceId): string[] {
+  const e = getCv("en").experiences.find((x) => x.id === id)!;
+  const todas = getWordmarks();
+  return todas.filter((m) => m === e.company.name || m === e.client);
 }

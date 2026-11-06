@@ -172,7 +172,7 @@ export default function Trayectoria({ locale }: { locale: Locale }) {
             </div>
             <div className="anios">
               {anios.map((a) => (
-                <span key={a} className="dot dot--s" data-dot="" style={{ left: pct(x(a)) }}>
+                <span key={a} style={{ left: pct(x(a)) }}>
                   {a}
                 </span>
               ))}

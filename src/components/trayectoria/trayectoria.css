@@ -318,11 +318,16 @@
     position: relative;
     height: 32px;
   }
+  /* P2-14 de la crítica de páginas y P2-1 de F1: los años del eje en
+     Instrument Sans con cifras tabulares (Doto queda para el odómetro y los
+     acumulados, donde la cifra es la imagen). */
   .anios span {
     position: absolute;
     top: 0;
     translate: -50% 0;
-    color: var(--tinta-3);
+    font: 500 var(--t-14) / 1.2 var(--font-texto);
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-2);
   }
   .anios span:first-child {
     translate: 0 0;
@@ -411,6 +416,15 @@
       opacity: 1;
       translate: 0 0;
       pointer-events: auto;
+    }
+    /* P0-1: el hito con el foco se ve siempre y al instante, aunque el scrub
+       todavía esté llegando a su tramo. */
+    .exp-cine .hito:focus-within {
+      opacity: 1;
+      translate: 0 0;
+      pointer-events: auto;
+      transition: none;
+      z-index: 1;
     }
     /* Valores de p = 0 hasta que la isla escribe los suyos. */
     .exp-cine .odometro .tira {

@@ -200,8 +200,8 @@
     background-image: linear-gradient(to top, #7c7fd0 0%, transparent 20%),
       radial-gradient(125% 85% at 38% 22%, #0c1266 0%, #1a2fb8 52%, #3f6bd9 86%, #6f98e6 108%);
   }
-  .c-andes .apoyo,
-  .c-andes .etiqueta {
+  .c-andes .losa--azul .apoyo,
+  .c-andes .losa--azul .etiqueta {
     color: var(--blanco);
   }
   .andes-cifras {
@@ -293,7 +293,7 @@
     padding-bottom: 4px;
   }
   /* Sobre el magenta, un apoyo de más de 40 caracteres va en blanco (8,5:1). */
-  .c-mp .apoyo {
+  .c-mp .losa--magenta .apoyo {
     color: var(--blanco);
   }
 

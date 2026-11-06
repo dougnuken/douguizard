@@ -76,11 +76,11 @@ export default function PortadaPerfilCliente() {
       geo = { A, B, pa: placement(A, "cine", foto), pb: placement(B, "losa", foto) };
       const lineaA = geo.pa.Oy + foto.ojo * geo.pa.Dy;
       const corte = corteActual();
-      const off = lockup.offsetTop + l2.offsetTop;
+      // Por la cadena de `offsetParent` (sin transformaciones): la entrada de
+      // +16 px no puede contaminar la medida.
+      let off = 0;
+      for (let n: HTMLElement | null = l2; n && n !== texto; n = n.offsetParent as HTMLElement | null) off += n.offsetTop;
       texto.style.top = `${Math.max(88, lineaA - off - corte)}px`;
-      // Segundo pase: la y real del corte contra la del láser.
-      const real = l2.getBoundingClientRect().top - escenario.getBoundingClientRect().top + corte;
-      texto.style.top = `${Math.max(88, parseFloat(texto.style.top) + (lineaA - real))}px`;
       texto.dataset.colocado = "";
     };
 
