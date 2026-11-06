@@ -1,0 +1,183 @@
+{
+  "fase": "F0",
+  "ruta": "/",
+  "medidoEl": "2026-11-05T20:46:23.588Z",
+  "nota": "Línea de base del rediseño 2026 (07-PLAN §2 F0). La línea de base es «antesDelUpgrade»; «despuesDelUpgrade» se midió igual para comparar. Medido con tests/e2e/perf.spec.ts solo (PERF_OUT=… npx playwright test perf --workers=1), servidor next start sin otra carga, Chromium 1243 headless. Mediana de 3 cargas en frío por perfil. jsInicial = scripts terminados antes de load: transferidoKB (lo que manda next start, comprimido, con cabeceras) y gzipKB (cuerpos con gzip nivel 6).",
+  "perfiles": {
+    "movil": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 3,
+      "red": {
+        "latency": 562.5,
+        "downloadThroughput": 188743.68000000002,
+        "uploadThroughput": 86400
+      },
+      "cpu": 4
+    },
+    "escritorio": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1,
+      "red": {
+        "latency": 40,
+        "downloadThroughput": 1310720,
+        "uploadThroughput": 1310720
+      },
+      "cpu": 1
+    }
+  },
+  "antesDelUpgrade": {
+    "versiones": {
+      "next": "16.3.5",
+      "react": "19.2.6",
+      "react-dom": "19.2.6"
+    },
+    "resultados": {
+      "movil": {
+        "lcpMs": 4456,
+        "lcpMsCorridas": [
+          4456,
+          4444,
+          4556
+        ],
+        "lcpElemento": "p.max-w-[86ch].text-[length:var(--step-body)].font-normal «Head of Product en Naowee. Marco la dirección de la platafor»",
+        "cls": 0.0056,
+        "loadMs": 3185,
+        "jsInicial": {
+          "archivos": 9,
+          "transferidoKB": 169.6,
+          "gzipKB": 157.6
+        },
+        "imagenesAntesDeLoad": {
+          "archivos": 1,
+          "transferidoKB": 2.5
+        }
+      },
+      "escritorio": {
+        "lcpMs": 1576,
+        "lcpMsCorridas": [
+          1632,
+          1576,
+          1564
+        ],
+        "lcpElemento": "p.max-w-[86ch].text-[length:var(--step-body)].font-normal «Head of Product en Naowee. Marco la dirección de la platafor»",
+        "cls": 0,
+        "loadMs": 392,
+        "jsInicial": {
+          "archivos": 9,
+          "transferidoKB": 169.6,
+          "gzipKB": 157.6
+        },
+        "imagenesAntesDeLoad": {
+          "archivos": 1,
+          "transferidoKB": 2.5
+        }
+      }
+    }
+  },
+  "despuesDelUpgrade": {
+    "versiones": {
+      "next": "16.4.5",
+      "react": "19.3.1",
+      "react-dom": "19.3.1"
+    },
+    "medidoEl": "2026-11-06T00:16:12.790Z",
+    "resultados": {
+      "movil": {
+        "lcpMs": 4584,
+        "lcpMsCorridas": [
+          4932,
+          4584,
+          4496
+        ],
+        "lcpElemento": "p.max-w-[86ch].text-[length:var(--step-body)].font-normal «Head of Product en Naowee. Marco la dirección de la platafor»",
+        "cls": 0,
+        "loadMs": 3288,
+        "jsInicial": {
+          "archivos": 9,
+          "transferidoKB": 170.3,
+          "gzipKB": 158.4
+        },
+        "imagenesAntesDeLoad": {
+          "archivos": 1,
+          "transferidoKB": 2.5
+        }
+      },
+      "escritorio": {
+        "lcpMs": 1576,
+        "lcpMsCorridas": [
+          1576,
+          1620,
+          1572
+        ],
+        "lcpElemento": "p.max-w-[86ch].text-[length:var(--step-body)].font-normal «Head of Product en Naowee. Marco la dirección de la platafor»",
+        "cls": 0,
+        "loadMs": 387,
+        "jsInicial": {
+          "archivos": 9,
+          "transferidoKB": 170.3,
+          "gzipKB": 158.4
+        },
+        "imagenesAntesDeLoad": {
+          "archivos": 1,
+          "transferidoKB": 2.5
+        }
+      }
+    }
+  },
+  "pruebas": {
+    "antesDelUpgrade": {
+      "vitest": {
+        "archivos": 10,
+        "pruebas": 149,
+        "verdes": 149
+      },
+      "playwright": [
+        {
+          "corrida": 1,
+          "specs": 17,
+          "pruebas": 267,
+          "verdes": 267,
+          "rojas": 0,
+          "duracionMin": 13.8
+        },
+        {
+          "corrida": 2,
+          "specs": 17,
+          "pruebas": 267,
+          "verdes": 267,
+          "rojas": 0,
+          "duracionMin": 13.7
+        }
+      ],
+      "rojasPreexistentes": [],
+      "notaQrvey": "Los 6 timeouts de networkidle en /work/qrvey que vio el revisor no se repitieron en ninguna de las dos corridas limpias: no se tocó ninguna espera."
+    },
+    "despuesDelUpgrade": {
+      "vitest": {
+        "archivos": 10,
+        "pruebas": 149,
+        "verdes": 149
+      },
+      "playwright": [
+        {
+          "corrida": 1,
+          "specs": 18,
+          "pruebas": 269,
+          "verdes": 269,
+          "rojas": 0,
+          "duracionMin": 14.4,
+          "nota": "267 de antes + 2 de perf.spec.ts (nuevo; solo mide)"
+        }
+      ]
+    }
+  },
+  "avisosDelBuild": [
+    "Custom Cache-Control en /_next/static/:path* (preexistente; el único, antes y después)"
+  ]
+}
