@@ -108,6 +108,8 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 60; pointer-event
 /* ── Tipos ─────────────────────────────────────────────────────────────────────────────────────────── */
 .dot { font-family: var(--f-dot); font-variation-settings: "ROND" 100, "wght" var(--dw); font-weight: 700; font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em; line-height: 1; transition: --dw var(--d-hover) var(--ease-out); }
+.dot .punto { position: relative; display: inline-block; width: .32em; -webkit-text-fill-color: transparent; }
+.dot .punto::after { content: ""; position: absolute; left: .1em; bottom: .02em; width: .11em; height: .11em; border-radius: 50%; background: currentColor; }
 .dot-gigante { font-size: var(--t-120); letter-spacing: -0.06em; }
 .dot-xl { font-size: var(--t-72); letter-spacing: -0.06em; }
 .dot-l  { font-size: var(--t-48); }
@@ -628,12 +630,21 @@ function setLang(l, push) {
   // los enlaces internos conservan el idioma (en producción: / ↔ /en con la misma ruta y el mismo hash)
   $$("a[data-int]").forEach((a) => { const [base, hash] = a.dataset.int.split("#"); a.href = base + (lang === "en" ? "?lang=en" : "") + (hash ? "#" + hash : ""); });
   const M = window.META?.[lang]; if (M) { document.title = M.title; $('meta[name="description"]').content = M.desc; }
+  puntosDoto();
   alCambiarIdioma.forEach((f) => f(lang));
   if (push) history.replaceState(history.state, "", (lang === "en" ? "?lang=en" : location.pathname) + location.hash);
   if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 $$(".idioma a").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); setLang(a.dataset.lang, true); }));
 
+/* El punto de miles en Doto tiene cola y se lee como coma («2,000+» en ES). Se deja el «.» real en el texto
+   (copiar, lectores de pantalla) y se dibuja un solo punto redondo del tamaño de los de la matriz. */
+function puntosDoto() {
+  $$(".dot").forEach((el) => {
+    if (el.children.length || !/\.\d/.test(el.textContent)) return;
+    el.innerHTML = el.textContent.replace(/\.(?=\d)/g, '<span class="punto">.</span>');
+  });
+}
 /* 2 · Volver arriba y dock (aparece al bajar del primer pliegue) */
 $$('a[href="#arriba"]').forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" }); }));
 const dock = $("#dock");
