@@ -53,7 +53,9 @@
 .lab-escena {
   position: relative;
   overflow: hidden;
-  min-height: 340px;
+  /* Alto relativo al viewport: el láser (62 %) se mueve al redimensionar en
+     vertical sin que el nombre cambie de tamaño, como en el héroe (P1-3). */
+  min-height: max(340px, 40svh);
   padding: 48px 24px;
   border-radius: var(--r-losa);
   background: var(--losa);

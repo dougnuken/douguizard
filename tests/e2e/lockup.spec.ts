@@ -209,6 +209,32 @@ if (LAB) test.describe("lab del sistema B", () => {
     expect(rojos / (info.width * info.height)).toBeLessThanOrEqual(0.01);
   });
 
+  test("resize vertical 1440×900 → 1440×1100: el corte sigue al láser, |Δ| ≤ 1 px (P1-3)", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrirLab(page);
+    await esperarEntrada(page);
+    const medir = () =>
+      page.evaluate((sel) => {
+        const el = document.querySelector(sel) as HTMLElement;
+        const l2 = el.querySelector(".l2") as HTMLElement;
+        const laser = document.querySelector(".lab-laser") as HTMLElement;
+        const rl = laser.getBoundingClientRect();
+        return {
+          yLaser: rl.top + rl.height / 2,
+          yCorte: l2.getBoundingClientRect().top + parseFloat(el.style.getPropertyValue("--corte")),
+          fs: parseFloat(getComputedStyle(el).fontSize),
+        };
+      }, XL);
+    const a = await medir();
+    expect(Math.abs(a.yLaser - a.yCorte)).toBeLessThanOrEqual(1);
+    await page.setViewportSize({ width: 1440, height: 1100 });
+    await page.waitForTimeout(300);
+    const b = await medir();
+    expect(b.fs).toBe(a.fs); // el nombre no cambia de tamaño…
+    expect(Math.abs(b.yLaser - a.yLaser)).toBeGreaterThan(10); // …pero el láser sí se mueve
+    expect(Math.abs(b.yLaser - b.yCorte)).toBeLessThanOrEqual(1);
+  });
+
   test("cerrado (t = 0): sin clip-path ni copia, y «Vargas» igual a la palabra sin construcción", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await abrirLab(page);

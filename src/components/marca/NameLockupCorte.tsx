@@ -13,7 +13,7 @@ import { bezier, CONSULTA_CORTE, corteDesdeMetricas, ENTRADA, fijarCorte, topSob
  *    `--curva-salida`, con `requestAnimationFrame` (al terminar no queda ninguna
  *    animación viva: nada de bucles ni rebote, que sería glitch, 01 §8);
  * 4. deja `--desp` al dueño del scroll (`fijarCorte`), y vuelve a medir con
- *    `ResizeObserver` y `document.fonts.ready`.
+ *    `ResizeObserver` (lockup, láser y contenedor), `resize` y `document.fonts.ready`.
  * Marca `data-corte-isla="activa"` mientras trabaja; fuera de su consulta deja
  * el nombre cerrado y quita lo que puso.
  */
@@ -93,6 +93,8 @@ export default function NameLockupCorte({ laser, entrada = true }: { laser?: str
         if (lockup.dataset.corteIsla) {
           delete lockup.dataset.corteIsla;
           lockup.style.removeProperty("--corte");
+          // P2-4: el `top` que puso `colocar` no sirve en móvil.
+          lockup.style.removeProperty("top");
           fijarCorte(lockup, 0);
         }
         return;
@@ -115,14 +117,32 @@ export default function NameLockupCorte({ laser, entrada = true }: { laser?: str
 
     aplicar();
     mq.addEventListener("change", aplicar);
-    const ro = new ResizeObserver(() => mq.matches && lockup.dataset.corteIsla && preparar());
+    // Se recoloca si cambia el nombre **o el láser** (06-CRITICA-F1 P1-3): en el
+    // héroe la y del láser sale de la foto y se mueve con el alto del viewport
+    // sin que el nombre cambie de tamaño. Se observan el lockup, el láser y su
+    // contenedor, y `resize` (una vez por cuadro) cubre el `object-position`.
+    let rafMedida = 0;
+    const remedir = () => {
+      if (rafMedida) return;
+      rafMedida = requestAnimationFrame(() => {
+        rafMedida = 0;
+        if (vivo && mq.matches && lockup.dataset.corteIsla) preparar();
+      });
+    };
+    const ro = new ResizeObserver(remedir);
     ro.observe(lockup);
+    const linea = laser ? document.querySelector<HTMLElement>(laser) : null;
+    if (linea) ro.observe(linea);
+    if (lockup.offsetParent instanceof HTMLElement) ro.observe(lockup.offsetParent);
+    if (laser) window.addEventListener("resize", remedir);
     document.fonts.ready.then(() => vivo && mq.matches && lockup.dataset.corteIsla && preparar());
     return () => {
       vivo = false;
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafMedida);
       clearTimeout(temporizador);
       mq.removeEventListener("change", aplicar);
+      window.removeEventListener("resize", remedir);
       ro.disconnect();
     };
   }, [laser, entrada]);
