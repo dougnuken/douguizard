@@ -39,3 +39,31 @@ export function stepSpring(s: Spring, goal: number, dt: number): boolean {
   }
   return asleep;
 }
+
+/* ── Muelle críticamente amortiguado (sistema B) ─────────────────────────────
+   Aditivo: `stepSpring` y sus constantes no cambian. Para lo que solo debe
+   llegar, sin rebote: la lente del vidrio (respuesta 0,35 s; entra k = 7, sale
+   k = 4) y cualquier seguimiento por eje. ζ = 1: la posición nunca pasa de la
+   meta. Se integra en forma cerrada, así que el paso de tiempo no la vuelve
+   inestable aunque un cuadro tarde 100 ms. */
+
+/**
+ * Avanza `s` hacia `goal` con un muelle críticamente amortiguado de pulsación
+ * `omega` (rad/s; tiempo de respuesta ≈ 4/omega). Devuelve true al dormirse, y
+ * entonces lo deja exactamente en la meta.
+ */
+export function stepCritical(s: Spring, goal: number, omega: number, dt: number): boolean {
+  if (dt <= 0) return false;
+  const x0 = s.pos - goal;
+  const v0 = s.vel;
+  const e = Math.exp(-omega * dt);
+  const c = v0 + omega * x0;
+  s.pos = goal + (x0 + c * dt) * e;
+  s.vel = (v0 - omega * c * dt) * e;
+  const asleep = Math.abs(goal - s.pos) < 0.0005 && Math.abs(s.vel) < 0.005;
+  if (asleep) {
+    s.pos = goal;
+    s.vel = 0;
+  }
+  return asleep;
+}
