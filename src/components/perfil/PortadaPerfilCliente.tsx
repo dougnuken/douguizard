@@ -104,6 +104,7 @@ export default function PortadaPerfilCliente() {
         height: `${pl.Dy}px`,
         translate: "none",
       });
+      poster.style.setProperty("--pluma", `${(18 * (1 - clamp(p / 0.6))).toFixed(2)}%`);
       laser.style.top = `${pl.Oy + foto.ojo * pl.Dy}px`;
       laser.style.opacity = String(lerp(1, 0.6, q));
       laser.style.clipPath = `inset(-12px 0 -12px ${Math.max(0, lerp(0, r.x - 24, q))}px)`;
