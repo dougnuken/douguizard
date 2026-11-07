@@ -221,19 +221,45 @@ test("X1 BdO gallery: nine images load, webp/avif, explicit dims, no stretch", a
   ).toEqual([]);
 });
 
-test("X2 scroll regression: /work/olbo reached by client nav scrolls", async ({ page }) => {
+// F6: desde el home el caso abre en hoja (07 F6). X2 se parte en dos: la rueda
+// desplaza el cuerpo de la hoja (X2a) y, en la página completa, la ventana (X2b).
+test("X2a /work/olbo by client nav opens the sheet and the wheel scrolls its body", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
   await settle(page);
-  const link = page.locator('a[href="/work/olbo"]').first();
-  expect(await link.count(), "X2 an in-page link to /work/olbo exists").toBeGreaterThan(0);
+  const link = page.locator('#main a[href="/work/olbo"]:visible').first();
+  expect(await link.count(), "X2a an in-page link to /work/olbo exists").toBeGreaterThan(0);
   await link.scrollIntoViewIfNeeded();
   await link.click();
   await page.waitForURL("**/work/olbo", { timeout: 15000 });
-  await page.waitForLoadState("networkidle");
+  await expect(page.locator("dialog.hoja[open]")).toBeVisible();
   await page.waitForTimeout(500);
+
+  const before = await page.evaluate(() => ({
+    y: window.scrollY,
+    body: document.querySelector(".hoja-cuerpo")!.scrollTop,
+  }));
+  await page.mouse.move(720, 600);
+  await page.mouse.wheel(0, 900);
+  await page.waitForTimeout(600);
+  const after = await page.evaluate(() => ({
+    y: window.scrollY,
+    body: document.querySelector(".hoja-cuerpo")!.scrollTop,
+  }));
+  console.log("X2a before", JSON.stringify(before), "after", JSON.stringify(after));
+  expect(after.body, "X2a wheel scrolled the sheet body").toBeGreaterThan(before.body + 100);
+  expect(after.y, "X2a the page under the sheet stayed put").toBe(before.y);
+});
+
+test("X2b /work/olbo loaded directly is the full page and the wheel scrolls the window", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(setTheme("dark"));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/work/olbo", { waitUntil: "networkidle" });
+  await expect(page.locator("dialog.hoja")).toHaveCount(0);
+  await page.waitForTimeout(300);
 
   const before = await page.evaluate(() => window.scrollY);
   await page.mouse.move(720, 450);
@@ -245,11 +271,10 @@ test("X2 scroll regression: /work/olbo reached by client nav scrolls", async ({ 
     innerH: window.innerHeight,
     bodyOverflow: getComputedStyle(document.body).overflow,
     htmlOverflow: getComputedStyle(document.documentElement).overflow,
-    bodyPosition: getComputedStyle(document.body).position,
   }));
-  console.log("X2 before", before, "after", JSON.stringify(after));
-  expect(after.docH, "X2 page is taller than the viewport").toBeGreaterThan(after.innerH + 100);
-  expect(after.y, `X2 wheel scrolled the page (before=${before} after=${after.y}, overflow body=${after.bodyOverflow} html=${after.htmlOverflow})`).toBeGreaterThan(before + 100);
+  console.log("X2b before", before, "after", JSON.stringify(after));
+  expect(after.docH, "X2b page is taller than the viewport").toBeGreaterThan(after.innerH + 100);
+  expect(after.y, `X2b wheel scrolled the page (before=${before} after=${after.y}, overflow body=${after.bodyOverflow} html=${after.htmlOverflow})`).toBeGreaterThan(before + 100);
 });
 
 test("X3 external anchors carry target/rel", async ({ page }) => {
