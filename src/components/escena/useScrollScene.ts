@@ -69,6 +69,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     const originales = new Map(enLinea.map((el) => [el, el.getAttribute("style")] as const));
 
     let vivo = true;
+    let activa = false;
     let p = 0;
     let corteListo = false;
     let geo: {
@@ -144,7 +145,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     };
 
     const pintar = () => {
-      if (!geo) return;
+      // Tras `salir()` (cruce de 1024, RM) un tick tardío del scrub no repinta nada.
+      if (!geo || !activa) return;
       escena.dataset.p = p.toFixed(3);
       setInert(p < 0.5);
       if (p >= 0.999) {
@@ -206,6 +208,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     };
 
     const salir = () => {
+      activa = false;
       limpiarGsap?.();
       limpiarGsap = null;
       irAlFin = null;
@@ -254,6 +257,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         if (!vivo || !mq.matches) return salir();
 
         const captura = html.hasAttribute("data-escena-captura") || "__escenaCaptura" in window;
+        activa = true;
         const estado = { p: 0 };
         let st: InstanceType<ST> | undefined;
         const ctx = gsap.context(() => {
