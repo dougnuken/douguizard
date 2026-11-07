@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { settle } from "../tests/e2e/settle";
 import { setTheme } from "../tests/e2e/matrix";
 
+const NOMBRE = "globalThis.__name = (f) => f;";
 const BASE = "http://localhost:3131";
 const OUT = "docs/rediseno-2026/F6-capturas";
 const CASOS = ["naowee-suid", "mercadolibre-andes", "olbo", "dc-medical"];
@@ -37,6 +38,8 @@ async function main() {
       const idioma = pre ? "en" : "es";
       const ctx = await browser.newContext({ viewport: { width: ancho, height: alto }, deviceScaleFactor: 1, reducedMotion: "reduce" });
       await ctx.addInitScript(setTheme("dark"));
+    // tsx (esbuild, keepNames) envuelve las funciones con `__name`, que no existe en la página.
+    await ctx.addInitScript(NOMBRE);
       const page = await ctx.newPage();
       for (const slug of CASOS) {
         await abrirHoja(page, pre, slug);
@@ -58,6 +61,7 @@ async function main() {
     recordVideo: { dir: OUT, size: { width: 1440, height: 900 } },
   });
   await ctx.addInitScript(setTheme("dark"));
+  await ctx.addInitScript(NOMBRE);
   const page = await ctx.newPage();
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
   await settle(page);
