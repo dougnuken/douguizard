@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import sharp from "sharp";
+import { getFotoActiva } from "../../src/data/hero";
 
 /**
  * F4 · vidrio estriado WebGL2 (07 F4, pruebas a–e + cambio de foto). El canvas
@@ -46,6 +47,45 @@ const rugosidad = async (page: Page, x: number, y: number) => {
   for (let j = 0; j < info.height; j++)
     for (let i = 0; i + 1 < info.width; i++) suma += Math.abs(data[j * info.width + i + 1] - data[j * info.width + i]);
   return suma / (info.height * (info.width - 1));
+};
+
+/**
+ * Rugosidad de la foto limpia (sin estrías) en el mismo punto: pinta la textura activa en un
+ * <img> temporal con la caja y el encuadre del canvas y mide ahí. Así la prueba mide solo las
+ * estrías (cerrada − limpia), no la textura propia de la foto.
+ */
+const rugosidadLimpia = async (page: Page, canvas: ReturnType<Page["locator"]>, x: number, y: number) => {
+  const src = getFotoActiva().rutas.textura;
+  const b = (await canvas.boundingBox())!;
+  const pos = await canvas.evaluate((c) => {
+    const p = c.parentElement?.querySelector<HTMLElement>("img.k1-poster");
+    const cs = getComputedStyle(p ?? c);
+    return { fit: cs.objectFit, pos: cs.objectPosition };
+  });
+  await page.evaluate(
+    async ({ src, b, pos }) => {
+      const im = document.createElement("img");
+      im.id = "__limpia";
+      im.style.cssText = `position:fixed;left:${b.x}px;top:${b.y}px;width:${b.width}px;height:${b.height}px;object-fit:${pos.fit === "fill" ? "cover" : pos.fit};object-position:${pos.pos};z-index:2147483647;pointer-events:none;transform:none;`;
+      im.src = src;
+      document.body.appendChild(im);
+      await im.decode();
+    },
+    { src, b, pos },
+  );
+  try {
+    return await rugosidad(page, x, y);
+  } finally {
+    await page.evaluate(() => document.getElementById("__limpia")?.remove());
+  }
+};
+
+/** La lente debe quitar ≥ 50 % de las estrías: (abierta − limpia) ≤ 0,5·(cerrada − limpia). */
+const quitaEstrias = (cerrada: number, abierta: number, limpia: number) => {
+  expect(cerrada - limpia, `hay estrías que quitar (cerrada ${cerrada.toFixed(2)}, limpia ${limpia.toFixed(2)})`).toBeGreaterThan(1);
+  expect(abierta - limpia, `estrías ${(cerrada - limpia).toFixed(2)} → ${(abierta - limpia).toFixed(2)} (cerrada ${cerrada.toFixed(2)}, abierta ${abierta.toFixed(2)}, limpia ${limpia.toFixed(2)})`).toBeLessThanOrEqual(
+    (cerrada - limpia) * 0.5,
+  );
 };
 
 const errores = (page: Page) => {
@@ -116,7 +156,8 @@ test.describe("(a) Chromium con WebGL2", () => {
     await page.waitForTimeout(300); // la tarjeta sube 2 px con el hover: se mide donde quedó la foto
     const p1 = await pared();
     const abierta = await rugosidad(page, p1.x, p1.y);
-    expect(abierta, `rugosidad ${cerrada.toFixed(2)} → ${abierta.toFixed(2)}`).toBeLessThanOrEqual(cerrada * 0.5);
+    const limpia = await rugosidadLimpia(page, lente, p1.x, p1.y);
+    quitaEstrias(cerrada, abierta, limpia);
     await page.mouse.move(20, 450, { steps: 4 });
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
     const tras = await cuadros(page, ".k1");
@@ -214,7 +255,7 @@ test.describe("(d) táctil", () => {
     await toque("touchMove", 60, 302);
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
     const abierta = await rugosidad(page, 60, 302);
-    expect(abierta, `rugosidad ${cerrada.toFixed(2)} → ${abierta.toFixed(2)}`).toBeLessThanOrEqual(cerrada * 0.5);
+    quitaEstrias(cerrada, abierta, await rugosidadLimpia(page, lente, 60, 302));
     await toque("touchEnd", 60, 302);
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
 

@@ -164,11 +164,19 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await abrir(page);
     await page.waitForTimeout(1600);
     await page.mouse.move(720, 450);
+    // Se registra el máximo de scrollY: la prueba solo vale si la rueda llegó a mover la página (antes de eso scrollY ya es 0).
+    await page.evaluate(() => {
+      const w = window as unknown as { __maxY: number };
+      w.__maxY = 0;
+      addEventListener("scroll", () => (w.__maxY = Math.max(w.__maxY, scrollY)), { passive: true });
+    });
     await page.mouse.wheel(0, 40);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __maxY: number }).__maxY), { timeout: 5000, intervals: [25] }).toBeGreaterThan(0);
     const t0 = Date.now();
-    await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 1500, intervals: [50] }).toBeLessThanOrEqual(1);
-    expect(Date.now() - t0).toBeLessThanOrEqual(1200);
-    expect(await progreso(page)).toBeLessThan(0.01);
+    await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3000, intervals: [50] }).toBeLessThanOrEqual(1);
+    expect(Date.now() - t0, "el scroll vuelve a 0 en ≤ 1,2 s").toBeLessThanOrEqual(1200);
+    // El progreso (scrub suavizado, por frame) alcanza el reposo tras scrollY: se espera el estado real.
+    await expect.poll(() => progreso(page), { timeout: 3000, intervals: [50] }).toBeLessThan(0.01);
     const f = await fin(page);
     await page.mouse.wheel(0, Math.round(900 * 0.6));
     await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3000 }).toBe(f);
