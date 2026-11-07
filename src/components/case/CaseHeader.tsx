@@ -36,11 +36,17 @@ export default function CaseHeader({
   const t = dict.case;
   const locale = useLocale();
 
-  const showClient = fold(meta.client) !== fold(study.project);
+  // P1-1 (06-CRITICA-F7): el título es el nombre corto (el de la miga), a 120
+  // como en la maqueta; el descriptor del `project` («— Plataforma del sector
+  // deportivo») lo dice ya el gancho, así que en pantalla se omite y queda solo
+  // para lectores de pantalla y buscadores (`<title>` y OG siguen con `project`).
+  const corto = getShortName(study);
+  const resto = study.project.startsWith(corto) ? study.project.slice(corto.length) : "";
+  const showClient = fold(meta.client) !== fold(corto) && fold(meta.client) !== fold(study.project);
   const ceja = [showClient ? meta.client : null, meta.role.replace(/ · /g, " · ")].filter(Boolean).join(" · ");
-  // Una palabra cabe a 120; un nombre de varias («Banco de Occidente — Design
-  // System») baja un paso para no ocupar media pantalla.
-  const largo = study.project.length > 18 ? "" : undefined;
+  // Red para nombres cortos de verdad largos («Multi-client UX Design»): bajan
+  // un paso. «Banco de Occidente» (18) cabe a 120 en dos líneas.
+  const largo = corto.length > 18 ? "" : undefined;
   const tituloId = enHoja ? tituloHojaId(study.slug) : "caso-titulo";
 
   return (
@@ -49,7 +55,7 @@ export default function CaseHeader({
         <nav aria-label={t.breadcrumb} className="caso-miga">
           <Link href={localePath(locale, "/work")}>{dict.dock.trabajo}</Link>
           <span aria-hidden="true">/</span>
-          <b translate="no">{getShortName(study)}</b>
+          <b translate="no">{corto}</b>
         </nav>
       )}
 
@@ -59,7 +65,8 @@ export default function CaseHeader({
           {enHoja ? (
             <>
               <h2 id={tituloId} className="caso-h1" data-largo={largo}>
-                {study.project}
+                <span translate="no">{corto}</span>
+                {resto && <span className="sr-only">{resto}</span>}
               </h2>
               <p className="gancho">{study.tagline}</p>
             </>
@@ -67,8 +74,9 @@ export default function CaseHeader({
             <>
               <h1 className="caso-h1" data-largo={largo} id={tituloId}>
                 <RevealText as="span" variant="mask" delay={0.05} className="block">
-                  {study.project}
+                  <span translate="no">{corto}</span>
                 </RevealText>
+                {resto && <span className="sr-only">{resto}</span>}
               </h1>
               <RevealText as="p" variant="fade" delay={0.2} className="gancho">
                 {study.tagline}

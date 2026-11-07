@@ -361,3 +361,77 @@ test.describe("transiciones y 404", () => {
     });
   }
 });
+
+/* ── Arreglos tras la crítica de F7 (06-CRITICA-F7 §4) ─────────────────── */
+
+
+const UNA_PALABRA = ["olbo", "naowee-suid", "mercadolibre-andes", "makeapet", "qrvey", "chub"];
+
+test.describe("P1-1 · el título es el nombre corto", () => {
+  test("1440: h1 a 120 en los de una palabra, ≤ 2 líneas en todos; el descriptor queda para lectores", async ({ page }) => {
+    test.slow();
+    await preparar(page, 1440);
+    for (const slug of CASOS) {
+      await page.goto(`/work/${slug}`, { waitUntil: "networkidle" });
+      const h = await page.locator("main h1.caso-h1").evaluate((h1) => {
+        const cs = getComputedStyle(h1);
+        const vis = h1.querySelector<HTMLElement>(":scope > span:not(.sr-only)")!;
+        return {
+          fs: parseFloat(cs.fontSize),
+          lineas: ((el: Element) => {
+            const rg = document.createRange();
+            rg.selectNodeContents(el);
+            return new Set([...rg.getClientRects()].filter((q) => q.width > 0).map((q) => Math.round(q.top))).size;
+          })(vis.querySelector("[translate]") ?? vis),
+          visible: vis.textContent!.trim(),
+          miga: document.querySelector("nav.caso-miga b")!.textContent!.trim(),
+          nombre: h1.textContent!.replace(/\s+/g, " ").trim(),
+        };
+      });
+      expect(h.visible, `${slug}: h1 = miga`).toBe(h.miga);
+      if (UNA_PALABRA.includes(slug)) expect(h.fs, `${slug} a 120`).toBe(120);
+      expect(h.lineas, `${slug} ≤ 2 líneas`).toBeLessThanOrEqual(2);
+      // El nombre accesible conserva el `project` completo.
+      expect(h.nombre.startsWith(h.miga), slug).toBe(true);
+    }
+    await page.goto("/work/naowee-suid", { waitUntil: "networkidle" });
+    await expect(page.locator("main h1.caso-h1")).toHaveText(/Naowee\s*— Plataforma del sector deportivo/);
+    await expect(page).toHaveTitle(/Plataforma del sector deportivo/);
+  });
+
+  test("390: una línea en Naowee; la ficha y el borde de la cubierta caben sobre el dock", async ({ page }) => {
+    test.slow();
+    await preparar(page, 390, 844);
+    for (const slug of CASOS) {
+      await page.goto(`/work/${slug}`, { waitUntil: "networkidle" });
+      const f = await page.evaluate(() => {
+        const r = (el: Element) => el.getBoundingClientRect();
+        const dock = document.querySelector<HTMLElement>("nav.dock");
+        const dockAlto = dock && getComputedStyle(dock).display !== "none" ? r(dock).height + 16 : 0;
+        const h1 = document.querySelector<HTMLElement>("main h1.caso-h1")!;
+        const vis = h1.querySelector<HTMLElement>("[translate]")!;
+        return {
+          ficha: r(document.querySelector("main [data-ficha]")!).bottom + window.scrollY,
+          cubierta: r(document.querySelector("main [data-cubierta]")!).top + window.scrollY,
+          limite: window.innerHeight - dockAlto,
+          lineas: ((el: Element) => {
+            const rg = document.createRange();
+            rg.selectNodeContents(el);
+            return new Set([...rg.getClientRects()].filter((q) => q.width > 0).map((q) => Math.round(q.top))).size;
+          })(vis),
+        };
+      });
+      expect(f.ficha, `${slug} ficha`).toBeLessThanOrEqual(f.limite);
+      expect(f.cubierta, `${slug} cubierta`).toBeLessThanOrEqual(f.limite);
+      if (slug === "naowee-suid") expect(f.lineas, "Naowee en una línea").toBe(1);
+    }
+  });
+
+  test("hoja 1440: el h2 es el nombre corto a 72", async ({ page }) => {
+    await preparar(page, 1440);
+    await abrirHoja(page, "naowee-suid");
+    const h2 = page.locator("dialog.hoja[open] .caso-h1");
+    expect(await h2.evaluate((h) => getComputedStyle(h).fontSize)).toBe("72px");
+    expect(await h2.locator(":scope > span:not(.sr-only)").textContent()).toBe("Naowee");
+  });
+});
