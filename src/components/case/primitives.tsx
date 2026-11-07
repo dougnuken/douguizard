@@ -30,7 +30,7 @@ export function renderBold(text: string): ReactNode {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="font-bold text-[var(--ink)]">
+        <strong key={i}>
           {part.slice(2, -2)}
         </strong>
       );
@@ -40,94 +40,62 @@ export function renderBold(text: string): ReactNode {
 }
 
 /**
- * Sticky offset for the left-hand eyebrows. The header is fixed, so an eyebrow
- * pinned at `top-0` would slide under it; this clears `--header-h` plus 2rem of
- * air. Written as an arbitrary value because Tailwind scans source text.
+ * Rótulo de sección del sistema B: ceja (Instrument Sans 14, `--tinta-2`).
+ * Ya no es fijo al hacer scroll: el índice lateral (≥ 1280) es quien orienta.
  */
-const STICKY = "md:sticky md:top-[calc(var(--header-h)+2rem)]";
-
-const EYEBROW_CLASS =
-  "font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--ink-muted)]";
-
-function EyebrowTick() {
-  return <span aria-hidden className="mr-3 inline-block h-px w-6 bg-[var(--ink)] align-middle" />;
-}
-
-/** Section eyebrow — hairline tick + mono label, sticky on desktop. */
-export function Eyebrow({ children, sticky = false }: { children: ReactNode; sticky?: boolean }) {
-  return (
-    <FadeIn>
-      <div className={twMerge(EYEBROW_CLASS, sticky && STICKY)}>
-        <EyebrowTick />
-        {children}
-      </div>
-    </FadeIn>
-  );
+export function Eyebrow({ children }: { children: ReactNode; sticky?: boolean }) {
+  return <p className="ceja">{children}</p>;
 }
 
 /**
- * Same visual language as `Eyebrow`, but a real `<h2>`, so the document keeps a
- * genuine outline (h1 project → h2 section → h3 phase/decision/feature) without
- * introducing a second, louder header style.
+ * El `h2` de cada bloque del caso (Urbanist 30), sin revelado propio: el bloque
+ * entero entra con su `FadeIn` cuando lo pide, y en la hoja nada se revela en la
+ * primera pantalla (06-CRITICA-F6 P1-4).
  */
 export function EyebrowHeading({
   children,
-  sticky = false,
+  id,
 }: {
   children: ReactNode;
+  id?: string;
   sticky?: boolean;
 }) {
   return (
-    <FadeIn>
-      <h2 className={twMerge(EYEBROW_CLASS, sticky && STICKY)}>
-        <EyebrowTick />
+    <div className="bloque-cab">
+      <h2 id={id} className="t-bloque">
         {children}
       </h2>
-    </FadeIn>
+    </div>
   );
 }
 
-const RULES = {
-  t: "hairline-t",
-  b: "hairline-b",
-  y: "hairline-t hairline-b",
-  none: "",
-} as const;
-
 export interface BandProps {
   children: ReactNode;
-  /** `raised` is ~4% off `paper` — a band change, not a card. */
+  /** Se conserva por compatibilidad: en B los bloques van sobre el vacío, sin bandas. */
   tone?: "paper" | "raised";
-  rule?: keyof typeof RULES;
-  /** Swap the 1100px prose measure for the 1400px media measure. */
+  rule?: "t" | "b" | "y" | "none";
   wide?: boolean;
-  /** Overrides the default vertical rhythm (twMerge, so `py-*` wins). */
   className?: string;
+  /** Ancla del índice lateral y de «Secciones». */
+  id?: string;
+  labelledBy?: string;
+  label?: string;
 }
 
 /**
- * One horizontal band of the case. Replaces the `section` + max-width +
- * padding triplet that the monolith repeated thirteen times, so the page's
- * rhythm lives in one place and a band can never drift half a step.
- *
- * The step is 64/96, down from 96/128. At the old step a dozen bands spent
- * close to three screens on padding alone, and the page read as long before
- * anyone had read a word of it. The bands are scannable grids now, not essays,
- * and they need a gap, not a pause.
+ * Un bloque del caso (02 §5.3). En F7 deja de ser una banda a todo el ancho con
+ * fondo alterno: la columna la pone `.caso-secciones` y el ritmo, `.bloque`
+ * (128 entre bloques; 96 en la hoja; 64 en móvil).
  */
-export function Band({ children, tone = "paper", rule = "none", wide = false, className }: BandProps) {
+export function Band({ children, className, id, labelledBy, label }: BandProps) {
   return (
     <section
-      className={twMerge(
-        "relative z-[2] px-6 py-16 md:px-12 md:py-24",
-        tone === "raised" ? "bg-[var(--paper-raised)]" : "bg-[var(--paper)]",
-        RULES[rule],
-        className,
-      )}
+      id={id}
+      aria-labelledby={labelledBy}
+      aria-label={label}
+      className={twMerge("bloque", className?.split(" ").filter((c) => !/^(md:)?py-/.test(c)).join(" "))}
     >
-      <div className={twMerge("mx-auto w-full", wide ? "max-w-[1400px]" : "max-w-[1100px]")}>
-        {children}
-      </div>
+      {children}
     </section>
   );
 }
@@ -135,13 +103,6 @@ export function Band({ children, tone = "paper", rule = "none", wide = false, cl
 /** The `/ Label` mono caption used by the meta strip, the links row and the colophon. */
 export function SlashLabel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div
-      className={twMerge(
-        "font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--ink-dim)]",
-        className,
-      )}
-    >
-      / {children}
-    </div>
+    <div className={twMerge("ceja", className)}>{children}</div>
   );
 }

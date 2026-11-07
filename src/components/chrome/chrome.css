@@ -338,7 +338,11 @@
       translate: -50% calc(100% + 24px);
       opacity: 0;
     }
-    .dock a {
+    .dock :is(a, button) {
+      appearance: none;
+      border: 0;
+      background: none;
+      cursor: pointer;
       display: grid;
       justify-items: center;
       align-content: center;
@@ -354,20 +358,20 @@
         background-color var(--d-hover) var(--curva-salida),
         scale var(--d-press) var(--curva-salida);
     }
-    .dock a:active {
+    .dock :is(a, button):active {
       scale: 0.95;
     }
-    .dock a[aria-current] {
+    .dock :is(a, button)[aria-current] {
       background: var(--blanco);
       color: var(--tinta-osc);
     }
-    .dock a:focus-visible {
+    .dock :is(a, button):focus-visible {
       outline: 2px solid var(--foco);
       outline-offset: 2px;
     }
   }
   @media (max-width: 359px) {
-    .dock a {
+    .dock :is(a, button) {
       min-inline-size: 56px;
     }
   }
@@ -390,7 +394,7 @@
 @media (prefers-reduced-motion: reduce) {
   .pill,
   .dock,
-  .dock a,
+  .dock :is(a, button),
   .rail-acciones a,
   .cab-menu svg {
     transition-duration: 1ms !important;

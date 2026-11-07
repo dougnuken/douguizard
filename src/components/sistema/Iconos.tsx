@@ -48,6 +48,8 @@ const TRAZOS = {
     </>
   ),
   contacto: <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h9A1.5 1.5 0 0 1 16 5.5v6a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3h0A1.5 1.5 0 0 1 4 11.5z" />,
+  /** «Secciones» del caso en el dock (F7): tres líneas con su punto. */
+  secciones: <path d="M4 5h.01M8 5h8M4 10h.01M8 10h8M4 15h.01M8 15h8" />,
 } as const;
 
 export type NombreIcono = keyof typeof TRAZOS;

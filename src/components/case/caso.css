@@ -1,0 +1,731 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   El caso en el sistema B (F7): la misma pieza en la página completa y en la
+   hoja. Valores de `propuestas/B-paginas/caso.html` (aprobada el 6 nov) con
+   P1-5 (ficha 2 × 2 sin escalera) y P1-6 (tablero con tope por ancho).
+   B es solo oscuro (D4): nada de esto mira `[data-theme]`.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* Las bandas que siguen usando los tokens de la plantilla vieja (historia,
+     funciones, vitrina) los reciben ya traducidos a B dentro del caso: así
+     ninguna queda en papel claro con el tema `light`, y el tipo pasa a
+     Urbanist / Instrument Sans sin reescribir cada banda. */
+  .caso-b {
+    --paper: var(--vacio);
+    --paper-raised: var(--losa);
+    --ink: var(--tinta);
+    --ink-muted: var(--tinta-2);
+    --ink-dim: var(--tinta-3);
+    --line: var(--losa-borde);
+    --line-strong: rgba(255, 255, 255, 0.18);
+    --signal: var(--electrico-texto);
+    --ease-out: var(--curva-salida);
+    --font-display: var(--font-display-b);
+    --font-body: var(--font-texto);
+    --font-mono: var(--font-texto);
+    --color-paper: var(--vacio);
+    --color-paper-raised: var(--losa);
+    --color-ink: var(--tinta);
+    --color-ink-muted: var(--tinta-2);
+    --color-ink-dim: var(--tinta-3);
+    --color-line: var(--losa-borde);
+    --color-signal: var(--electrico-texto);
+    color-scheme: dark;
+    background: var(--vacio);
+    color: var(--tinta);
+    font-family: var(--font-texto);
+  }
+  /* Los rótulos en mayúsculas espaciadas eran la voz de la plantilla vieja; en B
+     una ceja es Instrument Sans 14 en caja normal. */
+  .caso-b :where(.uppercase) {
+    text-transform: none;
+  }
+  .caso-b :where(.font-mono) {
+    letter-spacing: 0.01em;
+  }
+  .caso-b :where(h1, h2, h3, h4) {
+    font-family: var(--font-display-b);
+  }
+
+  /* ── Contenedor ───────────────────────────────────────────────────────── */
+  .caso-pieza {
+    padding: var(--cabecera) 24px 96px var(--os-izq);
+  }
+  @media (min-width: 1464px) {
+    .caso-pieza {
+      padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2));
+    }
+  }
+  .caso-ancho {
+    max-width: 1320px;
+  }
+  .caso-en-hoja .caso-pieza {
+    padding: 48px 48px 96px;
+  }
+
+  /* ── Miga ─────────────────────────────────────────────────────────────── */
+  .caso-miga {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    color: var(--tinta-2);
+  }
+  .caso-miga a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--toque);
+    color: var(--tinta-2);
+    text-decoration: underline;
+    text-decoration-color: rgba(161, 161, 171, 0.45);
+    text-underline-offset: 4px;
+  }
+  .caso-miga b {
+    font-weight: 500;
+    color: var(--tinta);
+  }
+
+  /* ── Portada: título col 1–7, ficha col 8–12, alineados abajo ─────────── */
+  .caso-portada {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gap);
+    align-items: end;
+    margin-top: 32px;
+  }
+  .caso-titulo {
+    grid-column: 1 / span 7;
+  }
+  .caso-h1 {
+    margin: 12px 0 24px;
+    font: 600 var(--t-120) / 0.92 var(--font-display-b);
+    letter-spacing: -0.045em;
+    color: var(--tinta);
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+  /* Los nombres largos («Banco de Occidente — Design System») bajan de 120: el
+     tamaño de la maqueta es para una palabra. */
+  .caso-h1[data-largo] {
+    font-size: var(--t-72);
+    line-height: 0.98;
+  }
+  .gancho {
+    max-width: 30em;
+    font: 400 var(--t-20) / 1.5 var(--font-texto);
+    color: var(--tinta-2);
+  }
+
+  /* P1-5 · ficha: lista de definición sin cajas, 2 × 2, Equipo ancha al final. */
+  .ficha {
+    grid-column: 8 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+    align-content: end;
+    margin: 0;
+  }
+  .ficha > div {
+    display: grid;
+    gap: 4px;
+    align-content: start;
+    padding-top: 12px;
+    border-top: 1px solid var(--losa-borde);
+  }
+  .ficha > .ancho {
+    grid-column: 1 / -1;
+  }
+  .ficha dt {
+    font: 400 var(--t-12) / 1.4 var(--font-texto);
+    letter-spacing: 0.02em;
+    color: var(--tinta-3);
+  }
+  .ficha dd {
+    margin: 0;
+    font: 400 var(--t-18) / 1.4 var(--font-texto);
+    color: var(--tinta);
+  }
+
+  /* ── Captura a sangre y su sustituto (NDA, cubierta, testimonio) ─────── */
+  .caso-cubierta {
+    margin-top: 48px;
+  }
+  .caso-cubierta > section:not(.losa) {
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  .caso-cubierta :where(video, img) {
+    border-radius: var(--r-m);
+  }
+
+  /* ── Cuerpo: índice col 1–2 + secciones col 3–12 (≥ 1280) ─────────────── */
+  .caso-cuerpo {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: 128px;
+  }
+  .caso-secciones {
+    grid-column: 3 / -1;
+    min-width: 0;
+  }
+  .caso-indice {
+    grid-column: 1 / span 2;
+    position: sticky;
+    top: 128px;
+    align-self: start;
+    display: grid;
+    grid-template-columns: 1px 1fr;
+    gap: 16px;
+  }
+  .caso-indice ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .indice-hilo {
+    position: relative;
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .indice-hilo i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    transform-origin: 50% 0;
+    transform: scaleY(var(--p, 0));
+    background: var(--laser-nucleo);
+    box-shadow: var(--haz, 0 0 8px rgba(255, 64, 96, 0.7));
+  }
+  .caso-indice a {
+    display: flex;
+    align-items: center;
+    min-height: var(--toque);
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    color: var(--tinta-2);
+    transition: color var(--d-hover) var(--curva-salida);
+  }
+  .caso-indice a[aria-current="true"] {
+    color: var(--tinta);
+    font-weight: 500;
+  }
+  .caso-indice a[aria-current="true"]::before {
+    content: "";
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-left: -19px;
+    margin-right: 13px;
+    border-radius: 50%;
+    background: var(--laser-nucleo);
+    box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo);
+  }
+  .caso-indice a:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .caso-indice a:hover {
+      color: var(--tinta);
+    }
+  }
+
+  /* ── Bloques ──────────────────────────────────────────────────────────── */
+  .bloque {
+    position: relative;
+    margin-top: 128px;
+    scroll-margin-top: 128px;
+  }
+  .caso-secciones > :first-child,
+  .bloque-grupo > .bloque:first-child {
+    margin-top: 0;
+  }
+  .bloque-grupo {
+    margin-top: 128px;
+    scroll-margin-top: 128px;
+  }
+  .bloque-grupo > .bloque + .bloque {
+    margin-top: 64px;
+  }
+  .bloque-cab {
+    margin-bottom: 32px;
+  }
+  .t-bloque {
+    font: 600 var(--t-30) / 1.15 var(--font-display-b);
+    letter-spacing: -0.02em;
+    color: var(--tinta);
+    text-wrap: balance;
+  }
+  .bloque.dos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: 48px;
+  }
+  .bloque.dos .bloque-cab {
+    margin: 0;
+  }
+  .prosa {
+    max-width: 34em;
+    font: 400 var(--t-18) / 1.65 var(--font-texto);
+    color: var(--tinta-2);
+  }
+  .prosa strong,
+  .lista-parte strong {
+    color: var(--tinta);
+    font-weight: 600;
+  }
+  .lista-parte {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lista-parte li {
+    position: relative;
+    max-width: 34em;
+    padding-left: 32px;
+    font: 400 var(--t-18) / 1.55 var(--font-texto);
+    color: var(--tinta);
+  }
+  .lista-parte li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.78em;
+    width: 16px;
+    height: 1px;
+    background: var(--tinta-3);
+  }
+
+  /* ── P1-6 · Tablero de impacto ────────────────────────────────────────── */
+  .tablero-caso {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .kpi-caso {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+    padding: 24px;
+    border-radius: var(--r-m);
+    background: var(--losa-alta);
+    box-shadow: var(--filo);
+    container-type: inline-size;
+  }
+  .kpi-caso .dot {
+    --dw: 100;
+    display: block;
+    margin-bottom: 8px;
+    /* 72 px salvo que la cifra más larga del caso (k em) no quepa: entonces baja
+       igual en todas las losas. */
+    font-size: min(var(--t-72), calc(100cqi / var(--k, 3.05)));
+    letter-spacing: -0.06em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--tinta);
+    transition: --dw 400ms var(--curva-salida) calc(var(--i, 0) * 60ms);
+  }
+  .tablero-caso[data-encendido] .kpi-caso .dot {
+    --dw: 700;
+  }
+  .kpi-et {
+    font: 400 var(--t-16) / 1.35 var(--font-texto);
+    color: var(--tinta-2);
+  }
+  .kpi-caso .micro {
+    color: var(--tinta-3);
+  }
+  .kpi-caso.clara {
+    background: var(--claro);
+    box-shadow: none;
+  }
+  .kpi-caso.clara .dot {
+    color: var(--tinta-osc);
+  }
+  .kpi-caso.clara :is(.kpi-et, .micro) {
+    color: var(--tinta-osc-2);
+  }
+  .impacto-lectura {
+    max-width: 34em;
+    margin-top: 32px;
+    font: 500 var(--t-24) / 1.35 var(--font-display-b);
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+    text-wrap: pretty;
+  }
+
+  /* ── Decisiones: losas ────────────────────────────────────────────────── */
+  .decisiones-caso {
+    display: grid;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .decision-caso {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 32px;
+    padding: 32px;
+    border-radius: var(--r-m);
+    background: var(--losa);
+    box-shadow: var(--filo);
+  }
+  .decision-caso .apoyo {
+    max-width: 38em;
+    font-size: var(--t-16);
+  }
+  .decision-caso strong {
+    color: var(--tinta);
+    font-weight: 600;
+  }
+
+  /* ── Proceso: riel de fases cosido por el hilo láser ──────────────────── */
+  .riel-caso {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .riel-caso::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15px;
+    height: 1px;
+    background: var(--laser-nucleo);
+    box-shadow: var(--haz, 0 0 8px rgba(255, 64, 96, 0.7));
+    opacity: 0.8;
+  }
+  .riel-caso li {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding-right: 24px;
+  }
+  .riel-caso .dot {
+    --dw: 700;
+    width: max-content;
+    padding-right: 12px;
+    background: var(--vacio);
+    color: var(--tinta);
+  }
+  .caso-en-hoja .riel-caso .dot {
+    background: var(--losa);
+  }
+
+  /* ── Colofón ──────────────────────────────────────────────────────────── */
+  .colofon-caso {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px;
+    padding-top: 48px;
+    border-top: 1px solid var(--losa-borde);
+  }
+  .colofon-caso h2 {
+    font: 400 var(--t-14) / 1.3 var(--font-texto);
+    letter-spacing: 0.01em;
+    color: var(--tinta-2);
+  }
+  .colofon-caso ul {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .colofon-caso .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .colofon-caso .enlace-texto {
+    color: var(--tinta);
+  }
+  .colofon-caso .apoyo {
+    margin-top: 12px;
+  }
+  .colofon-pie {
+    margin-top: 48px;
+    font: 400 var(--t-12) / 1.4 var(--font-texto);
+    color: var(--tinta-3);
+  }
+
+  /* ── Siguiente caso ───────────────────────────────────────────────────── */
+  .sig-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--gap);
+    margin-top: 16px;
+  }
+  .sig-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 280px;
+  }
+  .sig-card .enlace-tarjeta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .sig-card .enlace-tarjeta:focus-visible {
+    outline: none;
+  }
+  .sig-card:has(.enlace-tarjeta:focus-visible) {
+    outline: 2px solid var(--blanco);
+    outline-offset: 3px;
+  }
+  .sig-cifras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .sig-cifras .dot {
+    --dw: 700;
+  }
+  .sig-contacto {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .sig-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ── «Secciones» (móvil): botón dentro de la hoja y su lista ──────────── */
+  .secciones-boton {
+    display: none;
+  }
+  .lista-secciones {
+    margin: 0;
+    padding: 8px 24px 32px;
+    list-style: none;
+  }
+  .lista-secciones a {
+    display: flex;
+    align-items: center;
+    min-height: var(--boton-s);
+    font: 400 var(--t-18) / 1.3 var(--font-texto);
+    color: var(--tinta);
+    border-bottom: 1px solid var(--losa-borde);
+  }
+  .lista-secciones a:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: -2px;
+  }
+  dialog.secciones {
+    width: min(560px, 100vw);
+    max-width: 100vw;
+    max-height: 70svh;
+    margin: auto auto 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-m) var(--r-m) 0 0;
+    background: var(--losa);
+    color: var(--tinta);
+    box-shadow: var(--sombra-hoja), var(--filo);
+  }
+  dialog.secciones::backdrop {
+    background: rgba(6, 6, 8, 0.6);
+  }
+  .secciones-cab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 8px 24px;
+  }
+  .secciones-cab h2 {
+    font: 600 var(--t-20) / 1.2 var(--font-display-b);
+  }
+
+  /* ── En la hoja: sin índice lateral, columna única, título a 72 ──────── */
+  .caso-en-hoja .caso-portada {
+    margin-top: 0;
+  }
+  .caso-en-hoja .caso-h1 {
+    font-size: var(--t-72);
+  }
+  .caso-en-hoja .caso-h1[data-largo] {
+    font-size: var(--t-60);
+  }
+  .caso-en-hoja .caso-titulo {
+    grid-column: 1 / span 6;
+  }
+  .caso-en-hoja .ficha {
+    grid-column: 7 / -1;
+  }
+  .caso-en-hoja .caso-cuerpo {
+    display: block;
+    margin-top: 96px;
+  }
+  .caso-en-hoja .bloque,
+  .caso-en-hoja .bloque-grupo {
+    margin-top: 96px;
+  }
+  .caso-en-hoja .caso-secciones > :first-child {
+    margin-top: 0;
+  }
+  .caso-en-hoja .decision-caso {
+    background: var(--losa-alta);
+  }
+
+  @media (max-width: 1279px) {
+    .caso-indice {
+      display: none;
+    }
+    .caso-secciones {
+      grid-column: 1 / -1;
+    }
+    .tablero-caso {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .caso-pieza {
+      padding: calc(var(--cabecera) - 16px) 16px 128px;
+    }
+    .caso-en-hoja .caso-pieza {
+      padding: 16px 16px 96px;
+    }
+    .caso-portada {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .caso-titulo,
+    .ficha,
+    .caso-en-hoja .caso-titulo,
+    .caso-en-hoja .ficha {
+      grid-column: auto;
+    }
+    .caso-h1,
+    .caso-en-hoja .caso-h1 {
+      margin: 8px 0 16px;
+      font-size: var(--t-72);
+    }
+    .caso-h1[data-largo],
+    .caso-en-hoja .caso-h1[data-largo] {
+      font-size: var(--t-48);
+    }
+    .gancho {
+      font-size: var(--t-18);
+    }
+    .ficha {
+      gap: 12px 16px;
+    }
+    .ficha > div {
+      padding-top: 8px;
+      gap: 2px;
+    }
+    .ficha dd {
+      font-size: var(--t-16);
+    }
+    .caso-cubierta {
+      margin-top: 32px;
+    }
+    .caso-cuerpo,
+    .caso-en-hoja .caso-cuerpo {
+      display: block;
+      margin-top: 64px;
+    }
+    .bloque,
+    .bloque-grupo,
+    .caso-en-hoja .bloque,
+    .caso-en-hoja .bloque-grupo {
+      margin-top: 64px;
+      scroll-margin-top: 80px;
+    }
+    .bloque.dos {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .tablero-caso {
+      gap: 12px;
+    }
+    .kpi-caso {
+      padding: 16px;
+      border-radius: var(--r-s);
+    }
+    .kpi-caso .dot {
+      font-size: min(var(--t-48), calc(100cqi / var(--k, 3.05)));
+    }
+    .kpi-et {
+      font-size: var(--t-14);
+    }
+    .impacto-lectura {
+      font-size: var(--t-20);
+    }
+    .decision-caso {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 24px;
+    }
+    .riel-caso {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .riel-caso::before {
+      top: 0;
+      bottom: 0;
+      left: 15px;
+      right: auto;
+      width: 1px;
+      height: auto;
+    }
+    .riel-caso li {
+      padding: 0 0 0 48px;
+    }
+    .riel-caso .dot {
+      margin-left: -48px;
+      padding: 4px 0;
+    }
+    .colofon-caso {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .sig-fila {
+      grid-template-columns: 1fr;
+    }
+    .sig-card {
+      min-height: 220px;
+    }
+    .caso-en-hoja .secciones-boton {
+      position: sticky;
+      bottom: 16px;
+      z-index: 3;
+      display: flex;
+      margin: 32px auto 0;
+      width: max-content;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kpi-caso .dot {
+      --dw: 700;
+      transition: none;
+    }
+    .caso-indice a {
+      transition: none;
+    }
+  }
+}

@@ -116,6 +116,12 @@ export interface CaseStudy {
    * part of `project` before " — " is already short — see `getShortName`.
    */
   shortName?: string;
+  /**
+   * Dónde corre el producto, para la ficha del caso (F7, 07 §1.5). Solo donde
+   * se desprende del propio caso; sin dato, la ficha omite la celda. Son
+   * nombres de plataforma y no se traducen.
+   */
+  platforms?: string[];
   /** Numbered narrative of how the work happened, phase by phase. */
   process?: { phase: string; title: string; body: string }[];
   /** The calls worth defending — each one a choice and its reasoning. */
@@ -176,6 +182,7 @@ export interface CaseStudy {
 export const caseStudies: CaseStudy[] = [
   {
     slug: "olbo",
+    platforms: ["PWA"],
     num: "/01",
     project: "olbo",
     category: "Personal Product × Design Engineering",
@@ -534,6 +541,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "naowee-suid",
+    platforms: ["Web"],
     num: "/02",
     experienceId: "naowee",
     project: "Naowee — Sports Sector Platform",
@@ -658,6 +666,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "mercadolibre-andes",
+    platforms: ["iOS", "Android", "Web"],
     num: "/03",
     experienceId: "mercadolibre",
     project: "Andes Design System",
@@ -856,6 +865,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "dc-medical",
+    platforms: ["PWA"],
     num: "/05",
     project: "DC Medical Aesthetics",
     shortName: "DC Medical",
@@ -1142,6 +1152,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "makeapet",
+    platforms: ["iOS", "Android", "PWA"],
     num: "/06",
     project: "MakeaPet",
     category: "Personal Product × iOS, Android & PWA",
@@ -1495,6 +1506,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "royal-caribbean",
+    platforms: ["iOS", "Android"],
     num: "/07",
     experienceId: "globant",
     testimonialId: "nicolas",
@@ -1623,6 +1635,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "chub",
+    platforms: ["iOS"],
     num: "/10",
     project: "Chub",
     category: "iOS × Mobility",

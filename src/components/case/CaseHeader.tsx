@@ -3,49 +3,25 @@
 import Link from "next/link";
 import RevealText from "@/components/text/RevealText";
 import type { CaseMeta, CaseStudy } from "@/data/work";
+import { getShortName } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { tituloHojaId } from "@/components/hoja/ids";
-
-function Dot({ className = "" }: { className?: string }) {
-  return (
-    <span aria-hidden className={`text-[var(--ink-dim)] ${className}`}>
-      ·
-    </span>
-  );
-}
+import CaseMetaFicha from "./CaseMeta";
 
 const fold = (s: string) => s.trim().toLowerCase();
 
-const CLASE_TITULO =
-  "max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)]";
-const CLASE_LEAD =
-  "max-w-[46ch] font-display leading-[1.4] tracking-tight text-[var(--ink)] text-[length:var(--step-lead)]";
-
 /**
- * The case hero: breadcrumb, client and role, project, tagline.
+ * La portada del caso (02 §5.3, `caso.html`): miga `Trabajo / {proyecto}`, y
+ * en la rejilla de 12 el título (ceja · `h1` a 120 · gancho) en col 1–7 y la
+ * ficha en col 8–12, alineados abajo.
  *
- * The breadcrumb is **in the flow**, not a second fixed bar. The global header
- * already carries the way back to the site; what a case needs on top of that is
- * its coordinates — which case, in what category, when — and those belong in the
- * document, where they scroll away with the rest of the hero.
+ * La ceja es para quién y qué fue Doug (cliente · rol, de `getCaseMeta`): las dos
+ * primeras preguntas de quien recluta, encima del título.
  *
- * On a phone the breadcrumb is two clean lines — the way back, then number and
- * year — instead of one row that wrapped wherever it ran out and left a "·"
- * hanging at the end of a line. The category waits for `md`: it is the longest
- * item and the one the first screen needs least, since the tagline under the
- * h1 already says what the product is.
- *
- * The kicker is who the work was for and what Doug was there — "NAOWEE · HEAD
- * OF PRODUCT": a recruiter's first two questions, answered above the title. It
- * is a `<p class="kicker">` rather than the `<h2>` it used to be: an `h2` above
- * the `h1` inverted the outline on every case page, and the line is a label,
- * not a section.
- *
- * No minimum height. The hero used to hold 62% of the viewport open whatever
- * it contained, which pushed the product below the fold on every screen size.
- * It is as tall as its words now, so the showcase under it starts inside the
- * first screen: the reader sees what was made before reading about it.
+ * En la hoja (F6) el título baja a `h2` (el documento ya tiene su `h1`) con el
+ * id que nombra el `<dialog>`, sin miga (la cabecera de la hoja trae la suya) y
+ * sin revelado: el texto viaja con el panel (06-CRITICA-F6 P1-4).
  */
 export default function CaseHeader({
   study,
@@ -54,94 +30,54 @@ export default function CaseHeader({
 }: {
   study: CaseStudy;
   meta: CaseMeta;
-  /**
-   * Dentro de la hoja (F6, 07 §1.2): el título baja a `h2` con el id que nombra
-   * el `<dialog>` (en el documento ya hay un `h1`, el del tablero), sin la miga
-   * (la cabecera de la hoja trae la suya) y sin el hueco de la cabecera fija.
-   */
   enHoja?: boolean;
 }) {
-  const t = useDict().case;
+  const dict = useDict();
+  const t = dict.case;
   const locale = useLocale();
 
-  // Two ways the client could repeat what is already on screen. It IS the
-  // project ("Banco de Occidente" over "Banco de Occidente"): drop it. Or the
-  // category opens with it ("Personal product × …"): drop it from `md` up,
-  // where the breadcrumb prints the category — but not on a phone, where the
-  // category is hidden and the kicker is the only place it is said.
   const showClient = fold(meta.client) !== fold(study.project);
-  const clientInCategory = fold(study.category).startsWith(fold(meta.client));
+  const ceja = [showClient ? meta.client : null, meta.role.replace(/ · /g, " · ")].filter(Boolean).join(" · ");
+  // Una palabra cabe a 120; un nombre de varias («Banco de Occidente — Design
+  // System») baja un paso para no ocupar media pantalla.
+  const largo = study.project.length > 18 ? "" : undefined;
+  const tituloId = enHoja ? tituloHojaId(study.slug) : "caso-titulo";
 
   return (
-    <section
-      className="relative overflow-hidden bg-[var(--paper)] px-6 pb-12 md:px-12 md:pb-16"
-      style={{ paddingBlockStart: enHoja ? "48px" : "calc(var(--header-h) + 32px)" }}
-    >
-      <div className="relative z-10 mx-auto w-full max-w-[1400px]">
-        {!enHoja && (
-        <nav
-          aria-label={t.breadcrumb}
-          className="mb-6 flex flex-col items-start font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)] md:mb-10 md:flex-row md:flex-wrap md:items-center md:gap-x-3 md:gap-y-1"
-        >
-          <Link
-            href={localePath(locale, "/#work")}
-            className="inline-flex min-h-11 items-center text-[var(--ink)] no-underline underline-offset-4 hover:underline"
-          >
-            ← {t.allWork}
-          </Link>
-          <Dot className="hidden md:inline" />
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>{study.num}</span>
-            <Dot />
-            <span className="hidden md:inline">{study.category}</span>
-            <Dot className="hidden md:inline" />
-            <span>{meta.year}</span>
-          </span>
+    <>
+      {!enHoja && (
+        <nav aria-label={t.breadcrumb} className="caso-miga">
+          <Link href={localePath(locale, "/work")}>{dict.dock.trabajo}</Link>
+          <span aria-hidden="true">/</span>
+          <b translate="no">{getShortName(study)}</b>
         </nav>
-        )}
+      )}
 
-        {/* The client takes the ink and the role keeps the kicker's grey: some
-            contract titles carry a "·" of their own (the Mercado Libre and
-            Banco de Occidente ones do), and the change of tone is what keeps
-            the brand from reading as the first third of a three-part title. */}
-        <p className="kicker mb-4 tracking-[0.3em]">
-          {showClient && (
-            <span className={clientInCategory ? "md:hidden" : undefined}>
-              <span className="text-[var(--ink)]">{meta.client}</span>
-              <Dot className="mx-[0.5em]" />
-            </span>
+      <header className="caso-portada">
+        <div className="caso-titulo">
+          <p className="ceja">{ceja}</p>
+          {enHoja ? (
+            <>
+              <h2 id={tituloId} className="caso-h1" data-largo={largo}>
+                {study.project}
+              </h2>
+              <p className="gancho">{study.tagline}</p>
+            </>
+          ) : (
+            <>
+              <h1 className="caso-h1" data-largo={largo} id={tituloId}>
+                <RevealText as="span" variant="mask" delay={0.05} className="block">
+                  {study.project}
+                </RevealText>
+              </h1>
+              <RevealText as="p" variant="fade" delay={0.2} className="gancho">
+                {study.tagline}
+              </RevealText>
+            </>
           )}
-          {meta.role.replace(/ · /g, " ·\u00a0")}
-        </p>
-
-        {enHoja ? (
-          /* En la hoja el texto viaja con el panel: sin revelado propio, que
-             encadenaba una segunda coreografía tras la subida (06-CRITICA-F6
-             P1-4). F7 rehace el cuerpo en B y debe heredarlo. */
-          <>
-            <h2 id={tituloHojaId(study.slug)} className={`${CLASE_TITULO} mb-6 md:mb-8`}>
-              {study.project}
-            </h2>
-            <p className={CLASE_LEAD}>{study.tagline}</p>
-          </>
-        ) : (
-          <>
-            <RevealText
-              as="h1"
-              variant="mask"
-              delay={0.05}
-              className={`${CLASE_TITULO} mb-6 md:mb-8`}
-            >
-              {study.project}
-            </RevealText>
-
-            <RevealText as="p" variant="fade" delay={0.2} className={CLASE_LEAD}>
-              {study.tagline}
-            </RevealText>
-          </>
-        )}
-      </div>
-    </section>
+        </div>
+        <CaseMetaFicha meta={meta} platforms={study.platforms} t={t.meta} />
+      </header>
+    </>
   );
 }
-

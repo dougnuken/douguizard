@@ -14,7 +14,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   if (!study) notFound();
 
   return (
-    <div className="min-h-svh">
+    <div className="min-h-svh bg-[var(--vacio)]">
       <main id="main" tabIndex={-1}>
         <CaseBody study={study} locale={locale} />
       </main>

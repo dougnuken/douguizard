@@ -9,6 +9,7 @@ import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { getActiveSection, getServerActiveSection, subscribeActiveSection } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
+import { EVENTO_SECCIONES } from "@/components/case/HojaSecciones";
 
 type Destino = { clave: "trabajo" | "perfil" | "experiencia" | "cv" | "contacto"; icono: NombreIcono; seccion?: string; ruta: string };
 
@@ -36,6 +37,9 @@ export default function DockMovil() {
   const active = useSyncExternalStore(subscribeActiveSection, getActiveSection, getServerActiveSection);
   const [arriba, setArriba] = useState(true);
   const escondido = isHome && arriba;
+  // En la página de un caso, «Contacto» deja su sitio a «Secciones» (07 F7):
+  // abre la lista de secciones del caso (`HojaSecciones`).
+  const enCaso = /^\/work\/[^/]+$/.test(path);
 
   useEffect(() => {
     if (!isHome) return;
@@ -53,6 +57,20 @@ export default function DockMovil() {
   return (
     <nav className="dock" aria-label={t.label} data-escondido={escondido ? "" : undefined} inert={escondido || undefined}>
       {DESTINOS.map((d) => {
+        if (enCaso && d.clave === "contacto") {
+          return (
+            <button
+              key="secciones"
+              type="button"
+              aria-haspopup="dialog"
+              data-secciones=""
+              onClick={() => window.dispatchEvent(new Event(EVENTO_SECCIONES))}
+            >
+              <Icono nombre="secciones" />
+              <span>{t.secciones}</span>
+            </button>
+          );
+        }
         const contenido = (
           <>
             <Icono nombre={d.icono} />

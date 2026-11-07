@@ -1,7 +1,6 @@
 "use client";
 
-import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
+import { Band, FadeIn, renderBold } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Decision {
@@ -10,65 +9,31 @@ export interface Decision {
 }
 
 /**
- * The calls worth defending, as a two-column ledger: the call on the left, the
- * reasoning on the right, one hairline per row.
- *
- * Titles line up in a single column, so the decisions can be read top to
- * bottom as a list of positions in a few seconds; the reasoning is beside each
- * one rather than under it, which halves the band's height without hiding a
- * word. Below `lg` the pair stacks again.
- *
- * The section keeps its sticky eyebrow in the left gutter — the one band that
- * still does. It is the deepest read on the page, and the label is what tells
- * a reader halfway down it what they are reading. It is two words ("Key
- * decisions") because the gutter is 200px: the longer label it replaced broke
- * in two there, and a label that wraps no longer reads as one.
- *
- * The bullet is a short rule beside the first line rather than a filled dot: the
- * same weight, but a typographic mark rather than the page's one loud dot
- * repeated in three unrelated meanings.
+ * Decisiones (02 §5.3, punto 7): una losa por decisión, título en Urbanist y
+ * su porqué al lado. Los datos traen título y cuerpo; la maqueta separaba
+ * tensión / elección / por qué con copy propio que el caso no tiene, así que
+ * no se inventa: el cuerpo va entero.
  */
-export default function CaseDecisions({ decisions, tone }: { decisions: Decision[]; tone?: BandProps["tone"] }) {
+export default function CaseDecisions({ decisions, id }: { decisions: Decision[]; id?: string; tone?: unknown }) {
   const t = useDict().case;
+  const h = id && `${id}-h`;
   return (
-    <Band tone={tone} rule="t">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[200px_1fr] md:gap-12">
-        <EyebrowHeading sticky>{t.decisions}</EyebrowHeading>
-        <ul className="hairline-t list-none p-0">
-          {decisions.map((decision, i) => (
-            <li
-              key={decision.title}
-              className="hairline-b grid grid-cols-1 gap-3 py-6 md:py-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10"
-            >
-              {/* The rule hangs from the top of the row, not off its baseline:
-                  the masked title is an inline-block, and an inline-block's
-                  baseline is its LAST line, so a two-line title used to get
-                  its mark beside the second line. The row carries the title's
-                  size so the rule's `em` is the title's — 0.7em down is the
-                  middle of the first line's lowercase at 1.3 leading. */}
-              <div className="flex items-start gap-3.5 text-[clamp(18px,1.5vw,21px)]">
-                <span aria-hidden className="mt-[0.7em] h-px w-2.5 shrink-0 bg-[var(--ink)]" />
-                <RevealText
-                  as="h3"
-                  variant="mask"
-                  delay={i * 0.05}
-                  className="font-display text-[clamp(18px,1.5vw,21px)] font-medium leading-[1.3] tracking-[-0.015em] text-[var(--ink)]"
-                >
-                  {decision.title}
-                </RevealText>
-              </div>
-              <RevealText
-                as="p"
-                variant="fade"
-                delay={i * 0.05 + 0.08}
-                className="pl-6 text-[15px] leading-[1.6] text-[var(--ink-muted)] lg:pl-0"
-              >
-                {renderBold(decision.body)}
-              </RevealText>
-            </li>
-          ))}
-        </ul>
+    <Band id={id} labelledBy={h}>
+      <div className="bloque-cab">
+        <h2 id={h} className="t-bloque">
+          {t.decisions}
+        </h2>
       </div>
+      <ol className="decisiones-caso">
+        {decisions.map((d) => (
+          <li key={d.title}>
+            <FadeIn className="decision-caso">
+              <h3 className="t-losa">{d.title}</h3>
+              <p className="apoyo">{renderBold(d.body)}</p>
+            </FadeIn>
+          </li>
+        ))}
+      </ol>
     </Band>
   );
 }

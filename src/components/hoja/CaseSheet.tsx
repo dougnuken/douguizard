@@ -127,6 +127,8 @@ function Dialogo({
     };
     const tecla = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
+      // «Secciones» (móvil) es un dialog modal propio dentro de la hoja: su foco lo atrapa el navegador.
+      if ((e.target as Element | null)?.closest?.("dialog.secciones")) return;
       const focos = Array.from(d.querySelectorAll<HTMLElement>(SELECTOR_FOCO)).filter(
         (el) => el.getClientRects().length > 0 && !el.closest("[inert]"),
       );

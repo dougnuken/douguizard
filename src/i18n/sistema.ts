@@ -30,7 +30,7 @@ const en = {
     },
   },
   dock: { label: "Quick navigation", trabajo: "Work", perfil: "About", experiencia: "Experience", cv: "CV", contacto: "Contact", secciones: "Sections" },
-  hoja: { cerrar: "Close", verCompleta: "View full page", progreso: "Reading progress" },
+  hoja: { cerrar: "Close", verCompleta: "Open as a full page", progreso: "Reading progress" },
   carrusel: {
     anterior: "Previous",
     siguiente: "Next",
@@ -63,7 +63,7 @@ const es: DictSistema = {
     },
   },
   dock: { label: "Navegación rápida", trabajo: "Trabajo", perfil: "Perfil", experiencia: "Experiencia", cv: "CV", contacto: "Contacto", secciones: "Secciones" },
-  hoja: { cerrar: "Cerrar", verCompleta: "Ver página completa", progreso: "Progreso de lectura" },
+  hoja: { cerrar: "Cerrar", verCompleta: "Abrir como página completa", progreso: "Progreso de lectura" },
   carrusel: {
     anterior: "Anterior",
     siguiente: "Siguiente",

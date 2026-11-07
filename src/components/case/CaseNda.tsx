@@ -3,7 +3,8 @@
 import type { ReactNode } from "react";
 import { getSite } from "@/data/site";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { Band, EyebrowHeading, FadeIn } from "./primitives";
+import Boton from "@/components/sistema/Boton";
+import { FadeIn } from "./primitives";
 
 /**
  * What stands in for the showcase when the screens belong to the client.
@@ -35,25 +36,20 @@ export default function CaseNda({
 
   const notice = (
     <>
-      <EyebrowHeading>{t.nda}</EyebrowHeading>
+      <h2 className="t-titular">{t.nda}</h2>
 
       <FadeIn>
-        <p className="mt-6 max-w-[56ch] text-[19px] leading-[1.55] text-[var(--ink)] md:mt-8 md:text-[22px]">
+        <p className="mt-6 max-w-[34em] text-[18px] leading-[1.55] text-[var(--blanco)] md:mt-8">
           {body}
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3 md:mt-10">
-          <a
-            className="btn-pill btn-pill--solid"
-            href={linkedin.href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Boton variante="blanco" href={linkedin.href} target="_blank" rel="noopener noreferrer">
             {t.askOn(linkedin.label)}
-          </a>
-          <a className="btn-pill" href={`mailto:${site.email}`}>
+          </Boton>
+          <Boton variante="linea" href={`mailto:${site.email}`}>
             {t.email}
-          </a>
+          </Boton>
         </div>
       </FadeIn>
     </>
@@ -61,14 +57,14 @@ export default function CaseNda({
 
   if (!visual) {
     return (
-      <Band tone="raised" rule="t">
+      <section className="losa losa--azul losa--r-m caso-nda" data-superficie="azul">
         {notice}
-      </Band>
+      </section>
     );
   }
 
   return (
-    <Band tone="raised" rule="t" wide className="py-10 md:py-14">
+    <section className="losa losa--azul losa--r-m caso-nda" data-superficie="azul">
       <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
         <FadeIn>
           <figure className="m-0 w-full max-w-[640px]">
@@ -79,7 +75,7 @@ export default function CaseNda({
                 already the size it was drawn at. */}
             <div className="lg:[zoom:1.6]">{visual}</div>
             {visualCaption && (
-              <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
+              <figcaption className="mt-3 font-mono text-[12px] text-[var(--blanco)]">
                 {visualCaption}
               </figcaption>
             )}
@@ -87,6 +83,6 @@ export default function CaseNda({
         </FadeIn>
         <div>{notice}</div>
       </div>
-    </Band>
+    </section>
   );
 }

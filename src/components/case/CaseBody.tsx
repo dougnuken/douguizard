@@ -1,4 +1,5 @@
-import { Fragment, type ReactNode } from "react";
+import "@/components/pages/paginas-b.css";
+import "./caso.css";
 import { getCaseMeta, getNextCaseStudy, type CaseStudy } from "@/data/work";
 import type { Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
@@ -8,7 +9,6 @@ import { VIGNETTES } from "@/components/vignettes/registry";
 import CaseHeader from "@/components/case/CaseHeader";
 import CaseShowcase from "@/components/case/CaseShowcase";
 import CaseNda from "@/components/case/CaseNda";
-import CaseMeta from "@/components/case/CaseMeta";
 import CaseImpact from "@/components/case/CaseImpact";
 import CaseNarrative from "@/components/case/CaseNarrative";
 import CaseTestimonial from "@/components/case/CaseTestimonial";
@@ -18,38 +18,30 @@ import CaseProcess from "@/components/case/CaseProcess";
 import CaseDecisions from "@/components/case/CaseDecisions";
 import CaseColophon from "@/components/case/CaseColophon";
 import CaseNext from "@/components/case/CaseNext";
+import CaseIndice, { type EntradaIndice } from "@/components/case/CaseIndice";
+import HojaSecciones from "@/components/case/HojaSecciones";
 import { RegistrarLeido } from "@/components/trabajo/Leido";
 import { CaseChapter, CaseCover, CaseFilm } from "@/components/case/CaseStory";
-import type { BandProps } from "@/components/case/primitives";
-
-type Tone = NonNullable<BandProps["tone"]>;
 
 /**
- * One case study, composed, in one language.
+ * Un caso, compuesto, en un idioma: la misma pieza en la página completa y en
+ * la hoja (F6), en el sistema B (F7, `propuestas/B-paginas/caso.html`).
  *
- * A server component: the study is resolved here, in the route's language, and
- * each band receives its words as props. The bands themselves stay client
- * components for their reveals; what they no longer do is look anything up.
+ * El orden es el de 02 §5.3 y es el del DOM y del Tab:
  *
- * Show, then tell. The order is the order a reader skims in:
+ *   miga → portada (título + ficha) → captura a sangre → impacto → problema →
+ *   mi parte → decisiones → producto (película, capítulos, galería, funciones)
+ *   → proceso → testimonio → colofón → siguiente caso
  *
- *   hero → the product → the case at a glance → impact → context and what I
- *   did → in their words → the rest of the screens → features → how it
- *   happened → decisions → colophon → next
+ * Un bloque sin datos no se pinta, y su entrada del índice tampoco. La captura
+ * a sangre la ocupa, si no hay pantallas, la cubierta (casos largos), el aviso
+ * de NDA (con su viñeta y el jelly azul) o el testimonio (Royal Caribbean, que
+ * no tiene otra prueba: ahí sube y no se repite abajo).
  *
- * The first screen carries the hero and the top of the product; the first
- * three carry everything a recruiter scanning for a minute needs — what it is,
- * what it looks like, who did what, what it changed, and someone else saying
- * so. The deep read (process, decisions) follows for whoever stays.
- *
- * A case with no screens still opens on evidence rather than prose: on the
- * NDA notice when the screens are the client's, on the testimonial when there
- * is one and nothing else to show.
- *
- * Every section is optional and guarded: a case with only a hero, a meta strip
- * and a paragraph renders precisely those, and gains no empty headings. Role,
- * year, client and duration come from `getCaseMeta` — derived from the career
- * data — instead of being repeated on every case.
+ * En la hoja: sin índice lateral (el progreso va en el hilo de la cabecera de
+ * la hoja), columna única, título `h2` a 72, y nada de la primera pantalla se
+ * revela por su cuenta (06-CRITICA-F6 P1-4). Las anclas llevan el prefijo
+ * `hoja-` para no chocar con la página de debajo.
  */
 export default function CaseBody({
   study,
@@ -60,134 +52,99 @@ export default function CaseBody({
   locale: Locale;
   enHoja?: boolean;
 }) {
-
   const dict = getDict(locale);
+  const t = dict.case;
   const meta = getCaseMeta(study.slug, locale);
   const next = getNextCaseStudy(study.slug, locale);
   const media = planCaseMedia(study);
   const showcase = hasShowcase(media);
+  const pre = enHoja ? "hoja-" : "";
+  const id = (s: string) => `${pre}${s}`;
 
-  // `links` supersedes `externalLink`: when a case lists its destinations up
-  // top, repeating one of them in the colophon is noise.
-  const showExternalLink = Boolean(study.externalLink) && !study.links?.length;
+  // `links` manda sobre `externalLink`; los dos viven ahora en el colofón.
+  const enlaces = study.links?.length ? study.links : study.externalLink ? [study.externalLink] : undefined;
 
-  // A confidential case has no screens to lead with, so it leads with the
-  // notice instead — and with its home-page vignette when it has one, which
-  // draws the idea of the work rather than showing the client's product.
-  // `work.ts` only sets the flag; the words live with the interface's.
   const nda = study.nda && !study.gallery?.length;
   const vignette = nda ? VIGNETTES[study.slug] : undefined;
-
-  // A case with nothing to show and no notice to give (Royal Caribbean) would
-  // open on a hero and then text. Its strongest proof is someone else's word,
-  // so the testimonial takes the showcase's slot — straight under the hero —
-  // instead of its usual one after "what I did", and is not repeated there.
   const proofFirst = !showcase && !nda && study.testimonialId ? study.testimonialId : undefined;
 
-  /*
-   * The bands after the showcase alternate paper and raised by position, not
-   * by name. Which bands a case has varies — Qrvey has no process, Royal
-   * Caribbean has no screens — and a fixed tone per band left two of the same
-   * tone touching wherever one was missing between them. Counting instead
-   * means a missing band can never leave a seam.
-   */
-  const bands: { key: string; render: (tone: Tone) => ReactNode }[] = [
-    { key: "meta", render: (tone) => <CaseMeta tone={tone} meta={meta} links={study.links} wide={!proofFirst} /> },
-    {
-      key: "impact",
-      render: (tone) => (
-        <CaseImpact tone={tone} impact={study.impact} kpis={study.kpis} kind={study.kind} />
-      ),
-    },
-    {
-      key: "narrative",
-      render: (tone) => (
-        <CaseNarrative tone={tone} context={study.context} contributions={study.contributions} />
-      ),
-    },
+  const hayProducto = Boolean(study.film || study.story?.length || media.rest.length || study.features?.length);
+  const entradas: EntradaIndice[] = [
+    { id: id("impacto"), label: study.kind === "side" ? t.idea : t.impact },
+    { id: id("problema"), label: t.context },
+    ...(study.contributions.length ? [{ id: id("parte"), label: t.whatIDid }] : []),
+    ...(study.decisions?.length ? [{ id: id("decisiones"), label: t.decisions }] : []),
+    ...(hayProducto ? [{ id: id("producto"), label: t.product }] : []),
+    ...(study.process?.length ? [{ id: id("proceso"), label: t.howItHappened }] : []),
   ];
-  // A long-form case shows its walkthrough once the reader knows what it is,
-  // then tells the story chapter by chapter, its screens inside the argument.
-  if (study.film) {
-    const film = study.film;
-    bands.push({ key: "film", render: (tone) => <CaseFilm tone={tone} film={film} /> });
-  }
-  study.story?.forEach((chapter, i) => {
-    bands.push({
-      key: `story-${chapter.id}`,
-      render: (tone) => <CaseChapter tone={tone} chapter={chapter} index={i} />,
-    });
-  });
-  if (study.testimonialId && !proofFirst) {
-    const id = study.testimonialId;
-    bands.push({ key: "testimonial", render: (tone) => <CaseTestimonial tone={tone} id={id} /> });
-  }
-  if (media.rest.length > 0) {
-    bands.push({
-      key: "gallery",
-      render: (tone) => (
-        <CaseGallery tone={tone} project={study.project} shots={media.rest} kind={media.galleryKind} />
-      ),
-    });
-  }
-  if (study.features?.length) {
-    const features = study.features;
-    bands.push({
-      key: "features",
-      render: (tone) => <CaseFeatures tone={tone} intro={study.featuresIntro} features={features} />,
-    });
-  }
-  if (study.process?.length) {
-    const process = study.process;
-    bands.push({ key: "process", render: (tone) => <CaseProcess tone={tone} process={process} /> });
-  }
-  if (study.decisions?.length) {
-    const decisions = study.decisions;
-    bands.push({ key: "decisions", render: (tone) => <CaseDecisions tone={tone} decisions={decisions} /> });
-  }
-  if (study.technologies || showExternalLink || study.credits) {
-    bands.push({
-      key: "colophon",
-      render: (tone) => (
-        <CaseColophon
-          tone={tone}
-          technologies={study.technologies}
-          externalLink={showExternalLink ? study.externalLink : undefined}
-          credits={study.credits}
-          enHoja={enHoja}
-        />
-      ),
-    });
-  }
-  bands.push({ key: "next", render: (tone) => <CaseNext tone={tone} next={next} enHoja={enHoja} /> });
 
   const contenido = (
-    <>
-      <CaseHeader study={study} meta={meta} enHoja={enHoja} />
-      {/* «Leído» en `/work`: una comodidad por visitante (04 §6.3). */}
-      <RegistrarLeido slug={study.slug} />
+    <div className="caso-pieza">
+      <div className="caso-ancho">
+        <CaseHeader study={study} meta={meta} enHoja={enHoja} />
+        {/* «Leído» en `/work`: una comodidad por visitante (04 §6.3). */}
+        <RegistrarLeido slug={study.slug} />
 
-      {/* Whatever stands in the showcase's slot — the product, the NDA
-          notice or the testimonial — sits on the raised tone, so the first
-          counted band after it opens on paper. */}
-      {showcase && <CaseShowcase project={study.project} plan={media} />}
-      {!showcase && study.cover && <CaseCover cover={study.cover} />}
-      {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
-      {nda && (
-        <CaseNda
-          body={dict.case.ndaBody}
-          visual={vignette && <vignette.Component locale={locale} />}
-          visualCaption={vignette && dict.work.vignettes[vignette.key].caption}
-        />
-      )}
+        <div className="caso-cubierta" data-cubierta="">
+          {showcase && <CaseShowcase project={study.project} plan={media} />}
+          {!showcase && study.cover && <CaseCover cover={study.cover} />}
+          {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
+          {nda && (
+            <CaseNda
+              body={t.ndaBody}
+              visual={vignette && <vignette.Component locale={locale} />}
+              visualCaption={vignette && dict.work.vignettes[vignette.key].caption}
+            />
+          )}
+        </div>
 
-      {bands.map((band, i) => (
-        <Fragment key={band.key}>{band.render(i % 2 === 0 ? "paper" : "raised")}</Fragment>
-      ))}
-    </>
+        <div className="caso-cuerpo">
+          {!enHoja && <CaseIndice entradas={entradas} label={t.sections} />}
+          <div className="caso-secciones">
+            <CaseImpact id={id("impacto")} impact={study.impact} kpis={study.kpis} kind={study.kind} />
+            <CaseNarrative
+              idProblema={id("problema")}
+              idParte={id("parte")}
+              context={study.context}
+              contributions={study.contributions}
+            />
+            {study.decisions?.length ? <CaseDecisions id={id("decisiones")} decisions={study.decisions} /> : null}
+
+            {hayProducto && (
+              <div id={id("producto")} className="bloque-grupo" data-producto="">
+                {study.film && <CaseFilm tone="paper" film={study.film} />}
+                {study.story?.map((chapter, i) => (
+                  <CaseChapter key={chapter.id} tone="paper" chapter={chapter} index={i} />
+                ))}
+                {media.rest.length > 0 && (
+                  <CaseGallery tone="paper" project={study.project} shots={media.rest} kind={media.galleryKind} />
+                )}
+                {study.features?.length ? (
+                  <CaseFeatures tone="paper" intro={study.featuresIntro} features={study.features} />
+                ) : null}
+              </div>
+            )}
+
+            {study.process?.length ? <CaseProcess id={id("proceso")} process={study.process} /> : null}
+            {study.testimonialId && !proofFirst && <CaseTestimonial tone="paper" id={study.testimonialId} />}
+            {(study.technologies?.length || enlaces || study.credits) && (
+              <CaseColophon technologies={study.technologies} links={enlaces} credits={study.credits} enHoja={enHoja} />
+            )}
+            <CaseNext next={next} enHoja={enHoja} />
+          </div>
+        </div>
+        <HojaSecciones entradas={entradas} enHoja={enHoja} />
+      </div>
+    </div>
   );
 
   // En la hoja, todo va dentro de un `<article>` (sin `<main>`: el documento ya
-  // tiene el de la página de debajo). En la página completa no cambia nada.
-  return enHoja ? <article className="caso-en-hoja">{contenido}</article> : contenido;
+  // tiene el de la página de debajo).
+  return enHoja ? (
+    <article className="caso-b caso-en-hoja">{contenido}</article>
+  ) : (
+    <article className="caso-b" aria-labelledby="caso-titulo">
+      {contenido}
+    </article>
+  );
 }

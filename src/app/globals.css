@@ -1580,3 +1580,38 @@ html:has(dialog.hoja[open]) {
     backdrop-filter: none;
   }
 }
+
+/* ── Transiciones entre documentos (F7) ─────────────────────────────────────
+   Las navegaciones de documento completo del sitio (el `<a>` de «Siguiente
+   caso» en la página completa, «Abrir como página completa» desde la hoja, el
+   cambio de idioma) funden en Chromium; un navegador sin la API navega al
+   instante. La media del caso (`.caso-cubierta`) lleva nombre: de la hoja a su
+   página completa se transforma en su sitio (400 ms `--curva-io`); con RM, solo
+   un fundido de 200 ms. `/cv` no entra: conserva su tema y su impresión. */
+@view-transition {
+  navigation: auto;
+}
+:root:not([data-ruta="cv"]) .caso-cubierta {
+  view-transition-name: caso-media;
+}
+::view-transition-group(*) {
+  animation-duration: 400ms;
+  animation-timing-function: var(--curva-io);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 200ms;
+  }
+  ::view-transition-old(caso-media),
+  ::view-transition-new(caso-media) {
+    animation-name: none;
+  }
+}

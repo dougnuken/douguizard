@@ -83,20 +83,18 @@ test("I4 the switch is reachable at every width", async ({ page }) => {
 
 /** Interface words that must never show up in the other language's pages. */
 const EN_WORDS = [
-  "Selected work",
-  "How it happened",
-  "What I did",
-  "Key decisions",
+  "See case studies",
+  "Case study sections",
+  "My part",
   "Next case study",
   "Skip to content",
   "Download PDF",
   "Full CV",
 ];
 const ES_WORDS = [
-  "Trabajo seleccionado",
-  "Cómo se hizo",
-  "Qué hice",
-  "Decisiones clave",
+  "Ver casos",
+  "Secciones del caso",
+  "Mi parte",
   "Siguiente caso",
   "Ir al contenido",
   "Descargar PDF",
