@@ -156,8 +156,60 @@
     background: none;
     border: 0;
   }
-  .caso-cubierta :where(video, img) {
-    border-radius: var(--r-m);
+  /* P1-2 · la cubierta es una captura estática en losa a sangre: el radio y el
+     recorte van en el contenedor; la imagen no lleva radio propio. 16:8 (4:3 en
+     móvil); las portadas compuestas de los casos largos guardan su proporción. */
+  .caso-cover {
+    overflow: hidden;
+    aspect-ratio: 16 / 8;
+    border-radius: var(--r-losa);
+    background: var(--losa-alta);
+    box-shadow: inset 0 0 0 1px var(--losa-borde);
+  }
+  .caso-cover :where(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 0 0;
+    border-radius: 0;
+  }
+  .caso-cover-libre {
+    aspect-ratio: auto;
+  }
+  .caso-cover-libre :where(img) {
+    height: auto;
+  }
+  .caso-cover-fig {
+    margin: 0;
+  }
+  /* Pie de una captura o de la película: Instrument Sans, caja normal. */
+  .pie-caso {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    max-width: 60em;
+    margin-top: 12px;
+    font: 400 var(--t-14) / 1.5 var(--font-texto);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--tinta-3);
+  }
+  .pie-caso-et {
+    color: var(--tinta-2);
+  }
+  /* La película en Producto: losa con el radio en el contenedor, sin velo. */
+  .caso-losa-media {
+    overflow: hidden;
+    border-radius: var(--r-losa);
+    background: var(--losa-alta);
+    box-shadow: inset 0 0 0 1px var(--losa-borde);
+  }
+  .caso-losa-media :where(video, img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
   }
 
   /* ── Cuerpo: índice col 1–2 + secciones col 3–12 (≥ 1280) ─────────────── */
@@ -245,6 +297,9 @@
   .bloque-grupo {
     margin-top: 128px;
     scroll-margin-top: 128px;
+  }
+  .bloque-grupo > .caso-pelicula + * {
+    margin-top: 64px;
   }
   .bloque-grupo > .bloque + .bloque {
     margin-top: 64px;
@@ -677,6 +732,9 @@
     }
     .caso-cubierta {
       margin-top: 32px;
+    }
+    .caso-cover:not(.caso-cover-libre) {
+      aspect-ratio: 4 / 3;
     }
     .caso-cuerpo,
     .caso-en-hoja .caso-cuerpo {

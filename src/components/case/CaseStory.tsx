@@ -13,15 +13,22 @@ import { StoryFilmPlayer, StoryPicture } from "./StoryMedia";
  * their own.
  */
 
-/** The 16:9 cover, straight under the hero, at the full media measure. */
-export function CaseCover({ cover }: { cover: StoryFigure }) {
+/**
+ * The 16:9 cover, straight under the hero: a still in a full-bleed slab, the
+ * radius on the container (F7 P1-2). Its sr-only heading goes when the case
+ * already has a Product block.
+ */
+export function CaseCover({ cover, heading = true }: { cover: StoryFigure; heading?: boolean }) {
+  const t = useDict().case;
   return (
-    <Band tone="raised" rule="t" wide className="py-10 md:py-14">
-      <h2 className="sr-only">{useDict().case.product}</h2>
-      <div className="overflow-hidden rounded-xl border border-[var(--line-strong)]">
-        <StoryPicture figure={cover} sizes="(max-width: 1479px) 92vw, 1344px" priority />
-      </div>
-    </Band>
+    <>
+      {heading && <h2 className="sr-only">{t.product}</h2>}
+      <figure className="caso-cover-fig">
+        <div className="caso-cover caso-cover-libre">
+          <StoryPicture figure={cover} sizes="(max-width: 1023px) 92vw, 1320px" priority />
+        </div>
+      </figure>
+    </>
   );
 }
 

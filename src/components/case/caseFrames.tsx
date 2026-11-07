@@ -6,7 +6,12 @@ import { BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 import type { MockupItem } from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
-import { balanceColumns, shotNumber, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
+import {
+  balanceColumns,
+  shotNumber,
+  type CaseMediaPlan,
+  type Shot,
+} from "@/lib/caseMedia";
 import { FadeIn } from "./primitives";
 
 /**
@@ -28,7 +33,11 @@ export function browserLabel(src: string): string | undefined {
   const parts = src.split("/").filter(Boolean);
   const product = parts.at(-2);
   // A walkthrough is filed as "recorrido-<module>"; its label is the module.
-  const tokens = parts.at(-1)?.replace(/\.\w+$/, "").split("-") ?? [];
+  const tokens =
+    parts
+      .at(-1)
+      ?.replace(/\.\w+$/, "")
+      .split("-") ?? [];
   const moduleName = tokens[0] === "recorrido" ? tokens[1] : tokens[0];
   if (!product || !moduleName) return undefined;
   return `${product} · ${moduleName}`.toUpperCase();
@@ -90,10 +99,19 @@ function PlainCaption({ shot }: { shot: Shot }) {
  * column again, and `order` puts the cards back in their authored sequence —
  * the "01/02" numbers read in order at every width.
  */
-export function PlainGallery({ shots, ariaLabel }: { shots: Shot[]; ariaLabel: string }) {
+export function PlainGallery({
+  shots,
+  ariaLabel,
+}: {
+  shots: Shot[];
+  ariaLabel: string;
+}) {
   const [left, right] = balanceColumns(shots);
   return (
-    <ul aria-label={ariaLabel} className="flex list-none flex-col gap-8 md:block md:columns-2 md:gap-6">
+    <ul
+      aria-label={ariaLabel}
+      className="flex list-none flex-col gap-8 md:block md:columns-2 md:gap-6"
+    >
       {[...left, ...right].map((shot, i) => (
         <li
           key={shot.item.src}
@@ -138,7 +156,12 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
   const height = shot.item.height ?? 836;
   return (
     <figure className="m-0">
-      <div className="mx-auto" style={{ width: `min(100%, calc(78svh * ${(width / height).toFixed(4)}))` }}>
+      <div
+        className="mx-auto"
+        style={{
+          width: `min(100%, calc(78svh * ${(width / height).toFixed(4)}))`,
+        }}
+      >
         <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
           <Image
             src={shot.item.src}
@@ -159,6 +182,76 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
 type Walkthrough = NonNullable<CaseMediaPlan["video"]>;
 
 /**
+ * La cubierta del caso (F7 P1-2, `caso.html`): una captura estática y nítida en
+ * losa a sangre, 16:8 (4:3 en móvil), con el radio en el contenedor y la imagen
+ * recortada por él. Sin barra de ventana, sin velo y sin botón: es el LCP de la
+ * página completa, así que va con `fetchpriority="high"`.
+ */
+export function CoverStill({
+  src,
+  alt,
+  caption,
+  width,
+  height,
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+}) {
+  return (
+    <figure className="caso-cover-fig">
+      <div className="caso-cover">
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          sizes="(max-width: 1023px) 92vw, 1320px"
+          priority
+          fetchPriority="high"
+        />
+      </div>
+      {caption && <figcaption className="pie-caso">{caption}</figcaption>}
+    </figure>
+  );
+}
+
+/**
+ * La película en el bloque Producto (F7 P1-2): el vídeo con su póster y los
+ * controles nativos, en losa, sin velo sobre el póster y sin reproducirse solo;
+ * el pie en Instrument Sans y caja normal.
+ */
+export function WalkthroughFilm({ video }: { video: Walkthrough }) {
+  const t = useDict().case;
+  return (
+    <figure className="caso-pelicula">
+      <div className="caso-losa-media">
+        <video
+          controls
+          muted
+          playsInline
+          preload="none"
+          poster={video.poster}
+          width={video.width}
+          height={video.height}
+          aria-label={video.label}
+          style={{ aspectRatio: `${video.width} / ${video.height}` }}
+        >
+          {video.webm && <source src={video.webm} type="video/webm" />}
+          <source src={video.mp4} type="video/mp4" />
+        </video>
+      </div>
+      <figcaption className="pie-caso">
+        <span className="pie-caso-et">{t.walkthrough}</span>
+        {video.caption && <span>{video.caption}</span>}
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
  * The walkthrough, in the frame its capture was made in.
  *
  * One pass through the app, not a cycle: it opens on one screen and ends on
@@ -166,7 +259,13 @@ type Walkthrough = NonNullable<CaseMediaPlan["video"]>;
  * replay it, and how anyone stops it — which is what WCAG 2.2.2 asks of an
  * autoplaying clip longer than five seconds.
  */
-export function WalkthroughVideo({ video, kind }: { video: Walkthrough; kind: "phone" | "browser" }) {
+export function WalkthroughVideo({
+  video,
+  kind,
+}: {
+  video: Walkthrough;
+  kind: "phone" | "browser";
+}) {
   const t = useDict().case;
   if (kind === "browser") {
     return (
@@ -212,7 +311,9 @@ export function WalkthroughCaption({ caption }: { caption?: string }) {
   return (
     <FadeIn>
       <div className="mt-8 grid grid-cols-1 gap-3 md:mt-10 lg:grid-cols-4 lg:gap-8">
-        <div className="kicker text-[var(--ink-dim)] lg:pt-1.5">{t.walkthrough}</div>
+        <div className="kicker text-[var(--ink-dim)] lg:pt-1.5">
+          {t.walkthrough}
+        </div>
         {caption && (
           <p className="max-w-[62ch] text-[16px] leading-[1.6] text-[var(--ink)] md:text-[18px] lg:col-span-3">
             {caption}

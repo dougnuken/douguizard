@@ -22,6 +22,7 @@ import CaseIndice, { type EntradaIndice } from "@/components/case/CaseIndice";
 import HojaSecciones from "@/components/case/HojaSecciones";
 import { RegistrarLeido } from "@/components/trabajo/Leido";
 import { CaseChapter, CaseCover, CaseFilm } from "@/components/case/CaseStory";
+import { WalkthroughFilm } from "@/components/case/caseFrames";
 
 /**
  * Un caso, compuesto, en un idioma: la misma pieza en la página completa y en
@@ -68,7 +69,12 @@ export default function CaseBody({
   const vignette = nda ? VIGNETTES[study.slug] : undefined;
   const proofFirst = !showcase && !nda && study.testimonialId ? study.testimonialId : undefined;
 
-  const hayProducto = Boolean(study.film || study.story?.length || media.rest.length || study.features?.length);
+  // La película de un producto de escritorio ya no abre la página: se ve aquí,
+  // en Producto, bajo su titular (06-CRITICA-F7 P1-2).
+  const pelicula = media.video && media.videoKind === "browser" ? media.video : undefined;
+  const hayProducto = Boolean(
+    pelicula || study.film || study.story?.length || media.rest.length || study.features?.length,
+  );
   const entradas: EntradaIndice[] = [
     { id: id("impacto"), label: study.kind === "side" ? t.idea : t.impact },
     { id: id("problema"), label: t.context },
@@ -86,8 +92,8 @@ export default function CaseBody({
         <RegistrarLeido slug={study.slug} />
 
         <div className="caso-cubierta" data-cubierta="">
-          {showcase && <CaseShowcase project={study.project} plan={media} />}
-          {!showcase && study.cover && <CaseCover cover={study.cover} />}
+          {showcase && <CaseShowcase project={study.project} plan={media} heading={!hayProducto} />}
+          {!showcase && study.cover && <CaseCover cover={study.cover} heading={!hayProducto} />}
           {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
           {nda && (
             <CaseNda
@@ -111,7 +117,19 @@ export default function CaseBody({
             {study.decisions?.length ? <CaseDecisions id={id("decisiones")} decisions={study.decisions} /> : null}
 
             {hayProducto && (
-              <div id={id("producto")} className="bloque-grupo" data-producto="">
+              <div
+                id={id("producto")}
+                className="bloque-grupo"
+                data-producto=""
+                role="region"
+                aria-labelledby={id("producto-h")}
+              >
+                <div className="bloque-cab">
+                  <h2 id={id("producto-h")} className="t-bloque">
+                    {t.product}
+                  </h2>
+                </div>
+                {pelicula && <WalkthroughFilm video={pelicula} />}
                 {study.film && <CaseFilm tone="paper" film={study.film} />}
                 {study.story?.map((chapter, i) => (
                   <CaseChapter key={chapter.id} tone="paper" chapter={chapter} index={i} />

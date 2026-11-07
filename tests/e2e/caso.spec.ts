@@ -289,7 +289,17 @@ test.describe("contenido frente a F6", () => {
         const b = BASE_CASOS[`${idioma}/${slug}`];
         // Se compara sin la decoración de la plantilla vieja: el «→» de los
         // enlaces y el espaciado alrededor del «·» de las cejas.
-        const norm = (t: string) => t.replace(/\s*→/g, "").replace(/\s*·\s*/g, "·").replace(/\s+/g, " ").trim();
+        // Tras la crítica de F7 (P1-2, P1-4) tampoco cuentan la etiqueta de la
+        // barra de ventana («NAOWEE·IVC») ni el número de captura («01») pegado
+        // a su pie: eran cromo de los marcos viejos, no contenido.
+        const norm = (t: string) =>
+          t
+            .replace(/\s*→/g, "")
+            .replace(/\s*·\s*/g, "·")
+            .replace(/\p{Lu}{2,}(?: \p{Lu}+)*·\p{Lu}{2,}(?: \p{Lu}+)*/gu, "")
+            .replace(/(^|\D)\d{2}(?=\p{Lu})/gu, "$1")
+            .replace(/\s+/g, " ")
+            .trim();
         const textoAhora = norm(ahora.texto);
         // El gancho del siguiente caso salía en la banda «Siguiente» de F6; ya
         // no va en la losa azul (no llega a 7:1 sobre el jelly): es texto de
@@ -433,5 +443,70 @@ test.describe("P1-1 · el título es el nombre corto", () => {
     const h2 = page.locator("dialog.hoja[open] .caso-h1");
     expect(await h2.evaluate((h) => getComputedStyle(h).fontSize)).toBe("72px");
     expect(await h2.locator(":scope > span:not(.sr-only)").textContent()).toBe("Naowee");
+  });
+});
+
+test.describe("P1-2 · la cubierta es una captura estática en losa", () => {
+  for (const ancho of [1440, 390]) {
+    test(`Naowee ${ancho}: imagen nítida (luminancia ≥ 245), radio en el contenedor, sin vídeo ni barra; la película en Producto`, async ({ page }) => {
+      await preparar(page, ancho, ancho === 390 ? 844 : 900);
+      await page.goto("/work/naowee-suid", { waitUntil: "networkidle" });
+      const c = await page.evaluate(async () => {
+        const cub = document.querySelector<HTMLElement>("main [data-cubierta]")!;
+        const caja = cub.querySelector<HTMLElement>(".caso-cover")!;
+        const img = caja.querySelector("img")!;
+        await img.decode();
+        const cv = document.createElement("canvas");
+        cv.width = 400;
+        cv.height = Math.round((400 * img.naturalHeight) / img.naturalWidth);
+        const ctx = cv.getContext("2d")!;
+        ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+        let max = 0;
+        for (let i = 0; i < d.length; i += 4) max = Math.max(max, 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]);
+        const rLosa = getComputedStyle(document.documentElement).getPropertyValue("--r-losa").trim();
+        return {
+          max,
+          radioCaja: getComputedStyle(caja).borderTopLeftRadius,
+          rLosa,
+          radioImg: getComputedStyle(img).borderTopLeftRadius,
+          recorte: getComputedStyle(caja).overflow,
+          prioridad: img.getAttribute("fetchpriority"),
+          videosCubierta: cub.querySelectorAll("video").length,
+          botones: cub.querySelectorAll("button").length,
+          videosProducto: document.querySelectorAll("main #producto video").length,
+          pie: getComputedStyle(document.querySelector("main #producto .pie-caso")!).textTransform,
+        };
+      });
+      expect(c.max, "luminancia máxima").toBeGreaterThanOrEqual(245);
+      expect(c.radioCaja).toBe(c.rLosa);
+      expect(c.radioImg).toBe("0px");
+      expect(c.recorte).toBe("hidden");
+      expect(c.prioridad).toBe("high");
+      expect(c.videosCubierta, "sin vídeo en la cubierta").toBe(0);
+      expect(c.botones, "sin botón de reproducir en la cubierta").toBe(0);
+      expect(c.videosProducto, "la película en Producto").toBe(1);
+      expect(c.pie).toBe("none");
+    });
+  }
+
+  test("las portadas de los casos largos también van en losa con el radio en el contenedor", async ({ page }) => {
+    await preparar(page, 1440);
+    for (const slug of ["olbo", "dc-medical", "makeapet"]) {
+      await page.goto(`/work/${slug}`, { waitUntil: "networkidle" });
+      const c = await page.evaluate(() => {
+        const caja = document.querySelector<HTMLElement>("main [data-cubierta] .caso-cover")!;
+        const img = caja.querySelector("img")!;
+        return {
+          radioCaja: getComputedStyle(caja).borderTopLeftRadius,
+          rLosa: getComputedStyle(document.documentElement).getPropertyValue("--r-losa").trim(),
+          radioImg: getComputedStyle(img).borderTopLeftRadius,
+          prioridad: img.getAttribute("fetchpriority"),
+        };
+      });
+      expect(c.radioCaja, slug).toBe(c.rLosa);
+      expect(c.radioImg, slug).toBe("0px");
+      expect(c.prioridad, slug).toBe("high");
+    }
   });
 });
