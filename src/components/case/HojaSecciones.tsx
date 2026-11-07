@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import type { EntradaIndice } from "./CaseIndice";
 import { useDict } from "@/i18n/LocaleProvider";
 
-/** Lo dispara «Secciones» del dock en la página completa del caso (< 1024). */
-export const EVENTO_SECCIONES = "caso:secciones";
+import { EVENTO_SECCIONES } from "./eventos";
 
 /**
  * «Secciones» en móvil (07 F7): una hoja corta con los rótulos del índice.

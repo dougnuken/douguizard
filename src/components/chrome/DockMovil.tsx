@@ -9,7 +9,7 @@ import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { getActiveSection, getServerActiveSection, subscribeActiveSection } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
-import { EVENTO_SECCIONES } from "@/components/case/HojaSecciones";
+import { EVENTO_SECCIONES } from "@/components/case/eventos";
 
 type Destino = { clave: "trabajo" | "perfil" | "experiencia" | "cv" | "contacto"; icono: NombreIcono; seccion?: string; ruta: string };
 
