@@ -90,6 +90,13 @@ no): por eso (a), (d) y (e) corren de verdad; si en otro entorno no hubiera WebG
 
 ## Verificación final
 
+**Tras los arreglos de la crítica:** lint y `tsc` en verde; vitest **236/236**; `next build` en verde; Playwright
+completo **424/424** (13,5 min, `--trace off`; `vidrio.spec` 9/9 con las aserciones de píxeles nuevas). `perf.spec`
+de `/` en solitario (mediana de 3): móvil **980 ms** (`span.claim`, antes 1.004), escritorio **356 ms**
+(`img.k1-poster`, `losa-640.avif` v3, antes 364): sin regresión de LCP.
+
+**Al cerrar F4 (antes de la crítica):**
+
 lint y `tsc` en verde; vitest **236/236**; `next build` en verde; Playwright completo **424/424 en dos corridas
 completas seguidas** (14,3 min cada una; 415 de base + 9 de `vidrio.spec`), con `experience.spec.ts:173` en verde
 en las dos.
