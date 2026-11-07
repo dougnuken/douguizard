@@ -277,6 +277,32 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length)).toBe(0);
   });
 
+  test("P0-2: durante el viaje (p 0,1 … 0,7) K2 nunca tapa el nombre XL", async ({ page }) => {
+    for (const [w, h] of [[1440, 900], [1280, 720]]) {
+      await page.setViewportSize({ width: w, height: h });
+      await abrir(page, { captura: true });
+      for (const p of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]) {
+        await irA(page, p);
+        const r = await page.evaluate((sel) => {
+          const el = document.querySelector<HTMLElement>(sel)!;
+          const n = el.getBoundingClientRect();
+          const k = document.querySelector(".k2")!.getBoundingClientRect();
+          const x0 = Math.max(n.left, k.left);
+          const x1 = Math.min(n.right, k.right);
+          const y0 = Math.max(n.top, k.top);
+          const y1 = Math.min(n.bottom, k.bottom);
+          if (x1 - x0 <= 0 || y1 - y0 <= 0 || Number(getComputedStyle(el).opacity) < 0.05) return "libre";
+          // Se cruzan: en el centro del cruce tiene que verse el nombre (va por encima de K2).
+          el.style.pointerEvents = "auto";
+          const hit = document.elementFromPoint((x0 + x1) / 2, (y0 + y1) / 2);
+          el.style.pointerEvents = "";
+          return hit && el.contains(hit) ? "encima" : `tapado por ${hit?.className}`;
+        }, XL);
+        expect(r, `${w}×${h} p ${p}`).toMatch(/^(libre|encima)$/);
+      }
+    }
+  });
+
   test("P0-1: en p = 0 la foto del acto 1 no tiene bordes duros a los lados (|ΔL| < 6 entre columnas vecinas)", async ({ page }) => {
     for (const [w, h] of [[1440, 900], [1280, 720], [1920, 1080]]) {
       await page.setViewportSize({ width: w, height: h });

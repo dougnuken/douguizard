@@ -111,6 +111,11 @@
       pointer-events: none;
       text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
     }
+    /* P0-2 (crítica F5): durante el viaje el nombre va por encima de K2 (mismo
+       contexto de apilado). Si en algún cuadro se cruzan, se ve el protagonista. */
+    :root.cine[data-escena-fase="anim"] .escena-nombre {
+      z-index: 3;
+    }
     :root.cine .escena-indicador {
       position: absolute;
       z-index: 2;

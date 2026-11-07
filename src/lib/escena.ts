@@ -162,7 +162,10 @@ export const p2o = (t: number) => 1 - (1 - t) * (1 - t);
 /** Fin de cada pista del timeline (p ∈ [0, 1]). */
 export const ESCENA = {
   foto: 0.72,
-  k2Viaje: 0.6,
+  /** P0-2 (crítica F5): K2 sube cuando el nombre ya salió hacia K1; sus trayectorias no se cruzan. */
+  k2Viaje: [0.15, 0.6] as const,
+  /** El FLIP del nombre XL a K1 (`power2.out`: sale rápido hacia la derecha, sobre la foto). */
+  nombre: [0, 0.45] as const,
   material: [0.3, 0.52] as const,
   /** La tinta de K2 cambia de golpe aquí (P1-2): el contraste nunca cae a 1:1. */
   tinta: 0.41,
@@ -185,11 +188,13 @@ export function frameEscena(p: number) {
     q,
     radio: q,
     /** K2: viaje (0 = abajo a la izquierda, 1 = su celda) y material. */
-    k2: p2io(tramo(p, 0, ESCENA.k2Viaje)),
+    k2: p2io(tramo(p, ...ESCENA.k2Viaje)),
     m: p1io(tramo(p, ...ESCENA.material)),
     mt: p >= ESCENA.tinta ? 1 : 0,
-    /** Nombre XL: FLIP a K1 (`power2.inOut`, 0 → 0,72) y fundido. */
-    nombre: p2io(tramo(p, 0, ESCENA.foto)),
+    /** Nombre XL: FLIP a K1 (`power2.out`, 0 → 0,45) y fundido. */
+    nombre: p2o(tramo(p, ...ESCENA.nombre)),
+    /** …y en vertical más tarde (`power2.inOut`): primero se aparta a la derecha, luego baja a K1. */
+    nombreY: p2io(tramo(p, ...ESCENA.nombre)),
     nombreOpacidad: 1 - tramo(p, ...ESCENA.nombreFuera),
     panel: tramo(p, ...ESCENA.panelDentro),
     k3: losa(ESCENA.losas.k3),

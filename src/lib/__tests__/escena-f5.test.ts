@@ -50,6 +50,14 @@ describe("escena F5 · tramo y timeline", () => {
     expect(frameEscena(ESCENA.foto).q).toBe(1);
   });
 
+  it("P0-2: el nombre hace su FLIP en 0 → 0,45 (sale rápido) y K2 no sube antes de 0,15", () => {
+    expect(frameEscena(0.15).k2).toBe(0);
+    expect(frameEscena(0.6).k2).toBe(1);
+    expect(frameEscena(0.45).nombre).toBe(1);
+    // power2.out: a un tercio del tramo ya ha recorrido más de la mitad.
+    expect(frameEscena(0.15).nombre).toBeGreaterThan(0.5);
+  });
+
   it("el corte del nombre se cierra entre p 0 y 0,3 y llega entero (lib/corte)", () => {
     expect(aperturaDesdeProgreso(0)).toBe(1);
     expect(aperturaDesdeProgreso(0.3)).toBe(0);
