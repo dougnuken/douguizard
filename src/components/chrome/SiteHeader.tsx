@@ -45,7 +45,9 @@ function useEspiaSecciones(activo: boolean) {
       // ya está activa; en el acto 1 del home (F5, antes de llegar al OS), ninguna.
       const html = document.documentElement;
       const enActo1 = html.classList.contains("cine") && html.dataset.escenaFase !== "os";
-      if (id === "home" && !enActo1 && secciones[0].getBoundingClientRect().top < window.innerHeight) {
+      // Solo en escritorio (las pills); en móvil el dock aparece al salir del héroe.
+      const escritorio = window.matchMedia("(min-width: 1024px)").matches;
+      if (id === "home" && escritorio && !enActo1 && secciones[0].getBoundingClientRect().top < window.innerHeight) {
         id = secciones[0].dataset.seccion!;
       }
       // Al fondo de la página, la última sección (contacto) aunque no llegue al corte.

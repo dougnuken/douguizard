@@ -15,6 +15,10 @@ const geologica = Geologica({
   axes: ["SHRP"],
   variable: "--font-nombre",
   display: "swap",
+  // F5: el home también lo usa (acto 1, solo ≥ 1024). Sin precarga para que en
+  // móvil no compita con Urbanist/Instrument (CLS de K2 en Slow 4G); el corte
+  // espera a `document.fonts.load` antes de medir y abrir.
+  preload: false,
 });
 
 export interface EstiloLockup {

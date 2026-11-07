@@ -35,8 +35,9 @@ export default function K1Retrato({ locale }: { locale: Locale }) {
           className="k1-poster"
           // La foto llena el alto de la losa (cover): su ancho pintado es alto × 0,753,
           // más que el de la columna (≈ 595 px a 1440×900). En móvil, alto de pantalla.
-          // En el acto 1 (F5) la misma foto llena la pantalla (130 % del alto): el máster entero.
-          sizes="(min-width: 1024px) 880px, 75vh"
+          // En el acto 1 (F5) la foto llena la pantalla con el mismo póster de 640 (LCP sin
+          // regresión); tras el `load` el vidrio WebGL la repinta desde la textura.
+          sizes="(min-width: 1024px) 640px, 75vh"
         />
         {/* `espejo`: en el acto 1 la escena mueve la foto y el vidrio la sigue (y lee `--vidrio-p`). */}
         <VidrioDiferido estados={{ escritorio: "losa", movil: "movil" }} className="vidrio-llena" pos={[0.5, 0]} espejo="img.k1-poster">

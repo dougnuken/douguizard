@@ -227,6 +227,14 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
       }, XL);
       expect(Math.abs(d.yCorte - d.yLaser), `${w}×${h}`).toBeLessThanOrEqual(2);
       expect(d.top, `${w}×${h} bajo la cabecera`).toBeGreaterThanOrEqual(88 - 0.5);
+      // K2 no tapa el nombre y su CTA queda en pantalla.
+      const solape = await page.evaluate((sel) => {
+        const n = document.querySelector(sel)!.getBoundingClientRect();
+        const k = document.querySelector(".k2")!.getBoundingClientRect();
+        const c = document.querySelector(".k2 .cta-1")!.getBoundingClientRect();
+        return { k2SobreNombre: k.top < n.bottom - 2 && k.left < n.right, ctaFuera: c.bottom > innerHeight };
+      }, XL);
+      expect(solape, `${w}×${h}`).toEqual({ k2SobreNombre: false, ctaFuera: false });
       await irA(page, 0.3);
       await expect(page.locator(XL)).toHaveAttribute("data-corte", "cerrado");
       await irA(page, 1);

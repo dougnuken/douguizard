@@ -136,7 +136,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         pa,
         pb,
         radio: parseFloat(getComputedStyle(k1).borderTopLeftRadius) || 48,
-        k2: { dx: 24 - o2.x, dy: H - 24 - k2.offsetHeight - o2.y },
+        // Abajo a la izquierda, pero nunca encima del nombre (alto ≤ 800: P0-1 de B).
+        k2: { dx: 24 - o2.x, dy: Math.max(H - 24 - k2.offsetHeight, y0 + lockup.offsetHeight + 16) - o2.y },
         nombre: { x0, y0, dx: on.x - x0, dy: on.y - y0, s: fsK1 / fsXL },
       };
       pista.dataset.escenaFin = String(Math.round(pista.getBoundingClientRect().top + window.scrollY + H));

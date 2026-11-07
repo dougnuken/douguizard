@@ -146,8 +146,9 @@
         linear-gradient(90deg, rgba(10, 10, 12, 0.72), rgba(10, 10, 12, 0.32) 38%, transparent 62%),
         linear-gradient(0deg, rgba(10, 10, 12, 0.5), transparent 30%);
     }
-    /* Fuera de la foto (más ancha la pantalla que la foto), su atmósfera borrosa. */
-    :root.cine:not([data-escena-fase="os"]) .k1-foto::before {
+    /* Fuera de la foto (más ancha la pantalla que la foto), su atmósfera borrosa.
+       Solo cuando la escena ya montó (tras el `load`): no compite con el póster (LCP). */
+    :root.cine[data-escena-fase="anim"] .k1-foto::before {
       content: "";
       position: absolute;
       inset: -10%;
