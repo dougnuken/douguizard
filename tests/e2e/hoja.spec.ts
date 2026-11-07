@@ -67,8 +67,8 @@ test.describe("hoja · comprobaciones de §1.2 (versión instalada)", () => {
     await preparar(page);
     for (const [origen, slug] of [
       ["/work", "olbo"],
-      ["/about", "naowee-suid"],
-      ["/experience", "naowee-suid"],
+      ["/about", "banco-de-occidente"],
+      ["/experience", "banco-de-occidente"],
     ] as const) {
       await abrir(page, origen, slug, { asentar: false });
       expect((await estructura(page)).main, origen).toBe(1);
@@ -96,14 +96,11 @@ test.describe("hoja · comprobaciones de §1.2 (versión instalada)", () => {
   test("(c') slug inexistente por navegación blanda → el 404 de caso, sin hoja", async ({ page }) => {
     await preparar(page);
     await page.goto("/", { waitUntil: "networkidle" });
-    // Un `<Link>` cualquiera del home, reapuntado: la navegación sigue siendo blanda.
-    await page.evaluate(() => {
-      const a = document.querySelector<HTMLAnchorElement>('#main a[href="/work/olbo"]')!;
-      a.setAttribute("href", "/work/not-a-case");
-    });
-    const enlace = page.locator('#main a[href="/work/not-a-case"]').first();
-    await enlace.scrollIntoViewIfNeeded();
-    await enlace.click();
+    // Navegación blanda con el router de la app (lo mismo que hace un `<Link>`).
+    await page.waitForFunction(() => !!(window as unknown as { next?: { router?: unknown } }).next?.router);
+    await page.evaluate(() =>
+      (window as unknown as { next: { router: { push: (h: string) => void } } }).next.router.push("/work/not-a-case"),
+    );
     await page.waitForURL("**/work/not-a-case");
     await page.waitForLoadState("networkidle");
     await expect(page.locator(HOJA)).toHaveCount(0);
@@ -189,7 +186,7 @@ test.describe("hoja · conducta", () => {
     const enlace = page.locator('#main a[href="/work/olbo"]:visible').first();
     await enlace.scrollIntoViewIfNeeded();
     const [nueva] = await Promise.all([context.waitForEvent("page"), enlace.click({ modifiers: ["ControlOrMeta"] })]);
-    await nueva.waitForLoadState("networkidle");
+    await nueva.waitForURL("**/work/olbo", { waitUntil: "domcontentloaded" });
     expect(new URL(nueva.url()).pathname).toBe("/work/olbo");
     await expect(nueva.locator("dialog.hoja")).toHaveCount(0);
     expect(await nueva.locator("main#main").count()).toBe(1);
@@ -336,9 +333,14 @@ test.describe("hoja · movimiento y móvil", () => {
   test("móvil 390: hoja a pantalla completa menos 16 px; arrastre de 140 px cierra; 60 px vuelve", async ({ page }) => {
     await preparar(page, { rm: false, ancho: 390, alto: 844 });
     await abrir(page, "/", "olbo", { asentar: false });
+    await page.waitForTimeout(700); // la entrada dura 420 ms
     const caja = await page.locator(`${HOJA} .hoja-panel`).boundingBox();
     // El ancho útil del viewport (Chromium headless pinta barra clásica; en un teléfono es 390).
-    expect(caja!.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
+    // De lado a lado del dialog (Chromium headless reserva 15 px de canal de
+    // barra con `scrollbar-gutter`; en un teléfono, con barras superpuestas, es 390).
+    const dialogo = await page.locator(HOJA).evaluate((d) => d.clientWidth);
+    expect(caja!.width).toBe(dialogo);
+    expect(caja!.width).toBeGreaterThanOrEqual(390 - 16);
     expect(Math.round(caja!.y)).toBe(16);
     const cab = page.locator(`${HOJA} .hoja-asa`);
     const c = (await cab.boundingBox())!;
