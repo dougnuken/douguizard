@@ -38,7 +38,7 @@ export function CaseFilm({ film, tone }: { film: StoryFilm; tone?: BandProps["to
   return (
     <Band tone={tone} rule="t" wide>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 lg:gap-8">
-        <FadeIn className="kicker text-[var(--ink-dim)] lg:pt-1.5">{t.walkthrough}</FadeIn>
+        <FadeIn className="ceja lg:pt-1.5">{t.walkthrough}</FadeIn>
         <div className="mx-auto w-full max-w-[520px] md:max-w-none lg:col-span-3">
           <StoryFilmPlayer film={film} />
         </div>
@@ -54,14 +54,10 @@ function Figure({ figure, sizes }: { figure: StoryFigure; sizes: string }) {
   return (
     <FadeIn>
       <figure className="m-0">
-        <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
+        <div className="caso-losa-media caso-losa-media--m">
           <StoryPicture figure={figure} sizes={sizes} />
         </div>
-        {figure.caption && (
-          <figcaption className="mt-3 text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">
-            {figure.caption}
-          </figcaption>
-        )}
+        {figure.caption && <figcaption className="pie-caso">{figure.caption}</figcaption>}
       </figure>
     </FadeIn>
   );

@@ -548,3 +548,58 @@ test.describe("P1-3 · titulares del cuerpo", () => {
     });
   }
 });
+
+test.describe("P1-4 · bandas heredadas en el idioma de B", () => {
+  for (const idioma of ["es", "en"] as const) {
+    test(`${idioma}: dentro de .caso-b, ningún texto en mayúsculas espaciadas ni en mono (salvo Doto); capturas en losas sin barra de ventana`, async ({ page }) => {
+      test.slow();
+      for (const ancho of [1440, 390]) {
+        await preparar(page, ancho, ancho === 390 ? 844 : 900);
+        for (const slug of CASOS) {
+          await page.goto(`${idioma === "en" ? "/en" : ""}/work/${slug}`, { waitUntil: "networkidle" });
+          const r = await page.evaluate(() => {
+            const malos: string[] = [];
+            for (const el of document.querySelectorAll<HTMLElement>("main article.caso-b *")) {
+              const texto = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent!.trim());
+              // Las viñetas de NDA son dibujos del producto (tokens en mono): no cuentan.
+              if (!texto || el.closest(".sr-only, [data-vineta]")) continue;
+              const cs = getComputedStyle(el);
+              const ff = cs.fontFamily.toLowerCase();
+              if (cs.textTransform === "uppercase") malos.push(`uppercase: ${el.textContent!.trim().slice(0, 30)}`);
+              if (ff.includes("mono") && !ff.includes("doto")) malos.push(`mono: ${el.textContent!.trim().slice(0, 30)}`);
+            }
+            const imgs = [...document.querySelectorAll<HTMLImageElement>("main article.caso-b #producto img")];
+            const sinLosa = imgs.filter((i) => {
+              const c = i.closest<HTMLElement>(".caso-losa-media, .caso-cover");
+              // Los teléfonos (Chub) y las viñetas traen su propio aparato.
+              if (!c) return !i.closest("[data-device], .device, figure.phone, [data-mockup]") && i.width > 300;
+              return getComputedStyle(i).borderTopLeftRadius !== "0px" || getComputedStyle(c).overflow !== "hidden";
+            });
+            return { malos, sinLosa: sinLosa.map((i) => i.getAttribute("src")) };
+          });
+          expect(r.malos, `${idioma}/${slug} ${ancho}`).toEqual([]);
+          expect(r.sinLosa, `${idioma}/${slug} ${ancho} capturas fuera de losa`).toEqual([]);
+        }
+      }
+    });
+  }
+
+  test("Naowee: la galería son losas (fondo, radio en el contenedor), sin etiqueta de ventana ni número", async ({ page }) => {
+    await preparar(page, 1440);
+    await page.goto("/work/naowee-suid", { waitUntil: "networkidle" });
+    const g = await page.locator("main #producto .galeria-caso").evaluate((ul) => {
+      const cajas = [...ul.querySelectorAll<HTMLElement>(".caso-losa-media")];
+      return {
+        n: cajas.length,
+        radios: cajas.map((c) => getComputedStyle(c).borderTopLeftRadius),
+        rM: getComputedStyle(document.documentElement).getPropertyValue("--r-m").trim(),
+        fondo: cajas.map((c) => getComputedStyle(c).backgroundColor),
+        texto: ul.textContent!,
+      };
+    });
+    expect(g.n).toBe(4);
+    for (const r of g.radios) expect(r).toBe(g.rM);
+    for (const f of g.fondo) expect(f).not.toBe("rgba(0, 0, 0, 0)");
+    expect(g.texto).not.toMatch(/NAOWEE|\b0\d\b/);
+  });
+});

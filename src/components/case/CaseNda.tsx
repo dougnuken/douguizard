@@ -73,9 +73,13 @@ export default function CaseNda({
                 drawing — type, marks, padding — instead of reflowing it into
                 a wider, emptier box. Desktop only: on a phone the column is
                 already the size it was drawn at. */}
-            <div className="lg:[zoom:1.6]">{visual}</div>
+            {/* `data-vineta`: es un dibujo del producto (tokens en mono incluidos),
+                no una ceja ni un pie; la regla de P1-4 no lo alcanza. */}
+            <div className="lg:[zoom:1.6]" data-vineta="">
+              {visual}
+            </div>
             {visualCaption && (
-              <figcaption className="mt-3 font-mono text-[12px] text-[var(--blanco)]">
+              <figcaption className="pie-caso" style={{ color: "var(--blanco)" }}>
                 {visualCaption}
               </figcaption>
             )}

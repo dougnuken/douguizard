@@ -211,6 +211,22 @@
     height: auto;
     border-radius: 0;
   }
+  /* P1-4 · las capturas de la galería y de los capítulos: la misma losa, con
+     el radio mediano de la maqueta (`.galeria .media`). */
+  .caso-losa-media--m {
+    border-radius: var(--r-m);
+  }
+  .galeria-caso {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .galeria-caso > [data-ancho] {
+    grid-column: 1 / -1;
+  }
 
   /* ── Cuerpo: índice col 1–2 + secciones col 3–12 (≥ 1280) ─────────────── */
   .caso-cuerpo {
@@ -740,6 +756,10 @@
     .caso-cover:not(.caso-cover-libre) {
       aspect-ratio: 4 / 3;
     }
+    .galeria-caso {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
     .caso-cuerpo,
     .caso-en-hoja .caso-cuerpo {
       display: block;
@@ -826,3 +846,24 @@
     }
   }
 }
+
+/* P1-4 · dentro de la pieza B no queda voz de la plantilla vieja: ni mayúsculas
+   espaciadas ni mono (salvo Doto, que es de B). Fuera de capas a propósito: las
+   utilidades de Tailwind (`.uppercase`, `.kicker`) viven en capas y una regla
+   en capa no les gana. Los números de capítulo pasan a Doto, como el riel. */
+.caso-b :is(.kicker, .uppercase) {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+.caso-b :is(.kicker, .font-mono):not([data-vineta] *) {
+  font-family: var(--font-texto);
+  letter-spacing: 0.01em;
+}
+.caso-b .section-num {
+  font-family: var(--font-dot);
+  font-weight: 700;
+  font-size: max(var(--t-24), 1em);
+  letter-spacing: -0.03em;
+  color: var(--tinta-3);
+}
+
