@@ -88,6 +88,18 @@ export function foto(
 }
 
 export const fotos: FotoHeroe[] = [
+  // Foto elegida por Doug (7 nov, Higgsfield): ciudad nocturna, láser rojo en los ojos, 896×1200.
+  foto("960e1d8c", 1, {
+    tamano: { w: 896, h: 1200 },
+    foco: [0.5, 0.42],
+    cara: [0.5, 0.45, 0.2, 0.2],
+    ojo: 0.421,
+    laser: { y: 0.4215, h: 0.015 },
+    alt: {
+      es: "Doug Vargas, con gorra y chaqueta de cuero, de frente ante una ciudad nocturna; una línea de luz láser roja cruza la cara a la altura de los ojos.",
+      en: "Doug Vargas in a cap and leather jacket, facing the camera against a city at night; a thin red laser line crosses the face at eye level.",
+    },
+  }),
   // Provisional (D7): máster de 880 px; la imagen final debe llegar con ≥ 1920 px de ancho.
   foto("199598aa", 4, {
     tamano: { w: 880, h: 1168 },
@@ -102,7 +114,7 @@ export const fotos: FotoHeroe[] = [
   }),
 ];
 
-export const fotoActiva = "199598aa";
+export const fotoActiva = "960e1d8c";
 
 export function getFotoActiva(): FotoHeroe {
   const f = fotos.find((x) => x.id === fotoActiva);

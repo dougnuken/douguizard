@@ -1,0 +1,47 @@
+{
+  "id": "960e1d8c",
+  "version": 1,
+  "tamano": {
+    "w": 896,
+    "h": 1200
+  },
+  "textura": "/hero/960e1d8c-v1/textura.webp",
+  "poster": {
+    "cine": {
+      "avif": {
+        "440": "/hero/960e1d8c-v1/cine-440.avif",
+        "640": "/hero/960e1d8c-v1/cine-640.avif",
+        "880": "/hero/960e1d8c-v1/cine-880.avif"
+      },
+      "webp": {
+        "440": "/hero/960e1d8c-v1/cine-440.webp",
+        "640": "/hero/960e1d8c-v1/cine-640.webp",
+        "880": "/hero/960e1d8c-v1/cine-880.webp"
+      }
+    },
+    "losa": {
+      "avif": {
+        "440": "/hero/960e1d8c-v1/losa-440.avif",
+        "640": "/hero/960e1d8c-v1/losa-640.avif",
+        "880": "/hero/960e1d8c-v1/losa-880.avif"
+      },
+      "webp": {
+        "440": "/hero/960e1d8c-v1/losa-440.webp",
+        "640": "/hero/960e1d8c-v1/losa-640.webp",
+        "880": "/hero/960e1d8c-v1/losa-880.webp"
+      }
+    },
+    "movil": {
+      "avif": {
+        "440": "/hero/960e1d8c-v1/movil-440.avif",
+        "640": "/hero/960e1d8c-v1/movil-640.avif",
+        "880": "/hero/960e1d8c-v1/movil-880.avif"
+      },
+      "webp": {
+        "440": "/hero/960e1d8c-v1/movil-440.webp",
+        "640": "/hero/960e1d8c-v1/movil-640.webp",
+        "880": "/hero/960e1d8c-v1/movil-880.webp"
+      }
+    }
+  }
+}
