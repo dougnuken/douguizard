@@ -372,6 +372,63 @@ test.describe("hoja · movimiento y móvil", () => {
     expect(Math.abs(caja.x + caja.width / 2 - 720)).toBeLessThanOrEqual(1);
   });
 
+  for (const via of ["X", "Esc", "velo"] as const) {
+    test(`sin RM, ${via}: la salida se ve (a 100 ms a medio camino, a 400 ms sin hoja) (P1-3)`, async ({ page }) => {
+      await preparar(page, { rm: false });
+      await page.goto("/work", { waitUntil: "networkidle" });
+      await abrir(page, "/work", "olbo", { asentar: false });
+      await page.waitForTimeout(600); // la entrada dura 420 ms
+      const y0 = (await page.locator(`${HOJA} .hoja-panel`).boundingBox())!.y;
+      // Reloj desde el cierre real (cuando la hoja pasa a `cerrando`), no desde
+      // la orden de Playwright. Se anota cada cuadro pintado hasta los 400 ms.
+      await page.evaluate(() => {
+        const d = document.querySelector("dialog.hoja")!;
+        const w = window as unknown as { __salida: Promise<{ t: number; y: number | null; velo: number | null; abierta: boolean }[]> };
+        w.__salida = new Promise((fin) => {
+          const cuadros: { t: number; y: number | null; velo: number | null; abierta: boolean }[] = [];
+          new MutationObserver((_, o) => {
+            if (d.getAttribute("data-estado") !== "cerrando") return;
+            o.disconnect();
+            const t0 = performance.now();
+            const cuadro = () => {
+              const t = performance.now() - t0;
+              const p = d.isConnected ? d.querySelector(".hoja-panel") : null;
+              const v = d.isConnected ? d.querySelector(".hoja-velo") : null;
+              cuadros.push({
+                t,
+                y: p ? p.getBoundingClientRect().y : null,
+                velo: v ? Number(getComputedStyle(v).opacity) : null,
+                abierta: !!document.querySelector("dialog.hoja[open]"),
+              });
+              if (t < 400) requestAnimationFrame(cuadro);
+              else fin(cuadros);
+            };
+            requestAnimationFrame(cuadro);
+          }).observe(d, { attributes: true, attributeFilter: ["data-estado"] });
+        });
+      });
+      if (via === "X") await page.locator(`${HOJA} button.hoja-circulo`).click();
+      if (via === "Esc") await page.keyboard.press("Escape");
+      if (via === "velo") await page.mouse.click(40, 450);
+      const cuadros = await page.evaluate(() => (window as unknown as { __salida: Promise<{ t: number; y: number | null; velo: number | null; abierta: boolean }[]> }).__salida);
+      const resumen = cuadros.map((c) => `${Math.round(c.t)}ms y${c.y === null ? "–" : Math.round(c.y)}`).join(" · ");
+      // Hacia los 100 ms (el cuadro pintado más cercano, ±60 ms: un cuadro de
+      // headless dura ~55 ms): la hoja sigue en pantalla, a medio camino.
+      const medio = cuadros
+        .filter((c) => Math.abs(c.t - 100) <= 60 && c.abierta && c.y !== null && c.y > y0 + 20 && c.y < 900)
+        .sort((a, b) => Math.abs(a.t - 100) - Math.abs(b.t - 100))[0];
+      expect(medio, `estado intermedio cerca de 100 ms (${resumen})`).toBeTruthy();
+      expect(medio!.velo!, "el velo se está fundiendo").toBeGreaterThan(0);
+      expect(medio!.velo!).toBeLessThan(1);
+      // A los 400 ms: sin hoja.
+      const ultimo = cuadros[cuadros.length - 1];
+      expect(ultimo.t).toBeGreaterThanOrEqual(400);
+      expect(ultimo.abierta, `a 400 ms no queda hoja (${resumen})`).toBe(false);
+      expect(await page.locator("dialog.hoja").count()).toBe(0);
+      await expect(page).toHaveURL(/\/work$/);
+    });
+  }
+
   test("con el ancla (sin RM, 1440): cerrar deja el tablero en el mismo progreso", async ({ page }) => {
     await preparar(page, { rm: false });
     await page.goto("/", { waitUntil: "networkidle" });
