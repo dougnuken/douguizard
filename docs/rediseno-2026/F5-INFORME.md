@@ -55,7 +55,7 @@ Archivos: `components/escena/{Escena.tsx, EscenaCliente.tsx, useScrollScene.ts, 
 |---|---|
 | vitest | **247/247** (236 de base + 11 en `escena-f5.test.ts`: timeline en p 0/1, tinta en 0,41, inicios de las losas, corte 0 → 0,3, rail y láser, vidrio cine → losa con joroba y fase, `sceneInit`) |
 | lint · tsc · build | en verde |
-| Playwright completo | ver «Verificación final» (base 424 + 12 de `escena.spec` = 436) |
+| Playwright completo | **436/436 ×2 corridas** (base 424 + 12 de `escena.spec`) |
 | `escena.spec.ts` (nuevo, 12) | 1440×900: acto 1 (nombre XL bajo y = 88, CTA en pantalla, foto a pantalla completa) → rueda → OS con K1–K5 iguales al OS de F3 (±1 px) y sin estilos en línea · resize en el OS 1440×900 → 1280×800 (foto = losa) y 1100 → 900 (móvil sin restos) · Tab: las 12 primeras paradas visibles · snap: 40 px vuelve a 0 en ≤ 1 s y desde 0,6 termina el viaje · contraste de K2 en p 0,36/0,41/0,46 ≥ 4,5:1 · **lockup del home** a 1280×720, 1440×900 y 1920×1080 (láser en la rendija ±2 px en p = 0, `data-corte="cerrado"` en p 0,3 y en K1 la palabra entera, K2 sin tapar el nombre) · CLS ≤ 0,02 y reposo (sin animaciones, vidrio sin cuadros) · GSAP bloqueado → OS armado sin errores · RM, sin JS y 390: OS desde el primer píxel, sin pista ni GSAP · el chunk de GSAP se pide **después** del LCP |
 | Pruebas cambiadas | `settle.ts` deja el home al final del ancla. `vidrio.spec` «0 fps…» va primero al OS (la losa K1 del OS está al final del ancla; en el acto 1 la foto ocupa toda la pantalla). |
 
@@ -77,6 +77,14 @@ Para comparar en igualdad de condiciones medí también el commit de F4 (`0be187
   el `load`, solo ≥ 1024 sin RM (`escena.spec`).
 - CLS escritorio 0,0005. **CLS móvil 0,0655, igual en F4 hoy** (no es de F5): en Slow 4G la fila «Doug Vargas ·
   Disponible» de K2 ocupa dos líneas con la fuente de respaldo y una con Instrument Sans. Va a pendientes.
+
+## Verificación final (commit `9ed61e7`)
+
+- vitest 247/247 · lint · tsc · build en verde.
+- Playwright completo, dos corridas seguidas: **436/436** y **436/436** (14,8 y 15,0 min).
+- Antes de eso, dos corridas dieron 435/436 por el mismo fallo real en `escena.spec` («1100 → 900: móvil sin
+  restos»): tras salir de la escena, un tick tardío del scrub repintaba p = 0. Se arregló con una guarda (`activa`)
+  en `pintar`, y luego `escena.spec` pasó 3 veces seguidas (36/36) antes de las dos corridas finales.
 
 ## Capturas (`F5-capturas/`, `next build` + `next start`, DPR 1, JPG 82)
 
