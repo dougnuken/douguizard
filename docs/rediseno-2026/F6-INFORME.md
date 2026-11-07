@@ -129,3 +129,11 @@ Rama `claude/douguizard-portfolio-redesign-9ivnau`. Fuente: `07-PLAN-IMPLEMENTAC
 
 **Pendiente para F7 (P1-4):** el cuerpo B del caso hereda la regla: dentro de la hoja el contenido de la primera
 pantalla viaja con el panel, sin revelado propio. Los reveals solo van en contenido que entra por scroll.
+
+**Verificación de los arreglos:** lint, tsc y build en verde. vitest 255/255. Playwright completo **472/472**
+(464 de antes + 8 nuevas: P1-1 parte la prueba de foco en dos, más P1-2, P1-3 ×3, P1-4 y P1-5 ×2) en 15,2 min, con el
+`vidrio.spec` que ya subió la otra sesión (`5d0289f`). Capturas rehechas con `npx tsx scripts/shots-f6.ts --arreglos`
+(`next build` + `next start`): `hoja-naowee-suid-{es,en}-{1440,390}.jpg` y `hoja-mercadolibre-andes-es-{1440,390}.jpg`,
+con miga corta, panel en x 160–1279 a 1440 y el canal oscuro. `hoja-1440.webm` abre, lee y cierra con la X, y después
+abre y cierra con Esc y con el velo. A 390, headless sigue reservando 15 px de canal (desvío 4): ahora ese canal se ve
+oscuro.
