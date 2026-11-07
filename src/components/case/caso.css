@@ -303,6 +303,8 @@
   /* ── P1-6 · Tablero de impacto ────────────────────────────────────────── */
   .tablero-caso {
     display: grid;
+    /* Cada losa mide lo que lleva (P1-6): sin estirarse a la más alta de su fila. */
+    align-items: start;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--gap);
     margin: 0;
@@ -618,14 +620,19 @@
     .caso-en-hoja .ficha {
       grid-column: auto;
     }
-    .caso-h1,
-    .caso-en-hoja .caso-h1 {
+    .caso-h1 {
       margin: 8px 0 16px;
       font-size: var(--t-72);
     }
-    .caso-h1[data-largo],
-    .caso-en-hoja .caso-h1[data-largo] {
+    .caso-h1[data-largo] {
       font-size: var(--t-48);
+    }
+    /* En la hoja el título baja un paso más (48; 36 si es largo). */
+    .caso-en-hoja .caso-h1 {
+      font-size: var(--t-48);
+    }
+    .caso-en-hoja .caso-h1[data-largo] {
+      font-size: var(--t-36);
     }
     .gancho {
       font-size: var(--t-18);

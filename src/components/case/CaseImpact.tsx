@@ -8,14 +8,15 @@ import { useDict } from "@/i18n/LocaleProvider";
 
 /**
  * Avance de un carácter de Doto en em, ya con el tracking de −0,06 em de la
- * cifra. Medido a ojo sobre el subconjunto y redondeado hacia arriba, para que
- * la estimación se equivoque del lado de caber. El punto de miles del ES es el
+ * cifra. Doto es monoespaciada: medido en Chromium, 0,54 em por carácter con
+ * ese tracking; se usa 0,55 para que la estimación se equivoque del lado de
+ * caber. El punto de miles del ES es el
  * `span.punto` de 0,32 em (NOTAS §6).
  */
 function avance(ch: string, punto: boolean): number {
   if (ch === "." && punto) return 0.32;
   if (ch === " ") return 0.3;
-  return 0.56;
+  return 0.55;
 }
 
 /**

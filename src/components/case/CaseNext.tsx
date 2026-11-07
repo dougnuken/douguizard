@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getCaseMeta, getShortName, type CaseStudy } from "@/data/work";
+import { getCaseMeta, type CaseStudy } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import DotMatrix from "@/components/sistema/DotMatrix";
@@ -27,7 +27,7 @@ export default function CaseNext({ next, enHoja = false }: { next: CaseStudy; en
   const href = localePath(locale, `/work/${next.slug}`);
   const nombre = (
     <>
-      <span translate="no">{getShortName(next)}</span>
+      <span translate="no">{next.project}</span>
       <span className="sr-only">{t.readCase}</span>
     </>
   );
@@ -54,6 +54,7 @@ export default function CaseNext({ next, enHoja = false }: { next: CaseStudy; en
                 </a>
               )}
             </h3>
+            <p className="apoyo mt-3 text-[var(--blanco)]">{next.tagline}</p>
           </div>
           {cifras.length > 0 && (
             <div role="group" aria-label={cifras.map((k) => `${k.value} ${k.label}`).join(", ")}>
