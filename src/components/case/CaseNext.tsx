@@ -54,7 +54,6 @@ export default function CaseNext({ next, enHoja = false }: { next: CaseStudy; en
                 </a>
               )}
             </h3>
-            <p className="apoyo mt-3 text-[var(--blanco)]">{next.tagline}</p>
           </div>
           {cifras.length > 0 && (
             <div role="group" aria-label={cifras.map((k) => `${k.value} ${k.label}`).join(", ")}>

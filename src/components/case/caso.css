@@ -480,6 +480,11 @@
     gap: 24px;
     min-height: 280px;
   }
+  .sig-card .enlace-tarjeta {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--toque);
+  }
   .sig-card .enlace-tarjeta::after {
     content: "";
     position: absolute;
@@ -554,6 +559,29 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 16px 8px 24px;
+  }
+  .secciones-cerrar {
+    display: grid;
+    place-items: center;
+    width: var(--boton-s);
+    height: var(--boton-s);
+    border: 0;
+    border-radius: 50%;
+    background: var(--losa-alta);
+    color: var(--tinta);
+    cursor: pointer;
+  }
+  .secciones-cerrar svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+  .secciones-cerrar:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
   }
   .secciones-cab h2 {
     font: 600 var(--t-20) / 1.2 var(--font-display-b);

@@ -25,6 +25,7 @@ const CASOS = [
   "ideaware",
   "chub",
 ] as const;
+const BASE_CASOS = base as Record<string, { h2: number; img: number; video: number; textos: string[] }>;
 const CON_KPIS = ["olbo", "naowee-suid", "mercadolibre-andes", "banco-de-occidente", "dc-medical", "makeapet"];
 
 async function preparar(page: Page, ancho: number, alto = 900) {
@@ -285,12 +286,17 @@ test.describe("contenido frente a F6", () => {
             video: m.querySelectorAll("video").length,
           };
         });
-        const b = (base as Record<string, { h2: number; img: number; video: number; textos: string[] }>)[`${idioma}/${slug}`];
+        const b = BASE_CASOS[`${idioma}/${slug}`];
         // Se compara sin la decoración de la plantilla vieja: el «→» de los
         // enlaces y el espaciado alrededor del «·» de las cejas.
         const norm = (t: string) => t.replace(/\s*→/g, "").replace(/\s*·\s*/g, "·").replace(/\s+/g, " ").trim();
         const textoAhora = norm(ahora.texto);
-        const faltan = b.textos.filter((t) => !textoAhora.includes(norm(t)));
+        // El gancho del siguiente caso salía en la banda «Siguiente» de F6; ya
+        // no va en la losa azul (no llega a 7:1 sobre el jelly): es texto de
+        // ese otro caso y sigue íntegro en su propia portada.
+        const sig = (await page.locator("[data-siguiente] a.enlace-tarjeta").getAttribute("href"))!.split("/").pop()!;
+        const deOtro = new Set(BASE_CASOS[`${idioma}/${sig}`].textos.map(norm));
+        const faltan = b.textos.filter((t) => !textoAhora.includes(norm(t)) && !deOtro.has(norm(t)));
         expect(faltan, `${idioma}/${slug} texto perdido`).toEqual([]);
         expect(ahora.h2, `${idioma}/${slug} h2`).toBeGreaterThanOrEqual(b.h2);
         expect(ahora.img, `${idioma}/${slug} imágenes`).toBeGreaterThanOrEqual(b.img);

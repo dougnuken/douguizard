@@ -111,10 +111,11 @@ for (const [w, h] of [[1024, 768], [1280, 720], [1366, 768], [1440, 900], [1920,
   });
 }
 
-// 5.5 sticky eyebrow clears the header
-// olbo became a long-form case (cover, film, story) and lost its Decisions
-// band; DC Medical keeps one, so the sticky eyebrow is measured there.
-test("5.5 sticky eyebrow clears header on /work/dc-medical @1440", async ({ page }) => {
+// 5.5 lo fijo de un caso no queda bajo la cabecera.
+// F7: la plantilla B ya no fija rótulos de banda («Decisiones clave» era el
+// último); quien acompaña la lectura es el índice lateral (≥ 1280), sticky a
+// 128 px. Se mide en DC Medical, a media lectura de «Decisiones».
+test("5.5 sticky index clears header on /work/dc-medical @1440", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -122,45 +123,26 @@ test("5.5 sticky eyebrow clears header on /work/dc-medical @1440", async ({ page
   await settle(page);
   const info = await page.evaluate(async () => {
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    const heads = Array.from(document.querySelectorAll<HTMLElement>("h2"));
-    // The Decisions band keeps the page's sticky gutter eyebrow: "Key
-    // decisions", "Decisiones clave" on the Spanish page this route serves
-    // (CaseDecisions.tsx). Process used to be the target, but it is a
-    // horizontal timeline now, with its eyebrow on top and nothing to stick.
-    const head = heads.find((h) => /key decisions|decisiones clave/i.test(h.textContent || ""));
-    if (!head) return { found: false as const, all: heads.map((h) => (h.textContent || "").trim()) };
-    head.scrollIntoView({ block: "start", behavior: "auto" });
-    await sleep(120);
-    // A sticky element travels only within its containing block — here the
-    // grid cell beside the decisions list. Scroll 300px past the heading's
-    // own position, or as far as that cell allows if the list is shorter,
-    // so the reading is taken while the heading is still pinned rather than
-    // after the cell has carried it away.
-    const cell = head.parentElement!.getBoundingClientRect();
-    const stickyTop = parseFloat(getComputedStyle(head).top) || 0;
-    const travel = cell.height - head.offsetHeight - stickyTop;
-    const by = Math.max(0, Math.min(300, Math.floor(travel) - 16));
-    window.scrollBy(0, by);
+    const nav = document.querySelector<HTMLElement>("main nav[data-indice]");
+    const dec = document.getElementById("decisiones");
+    if (!nav || !dec) return { found: false as const };
+    window.scrollTo(0, dec.getBoundingClientRect().top + window.scrollY - 200);
     await sleep(250);
-    const r = head.getBoundingClientRect();
+    const r = nav.getBoundingClientRect();
+    const zona = nav.parentElement!.getBoundingClientRect();
     return {
       found: true as const,
-      by,
+      position: getComputedStyle(nav).position,
       top: +r.top.toFixed(1),
-      // How far the heading sits below its cell's top: positive only if it
-      // stuck, since in flow it would sit at the cell's very top.
-      pinnedBy: +(r.top - head.parentElement!.getBoundingClientRect().top).toFixed(1),
+      pinnedBy: +(r.top - zona.top).toFixed(1),
       headerBottom: +(document.querySelector("header")?.getBoundingClientRect().bottom ?? 0).toFixed(1),
-      position: getComputedStyle(head).position,
-      text: (head.textContent || "").trim().slice(0, 40),
     };
   });
-  expect(info.found, "5.5 Decisions h2 exists").toBe(true);
+  expect(info.found, "5.5 índice y Decisiones existen").toBe(true);
   if (info.found) {
-    expect(info.position, "5.5 Decisions h2 is sticky").toBe("sticky");
-    expect(info.by, "5.5 the band leaves room to scroll past the heading").toBeGreaterThan(100);
-    expect(info.pinnedBy, "5.5 heading is pinned, not in flow").toBeGreaterThan(0);
-    expect(info.top, `5.5 sticky h2 top ${info.top} >= 64`).toBeGreaterThanOrEqual(64);
-    expect(info.top, `5.5 sticky h2 top ${info.top} clears the header`).toBeGreaterThanOrEqual(info.headerBottom);
+    expect(info.position, "5.5 índice sticky").toBe("sticky");
+    expect(info.pinnedBy, "5.5 fijado, no en el flujo").toBeGreaterThan(0);
+    expect(info.top, `5.5 top ${info.top} >= 64`).toBeGreaterThanOrEqual(64);
+    expect(info.top, `5.5 top ${info.top} bajo la cabecera`).toBeGreaterThanOrEqual(info.headerBottom);
   }
 });

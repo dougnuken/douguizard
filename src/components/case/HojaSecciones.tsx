@@ -59,7 +59,7 @@ export default function HojaSecciones({ entradas, enHoja = false }: { entradas: 
           <h2 id={enHoja ? "secciones-hoja-h" : "secciones-h"}>{dict.dock.secciones}</h2>
           <button
             type="button"
-            className="hoja-circulo"
+            className="secciones-cerrar"
             aria-label={dict.hoja.cerrar}
             onClick={() => dialogo.current?.close()}
           >
