@@ -1408,7 +1408,9 @@ html:has(dialog.hoja[open]) {
 .hoja-panel {
   --sale: calc(100% + 48px);
   position: absolute;
-  left: 50%;
+  /* Centro de la ventana, no del dialog: con barras clásicas el dialog mide
+     15 px menos (el canal) y el panel quedaría descentrado (P1-2). */
+  left: 50vw;
   bottom: 0;
   width: min(1120px, calc(100vw - 2 * var(--os-izq)));
   height: calc(100svh - 48px);
@@ -1549,6 +1551,7 @@ html:has(dialog.hoja[open]) {
 @media (max-width: 1023px) {
   .hoja-panel {
     --sale: 100%;
+    left: 50%;
     width: 100%;
     height: calc(100svh - 16px);
   }

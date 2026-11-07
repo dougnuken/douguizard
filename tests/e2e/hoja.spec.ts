@@ -367,6 +367,9 @@ test.describe("hoja · movimiento y móvil", () => {
       const velo = lum(1410, y);
       expect(Math.abs(canal - velo), `y ${y}: canal ${canal} vs velo ${velo}`).toBeLessThanOrEqual(3);
     }
+    // El panel se centra en la ventana (maqueta: x 160–1279), no en el dialog.
+    const caja = (await page.locator(`${HOJA} .hoja-panel`).boundingBox())!;
+    expect(Math.abs(caja.x + caja.width / 2 - 720)).toBeLessThanOrEqual(1);
   });
 
   test("con el ancla (sin RM, 1440): cerrar deja el tablero en el mismo progreso", async ({ page }) => {
