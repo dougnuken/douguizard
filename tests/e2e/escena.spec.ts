@@ -303,6 +303,26 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     }
   });
 
+  test("P1-1: fotograma intermedio limpio (sin atmósfera desde 0,35; láser de lado a lado hasta el OS)", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrir(page, { captura: true });
+    for (const p of [0.35, 0.5, 0.7, 0.85]) {
+      await irA(page, p);
+      const m = await page.evaluate(() => {
+        const atm = getComputedStyle(document.querySelector(".k1-foto")!, "::before").opacity;
+        const k1 = document.querySelector(".k1-laser")!.getBoundingClientRect();
+        const os = document.querySelector<HTMLElement>(".os-laser")!;
+        const r = os.getBoundingClientRect();
+        return { atm: Number(atm), dy: Math.abs(r.top - k1.top), ancho: r.width, alfa: Number(getComputedStyle(os).opacity) };
+      });
+      expect(m.atm, `p ${p}: atmósfera`).toBe(0);
+      expect(m.dy, `p ${p}: el láser ancho sigue a la línea de la foto`).toBeLessThanOrEqual(1.5);
+      // Hasta 0,8 de lado a lado; luego vuelve al ancho del tablero de F3.
+      if (p <= 0.8) expect(m.ancho, `p ${p}`).toBeGreaterThanOrEqual(1440 - 20);
+      expect(m.alfa, `p ${p}`).toBeGreaterThanOrEqual(0.5);
+    }
+  });
+
   test("P0-1: en p = 0 la foto del acto 1 no tiene bordes duros a los lados (|ΔL| < 6 entre columnas vecinas)", async ({ page }) => {
     for (const [w, h] of [[1440, 900], [1280, 720], [1920, 1080]]) {
       await page.setViewportSize({ width: w, height: h });

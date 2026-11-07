@@ -58,6 +58,13 @@ describe("escena F5 · tramo y timeline", () => {
     expect(frameEscena(0.15).nombre).toBeGreaterThan(0.5);
   });
 
+  it("P1-1: la atmósfera se va antes de 0,35 y el láser a todo el ancho no se apaga nunca", () => {
+    expect(frameEscena(0).atm).toBe(1);
+    expect(frameEscena(0.35).atm).toBe(0);
+    for (const p of [0, 0.2, 0.4, 0.6, 0.8, 0.9, 1]) expect(frameEscena(p).laserAncho).toBeGreaterThanOrEqual(0.5);
+    expect(frameEscena(1).laserAncho).toBe(1);
+  });
+
   it("el corte del nombre se cierra entre p 0 y 0,3 y llega entero (lib/corte)", () => {
     expect(aperturaDesdeProgreso(0)).toBe(1);
     expect(aperturaDesdeProgreso(0.3)).toBe(0);

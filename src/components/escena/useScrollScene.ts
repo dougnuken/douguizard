@@ -80,6 +80,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       radio: number;
       k2: { dx: number; dy: number };
       nombre: { x0: number; y0: number; dx: number; dy: number; s: number };
+      /** Ancho del láser del tablero: el del viewport en la escena, el de F3 en el OS. */
+      laser: { ancho: number; os: number };
     } | null = null;
     let limpiarGsap: (() => void) | null = null;
     let irAlFin: (() => void) | null = null;
@@ -140,8 +142,17 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         // Abajo a la izquierda, pero nunca encima del nombre (alto ≤ 800: P0-1 de B).
         k2: { dx: 24 - o2.x, dy: Math.max(H - 24 - k2.offsetHeight, y0 + lockup.offsetHeight + 16) - o2.y },
         nombre: { x0, y0, dx: on.x - x0, dy: on.y - y0, s: fsK1 / fsXL },
+        laser: { ancho: W, os: W },
       };
-      pista.dataset.escenaFin = String(Math.round(pista.getBoundingClientRect().top + window.scrollY + H));
+      let laserOs = 0;
+      if (osLaser) {
+        const w0 = osLaser.style.width;
+        osLaser.style.removeProperty("width");
+        laserOs = osLaser.getBoundingClientRect().width;
+        if (w0) osLaser.style.width = w0;
+      }
+      geo.laser = { ancho: W, os: laserOs };
+            pista.dataset.escenaFin = String(Math.round(pista.getBoundingClientRect().top + window.scrollY + H));
     };
 
     const pintar = () => {
@@ -172,7 +183,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         height: `${r.h}px`,
         borderRadius: `${lerp(0, geo.radio, fr.radio)}px`,
       });
-      foto.style.setProperty("--atm", (1 - fr.q).toFixed(3));
+      foto.style.setProperty("--atm", fr.atm.toFixed(3));
       foto.style.setProperty("--q", fr.q.toFixed(4));
       Object.assign(poster.style, {
         position: "absolute",
@@ -183,7 +194,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         maxWidth: "none",
       });
       poster.style.setProperty("--vidrio-p", p.toFixed(4));
-      laser.style.top = `${pl.Oy + f.ojo * pl.Dy - r.y}px`;
+      const lineaY = pl.Oy + f.ojo * pl.Dy;
+      laser.style.top = `${lineaY - r.y}px`;
       velo.style.opacity = fr.velo.toFixed(3);
       k2.style.translate = `${lerp(geo.k2.dx, 0, fr.k2).toFixed(2)}px ${lerp(geo.k2.dy, 0, fr.k2).toFixed(2)}px`;
       k2.style.setProperty("--m", fr.m.toFixed(3));
@@ -202,7 +214,12 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         rail.style.opacity = fr.rail.toFixed(3);
         rail.style.translate = `${(-112 * (1 - fr.rail)).toFixed(2)}px 0`;
       }
-      if (osLaser) osLaser.style.opacity = fr.laserOs.toFixed(3);
+      if (osLaser) {
+        // P1-1: fuera de la caja de la foto el láser sigue de lado a lado (el área de K1 = su caja).
+        osLaser.style.top = `${lineaY.toFixed(2)}px`;
+        osLaser.style.width = `${lerp(geo.laser.ancho, geo.laser.os, fr.laserOs).toFixed(1)}px`;
+        osLaser.style.opacity = fr.laserAncho.toFixed(3);
+      }
       indicador.style.setProperty("--p", Math.min(1, p / 0.17).toFixed(3));
       indicador.style.opacity = fr.indicador.toFixed(3);
       if (corteListo) fijarCorte(lockup, aperturaDesdeProgreso(p));

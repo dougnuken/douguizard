@@ -176,6 +176,8 @@ export const ESCENA = {
   nombreFuera: [0.66, 0.76] as const,
   panelDentro: [0.68, 0.8] as const,
   laserOs: [0.8, 1] as const,
+  /** P1-1 (crítica F5): la atmósfera borrosa se va antes de 0,35 (nunca queda la caja gris sola). */
+  atmosfera: [0, 0.35] as const,
   indicador: [0.05, 0.17] as const,
 } as const;
 
@@ -203,6 +205,10 @@ export function frameEscena(p: number) {
     rail: p2o(tramo(p, ...ESCENA.rail)),
     velo: 1 - tramo(p, ...ESCENA.velo),
     laserOs: tramo(p, ...ESCENA.laserOs),
+    atm: 1 - p2io(tramo(p, ...ESCENA.atmosfera)),
+    /** P1-1: el láser sigue a todo el ancho (`.os-laser` pegado a la línea de la foto),
+     *  con la alfa bajando de 1 a 0,5 hasta 0,8; ahí vuelve a 1 como láser del tablero. */
+    laserAncho: Math.max(1 - 0.5 * tramo(p, 0, ESCENA.laserOs[0]), tramo(p, ...ESCENA.laserOs)),
     indicador: 1 - tramo(p, ...ESCENA.indicador),
   };
 }
