@@ -12,8 +12,10 @@ const SIGLA: Record<string, string> = { LinkedIn: "in", Behance: "Bē", GitHub: 
  * LinkedIn · Behance · GitHub · Volver arriba, en gris salvo el correo. Lo
  * montan el home y las páginas B (no `/cv` ni los casos).
  *
- * Es de servidor en F3: sin escena (F5) nunca está inerte, así que no necesita
- * JS. F5 lo vuelve isla para ponerle `inert` mientras p < 0,5 del ancla (P0-3).
+ * Sigue siendo de servidor: en el home de escritorio con movimiento, el script
+ * `sceneInit` (F5) lo deja `inert` antes del primer pintado y `useScrollScene`
+ * lo libera desde p = 0,5 del ancla (P0-3 de B). Sin JS, con RM, en móvil y en
+ * las demás páginas nunca está inerte.
  */
 export default function RailAcciones({ locale }: { locale: Locale }) {
   const s = getSite(locale);

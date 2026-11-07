@@ -1,0 +1,212 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Escena del home · F5. Acto 1 «cine» (≥ 1024 sin RM, `html.cine`) → OS de F3.
+   - Sin `html[data-escena-fase]`: el CSS pinta p = 0 solo, antes de cualquier JS de escena
+     (la foto de K1 a pantalla completa, K2 de vidrio abajo a la izquierda, las
+     losas K3–K5 y el rail apagados, el nombre XL y «Desliza»).
+   - `data-escena-fase="anim"`: `useScrollScene` lo escribe todo en línea (0 < p < 1).
+   - `data-escena-fase="os"`: p = 1; sin estilos en línea, el OS de F3 tal cual.
+   Las cuentas de p = 0 son las de `placement(…, "cine")` (lib/escena.ts): foto a
+   130 % del alto, centrada al 62 % del ancho, ojo al 41 % del alto.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .escena-nombre,
+  .escena-indicador,
+  .k1-velo,
+  .os-laser {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    /* P2-2 (F3 y F4): el láser cruza el tablero a la altura de los ojos de K1,
+       por detrás de las losas (solo se ve en las calles y en los márgenes). */
+    .os-laser {
+      display: block;
+      position: absolute;
+      grid-area: k1;
+      z-index: -1;
+      top: calc(var(--foto-ojo, 0.3) * 100%);
+      left: -100vw;
+      right: -100vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 51, 68, 0.5) 30%, rgba(255, 51, 68, 0.5) 70%, transparent);
+      box-shadow: 0 0 6px rgba(255, 51, 68, 0.35);
+      pointer-events: none;
+    }
+    .escena {
+      overflow-x: clip;
+    }
+
+    /* ── Acto 1 (`html.cine`) ─────────────────────────────────────────── */
+    /* La pista: 1 viewport de recorrido mientras la escena queda pegada. */
+    :root.cine .escena-pista::after {
+      content: "";
+      display: block;
+      height: 100svh;
+    }
+    :root.cine .escena {
+      position: sticky;
+      top: 0;
+    }
+    /* El nombre XL pasa por detrás de K2 y por delante de la foto (sin el
+       contexto de apilado del OS, K2 = 2 > nombre = 1 > K1, K3–K5). */
+    :root.cine .os {
+      z-index: auto;
+    }
+    :root.cine .k1 {
+      overflow: visible;
+    }
+    /* Siempre en caja (las entradas no se repiten al volver del OS); en p = 1, ocultos. */
+    :root.cine :is(.escena-nombre, .escena-indicador) {
+      display: block;
+    }
+    :root.cine:not([data-escena-fase="os"]) .k1-velo {
+      display: block;
+    }
+    :root.cine[data-escena-fase="os"] :is(.escena-nombre, .escena-indicador) {
+      visibility: hidden;
+    }
+
+    /* Entrada por tiempo, una vez y sin JS (NOTAS §2): todo termina antes de
+       1,1 s y el escalonado total es < 600 ms. El LCP (la foto) no se anima.
+       `backwards`: al terminar no queda ninguna animación en efecto (0 fps). */
+    :root.cine .escena-nombre .linea {
+      animation: escena-sube 600ms cubic-bezier(0.16, 1, 0.3, 1) 80ms backwards;
+    }
+    :root.cine .escena-nombre .l2 {
+      animation-delay: 160ms;
+    }
+    :root.cine .k1-laser {
+      animation: escena-laser 700ms cubic-bezier(0.65, 0, 0.35, 1) 240ms backwards;
+    }
+    :root.cine .k2 {
+      animation: escena-k2 600ms cubic-bezier(0.16, 1, 0.3, 1) 400ms backwards;
+    }
+    :root.cine .escena-indicador {
+      animation: escena-aparece 300ms ease-out 600ms backwards;
+    }
+    :root.cine .escena-nombre {
+      position: absolute;
+      z-index: 1;
+      left: 24px;
+      /* Primer pase sin JS: la línea del corte (≈ 1,35 em bajo el borde) sobre
+         el láser (41 % del alto); `useScrollScene` lo corrige medido. */
+      top: max(88px, 41svh - 1.36em);
+      margin: 0;
+      color: var(--tinta);
+      transform-origin: 0 0;
+      pointer-events: none;
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+    }
+    :root.cine .escena-indicador {
+      position: absolute;
+      z-index: 2;
+      right: 24px;
+      top: 50svh;
+      width: 2px;
+      height: 128px;
+      translate: 0 -50%;
+      background: rgba(255, 255, 255, 0.24);
+    }
+    .escena-indicador i {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 0;
+      transform: scaleY(var(--p, 0));
+      background: var(--laser);
+    }
+    .escena-indicador span {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      font: 400 var(--t-12) / 1.2 var(--font-texto);
+      color: var(--tinta-2);
+      white-space: nowrap;
+    }
+    /* El velo de la izquierda: legibilidad del nombre y de K2 sobre la foto. */
+    .k1-velo {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(10, 10, 12, 0.72), rgba(10, 10, 12, 0.32) 38%, transparent 62%),
+        linear-gradient(0deg, rgba(10, 10, 12, 0.5), transparent 30%);
+    }
+    /* Fuera de la foto (más ancha la pantalla que la foto), su atmósfera borrosa. */
+    :root.cine:not([data-escena-fase="os"]) .k1-foto::before {
+      content: "";
+      position: absolute;
+      inset: -10%;
+      z-index: -1;
+      opacity: var(--atm, 1);
+      background: var(--foto-atm) 50% 42% / cover no-repeat;
+      filter: blur(28px) brightness(0.72) saturate(1.05);
+    }
+    :root.cine .k2 {
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      backdrop-filter: blur(24px) saturate(140%);
+    }
+
+    /* ── p = 0 sin JS de escena (sin `data-fase`) ─────────────────────── */
+    :root.cine:not([data-escena-fase]) .k1-foto {
+      position: fixed;
+      inset: 0;
+      border-radius: 0;
+    }
+    :root.cine:not([data-escena-fase]) .k1-foto :is(.k1-poster, .vidrio-gl, .vidrio-css) {
+      position: absolute;
+      left: 62%;
+      top: calc(41% - var(--foto-ojo) * 130%);
+      width: auto;
+      height: 130%;
+      aspect-ratio: var(--foto-ar);
+      translate: -50% 0;
+    }
+    :root.cine:not([data-escena-fase]) .k1-laser {
+      top: 41%;
+    }
+    :root.cine:not([data-escena-fase]) .k2 {
+      --m: 0;
+      --mt: 0;
+      translate: calc(24px - var(--os-izq)) calc(100svh - 24px - 3 * var(--fila) - 2 * var(--gap) - var(--cabecera));
+    }
+    :root.cine:not([data-escena-fase]) :is(.k3, .k4, .k5, .k1-panel, .os-laser) {
+      opacity: 0;
+    }
+    /* El rail entra entre p 0,5 y 0,8 (en línea desde `useScrollScene`). */
+    :root.cine:not([data-escena-fase]) .rail-acciones {
+      opacity: 0;
+      translate: -112px 0;
+    }
+  }
+
+  /* Copiar el nombre XL no duplica «Doug Vargas» (es decorativo). */
+  .escena-nombre {
+    user-select: none;
+  }
+
+  @keyframes escena-sube {
+    from {
+      opacity: 0;
+      translate: 0 0.35em;
+    }
+  }
+  @keyframes escena-laser {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes escena-k2 {
+    from {
+      opacity: 0;
+      scale: 0.96;
+      filter: blur(12px);
+    }
+  }
+  @keyframes escena-aparece {
+    from {
+      opacity: 0;
+    }
+  }
+}

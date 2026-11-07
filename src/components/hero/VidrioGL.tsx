@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { getFotoActiva, vidrio, type EstadoVidrio } from "@/data/hero";
-import { uniformesVidrio } from "@/lib/escena";
+import { uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
 import { crearPrograma, dibujar, liberar } from "@/lib/gl/programa";
 import { cargarImagen, subirTextura } from "@/lib/gl/textura";
 import { montarLente } from "./useLente";
@@ -81,7 +81,13 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       let primero = true;
       const pintar = () => {
         if (!visible || gl.isContextLost()) return;
-        const p = vidrio[escritorio.matches ? estados.escritorio : estados.movil];
+        // F5: con `--vidrio-p` (el progreso del ancla del home, copiado de la foto)
+        // los parámetros van de `cine` a `losa`; sin él, los del estado.
+        const pe = parseFloat(canvas.style.getPropertyValue("--vidrio-p"));
+        const enEscena = escritorio.matches && Number.isFinite(pe);
+        const base = vidrio[escritorio.matches ? estados.escritorio : estados.movil];
+        const mezcla = enEscena ? vidrioEnEscena(pe, vidrio.cine, vidrio.losa) : null;
+        const p = mezcla ? { ...base, ...mezcla } : base;
         const w = canvas.clientWidth;
         const h = canvas.clientHeight;
         if (!w || !h) return;
@@ -103,6 +109,7 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           fuerza: Number.isFinite(f) ? f : undefined,
           mx: s.mx,
           lente: s.abierta,
+          fase: mezcla?.fase,
         });
         dibujar(gl, prog, v, { w, h, dpr }, { x: s.mx, y: s.my, abierta: s.abierta });
         if (primero) {

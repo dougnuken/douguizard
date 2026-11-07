@@ -120,6 +120,8 @@ export function uniformesVidrio(o: {
   laser?: boolean;
   mx?: number;
   lente?: number;
+  /** Fase extra (px) a lo largo del ancla del home (F5). */
+  fase?: number;
 }): UniformesVidrio {
   const { caja, foto, params } = o;
   const c = o.col ?? cubrir(caja, foto.w / foto.h, o.pos);
@@ -132,11 +134,89 @@ export function uniformesVidrio(o: {
     w: Math.max(4, params.estria * c.Dy),
     ang: (params.angulo * Math.PI) / 180,
     str: Math.max(0, Math.min(1, o.fuerza ?? params.fuerza)),
-    phase: o.mx === undefined ? 0 : (o.mx - caja.w / 2) * 0.04 * lente,
+    phase: (o.fase ?? 0) + (o.mx === undefined ? 0 : (o.mx - caja.w / 2) * 0.04 * lente),
     face: [c.Ox + cx * c.Dx, c.Oy + cy * c.Dy, rx * c.Dx, ry * c.Dy],
     lineY: c.Oy + (banda ? banda.y : foto.ojo) * c.Dy,
     lineH: banda ? banda.h * c.Dy : 0,
     lensR: params.lente,
     prot: params.proteccionCara,
+  };
+}
+
+/* ── F5 · acto 1 «cine» → OS (scroll anclado de 1 viewport) ─────────────────
+   Todo puro: lo usan `useScrollScene` (pinta), `VidrioGL` (parámetros) y vitest.
+   Tiempos de NOTAS §2 corregidos por §7 (07 F5). */
+
+/** Progreso local de un tramo [a, b] de p, recortado a [0, 1]. */
+export function tramo(p: number, a: number, b: number): number {
+  if (!Number.isFinite(p)) return 0;
+  return Math.min(1, Math.max(0, (p - a) / (b - a)));
+}
+
+const lerpN = (a: number, b: number, t: number) => a + (b - a) * t;
+/** `power2.inOut` / `power1.inOut` / `power2.out` de GSAP, para pintar sin tweens. */
+export const p2io = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+export const p1io = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+export const p2o = (t: number) => 1 - (1 - t) * (1 - t);
+
+/** Fin de cada pista del timeline (p ∈ [0, 1]). */
+export const ESCENA = {
+  foto: 0.72,
+  k2Viaje: 0.6,
+  material: [0.3, 0.52] as const,
+  /** La tinta de K2 cambia de golpe aquí (P1-2): el contraste nunca cae a 1:1. */
+  tinta: 0.41,
+  /** Losas: opacidad, y 24 → 0, escala .96 → 1; sin blur (P1-1). */
+  losas: { k3: 0.3, k4: 0.36, k5: 0.42, duracion: 0.2 },
+  rail: [0.5, 0.8] as const,
+  velo: [0, 0.4] as const,
+  nombreFuera: [0.66, 0.76] as const,
+  panelDentro: [0.68, 0.8] as const,
+  laserOs: [0.8, 1] as const,
+  indicador: [0.05, 0.17] as const,
+} as const;
+
+/** Lo que cada elemento de la escena vale en p (sin DOM). */
+export function frameEscena(p: number) {
+  const q = eio(tramo(p, 0, ESCENA.foto));
+  const losa = (inicio: number) => p2o(tramo(p, inicio, inicio + ESCENA.losas.duracion));
+  return {
+    /** Foto: pantalla completa → K1 (cúbica in-out). */
+    q,
+    radio: q,
+    /** K2: viaje (0 = abajo a la izquierda, 1 = su celda) y material. */
+    k2: p2io(tramo(p, 0, ESCENA.k2Viaje)),
+    m: p1io(tramo(p, ...ESCENA.material)),
+    mt: p >= ESCENA.tinta ? 1 : 0,
+    /** Nombre XL: FLIP a K1 (`power2.inOut`, 0 → 0,72) y fundido. */
+    nombre: p2io(tramo(p, 0, ESCENA.foto)),
+    nombreOpacidad: 1 - tramo(p, ...ESCENA.nombreFuera),
+    panel: tramo(p, ...ESCENA.panelDentro),
+    k3: losa(ESCENA.losas.k3),
+    k4: losa(ESCENA.losas.k4),
+    k5: losa(ESCENA.losas.k5),
+    rail: p2o(tramo(p, ...ESCENA.rail)),
+    velo: 1 - tramo(p, ...ESCENA.velo),
+    laserOs: tramo(p, ...ESCENA.laserOs),
+    indicador: 1 - tramo(p, ...ESCENA.indicador),
+  };
+}
+
+/**
+ * Parámetros del vidrio a lo largo del ancla: de `cine` a `losa` con la foto
+ * (q), y la fuerza con una joroba de +0,30 a mitad del viaje (las estrías «se
+ * cierran» y se abren al llegar). La fase avanza 140 px. F4 dejó las estrías a
+ * 12° en los tres estados (P0 de 06-CRITICA-F4): el ángulo ya no gira a 0°.
+ */
+export function vidrioEnEscena(p: number, cine: ParamsVidrio, losa: ParamsVidrio): ParamsVidrio & { fase: number } {
+  const t = tramo(p, 0, ESCENA.foto);
+  const q = eio(t);
+  return {
+    angulo: lerpN(cine.angulo, losa.angulo, q),
+    estria: lerpN(cine.estria, losa.estria, q),
+    fuerza: lerpN(cine.fuerza, losa.fuerza, q) + 0.3 * Math.sin(Math.PI * t),
+    lente: lerpN(cine.lente, losa.lente, q),
+    proteccionCara: lerpN(cine.proteccionCara, losa.proteccionCara, q),
+    fase: 140 * Math.min(1, Math.max(0, p)),
   };
 }

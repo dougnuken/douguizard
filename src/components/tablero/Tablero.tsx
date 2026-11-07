@@ -12,6 +12,7 @@ import CarruselMovil from "./CarruselMovil";
 import Contacto from "./Contacto";
 import K1Retrato from "./K1Retrato";
 import K2Claim from "./K2Claim";
+import { varsFoto } from "@/data/hero";
 import { getCaseMeta } from "@/data/work";
 import { getTestimonial } from "@/data/testimonials";
 import { localePath, type Locale } from "@/i18n/config";
@@ -31,6 +32,8 @@ export function TableroArriba({ locale }: { locale: Locale }) {
   const t = tableroDict[locale];
   return (
     <div className="os os-top" id="os">
+      {/* P2-2: el láser cruza el tablero por las calles, a la altura de los ojos de K1. */}
+      <div className="os-laser" aria-hidden="true" style={varsFoto() as React.CSSProperties} />
       <K2Claim locale={locale} />
       <K1Retrato locale={locale} />
       <h2 className="seccion-titulo">{t.secciones.trabajo}</h2>

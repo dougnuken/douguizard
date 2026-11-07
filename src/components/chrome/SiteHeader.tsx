@@ -41,6 +41,13 @@ function useEspiaSecciones(activo: boolean) {
       const corte = window.innerHeight * 0.35;
       let id = "home";
       for (const s of secciones) if (s.getBoundingClientRect().top <= corte) id = s.dataset.seccion!;
+      // 06-CRITICA-F3 P2-1: con el tablero a la vista (K3 en el pliegue), «Trabajo»
+      // ya está activa; en el acto 1 del home (F5, antes de llegar al OS), ninguna.
+      const html = document.documentElement;
+      const enActo1 = html.classList.contains("cine") && html.dataset.escenaFase !== "os";
+      if (id === "home" && !enActo1 && secciones[0].getBoundingClientRect().top < window.innerHeight) {
+        id = secciones[0].dataset.seccion!;
+      }
       // Al fondo de la página, la última sección (contacto) aunque no llegue al corte.
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
         id = secciones[secciones.length - 1].dataset.seccion!;
