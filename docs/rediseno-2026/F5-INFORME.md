@@ -136,6 +136,14 @@ abre o aclara el vidrio. Un commit por arreglo.
 | **P1-2** Cara en `cine` (`a867c7f`) | Uniforme `uCaraF`: en `cine` la fuerza × 0,6 en una elipse 1,5 × la cara (`caraFuerza` en `hero.ts`, interpola a 1 en `losa`). Fase base `centro`: el centro de una estría cae en el eje de la nariz en los tres estados (cierra F4 P2-1). Halo del láser a ±6 px y alfa 0,55 sobre los ojos (`--cara-x/--cara-rx`); la línea de 1 px intacta. Pósteres rehorneados y **foto v4** (cambian los parámetros: caché inmutable). | Vitest: `caraF` y fracción 0,5 de la estría en la nariz para 3 cajas × 3 estados. `vidrio.spec` en verde. `1440x900-p0`, `1920x1080-p0`. |
 | **P1-3** 1280×720 (`705e573`) | Con alto ≤ 800, K2 compacta en el acto 1: pegada al pie de su celda, padding 20 → 32 y «Hoy, Naowee…» plegado, ligados a `--k2t`/`--k2-h` (en p = 1 es la K2 de F3). Tope medido desde el descendente de la línea 2 (+0,25 em) + 16 px. | `escena.spec` «P1-3» a 1280×720 y 1366×768: pie ≤ alto − 16, K2 ≥ descendente + 16, K2 = F3 (±1 px) en p = 1. `1280x720-p0`. |
 
+**Verificación tras los arreglos (`705e573` + informe).** lint, tsc, build en verde · vitest **250/250** (247 + 3) ·
+Playwright completo, dos corridas seguidas: **440/440** y **440/440** (15,0 y 14,8 min; 436 + 4 nuevas de
+`escena.spec`) · LCP (`perf-F5-arreglos.json`, mediana de 3, servidor solo): escritorio **400 ms** (400–408; F5 400),
+móvil **1.040 ms** (1.036–1.044; F5 1.096), sin regresión; JS inicial 157,9 KB gz (+0,4). Capturas rehechas con
+`next build` + `next start`: `home-es-1440x900-p{0,03,06}`, `home-es-1280x720-p{0,03}`, `home-es-1920x1080-p0`, y el
+vídeo `F5-capturas/ancla-1440.webm` (`recordVideo`, sin modo captura: rueda abajo con snap a 1, pausa en el OS, rueda
+arriba, rueda corta de 40 px que vuelve a 0 y la lente del cursor sobre la cara).
+
 **No hecho:** las estrías sobre la atmósfera (el ideal de P0-1, canvas a `100vw`). La crítica da el fundido por
 suficiente para cerrar el P0; queda como pulido.
 

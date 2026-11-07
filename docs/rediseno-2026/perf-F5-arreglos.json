@@ -1,0 +1,164 @@
+{
+  "medidoEl": "2026-11-07T17:16:36.900Z",
+  "ruta": "/",
+  "corridasPorPerfil": 3,
+  "workers": 1,
+  "perfiles": {
+    "movil": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 3,
+      "red": {
+        "latency": 562.5,
+        "downloadThroughput": 188743.68000000002,
+        "uploadThroughput": 86400
+      },
+      "cpu": 4
+    },
+    "escritorio": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1,
+      "red": {
+        "latency": 40,
+        "downloadThroughput": 1310720,
+        "uploadThroughput": 1310720
+      },
+      "cpu": 1
+    }
+  },
+  "resultados": {
+    "movil": {
+      "mediana": {
+        "lcpMs": 1040,
+        "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+        "cls": 0.0655,
+        "loadMs": 3712,
+        "js": {
+          "archivos": 9,
+          "transferidoKB": 170,
+          "gzipKB": 157.9
+        },
+        "imagenes": {
+          "archivos": 1,
+          "transferidoKB": 46
+        }
+      },
+      "corridas": [
+        {
+          "lcpMs": 1040,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0.0655,
+          "loadMs": 3700,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 46
+          }
+        },
+        {
+          "lcpMs": 1044,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0.0655,
+          "loadMs": 3712,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 46
+          }
+        },
+        {
+          "lcpMs": 1036,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0.0655,
+          "loadMs": 3731,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 46
+          }
+        }
+      ]
+    },
+    "escritorio": {
+      "mediana": {
+        "lcpMs": 400,
+        "lcpElemento": "img.k1-poster /hero/199598aa-v4/losa-640.avif",
+        "cls": 0.0005,
+        "loadMs": 519,
+        "js": {
+          "archivos": 9,
+          "transferidoKB": 170,
+          "gzipKB": 157.9
+        },
+        "imagenes": {
+          "archivos": 4,
+          "transferidoKB": 72
+        }
+      },
+      "corridas": [
+        {
+          "lcpMs": 400,
+          "lcpElemento": "img.k1-poster /hero/199598aa-v4/losa-640.avif",
+          "cls": 0.0005,
+          "loadMs": 521,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 4,
+            "transferidoKB": 72
+          }
+        },
+        {
+          "lcpMs": 400,
+          "lcpElemento": "img.k1-poster /hero/199598aa-v4/losa-640.avif",
+          "cls": 0.0005,
+          "loadMs": 519,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 4,
+            "transferidoKB": 72
+          }
+        },
+        {
+          "lcpMs": 408,
+          "lcpElemento": "img.k1-poster /hero/199598aa-v4/losa-640.avif",
+          "cls": 0.0005,
+          "loadMs": 506,
+          "js": {
+            "archivos": 9,
+            "transferidoKB": 170,
+            "gzipKB": 157.9
+          },
+          "imagenes": {
+            "archivos": 4,
+            "transferidoKB": 72
+          }
+        }
+      ]
+    }
+  }
+}
