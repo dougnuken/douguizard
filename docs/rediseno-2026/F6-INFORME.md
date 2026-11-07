@@ -116,3 +116,16 @@ Rama `claude/douguizard-portfolio-redesign-9ivnau`. Fuente: `07-PLAN-IMPLEMENTAC
   Revisar en F7 al pasar el caso a B.
 - CLS móvil 0,066 de F5 sigue abierto (no es de F6).
 - `ESTADO.md` no se tocó (lo cierra el orquestador).
+
+## Arreglos tras la crítica (`06-CRITICA-F6.md`, P1-1 a P1-5)
+
+| Punto | Cambio | Prueba (`tests/e2e/hoja.spec.ts`) |
+|---|---|---|
+| **P1-1** foco inicial | `CaseSheet` enfoca `.hoja-cuerpo` (`preventScroll`) en vez de Cerrar. Desde el cuerpo, el primer Tab va a Cerrar (la trampa lo fuerza); Shift+Tab cae en Cerrar por orden del DOM. El anillo de `.hoja-cuerpo` sigue solo con `:focus-visible` (no sale al abrir con el ratón). | «foco inicial en el cuerpo»: `activeElement` = `.hoja-cuerpo`; Espacio, ↓ y AvPág suben `scrollTop`, el foco sigue en el cuerpo, la hoja sigue abierta y la URL es la del caso; el primer Tab llega a Cerrar. «Tab atrapado» (×60 adelante y atrás) sigue. |
+| **P1-2** canal de la barra | `html:has(dialog.hoja[open]) { background-color: rgb(6 6 8) }` (en claro, el velo sobre el papel con `color-mix`): con fondo propio en `html`, `body` deja de propagar el suyo al lienzo y el canal toma el color del velo; lo de debajo no cambia. El panel se centra en la ventana (`left: 50vw`) y no en el dialog; en < 1024 sigue `left: 50%`. | «1440 con barras clásicas»: Δlum entre x = 1432 y x = 1410 ≤ 3 en y = 24, 200 y 450 (antes 99 contra 6 en claro, 16 contra 6 en oscuro); centro del panel a ±1 px de 720. Se salta si el navegador no reserva canal. |
+| **P1-3** salida | Sin cambio de código: el CSS de salida funciona. En headless un cuadro dura ≈ 55 ms y la transición arranca un cuadro después del cambio de estado; con `--curva-hoja` el panel recorre la mayor parte en ese primer cuadro (48 → 567 → 853 → 926 px, sin hoja a ≈ 310 ms). Eso explica el «salto» del vídeo de F6. | «sin RM, X / Esc / velo» (3): desde que la hoja pasa a `cerrando`, se anota cada cuadro pintado; cerca de los 100 ms (±60) la hoja sigue abierta, el panel ha bajado más de 20 px sin salir y el velo está entre 0 y 1; a los 400 ms no queda hoja y la URL es la de origen. |
+| **P1-4** entrada en dos tiempos | `CaseHeader` con `enHoja`: el `h2` y el lead son elementos normales, sin `RevealText`. El texto sube con el panel. La página completa conserva su revelado. | «el encabezado entra con el panel»: a los 420 ms de abrir, el `h2`, el lead y sus ancestros dentro del cuerpo tienen opacidad 1 y sin `clip-path`, `transform` ni `translate`. |
+| **P1-5** miga | Campo `shortName` en `caseStudies` (Andes, DC Medical, Royal Caribbean; es una marca y no se traduce) y `getShortName()` (si falta, la parte de `project` antes de « — »). Los dos slots `@modal` (ES y EN) lo pasan a la miga. El `ellipsis` se queda como red de seguridad. | «móvil 390 / y /en» (2): la miga dice Naowee, Andes, olbo y DC Medical, con `scrollWidth ≤ clientWidth`. |
+
+**Pendiente para F7 (P1-4):** el cuerpo B del caso hereda la regla: dentro de la hoja el contenido de la primera
+pantalla viaja con el panel, sin revelado propio. Los reveals solo van en contenido que entra por scroll.

@@ -13,6 +13,9 @@ const NOMBRE = "globalThis.__name = (f) => f;";
 const BASE = "http://localhost:3131";
 const OUT = "docs/rediseno-2026/F6-capturas";
 const CASOS = ["naowee-suid", "mercadolibre-andes", "olbo", "dc-medical"];
+// `--arreglos` (tras 06-CRITICA-F6): solo las hojas de Naowee y Andes en ES,
+// Naowee en EN, y el vídeo con los tres cierres.
+const ARREGLOS = process.argv.includes("--arreglos");
 const VISTAS = [
   { ancho: 1440, alto: 900 },
   { ancho: 390, alto: 844 },
@@ -41,9 +44,11 @@ async function main() {
     // tsx (esbuild, keepNames) envuelve las funciones con `__name`, que no existe en la página.
     await ctx.addInitScript(NOMBRE);
       const page = await ctx.newPage();
-      for (const slug of CASOS) {
+      const casos = !ARREGLOS ? CASOS : pre ? ["naowee-suid"] : ["naowee-suid", "mercadolibre-andes"];
+      for (const slug of casos) {
         await abrirHoja(page, pre, slug);
         await page.screenshot({ path: join(OUT, `hoja-${slug}-${idioma}-${ancho}.jpg`), type: "jpeg", quality: 82 });
+        if (ARREGLOS) continue;
         await page.goto(`${BASE}${pre}/work/${slug}`, { waitUntil: "networkidle" });
         await settle(page);
         await page.evaluate(() => window.scrollTo(0, 0));
@@ -54,7 +59,8 @@ async function main() {
     }
   }
 
-  // Vídeo: abrir desde el tablero, leer un poco, cerrar con la X (con movimiento).
+  // Vídeo: abrir desde el tablero, leer un poco y cerrar con la X; luego abrir
+  // y cerrar con Esc y con el velo (con movimiento).
   const ctx = await browser.newContext({
     viewport: { width: 1440, height: 900 },
     deviceScaleFactor: 1,
@@ -67,21 +73,40 @@ async function main() {
   await settle(page);
   await page.waitForTimeout(800);
   const enlace = page.locator('#main a[href="/work/naowee-suid"]:visible').first();
-  const caja = await enlace.boundingBox();
-  if (caja) await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2, { steps: 20 });
-  await page.waitForTimeout(500);
-  await enlace.click();
-  await page.locator('dialog.hoja[data-estado="abierta"]').waitFor();
-  await page.waitForTimeout(1200);
+  const abrirVideo = async () => {
+    const caja = await enlace.boundingBox();
+    if (caja) await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2, { steps: 20 });
+    await page.waitForTimeout(500);
+    await enlace.click();
+    await page.locator('dialog.hoja[data-estado="abierta"]').waitFor();
+    await page.waitForTimeout(1200);
+  };
+  await abrirVideo();
   await page.mouse.move(720, 600, { steps: 10 });
   for (let i = 0; i < 8; i++) {
     await page.mouse.wheel(0, 220);
     await page.waitForTimeout(120);
   }
   await page.waitForTimeout(900);
-  await page.locator("dialog.hoja button.hoja-circulo").click();
+  const cerrar = page.locator("dialog.hoja button.hoja-circulo");
+  const caja = await cerrar.boundingBox();
+  if (caja) await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2, { steps: 12 });
+  await page.waitForTimeout(400);
+  await cerrar.click();
   await page.waitForURL(`${BASE}/`);
   await page.waitForTimeout(1500);
+  if (ARREGLOS) {
+    await abrirVideo();
+    await page.keyboard.press("Escape");
+    await page.waitForURL(`${BASE}/`);
+    await page.waitForTimeout(1500);
+    await abrirVideo();
+    await page.mouse.move(60, 450, { steps: 12 });
+    await page.waitForTimeout(300);
+    await page.mouse.click(60, 450);
+    await page.waitForURL(`${BASE}/`);
+    await page.waitForTimeout(1500);
+  }
   const video = page.video();
   await ctx.close();
   if (video) renameSync(await video.path(), join(OUT, "hoja-1440.webm"));
