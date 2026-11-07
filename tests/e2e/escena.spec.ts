@@ -323,6 +323,29 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     }
   });
 
+  test("P1-3: a 1280×720 y 1366×768 K2 cabe entera (16 px al pie y 16 px bajo el descendente) y en p = 1 es la de F3", async ({ page }) => {
+    for (const [w, h] of [[1280, 720], [1366, 768]]) {
+      await page.setViewportSize({ width: w, height: h });
+      await abrir(page, { captura: true });
+      await page.waitForTimeout(700); // la entrada de K2 (escala) termina
+      const m = await page.evaluate((sel) => {
+        const el = document.querySelector<HTMLElement>(sel)!;
+        const l2 = el.querySelector(".l2")!.getBoundingClientRect();
+        const fs = parseFloat(getComputedStyle(el).fontSize);
+        const k = document.querySelector(".k2")!.getBoundingClientRect();
+        return { desc: l2.bottom + 0.25 * fs, top: k.top, bottom: k.bottom, h: innerHeight };
+      }, XL);
+      expect(m.bottom, `${w}×${h}: pie de K2`).toBeLessThanOrEqual(m.h - 16);
+      expect(m.top - m.desc, `${w}×${h}: K2 bajo el descendente de «Vargas»`).toBeGreaterThanOrEqual(16 - 0.5);
+      await irA(page, 1);
+      const os = await rectsOS(page, w, h);
+      await page.mouse.move(1, 1);
+      await page.waitForTimeout(300);
+      const k2 = (await rects(page))[1];
+      for (let i = 0; i < 4; i++) expect(Math.abs(k2[i] - os[1][i]), `${w}×${h} K2[${i}] en p = 1`).toBeLessThanOrEqual(1);
+    }
+  });
+
   test("P0-1: en p = 0 la foto del acto 1 no tiene bordes duros a los lados (|ΔL| < 6 entre columnas vecinas)", async ({ page }) => {
     for (const [w, h] of [[1440, 900], [1280, 720], [1920, 1080]]) {
       await page.setViewportSize({ width: w, height: h });

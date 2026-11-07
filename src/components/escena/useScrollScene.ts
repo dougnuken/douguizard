@@ -78,7 +78,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       pa: Colocacion;
       pb: Colocacion;
       radio: number;
-      k2: { dx: number; dy: number };
+      k2: { dx: number; dy: number; h: number; celda: number };
       nombre: { x0: number; y0: number; dx: number; dy: number; s: number };
       /** Ancho del láser del tablero: el del viewport en la escena, el de F3 en el OS. */
       laser: { ancho: number; os: number };
@@ -124,6 +124,14 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       const cine = placement({ x: 0, y: 0, w: W, h: H }, "cine", fotoDatos);
       const pa = { ...cine, Ox: cine.Ox - o1.x, Oy: cine.Oy - o1.y };
       const pb = cubrir(B, f.tamano.w / f.tamano.h, [0.5, 0]);
+      // P1-3: K2 compacta (alto ≤ 800, CSS): su alto de contenido (`--k2t` 0) y el de su celda.
+      k2.style.removeProperty("--k2-h");
+      k2.style.setProperty("--k2t", "0");
+      const hK2 = k2.offsetHeight;
+      Object.assign(k2.style, { alignSelf: "stretch", height: "auto" });
+      const celda = k2.offsetHeight;
+      k2.style.removeProperty("align-self");
+      k2.style.removeProperty("height");
       const o2 = offset(k2, escena);
       // El nombre: su corte sobre el láser (ojo al 41 % del alto), nunca bajo la cabecera.
       const lineaA = cine.Oy + f.ojo * cine.Dy;
@@ -139,8 +147,14 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         pa,
         pb,
         radio: parseFloat(getComputedStyle(k1).borderTopLeftRadius) || 48,
-        // Abajo a la izquierda, pero nunca encima del nombre (alto ≤ 800: P0-1 de B).
-        k2: { dx: 24 - o2.x, dy: Math.max(H - 24 - k2.offsetHeight, y0 + lockup.offsetHeight + 16) - o2.y },
+        // Abajo a la izquierda, pero nunca encima del nombre (alto ≤ 800: P0-1 de B): 16 px
+        // desde el descendente de la línea 2 (su caja + 0,25 em; P1-3 de la crítica F5).
+        k2: {
+          dx: 24 - o2.x,
+          dy: Math.max(H - 24 - hK2, y0 + Math.max(lockup.offsetHeight, offset(l2, lockup).y + l2.offsetHeight + 0.25 * fsXL) + 16) - o2.y,
+          h: hK2,
+          celda,
+        },
         nombre: { x0, y0, dx: on.x - x0, dy: on.y - y0, s: fsK1 / fsXL },
         laser: { ancho: W, os: W },
       };
@@ -202,6 +216,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       velo.style.opacity = fr.velo.toFixed(3);
       k2.style.translate = `${lerp(geo.k2.dx, 0, fr.k2).toFixed(2)}px ${lerp(geo.k2.dy, 0, fr.k2).toFixed(2)}px`;
       k2.style.setProperty("--m", fr.m.toFixed(3));
+      k2.style.setProperty("--k2t", fr.k2.toFixed(4));
+      k2.style.setProperty("--k2-h", `${lerp(geo.k2.h, geo.k2.celda, fr.k2).toFixed(2)}px`);
       k2.style.setProperty("--mt", String(fr.mt));
       const n = geo.nombre;
       lockup.style.transform = `translate(${(n.dx * fr.nombre).toFixed(2)}px, ${(n.dy * fr.nombreY).toFixed(2)}px) scale(${lerp(1, n.s, fr.nombre).toFixed(4)})`;

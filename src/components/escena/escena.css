@@ -244,6 +244,25 @@
     }
   }
 
+  /* P1-3 (crítica F5): con alto ≤ 800 K2 va compacta en el acto 1: pegada al pie
+     de su celda (así la cuenta sin JS de su `translate` sigue valiendo), padding
+     20 px y «Hoy, Naowee…» plegado. Todo va con `--k2t` (el viaje de K2, 0 → 1) y
+     `--k2-h` (su alto, del de contenido al de la celda), que escribe
+     `useScrollScene`: en p = 1 es la K2 de F3, sin salto. */
+  @media (min-width: 1024px) and (max-height: 800px) {
+    :root.cine:not([data-escena-fase="os"]) .os .k2 {
+      align-self: end;
+      height: var(--k2-h, auto);
+      padding: calc(20px + 12px * var(--k2t, 0));
+    }
+    :root.cine:not([data-escena-fase="os"]) .k2 .sub {
+      max-height: calc(var(--k2t, 0) * 6em);
+      margin-top: calc(-16px * (1 - var(--k2t, 0)));
+      opacity: var(--k2t, 0);
+      overflow: hidden;
+    }
+  }
+
   /* K2 en el acto 1 (07 F5): el material va con `--m` (0 = vidrio oscuro, 1 =
      losa blanca) y la tinta con `--mt`, que cambia de golpe en p = 0,41 (P1-2
      de B). Solo mientras dura la escena: en p = 1 vuelven los colores de F3. */
