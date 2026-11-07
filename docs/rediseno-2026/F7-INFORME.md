@@ -64,7 +64,7 @@ maqueta aprobada `propuestas/B-paginas/caso.html` con NOTAS §7 (P1-5 ficha, P1-
 |---|---|
 | vitest | **257/257** (255 + 2 en `src/components/case/__tests__/caso.test.ts`: k de «~1.200» y mismo k para el caso; `platforms` con nombres conocidos, sin repetir, igual en ES y EN, y ausente donde el caso no lo dice) |
 | lint · tsc · build | en verde |
-| Playwright completo | PENDIENTE_PW |
+| Playwright completo | **502/502 en dos corridas completas seguidas** con el código final (16,6 min cada una). Base 472 + 30 de `caso.spec`. Corridas anteriores, de camino: la 1.ª dio 486/502 (16 fallos de F7, arreglados: contraste AAA y objetivo táctil en la losa del siguiente caso, el Cerrar de «Secciones» confundía el selector de `hoja.spec`, y `layout 5.5`); la 2.ª dio 501/502, con un fallo de tiempo en `escena.spec` «snap» (1.336 ms frente al tope de 1.200, en el home, que F7 no toca), que no se repitió en la 3.ª, la 4.ª ni la 5.ª. |
 
 `tests/e2e/caso.spec.ts` (30, nueva):
 - **Ficha** ×3 (1440, 1024, 390; los 10 casos): sin fondo ni sombra, filete de 1 px, ≤ 2 bordes izquierdos, misma
