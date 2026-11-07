@@ -10,6 +10,8 @@ interface RevealTextProps {
   /** Rendered wrapper element (h1/h2/h3/p/span/div…). Defaults to div. */
   as?: ElementType;
   className?: string;
+  /** id del elemento envolvente (p. ej. el título que nombra un `<dialog>`). */
+  id?: string;
   /**
    * "mask" — text slides up from behind a clip (titles, the case-study look).
    * "fade" — text fades and rises (body copy).
@@ -38,6 +40,7 @@ export default function RevealText({
   children,
   as = "div",
   className,
+  id,
   variant = "mask",
   delay = 0,
   duration,
@@ -57,6 +60,7 @@ export default function RevealText({
     return (
       <Tag
         ref={ref as never}
+        id={id}
         className={className}
         style={{
           ...timing,
@@ -77,7 +81,7 @@ export default function RevealText({
   // ascenders AND descenders room, so display type set at leading < 1 (the
   // hero h1 runs at 0.92) is not clipped top or bottom at rest.
   return (
-    <Tag className={className}>
+    <Tag id={id} className={className}>
       <span ref={ref as never} className="block overflow-hidden py-[0.16em] -my-[0.16em]">
         <span
           className="inline-block will-change-transform"

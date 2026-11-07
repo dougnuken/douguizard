@@ -18,6 +18,18 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = rootMetadata("es");
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <RootDocument locale="es">{children}</RootDocument>;
+/**
+ * `modal` es el slot de la hoja de casos (F6, 07 §1.2): `(es)` y `@modal` no son
+ * segmentos, así que `@modal/(.)work/[slug]` intercepta `/work/[slug]`.
+ */
+export default function RootLayout({
+  children,
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+  return (
+    <RootDocument locale="es">
+      {children}
+      {modal}
+    </RootDocument>
+  );
 }

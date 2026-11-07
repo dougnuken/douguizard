@@ -5,6 +5,7 @@ import RevealText from "@/components/text/RevealText";
 import type { CaseMeta, CaseStudy } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
+import { tituloHojaId } from "@/components/hoja/ids";
 
 function Dot({ className = "" }: { className?: string }) {
   return (
@@ -41,7 +42,20 @@ const fold = (s: string) => s.trim().toLowerCase();
  * It is as tall as its words now, so the showcase under it starts inside the
  * first screen: the reader sees what was made before reading about it.
  */
-export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: CaseMeta }) {
+export default function CaseHeader({
+  study,
+  meta,
+  enHoja = false,
+}: {
+  study: CaseStudy;
+  meta: CaseMeta;
+  /**
+   * Dentro de la hoja (F6, 07 §1.2): el título baja a `h2` con el id que nombra
+   * el `<dialog>` (en el documento ya hay un `h1`, el del tablero), sin la miga
+   * (la cabecera de la hoja trae la suya) y sin el hueco de la cabecera fija.
+   */
+  enHoja?: boolean;
+}) {
   const t = useDict().case;
   const locale = useLocale();
 
@@ -56,9 +70,10 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
   return (
     <section
       className="relative overflow-hidden bg-[var(--paper)] px-6 pb-12 md:px-12 md:pb-16"
-      style={{ paddingBlockStart: "calc(var(--header-h) + 32px)" }}
+      style={{ paddingBlockStart: enHoja ? "48px" : "calc(var(--header-h) + 32px)" }}
     >
       <div className="relative z-10 mx-auto w-full max-w-[1400px]">
+        {!enHoja && (
         <nav
           aria-label={t.breadcrumb}
           className="mb-6 flex flex-col items-start font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--ink-muted)] md:mb-10 md:flex-row md:flex-wrap md:items-center md:gap-x-3 md:gap-y-1"
@@ -78,6 +93,7 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
             <span>{meta.year}</span>
           </span>
         </nav>
+        )}
 
         {/* The client takes the ink and the role keeps the kicker's grey: some
             contract titles carry a "·" of their own (the Mercado Libre and
@@ -94,7 +110,8 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
         </p>
 
         <RevealText
-          as="h1"
+          as={enHoja ? "h2" : "h1"}
+          id={enHoja ? tituloHojaId(study.slug) : undefined}
           variant="mask"
           delay={0.05}
           className="mb-6 max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)] md:mb-8"
@@ -114,3 +131,4 @@ export default function CaseHeader({ study, meta }: { study: CaseStudy; meta: Ca
     </section>
   );
 }
+

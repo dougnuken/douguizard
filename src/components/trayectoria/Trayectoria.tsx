@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Icono } from "@/components/sistema/Iconos";
 import { eras, getTrayectoriaPortada } from "@/data/perfil";
 import { localePath, type Locale } from "@/i18n/config";
@@ -131,11 +132,11 @@ export default function Trayectoria({ locale }: { locale: Locale }) {
                 <p className="rol">{h.rol}</p>
                 <p className="logro">{h.logro}</p>
                 {h.caso && (
-                  <a className="ver-caso" href={localePath(locale, `/work/${h.caso}`)}>
+                  <Link className="ver-caso" href={localePath(locale, `/work/${h.caso}`)}>
                     <span>{h.nda ? t.verCasoNda : t.verCaso}</span>
                     <span className="sr-only">: {h.casoNombre}</span>
                     <Icono nombre="flecha" />
-                  </a>
+                  </Link>
                 )}
               </li>
             ))}

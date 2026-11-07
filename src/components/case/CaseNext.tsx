@@ -13,7 +13,20 @@ import { Band, FadeIn, SlashLabel, type BandProps } from "./primitives";
  * colour shift has nowhere to go, and the type is large enough that a change of
  * weight reads from across the room.
  */
-export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandProps["tone"] }) {
+export default function CaseNext({
+  next,
+  tone,
+  enHoja = false,
+}: {
+  next: CaseStudy;
+  tone?: BandProps["tone"];
+  /**
+   * F6 (07 §1.2): en la hoja, `<Link replace>` cambia de caso sin apilar
+   * historial (Cerrar vuelve al tablero); en la página completa, `<a>`: la
+   * interceptación del nivel raíz abriría una hoja encima de la página.
+   */
+  enHoja?: boolean;
+}) {
   const t = useDict().case;
   const locale = useLocale();
   // The line over the title says who the work was for — unless that IS the
@@ -30,7 +43,11 @@ export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandP
         <SlashLabel className="mb-8 text-[11px] text-[var(--ink-muted)]">{t.next}</SlashLabel>
       </FadeIn>
 
-      <Link href={localePath(locale, `/work/${next.slug}`)} className="group block text-inherit no-underline">
+      <Destino
+        href={localePath(locale, `/work/${next.slug}`)}
+        enHoja={enHoja}
+        className="group block text-inherit no-underline"
+      >
         <FadeIn>
           <div
             className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-transform duration-500 group-hover:translate-x-2"
@@ -62,7 +79,32 @@ export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandP
             {next.tagline}
           </p>
         </FadeIn>
-      </Link>
+      </Destino>
     </Band>
+  );
+}
+
+function Destino({
+  href,
+  enHoja,
+  className,
+  children,
+}: {
+  href: string;
+  enHoja: boolean;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (enHoja) {
+    return (
+      <Link href={href} replace scroll={false} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} className={className}>
+      {children}
+    </a>
   );
 }

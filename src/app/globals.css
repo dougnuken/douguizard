@@ -1359,3 +1359,212 @@
     opacity: 0;
   }
 }
+
+/* ── Hoja de casos (F6, 07 §1.2) ─────────────────────────────────────────────
+   `<dialog>` modal a pantalla completa (sin el UA: el panel y el velo son
+   suyos). Entra 420 ms con `--curva-hoja` y velo con blur 8; sale 280 ms. Con
+   RM, fundido de 150 ms sin desplazamiento. Mientras está abierta, la página
+   de debajo no se desplaza (y el canal de la barra no cambia: el pin no se
+   mueve). Móvil: a pantalla completa menos 16 px, desde abajo, con arrastre. */
+html:has(dialog.hoja[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+.hoja {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  overflow: clip;
+}
+.hoja::backdrop {
+  background: transparent;
+}
+.hoja-velo {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 8, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity var(--d-hoja-salida) var(--curva-salida);
+}
+.hoja-panel {
+  --sale: calc(100% + 48px);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(1120px, calc(100vw - 2 * var(--os-izq)));
+  height: calc(100svh - 48px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-m) var(--r-m) 0 0;
+  background: var(--losa);
+  box-shadow: var(--filo), var(--sombra-hoja);
+  translate: -50% var(--sale);
+  transition: translate var(--d-hoja-salida) var(--curva-hoja);
+  overflow: clip;
+}
+.hoja[data-estado="abierta"] .hoja-velo {
+  opacity: 1;
+  transition-duration: var(--d-hoja);
+}
+.hoja[data-estado="abierta"] .hoja-panel {
+  translate: -50% var(--arrastre, 0px);
+  transition-duration: var(--d-hoja);
+}
+.hoja-panel[data-arrastrando] {
+  transition: none !important;
+}
+.hoja-cab {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px 16px 48px;
+  border-bottom: 1px solid var(--losa-borde);
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+.hoja-asa {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.24);
+  translate: -50% 0;
+}
+.hoja-miga {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  font: 400 15px / 1.3 var(--font-texto, inherit);
+  color: var(--tinta);
+}
+.hoja-miga a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--tinta-2, rgba(245, 245, 247, 0.72));
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+}
+.hoja-miga a:hover {
+  color: var(--tinta);
+}
+.hoja-miga span {
+  color: rgba(245, 245, 247, 0.5);
+}
+.hoja-miga b {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hoja-acciones {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hoja-circulo {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--losa-alta);
+  color: var(--tinta);
+  cursor: pointer;
+  transition:
+    background-color var(--d-hover) var(--curva-salida),
+    scale var(--d-press) var(--curva-salida);
+}
+.hoja-circulo:hover {
+  background: #26272c;
+}
+.hoja-circulo:active {
+  scale: 0.94;
+}
+.hoja-circulo:focus-visible {
+  outline: 2px solid var(--electrico-texto);
+  outline-offset: 2px;
+}
+.hoja-circulo svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* El hilo láser: progreso de lectura del cuerpo. */
+.hoja-progreso {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background: var(--laser-nucleo);
+  box-shadow: var(--haz, 0 0 8px rgba(255, 64, 96, 0.7));
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+}
+.hoja-cuerpo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.hoja-cuerpo:focus-visible {
+  outline: 2px solid var(--electrico-texto);
+  outline-offset: -2px;
+}
+@media (max-width: 1023px) {
+  .hoja-panel {
+    --sale: 100%;
+    width: 100%;
+    height: calc(100svh - 16px);
+  }
+  .hoja-cab {
+    padding: 24px 16px 12px 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoja .hoja-panel,
+  .hoja[data-estado="abierta"] .hoja-panel {
+    translate: -50% 0;
+    opacity: 0;
+    transition: opacity 150ms linear !important;
+  }
+  .hoja .hoja-velo {
+    transition: opacity 150ms linear !important;
+  }
+  .hoja[data-estado="abierta"] .hoja-panel {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hoja-velo {
+    background: var(--losa-alta);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

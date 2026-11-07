@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { lockup } from "@/app/fonts/lockup";
 import DotMatrix from "@/components/sistema/DotMatrix";
 import Estado from "@/components/sistema/Estado";
@@ -172,9 +173,9 @@ export function Citas({ locale }: { locale: Locale }) {
                   {c.author.role}, {c.author.company}
                 </span>
                 {c.caseSlug && cliente && (
-                  <a className="enlace-texto" href={localePath(locale, `/work/${c.caseSlug}`)}>
+                  <Link className="enlace-texto" href={localePath(locale, `/work/${c.caseSlug}`)}>
                     {t.leerCasoDe(cliente)}
-                  </a>
+                  </Link>
                 )}
               </p>
             </Losa>

@@ -8,6 +8,8 @@ export interface CaseColophonProps {
   externalLink?: { label: string; href: string };
   credits?: string;
   tone?: BandProps["tone"];
+  /** En la hoja (F6) el pie es un `<div>`: el `contentinfo` del documento es el de la página de debajo. */
+  enHoja?: boolean;
 }
 
 /**
@@ -23,8 +25,10 @@ export default function CaseColophon({
   externalLink,
   credits,
   tone,
+  enHoja = false,
 }: CaseColophonProps) {
   const t = useDict().case;
+  const Pie = enHoja ? "div" : "footer";
   return (
     <Band tone={tone} rule="t" className="py-14 md:py-20">
       <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
@@ -70,11 +74,11 @@ export default function CaseColophon({
         </div>
       )}
 
-      <footer className="mt-14 border-t border-[var(--line)] pt-8">
+      <Pie className="mt-14 border-t border-[var(--line)] pt-8">
         <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
           © {new Date().getFullYear()} Doug Vargas
         </p>
-      </footer>
+      </Pie>
     </Band>
   );
 }
