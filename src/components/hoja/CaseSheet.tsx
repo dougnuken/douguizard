@@ -19,7 +19,8 @@ const SELECTOR_FOCO =
  * La pinta el slot `@modal` cuando la navegación a `/work/[slug]` es blanda;
  * la carga directa o la recarga dan la página completa (el slot cae en
  * `default.tsx`). Es un `<dialog>` modal: `showModal()` deja inerte lo de
- * debajo, el foco empieza en Cerrar y Tab no sale (trampa propia además de la
+ * debajo, el foco empieza en el cuerpo (↓, AvPág y Espacio leen el caso; APG
+ * para diálogos con mucho contenido), Cerrar es la primera parada de Tab y Tab no sale (trampa propia además de la
  * del navegador, que en Chromium deja escapar a la barra de direcciones).
  *
  * Cerrar (X, Esc, velo, arrastre) anima la salida y hace `router.back()`; Atrás
@@ -87,7 +88,9 @@ function Dialogo({
     if (!d.open) d.showModal();
     // «Siguiente» reemplaza el caso en la misma hoja: se empieza arriba.
     if (cuerpo.current) cuerpo.current.scrollTop = 0;
-    botonCerrar.current?.focus({ preventScroll: true });
+    // El foco va al cuerpo que se desplaza, no a Cerrar: así ↓, AvPág y
+    // Espacio leen el caso (en un botón, Espacio lo activaría y cerraría).
+    cuerpo.current?.focus({ preventScroll: true });
     // Dos cuadros: el primero pinta la hoja abajo, el segundo dispara la transición.
     let r2 = 0;
     const r1 = requestAnimationFrame(() => {
@@ -131,6 +134,12 @@ function Dialogo({
       const primero = focos[0];
       const ultimo = focos[focos.length - 1];
       const activo = document.activeElement;
+      // Desde el cuerpo (foco inicial), el primer Tab va a Cerrar.
+      if (!e.shiftKey && activo === cuerpo.current && botonCerrar.current) {
+        e.preventDefault();
+        botonCerrar.current.focus();
+        return;
+      }
       if (e.shiftKey && (activo === primero || !d.contains(activo))) {
         e.preventDefault();
         ultimo.focus();

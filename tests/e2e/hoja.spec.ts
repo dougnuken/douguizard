@@ -133,10 +133,29 @@ test.describe("hoja · comprobaciones de §1.2 (versión instalada)", () => {
 });
 
 test.describe("hoja · conducta", () => {
-  test("foco inicial en Cerrar y Tab atrapado (adelante y atrás)", async ({ page }) => {
+  test("foco inicial en el cuerpo: Espacio, ↓ y AvPág leen sin cerrar; el primer Tab va a Cerrar (P1-1)", async ({ page }) => {
     await preparar(page);
     await abrir(page, "/");
+    const cuerpo = page.locator(`${HOJA} .hoja-cuerpo`);
+    await expect(cuerpo).toBeFocused();
+    const top = () => cuerpo.evaluate((c) => c.scrollTop);
+    let antes = await top();
+    for (const tecla of ["Space", "ArrowDown", "PageDown"]) {
+      await page.keyboard.press(tecla);
+      await expect.poll(top, { message: `${tecla} desplaza el cuerpo` }).toBeGreaterThan(antes);
+      await page.waitForTimeout(300);
+      antes = await top();
+      await expect(cuerpo, `${tecla}: el foco sigue en el cuerpo`).toBeFocused();
+      await expect(page.locator(HOJA), `${tecla} no cierra la hoja`).toBeVisible();
+      await expect(page).toHaveURL(/\/work\/olbo$/);
+    }
+    await page.keyboard.press("Tab");
     await expect(page.locator(`${HOJA} button.hoja-circulo`)).toBeFocused();
+  });
+
+  test("Tab atrapado (adelante y atrás)", async ({ page }) => {
+    await preparar(page);
+    await abrir(page, "/");
     for (const tecla of ["Tab", "Shift+Tab"]) {
       for (let i = 0; i < 60; i++) {
         await page.keyboard.press(tecla);
