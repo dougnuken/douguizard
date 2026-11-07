@@ -185,8 +185,31 @@ test.describe("hoja · conducta", () => {
     await page.goto("/", { waitUntil: "networkidle" });
     const enlace = page.locator('#main a[href="/work/olbo"]:visible').first();
     await enlace.scrollIntoViewIfNeeded();
-    const [nueva] = await Promise.all([context.waitForEvent("page"), enlace.click({ modifiers: ["ControlOrMeta"] })]);
-    await nueva.waitForURL("**/work/olbo", { waitUntil: "domcontentloaded" });
+    // Lo nuestro es que la app NO intercepte un clic con modificador (Next deja
+    // pasar Ctrl/Cmd/Shift/clic medio y el navegador abre la pestaña). Abrir la
+    // pestaña real dependía de la carga de la máquina (1 fallo en 464), así que
+    // se comprueba por separado: el clic no navega ni abre la hoja, y la
+    // pestaña nueva con ese enlace da la página completa.
+    // El último en enterarse es `window` (después del manejador de React): si
+    // la app hubiera interceptado el clic, ya vendría con `defaultPrevented`.
+    const interceptado = await enlace.evaluate((a) => {
+      let previo = true;
+      window.addEventListener(
+        "click",
+        (e) => {
+          previo = e.defaultPrevented;
+          e.preventDefault(); // y el navegador no abre nada
+        },
+        { once: true },
+      );
+      a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, ctrlKey: true, metaKey: true }));
+      return previo;
+    });
+    expect(interceptado, "la app no intercepta el clic con modificador").toBe(false);
+    await page.waitForTimeout(500);
+    const href = await enlace.getAttribute("href");
+    const nueva = await context.newPage();
+    await nueva.goto(href!, { waitUntil: "domcontentloaded" });
     expect(new URL(nueva.url()).pathname).toBe("/work/olbo");
     await expect(nueva.locator("dialog.hoja")).toHaveCount(0);
     expect(await nueva.locator("main#main").count()).toBe(1);
