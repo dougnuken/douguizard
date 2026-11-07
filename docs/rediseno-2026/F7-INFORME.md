@@ -212,3 +212,15 @@ Reformulados solo con lo que ya dice cada caso; ninguna cifra nueva. Viven en `s
 
 Sin borrador, a propósito: Producto en todos menos Naowee (no hay frase en el caso que lo resuma sin inventar) y
 Decisiones/Proceso donde el caso no tiene ese bloque.
+
+### Verificación de los arreglos
+
+- lint · tsc · build: en verde.
+- vitest: **258/258** (257 + 1 de `heads`).
+- Playwright completo: **513/513** en una corrida (16,7 min; 502 + 11 nuevas de `caso.spec`: P1-1 ×3, P1-2 ×3,
+  P1-3 ×2, P1-4 ×3).
+- LCP de `/` (`perf-F7-arreglos.json`, mediana de 3, servidor solo): móvil **1.012 ms** (F7: 1.068), escritorio
+  **412 ms** (F7: 432); CLS igual (0,0655 / 0,0005). Sin regresión: el CSS del caso no viaja con `/`.
+- Capturas rehechas con `npx tsx scripts/shots-f7.ts` (`next build` + `next start`): `completa-`, `entera-` y `hoja-`
+  de Naowee, Andes, olbo y DC Medical (ES, 1440 y 390), las de Naowee en EN, y los 404. olbo y DC Medical se
+  rehicieron también porque P1-2 y P1-4 cambian su portada y sus capítulos.
