@@ -23,7 +23,7 @@
 - **Nombre:** lockup **«corte láser»** (opción 4 de `propuestas/B-tipo/`, Geologica; el láser parte «Vargas» y el
   corte se cierra cuando la foto se encoge). Resto: Urbanist + Instrument Sans + Doto (solo cifras/fechas).
 - **Sin máscara** ni revelado. Héroe = foto + vidrio estriado oblicuo; el cursor solo abre/aclara el vidrio.
-- **Imagen del héroe en pausa.** Provisional `retratos-hf/199598aa.jpg` (láser rojo, gorra NY, sin lentes, 880×1168).
+- **Imagen del héroe (7 nov): `retratos-hf/960e1d8c.jpg`** (Higgsfield, ciudad nocturna, láser rojo en los ojos, 896×1200), activa en `src/data/hero.ts`. Antes en pausa: Provisional `retratos-hf/199598aa.jpg` (láser rojo, gorra NY, sin lentes, 880×1168).
   Lo explorado no convenció (`heroe/`). Gusto: `referencias/ref-6`, `ref-7` (render 3D hiperdetallado, gear gastado)
   pero **fondo oscuro**. Se le dará dirección de arte después.
 - **Experiencia:** motion graphics que cuentan los años como línea de tiempo (maqueta en `propuestas/B-paginas/`).
@@ -58,7 +58,7 @@
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
 Disponibilidad (consultoría vs roles) · orden de casos · titular EN «direct/lead» · retirar toggle claro/oscuro ·
-datos faltantes de `04-COPY.md §7` · imagen final del héroe · plataformas por caso (ficha F7; solo las confirmadas) · marcas de `/about` (8 vs 7), título «DC Medical Aesthetics», Chub (F2-INFORME desvíos 5, 14).
+datos faltantes de `04-COPY.md §7` · plataformas por caso (ficha F7; solo las confirmadas) · marcas de `/about` (8 vs 7), título «DC Medical Aesthetics», Chub (F2-INFORME desvíos 5, 14).
 
 ## Entorno
 
