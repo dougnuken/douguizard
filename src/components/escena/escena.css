@@ -155,7 +155,19 @@
       z-index: -1;
       opacity: var(--atm, 1);
       background: var(--foto-atm) 50% 42% / cover no-repeat;
-      filter: blur(28px) brightness(0.72) saturate(1.05);
+      /* P0-1 (crítica F5): más oscura y más borrosa, para que el empalme con el
+         fundido de la foto no cambie de tono. */
+      filter: blur(36px) brightness(0.6) saturate(1.05);
+    }
+    /* P0-1 (crítica F5, como P1-1 de F2 en `/about`): la foto del acto 1 no
+       tiene bordes duros a los lados. Fundido lateral ligado a la foto (`--q`,
+       0 → 1 de p 0 a 0,72): existe en p = 0 y desaparece al llegar a la losa;
+       el OS (`data-escena-fase="os"`) queda sin máscara, píxel a píxel. La lente
+       CSS (`.vidrio-css`) ya lleva su máscara radial y solo se ve bajo el cursor. */
+    :root.cine:not([data-escena-fase="os"]) .k1-foto :is(.k1-poster, .vidrio-gl) {
+      --fx: calc(14% * (1 - var(--q, 0)));
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%);
     }
     :root.cine .k2 {
       -webkit-backdrop-filter: blur(24px) saturate(140%);

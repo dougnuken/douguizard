@@ -173,6 +173,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
         borderRadius: `${lerp(0, geo.radio, fr.radio)}px`,
       });
       foto.style.setProperty("--atm", (1 - fr.q).toFixed(3));
+      foto.style.setProperty("--q", fr.q.toFixed(4));
       Object.assign(poster.style, {
         position: "absolute",
         left: `${pl.Ox - r.x}px`,

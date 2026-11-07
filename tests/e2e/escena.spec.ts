@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import sharp from "sharp";
 
 /**
  * F5 · acto 1 «cine» y scroll anclado del home (07 F5). Sin RM a ≥ 1024 el home
@@ -274,6 +275,45 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect(despues - antes, "rAF en 1 s de reposo (sin el bucle vacío de ScrollTrigger)").toBeLessThanOrEqual(6);
     expect(await cuadros(), "el vidrio no pinta en reposo").toBe(c0);
     expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length)).toBe(0);
+  });
+
+  test("P0-1: en p = 0 la foto del acto 1 no tiene bordes duros a los lados (|ΔL| < 6 entre columnas vecinas)", async ({ page }) => {
+    for (const [w, h] of [[1440, 900], [1280, 720], [1920, 1080]]) {
+      await page.setViewportSize({ width: w, height: h });
+      await abrir(page, { captura: true });
+      await page.mouse.move(1, h - 1);
+      await page.waitForTimeout(900); // la entrada por tiempo y el fundido del vidrio terminan
+      const g = await page.evaluate((sel) => {
+        const r = (s: string) => {
+          const b = document.querySelector(s)!.getBoundingClientRect();
+          return { x: b.left, y: b.top, r: b.right, b: b.bottom };
+        };
+        return { foto: r("img.k1-poster"), tapan: [r(sel), r(".k2"), r(".escena-indicador"), r(".escena-indicador span")] };
+      }, XL);
+      const png = await page.screenshot();
+      const { data, info } = await sharp(png).greyscale().raw().toBuffer({ resolveWithObject: true });
+      for (const borde of [g.foto.x, g.foto.r]) {
+        const x0 = Math.max(1, Math.round(borde - 90));
+        const x1 = Math.min(info.width - 2, Math.round(borde + 90));
+        // Filas libres: bajo la cabecera, sin el nombre XL, K2 ni «Desliza» en la ventana de columnas.
+        const filas: number[] = [];
+        for (let y = 96; y < info.height - 16; y++) {
+          const tapa = g.tapan.some((c) => y >= c.y - 4 && y <= c.b + 4 && c.x - 4 <= x1 && c.r + 4 >= x0);
+          if (!tapa) filas.push(y);
+        }
+        expect(filas.length, `${w}×${h} filas libres en x ≈ ${Math.round(borde)}`).toBeGreaterThanOrEqual(40);
+        let max = 0;
+        let prev = -1;
+        for (let x = x0; x <= x1; x++) {
+          let suma = 0;
+          for (const y of filas) suma += data[y * info.width + x];
+          const m = suma / filas.length;
+          if (prev >= 0) max = Math.max(max, Math.abs(m - prev));
+          prev = m;
+        }
+        expect(max, `${w}×${h}: salto de luminancia en el borde x ≈ ${Math.round(borde)}`).toBeLessThan(6);
+      }
+    }
   });
 
   test("GSAP bloqueado: el acto 1 se retira y queda el OS armado, sin errores", async ({ page }) => {
