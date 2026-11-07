@@ -22,4 +22,23 @@ describe("F7 · caso en B", () => {
     // Donde el caso no lo dice, no se inventa (07 F7).
     expect(caseStudies.find((c) => c.slug === "qrvey")?.platforms).toBeUndefined();
   });
+
+  it("heads (P1-3): mismas claves en ES y EN, sin vacíos, solo para bloques que existen; Naowee con el copy de caso.html", () => {
+    for (const c of caseStudies) {
+      const es = getCaseStudy(c.slug, "es")!;
+      expect(Object.keys(es.heads ?? {}).sort(), c.slug).toEqual(Object.keys(c.heads ?? {}).sort());
+      for (const h of [c.heads, es.heads]) {
+        for (const v of Object.values(h ?? {})) expect((v as string).trim().length, c.slug).toBeGreaterThan(0);
+        if (h?.decisions) expect(c.decisions?.length, `${c.slug} decisions`).toBeGreaterThan(0);
+        if (h?.process) expect(c.process?.length, `${c.slug} process`).toBeGreaterThan(0);
+      }
+    }
+    expect(getCaseStudy("naowee-suid", "es")?.heads).toEqual({
+      context: "Un sector que funcionaba con archivos",
+      contributions: "Dirijo el producto y construyo el prototipo",
+      decisions: "Tres reglas que sostienen la plataforma",
+      product: "Así se despeja hoy un trámite vencido",
+      process: "Del archivo al prototipo firmado",
+    });
+  });
 });

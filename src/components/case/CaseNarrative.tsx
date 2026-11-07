@@ -1,6 +1,7 @@
 "use client";
 
-import { Band, FadeIn, renderBold } from "./primitives";
+import { Band, CabBloque, FadeIn, renderBold } from "./primitives";
+import type { CaseHeads } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
 /**
@@ -13,22 +14,20 @@ export default function CaseNarrative({
   contributions,
   idProblema,
   idParte,
+  heads,
 }: {
   context: string;
   contributions: string[];
   idProblema?: string;
   idParte?: string;
+  heads?: CaseHeads;
   tone?: unknown;
 }) {
   const t = useDict().case;
   return (
     <>
       <Band id={idProblema} labelledBy={idProblema && `${idProblema}-h`} className="dos">
-        <div className="bloque-cab">
-          <h2 id={idProblema && `${idProblema}-h`} className="t-bloque">
-            {t.context}
-          </h2>
-        </div>
+        <CabBloque id={idProblema && `${idProblema}-h`} rotulo={t.context} titular={heads?.context} />
         <FadeIn>
           <p className="prosa">{renderBold(context)}</p>
         </FadeIn>
@@ -36,11 +35,7 @@ export default function CaseNarrative({
 
       {contributions.length > 0 && (
         <Band id={idParte} labelledBy={idParte && `${idParte}-h`} className="dos">
-          <div className="bloque-cab">
-            <h2 id={idParte && `${idParte}-h`} className="t-bloque">
-              {t.whatIDid}
-            </h2>
-          </div>
+          <CabBloque id={idParte && `${idParte}-h`} rotulo={t.whatIDid} titular={heads?.contributions} />
           <FadeIn>
             <ul className="lista-parte">
               {contributions.map((c) => (

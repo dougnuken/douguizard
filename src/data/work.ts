@@ -64,6 +64,19 @@ export interface StoryChapter {
   sections: StorySection[];
 }
 
+/**
+ * Titulares del cuerpo del caso (F7 P1-3): con dato, cada bloque lleva su
+ * rótulo como ceja y este titular como `h2`; sin dato, el rótulo solo. El
+ * índice lateral sigue con los rótulos cortos.
+ */
+export interface CaseHeads {
+  context?: string;
+  contributions?: string;
+  decisions?: string;
+  product?: string;
+  process?: string;
+}
+
 export interface CaseStudy {
   slug: string;
   num: string;
@@ -122,6 +135,8 @@ export interface CaseStudy {
    * nombres de plataforma y no se traducen.
    */
   platforms?: string[];
+  /** Titulares de los bloques del cuerpo; ver `CaseHeads`. */
+  heads?: CaseHeads;
   /** Numbered narrative of how the work happened, phase by phase. */
   process?: { phase: string; title: string; body: string }[];
   /** The calls worth defending — each one a choice and its reasoning. */
@@ -182,6 +197,11 @@ export interface CaseStudy {
 export const caseStudies: CaseStudy[] = [
   {
     slug: "olbo",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "An app that worked, and had grown loud",
+      contributions: "I redesigned the brand and the UI, and directed the build",
+    },
     platforms: ["PWA"],
     num: "/01",
     project: "olbo",
@@ -541,6 +561,14 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "naowee-suid",
+    // Titulares del cuerpo (P1-3): de `caso.html`, aprobados.
+    heads: {
+      context: "A sector that ran on files",
+      contributions: "I set the direction and build the prototype",
+      decisions: "Three rules the platform stands on",
+      product: "Clearing an overdue filing, today",
+      process: "From files to a signed prototype",
+    },
     platforms: ["Web"],
     num: "/02",
     experienceId: "naowee",
@@ -666,6 +694,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "mercadolibre-andes",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "Mercadolibre's source of truth",
+      contributions: "Foundations, parity and AI-driven audits",
+    },
     platforms: ["iOS", "Android", "Web"],
     num: "/03",
     experienceId: "mercadolibre",
@@ -714,6 +747,13 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "banco-de-occidente",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "A dense portal, and squads solving the same problems differently",
+      contributions: "I redesigned the portal and built Velocity",
+      decisions: "Two rules for the portal",
+      process: "From research to prototypes tested with people",
+    },
     num: "/04",
     experienceId: "aval",
     testimonialId: "francesca",
@@ -865,6 +905,12 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "dc-medical",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "A clinic running on WhatsApp, Calendar and Drive",
+      contributions: "One panel on top of those tools, not instead of them",
+      decisions: "Three rules the panel stands on",
+    },
     platforms: ["PWA"],
     num: "/05",
     project: "DC Medical Aesthetics",
@@ -1152,6 +1198,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "makeapet",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "Finding a playmate comes down to luck",
+      contributions: "Research, a design system and a team of agents",
+    },
     platforms: ["iOS", "Android", "PWA"],
     num: "/06",
     project: "MakeaPet",
@@ -1506,6 +1557,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "royal-caribbean",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "A week aboard, on patchy connectivity",
+      contributions: "Booking and the onboard experience, for every guest",
+    },
     platforms: ["iOS", "Android"],
     num: "/07",
     experienceId: "globant",
@@ -1534,6 +1590,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "qrvey",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "Someone still had to act on the answers",
+      contributions: "I designed AutomatiQ, the builder that did",
+    },
     num: "/08",
     experienceId: "qrvey",
     testimonialId: "arman",
@@ -1611,6 +1672,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "ideaware",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "Learning each client's domain fast",
+      contributions: "Wireframes, prototypes and reusable patterns",
+    },
     num: "/09",
     experienceId: "ideaware",
     project: "Multi-client UX Design",
@@ -1635,6 +1701,11 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: "chub",
+    // Titulares del cuerpo (P1-3): borrador para Doug, reformulado del propio caso.
+    heads: {
+      context: "Booking a car, not a ride",
+      contributions: "From the decision card to the cabin controls",
+    },
     platforms: ["iOS"],
     num: "/10",
     project: "Chub",
@@ -1710,6 +1781,8 @@ export interface CaseCopy {
   roleOverride?: string;
   clientOverride?: string;
   duration?: string;
+  /** Mismas claves que `heads` en inglés. */
+  heads?: CaseHeads;
   /** `value` only where the digits are written differently ("~1.200", "6 años"). */
   kpis?: { value?: string; label: string; delta?: string }[];
   process?: { title: string; body: string }[];
@@ -1776,6 +1849,8 @@ function localize(c: CaseStudy, t: CaseCopy | undefined): CaseStudy {
     roleOverride: t.roleOverride ?? c.roleOverride,
     clientOverride: t.clientOverride ?? c.clientOverride,
     duration: t.duration ?? c.duration,
+    // Sin fallback al inglés: un titular sin traducir no se pinta.
+    heads: t.heads,
     kpis: c.kpis?.map((k, i) => {
       const tk = t.kpis?.[i];
       return tk ? { value: tk.value ?? k.value, label: tk.label, delta: tk.delta } : k;

@@ -106,3 +106,19 @@ export function SlashLabel({ children, className }: { children: ReactNode; class
     <div className={twMerge("ceja", className)}>{children}</div>
   );
 }
+
+/**
+ * La cabecera de un bloque del cuerpo (F7 P1-3, `caso.html`): con titular, el
+ * rótulo va de ceja y el titular es el `h2`; sin él, el rótulo solo es el
+ * `h2`, como antes. No se inventa copy: el titular sale de `heads` en `work.ts`.
+ */
+export function CabBloque({ id, rotulo, titular }: { id?: string; rotulo: string; titular?: string }) {
+  return (
+    <div className="bloque-cab" data-titular={titular ? "" : undefined}>
+      {titular && <p className="ceja">{rotulo}</p>}
+      <h2 id={id} className="t-bloque">
+        {titular ?? rotulo}
+      </h2>
+    </div>
+  );
+}

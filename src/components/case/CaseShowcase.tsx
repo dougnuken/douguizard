@@ -6,26 +6,17 @@ import MockupGallery from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
 import type { CaseMediaPlan, Shot } from "@/lib/caseMedia";
 import { shotNumber } from "@/lib/caseMedia";
-import {
-  CoverStill,
-  PlainLead,
-  WalkthroughCaption,
-  WalkthroughVideo,
-  browserLabel,
-  toMockupItems,
-} from "./caseFrames";
+import { CoverStill, PlainLead, WalkthroughCaption, WalkthroughVideo, browserLabel, toMockupItems } from "./caseFrames";
 import { Band } from "./primitives";
 
 /** Full-measure desktop still: the band's 1400px, less its gutters. */
 const SIZES_FULL = "(max-width: 767px) 92vw, (max-width: 1479px) 92vw, 1344px";
 /** The wide column beside a phone walkthrough — three quarters of the band. */
-const SIZES_BESIDE_PHONE =
-  "(max-width: 1023px) 92vw, (max-width: 1479px) 68vw, 980px";
+const SIZES_BESIDE_PHONE = "(max-width: 1023px) 92vw, (max-width: 1479px) 68vw, 980px";
 
 /** A desktop or artboard still beside a phone walkthrough. */
 function Companion({ shot, kind }: { shot: Shot; kind: "browser" | "plain" }) {
-  if (kind === "plain")
-    return <PlainLead shot={shot} sizes={SIZES_BESIDE_PHONE} />;
+  if (kind === "plain") return <PlainLead shot={shot} sizes={SIZES_BESIDE_PHONE} />;
   return (
     <BrowserFrame
       src={shot.item.src}
@@ -73,10 +64,7 @@ export default function CaseShowcase({
 
   // A desktop product opens on a still, never on its clip (F7 P1-2): the
   // walkthrough plays in the Product block (`WalkthroughFilm`).
-  const still =
-    lead[0] && (galleryKind === "browser" || (video && videoKind === "browser"))
-      ? lead[0]
-      : undefined;
+  const still = lead[0] && (galleryKind === "browser" || (video && videoKind === "browser")) ? lead[0] : undefined;
   if (still || (video && videoKind === "browser")) {
     return still ? (
       <CoverStill
@@ -87,12 +75,7 @@ export default function CaseShowcase({
         height={still.item.height ?? 1800}
       />
     ) : (
-      <CoverStill
-        src={video!.poster}
-        alt=""
-        width={video!.width}
-        height={video!.height}
-      />
+      <CoverStill src={video!.poster} alt="" width={video!.width} height={video!.height} />
     );
   }
 
@@ -125,12 +108,7 @@ export default function CaseShowcase({
         <div className="mx-auto w-full max-w-[320px] lg:max-w-none">
           <WalkthroughVideo video={video} kind="phone" />
         </div>
-        {companion && (
-          <Companion
-            shot={companion}
-            kind={galleryKind === "plain" ? "plain" : "browser"}
-          />
-        )}
+        {companion && <Companion shot={companion} kind={galleryKind === "plain" ? "plain" : "browser"} />}
       </div>
     );
   } else if (galleryKind === "phone") {

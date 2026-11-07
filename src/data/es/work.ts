@@ -14,6 +14,10 @@ import type { CaseCopy } from "@/data/work";
  */
 export const workEs: Record<string, CaseCopy> = {
   olbo: {
+    heads: {
+      context: "Una app que funcionaba y se había vuelto ruidosa",
+      contributions: "Rediseñé la marca y la UI, y dirigí la construcción",
+    },
     category: "Producto propio × Ingeniería de diseño",
     roleOverride: "Design Engineer — de punta a punta",
     duration: "Semanas, y sigue en marcha",
@@ -304,6 +308,13 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   "naowee-suid": {
+    heads: {
+      context: "Un sector que funcionaba con archivos",
+      contributions: "Dirijo el producto y construyo el prototipo",
+      decisions: "Tres reglas que sostienen la plataforma",
+      product: "Así se despeja hoy un trámite vencido",
+      process: "Del archivo al prototipo firmado",
+    },
     project: "Naowee — Plataforma del sector deportivo",
     category: "GovTech × Deporte × Nativo de IA",
     duration: "En curso",
@@ -395,6 +406,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   "mercadolibre-andes": {
+    heads: {
+      context: "La fuente de verdad de Mercadolibre",
+      contributions: "Fundamentos, paridad y auditorías con IA",
+    },
     category: "Sistemas de diseño × E-commerce",
     duration: "~2 años",
     team: "400+ diseñadores, 2.000+ ingenieros",
@@ -423,6 +438,12 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   "banco-de-occidente": {
+    heads: {
+      context: "Un portal denso y squads que resolvían lo mismo a su manera",
+      contributions: "Rediseñé el portal y construí Velocity",
+      decisions: "Dos reglas para el portal",
+      process: "De la investigación a prototipos probados con personas",
+    },
     category: "Banca × Sistemas de diseño",
     duration: "5 años y 2 meses",
     team: "Equipos del banco y de Aval Digital Labs",
@@ -509,6 +530,11 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   "dc-medical": {
+    heads: {
+      context: "Una clínica que funcionaba con WhatsApp, Calendar y Drive",
+      contributions: "Un panel encima de esas herramientas, no en su lugar",
+      decisions: "Tres reglas que sostienen el panel",
+    },
     category: "Operación clínica × Ingeniería de diseño",
     roleOverride: "Diseñador de producto e ingeniero de diseño — de punta a punta",
     duration: "En vivo desde el 21 sep 2026, en desarrollo activo",
@@ -724,6 +750,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   "royal-caribbean": {
+    heads: {
+      context: "Una semana a bordo, con una conexión irregular",
+      contributions: "La reserva y la experiencia a bordo, para todos los huéspedes",
+    },
     category: "Viajes × Móvil",
     duration: "1 año",
     team: "Equipo multifuncional EE. UU. + LATAM",
@@ -742,6 +772,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   qrvey: {
+    heads: {
+      context: "Alguien tenía que hacer algo con las respuestas",
+      contributions: "Diseñé AutomatiQ, el constructor que lo hacía",
+    },
     category: "SaaS × Encuestas y NPS × Automatización",
     duration: "11 meses",
     team: "Producto e ingeniería",
@@ -788,6 +822,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   ideaware: {
+    heads: {
+      context: "Aprender rápido el dominio de cada cliente",
+      contributions: "Wireframes, prototipos y patrones reutilizables",
+    },
     project: "Diseño UX multicliente",
     category: "Agencia × Multicliente",
     duration: "1 año",
@@ -807,6 +845,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   chub: {
+    heads: {
+      context: "Reservar un carro, no un viaje",
+      contributions: "De la tarjeta de decisión a los controles de la cabina",
+    },
     category: "iOS × Movilidad",
     clientOverride: "Proyecto freelance paralelo",
     roleOverride: "Diseñador de producto — de punta a punta",
@@ -847,6 +889,10 @@ export const workEs: Record<string, CaseCopy> = {
   },
 
   makeapet: {
+    heads: {
+      context: "Encontrar compañeros de juego depende de la suerte",
+      contributions: "Investigación, sistema de diseño y un equipo de agentes",
+    },
     category: "Producto propio × iOS, Android y PWA",
     roleOverride: "Diseño UX/UI y dirección de producto",
     duration: "Octubre de 2026",

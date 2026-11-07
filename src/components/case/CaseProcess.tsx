@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Band, FadeIn, renderBold } from "./primitives";
+import { Band, CabBloque, FadeIn, renderBold } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface ProcessPhase {
@@ -14,16 +14,12 @@ export interface ProcessPhase {
  * Proceso (02 §5.3, punto 9): un riel de fases cosido por el hilo láser, con el
  * número de cada fase en Doto sobre el hilo. En móvil el riel es vertical.
  */
-export default function CaseProcess({ process, id }: { process: ProcessPhase[]; id?: string; tone?: unknown }) {
+export default function CaseProcess({ process, id, titular }: { process: ProcessPhase[]; id?: string; titular?: string; tone?: unknown }) {
   const t = useDict().case;
   const h = id && `${id}-h`;
   return (
     <Band id={id} labelledBy={h}>
-      <div className="bloque-cab">
-        <h2 id={h} className="t-bloque">
-          {t.howItHappened}
-        </h2>
-      </div>
+      <CabBloque id={h} rotulo={t.howItHappened} titular={titular} />
       <FadeIn>
         <ol className="riel-caso" style={{ "--n": Math.min(process.length, 4) } as CSSProperties}>
           {process.map((p) => (

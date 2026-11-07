@@ -1,6 +1,6 @@
 "use client";
 
-import { Band, FadeIn, renderBold } from "./primitives";
+import { Band, CabBloque, FadeIn, renderBold } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Decision {
@@ -14,16 +14,12 @@ export interface Decision {
  * tensión / elección / por qué con copy propio que el caso no tiene, así que
  * no se inventa: el cuerpo va entero.
  */
-export default function CaseDecisions({ decisions, id }: { decisions: Decision[]; id?: string; tone?: unknown }) {
+export default function CaseDecisions({ decisions, id, titular }: { decisions: Decision[]; id?: string; titular?: string; tone?: unknown }) {
   const t = useDict().case;
   const h = id && `${id}-h`;
   return (
     <Band id={id} labelledBy={h}>
-      <div className="bloque-cab">
-        <h2 id={h} className="t-bloque">
-          {t.decisions}
-        </h2>
-      </div>
+      <CabBloque id={h} rotulo={t.decisions} titular={titular} />
       <ol className="decisiones-caso">
         {decisions.map((d) => (
           <li key={d.title}>

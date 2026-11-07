@@ -6,12 +6,7 @@ import { BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 import type { MockupItem } from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
-import {
-  balanceColumns,
-  shotNumber,
-  type CaseMediaPlan,
-  type Shot,
-} from "@/lib/caseMedia";
+import { balanceColumns, shotNumber, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
 import { FadeIn } from "./primitives";
 
 /**
@@ -33,11 +28,7 @@ export function browserLabel(src: string): string | undefined {
   const parts = src.split("/").filter(Boolean);
   const product = parts.at(-2);
   // A walkthrough is filed as "recorrido-<module>"; its label is the module.
-  const tokens =
-    parts
-      .at(-1)
-      ?.replace(/\.\w+$/, "")
-      .split("-") ?? [];
+  const tokens = parts.at(-1)?.replace(/\.\w+$/, "").split("-") ?? [];
   const moduleName = tokens[0] === "recorrido" ? tokens[1] : tokens[0];
   if (!product || !moduleName) return undefined;
   return `${product} · ${moduleName}`.toUpperCase();
@@ -99,19 +90,10 @@ function PlainCaption({ shot }: { shot: Shot }) {
  * column again, and `order` puts the cards back in their authored sequence —
  * the "01/02" numbers read in order at every width.
  */
-export function PlainGallery({
-  shots,
-  ariaLabel,
-}: {
-  shots: Shot[];
-  ariaLabel: string;
-}) {
+export function PlainGallery({ shots, ariaLabel }: { shots: Shot[]; ariaLabel: string }) {
   const [left, right] = balanceColumns(shots);
   return (
-    <ul
-      aria-label={ariaLabel}
-      className="flex list-none flex-col gap-8 md:block md:columns-2 md:gap-6"
-    >
+    <ul aria-label={ariaLabel} className="flex list-none flex-col gap-8 md:block md:columns-2 md:gap-6">
       {[...left, ...right].map((shot, i) => (
         <li
           key={shot.item.src}
@@ -156,12 +138,7 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
   const height = shot.item.height ?? 836;
   return (
     <figure className="m-0">
-      <div
-        className="mx-auto"
-        style={{
-          width: `min(100%, calc(78svh * ${(width / height).toFixed(4)}))`,
-        }}
-      >
+      <div className="mx-auto" style={{ width: `min(100%, calc(78svh * ${(width / height).toFixed(4)}))` }}>
         <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
           <Image
             src={shot.item.src}
@@ -259,13 +236,7 @@ export function WalkthroughFilm({ video }: { video: Walkthrough }) {
  * replay it, and how anyone stops it — which is what WCAG 2.2.2 asks of an
  * autoplaying clip longer than five seconds.
  */
-export function WalkthroughVideo({
-  video,
-  kind,
-}: {
-  video: Walkthrough;
-  kind: "phone" | "browser";
-}) {
+export function WalkthroughVideo({ video, kind }: { video: Walkthrough; kind: "phone" | "browser" }) {
   const t = useDict().case;
   if (kind === "browser") {
     return (
@@ -311,9 +282,7 @@ export function WalkthroughCaption({ caption }: { caption?: string }) {
   return (
     <FadeIn>
       <div className="mt-8 grid grid-cols-1 gap-3 md:mt-10 lg:grid-cols-4 lg:gap-8">
-        <div className="kicker text-[var(--ink-dim)] lg:pt-1.5">
-          {t.walkthrough}
-        </div>
+        <div className="kicker text-[var(--ink-dim)] lg:pt-1.5">{t.walkthrough}</div>
         {caption && (
           <p className="max-w-[62ch] text-[16px] leading-[1.6] text-[var(--ink)] md:text-[18px] lg:col-span-3">
             {caption}

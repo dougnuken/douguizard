@@ -510,3 +510,41 @@ test.describe("P1-2 · la cubierta es una captura estática en losa", () => {
     }
   });
 });
+
+test.describe("P1-3 · titulares del cuerpo", () => {
+  for (const [pre, rotulos, titulares] of [
+    [
+      "",
+      ["Problema", "Mi parte", "Decisiones", "Producto", "Proceso"],
+      [
+        "Un sector que funcionaba con archivos",
+        "Dirijo el producto y construyo el prototipo",
+        "Tres reglas que sostienen la plataforma",
+        "Así se despeja hoy un trámite vencido",
+        "Del archivo al prototipo firmado",
+      ],
+    ],
+    ["/en", ["Problem", "My part", "Decisions", "Product", "Process"], ["A sector that ran on files"]],
+  ] as const) {
+    test(`Naowee${pre || " ES"}: ceja + titular en cada bloque; el índice sigue con los rótulos`, async ({ page }) => {
+      await preparar(page, 1440);
+      await page.goto(`${pre}/work/naowee-suid`, { waitUntil: "networkidle" });
+      const cabs = await page.locator("main .caso-secciones .bloque-cab[data-titular]").evaluateAll((els) =>
+        els.map((e) => ({
+          ceja: e.querySelector(".ceja")!.textContent!.trim(),
+          h2: e.querySelector("h2")!.textContent!.trim(),
+          fs: parseFloat(getComputedStyle(e.querySelector("h2")!).fontSize),
+          fsCeja: parseFloat(getComputedStyle(e.querySelector(".ceja")!).fontSize),
+        })),
+      );
+      expect(cabs.map((c) => c.ceja)).toEqual([...rotulos]);
+      titulares.forEach((t, i) => expect(cabs[i].h2).toBe(t));
+      for (const c of cabs) {
+        expect(c.fs).toBe(30);
+        expect(c.fsCeja).toBeLessThanOrEqual(14);
+      }
+      const indice = await page.locator("main nav[data-indice] a").allTextContents();
+      for (const r of rotulos) expect(indice.map((t) => t.trim())).toContain(r);
+    });
+  }
+});

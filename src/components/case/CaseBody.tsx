@@ -23,6 +23,7 @@ import HojaSecciones from "@/components/case/HojaSecciones";
 import { RegistrarLeido } from "@/components/trabajo/Leido";
 import { CaseChapter, CaseCover, CaseFilm } from "@/components/case/CaseStory";
 import { WalkthroughFilm } from "@/components/case/caseFrames";
+import { CabBloque } from "@/components/case/primitives";
 
 /**
  * Un caso, compuesto, en un idioma: la misma pieza en la página completa y en
@@ -112,9 +113,12 @@ export default function CaseBody({
               idProblema={id("problema")}
               idParte={id("parte")}
               context={study.context}
+              heads={study.heads}
               contributions={study.contributions}
             />
-            {study.decisions?.length ? <CaseDecisions id={id("decisiones")} decisions={study.decisions} /> : null}
+            {study.decisions?.length ? (
+              <CaseDecisions id={id("decisiones")} decisions={study.decisions} titular={study.heads?.decisions} />
+            ) : null}
 
             {hayProducto && (
               <div
@@ -124,11 +128,7 @@ export default function CaseBody({
                 role="region"
                 aria-labelledby={id("producto-h")}
               >
-                <div className="bloque-cab">
-                  <h2 id={id("producto-h")} className="t-bloque">
-                    {t.product}
-                  </h2>
-                </div>
+                <CabBloque id={id("producto-h")} rotulo={t.product} titular={study.heads?.product} />
                 {pelicula && <WalkthroughFilm video={pelicula} />}
                 {study.film && <CaseFilm tone="paper" film={study.film} />}
                 {study.story?.map((chapter, i) => (
@@ -143,7 +143,9 @@ export default function CaseBody({
               </div>
             )}
 
-            {study.process?.length ? <CaseProcess id={id("proceso")} process={study.process} /> : null}
+            {study.process?.length ? (
+              <CaseProcess id={id("proceso")} process={study.process} titular={study.heads?.process} />
+            ) : null}
             {study.testimonialId && !proofFirst && <CaseTestimonial tone="paper" id={study.testimonialId} />}
             {(study.technologies?.length || enlaces || study.credits) && (
               <CaseColophon technologies={study.technologies} links={enlaces} credits={study.credits} enHoja={enHoja} />
