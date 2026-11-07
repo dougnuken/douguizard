@@ -276,7 +276,10 @@ test.describe("hoja · conducta", () => {
     await page.waitForTimeout(800);
     const rsc: string[] = [];
     page.on("request", (r) => {
-      if (r.headers()["rsc"] || /[?&]_rsc=/.test(r.url())) rsc.push(r.url());
+      // Solo la ruta del caso: los prefetch de los enlaces que entran en la hoja
+      // (la miga a `/work`) son de otras rutas y no cuentan.
+      const u = new URL(r.url());
+      if (u.pathname === "/work/olbo" && (r.headers()["rsc"] || u.searchParams.has("_rsc"))) rsc.push(r.url());
     });
     await enlace.click();
     await expect(page.locator(HOJA)).toHaveAttribute("data-estado", "abierta");
@@ -334,7 +337,8 @@ test.describe("hoja · movimiento y móvil", () => {
     await preparar(page, { rm: false, ancho: 390, alto: 844 });
     await abrir(page, "/", "olbo", { asentar: false });
     const caja = await page.locator(`${HOJA} .hoja-panel`).boundingBox();
-    expect(caja!.width).toBe(390);
+    // El ancho útil del viewport (Chromium headless pinta barra clásica; en un teléfono es 390).
+    expect(caja!.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
     expect(Math.round(caja!.y)).toBe(16);
     const cab = page.locator(`${HOJA} .hoja-asa`);
     const c = (await cab.boundingBox())!;
