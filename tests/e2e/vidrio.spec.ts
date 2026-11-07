@@ -88,6 +88,10 @@ test.describe("(a) Chromium con WebGL2", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "load" });
     test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
+    // F5: la losa K1 del OS está al final del ancla del acto 1.
+    await page.waitForFunction(() => !!document.querySelector<HTMLElement>("[data-escena-pista]")?.dataset.escenaFin);
+    await page.evaluate(() => document.dispatchEvent(new Event("escena:fin", { cancelable: true })));
+    await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
     await page.waitForTimeout(500);
     const quieto = await cuadros(page, ".k1");
     await page.waitForTimeout(1200);

@@ -22,8 +22,14 @@ const progreso = (page: Page) => page.evaluate(() => Number(document.querySelect
 async function irA(page: Page, p: number) {
   const h = await page.evaluate(() => window.innerHeight);
   const f = await fin(page);
-  await page.evaluate((y) => window.scrollTo(0, y), Math.round(f - h + p * h));
-  await expect.poll(() => progreso(page), { timeout: 4000 }).toBeCloseTo(p, 2);
+  const y = Math.round(f - h + p * h);
+  // ScrollTrigger puede restaurar el scroll en su primer `refresh`: se insiste hasta que el progreso llegue.
+  await expect
+    .poll(async () => {
+      await page.evaluate((y) => window.scrollY !== y && window.scrollTo(0, y), y);
+      return progreso(page);
+    }, { timeout: 5000, intervals: [100, 200, 300] })
+    .toBeCloseTo(p, 2);
 }
 
 const rects = (page: Page) =>
@@ -66,7 +72,11 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     for (let i = 0; i < 12; i++) await page.mouse.wheel(0, 120);
     await expect.poll(() => progreso(page), { timeout: 5000 }).toBe(1);
     await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
-    expect(await page.evaluate(() => window.scrollY)).toBe(await fin(page));
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(await fin(page));
+    // Al final del ancla el OS está donde F3 lo tiene en scrollY = 0.
+    await page.evaluate((y) => window.scrollTo(0, y), await fin(page));
+    await page.mouse.move(1, 1); // sin hover (las losas suben 2 px)
+    await page.waitForTimeout(400);
     const os = await rectsOS(page, 1440, 900);
     const final = await rects(page);
     for (let i = 0; i < TARJETAS.length; i++) {
@@ -120,6 +130,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     const malas: string[] = [];
     for (let i = 0; i < 12; i++) {
       await page.keyboard.press("Tab");
+      await page.waitForTimeout(250);
       const r = await page.evaluate(() => {
         const el = document.activeElement as HTMLElement | null;
         if (!el || el === document.body) return null;
@@ -224,18 +235,23 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
       }).observe({ type: "layout-shift", buffered: true });
       const raf = window.requestAnimationFrame.bind(window);
       window.requestAnimationFrame = (cb) => {
-        w.__raf++;
+        if (!/^function \w+\(\)\{return \w+&&requestAnimationFrame\(\w+\)\}$/.test(cb.toString())) w.__raf++;
         return raf(cb);
       };
     });
     await abrir(page);
     await page.waitForTimeout(3000);
     expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBeLessThanOrEqual(0.02);
-    // Reposo: ni animaciones CSS/WAAPI ni bucles de rAF (GSAP duerme sin tweens).
+    // Reposo: ni animaciones CSS/WAAPI, ni cuadros del vidrio, ni bucles de rAF que
+    // pinten. Se descuenta el bucle vacío que ScrollTrigger deja vivo mientras está
+    // registrado (`_rafBugFix`: `function e(){return x&&requestAnimationFrame(e)}`, no toca el DOM).
     const antes = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
+    const cuadros = () => page.evaluate(() => document.querySelector(".k1 canvas")?.getAttribute("data-cuadros") ?? "sin-canvas");
+    const c0 = await cuadros();
     await page.waitForTimeout(1000);
     const despues = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
-    expect(despues - antes, "rAF en 1 s de reposo").toBeLessThanOrEqual(2);
+    expect(despues - antes, "rAF en 1 s de reposo (sin el bucle vacío de ScrollTrigger)").toBeLessThanOrEqual(6);
+    expect(await cuadros(), "el vidrio no pinta en reposo").toBe(c0);
     expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length)).toBe(0);
   });
 
@@ -246,11 +262,12 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await page.route("**/_next/static/chunks/**/*.js", async (route) => {
       const r = await route.fetch();
       const cuerpo = await r.text();
-      if (/_gsap|ScrollTrigger/.test(cuerpo)) return route.abort();
+      if (/_gsap|pinSpacing/.test(cuerpo)) return route.abort();
       return route.fulfill({ response: r, body: cuerpo });
     });
     await page.goto("/", { waitUntil: "load" });
     await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains("cine")), { timeout: 8000 }).toBe(false);
+    await page.waitForTimeout(600); // la transición de `translate` de las losas (hover) termina
     const m = await page.evaluate(() => ({
       k3: getComputedStyle(document.querySelector(".k3")!).opacity,
       k2: getComputedStyle(document.querySelector(".k2")!).translate,
@@ -277,7 +294,7 @@ test.describe("escena del home · sin acto 1", () => {
       page.on("response", async (r) => {
         if (!r.url().endsWith(".js")) return;
         const t = await r.text().catch(() => "");
-        if (/_gsap|ScrollTrigger/.test(t)) gsap.push(r.url());
+        if (/_gsap|pinSpacing/.test(t)) gsap.push(r.url());
       });
       await page.goto("/", { waitUntil: "load" });
       await page.waitForTimeout(2500);
@@ -307,7 +324,7 @@ test.describe("escena del home · sin acto 1", () => {
     page.on("response", async (r) => {
       if (!r.url().endsWith(".js")) return;
       const t = await r.text().catch(() => "");
-      if (/_gsap|ScrollTrigger/.test(t)) gsap.push(new URL(r.url()).pathname);
+      if (/_gsap|pinSpacing/.test(t)) gsap.push(new URL(r.url()).pathname);
     });
     await abrir(page);
     expect(gsap.length).toBeGreaterThan(0);

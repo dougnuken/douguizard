@@ -61,7 +61,8 @@
   }
   @media (min-width: 1464px) {
     .escena {
-      padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2));
+      --os-x: max(var(--os-izq), calc((100vw - 1320px) / 2));
+      padding-left: var(--os-x);
     }
     .os-resto {
       margin-left: max(var(--os-izq), calc((100vw - 1320px) / 2));

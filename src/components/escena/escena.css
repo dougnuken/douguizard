@@ -23,17 +23,26 @@
     .os-laser {
       display: block;
       position: absolute;
-      grid-area: k1;
+      /* Las filas de K1 (su alto) y, a lo ancho, del borde izquierdo al derecho
+         del viewport: el bloque contenedor es la rejilla entera. */
+      grid-column: 1 / -1;
+      grid-row: 1 / 7;
       z-index: -1;
       top: calc(var(--foto-ojo, 0.3) * 100%);
-      left: -100vw;
-      right: -100vw;
+      left: calc(-1 * var(--os-x, var(--os-izq)));
+      width: 100cqw;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255, 51, 68, 0.5) 30%, rgba(255, 51, 68, 0.5) 70%, transparent);
       box-shadow: 0 0 6px rgba(255, 51, 68, 0.35);
       pointer-events: none;
     }
+    @media (max-width: 1279px) {
+      .os-laser {
+        grid-row: 1 / 6;
+      }
+    }
     .escena {
+      container-type: inline-size;
       overflow-x: clip;
     }
 
@@ -55,6 +64,10 @@
     }
     :root.cine .k1 {
       overflow: visible;
+    }
+    /* En el acto 1 la foto llena la pantalla: K1 no «sube» con el hover. */
+    :root.cine:not([data-escena-fase="os"]) .os .k1.tarjeta {
+      translate: none;
     }
     /* Siempre en caja (las entradas no se repiten al volver del OS); en p = 1, ocultos. */
     :root.cine :is(.escena-nombre, .escena-indicador) {
@@ -156,12 +169,13 @@
     }
     :root.cine:not([data-escena-fase]) .k1-foto :is(.k1-poster, .vidrio-gl, .vidrio-css) {
       position: absolute;
-      left: 62%;
+      /* Sin `translate`: la posición de caja es la misma que escribe la escena (sin CLS). */
+      left: calc(62% - 0.65 * 100svh * var(--foto-ar));
       top: calc(41% - var(--foto-ojo) * 130%);
       width: auto;
       height: 130%;
+      max-width: none;
       aspect-ratio: var(--foto-ar);
-      translate: -50% 0;
     }
     :root.cine:not([data-escena-fase]) .k1-laser {
       top: 41%;

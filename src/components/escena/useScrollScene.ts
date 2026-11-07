@@ -112,8 +112,11 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     const medir = () => {
       const W = escena.clientWidth;
       const H = window.innerHeight;
-      const o1 = offset(k1, escena);
-      const B: Rect = { x: 0, y: 0, w: k1.offsetWidth, h: k1.offsetHeight };
+      // K1 no se transforma nunca en la escena: su caja medida (sin redondeo de offsetTop) es exacta.
+      const rk = k1.getBoundingClientRect();
+      const re = escena.getBoundingClientRect();
+      const o1 = { x: rk.left - re.left, y: rk.top - re.top };
+      const B: Rect = { x: 0, y: 0, w: rk.width, h: rk.height };
       const A: Rect = { x: -o1.x, y: -o1.y, w: W, h: H };
       const cine = placement({ x: 0, y: 0, w: W, h: H }, "cine", fotoDatos);
       const pa = { ...cine, Ox: cine.Ox - o1.x, Oy: cine.Oy - o1.y };
@@ -216,6 +219,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
 
     const montar = async () => {
       if (!mq.matches) return salir();
+      // La red de seguridad de `sceneInit` ya retiró el acto 1: no se vuelve a él.
+      if ("escenaRetirada" in html.dataset) return;
       if (!html.classList.contains("cine")) {
         // Vuelve a 1024+ desde el OS (o se quitó RM): se entra en p = 1, sin saltos.
         const y = window.scrollY;
