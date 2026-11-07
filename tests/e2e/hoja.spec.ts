@@ -429,6 +429,34 @@ test.describe("hoja · movimiento y móvil", () => {
     });
   }
 
+  test("sin RM: el encabezado del caso entra con el panel, sin revelado propio (P1-4)", async ({ page }) => {
+    await preparar(page, { rm: false });
+    await page.goto("/work", { waitUntil: "networkidle" });
+    const enlace = page.locator('#main a[href="/work/olbo"]:visible').first();
+    await enlace.click();
+    await page.waitForURL("**/work/olbo");
+    await expect(page.locator(HOJA)).toHaveAttribute("data-estado", "abierta");
+    await page.waitForTimeout(420);
+    const titulo = await page.locator(`${HOJA} h2`).first().evaluate((h) => {
+      const cadena: Element[] = [];
+      for (let el: Element | null = h; el && !el.classList.contains("hoja-cuerpo"); el = el.parentElement) cadena.push(el);
+      // También los hijos (el revelado envolvía líneas en spans).
+      cadena.push(...Array.from(h.querySelectorAll("*")));
+      const lead = h.nextElementSibling;
+      if (lead) cadena.push(lead, ...Array.from(lead.querySelectorAll("*")));
+      return cadena.map((el) => {
+        const cs = getComputedStyle(el);
+        return { tag: el.tagName, op: Number(cs.opacity), clip: cs.clipPath, tf: cs.transform, tr: cs.translate };
+      });
+    });
+    for (const t of titulo) {
+      expect(t.op, `${t.tag} opaco`).toBe(1);
+      expect(t.clip, `${t.tag} sin clip-path`).toBe("none");
+      expect(t.tf, `${t.tag} sin transform`).toBe("none");
+      expect(t.tr, `${t.tag} sin translate`).toBe("none");
+    }
+  });
+
   test("con el ancla (sin RM, 1440): cerrar deja el tablero en el mismo progreso", async ({ page }) => {
     await preparar(page, { rm: false });
     await page.goto("/", { waitUntil: "networkidle" });

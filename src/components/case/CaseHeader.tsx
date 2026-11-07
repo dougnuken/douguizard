@@ -17,6 +17,11 @@ function Dot({ className = "" }: { className?: string }) {
 
 const fold = (s: string) => s.trim().toLowerCase();
 
+const CLASE_TITULO =
+  "max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)]";
+const CLASE_LEAD =
+  "max-w-[46ch] font-display leading-[1.4] tracking-tight text-[var(--ink)] text-[length:var(--step-lead)]";
+
 /**
  * The case hero: breadcrumb, client and role, project, tagline.
  *
@@ -109,24 +114,32 @@ export default function CaseHeader({
           {meta.role.replace(/ · /g, " ·\u00a0")}
         </p>
 
-        <RevealText
-          as={enHoja ? "h2" : "h1"}
-          id={enHoja ? tituloHojaId(study.slug) : undefined}
-          variant="mask"
-          delay={0.05}
-          className="mb-6 max-w-[1100px] font-display font-extrabold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] text-[length:var(--step-display)] md:mb-8"
-        >
-          {study.project}
-        </RevealText>
+        {enHoja ? (
+          /* En la hoja el texto viaja con el panel: sin revelado propio, que
+             encadenaba una segunda coreografía tras la subida (06-CRITICA-F6
+             P1-4). F7 rehace el cuerpo en B y debe heredarlo. */
+          <>
+            <h2 id={tituloHojaId(study.slug)} className={`${CLASE_TITULO} mb-6 md:mb-8`}>
+              {study.project}
+            </h2>
+            <p className={CLASE_LEAD}>{study.tagline}</p>
+          </>
+        ) : (
+          <>
+            <RevealText
+              as="h1"
+              variant="mask"
+              delay={0.05}
+              className={`${CLASE_TITULO} mb-6 md:mb-8`}
+            >
+              {study.project}
+            </RevealText>
 
-        <RevealText
-          as="p"
-          variant="fade"
-          delay={0.2}
-          className="max-w-[46ch] font-display leading-[1.4] tracking-tight text-[var(--ink)] text-[length:var(--step-lead)]"
-        >
-          {study.tagline}
-        </RevealText>
+            <RevealText as="p" variant="fade" delay={0.2} className={CLASE_LEAD}>
+              {study.tagline}
+            </RevealText>
+          </>
+        )}
       </div>
     </section>
   );
