@@ -52,7 +52,7 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F1.md`) → arreglos ✓ → **F1 cerrada**. F2 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F2.md`) → arreglo P1-1 ✓ → **F2 cerrada** · F3 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F3.md`) → arreglos ✓ → **F3 cerrada**. F4 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F4.md`) → arreglos ✓ → **F4 cerrada**. F5 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F5.md`) → arreglos ✓ → **F5 cerrada**. **Siguiente: F6** casos en hoja con URL real (espera el sí de Doug) → F7, F8 (`session_0115FVo8yBzjXsUeECw4PfTN`) → QA F3 → F4…F8 → F8, una sesión por fase (ejecutor) + una de QA visual/crítica por fase.
+4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). **Siguiente: F6** casos en hoja con URL real (espera el sí de Doug) → F7 → F8. Una sesión por fase (ejecutor) + una de QA visual/crítica.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
