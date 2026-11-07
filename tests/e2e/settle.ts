@@ -18,6 +18,19 @@ export async function settle(page: Page, maxMs = 8000): Promise<string[]> {
       }
       window.scrollTo(0, 0);
     }
+    // F5: en el acto 1 del home (≥ 1024 sin RM), la página se deja al final del
+    // ancla (el OS armado) en vez de en 0. Si GSAP aún no montó, se le espera.
+    if (document.documentElement.classList.contains("cine")) {
+      const pista = () => document.querySelector<HTMLElement>("[data-escena-pista]");
+      const t0 = performance.now();
+      while (!pista()?.dataset.escenaFin && document.documentElement.classList.contains("cine") && performance.now() - t0 < 6000) await sleep(50);
+      const fin = Number(pista()?.dataset.escenaFin);
+      if (fin) {
+        document.dispatchEvent(new Event("escena:fin", { cancelable: true }));
+        window.scrollTo(0, fin);
+        while (document.documentElement.dataset.escenaFase !== "os" && performance.now() - t0 < 8000) await sleep(50);
+      }
+    }
     await sleep(250);
   });
 

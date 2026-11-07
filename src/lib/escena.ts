@@ -156,7 +156,7 @@ export function tramo(p: number, a: number, b: number): number {
 const lerpN = (a: number, b: number, t: number) => a + (b - a) * t;
 /** `power2.inOut` / `power1.inOut` / `power2.out` de GSAP, para pintar sin tweens. */
 export const p2io = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-export const p1io = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+export const p1io = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
 export const p2o = (t: number) => 1 - (1 - t) * (1 - t);
 
 /** Fin de cada pista del timeline (p ∈ [0, 1]). */

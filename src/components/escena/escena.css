@@ -181,6 +181,26 @@
     }
   }
 
+  /* K2 en el acto 1 (07 F5): el material va con `--m` (0 = vidrio oscuro, 1 =
+     losa blanca) y la tinta con `--mt`, que cambia de golpe en p = 0,41 (P1-2
+     de B). Solo mientras dura la escena: en p = 1 vuelven los colores de F3. */
+  :root.cine:not([data-escena-fase="os"]) .k2 {
+    --m: 1;
+    --mt: 1;
+    background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), rgba(20, 20, 24, 0.9));
+    color: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--tinta));
+  }
+  :root.cine:not([data-escena-fase="os"]) .k2 :is(.nivel, .sub) {
+    color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--mt) * 100%), var(--tinta-2-vidrio));
+  }
+  :root.cine:not([data-escena-fase="os"]) .k2 .cta-1 {
+    background: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--blanco));
+    color: color-mix(in oklab, var(--blanco) calc(var(--mt) * 100%), var(--tinta-osc));
+  }
+  :root.cine:not([data-escena-fase="os"]) .k2 .cta-2 {
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, rgba(14, 14, 18, 0.24) calc(var(--mt) * 100%), rgba(255, 255, 255, 0.28));
+  }
+
   /* Copiar el nombre XL no duplica «Doug Vargas» (es decorativo). */
   .escena-nombre {
     user-select: none;
