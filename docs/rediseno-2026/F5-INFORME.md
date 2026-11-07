@@ -123,6 +123,22 @@ suavizado).
 10. Las cifras Doto de K3–K5 no hacen el «se encienden» (`--dw` 100 → 700). Es cosmético y queda para la QA si lo
     pide.
 
+## Arreglos tras la crítica (`06-CRITICA-F5.md`)
+
+Decisiones de Doug que fijan el marco: sin máscara de revelado; foto + vidrio estriado oblicuo a 12°; el cursor solo
+abre o aclara el vidrio. Un commit por arreglo.
+
+| Punto | Cambio | Prueba / captura |
+|---|---|---|
+| **P0-1** Bordes duros de la foto (`b758b74`) | `mask-image` lateral en póster y canvas con `--fx = 14 % × (1 − q)` (`--q` = la foto, 0 → 1 de p 0 a 0,72; sin máscara en el OS). Atmósfera `blur(36px) brightness(.6)` (antes 28 / .72). | `escena.spec` «P0-1»: a 1440, 1280 y 1920 en p = 0, \|ΔL\| < 6 entre columnas vecinas (media de las filas libres) en ±90 px de cada borde. Antes: 28 en un píxel. `home-es-1440x900-p0`, `1280x720-p0`, `1920x1080-p0`. |
+| **P0-2** Nombre XL tapado por K2 (`4dd3807`) | El FLIP del nombre va en 0 → 0,45 (x `power2.out`, y `power2.inOut`: primero se aparta a la derecha, luego baja a K1); K2 sube en 0,15 → 0,6. En `anim` el nombre va en z 3, por encima de K2. | `escena.spec` «P0-2»: p 0,1 … 0,7 a 1440 y 1280, `rect(nombre) ∩ rect(K2) = ∅` o el nombre encima en `elementFromPoint`. Vitest de tramos. `1440x900-p03`, `1280x720-p03` (el nombre se ve sobre la foto). |
+| **P1-1** Fotograma intermedio (`e224b76`) | Atmósfera fuera en 0 → 0,35 (`power2.inOut`). `.os-laser` sigue la línea de la foto de lado a lado hasta 0,8 (alfa 1 → 0,5) y recupera su ancho de F3 en 0,8 → 1; el láser de la foto se funde en los bordes de su caja (`--lx`, joroba en q) con el halo en `::before`. | `escena.spec` «P1-1» en p 0,35 / 0,5 / 0,7 / 0,85 (atmósfera 0, láser ancho a ±1,5 px de la línea, ≥ viewport hasta 0,8, alfa ≥ 0,5). Vitest. `1440x900-p03`. |
+| **P1-2** Cara en `cine` (`a867c7f`) | Uniforme `uCaraF`: en `cine` la fuerza × 0,6 en una elipse 1,5 × la cara (`caraFuerza` en `hero.ts`, interpola a 1 en `losa`). Fase base `centro`: el centro de una estría cae en el eje de la nariz en los tres estados (cierra F4 P2-1). Halo del láser a ±6 px y alfa 0,55 sobre los ojos (`--cara-x/--cara-rx`); la línea de 1 px intacta. Pósteres rehorneados y **foto v4** (cambian los parámetros: caché inmutable). | Vitest: `caraF` y fracción 0,5 de la estría en la nariz para 3 cajas × 3 estados. `vidrio.spec` en verde. `1440x900-p0`, `1920x1080-p0`. |
+| **P1-3** 1280×720 (`705e573`) | Con alto ≤ 800, K2 compacta en el acto 1: pegada al pie de su celda, padding 20 → 32 y «Hoy, Naowee…» plegado, ligados a `--k2t`/`--k2-h` (en p = 1 es la K2 de F3). Tope medido desde el descendente de la línea 2 (+0,25 em) + 16 px. | `escena.spec` «P1-3» a 1280×720 y 1366×768: pie ≤ alto − 16, K2 ≥ descendente + 16, K2 = F3 (±1 px) en p = 1. `1280x720-p0`. |
+
+**No hecho:** las estrías sobre la atmósfera (el ideal de P0-1, canvas a `100vw`). La crítica da el fundido por
+suficiente para cerrar el P0; queda como pulido.
+
 ## Pendientes
 
 - QA visual y crítica de F5 (coreografía, curvas, snap; vídeo del ancla a 1440 con `recordVideo`).
