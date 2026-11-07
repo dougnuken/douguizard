@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import sharp from "sharp";
 import { setTheme } from "./matrix";
 import { settle } from "./settle";
 
@@ -349,6 +350,23 @@ test.describe("hoja · movimiento y móvil", () => {
     expect(conRm.prop).toBe("opacity");
     expect(conRm.dur).toBe("0.15s");
     expect(conRm.translate).toBe("-50%");
+  });
+
+  test("1440 con barras clásicas: el canal de la barra queda bajo el velo (Δlum x 1432 vs 1410 ≤ 3) (P1-2)", async ({ page }) => {
+    await preparar(page);
+    await abrir(page, "/");
+    await page.waitForTimeout(300);
+    const ancho = await page.locator(HOJA).evaluate((d) => d.clientWidth);
+    // Solo tiene sentido si hay canal (Chromium headless pinta barra clásica).
+    test.skip(ancho >= 1440, "sin canal de barra en este navegador");
+    const png = await page.screenshot({ animations: "disabled" });
+    const { data, info } = await sharp(png).greyscale().raw().toBuffer({ resolveWithObject: true });
+    const lum = (x: number, y: number) => data[y * info.width + x];
+    for (const y of [24, 200, 450]) {
+      const canal = lum(1432, y);
+      const velo = lum(1410, y);
+      expect(Math.abs(canal - velo), `y ${y}: canal ${canal} vs velo ${velo}`).toBeLessThanOrEqual(3);
+    }
   });
 
   test("con el ancla (sin RM, 1440): cerrar deja el tablero en el mismo progreso", async ({ page }) => {

@@ -1369,6 +1369,15 @@
 html:has(dialog.hoja[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
+  /* El `dialog` fijo no cubre el canal de la barra (barras clásicas: 15 px a
+     la derecha). El lienzo toma el color medido del velo (oscuro: (6,6,8);
+     claro: el velo sobre el papel), así el canal no queda como franja clara.
+     Con fondo propio en `html`, `body` deja de propagarlo al lienzo y conserva
+     el suyo: lo de debajo no cambia (P1-2). */
+  background-color: rgb(6 6 8);
+}
+:root[data-theme="light"]:has(dialog.hoja[open]) {
+  background-color: color-mix(in srgb, rgb(6 6 8) 62%, var(--paper));
 }
 .hoja {
   position: fixed;
