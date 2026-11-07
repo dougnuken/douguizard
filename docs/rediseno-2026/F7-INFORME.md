@@ -158,3 +158,57 @@ Pruebas existentes cambiadas, con motivo:
   (`platforms` en `work.ts`).
 - Safari/Firefox reales (la transición entre documentos solo existe en Chromium) y VoiceOver → F8.
 - CLS móvil 0,066 de F5 sigue abierto (no es de F7).
+
+## Arreglos tras la crítica (06-CRITICA-F7 §4)
+
+| Punto | Cambio | Prueba |
+|---|---|---|
+| **P1-1** título corto | El `h1` (y el `h2` de la hoja) muestra el nombre de la miga (`getShortName`): «Naowee», «Andes», «DC Medical»… a 120 / 72 en la página (72 / 48 en la hoja, ≥ 1024 / < 1024). El resto del `project` («— Plataforma del sector deportivo») va en `sr-only` dentro del título: el nombre accesible no cambia y `<title>`/OG siguen con `project`. La ceja ya no repite el cliente cuando coincide con el nombre («Head of Product», no «Naowee · Head of Product»). `data-largo` queda como red para nombres cortos de > 18 caracteres (hoy solo «Multi-client UX Design» / «Diseño UX multicliente»). `CaseHeader.tsx`. | `caso.spec` «P1-1»: a 1440, los 10 casos con `h1` = miga y ≤ 2 renglones (contados con `Range.getClientRects`, no con la caja, que lleva el relleno del revelado), y 120 px en los de una palabra; `<title>` con el descriptor. A 390×844, Naowee en 1 renglón y, en los 10 casos, la ficha y el borde superior de la cubierta sobre el dock. Hoja 1440: «Naowee» a 72. |
+| **P1-2** cubierta | `planCaseMedia`: con un recorrido de escritorio, la primera captura es la cubierta y el clip se va a Producto. `CoverStill`: imagen estática en `.caso-cover` (losa, `--r-losa` y `overflow: hidden` en el contenedor, imagen con radio 0, 16:8 y 4:3 < 1024, `fetchpriority="high"`), sin barra de ventana, velo ni botón; su pie, si lo hay, en `.pie-caso`. `WalkthroughFilm` en el bloque Producto: `<video controls muted playsinline preload="none">` con póster sin velo, en `.caso-losa-media`, y el pie «Recorrido · sin sonido» en Instrument Sans y caja normal (diccionario ES/EN cambiado). Las portadas de olbo, DC Medical y MakeaPet pasan a la misma losa (guardan su 16:9). El `h2` oculto «Producto» de la cubierta solo queda si el caso no tiene bloque Producto, que ahora lleva su `h2` visible. | `caso.spec` «P1-2» a 1440 y 390: luminancia máxima de la cubierta de Naowee ≥ 245 (canvas), radio del contenedor = `--r-losa`, radio de la imagen 0, `overflow: hidden`, `fetchpriority=high`, sin `video` ni botón en la cubierta, 1 `video` en `#producto` y pie sin `text-transform`. Portadas de los casos largos: mismo radio y prioridad. `caseMedia.test`: la regla del recorrido de escritorio. |
+| **P1-3** titulares | `heads?: { context, contributions, decisions, product, process }` en `CaseStudy` y `CaseCopy` (ES sin fallback al inglés). `CabBloque` pinta ceja + `h2` con dato y el rótulo solo sin él; el índice lateral y «Secciones» siguen con los rótulos cortos. Naowee con el copy de `caso.html` (ES y EN); el resto, borradores (abajo). | `caso.test` (vitest +1): mismas claves en ES y EN, sin vacíos, `decisions`/`process` solo donde existe el bloque, y Naowee igual a `caso.html`. `caso.spec` «P1-3»: Naowee ES y EN, cinco cejas en orden, titulares de la maqueta, `h2` a 30 y ceja ≤ 14, índice con los rótulos. |
+| **P1-4** bandas heredadas | Galería de escritorio: `GaleriaLosas` (captura a sangre en `.caso-losa-media--m`, radio `--r-m` en el contenedor, sin barra de ventana ni etiqueta «NAOWEE · …», sin número; con un número impar la primera va a todo el ancho). Artboards (`PlainGallery`, `PlainLead`), figuras y películas de los capítulos: la misma losa, pie en `.pie-caso`. Números de capítulo (`.section-num`) en Doto. Sin numeración en la galería (la crítica lo admite: Doto no baja de 24 y pesaría junto a un pie de 14). Una regla fuera de capas en `caso.css` quita `uppercase`/`.kicker` y mono dentro de `.caso-b` (las utilidades de Tailwind viven en capas y una regla en capa no les ganaba); las viñetas de NDA quedan fuera (`data-vineta`): son dibujos del producto con tokens en mono. El pie de la viñeta pasa a Instrument Sans. | `caso.spec` «P1-4», ES y EN, 1440 y 390, los 10 casos: ningún elemento con texto dentro de `.caso-b` con `text-transform: uppercase` ni `font-family` mono (salvo Doto y viñetas); toda captura de `#producto` en losa con radio 0 en la imagen. Naowee: 4 losas en la galería con radio `--r-m` y fondo, sin «NAOWEE» ni números. |
+
+Pruebas cambiadas, con motivo:
+- `caso.spec` «contenido frente a F6»: la normalización también quita la etiqueta de la barra de ventana
+  («NAOWEE·IVC») y el número de captura («01») pegado a su pie. Eran cromo de los marcos viejos que P1-2 y P1-4
+  quitan; el pie de cada captura sigue presente.
+- `caseMedia.test` «a browser walkthrough…»: ahora deja la primera captura como cubierta (antes, ninguna).
+
+Desvíos:
+- La cubierta de Naowee es la primera captura de la galería (el espacio de trabajo del trámite), como en `caso.html`,
+  no el póster del recorrido: el póster sigue siendo el del vídeo en Producto, así que no se repite la misma imagen.
+- La película de Producto usa los controles nativos del navegador, como la maqueta, y no el botón propio con velo.
+- Los teléfonos de Chub siguen en su marco de aparato (son la captura de un móvil); solo pierden el número y la caja
+  alta de sus pies.
+
+### Borradores para Doug (titulares `heads`, P1-3)
+
+Reformulados solo con lo que ya dice cada caso; ninguna cifra nueva. Viven en `src/data/work.ts` (EN) y
+`src/data/es/work.ts` (ES), marcados con el comentario «borrador para Doug».
+
+| Caso | Bloque | ES | EN |
+|---|---|---|---|
+| olbo | Problema | Una app que funcionaba y se había vuelto ruidosa | An app that worked, and had grown loud |
+| olbo | Mi parte | Rediseñé la marca y la UI, y dirigí la construcción | I redesigned the brand and the UI, and directed the build |
+| Andes | Problema | La fuente de verdad de Mercadolibre | Mercadolibre's source of truth |
+| Andes | Mi parte | Fundamentos, paridad y auditorías con IA | Foundations, parity and AI-driven audits |
+| Banco de Occidente | Problema | Un portal denso y squads que resolvían lo mismo a su manera | A dense portal, and squads solving the same problems differently |
+| Banco de Occidente | Mi parte | Rediseñé el portal y construí Velocity | I redesigned the portal and built Velocity |
+| Banco de Occidente | Decisiones | Dos reglas para el portal | Two rules for the portal |
+| Banco de Occidente | Proceso | De la investigación a prototipos probados con personas | From research to prototypes tested with people |
+| DC Medical | Problema | Una clínica que funcionaba con WhatsApp, Calendar y Drive | A clinic running on WhatsApp, Calendar and Drive |
+| DC Medical | Mi parte | Un panel encima de esas herramientas, no en su lugar | One panel on top of those tools, not instead of them |
+| DC Medical | Decisiones | Tres reglas que sostienen el panel | Three rules the panel stands on |
+| MakeaPet | Problema | Encontrar compañeros de juego depende de la suerte | Finding a playmate comes down to luck |
+| MakeaPet | Mi parte | Investigación, sistema de diseño y un equipo de agentes | Research, a design system and a team of agents |
+| Royal Caribbean | Problema | Una semana a bordo, con una conexión irregular | A week aboard, on patchy connectivity |
+| Royal Caribbean | Mi parte | La reserva y la experiencia a bordo, para todos los huéspedes | Booking and the onboard experience, for every guest |
+| Qrvey | Problema | Alguien tenía que hacer algo con las respuestas | Someone still had to act on the answers |
+| Qrvey | Mi parte | Diseñé AutomatiQ, el constructor que lo hacía | I designed AutomatiQ, the builder that did |
+| Ideaware | Problema | Aprender rápido el dominio de cada cliente | Learning each client's domain fast |
+| Ideaware | Mi parte | Wireframes, prototipos y patrones reutilizables | Wireframes, prototypes and reusable patterns |
+| Chub | Problema | Reservar un carro, no un viaje | Booking a car, not a ride |
+| Chub | Mi parte | De la tarjeta de decisión a los controles de la cabina | From the decision card to the cabin controls |
+
+Sin borrador, a propósito: Producto en todos menos Naowee (no hay frase en el caso que lo resuma sin inventar) y
+Decisiones/Proceso donde el caso no tiene ese bloque.
