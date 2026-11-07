@@ -44,7 +44,7 @@
 | F3 tablero OS + cromo nuevo | ✓ ejecutor: vitest 227/227, Playwright 404/404 (shell retirado, pruebas reescritas); JS / 152,3→**−6,1 KB gz** vs base; LCP móvil / 2,97 s (−1,5 s; meta 2,0 → F4/F8) · QA ✓ 8,3/10: 0 P0, 3 P1, 7 P2 · P1 arreglados ✓ (vitest 227/227, Playwright 414/415: `experience.spec.ts:173` intermitente → se arregla al inicio de F4) · **F3 ✓** | `F3-INFORME.md`, `F3-capturas/` |
 | F4 vidrio WebGL2 + póster horneado | ✓ ejecutor: vitest 236/236, Playwright 424/424 ×2 corridas (`experience.spec:173` estable); JS / 151,9 KB gz; **LCP móvil / 1,00 s ✓** (CSS en línea); `/about` móvil 2,95 s → F8 · QA ✓ 7,7/10: **1 P0 (estrías verticales, no oblicuas)**, 3 P1, 5 P2 · P0+P1 arreglados ✓ (estrías 12° en los tres héroes, antialias, lente medible; Playwright 424/424; LCP / móvil 980 ms) · **F4 ✓** | `F4-INFORME.md`, `F4-capturas/` |
 | F5 acto 1 «cine» + scroll anclado | ✓ ejecutor: vitest 247/247, Playwright 436/436 ×2; JS / 157,5 KB gz; LCP sin regresión vs F4 · QA ✓: **2 P0** (bordes duros de la foto en el acto 1; nombre tapado por K2 a p≈0,3), 3 P1 · P0+P1 arreglados ✓ (foto fundida, nombre visible, cara atenuada, 1280 cabe; Playwright 440/440 ×2; LCP móvil 1,04 s) · **F5 ✓** (pendiente pulido: estrías sobre la atmósfera; CLS móvil 0,066) | `F5-INFORME.md`, `F5-capturas/` |
-| F6 casos en hoja con URL real | ✓ ejecutor: vitest 255/255, Playwright 464/464 ×2; JS / 157,9 KB gz (= F5); LCP móvil 1.036 ms, escritorio 376 ms · **QA en curso** | `F6-INFORME.md`, `F6-capturas/` (+ `hoja-1440.webm`) |
+| F6 casos en hoja con URL real | ✓ ejecutor: vitest 255/255, Playwright 464/464 ×2; JS / 157,9 KB gz (= F5); LCP móvil 1.036 ms, escritorio 376 ms · QA ✓ 8,1/10: 0 P0, 5 P1 (foco/teclado, canal sin velo, salida sin prueba, entrada en dos tiempos, miga larga) · **arreglando P1** | `F6-INFORME.md`, `F6-capturas/` (+ `hoja-1440.webm`) |
 | F7–F8 | pendiente | `07` §2 |
 
 ## Siguiente (en orden)
@@ -53,7 +53,7 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). F6 ✓ (ejecutor) → **QA de F6 en curso** → F7 → F8. Una sesión por fase (ejecutor) + una de QA visual/crítica.
+4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). F6 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F6.md`) → **arreglos P1 en curso** → F7 → F8. En paralelo: ajuste de `vidrio.spec` a la foto nueva. Una sesión por fase (ejecutor) + una de QA visual/crítica.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
