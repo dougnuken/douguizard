@@ -59,8 +59,9 @@ export function dibujar(
   gl.uniform1f(u.uW, v.w);
   gl.uniform1f(u.uAng, v.ang);
   gl.uniform1f(u.uStr, v.str);
-  gl.uniform1f(u.uPhase, v.phase);
+  gl.uniform1f(u.uPhase, v.phase + v.centro);
   gl.uniform1f(u.uProt, v.prot);
+  gl.uniform1f(u.uCaraF, v.caraF);
   gl.uniform4f(u.uFace, v.face[0], v.face[1], v.face[2], v.face[3]);
   gl.uniform1f(u.uLineY, v.lineY);
   gl.uniform1f(u.uLineH, v.lineH);

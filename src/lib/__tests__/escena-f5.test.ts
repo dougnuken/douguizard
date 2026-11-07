@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { vidrio } from "@/data/hero";
+import { getFotoActiva, vidrio } from "@/data/hero";
 import { ESCENA, frameEscena, tramo, uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
 import { aperturaDesdeProgreso } from "@/lib/corte";
 import { CONSULTA_CINE, SCENE_INIT } from "@/components/escena/sceneInit";
@@ -91,6 +91,25 @@ describe("escena F5 · vidrio a lo largo del ancla", () => {
     expect(b.fase).toBe(140);
     expect(a.fuerza).toBeCloseTo(vidrio.cine.fuerza, 6);
     expect(b.fuerza).toBeCloseTo(vidrio.losa.fuerza, 6);
+  });
+
+  it("P1-2: en cine la fuerza baja sobre la cara (× 0,6) y una estría queda centrada en la nariz", () => {
+    expect(vidrio.cine.caraFuerza).toBe(0.6);
+    expect(vidrioEnEscena(0, vidrio.cine, vidrio.losa).caraFuerza).toBeCloseTo(0.6, 6);
+    expect(vidrioEnEscena(1, vidrio.cine, vidrio.losa).caraFuerza).toBeCloseTo(1, 6);
+    const f = getFotoActiva();
+    const fv = { ...f.tamano, cara: f.cara, ojo: f.ojo, laser: f.laser };
+    for (const caja of [{ w: 880, h: 1168 }, { w: 1170 * (880 / 1168), h: 1170 }, { w: 600, h: 900 }]) {
+      for (const params of [vidrio.cine, vidrio.losa, vidrio.movil]) {
+        const u = uniformesVidrio({ caja, foto: fv, params });
+        expect(u.caraF).toBe(params.caraFuerza ?? 1);
+        // Coordenada de estría en la nariz (como el shader): su parte fraccionaria es 0,5.
+        const nx = u.face[0] - u.off[0];
+        const ny = u.face[1] + 0.15 * u.face[3] - u.off[1];
+        const t = (Math.cos(u.ang) * nx + Math.sin(u.ang) * ny + u.phase + u.centro) / u.w;
+        expect(t - Math.floor(t)).toBeCloseTo(0.5, 6);
+      }
+    }
   });
 
   it("la fuerza sube con una joroba de +0,30 a mitad del viaje de la foto", () => {

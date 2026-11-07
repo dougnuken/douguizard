@@ -196,6 +196,9 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       poster.style.setProperty("--vidrio-p", p.toFixed(4));
       const lineaY = pl.Oy + f.ojo * pl.Dy;
       laser.style.top = `${lineaY - r.y}px`;
+      // P1-2: la cara en px de la caja del láser (= la de la foto), para bajar el halo sobre los ojos.
+      laser.style.setProperty("--cara-x", `${(pl.Ox - r.x + f.cara[0] * pl.Dx).toFixed(1)}px`);
+      laser.style.setProperty("--cara-rx", `${(f.cara[2] * pl.Dx).toFixed(1)}px`);
       velo.style.opacity = fr.velo.toFixed(3);
       k2.style.translate = `${lerp(geo.k2.dx, 0, fr.k2).toFixed(2)}px ${lerp(geo.k2.dy, 0, fr.k2).toFixed(2)}px`;
       k2.style.setProperty("--m", fr.m.toFixed(3));

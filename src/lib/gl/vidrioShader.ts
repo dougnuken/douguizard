@@ -16,7 +16,7 @@ uniform sampler2D uTex;
 uniform vec2 uRes;
 uniform float uDpr;
 uniform vec2 uOff, uSize;
-uniform float uW, uAng, uStr, uPhase, uProt;
+uniform float uW, uAng, uStr, uPhase, uProt, uCaraF;
 uniform vec4 uFace;
 uniform float uLineY, uLineH;
 uniform vec2 uMouse;
@@ -51,7 +51,9 @@ void main() {
   float face = 1.0 - smoothstep(0.78, 1.1, length((p - uFace.xy) / uFace.zw));
   float md = length(p - uMouse);
   float lens = uLensR > 0.0 ? (1.0 - smoothstep(uLensR * 0.6, uLensR * 1.2, md)) * uLens : 0.0;
-  float str = uStr * (1.0 - uProt * face) * (1.0 - lens);
+  // P1-2 (crítica F5): en \`cine\` la fuerza baja también en una elipse algo mayor que la cara (ojos–boca).
+  float caraA = 1.0 - smoothstep(0.95, 1.5, length((p - uFace.xy) / uFace.zw));
+  float str = uStr * (1.0 - uProt * face) * mix(1.0, uCaraF, caraA) * (1.0 - lens);
   float band = uLineH > 0.0 ? 1.0 - smoothstep(uLineH, uLineH * 2.4, abs(p.y - uLineY)) : 0.0;
   float g = 1.0 - lens;
   float lipW = max(0.10, 2.0 * aa); // labio de al menos 2 px
@@ -65,7 +67,7 @@ void main() {
 
 export const UNIFORMES = [
   "uTex", "uRes", "uDpr", "uOff", "uSize", "uW", "uAng", "uStr", "uPhase", "uProt",
-  "uFace", "uLineY", "uLineH", "uMouse", "uLens", "uLensR",
+  "uFace", "uLineY", "uLineH", "uMouse", "uLens", "uLensR", "uCaraF",
 ] as const;
 
 export type Uniforme = (typeof UNIFORMES)[number];

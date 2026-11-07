@@ -89,8 +89,10 @@ async function hornear(foto: FotoHeroe, master: string, raiz: string) {
           gl.uniform1f(L("uW"), u.w);
           gl.uniform1f(L("uAng"), u.ang);
           gl.uniform1f(L("uStr"), u.str);
-          gl.uniform1f(L("uPhase"), 0);
+          // La fase base centra una estría en la nariz (P1-2 de la crítica F5), igual que en vivo.
+          gl.uniform1f(L("uPhase"), u.phase + u.centro);
           gl.uniform1f(L("uProt"), u.prot);
+          gl.uniform1f(L("uCaraF"), u.caraF);
           gl.uniform4f(L("uFace"), u.face[0], u.face[1], u.face[2], u.face[3]);
           gl.uniform1f(L("uLineY"), u.lineY);
           gl.uniform1f(L("uLineH"), u.lineH);

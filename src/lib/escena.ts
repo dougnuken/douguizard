@@ -86,6 +86,7 @@ export interface ParamsVidrio {
   fuerza: number;
   lente: number;
   proteccionCara: number;
+  caraFuerza?: number;
 }
 
 export interface UniformesVidrio {
@@ -103,6 +104,13 @@ export interface UniformesVidrio {
   lineH: number;
   lensR: number;
   prot: number;
+  /** Multiplicador de la fuerza sobre la cara (1 = sin cambio). */
+  caraF: number;
+  /**
+   * Fase base (px) que pone el **centro** de una estría, no una costura, en el eje de
+   * la nariz (P1-2 de la crítica F5; cierra F4 P2-1). Se suma a `phase` al pintar.
+   */
+  centro: number;
 }
 
 /**
@@ -128,11 +136,16 @@ export function uniformesVidrio(o: {
   const [cx, cy, rx, ry] = foto.cara;
   const banda = o.laser !== false && foto.laser ? foto.laser : null;
   const lente = o.lente ?? 0;
+  const w = Math.max(4, params.estria * c.Dy);
+  const ang = (params.angulo * Math.PI) / 180;
+  // La nariz: el eje de la cara, un poco bajo la línea de los ojos.
+  const nariz = Math.cos(ang) * cx * c.Dx + Math.sin(ang) * (cy + 0.15 * ry) * c.Dy;
+  const centro = (((0.5 * w - nariz) % w) + w) % w;
   return {
     off: [c.Ox, c.Oy],
     size: [c.Dx, c.Dy],
-    w: Math.max(4, params.estria * c.Dy),
-    ang: (params.angulo * Math.PI) / 180,
+    w,
+    ang,
     str: Math.max(0, Math.min(1, o.fuerza ?? params.fuerza)),
     phase: (o.fase ?? 0) + (o.mx === undefined ? 0 : (o.mx - caja.w / 2) * 0.04 * lente),
     face: [c.Ox + cx * c.Dx, c.Oy + cy * c.Dy, rx * c.Dx, ry * c.Dy],
@@ -140,6 +153,8 @@ export function uniformesVidrio(o: {
     lineH: banda ? banda.h * c.Dy : 0,
     lensR: params.lente,
     prot: params.proteccionCara,
+    caraF: params.caraFuerza ?? 1,
+    centro,
   };
 }
 
@@ -228,6 +243,7 @@ export function vidrioEnEscena(p: number, cine: ParamsVidrio, losa: ParamsVidrio
     fuerza: lerpN(cine.fuerza, losa.fuerza, q) + 0.3 * Math.sin(Math.PI * t),
     lente: lerpN(cine.lente, losa.lente, q),
     proteccionCara: lerpN(cine.proteccionCara, losa.proteccionCara, q),
+    caraFuerza: lerpN(cine.caraFuerza ?? 1, losa.caraFuerza ?? 1, q),
     fase: 140 * Math.min(1, Math.max(0, p)),
   };
 }

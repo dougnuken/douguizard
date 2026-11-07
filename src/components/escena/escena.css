@@ -207,13 +207,26 @@
       box-shadow: none;
       background: linear-gradient(90deg, transparent 0, var(--laser-nucleo) var(--lx), var(--laser-nucleo) calc(100% - var(--lx)), transparent 100%);
     }
+    /* P1-2 (crítica F5): el halo va con la mitad de alto (±6 px) y, sobre los ojos,
+       con alfa 0,55 (la cara: `--cara-x` ± `--cara-rx`, en px desde `useScrollScene`;
+       sin JS, la cuenta de p = 0). La línea de 1 px se queda entera. */
+    :root.cine:not([data-escena-fase="os"]) .k1-laser {
+      --cara-x: calc(62% - 0.65 * 100svh * var(--foto-ar) + var(--foto-cara-x) * 130svh * var(--foto-ar));
+      --cara-rx: calc(var(--foto-cara-rx) * 130svh * var(--foto-ar));
+    }
     :root.cine:not([data-escena-fase="os"]) .k1-laser::before {
       content: "";
       position: absolute;
-      inset: -12px 0;
+      inset: -6px 0;
       background: linear-gradient(180deg, transparent, var(--laser-halo) 38%, var(--laser) 50%, var(--laser-halo) 62%, transparent);
-      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--lx), #000 calc(100% - var(--lx)), transparent 100%);
-      mask-image: linear-gradient(90deg, transparent 0, #000 var(--lx), #000 calc(100% - var(--lx)), transparent 100%);
+      -webkit-mask-image:
+        linear-gradient(90deg, transparent 0, #000 var(--lx), #000 calc(100% - var(--lx)), transparent 100%),
+        linear-gradient(90deg, #000 calc(var(--cara-x) - var(--cara-rx)), rgba(0, 0, 0, 0.55) calc(var(--cara-x) - 0.55 * var(--cara-rx)), rgba(0, 0, 0, 0.55) calc(var(--cara-x) + 0.55 * var(--cara-rx)), #000 calc(var(--cara-x) + var(--cara-rx)));
+      mask-image:
+        linear-gradient(90deg, transparent 0, #000 var(--lx), #000 calc(100% - var(--lx)), transparent 100%),
+        linear-gradient(90deg, #000 calc(var(--cara-x) - var(--cara-rx)), rgba(0, 0, 0, 0.55) calc(var(--cara-x) - 0.55 * var(--cara-rx)), rgba(0, 0, 0, 0.55) calc(var(--cara-x) + 0.55 * var(--cara-rx)), #000 calc(var(--cara-x) + var(--cara-rx)));
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
       pointer-events: none;
     }
     :root.cine:not([data-escena-fase]) .k2 {
