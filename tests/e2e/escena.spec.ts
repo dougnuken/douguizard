@@ -74,10 +74,18 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
     expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(await fin(page));
     // Al final del ancla el OS está donde F3 lo tiene en scrollY = 0.
-    await page.evaluate((y) => window.scrollTo(0, y), await fin(page));
+    const yFin = await fin(page);
     await page.mouse.move(1, 1); // sin hover (las losas suben 2 px)
-    await page.waitForTimeout(400);
     const os = await rectsOS(page, 1440, 900);
+    // Al final del ancla (insiste: el snap puede estar terminando su viaje).
+    await expect
+      .poll(async () => {
+        await page.evaluate((y) => window.scrollY !== y && window.scrollTo(0, y), yFin);
+        await page.waitForTimeout(150);
+        const r = await rects(page);
+        return Math.abs(r[0][1] - os[0][1]) <= 1 && (await page.evaluate(() => window.scrollY));
+      }, { timeout: 5000 })
+      .toBe(yFin);
     const final = await rects(page);
     for (let i = 0; i < TARJETAS.length; i++) {
       for (let k = 0; k < 4; k++) expect(Math.abs(final[i][k] - os[i][k]), `${TARJETAS[i]}[${k}]`).toBeLessThanOrEqual(1);
@@ -130,16 +138,21 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     const malas: string[] = [];
     for (let i = 0; i < 12; i++) {
       await page.keyboard.press("Tab");
-      await page.waitForTimeout(250);
-      const r = await page.evaluate(() => {
-        const el = document.activeElement as HTMLElement | null;
-        if (!el || el === document.body) return null;
-        let o = 1;
-        for (let n: Element | null = el; n; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity);
-        const b = el.getBoundingClientRect();
-        const fuera = b.bottom <= 0 || b.top >= innerHeight || b.right <= 0 || b.left >= innerWidth;
-        return { id: `${el.tagName}.${el.className}`.slice(0, 60), o, fuera };
-      });
+      // Se deja terminar la transición de entrada (el skip link baja en `--dur-fast`); hasta 1 s.
+      let r: { id: string; o: number; fuera: boolean } | null = null;
+      for (let t = 0; t < 10; t++) {
+        await page.waitForTimeout(100);
+        r = await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement | null;
+          if (!el || el === document.body) return null;
+          let o = 1;
+          for (let n: Element | null = el; n; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity);
+          const b = el.getBoundingClientRect();
+          const fuera = b.bottom <= 0 || b.top >= innerHeight || b.right <= 0 || b.left >= innerWidth;
+          return { id: `${el.tagName}.${el.className}`.slice(0, 60), o, fuera };
+        });
+        if (!r || (r.o >= 0.99 && !r.fuera)) break;
+      }
       if (r && (r.o < 0.99 || r.fuera)) malas.push(`${i + 1}: ${r.id} (opacidad ${r.o.toFixed(2)}${r.fuera ? ", fuera" : ""})`);
     }
     expect(malas).toEqual([]);
@@ -327,7 +340,7 @@ test.describe("escena del home · sin acto 1", () => {
       if (/_gsap|pinSpacing/.test(t)) gsap.push(new URL(r.url()).pathname);
     });
     await abrir(page);
-    expect(gsap.length).toBeGreaterThan(0);
+    await expect.poll(() => gsap.length, { timeout: 5000 }).toBeGreaterThan(0);
     const t = await page.evaluate((rutas) => {
       const w = window as unknown as { __lcp: number };
       const inicios = performance
