@@ -110,6 +110,12 @@ export interface CaseStudy {
   kind?: "client" | "personal" | "side";
   /** What the meta strip calls the client when there is no experience behind it. */
   clientOverride?: string;
+  /**
+   * The case's short name, for tight places like the sheet's breadcrumb
+   * ("Trabajo / Naowee"). A brand, so it is not translated. Omitted when the
+   * part of `project` before " — " is already short — see `getShortName`.
+   */
+  shortName?: string;
   /** Numbered narrative of how the work happened, phase by phase. */
   process?: { phase: string; title: string; body: string }[];
   /** The calls worth defending — each one a choice and its reasoning. */
@@ -655,6 +661,7 @@ export const caseStudies: CaseStudy[] = [
     num: "/03",
     experienceId: "mercadolibre",
     project: "Andes Design System",
+    shortName: "Andes",
     // The kicker names the brand; the h1 under it already names the system.
     clientOverride: "Mercadolibre",
     category: "Design Systems × E-commerce",
@@ -851,6 +858,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "dc-medical",
     num: "/05",
     project: "DC Medical Aesthetics",
+    shortName: "DC Medical",
     category: "Clinic Operations × Design Engineering",
     roleOverride: "Product Designer and Design Engineer — end to end",
     yearOverride: "2026",
@@ -1491,6 +1499,7 @@ export const caseStudies: CaseStudy[] = [
     experienceId: "globant",
     testimonialId: "nicolas",
     project: "Royal Caribbean Cruises",
+    shortName: "Royal Caribbean",
     category: "Travel × Mobile",
     duration: "1 year",
     team: "Cross-functional US + LATAM",
@@ -1783,6 +1792,11 @@ const caseStudiesEs: CaseStudy[] = caseStudies.map((c) => localize(c, workEs[c.s
  */
 export function getCaseStudies(locale: Locale = "en"): CaseStudy[] {
   return locale === "es" ? caseStudiesEs : caseStudies;
+}
+
+/** The name the sheet's breadcrumb uses: `shortName`, or `project` up to " — ". */
+export function getShortName(c: CaseStudy): string {
+  return c.shortName ?? c.project.split(" — ")[0];
 }
 
 export function getCaseStudy(slug: string, locale: Locale = "en"): CaseStudy | undefined {

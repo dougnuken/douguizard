@@ -457,6 +457,22 @@ test.describe("hoja · movimiento y móvil", () => {
     }
   });
 
+  for (const origen of ["/", "/en"]) {
+    test(`móvil 390 ${origen}: la miga lleva el nombre corto del caso, sin truncar (P1-5)`, async ({ page }) => {
+      await preparar(page, { ancho: 390, alto: 844 });
+      const cortos: Record<string, string> = { "naowee-suid": "Naowee", "mercadolibre-andes": "Andes", olbo: "olbo", "dc-medical": "DC Medical" };
+      for (const [slug, corto] of Object.entries(cortos)) {
+        await abrir(page, origen, slug, { asentar: false });
+        const b = page.locator(`${HOJA} .hoja-miga b`);
+        await expect(b).toHaveText(corto);
+        const { sw, cw } = await b.evaluate((el) => ({ sw: el.scrollWidth, cw: el.clientWidth }));
+        expect(sw, `${slug}: sin truncar`).toBeLessThanOrEqual(cw);
+        await page.keyboard.press("Escape");
+        await expect(page.locator("dialog.hoja")).toHaveCount(0);
+      }
+    });
+  }
+
   test("con el ancla (sin RM, 1440): cerrar deja el tablero en el mismo progreso", async ({ page }) => {
     await preparar(page, { rm: false });
     await page.goto("/", { waitUntil: "networkidle" });
