@@ -77,7 +77,7 @@ async function main() {
     box-shadow:0 0 6px 1px rgba(255,51,68,.85),0 0 22px 4px rgba(255,51,68,.35);
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%);mask-image:linear-gradient(90deg,transparent 0,#000 6%)"></div>
   <p style="position:absolute;left:72px;top:64px;margin:0;font:500 22px/1 'Instrument Sans',sans-serif;color:${gris}">${d.dominio}</p>
-  <p style="position:absolute;left:66px;bottom:${d.H - d.ojoY + 20}px;margin:0;font:100 104px/0.9 ${d.fuenteNombre};letter-spacing:-0.035em;white-space:nowrap">${d.nombre}</p>
+  <p style="position:absolute;left:66px;bottom:${d.H - d.ojoY + 20}px;margin:0;font:600 104px/0.9 ${d.fuenteNombre};letter-spacing:-0.05em;white-space:nowrap">${d.nombre}</p>
   <p style="position:absolute;left:72px;top:${d.ojoY + 40}px;width:640px;margin:0;font:600 50px/1.06 Urbanist,sans-serif;letter-spacing:-0.025em;text-wrap:balance">${d.claim}</p>
   <p style="position:absolute;left:72px;bottom:60px;margin:0;font:400 22px/1.3 'Instrument Sans',sans-serif;color:${gris}">${d.rol}</p>
 </div>`;

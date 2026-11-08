@@ -49,7 +49,10 @@ describe("decisiones de Doug", () => {
     const familia = { geologica: "Geologica", "big-shoulders": "Big_Shoulders_Stencil" }[
       decisiones.nombreLockup.fuente as "geologica" | "big-shoulders"
     ];
-    expect(lockup).toMatch(new RegExp(`import \\{ ${familia} \\} from "next/font/google"`));
+    // Geologica se sirve local (instancia estática, F8); Big Shoulders vendría de Google.
+    expect(lockup).toMatch(
+      new RegExp(`import \\{ ${familia} \\} from "next/font/google"|src: "\\./${familia.toLowerCase()}[^"]*\\.woff2"`),
+    );
   });
 
   it("rolCorto se deriva del cargo actual del CV", () => {

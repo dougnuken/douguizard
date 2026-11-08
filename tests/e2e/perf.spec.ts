@@ -1,4 +1,4 @@
-import { test, type Browser } from "@playwright/test";
+import { expect, test, type Browser } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { gzipSync } from "node:zlib";
@@ -47,6 +47,11 @@ const PERFILES = {
 } as const;
 
 type Perfil = keyof typeof PERFILES;
+
+const UMBRALES: Record<Perfil, { lcpMs: number; cls: number }> = {
+  movil: { lcpMs: 2000, cls: 0.02 },
+  escritorio: { lcpMs: 1200, cls: 0.02 },
+};
 
 type Medida = {
   lcpMs: number | null;
@@ -194,5 +199,12 @@ for (const perfil of Object.keys(PERFILES) as Perfil[]) {
       corridas,
     };
     escribir(info.config.workers);
+    // F8: umbrales finales de 07 (LCP ≤ 2,0 s móvil y ≤ 1,2 s escritorio, CLS ≤ 0,02).
+    // Solo con PERF_ASSERT=1: dentro de la suite completa la CPU es compartida y la cifra no vale.
+    if (process.env.PERF_ASSERT === "1") {
+      const m = resultados[perfil].mediana;
+      expect(m.lcpMs ?? Infinity, `LCP ${RUTA} ${perfil}`).toBeLessThanOrEqual(UMBRALES[perfil].lcpMs);
+      expect(m.cls ?? Infinity, `CLS ${RUTA} ${perfil}`).toBeLessThanOrEqual(UMBRALES[perfil].cls);
+    }
   });
 }
