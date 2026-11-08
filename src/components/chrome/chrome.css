@@ -44,6 +44,8 @@
     border-radius: var(--r-pill);
     background: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
   }
   .pill {
@@ -85,14 +87,17 @@
     border-radius: var(--r-pill);
     background: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
   }
   .idioma-op {
     display: grid;
     place-items: center;
-    min-inline-size: 44px;
+    inline-size: 44px;
     block-size: 44px;
-    padding: 6px 2px;
+    /* La burbuja es el content-box: 32 × 32, un círculo (antes 40 × 32, ovalada). */
+    padding: 6px;
     background-clip: content-box;
     border-radius: var(--r-pill);
     font: 500 var(--t-14) / 1 var(--font-texto);
@@ -143,6 +148,8 @@
     border: 0;
     background: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
     color: var(--tinta);
     cursor: pointer;
@@ -326,8 +333,8 @@
       border-radius: var(--r-pill);
       background: var(--vidrio-plano);
       background-image: var(--vidrio-oscuro);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: var(--vidrio-filtro);
+      backdrop-filter: var(--vidrio-filtro);
       box-shadow: var(--filo), var(--sombra-flota);
       font-family: var(--font-texto);
       transition:

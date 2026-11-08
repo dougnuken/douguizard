@@ -233,8 +233,12 @@
   /* Peor punto de cada gradiente (para el color de fondo sólido que leen las pruebas). */
   --jelly-azul-peor: #3f6bd9;
   --jelly-magenta-peor: #8e1f55;
-  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, 0.86) 0%, rgba(18, 19, 20, 0.86) 10% 90%, rgba(58, 59, 63, 0.86) 100%);
-  --vidrio-plano: rgba(17, 18, 20, 0.78);
+  /* Vidrio (pulido tras F8, pedido de Doug): tinte oscuro translúcido + desenfoque fuerte, para que la
+     foto se lea difuminada detrás. Antes, plano 0,78 + gradiente 0,86 apilados daban ~0,97 de opacidad
+     (losa casi sólida). Ahora ~0,5 de tinte; los cantos llevan un brillo blanco tenue, como un cristal. */
+  --vidrio-oscuro: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 12% 88%, rgba(255, 255, 255, 0.09) 100%);
+  --vidrio-plano: rgba(14, 15, 18, 0.5);
+  --vidrio-filtro: blur(28px) saturate(170%);
   --foco: var(--electrico-texto);
 
   /* espacio estructural (la escala 4…128 es la de Tailwind: p-1…p-32) */
@@ -306,6 +310,7 @@
   :root {
     --vidrio-oscuro: linear-gradient(#141518, #141518);
     --vidrio-plano: #141518;
+    --vidrio-filtro: none;
   }
 }
 

@@ -161,8 +161,8 @@
   .losa--vidrio {
     background-color: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
   }
   .losa--vidrio :is(.ceja, .apoyo, .etiqueta) {

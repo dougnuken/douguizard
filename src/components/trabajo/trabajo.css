@@ -50,6 +50,8 @@
     border-radius: var(--r-pill);
     background-color: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
   }
   .filtro {

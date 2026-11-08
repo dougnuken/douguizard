@@ -3,6 +3,7 @@ import { htmlLang, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import SiteHeader from "@/components/chrome/SiteHeader";
+import RevelarLosas from "@/components/motion/RevelarLosas";
 import Wordmark from "@/components/marca/Wordmark";
 import { personJsonLd } from "@/lib/personJsonLd";
 import { urbanist } from "@/app/fonts/urbanist";
@@ -80,6 +81,7 @@ export default function RootDocument({
           </a>
           <SiteHeader marca={<Wordmark locale={locale} />} />
           {children}
+          <RevelarLosas />
         </LocaleProvider>
         {!lost && (
           <script
