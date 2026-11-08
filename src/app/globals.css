@@ -718,13 +718,25 @@
     opacity: 1;
   }
   /* El fondo de la activa entra y sale sin fundido: el relevo con la píldora
-     (al salir y al llegar) cae en el mismo cuadro y en la misma caja. */
+     (al salir y al llegar) cae en el mismo cuadro y en la misma caja. El color
+     tampoco funde (P2-1, 06-CRITICA-FINAL): un fundido de 240 ms contra un
+     viaje de 340 ms dejaba etiquetas claras sobre la píldora blanca. */
+  .pildora ~ * {
+    transition-property: background-color, scale !important;
+  }
   .pildora ~ :is([aria-current], [aria-pressed="true"]),
   [data-moviendo] > .pildora ~ * {
-    transition-property: color, scale !important;
+    transition-property: scale !important;
   }
+  /* Durante el viaje todas las etiquetas llevan la tinta clara en modo
+     `difference`: sobre el vidrio oscuro se ven como siempre y, en el tramo que
+     cubre la píldora blanca, se invierten a oscuro (≈ #3d3d35), cuadro a cuadro
+     y con el borde exacto de la píldora, sin duplicar las opciones en el DOM.
+     El grupo ya aísla la mezcla (`isolation: isolate`). */
   [data-moviendo] > .pildora ~ :is(a, button, span) {
     background-color: transparent !important;
+    color: var(--tinta-2-vidrio) !important;
+    mix-blend-mode: difference;
   }
 
   /* F8: el skip link y los textos `sr-only` heredaban Archivo (fuente del diseño
