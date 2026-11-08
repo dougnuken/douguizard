@@ -138,7 +138,10 @@ usan). No hacen falta para este despliegue.
    Safari y en Firefox. O con las pruebas: `npx.cmd playwright install webkit firefox` y luego
    `$env:PW_NAVEGADORES="1"; npx.cmd playwright test navegadores --trace off`.
 5. **VoiceOver** en Safari: un recorrido corto del inicio y de la hoja de un caso.
-6. **Lighthouse en tu máquina** si quieres confirmar los números de §7 (en Chrome, `F12` → Lighthouse → Mobile).
+6. **PageSpeed / Lighthouse tras el deploy.** Aquí Accesibilidad, Buenas prácticas y SEO dieron 100, pero
+   Rendimiento móvil quedó en 65–86 porque este entorno no tiene tarjeta gráfica y el vidrio animado se dibuja muy
+   lento. En producción y en un teléfono real debería subir. Si sigue por debajo de 90, avísame: el arreglo es
+   encender el vidrio animado en el celular solo cuando alguien lo toque (la foto ya trae el vidrio dibujado).
 
 ## 6. Recorrido de revisión (en la vista previa)
 
@@ -150,4 +153,48 @@ una dirección que no existe (`/hola`) · el celular en vertical · con «Reduci
 
 Leyenda: [x] verificado aquí · [~] parcial o con nota · [ ] pendiente (de Doug o de la QA final).
 
-PENDIENTE_CHECKLIST
+**Pruebas y build**
+- [x] `npm run lint`, `npm test` (vitest 252/252), `npm run build`: sin errores ni avisos nuevos.
+- [~] `npx playwright test`: **518/518 en Chromium, dos corridas seguidas**. WebKit y Firefox: no se pudieron bajar
+      aquí (proxy); el smoke está listo (`navegadores.spec.ts`, ver §5.4). Pruebas cambiadas o retiradas:
+      - retiradas: las del lab en `lockup.spec` (solo corrían con `DG_LAB=1`, no estaban en los 513) y la de
+        `lib/spring.ts` en vitest (−6; el archivo no lo usaba nadie);
+      - nuevas: `navegadores.spec` (3), `seo E1b` (OG por idioma), `lockup` «toda var() resuelve en `/`» (pasa del
+        lab a `/`); `seo E1` ahora exige la OG del idioma; `decisiones.test` acepta Geologica local.
+- [x] axe sin violaciones en la matriz de `a11y.spec` (ES y EN, con la hoja); Lighthouse Accesibilidad 100 en las 4
+      rutas medidas.
+
+**Visual**
+- [ ] Matriz final de capturas (5 anchos × ES/EN × RM, ancla, hoja): para la QA final. Cambios visibles de F8: en
+      móvil, el nombre y el estado de K2 van uno debajo del otro; la «d» de la marca va en 600.
+- [ ] Puntuación del crítico ≥ 8,6: QA final.
+
+**Comportamiento**
+- [x] Sin JS, sin WebGL, sin GSAP y con reduced-motion: cubierto por la suite (escena, vidrio, motion, hoja).
+- [x] Teclado (skip link, foco en la hoja atrapado y devuelto) y táctil (≥ 44 px, arrastre): suite (`keyboard`,
+      `hoja`, `layout`).
+- [x] URL de cada caso compartible; Atrás cierra la hoja; recarga → página completa; ES ↔ EN: `hoja.spec`,
+      `i18n.spec`, smoke.
+
+**Rendimiento** (`perf-F8.json`)
+- [x] LCP móvil ≤ 2,0 s: `/` 1.040 ms, `/about` 1.920 ms (Slow 4G, CPU × 4); escritorio ≤ 1,2 s: 348 / 516 ms.
+- [x] CLS ≤ 0,02: `/` 0 (antes 0,066), `/about` 0,0002.
+- [~] TBT ≤ 200 ms: **no** en Lighthouse local (650–1.550 ms; WebGL sin GPU en el contenedor). Verificar en PageSpeed.
+- [x] GSAP no se pide antes del LCP ni en móvil ni con RM; WebGL diferido (pruebas de F4/F5 en verde).
+- [~] Lighthouse móvil: 100 / 100 / 100 en Accesibilidad, Buenas prácticas y SEO; Rendimiento 65–86 aquí → **Doug
+      corre PageSpeed tras el deploy**.
+- [ ] fps en hardware real (MacBook, Android medio): **Doug**.
+
+**Contenido, SEO y seguridad**
+- [x] Ningún `[DATO A CONFIRMAR]` ni marcador de copy (`copy.sinMarcadores`, `grep`); datos solo desde `src/data`.
+- [x] Sitemap con `/work`, `/about`, `/experience` y casos (ES/EN); `hreflang`, canonical, JSON-LD (Person,
+      ProfilePage, ItemList, BreadcrumbList); **OG nuevo por idioma** con la foto `960e1d8c`.
+- [x] CSP y cabeceras sin cambios (S1–S6 en verde); nada desde otro origen.
+- [x] `/cv`, sus PDFs y los dos 404 funcionan (suite); además, páginas de error nuevas.
+
+**Configuración y entrega**
+- [x] Cambiar la foto = `hero.ts` + `npm run hero:poster` (probado en F8: `960e1d8c` v3); lockup =
+      `src/app/fonts/lockup.ts` (probado: pasó a la instancia local); decisión = `src/data/decisiones.ts`
+      (`decisiones.test`).
+- [x] Sin `/lab`, sin `DG_LAB`, sin código muerto conocido; README con el stack real.
+- [x] Todo en la rama `claude/douguizard-portfolio-redesign-9ivnau`. **Sin push a `main` ni deploy.**

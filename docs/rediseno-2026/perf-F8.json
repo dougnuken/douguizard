@@ -427,5 +427,68 @@
     "/about movil LCP (perf-F4)": 2950,
     "/ JS gzip KB (F7)": 158.2
   },
-  "nota_js": "+1,2 KB gz en / frente a F7: el límite de error (error.tsx) de cada idioma es un componente cliente."
+  "nota_js": "+1,2 KB gz en / frente a F7: el límite de error (error.tsx) de cada idioma es un componente cliente.",
+  "lighthouse": {
+    "version": "12 (npx, Chromium 1243 headless, sin GPU: WebGL por SwiftShader)",
+    "movil_simulado": {
+      "/": {
+        "perf": 65,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3689,
+        "cls": 0,
+        "tbtMs": 1252
+      },
+      "/en": {
+        "perf": 68,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3662,
+        "cls": 0,
+        "tbtMs": 1022
+      },
+      "/about": {
+        "perf": 66,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3338,
+        "cls": 0,
+        "tbtMs": 1538
+      },
+      "/work/naowee-suid": {
+        "perf": 86,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3980,
+        "cls": 0,
+        "tbtMs": 134
+      }
+    },
+    "movil_devtools": {
+      "/": {
+        "perf": 84,
+        "lcpMs": 1028,
+        "cls": 0,
+        "tbtMs": 649
+      },
+      "/about": {
+        "perf": 85,
+        "lcpMs": 1899,
+        "cls": 0,
+        "tbtMs": 570
+      }
+    },
+    "escritorio": {
+      "/": {
+        "perf": 98,
+        "lcpMs": 807,
+        "tbtMs": 110
+      }
+    },
+    "nota": "La mayor tarea larga (~1,2 s con CPU x4) es el chunk del vidrio WebGL2 (compilar el shader y pintar en SwiftShader, sin GPU); el resto, React. En un teléfono con GPU ese coste es mucho menor: Doug lo confirma con PageSpeed tras el deploy."
+  }
 }

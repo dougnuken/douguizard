@@ -11,9 +11,9 @@
 | LCP escritorio ≤ 1,2 s | `/` **348 ms** · `/about` **516 ms** |
 | CLS ≤ 0,02 | `/` móvil **0** (antes 0,066) · `/about` 0,0002 · escritorio ≤ 0,0005 |
 | JS inicial `/` | 159,4 KB gz (F7: 158,2; +1,2 KB por los `error.tsx`) · `/about` 151,4 KB |
-| Lighthouse | LIGHTHOUSE_RESUMEN |
-| vitest · lint · tsc · build | VITEST_RESUMEN |
-| Playwright completo (Chromium) | PW_RESUMEN |
+| Lighthouse 12 (local, sin GPU) | Accesibilidad **100**, Buenas prácticas **100**, SEO **100** en `/`, `/en`, `/about`, `/work/naowee-suid`. Rendimiento móvil simulado 65–86 (**< 90**, por TBT); con throttling devtools 84/85 (LCP 1.028 / 1.899 ms, CLS 0); escritorio `/` 98 (LCP 807 ms) — ver desvío 1 |
+| vitest · lint · tsc · build | **252/252** · lint 0 · tsc 0 · build sin avisos nuevos |
+| Playwright completo (Chromium) | **518/518 en dos corridas seguidas** (17,2 y 17,0 min) |
 | WebKit / Firefox | **no se pudo aquí**: el proxy responde 403 a `cdn.playwright.dev` y `playwright.download.prss.microsoft.com`. Los proyectos existen (`PW_NAVEGADORES=1`) y el smoke corre en Chromium; queda en el checklist de Doug |
 | Sin `/lab`, `DG_LAB`, marcadores ni `console.log` en `src/` | ✓ (`grep` vacío; `/lab` da 404 y no está en el sitemap: prueba) |
 
@@ -96,7 +96,14 @@ Cifras de rendimiento: `perf-F8.json` (perf.spec, mediana de 5, servidor solo, `
 
 ## Desvíos
 
-1. **Lighthouse**: LIGHTHOUSE_DESVIO
+1. **Lighthouse móvil, Rendimiento < 90.** Accesibilidad, Buenas prácticas y SEO dan 100; el LCP medido con
+   throttling real (devtools) cumple (1,03 / 1,90 s) y CLS es 0. Lo que baja la nota es el **TBT** (650–1.550 ms):
+   la tarea larga mayor (~1,2 s con CPU × 4) es el chunk del vidrio WebGL2 (compilar el shader y pintar), que aquí
+   corre en SwiftShader porque el contenedor no tiene GPU; el resto es React (`react-dom`, ~480 ms de script). El
+   LCP «simulado» (3,3–4,0 s) lo estima Lantern a partir de ese CPU lento. En un teléfono con GPU el coste del
+   shader es una fracción; **Doug confirma con PageSpeed tras el deploy** (`08-ENTREGA.md` §4). Si en producción
+   sigue < 90, la palanca es no iniciar el WebGL en táctil hasta el primer arrastre (el póster ya trae el vidrio):
+   cambio de comportamiento de F4 que no se hizo sin QA. Cifras: `perf-F8.json` → `lighthouse`.
 2. **WebKit/Firefox** no corrieron (proxy). El smoke y los proyectos quedan listos para Doug.
 3. **Capturas de la matriz final de §5** (`tests/shots/rediseno/final/`): no se hicieron en esta sesión (presupuesto de
    uso); son de la QA final. Las de F7 siguen siendo válidas salvo K2 en móvil (nombre y estado ahora apilados) y la
