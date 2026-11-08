@@ -133,6 +133,22 @@
       transform: scaleY(var(--p, 0));
       background: var(--laser);
     }
+    /* «Desliza» animado (09-MOTION-CONTROLES §3): un trazo recorre el riel hacia
+       abajo y se apaga, dos veces tras la entrada, y queda quieto. Finito a
+       propósito: en reposo no queda ninguna animación viva (escena 0 fps). Con el
+       primer scroll (p > 0) se retira: el riel pasa a ser el progreso (`--p`). */
+    .escena-indicador::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 0;
+      transform: scaleY(0);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+      pointer-events: none;
+    }
+    :root.cine .escena:is(:not([data-p]), [data-p="0.000"]) .escena-indicador::after {
+      animation: riel-recorre 1200ms var(--curva-io) 1000ms 2;
+    }
     .escena-indicador span {
       position: absolute;
       right: 0;
@@ -306,9 +322,29 @@
       filter: blur(12px);
     }
   }
+  @keyframes riel-recorre {
+    0% {
+      transform: scaleY(0);
+      opacity: 1;
+    }
+    60% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0;
+    }
+  }
   @keyframes escena-aparece {
     from {
       opacity: 0;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escena-indicador::after {
+    animation: none !important;
   }
 }
