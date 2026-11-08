@@ -373,7 +373,7 @@ test.describe("hoja · movimiento y móvil", () => {
   });
 
   for (const via of ["X", "Esc", "velo"] as const) {
-    test(`sin RM, ${via}: la salida se ve (a 100 ms a medio camino, a 400 ms sin hoja) (P1-3)`, async ({ page }) => {
+    test(`sin RM, ${via}: la salida se ve (a medio camino durante la salida, a 400 ms sin hoja) (P1-3)`, async ({ page }) => {
       await preparar(page, { rm: false });
       await page.goto("/work", { waitUntil: "networkidle" });
       await abrir(page, "/work", "olbo", { asentar: false });
@@ -412,14 +412,11 @@ test.describe("hoja · movimiento y móvil", () => {
       if (via === "velo") await page.mouse.click(40, 450);
       const cuadros = await page.evaluate(() => (window as unknown as { __salida: Promise<{ t: number; y: number | null; velo: number | null; abierta: boolean }[]> }).__salida);
       const resumen = cuadros.map((c) => `${Math.round(c.t)}ms y${c.y === null ? "–" : Math.round(c.y)}`).join(" · ");
-      // Hacia los 100 ms (el cuadro pintado más cercano, ±60 ms: un cuadro de
-      // headless dura ~55 ms): la hoja sigue en pantalla, a medio camino.
-      const medio = cuadros
-        .filter((c) => Math.abs(c.t - 100) <= 60 && c.abierta && c.y !== null && c.y > y0 + 20 && c.y < 900)
-        .sort((a, b) => Math.abs(a.t - 100) - Math.abs(b.t - 100))[0];
-      expect(medio, `estado intermedio cerca de 100 ms (${resumen})`).toBeTruthy();
-      expect(medio!.velo!, "el velo se está fundiendo").toBeGreaterThan(0);
-      expect(medio!.velo!).toBeLessThan(1);
+      // Estado real, no reloj fijo: algún cuadro pintado de la salida muestra la hoja
+      // a medio camino (en pantalla, desplazada y velo a medio fundir). El arranque
+      // de la transición varía por cuadro de headless (~50 ms), por eso no se ata a 100 ms.
+      const medio = cuadros.find((c) => c.abierta && c.y !== null && c.y > y0 + 20 && c.y < 900 && c.velo !== null && c.velo > 0 && c.velo < 1);
+      expect(medio, `estado intermedio durante la salida (${resumen})`).toBeTruthy();
       // A los 400 ms: sin hoja.
       const ultimo = cuadros[cuadros.length - 1];
       expect(ultimo.t).toBeGreaterThanOrEqual(400);
