@@ -166,3 +166,13 @@ imagen del héroe: decidida por Doug (`960e1d8c`) · jerarquía y spacing: 8,4 h
 
 Después de arreglar, rehacer en `QA-final/`: `home-os2-{1440,390}`, `caso-completa-390`, `cv-{1440,390}` y
 `cv-entera-1440`.
+
+## 6. Arreglos (P1 cerrados)
+
+| Punto | Cambio | Prueba |
+| --- | --- | --- |
+| **P1-1** vidrio del cromo | Token nuevo `--vidrio-cromo: rgba(14,15,18,.8)` (`globals.css`), con su equivalente sólido en `prefers-reduced-transparency`. Lo usan `.cab-marca .wordmark`, `.cab-pills`, `.idioma`, `.cab-menu` y `.dock` (`chrome.css`); `.cab-menu-panel` ya era sólido (`--losa-alta`). Las losas siguen en `--vidrio-plano` 0,5. Se probó 0,76: el dock a 390 quedaba en 4,54:1, sin margen; 0,8 deja ≥ 5,1:1 y se sigue leyendo como cristal. | `tests/e2e/cromo-contraste.spec.ts`: oculta el texto, toma una captura de cada etiqueta y mide el percentil 90 de luminancia del fondo real. A 390, dock sobre la cubierta clara de `/work/naowee-suid`: «Trabajo» y «Secciones» 5,17:1 y el resto ≥ 5,59:1. A 1440, cabecera sobre cada losa clara del OS (olbo, «En cifras», k15): «douguizard» 11,1:1 y ES/EN 5,77:1. Antes, con 0,5: 3,7:1 y ≈ 2,2:1. |
+| **P1-2** cuerpo de `/cv` | `src/components/cv/cv-b.css`, solo bajo `@media screen` y fuera de capas (gana a las utilidades sin `!important` y nunca llega al papel). Lleva Instrument Sans en el cuerpo y Urbanist en nombre, empresas y carta; quita mono y mayúsculas espaciadas; nada baja de 14 px; las `--ink*` de F0 se redefinen a las tintas B (`--tinta`, `--tinta-2`, `--tinta-3`, con equivalentes oscuros en tema claro); los rótulos usan el estilo `.ceja`. Retícula de 12 con subgrid desde 1024: contenido en col 2–8 y lateral en col 9–12, con la columna de 1320 de las páginas B. «Ver caso» mide 44 px en táctil y 32 px con puntero fino. El marcado y las clases que lee la hoja de impresión no cambian. | `tests/e2e/cv-b.spec.ts`: a 1440 y 390 hay 0 textos mono, 0 por debajo de 13 px y 0 en mayúsculas; «Ver caso» mide 32 y 44 px; no hay desborde horizontal; la retícula es de 12 columnas, con experiencia en 2/9 y lateral en 9/13. Con `media: print`, la hoja conserva la mono y su flujo de bloque. `print.spec` sigue en verde: A4 en 3 páginas, Letter en 4 y todas las experiencias en la capa de texto del PDF. |
+
+Capturas rehechas con `npm run build` + `next start`: `QA-final/home-os2-{1440,390}.jpg`,
+`caso-completa-390.jpg`, `cv-{1440,390}.jpg` y `cv-entera-1440.jpg`.
