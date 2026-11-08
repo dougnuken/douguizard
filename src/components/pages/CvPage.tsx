@@ -1,3 +1,4 @@
+import "@/components/cv/cv-b.css";
 import DockMovil from "@/components/chrome/DockMovil";
 import RailAcciones from "@/components/chrome/RailAcciones";
 import { IconosSprite } from "@/components/sistema/Iconos";
