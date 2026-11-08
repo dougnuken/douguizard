@@ -431,9 +431,11 @@
       justify-items: center;
       align-content: center;
       gap: 2px;
-      min-inline-size: 64px;
+      /* P2-3: 8 px por lado, para que la etiqueta más larga («Experiencia») no
+         toque el canto de la píldora; 62 px de mínimo para que quepa a 360. */
+      min-inline-size: 62px;
       block-size: 52px;
-      padding: 0 4px;
+      padding: 0 8px;
       border-radius: var(--r-pill);
       font: 500 var(--t-12) / 1.2 var(--font-texto);
       color: var(--tinta-2-vidrio);
@@ -457,7 +459,8 @@
   }
   @media (max-width: 359px) {
     .dock :is(a, button) {
-      min-inline-size: 56px;
+      min-inline-size: 52px;
+      font-size: 11px;
     }
   }
   @media (scripting: none) {
