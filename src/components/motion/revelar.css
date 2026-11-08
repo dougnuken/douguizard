@@ -20,6 +20,19 @@
   }
 }
 
+/* P2-6: capturas de página entera (`?estatico`) e impresión ven todo. */
+:root[data-estatico] [data-revelar] {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media print {
+  [data-revelar] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   [data-revelar] {
     opacity: 1 !important;

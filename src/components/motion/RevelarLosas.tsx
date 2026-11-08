@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import "./revelar.css";
+import { esEstatico } from "@/lib/estatico";
 
 /**
  * Capa de movimiento de las losas (pulido tras F8, pedido de Doug): cada losa
@@ -13,8 +14,9 @@ import "./revelar.css";
  * - Solo se esconden las losas que al montar están **debajo** del borde inferior
  *   de la ventana: nunca se oculta algo que ya se pintó (sin parpadeo, sin tocar
  *   el LCP, que es K2 o el póster, ambos arriba).
- * - Con movimiento reducido no hace nada. Sin JS, todo se ve (el oculto lo pone
- *   este script).
+ * - Con movimiento reducido o con `?estatico` (capturas de página entera, P2-6)
+ *   no hace nada; al imprimir, todo se ve.
+ * - Sin JS, todo se ve (el oculto lo pone este script).
  * - En el acto 1 del home (`html.cine`, ≥ 1024) el OS ya lo arma GSAP: se salta.
  * - Al terminar, la losa pasa a `listo` y se queda sin animación (0 en reposo).
  * - Animación (`transform` + `opacity`), no transición: no pisa el `translate`
@@ -27,6 +29,8 @@ export default function RevelarLosas() {
 
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // P2-6: `?estatico` (capturas de página entera) no esconde nada.
+    if (esEstatico()) return;
     if (!("IntersectionObserver" in window)) return;
     const raiz = document.documentElement;
 
