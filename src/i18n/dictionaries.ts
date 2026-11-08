@@ -169,6 +169,14 @@ const en = {
     work: "See case studies",
     cv: "CV",
   },
+  /** F8 · error de render (error.tsx): sin detalles técnicos, con salida. */
+  error: {
+    kicker: "Error",
+    title: "Something broke on this page.",
+    body: "It's on my side, not yours. Try again, or go back home.",
+    retry: "Try again",
+    home: "Go home",
+  },
 };
 
 type DictBase = typeof en;
@@ -274,7 +282,14 @@ const es: DictBase = {
       title: "Este caso no existe, o todavía no está publicado.",
       back: "Ver todos los casos",
     },
+  },  error: {
+    kicker: "Error",
+    title: "Algo falló en esta página.",
+    body: "Es de mi lado, no del tuyo. Intenta de nuevo o vuelve al inicio.",
+    retry: "Intentar de nuevo",
+    home: "Ir al inicio",
   },
+
   cv: {
     title: (headline: string) => `Hoja de vida — ${headline}`,
     description: (p) =>

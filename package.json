@@ -12,7 +12,8 @@
     "cv:pdf": "tsx scripts/build-cv-pdf.ts",
     "test:e2e": "next build && playwright test",
     "shots:rediseno": "tsx scripts/shots-rediseno.ts",
-    "hero:poster": "tsx scripts/build-hero-poster.ts"
+    "hero:poster": "tsx scripts/build-hero-poster.ts",
+    "og": "tsx scripts/og/build-og.ts"
   },
   "dependencies": {
     "gsap": "^3.15.1",

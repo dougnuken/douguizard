@@ -85,6 +85,9 @@ for (const route of [...ROUTES, ...EN_ROUTES]) {
     }
     if (m.ogImage && !m.ogImage.startsWith("http"))
       problems.push(`og:image is not absolute: ${m.ogImage}`);
+    // F8: tarjeta por idioma (og.png en ES, og-en.png en EN).
+    const ogEsperada = `${ORIGIN}${lang === "es" ? "/og.png" : "/og-en.png"}`;
+    if (m.ogImage !== ogEsperada) problems.push(`og:image = ${m.ogImage}, expected ${ogEsperada}`);
 
     if (m.lang !== lang) problems.push(`html lang = ${m.lang}, expected ${lang}`);
     if (m.h1.length !== 1) problems.push(`${m.h1.length} <h1>: ${JSON.stringify(m.h1)}`);
@@ -167,4 +170,17 @@ test("E5 a URL that does not exist says so", async ({ page }) => {
   expect(bogusEnCase?.status(), "E5 unknown /en case status").toBe(404);
   const bogusEn = await page.goto("/en/this-page-was-never-here", { waitUntil: "networkidle" });
   expect(bogusEn?.status(), "E5 unknown /en address status").toBe(404);
+});
+
+/** F8: las dos tarjetas OG existen, son PNG de 1200 × 630 y pesan lo que un cliente de chat acepta. */
+test("E1b tarjetas OG por idioma: 1200×630, PNG, ≤ 300 KB", async ({ request }) => {
+  for (const ruta of ["/og.png", "/og-en.png"]) {
+    const r = await request.get(ruta);
+    expect(r.status(), ruta).toBe(200);
+    expect(r.headers()["content-type"], ruta).toContain("image/png");
+    const buf = await r.body();
+    expect(buf.length, `${ruta} bytes`).toBeLessThanOrEqual(300 * 1024);
+    // Cabecera IHDR: ancho y alto en big-endian a partir del byte 16.
+    expect([buf.readUInt32BE(16), buf.readUInt32BE(20)], ruta).toEqual([1200, 630]);
+  }
 });
