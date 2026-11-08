@@ -594,9 +594,6 @@
   }
 
   /* ── «Secciones» (móvil): botón dentro de la hoja y su lista ──────────── */
-  .secciones-boton {
-    display: none;
-  }
   .lista-secciones {
     margin: 0;
     padding: 8px 24px 32px;
@@ -860,14 +857,6 @@
     }
     .sig-card {
       min-height: 220px;
-    }
-    .caso-en-hoja .secciones-boton {
-      position: sticky;
-      bottom: 16px;
-      z-index: 3;
-      display: flex;
-      margin: 32px auto 0;
-      width: max-content;
     }
   }
 

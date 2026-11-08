@@ -7,6 +7,8 @@ import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { devolverFoco, guardarOrigen, olvidarOrigen } from "./origen";
 import { useArrastreHoja } from "./useArrastreHoja";
+import { Icono } from "@/components/sistema/Iconos";
+import { EVENTO_SECCIONES_HOJA } from "@/components/case/eventos";
 
 type Estado = "entrando" | "abierta" | "cerrando";
 
@@ -47,7 +49,7 @@ export default function CaseSheet({
   const activa = pathname === ruta;
   if (!activa) return null;
   return (
-    <Dialogo slug={slug} ruta={ruta} proyecto={proyecto} tituloId={tituloId} t={t} trabajo={dict.dock.trabajo}>
+    <Dialogo slug={slug} ruta={ruta} proyecto={proyecto} tituloId={tituloId} t={t} trabajo={dict.dock.trabajo} secciones={dict.dock.secciones}>
       {children}
     </Dialogo>
   );
@@ -60,6 +62,7 @@ function Dialogo({
   tituloId,
   t,
   trabajo,
+  secciones,
   children,
 }: {
   slug: string;
@@ -68,6 +71,7 @@ function Dialogo({
   tituloId: string;
   t: { cerrar: string; verCompleta: string; progreso: string };
   trabajo: string;
+  secciones: string;
   children: ReactNode;
 }) {
   const locale = useLocale();
@@ -196,6 +200,17 @@ function Dialogo({
             <b translate="no">{proyecto}</b>
           </p>
           <div className="hoja-acciones">
+            {/* P2-7 (F7 P2-4): «Secciones» (< 1024) va en la cabecera, no flotando sobre el texto. */}
+            <button
+              type="button"
+              className="hoja-secciones"
+              aria-haspopup="dialog"
+              aria-label={secciones}
+              title={secciones}
+              onClick={() => window.dispatchEvent(new Event(EVENTO_SECCIONES_HOJA))}
+            >
+              <Icono nombre="secciones" />
+            </button>
             {/* Documento, no `<Link>`: la página completa, sin hoja encima. */}
             <a className="hoja-circulo" href={ruta} aria-label={t.verCompleta} title={t.verCompleta}>
               <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">

@@ -240,8 +240,9 @@ test.describe("la misma pieza en la hoja", () => {
     await preparar(page, 390, 844);
     await abrirHoja(page, "olbo");
     expect(await page.locator("dialog.hoja[open] .caso-h1").evaluate((h) => getComputedStyle(h).fontSize)).toBe("48px");
-    const boton = page.locator("dialog.hoja[open] .secciones-boton");
-    await boton.scrollIntoViewIfNeeded();
+    // P2-7: el botón vive en la cabecera de la hoja (antes flotaba sobre el texto, al pie).
+    const boton = page.locator("dialog.hoja[open] .hoja-cab button.hoja-secciones");
+    await expect(page.locator("dialog.hoja[open] .secciones-boton")).toHaveCount(0);
     await boton.click();
     const lista = page.locator("dialog.hoja[open] dialog.secciones[open]");
     await expect(lista).toBeVisible();

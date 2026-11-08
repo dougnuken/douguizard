@@ -1482,7 +1482,7 @@ html:has(dialog.hoja[open]) {
   gap: 8px;
   align-items: center;
 }
-.hoja-circulo {
+:is(.hoja-circulo, .hoja-secciones) {
   display: grid;
   place-items: center;
   width: 56px;
@@ -1498,18 +1498,18 @@ html:has(dialog.hoja[open]) {
     scale var(--d-press) var(--curva-salida);
 }
 @media (hover: hover) and (pointer: fine) {
-  .hoja-circulo:hover {
+  :is(.hoja-circulo, .hoja-secciones):hover {
     background: #26272c;
   }
 }
-.hoja-circulo:active {
+:is(.hoja-circulo, .hoja-secciones):active {
   scale: 0.96;
 }
-.hoja-circulo:focus-visible {
+:is(.hoja-circulo, .hoja-secciones):focus-visible {
   outline: 2px solid var(--electrico-texto);
   outline-offset: 2px;
 }
-.hoja-circulo svg {
+:is(.hoja-circulo, .hoja-secciones) svg {
   width: 20px;
   height: 20px;
   fill: none;
@@ -1517,6 +1517,20 @@ html:has(dialog.hoja[open]) {
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+/* P2-7: «Secciones» de la hoja, en la cabecera y solo en móvil; ahí los tres
+   círculos bajan a 48 px para que la miga respire. */
+.hoja-secciones {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .hoja-secciones {
+    display: grid;
+  }
+  .hoja-acciones :is(.hoja-circulo, .hoja-secciones) {
+    width: 48px;
+    height: 48px;
+  }
 }
 /* El hilo láser: progreso de lectura del cuerpo. */
 .hoja-progreso {
