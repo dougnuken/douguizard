@@ -1,33 +1,14 @@
 import type { Page } from "@playwright/test";
 
 /**
- * Components reveal on IntersectionObserver. Walk the page (vertically, and
- * horizontally for the home shell) so every observer fires, then wait until no
+ * Components reveal on IntersectionObserver. Walk the page vertically (F3: the
+ * horizontal home shell is gone, so there is no sideways walk) so every observer fires, then wait until no
  * element is left at opacity 0. Returns the ids/classes of anything still
  * invisible so a caller can report it instead of silently accepting a blank.
  */
 export async function settle(page: Page, maxMs = 8000): Promise<string[]> {
   await page.evaluate(async () => {
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    const shell = document.querySelector<HTMLElement>("[data-hshell]");
-    if (shell && shell.scrollWidth > shell.clientWidth + 1) {
-      const steps = 12;
-      for (let i = 0; i <= steps; i++) {
-        shell.scrollLeft = (shell.scrollWidth - shell.clientWidth) * (i / steps);
-        await sleep(60);
-      }
-      // walk each panel's own vertical scroll too
-      for (const p of Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"))) {
-        if (p.scrollHeight > p.clientHeight + 1) {
-          for (let i = 0; i <= 6; i++) {
-            p.scrollTop = (p.scrollHeight - p.clientHeight) * (i / 6);
-            await sleep(40);
-          }
-          p.scrollTop = 0;
-        }
-      }
-      shell.scrollLeft = 0;
-    }
     const h = document.documentElement.scrollHeight;
     if (h > window.innerHeight + 1) {
       const steps = Math.min(30, Math.ceil(h / (window.innerHeight / 2)));
@@ -36,6 +17,19 @@ export async function settle(page: Page, maxMs = 8000): Promise<string[]> {
         await sleep(70);
       }
       window.scrollTo(0, 0);
+    }
+    // F5: en el acto 1 del home (≥ 1024 sin RM), la página se deja al final del
+    // ancla (el OS armado) en vez de en 0. Si GSAP aún no montó, se le espera.
+    if (document.documentElement.classList.contains("cine")) {
+      const pista = () => document.querySelector<HTMLElement>("[data-escena-pista]");
+      const t0 = performance.now();
+      while (!pista()?.dataset.escenaFin && document.documentElement.classList.contains("cine") && performance.now() - t0 < 6000) await sleep(50);
+      const fin = Number(pista()?.dataset.escenaFin);
+      if (fin) {
+        document.dispatchEvent(new Event("escena:fin", { cancelable: true }));
+        window.scrollTo(0, fin);
+        while (document.documentElement.dataset.escenaFase !== "os" && performance.now() - t0 < 8000) await sleep(50);
+      }
     }
     await sleep(250);
   });

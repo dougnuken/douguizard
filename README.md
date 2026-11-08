@@ -1,314 +1,65 @@
 # douguizard
 
-> Doug Vargas — Head of Product · Senior Product Designer (UX/UI) · Design Engineer · Personal site & CV
-> Next.js 16 · React 19 · Framer Motion · React Three Fiber · Tailwind v4
+Portafolio de Doug Vargas — [douguizard.com](https://douguizard.com). Rediseño 2026, propuesta B «Cine → OS»
+(documentación completa en `docs/rediseno-2026/`; para Doug, empezar por `08-ENTREGA.md`).
 
----
+> Next.js 16 (App Router) · React 19 · Tailwind v4 · GSAP 3 (diferido) · WebGL2 propio · TypeScript
 
-## ⚡ Quick start
-
-You need **Node.js 20+** installed (currently tested on Node 22). Then:
+## Arranque
 
 ```bash
-# 1. Install dependencies (~1 min)
-npm install
-
-# 2. Start dev server (Turbopack, hot reload)
-npm run dev
-
-# Open http://localhost:3000
+npm ci              # dependencias
+npm run dev         # desarrollo en http://localhost:3000
+npm run build       # build de producción
+npm run start       # sirve el build
 ```
 
-That's it. The dev server boots in ~500ms.
+En Windows (PowerShell), los mismos comandos con `npm.cmd` (ver `docs/rediseno-2026/08-ENTREGA.md`).
 
----
+## Stack real
 
-## 📁 Project structure
+- **Next.js 16** con dos layouts raíz (`app/(es)` y `app/(en)/en`), `global-not-found.tsx`, `error.tsx` por idioma y
+  `global-error.tsx`. CSS en línea (`experimental.inlineCss`) para que el LCP no espere una hoja externa.
+- **Casos en hoja con URL real**: rutas interceptadas `@modal/(.)work/[slug]` (la hoja sobre la página) y la página
+  completa `work/[slug]` (recarga, enlace directo, sin JS).
+- **Héroe**: póster horneado (foto + vidrio estriado) como LCP; el vidrio vivo es un shader **WebGL2 propio**
+  (`src/lib/gl/`), cargado después del LCP; con movimiento reducido o sin WebGL queda el póster.
+- **GSAP** solo para el acto 1 (cine → OS) y solo en escritorio, importado de forma diferida.
+- **Tipografía** (`src/app/fonts/`): Geologica (lockup «corte láser» del nombre), Urbanist (titulares), Instrument Sans
+  (texto), Doto (cifras). Archivo y Geist Mono quedan para `/cv`.
+- Sin Framer Motion, sin React Three Fiber, sin Lenis.
 
-```
-douguizard/
-├── src/
-│   ├── app/                        # Next.js App Router
-│   │   ├── layout.tsx              # Root layout: fonts, metadata
-│   │   ├── globals.css             # Tailwind v4 + design tokens
-│   │   ├── page.tsx                # Home (the cinematic hero site)
-│   │   ├── cv/
-│   │   │   ├── layout.tsx          # CV layout (cursor)
-│   │   │   └── page.tsx            # /cv route — print-to-PDF ready
-│   │   └── work/[slug]/
-│   │       ├── layout.tsx          # generateStaticParams + metadata
-│   │       ├── page.tsx            # Cinematic case study page
-│   │       └── not-found.tsx       # 404 for invalid slugs
-│   │
-│   ├── components/
-│   │   ├── Loader.tsx              # Cinematic 0→100% loader
-│   │   ├── CustomCursor.tsx        # Difference-blend cursor
-│   │   ├── SmoothScroll.tsx        # Lenis smooth-scroll provider
-│   │   │
-│   │   ├── three/                  # React Three Fiber 3D scene
-│   │   │   ├── Scene3D.tsx         # Canvas + scroll-driven layers
-│   │   │   ├── Starfield.tsx       # 3,500 GPU-shader stars
-│   │   │   ├── NebulaClouds.tsx    # 4 additive-blended spheres
-│   │   │   ├── GeometricRings.tsx  # 3 rotating tori
-│   │   │   ├── FloatingParticles.tsx  # 20 wireframe geometries
-│   │   │   └── CinematicCamera.tsx # Scroll + mouse parallax cam
-│   │   │
-│   │   └── sections/               # Page sections
-│   │       ├── Navigation.tsx
-│   │       ├── Hero.tsx            # Masked-line text reveal
-│   │       ├── Marquee.tsx
-│   │       ├── Manifesto.tsx       # Word-by-word scroll reveal
-│   │       ├── Capabilities.tsx    # Hover-spotlight cards
-│   │       ├── Portfolio.tsx       # Floating preview on hover
-│   │       ├── Stats.tsx           # Animated counters
-│   │       └── Footer.tsx
-│   │
-│   └── data/
-│       ├── cv.ts                   # CV content (single source)
-│       └── work.ts                 # Case studies (single source)
-│
-├── package.json
-├── next.config.ts
-├── tsconfig.json
-├── postcss.config.mjs              # Tailwind v4
-└── README.md
-```
+## Dónde se cambia cada cosa
 
-## 🛣 Routes
-
-The site is bilingual. **Spanish is the primary language and lives at the root**;
-English is the mirror, one segment down. Every page exists in both, at the same
-path apart from the `/en` prefix.
-
-| Spanish (default) | English | What |
+| Qué | Dónde | Después |
 |---|---|---|
-| `/` | `/en` | Home — hero, work, craft, about, contact |
-| `/cv` | `/en/cv` | CV (hoja de vida), print-ready, with its own PDF |
-| `/work/[slug]` | `/en/work/[slug]` | Case studies, all prerendered |
+| Foto del héroe | `src/data/hero.ts` (añadir objeto, `fotoActiva`, `version` + 1) | `npm run hero:poster` y `npm run og` |
+| Fuente del nombre (lockup) | `src/app/fonts/lockup.ts` | — |
+| Decisiones pendientes (disponibilidad, PDF del CTA, colofón…) | `src/data/decisiones.ts` | — |
+| Datos de la persona y SEO | `src/data/site.ts` | — |
+| CV (hechos) | `src/data/cv.ts` y `src/data/es/cv.ts` | `npm run cv:pdf` |
+| Casos | `src/data/work.ts` y `src/data/es/work.ts` | — |
+| Textos de la interfaz | `src/i18n/*.ts` | — |
+| Tarjetas para compartir (OG) | `scripts/og/build-og.ts` | `npm run og` (con `next start` en el puerto 3131) |
 
-Unmatched addresses get `app/global-not-found.tsx` (Spanish, with a line in English).
+Una sola fuente por dato: los años, roles y cifras se derivan de `src/data` (`data.singleSource.test.ts` lo vigila).
 
----
+## Scripts
 
-## 🌐 Languages (ES / EN)
-
-- **Routing:** two route groups, each with its own root layout, so every page is
-  served with the right `<html lang>`: `src/app/(es)/…` and `src/app/(en)/en/…`.
-  Both render the shared pages in `src/components/pages/`.
-- **The switch:** `src/components/LanguageSwitch.tsx`, in the header. It always
-  links to the same page in the other language (on the home page, to the same
-  panel). Below 360 px it moves into the menu.
-- **Interface words** (labels, buttons, headings, accessible names):
-  `src/i18n/dictionaries.ts`. English is the shape; Spanish must match it key
-  for key — TypeScript and `i18n.parity.test.ts` both enforce it.
-- **Content** keeps English as the source and adds Spanish beside it:
-  - Case studies: `src/data/work.ts` (English, plus all the facts: slugs,
-    media, links, figures) and `src/data/es/work.ts` (Spanish words only).
-  - CV: `src/data/cv.ts` + `src/data/es/cv.ts`. Site facts: `src/data/site.ts`.
-  - Cover letter and testimonial framing: in their own data files. **Quotes are
-    never translated** — a Spanish page shows the original and says so.
-- **SEO:** each page declares its canonical and its `hreflang` twin
-  (`alternatesFor` in `src/i18n/config.ts`); the sitemap lists both languages.
-
----
-
-## 🎨 The animation system
-
-### Tech stack
-- **React Three Fiber v9** (`@react-three/fiber`) — Three.js in React, with React 19 support
-- **Framer Motion v11** — declarative animations, scroll, gestures
-- **Lenis v1** — buttery smooth scroll
-- **Tailwind v4** — CSS-first config, design tokens in `globals.css`
-
-### Scene composition (4 depth layers)
-
-| Layer | What | Parallax |
-|---|---|---|
-| **Starfield** | 3,500 GPU-shader points with twinkle | Z drift -200 over scroll |
-| **Nebula** | 4 additive spheres breathing | Z drift -80 |
-| **Rings** | 3 tori rotating per-axis | Scale 1→1.6, Z drift -100 |
-| **Particles** | 20 wireframe octahedra/tetrahedra | Z forward +50 |
-
-### Camera (scroll 0% → 100%)
-```
-position.z   : 300 → 220 → 300   (dolly in mid, dolly back)
-fov          : 50  → 54  → 50    (FOV breathing)
-position.y   : 0   → -80         (vertical pan)
-position.x   : ±12 lerp           (mouse parallax)
-lookAt       : drifts y -40       (with mouse offset)
-```
-
-Smoothing: `lerp 0.08` per frame for natural easing.
-
-### Lighting (3-point cinematic rig)
-- **Key**: warm `#ff8b5e` top-left, intensity 1.2 + scroll-modulated
-- **Fill**: cool `#5eb8ff` bottom-right, 0.8 inverse phase
-- **Back**: violet `#8b7fff` behind scene, constant 0.6
-- **Ambient**: `#1a1530`, 0.4
-- **Fog**: `FogExp2 0.0008` for soft far-distance fade
-
-### Framer Motion patterns used
-
-- `useScroll` + `useTransform` for word-by-word manifesto reveal
-- `useMotionValue` + `useSpring` for cursor and floating preview
-- `useInView` + `animate` for counters
-- `motion.div` with `whileInView` for section reveals
-- `AnimatePresence` for loader and preview unmount
-
----
-
-## 🚀 Deploy
-
-### Recommended: **Vercel** (creator of Next.js, zero-config)
-
-```bash
-npm i -g vercel
-vercel
-# Follow prompts, app live in ~1 minute
-```
-
-For custom domain:
-1. In Vercel dashboard → Settings → Domains
-2. Add `douguizard.com`
-3. Vercel shows the DNS records to set at your registrar
-4. Wait ~10 min for propagation
-5. HTTPS auto-provisioned
-
-### Alternative: **Netlify**
-```bash
-npm run build
-# Drag the .next/ folder onto https://app.netlify.com/drop
-```
-
-### Buying the domain (`douguizard.net` if `.com` is taken)
-
-Recommended registrars (cheapest first):
-- **Cloudflare Registrar** — at-cost (~$10/yr `.net`), no markup
-- **Porkbun** — ~$11/yr, best UI
-- **Namecheap** — ~$13/yr
-- **Avoid GoDaddy** — cheap year 1, expensive renewals
-
-To check availability: type the domain into any of those sites.
-
----
-
-## ✏️ Updating content
-
-### CV
-CV facts live in **one file**: `src/data/cv.ts` (dates, companies, roles), with
-the Spanish wording in `src/data/es/cv.ts`.
-
-Each language has its own downloadable PDF, printed from the same data by
-`src/lib/cvSheet.ts` (a one-column, black-on-white, ATS-friendly sheet):
-Spanish → `public/cv/doug-vargas-cv-es.pdf`, English → `public/cv/doug-vargas-cv.pdf`,
-each also without the photo (`doug-vargas-cv-es-sin-foto.pdf`, `doug-vargas-cv-no-photo.pdf`).
-On `/cv` and `/en/cv`, "Download PDF" opens a small dialog to pick the language
-and the photo; the page's language and the photo come preselected. After
-changing anything the CV prints, regenerate both (no server needed):
-
-```bash
-npm run cv:pdf      # writes both PDFs and their stamps
-```
-
-The sheet's photo is `public/portrait/doug-cv-photo.jpg`; its fonts are the
-static TrueType files in `scripts/cv-fonts/` (OFL).
-
-A unit test compares each PDF's stamp with the data and fails if either drifts.
-
-### Case studies
-All case study data lives in **`src/data/work.ts`** (English + facts) and
-**`src/data/es/work.ts`** (the same case in Spanish). Each entry has:
-- `slug` — URL path (e.g. `/work/my-project`, `/en/work/my-project`)
-- `tagline`, `impact`, `context`, `contributions` — the story, in both files
-- `process`, `decisions`, `features`, `gallery`, `kpis` — lists matched by
-  position between the two languages (a test fails if they ever drift)
-- Optional: `video`, `links`, `technologies`, `credits`
-
-To add a new case study:
-1. Add an entry to `caseStudies` in `src/data/work.ts`
-2. Add its Spanish copy under the same slug in `src/data/es/work.ts`
-3. Both routes are generated, and the Work panel lists it in both languages
-
-### Site copy
-Each section is its own component in `src/components/sections/`. Edit the JSX directly.
-
-### Color tokens
-All colors are CSS variables defined in `src/app/globals.css` under `@theme`. Change one value, propagates everywhere.
-
-```css
-@theme {
-  --color-accent: #8b7fff;       /* primary violet */
-  --color-accent-warm: #ff8b5e;  /* sunset */
-  --color-accent-cool: #5eb8ff;  /* nebula blue */
-  /* ... */
-}
-```
-
----
-
-## 🛠 Common tasks
-
-### Add a new project to the portfolio list
-Edit `src/components/sections/Portfolio.tsx` → add a new entry to the `works` array:
-```tsx
-{
-  num: "/06",
-  name: { plain: "Project name", accent: "Highlight" },
-  role: "Your role · Description",
-  year: "2024 — 2025",
-  colors: ["#8b7fff", "#5eb8ff"],
-  href: "https://...",  // optional
-},
-```
-
-### Change the manifesto
-Edit `src/components/sections/Manifesto.tsx` → `manifestoText` string.
-- Wrap accent words in `{curly braces}` → renders italic violet
-- Wrap warm-accent words in `[square brackets]` → renders italic orange
-
-### Add a new section
-1. Create `src/components/sections/NewSection.tsx`
-2. Import and add to `src/app/page.tsx` between existing sections
-
----
-
-## 🧪 Available scripts
-
-```bash
-npm run dev       # Dev server with Turbopack hot reload
-npm run build     # Production build
-npm run start     # Run production build
-npm run lint      # ESLint check
-```
-
----
-
-## 📦 What's in package.json
-
-| Package | Why |
+| Script | Qué hace |
 |---|---|
-| `next` 16.2 | Latest stable; Turbopack dev/build |
-| `react` 19 | Latest, paired with Next 16 |
-| `framer-motion` 11 | Animation engine |
-| `three` 0.170 | 3D library |
-| `@react-three/fiber` 9 | React renderer for Three (React 19 compatible) |
-| `@react-three/drei` 10 | R3F helpers (loaded but minimally used) |
-| `lenis` 1 | Smooth scroll |
-| `tailwindcss` 4 | CSS-first styling |
+| `npm run lint` | ESLint |
+| `npm test` | Vitest (datos, i18n, paridad ES/EN, CV, escena) |
+| `npx playwright test --trace off` | E2E en Chromium sobre `next start -p 3131` (construir antes) |
+| `npm run hero:poster` | Hornea el póster del héroe y la textura del WebGL |
+| `npm run og` | Hornea `public/og.png` (ES) y `public/og-en.png` (EN) |
+| `npm run cv:pdf` | Genera los PDF del CV |
+| `npm run shots:rediseno` | Capturas de revisión |
 
----
+`PERF_RUTA=/about PERF_OUT=docs/rediseno-2026/perf-x.json npx playwright test perf --workers=1` mide LCP, CLS y JS
+con el perfil móvil de Lighthouse (Slow 4G, CPU × 4).
 
-## 🎯 Next steps (when you're ready)
+## Despliegue
 
-1. **Profile photo** — when you have one, add to `public/` and integrate into Hero
-2. **Real case study pages** — add `app/work/[slug]/page.tsx` with MDX support for case studies
-3. **Blog/Thinking section** — add `app/thinking/[slug]/page.tsx` for AI + design articles
-4. **Open Graph image** — auto-generated social preview using Next's OG Image API
-5. **Analytics** — Plausible, Fathom, or Vercel Analytics (privacy-first)
-6. **Sitemap & robots.txt** — Next can generate these automatically
-
-Each of these is a small, isolated addition. The core architecture handles them cleanly.
-
----
-
-Built with care · Doug, May 2026.
+Lo hace Doug (Vercel). Cabeceras de seguridad y caché en `next.config.ts`; redirecciones también allí. Pasos en
+`docs/rediseno-2026/08-ENTREGA.md`.

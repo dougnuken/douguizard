@@ -46,8 +46,9 @@ export const LEAD_PHONES_SPLIT = 4;
  * matters, that every screen appears exactly once and in its authored order,
  * is something a unit test can hold rather than something a layout implies.
  *
- * - **Browser walkthrough** — a landscape window already runs the full
- *   measure, so it opens alone and every still waits for the gallery.
+ * - **Browser walkthrough** — the first still is the static cover (F7 P1-2:
+ *   a sharp capture opens the page, not a clip under a play button); the clip
+ *   itself plays in the Product block and the other stills follow it there.
  * - **Phone walkthrough, phone stills** — the clip and up to four stills
  *   share one row of handsets, the first one moving.
  * - **Phone walkthrough, desktop stills** — the clip beside the first desktop
@@ -74,7 +75,7 @@ export function planCaseMedia(
 
   let leadCount: number;
   if (video) {
-    if (videoKind === "browser") leadCount = 0;
+    if (videoKind === "browser") leadCount = 1;
     else if (galleryKind === "phone") leadCount = LEAD_PHONES_MAX - 1;
     else leadCount = 1;
   } else if (galleryKind === "phone") {

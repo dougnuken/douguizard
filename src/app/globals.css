@@ -83,6 +83,12 @@
   color-scheme: light;
 }
 
+/* Las superficies B ignoran el tema (07 §F7): el navegador debe pintar barras y
+   controles nativos en oscuro. Solo /cv (`<html data-ruta="cv">`) sigue el tema. */
+:root:not([data-ruta="cv"]) {
+  color-scheme: dark;
+}
+
 /* ── Fluid type scale, easings, durations ────────────────────────────────── */
 :root {
   /* The hero only. One step above `--step-display`, because the headline there
@@ -129,6 +135,177 @@
 @media (min-width: 1024px) {
   :root {
     --header-h: 64px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Sistema B «Cine → OS» (rediseño 2026, F1). Capa ADITIVA: nombres en español,
+   solo oscuro e independiente de [data-theme] (D4). Nada de lo de arriba se
+   redefine — `--ease-out`, `--paper`, `--ink`… siguen siendo de casos y CV
+   hasta F7. Fuente: docs/rediseno-2026/propuestas/B/NOTAS.md §3 y 07 §1.6.
+   ════════════════════════════════════════════════════════════════════════════ */
+@property --m {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --mt {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --dw {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 700;
+}
+/* Corte láser del nombre: desplazamiento de las mitades y rendija (0 = cerrado). */
+@property --desp {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+@property --rendija {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@theme inline {
+  --color-vacio: var(--vacio);
+  --color-losa: var(--losa);
+  --color-losa-alta: var(--losa-alta);
+  --color-claro: var(--claro);
+  --color-niebla: var(--niebla);
+  --color-blanco: var(--blanco);
+  --color-tinta: var(--tinta);
+  --color-tinta-2: var(--tinta-2);
+  --color-tinta-3: var(--tinta-3);
+  --color-tinta-osc: var(--tinta-osc);
+  --color-tinta-osc-2: var(--tinta-osc-2);
+  --color-electrico: var(--electrico);
+  --color-electrico-texto: var(--electrico-texto);
+  --color-laser: var(--laser);
+  --color-verde-osc: var(--verde-osc);
+}
+
+:root {
+  /* familias B. Van aquí y no en `@theme inline`: Tailwind solo emite una
+     variable de `@theme` si una regla que procesa la usa, y `sistema.css` /
+     `marca.css` no pasan por Tailwind (06-CRITICA-F1 P0-1: `--font-dot` se
+     podaba y Doto nunca pintaba). */
+  --font-display-b: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
+  --font-texto: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-dot: var(--font-doto), ui-monospace, monospace;
+  /* color · superficies */
+  --vacio: #060608;
+  --losa: #111214;
+  --losa-alta: #1a1b1f;
+  --losa-borde: rgba(255, 255, 255, 0.08);
+  --claro: #f2f2f4;
+  --niebla: #e4e2ec;
+  --blanco: #ffffff;
+  /* color · texto. `--tinta-osc-2` se oscurece respecto a la maqueta (#55555F,
+     6,6:1 sobre claro) a #48484F: 8,1:1 sobre claro y 7,1:1 sobre niebla, para
+     que los párrafos largos cumplan `a11y 3.1` (≥ 7:1). */
+  --tinta: #f5f5f7;
+  --tinta-2: #a1a1ab;
+  --tinta-2-vidrio: #c2c2ca;
+  --tinta-3: #8a8a95;
+  --tinta-osc: #0e0e12;
+  --tinta-osc-2: #48484f;
+  /* color · acentos. Materiales (rellenos): azul y magenta. Luz (solo línea de
+     1 px, nunca relleno ni texto): láser. Sin `--verde`: el estado es luz láser. */
+  --electrico: #2b56f3;
+  --electrico-texto: #5b7cff;
+  --resplandor-b: #361976;
+  --laser: #ff3344;
+  --laser-nucleo: #ffe4e6;
+  --laser-halo: rgba(255, 51, 68, 0.45);
+  --verde-osc: #0e6b3d; /* solo el «647» de olbo, sobre niebla (5,1:1) */
+  --azul-etiqueta: #e3eaff;
+  --magenta-etiqueta: #f0b8d6;
+  --magenta-etiqueta-base: #fce6f1;
+  --jelly-azul: linear-gradient(to top, #7c7fd0 0%, transparent 22%),
+    radial-gradient(120% 75% at 50% 46%, #0c1266 0%, #1a2fb8 46%, #3f6bd9 78%, #6f98e6 100%);
+  --jelly-magenta: linear-gradient(to top, #a84d86 0%, transparent 26%),
+    radial-gradient(110% 90% at 48% 45%, #2a0d2c 0%, #5e1640 40%, #8e1f55 70%, #b4407e 100%);
+  /* Peor punto de cada gradiente (para el color de fondo sólido que leen las pruebas). */
+  --jelly-azul-peor: #3f6bd9;
+  --jelly-magenta-peor: #8e1f55;
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, 0.86) 0%, rgba(18, 19, 20, 0.86) 10% 90%, rgba(58, 59, 63, 0.86) 100%);
+  --vidrio-plano: rgba(17, 18, 20, 0.78);
+  --foco: var(--electrico-texto);
+
+  /* espacio estructural (la escala 4…128 es la de Tailwind: p-1…p-32) */
+  --cabecera: 88px;
+  --rail: 64px;
+  --os-izq: 112px;
+  --gap: 16px;
+  --fila: clamp(96px, calc((100svh - var(--cabecera) - var(--gap) - 5 * var(--gap)) / 6), 128px);
+  --toque: 44px;
+  --boton-s: 48px;
+  --boton: 56px;
+  --pill-alto: 40px;
+
+  /* tipo */
+  --t-12: 12px;
+  --t-14: 14px;
+  --t-16: 16px;
+  --t-18: 18px;
+  --t-20: 20px;
+  --t-24: 24px;
+  --t-30: 30px;
+  --t-36: 36px;
+  --t-48: 48px;
+  --t-60: 60px;
+  --t-72: 72px;
+  --t-96: 96px; /* alto ≤ 800 px (P0-1) */
+  --t-120: 120px;
+
+  /* radios (concéntricos: interno = externo − inset) */
+  --r-losa: 48px;
+  --r-m: 32px;
+  --r-s: 24px;
+  --r-xs: 16px;
+  --r-pill: 999px;
+
+  /* sombras: del color de la losa, nunca grises genéricas */
+  --bloom-azul: 0 24px 64px -12px rgba(43, 86, 243, 0.35);
+  --bloom-magenta: 0 24px 64px -12px rgba(161, 47, 106, 0.38);
+  --sombra-flota: 0 10px 24px rgba(0, 0, 0, 0.45);
+  --sombra-hoja: 0 -24px 64px rgba(0, 0, 0, 0.55);
+  --filo: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 0 48px rgba(255, 255, 255, 0.16);
+
+  /* motion. `--ease-out` NO se redefine (casos y CV); B usa `--curva-*`. */
+  --curva-salida: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --curva-hoja: cubic-bezier(0.32, 0.72, 0, 1);
+  --d-press: 120ms;
+  --d-hover: 200ms;
+  --d-ui: 240ms;
+  --d-hoja: 420ms;
+  --d-hoja-salida: 280ms;
+  --d-entrada: 600ms;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --r-losa: 36px;
+    --r-m: 28px;
+    --r-s: 20px;
+    --gap: 12px;
+    --boton: 48px;
+  }
+}
+
+/* Los vidrios oscuros pasan a sólido si el sistema pide menos transparencia. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --vidrio-oscuro: linear-gradient(#141518, #141518);
+    --vidrio-plano: #141518;
   }
 }
 
@@ -217,35 +394,6 @@
 }
 
 @layer utilities {
-  /* Availability badge. The dot is the status; the ring is a slow pulse that
-     runs on `transform` and `opacity` only, so it costs the compositor nothing
-     while it loops forever in the header. */
-  .status-dot {
-    position: relative;
-    display: inline-block;
-    inline-size: 7px;
-    block-size: 7px;
-    border-radius: 9999px;
-    background: var(--ok);
-    flex: none;
-  }
-
-  .status-dot::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--ok);
-    animation: status-pulse 2.4s var(--ease-out) infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .status-dot::after {
-      animation: none;
-      opacity: 0;
-    }
-  }
-
   .kicker {
     font-family: var(--font-mono);
     font-size: var(--step-meta);
@@ -253,13 +401,6 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink-muted);
-  }
-
-  /* Kicker typography, status colour. Declared after `.kicker` so it takes the
-     colour on source order — `.kicker` sets its own, and an arbitrary-value
-     text utility would only tie with it. */
-  .kicker-ok {
-    color: var(--ok);
   }
 
   .section-num {
@@ -533,109 +674,12 @@
     opacity: 0.88;
   }
 
-  /* The single permitted CTA use of the accent. */
-  .btn-pill--signal {
-    box-shadow: inset 0 -2px 0 0 var(--signal);
-  }
-
-  /* ── `SectionIndex`: the picker wheel ───────────────────────────────────
-     The rail used to be a glass capsule with its labels hanging off the left
-     edge — ~90px INTO the panel's text column, which is exactly where they
-     crossed the Contact rows in the light theme. Both are gone: no plate, and
-     the standing label stands on end inside the gutter, where it costs 13px
-     of width and can never reach the content's right margin. */
-  /* The reels lay each letter in a cell exactly `1ch + 0.2em` tall, which is
-     only true of a monospace face. `--font-mono` falls back to next/font's
-     "Geist Mono Fallback" — Arial with its size adjusted, i.e. proportional —
-     and while that is showing (a slow first load, a blocked font) W and M
-     overrun their cells and the word collides with itself. So the label skips
-     that fallback and falls straight to the system's monospace instead. */
-  .rail-vlabel {
-    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    animation: rail-label-in var(--dur) var(--ease-out) both;
-  }
-
-  .rail-vlabel-strip {
-    transition: transform var(--dur-slow) var(--ease-out);
-  }
-
-  /* The drum's ends are masked rather than cut, so a row leaves the wheel
-     instead of hitting a border. Rows also fade by angle in JS; this is the
-     last few per cent, and the reason there is no container to draw. */
-  /* The fade is written frame by frame as an inline style, so the one thing
-     that has to beat it — a row the pointer or the keyboard is on — needs
-     `!important`. Nothing else in the file does. */
-  .rail-drum a:hover,
-  .rail-drum a:focus-visible {
-    opacity: 1 !important;
-  }
-
-  .rail-drum {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 9%,
-      #000 91%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 9%,
-      #000 91%,
-      transparent 100%
-    );
-  }
-
-  @keyframes rail-label-in {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rail-vlabel {
-      animation: none;
-    }
-
-    .rail-vlabel-strip {
-      transition: none;
-    }
-  }
-
-  /* The hero's noise field.
-  
-     The shader mixes its colours into an opaque ground, so what lands on the
-     page is a rectangle — and a rectangle is exactly what a hero like this one
-     must not have. The mask takes it to nothing well before its own edges,
-     which leaves a soft body of light in the right-hand band and no seam. The
-     ground itself is the paper colour, passed in per theme by `HeroField`, so
-     what the mask fades into is the page it is already standing on.
-  
-     The radii are 50/50 from dead centre for a reason: an ellipse wider than
-     its half-box never reaches its own transparent stop before the box ends,
-     and the seam it was meant to hide is still there. Move the centre and the
-     radii have to come down with it. */
-  .hero-field {
-    -webkit-mask-image: radial-gradient(
-      50% 50% at 50% 50%,
-      #000 18%,
-      rgba(0, 0, 0, 0.58) 56%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      50% 50% at 50% 50%,
-      #000 18%,
-      rgba(0, 0, 0, 0.58) 56%,
-      transparent 100%
-    );
+  /* F8: el skip link y los textos `sr-only` heredaban Archivo (fuente del diseño
+     anterior) del `body` y la hacían bajar (35 KB) en cada ruta B, compitiendo con
+     el póster por la red móvil. Instrument Sans ya está precargada. */
+  .skip-link,
+  .sr-only {
+    font-family: var(--font-texto);
   }
 
   .skip-link {
@@ -658,41 +702,6 @@
 
   .skip-link:focus-visible {
     transform: translateY(0);
-  }
-
-  .site-header {
-    position: fixed;
-    inset-block-start: 0;
-    inset-inline: 0;
-    z-index: 60;
-    block-size: var(--header-h);
-    /* Thin enough that the blur is the thing you see. At 86% the plate was
-       doing the work and the blur was decoration; at 72% the page passes
-       through it. */
-    background: color-mix(in srgb, var(--paper) 72%, transparent);
-    border-block-end: 1px solid var(--line);
-  }
-
-  /* The header has NOT been glass in Chrome for some time, and this is why.
-     Under this project's default browser targets Lightning CSS compiles
-     `backdrop-filter` down to `-webkit-backdrop-filter` ALONE — and Chrome
-     152 has dropped that alias (`CSS.supports("-webkit-backdrop-filter",
-     "blur(9px)")` is now false), so the declaration reached the browser and
-     did nothing. Inside a feature query on the standard property the standard
-     property survives the compiler. Verify with a build, not by reading:
-     `grep -o "backdrop-filter:[^;}]*" .next/static/chunks/*.css` must show
-     the unprefixed form. */
-  @supports (backdrop-filter: blur(1px)) {
-    .site-header {
-      backdrop-filter: blur(18px) saturate(150%);
-    }
-
-    /* The mobile menu hangs off the same bar, so it takes the same glass —
-       otherwise opening it drops an opaque panel out of a translucent one. */
-    .site-header nav[data-menu] {
-      background: color-mix(in srgb, var(--paper) 82%, transparent);
-      backdrop-filter: blur(18px) saturate(150%);
-    }
   }
 
   .theme-toggle {
@@ -737,72 +746,6 @@
 
   :root[data-theme="light"] .theme-toggle [data-glyph="moon"] {
     display: none;
-  }
-
-  /* ── The language switch. Same hairline and the same 44px as the theme
-     toggle beside it, so the two read as one row of controls. The current
-     language is the filled half — ink on paper, the one inversion the header
-     allows itself — and it is not a link: there is nowhere for it to go. */
-  .lang-switch {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    gap: 2px;
-    block-size: 44px;
-    padding: 3px;
-    border-radius: 9999px;
-    border: 1px solid var(--line);
-  }
-
-  .lang-switch__item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-inline-size: 40px;
-    block-size: 36px;
-    padding-inline: 0.65rem;
-    border-radius: 9999px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    line-height: 1;
-    color: var(--ink-muted);
-    text-decoration: none;
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      background-color var(--dur-fast) var(--ease-out);
-  }
-
-  a.lang-switch__item:hover {
-    color: var(--ink);
-    background: color-mix(in srgb, var(--ink) 8%, transparent);
-  }
-
-  .lang-switch__item--current {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .lang-switch-compact {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    inline-size: 44px;
-    block-size: 44px;
-    border-radius: 9999px;
-    border: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    line-height: 1;
-    color: var(--ink);
-    text-decoration: none;
-    transition: opacity var(--dur-fast) var(--ease-out);
-  }
-
-  .lang-switch-compact:hover {
-    opacity: 0.8;
   }
 
   /* The CV download dialog: frosted glass over the page, with a lit edge that
@@ -1342,16 +1285,258 @@
   }
 }
 
-/* Slow outward pulse for `.status-dot`. Kept out of `@layer utilities` so the
-   keyframes are never pruned along with an unused utility. */
-@keyframes status-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
+/* ── Hoja de casos (F6, 07 §1.2) ─────────────────────────────────────────────
+   `<dialog>` modal a pantalla completa (sin el UA: el panel y el velo son
+   suyos). Entra 420 ms con `--curva-hoja` y velo con blur 8; sale 280 ms. Con
+   RM, fundido de 150 ms sin desplazamiento. Mientras está abierta, la página
+   de debajo no se desplaza (y el canal de la barra no cambia: el pin no se
+   mueve). Móvil: a pantalla completa menos 16 px, desde abajo, con arrastre. */
+html:has(dialog.hoja[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+  /* El `dialog` fijo no cubre el canal de la barra (barras clásicas: 15 px a
+     la derecha). El lienzo toma el color medido del velo (oscuro: (6,6,8);
+     claro: el velo sobre el papel), así el canal no queda como franja clara.
+     Con fondo propio en `html`, `body` deja de propagarlo al lienzo y conserva
+     el suyo: lo de debajo no cambia (P1-2). */
+  background-color: rgb(6 6 8);
+}
+:root[data-theme="light"]:has(dialog.hoja[open]) {
+  background-color: color-mix(in srgb, rgb(6 6 8) 62%, var(--paper));
+}
+.hoja {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  overflow: clip;
+}
+.hoja::backdrop {
+  background: transparent;
+}
+.hoja-velo {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 8, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity var(--d-hoja-salida) var(--curva-salida);
+}
+.hoja-panel {
+  --sale: calc(100% + 48px);
+  position: absolute;
+  /* Centro de la ventana, no del dialog: con barras clásicas el dialog mide
+     15 px menos (el canal) y el panel quedaría descentrado (P1-2). */
+  left: 50vw;
+  bottom: 0;
+  width: min(1120px, calc(100vw - 2 * var(--os-izq)));
+  height: calc(100svh - 48px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-m) var(--r-m) 0 0;
+  background: var(--losa);
+  box-shadow: var(--filo), var(--sombra-hoja);
+  translate: -50% var(--sale);
+  transition: translate var(--d-hoja-salida) var(--curva-hoja);
+  overflow: clip;
+}
+.hoja[data-estado="abierta"] .hoja-velo {
+  opacity: 1;
+  transition-duration: var(--d-hoja);
+}
+.hoja[data-estado="abierta"] .hoja-panel {
+  translate: -50% var(--arrastre, 0px);
+  transition-duration: var(--d-hoja);
+}
+.hoja-panel[data-arrastrando] {
+  transition: none !important;
+}
+.hoja-cab {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px 16px 48px;
+  border-bottom: 1px solid var(--losa-borde);
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+.hoja-asa {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.24);
+  translate: -50% 0;
+}
+.hoja-miga {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  font: 400 15px / 1.3 var(--font-texto, inherit);
+  color: var(--tinta);
+}
+.hoja-miga a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--tinta-2, rgba(245, 245, 247, 0.72));
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+}
+.hoja-miga a:hover {
+  color: var(--tinta);
+}
+.hoja-miga span {
+  color: rgba(245, 245, 247, 0.5);
+}
+.hoja-miga b {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hoja-acciones {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hoja-circulo {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--losa-alta);
+  color: var(--tinta);
+  cursor: pointer;
+  transition:
+    background-color var(--d-hover) var(--curva-salida),
+    scale var(--d-press) var(--curva-salida);
+}
+.hoja-circulo:hover {
+  background: #26272c;
+}
+.hoja-circulo:active {
+  scale: 0.94;
+}
+.hoja-circulo:focus-visible {
+  outline: 2px solid var(--electrico-texto);
+  outline-offset: 2px;
+}
+.hoja-circulo svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* El hilo láser: progreso de lectura del cuerpo. */
+.hoja-progreso {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background: var(--laser-nucleo);
+  box-shadow: var(--haz, 0 0 8px rgba(255, 64, 96, 0.7));
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+}
+.hoja-cuerpo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.hoja-cuerpo:focus-visible {
+  outline: 2px solid var(--electrico-texto);
+  outline-offset: -2px;
+}
+@media (max-width: 1023px) {
+  .hoja-panel {
+    --sale: 100%;
+    left: 50%;
+    width: 100%;
+    height: calc(100svh - 16px);
   }
-  70%,
-  100% {
-    transform: scale(2.6);
+  .hoja-cab {
+    padding: 24px 16px 12px 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoja .hoja-panel,
+  .hoja[data-estado="abierta"] .hoja-panel {
+    translate: -50% 0;
     opacity: 0;
+    transition: opacity 150ms linear !important;
+  }
+  .hoja .hoja-velo {
+    transition: opacity 150ms linear !important;
+  }
+  .hoja[data-estado="abierta"] .hoja-panel {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hoja-velo {
+    background: var(--losa-alta);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* ── Transiciones entre documentos (F7) ─────────────────────────────────────
+   Las navegaciones de documento completo del sitio (el `<a>` de «Siguiente
+   caso» en la página completa, «Abrir como página completa» desde la hoja, el
+   cambio de idioma) funden en Chromium; un navegador sin la API navega al
+   instante. La media del caso (`.caso-cubierta`) lleva nombre: de la hoja a su
+   página completa se transforma en su sitio (400 ms `--curva-io`); con RM, solo
+   un fundido de 200 ms. `/cv` no entra: conserva su tema y su impresión. */
+@view-transition {
+  navigation: auto;
+}
+:root:not([data-ruta="cv"]) .caso-cubierta {
+  view-transition-name: caso-media;
+}
+::view-transition-group(*) {
+  animation-duration: 400ms;
+  animation-timing-function: var(--curva-io);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 200ms;
+  }
+  ::view-transition-old(caso-media),
+  ::view-transition-new(caso-media) {
+    animation-name: none;
   }
 }

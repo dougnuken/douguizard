@@ -1,0 +1,287 @@
+{
+  "nota": "F4: mediana de 3 en frío, servidor solo (perf.spec). \"/\" y \"/about\"; F3 /about medido con el commit 9b6e76d.",
+  "/": {
+    "medidoEl": "2026-11-06T21:58:22.353Z",
+    "ruta": "/",
+    "corridasPorPerfil": 3,
+    "workers": 1,
+    "perfiles": {
+      "movil": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "dpr": 3,
+        "red": {
+          "latency": 562.5,
+          "downloadThroughput": 188743.68000000002,
+          "uploadThroughput": 86400
+        },
+        "cpu": 4
+      },
+      "escritorio": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1,
+        "red": {
+          "latency": 40,
+          "downloadThroughput": 1310720,
+          "uploadThroughput": 1310720
+        },
+        "cpu": 1
+      }
+    },
+    "resultados": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 1004,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0.0655,
+          "loadMs": 3710,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 162.6,
+            "gzipKB": 151.9
+          },
+          "imagenes": {
+            "archivos": 2,
+            "transferidoKB": 70.8
+          }
+        }
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 364,
+          "lcpElemento": "img.k1-poster /hero/199598aa-v2/losa-640.avif",
+          "cls": 0.0004,
+          "loadMs": 508,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 162.6,
+            "gzipKB": 151.9
+          },
+          "imagenes": {
+            "archivos": 5,
+            "transferidoKB": 79.5
+          }
+        }
+      }
+    }
+  },
+  "/about": {
+    "medidoEl": "2026-11-06T21:59:04.036Z",
+    "ruta": "/about",
+    "corridasPorPerfil": 3,
+    "workers": 1,
+    "perfiles": {
+      "movil": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "dpr": 3,
+        "red": {
+          "latency": 562.5,
+          "downloadThroughput": 188743.68000000002,
+          "uploadThroughput": 86400
+        },
+        "cpu": 4
+      },
+      "escritorio": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1,
+        "red": {
+          "latency": 40,
+          "downloadThroughput": 1310720,
+          "uploadThroughput": 1310720
+        },
+        "cpu": 1
+      }
+    },
+    "resultados": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 2952,
+          "lcpElemento": "img.poster /hero/199598aa-v2/movil-880.avif",
+          "cls": 0.0002,
+          "loadMs": 3733,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159.8,
+            "gzipKB": 149.2
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 52.8
+          }
+        }
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 548,
+          "lcpElemento": "img.poster /hero/199598aa-v2/cine-880.avif",
+          "cls": 0,
+          "loadMs": 519,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159.8,
+            "gzipKB": 149.2
+          },
+          "imagenes": {
+            "archivos": 2,
+            "transferidoKB": 74.4
+          }
+        }
+      }
+    }
+  },
+  "F3-/about": {
+    "medidoEl": "2026-11-06T21:56:58.682Z",
+    "ruta": "/about",
+    "corridasPorPerfil": 3,
+    "workers": 1,
+    "perfiles": {
+      "movil": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "dpr": 3,
+        "red": {
+          "latency": 562.5,
+          "downloadThroughput": 188743.68000000002,
+          "uploadThroughput": 86400
+        },
+        "cpu": 4
+      },
+      "escritorio": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1,
+        "red": {
+          "latency": 40,
+          "downloadThroughput": 1310720,
+          "uploadThroughput": 1310720
+        },
+        "cpu": 1
+      }
+    },
+    "resultados": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 3424,
+          "lcpElemento": "img.poster /hero/199598aa-v1-880.avif",
+          "cls": 0,
+          "loadMs": 4515,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159,
+            "gzipKB": 148.4
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 32.9
+          }
+        }
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 588,
+          "lcpElemento": "img.poster /hero/199598aa-v1-880.avif",
+          "cls": 0,
+          "loadMs": 567,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159,
+            "gzipKB": 148.4
+          },
+          "imagenes": {
+            "archivos": 2,
+            "transferidoKB": 46.2
+          }
+        }
+      }
+    }
+  },
+  "F4-sin-inlineCss": {
+    "/": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 2936,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0,
+          "loadMs": 4679,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 162.6,
+            "gzipKB": 151.9
+          },
+          "imagenes": {
+            "archivos": 5,
+            "transferidoKB": 162.6
+          }
+        }
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 420,
+          "lcpElemento": "img.k1-poster /hero/199598aa-v2/losa-640.avif",
+          "cls": 0,
+          "loadMs": 564,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 162.6,
+            "gzipKB": 151.9
+          },
+          "imagenes": {
+            "archivos": 5,
+            "transferidoKB": 79.5
+          }
+        }
+      }
+    },
+    "/about": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 3540,
+          "lcpElemento": "img.poster /hero/199598aa-v2/movil-880.avif",
+          "cls": 0,
+          "loadMs": 4542,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159.8,
+            "gzipKB": 149.2
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 52.8
+          }
+        }
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 568,
+          "lcpElemento": "img.poster /hero/199598aa-v2/cine-880.avif",
+          "cls": 0,
+          "loadMs": 572,
+          "js": {
+            "archivos": 8,
+            "transferidoKB": 159.8,
+            "gzipKB": 149.2
+          },
+          "imagenes": {
+            "archivos": 2,
+            "transferidoKB": 74.4
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,14 +2,21 @@ import { Archivo, Geist_Mono } from "next/font/google";
 import { htmlLang, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/chrome/SiteHeader";
+import Wordmark from "@/components/marca/Wordmark";
 import { personJsonLd } from "@/lib/personJsonLd";
+import { urbanist } from "@/app/fonts/urbanist";
+import { instrument } from "@/app/fonts/instrument";
+import { doto } from "@/app/fonts/doto";
 
 const archivo = Archivo({
   subsets: ["latin"],
   weight: ["400", "600", "800"],
   variable: "--font-archivo",
   display: "swap",
+  // F8: fuente del diseño anterior (hoy solo `/cv` y restos de rótulos); sin
+  // preload, deja de competir con el póster y la tipografía B por la red móvil.
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
@@ -17,17 +24,18 @@ const geistMono = Geist_Mono({
   weight: ["400", "500"],
   variable: "--font-geist-mono",
   display: "swap",
+  preload: false,
 });
 
 /**
  * Resolution order: stored choice → `prefers-color-scheme: light` → dark.
  * Runs before the first paint, so a stored light theme never shows a dark frame.
  */
-const THEME_INIT = `(function(){try{
+const THEME_INIT = `(function(){if(/^(\\/en)?\\/cv(\\/|$)/.test(location.pathname))document.documentElement.setAttribute("data-ruta","cv");try{
 var s=localStorage.getItem("dg-theme");
 var t=(s==="light"||s==="dark")?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
-var r=document.documentElement;r.setAttribute("data-theme",t);r.style.colorScheme=t;
-}catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");r.style.colorScheme="dark";}})();`;
+var r=document.documentElement;r.setAttribute("data-theme",t);
+}catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");}})();`;
 
 /**
  * The document both languages share.
@@ -55,7 +63,7 @@ export default function RootDocument({
   return (
     <html
       lang={htmlLang[locale]}
-      className={`${archivo.variable} ${geistMono.variable}`}
+      className={`${archivo.variable} ${geistMono.variable} ${urbanist.variable} ${instrument.variable} ${doto.variable}`}
       suppressHydrationWarning
     >
       {/* This IS the root layout's document — both `app/(es)/layout.tsx` and
@@ -70,7 +78,7 @@ export default function RootDocument({
           <a href="#main" className="skip-link">
             {t.meta.skip}
           </a>
-          <SiteHeader />
+          <SiteHeader marca={<Wordmark locale={locale} />} />
           {children}
         </LocaleProvider>
         {!lost && (

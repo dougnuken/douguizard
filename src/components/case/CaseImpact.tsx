@@ -1,142 +1,115 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, type BandProps } from "./primitives";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import DotMatrix from "@/components/sistema/DotMatrix";
+import { Band } from "./primitives";
 import type { CaseStudy, Kpi } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
 /**
- * How wide a glyph of the figures' face is, in em — Archivo ExtraBold at the
- * figures' -0.035em tracking, measured, then rounded UP per class so the
- * estimate errs on the side of fitting: digits and lowercase measure ≤0.61,
- * capitals ≤0.78, and only M, W, m, w and % run wider.
+ * Avance de un carácter de Doto en em, ya con el tracking de −0,06 em de la
+ * cifra. Doto es monoespaciada: medido en Chromium, 0,54 em por carácter con
+ * ese tracking; se usa 0,55 para que la estimación se equivoque del lado de
+ * caber. El punto de miles del ES es el
+ * `span.punto` de 0,32 em (NOTAS §6).
  */
-function advance(ch: string): number {
-  if (/[MWmw%]/.test(ch)) return 0.95;
-  if (/[A-HJ-Z]/.test(ch)) return 0.78;
-  if (/[.,:;'’!|\-fijlrtI]/.test(ch)) return 0.4;
-  return 0.62;
+function avance(ch: string, punto: boolean): number {
+  if (ch === "." && punto) return 0.32;
+  if (ch === " ") return 0.3;
+  return 0.55;
 }
 
 /**
- * The figures' size: up to 72px, and never wider than their column.
- *
- * The figures are the loudest thing on the page after the product, but the
- * copy is free text — "~1,200" and "1:2.5" share a band with "End-to-end" and
- * "Sin conexión" — and a column is 124px wide on a 320px phone. So each card
- * is a size container, and the type is capped at the width the row's widest
- * unbreakable word needs: a long value scales down instead of spilling into
- * the next column (or being clipped by its reveal mask). One cap for the whole
- * row, because the columns are equal — a "2" beside "End-to-end" is set at
- * the same size, not twice as loud.
+ * k de P1-6: el ancho en em de la cifra más larga del caso. Las cuatro losas
+ * usan el mismo k, así todas las cifras de un caso salen al mismo tamaño:
+ * `min(72px, 100cqi / k)` (48 a < 1024). Para «~1.200», k ≈ 3,05.
  */
-function figureSize(kpis: Kpi[]): string {
-  // A number and its unit ("6 años") count as one word: split, the figure
-  // would end a line and what it counts would start the next.
-  const words = (value: string) => (/^[~<>+]?\d/.test(value) ? [value] : value.split(/\s+/));
-  const widest = Math.max(
+export function anchoCifras(kpis: Pick<Kpi, "value">[]): number {
+  const k = Math.max(
     1,
-    ...kpis.flatMap((k) =>
-      words(k.value).map((word) => [...word].reduce((em, ch) => em + advance(ch), 0)),
-    ),
+    ...kpis.map((kpi) => {
+      const punto = /\d\.\d/.test(kpi.value);
+      return [...kpi.value].reduce((em, ch) => em + avance(ch, punto), 0);
+    }),
   );
-  return `min(clamp(40px, 5vw, 72px), ${(100 / widest).toFixed(2)}cqi)`;
+  return Math.round(k * 100) / 100;
 }
 
 /**
- * One KPI: the figure, what it measures, and an optional context chip.
+ * Tablero de impacto (P1-6): una losa por KPI, la primera clara, la cifra en
+ * Doto que se «enciende» (100 → 700) al entrar al 40 %, la etiqueta debajo y el
+ * `delta` como nota. Después, la frase que lee las cifras (`impact`), que es
+ * contenido del caso y no se pierde.
  *
- * The chip's leading mark used to be a filled ink dot, the same mark the
- * decisions list and the AI feature label also used — three different meanings
- * on one page, told apart by nothing. Here it is a short rule instead, and the
- * text drops to `--ink-dim`, which is where the type scale puts a caption.
- *
- * The rule hangs from the top of the chip, not its middle: a chip that wraps
- * to two lines would otherwise centre the mark between them and point at
- * neither. 0.7em down is the middle of the first line's capitals at 1.5
- * leading.
- */
-function KpiCard({ kpi, index }: { kpi: Kpi; index: number }) {
-  return (
-    <div className="@container flex min-w-0 flex-col">
-      <RevealText
-        as="div"
-        variant="mask"
-        delay={index * 0.07}
-        className="font-display text-[length:var(--kpi-size)] font-extrabold leading-[0.95] tracking-[-0.035em] text-[var(--ink)]"
-      >
-        {kpi.value}
-      </RevealText>
-      <RevealText
-        as="div"
-        variant="fade"
-        delay={index * 0.07 + 0.08}
-        className="mt-3 font-mono text-[11px] uppercase leading-[1.5] tracking-[0.18em] text-[var(--ink-muted)]"
-      >
-        {kpi.label}
-      </RevealText>
-      {kpi.delta && (
-        <span className="mt-2 flex gap-2 font-mono text-[10px] uppercase leading-[1.5] tracking-[0.15em] text-[var(--ink-dim)]">
-          <span aria-hidden className="mt-[0.7em] h-px w-2 shrink-0 bg-[var(--ink-dim)]" />
-          {kpi.delta}
-        </span>
-      )}
-    </div>
-  );
-}
-
-/**
- * The market-facing star: the numbers, then the one sentence that reads them.
- *
- * Figures first. They are the proof, they are what a reader scanning the page
- * stops on, and set at 72px they are the loudest thing after the product — so
- * they open the band, right under its eyebrow, instead of waiting below a
- * five-line sentence set larger than they were. The sentence follows at the
- * lead step as their reading: a reader who stops at the figures has the
- * result, one who reads on gets what it meant.
- *
- * A side project that never shipped has a premise rather than results, so its
- * band is titled as one ("The idea") — the sentence is the same slot, but it
- * is not dressed as an outcome.
+ * Un producto propio que no salió (`kind: "side"`) tiene una premisa, no
+ * resultados: el `h2` (oculto) dice «La idea».
  */
 export default function CaseImpact({
   impact,
   kpis,
   kind,
-  tone,
+  id,
 }: {
   impact: string;
   kpis?: Kpi[];
   kind?: CaseStudy["kind"];
-  tone?: BandProps["tone"];
+  id?: string;
+  tone?: unknown;
 }) {
   const t = useDict().case;
-  // No grid at all when a case has no verified figures. An empty rule across
-  // the page reads as something that failed to load.
   const figures = kpis && kpis.length > 0 ? kpis : undefined;
+  const tablero = useRef<HTMLUListElement>(null);
+  const [encendido, setEncendido] = useState(false);
+
+  useEffect(() => {
+    const el = tablero.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setEncendido(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setEncendido(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const tituloId = id ? `${id}-h` : undefined;
   return (
-    <Band tone={tone} rule="t">
-      <EyebrowHeading>{kind === "side" ? t.idea : t.impact}</EyebrowHeading>
+    <Band id={id} labelledBy={tituloId}>
+      <h2 id={tituloId} className="sr-only">
+        {kind === "side" ? t.idea : t.impact}
+      </h2>
 
       {figures && (
-        <div
-          className="hairline-b mt-8 grid grid-cols-2 gap-x-6 gap-y-10 pb-10 md:mt-10 md:grid-cols-4 md:gap-x-8 md:pb-12"
-          style={{ "--kpi-size": figureSize(figures) } as CSSProperties}
+        <ul
+          ref={tablero}
+          className="tablero-caso"
+          data-encendido={encendido ? "" : undefined}
+          style={{ "--k": anchoCifras(figures) } as CSSProperties}
         >
           {figures.map((kpi, i) => (
-            <KpiCard key={kpi.label} kpi={kpi} index={i} />
+            <li
+              key={kpi.label}
+              className={i === 0 ? "kpi-caso clara" : "kpi-caso"}
+              style={{ "--i": i } as CSSProperties}
+            >
+              <DotMatrix valor={kpi.value} tamano="xl" />
+              <span className="kpi-et">{kpi.label}</span>
+              {kpi.delta && <span className="micro">{kpi.delta}</span>}
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
-      <RevealText
-        as="p"
-        variant="mask"
-        className="mt-8 max-w-[760px] font-display text-[clamp(1.25rem,2.2vw,2rem)] font-medium leading-[1.3] tracking-[-0.015em] text-[var(--ink)] md:mt-10"
-      >
-        {impact}
-      </RevealText>
+      <p className="impacto-lectura">{impact}</p>
     </Band>
   );
 }

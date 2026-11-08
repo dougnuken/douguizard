@@ -13,15 +13,22 @@ import { StoryFilmPlayer, StoryPicture } from "./StoryMedia";
  * their own.
  */
 
-/** The 16:9 cover, straight under the hero, at the full media measure. */
-export function CaseCover({ cover }: { cover: StoryFigure }) {
+/**
+ * The 16:9 cover, straight under the hero: a still in a full-bleed slab, the
+ * radius on the container (F7 P1-2). Its sr-only heading goes when the case
+ * already has a Product block.
+ */
+export function CaseCover({ cover, heading = true }: { cover: StoryFigure; heading?: boolean }) {
+  const t = useDict().case;
   return (
-    <Band tone="raised" rule="t" wide className="py-10 md:py-14">
-      <h2 className="sr-only">{useDict().case.product}</h2>
-      <div className="overflow-hidden rounded-xl border border-[var(--line-strong)]">
-        <StoryPicture figure={cover} sizes="(max-width: 1479px) 92vw, 1344px" priority />
-      </div>
-    </Band>
+    <>
+      {heading && <h2 className="sr-only">{t.product}</h2>}
+      <figure className="caso-cover-fig">
+        <div className="caso-cover caso-cover-libre">
+          <StoryPicture figure={cover} sizes="(max-width: 1023px) 92vw, 1320px" priority />
+        </div>
+      </figure>
+    </>
   );
 }
 
@@ -31,7 +38,7 @@ export function CaseFilm({ film, tone }: { film: StoryFilm; tone?: BandProps["to
   return (
     <Band tone={tone} rule="t" wide>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 lg:gap-8">
-        <FadeIn className="kicker text-[var(--ink-dim)] lg:pt-1.5">{t.walkthrough}</FadeIn>
+        <FadeIn className="ceja lg:pt-1.5">{t.walkthrough}</FadeIn>
         <div className="mx-auto w-full max-w-[520px] md:max-w-none lg:col-span-3">
           <StoryFilmPlayer film={film} />
         </div>
@@ -47,14 +54,10 @@ function Figure({ figure, sizes }: { figure: StoryFigure; sizes: string }) {
   return (
     <FadeIn>
       <figure className="m-0">
-        <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
+        <div className="caso-losa-media caso-losa-media--m">
           <StoryPicture figure={figure} sizes={sizes} />
         </div>
-        {figure.caption && (
-          <figcaption className="mt-3 text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">
-            {figure.caption}
-          </figcaption>
-        )}
+        {figure.caption && <figcaption className="pie-caso">{figure.caption}</figcaption>}
       </figure>
     </FadeIn>
   );

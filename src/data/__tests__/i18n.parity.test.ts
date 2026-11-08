@@ -3,7 +3,7 @@ import { caseStudies, getCaseStudies, getCaseStudy } from "@/data/work";
 import { workEs } from "@/data/es/work";
 import { experiencesEs, skillsEs } from "@/data/es/cv";
 import { experiences, getCv, skills } from "@/data/cv";
-import { getSections, sections } from "@/data/sections";
+import { secciones } from "@/data/home";
 import { getSite } from "@/data/site";
 import { getCoverLetter } from "@/data/coverLetter";
 import { getTestimonial, testimonials } from "@/data/testimonials";
@@ -159,8 +159,11 @@ describe("site, sections, letter and quotes", () => {
     expect(getSite("en").cv.path).toBe("/en/cv");
   });
 
-  it("panel ids and numbers survive the switch, so an anchor does too", () => {
-    expect(getSections("es").map((s) => [s.id, s.num])).toEqual(sections.map((s) => [s.id, s.num]));
+  // F3: `sections.ts` se fue con el shell; los ids del home son `home.secciones`,
+  // una sola lista para los dos idiomas (en inglés), así que `/#work` → `/en#work`.
+  it("section ids survive the switch, so an anchor does too", () => {
+    expect([...secciones]).toEqual(["work", "about", "experience", "contact"]);
+    for (const id of secciones) expect(id).toMatch(/^[a-z]+$/);
   });
 
   it("the letter is written in both", () => {

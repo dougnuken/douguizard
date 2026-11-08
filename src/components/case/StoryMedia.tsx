@@ -78,7 +78,7 @@ export function StoryFilmPlayer({ film, className = "" }: { film: StoryFilm; cla
 
   return (
     <figure className={`m-0 ${className}`}>
-      <div className="relative overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
+      <div className="caso-losa-media relative">
         {source ? (
           <>
             <video
@@ -117,9 +117,7 @@ export function StoryFilmPlayer({ film, className = "" }: { film: StoryFilm; cla
         )}
       </div>
       <VideoControlRow isPlaying={isPlaying} onToggle={toggle} playLabel={t.play} pauseLabel={t.pause} />
-      {film.caption && (
-        <figcaption className="mt-3 text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">{film.caption}</figcaption>
-      )}
+      {film.caption && <figcaption className="pie-caso">{film.caption}</figcaption>}
     </figure>
   );
 }

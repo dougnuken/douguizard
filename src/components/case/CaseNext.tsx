@@ -4,65 +4,81 @@ import Link from "next/link";
 import { getCaseMeta, type CaseStudy } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { Band, FadeIn, SlashLabel, type BandProps } from "./primitives";
+import DotMatrix from "@/components/sistema/DotMatrix";
+import Boton from "@/components/sistema/Boton";
+import Losa from "@/components/sistema/Losa";
+import { FadeIn } from "./primitives";
 
 /**
- * The way onward.
+ * Siguiente caso (02 §5.3, punto 12; D19: sigue `num`) y «Hablemos»: la losa
+ * azul del siguiente con sus cifras en Doto, y a su lado una losa clara para
+ * escribir.
  *
- * Hover changes weight and underline, never hue: in a two-colour system a
- * colour shift has nowhere to go, and the type is large enough that a change of
- * weight reads from across the room.
+ * En la página completa el enlace es un `<a>` (documento nuevo, con su
+ * `@view-transition`); en la hoja, un `<Link replace>` que cambia de caso sin
+ * apilar historial (F6).
  */
-export default function CaseNext({ next, tone }: { next: CaseStudy; tone?: BandProps["tone"] }) {
-  const t = useDict().case;
+export default function CaseNext({ next, enHoja = false }: { next: CaseStudy; enHoja?: boolean; tone?: unknown }) {
+  const dict = useDict();
+  const t = dict.case;
   const locale = useLocale();
-  // The line over the title says who the work was for — unless that IS the
-  // title ("BANCO DE OCCIDENTE" over "Banco de Occidente"), where it says
-  // what kind of work it was instead, the same rule the hero's kicker keeps.
-  const client = getCaseMeta(next.slug, locale).client;
-  const over = client.toLowerCase() === next.project.toLowerCase() ? next.category : client;
-  const cut = next.project.lastIndexOf(" ");
-  const head = next.project.slice(0, cut + 1);
-  const tail = next.project.slice(cut + 1);
+  const meta = getCaseMeta(next.slug, locale);
+  const cifras = (next.kpis ?? []).slice(0, 3);
+  const href = localePath(locale, `/work/${next.slug}`);
+  const nombre = (
+    <>
+      <span translate="no">{next.project}</span>
+      <span className="sr-only">{t.readCase}</span>
+    </>
+  );
+
   return (
-    <Band tone={tone} rule="t">
-      <FadeIn>
-        <SlashLabel className="mb-8 text-[11px] text-[var(--ink-muted)]">{t.next}</SlashLabel>
-      </FadeIn>
-
-      <Link href={localePath(locale, `/work/${next.slug}`)} className="group block text-inherit no-underline">
-        <FadeIn>
-          <div
-            className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-[var(--ink-muted)] transition-transform duration-500 group-hover:translate-x-2"
-            style={{ transitionTimingFunction: "var(--ease-out)" }}
-          >
-            {over}
+    <section className="bloque" aria-labelledby="caso-siguiente-h" data-siguiente="">
+      <h2 id="caso-siguiente-h" className="ceja">
+        {t.next}
+      </h2>
+      <FadeIn className="sig-fila">
+        <Losa as="article" superficie="azul" radio="m" className="sig-card">
+          <div>
+            <p className="ceja">
+              <span translate="no">{meta.client}</span> · {meta.year}
+            </p>
+            <h3 className="t-losa">
+              {enHoja ? (
+                <Link href={href} replace scroll={false} className="enlace-tarjeta">
+                  {nombre}
+                </Link>
+              ) : (
+                <a href={href} className="enlace-tarjeta">
+                  {nombre}
+                </a>
+              )}
+            </h3>
           </div>
-
-          <h2
-            className="mb-8 font-display text-[clamp(44px,11vw,160px)] font-semibold leading-[0.9] tracking-[-0.04em] text-[var(--ink)] transition-[font-weight] duration-300 group-hover:font-extrabold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[12px]"
-          >
-            {/* The arrow is bound to the last word, so it never wraps onto a line
-                of its own; it is decoration, so the heading reads as the name. */}
-            {head}
-            <span className="whitespace-nowrap">
-              {tail}
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-500 group-hover:translate-x-4"
-                style={{ transitionTimingFunction: "var(--ease-out)" }}
-              >
-                {" "}
-                →
-              </span>
-            </span>
-          </h2>
-
-          <p className="max-w-[720px] text-lg leading-[1.5] text-[var(--ink-muted)]">
-            {next.tagline}
+          {cifras.length > 0 && (
+            <div role="group" aria-label={cifras.map((k) => `${k.value} ${k.label}`).join(", ")}>
+              <div className="sig-cifras" aria-hidden="true">
+                {cifras.map((k) => (
+                  <DotMatrix key={k.label} valor={k.value} tamano="l" />
+                ))}
+              </div>
+            </div>
+          )}
+        </Losa>
+        <Losa superficie="clara" radio="m" className="sig-contacto">
+          <p className="t-losa" style={{ color: "var(--tinta-osc)" }}>
+            {t.nextLine}
           </p>
-        </FadeIn>
-      </Link>
-    </Band>
+          <div className="sig-cta">
+            <Boton variante="tinta" href={localePath(locale, "/#contact")}>
+              {dict.sistema.nav.hablemos}
+            </Boton>
+            <Boton variante="linea-osc" href={localePath(locale, "/work")}>
+              {t.allWork}
+            </Boton>
+          </div>
+        </Losa>
+      </FadeIn>
+    </section>
   );
 }

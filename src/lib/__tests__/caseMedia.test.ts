@@ -39,11 +39,11 @@ describe("planCaseMedia — the invariant", () => {
 });
 
 describe("planCaseMedia — the rules", () => {
-  it("a browser walkthrough opens alone and leaves every still for later", () => {
+  it("a browser walkthrough leaves its first still as the cover and every other for later", () => {
     const plan = planCaseMedia({ galleryKind: "browser", video: clip, gallery: shots(6) });
     expect(plan.videoKind).toBe("browser");
-    expect(plan.lead).toHaveLength(0);
-    expect(plan.rest).toHaveLength(6);
+    expect(plan.lead.map((s) => s.num)).toEqual([1]);
+    expect(plan.rest).toHaveLength(5);
   });
 
   it("a phone walkthrough shares one row of handsets with the first stills", () => {

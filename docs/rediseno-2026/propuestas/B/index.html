@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Doug Vargas — Head of Product · Product Designer (UX/UI)</title>
+<meta name="description" content="Doug Vargas, Head of Product en Naowee y diseñador de producto que construye en código. Antes, líder técnico de Andes, el sistema de diseño de Mercadolibre.">
+<meta name="theme-color" content="#060608">
+<!--
+  Propuesta B · «Cine → Sistema operativo» · douguizard 2026
+  Acto 1: retrato a pantalla completa tras vidrio estriado oblicuo (el cursor abre el vidrio).
+  Acto 2: scroll anclado con scrub (GSAP ScrollTrigger): la foto se encoge a su losa, el claim se vuelve losa
+          blanca y el tablero se arma alrededor; la línea láser de la foto se queda como hilo del tablero.
+  Acto 3: el OS: rail de acciones, pills de secciones, losas; los casos se abren como hoja (Naowee implementado).
+  Parámetros de prueba: ?lang=en · ?rm=1 (simula movimiento reducido) · ?captura=1 (sin snap ni entrada).
+  Servir con un servidor estático (Chrome no sube una imagen file:// a WebGL; sin servidor queda el póster CSS).
+-->
+<script>
+  (function () {
+    var d = document.documentElement, q = location.search;
+    var rm = /[?&]rm=1/.test(q) || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    d.classList.add("js");
+    if (rm) d.classList.add("rm");
+    if (!rm && matchMedia("(min-width: 1024px)").matches) d.classList.add("cine");
+    if (/[?&]captura=1/.test(q)) d.classList.add("captura");
+    if (/[?&]lang=en/.test(q)) d.lang = "en";
+  })();
+</script>
+<link rel="preload" as="image" href="../../retratos-hf/199598aa.jpg" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="../fonts/urbanist-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/doto-latin.woff2" crossorigin>
+<style>
+/* ── Fuentes · OFL. Local primero (propuestas/fonts), Google Fonts como segunda fuente ───────────────── */
+@font-face { font-family: "Urbanist"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/urbanist-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/urbanist/v18/L0x-DF02iFML4hGCyMqlbS0.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Sans"; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url(../fonts/instrument-sans-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2) format("woff2"); }
+@font-face { font-family: "Doto"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/doto-latin.woff2) format("woff2"), url(https://fonts.gstatic.com/s/doto/v3/t5tvIRMbNJ6TamLgVg.woff2) format("woff2"); }
+
+@property --m  { syntax: "<number>"; inherits: true; initial-value: 1; }   /* material de K2: 0 vidrio oscuro → 1 losa blanca */
+@property --mt { syntax: "<number>"; inherits: true; initial-value: 1; }   /* tinta de K2: cambia de golpe en el punto medio (nunca 1:1) */
+@property --dw { syntax: "<number>"; inherits: true; initial-value: 700; } /* peso del dot-matrix: 100 apagado → 700 encendido */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+  /* color · superficies (01 §2.1) */
+  --vacio: #060608; --losa: #111214; --losa-alta: #1A1B1F; --losa-borde: rgba(255, 255, 255, .08);
+  --claro: #F2F2F4; --niebla: #E4E2EC; --blanco: #FFFFFF;
+  /* color · texto */
+  --tinta: #F5F5F7; --tinta-2: #A1A1AB; --tinta-3: #8A8A95; --tinta-osc: #0E0E12; --tinta-osc-2: #55555F;
+  /* color · acentos. Materiales (rellenos): azul y magenta. Luz (solo línea, nunca relleno ni texto): láser. */
+  --electrico: #2B56F3; --electrico-texto: #5B7CFF; --resplandor: #361976;
+  --azul-etiqueta: #E3EAFF; --magenta-etiqueta: #F0B8D6; --magenta-etiqueta-base: #FCE6F1;
+  --laser: #FF3344; --laser-nucleo: #FFE4E6; --laser-halo: rgba(255, 51, 68, .45);
+  --verde-osc: #0E6B3D;  /* «647 pruebas en verde» de olbo, sobre losa niebla (5,14:1) */
+  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, .86) 0%, rgba(18, 19, 20, .86) 10% 90%, rgba(58, 59, 63, .86) 100%);
+  --tinta-2-vidrio: #C2C2CA;   /* secundario sobre vidrio que monta en la foto (AA en el peor punto) */
+  --vidrio-plano: rgba(17, 18, 20, .78);
+  --foco: var(--electrico-texto);
+
+  /* espacio (base 4/8 · Refactoring UI) */
+  --e-4: 4px; --e-8: 8px; --e-12: 12px; --e-16: 16px; --e-24: 24px; --e-32: 32px; --e-48: 48px; --e-64: 64px; --e-96: 96px; --e-128: 128px;
+
+  /* tipografía (01 §4.4) */
+  --f-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --f-texto: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --f-dot: "Doto", ui-monospace, monospace;
+  --t-12: 12px; --t-14: 14px; --t-16: 16px; --t-18: 18px; --t-20: 20px; --t-24: 24px; --t-30: 30px;
+  --t-36: 36px; --t-48: 48px; --t-60: 60px; --t-72: 72px; --t-96: 96px; --t-120: 120px;
+
+  /* forma */
+  --r-xl: 48px; --r-m: 32px; --r-s: 24px; --r-xs: 16px; --r-pill: 999px;
+  --borde-1: 1px;
+  --boton: 56px; --boton-s: 48px; --toque: 44px; --pill-alto: 40px; --rail: 64px;
+  --gap: 16px;
+  --cabecera: 88px;   /* 24 margen + 40 pill + 24 aire: donde arranca la rejilla */
+  --os-izq: 112px;    /* 24 + rail 64 + 24 */
+  --fila: clamp(96px, calc((100svh - var(--cabecera) - var(--gap) - 5 * var(--gap)) / 6), 128px);
+
+  /* opacidades fijas */
+  --o-05: .05; --o-10: .1; --o-20: .2; --o-40: .4; --o-60: .6; --o-80: .8;
+
+  /* sombras: del color de la losa (bloom), y una para lo que flota sobre foto */
+  --bloom-azul: 0 24px 64px -12px rgba(43, 86, 243, .35);
+  --bloom-magenta: 0 24px 64px -12px rgba(161, 47, 106, .38);
+  --sombra-flota: 0 10px 24px rgba(0, 0, 0, .45);
+  --sombra-hoja: 0 -24px 64px rgba(0, 0, 0, .55);
+  --filo: inset 0 1px 0 rgba(255, 255, 255, .10), inset 0 0 0 1px rgba(255, 255, 255, .06);
+  --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 0 0 1px rgba(255, 255, 255, .10), inset 0 0 48px rgba(255, 255, 255, .16);
+
+  /* motion (emil-design-eng) */
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+  --d-press: 120ms; --d-hover: 200ms; --d-ui: 240ms; --d-hoja: 420ms; --d-hoja-salida: 280ms; --d-entrada: 600ms;
+}
+@media (max-width: 1023px) {
+  :root { --r-xl: 36px; --r-m: 28px; --r-s: 20px; --gap: 12px; --boton: 48px; }
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--vacio); -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.sprite { position: absolute; width: 0; height: 0; }
+.mt-8 { margin-top: var(--e-8); }
+.mt-12 { margin-top: var(--e-12); }
+.boton-toque { min-height: var(--toque); }
+body {
+  margin: 0; background: var(--vacio); color: var(--tinta);
+  font: 400 var(--t-16)/1.5 var(--f-texto); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, p, ol, ul, figure, blockquote { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+.saltar { position: fixed; z-index: 100; left: var(--e-16); top: var(--e-16); padding: var(--e-12) var(--e-16); border-radius: var(--r-pill);
+  background: var(--blanco); color: var(--tinta-osc); font-weight: 500; transform: translateY(-200%); }
+.saltar:focus-visible { transform: none; }
+.ico { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Grano + retícula de puntos del fondo (ref-3) */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, .06) 1px, transparent 1.4px) 0 0 / 8px 8px;
+  -webkit-mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%); mask-image: radial-gradient(80% 60% at 50% 0%, #000 0%, transparent 75%);
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: var(--o-05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+}
+.resplandor { position: absolute; left: 0; right: 0; top: 0; height: 640px; z-index: 0; pointer-events: none;
+  background: radial-gradient(60% 100% at 55% 0%, rgba(54, 25, 118, .45) 0%, rgba(28, 14, 73, .2) 45%, transparent 75%); }
+
+/* ── Tipos ─────────────────────────────────────────────────────────────────────────────────────────── */
+.dot { font-family: var(--f-dot); font-variation-settings: "ROND" 100, "wght" var(--dw); font-weight: 700;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.04em; line-height: 1; transition: --dw var(--d-hover) var(--ease-out); }
+.dot-xl { font-size: var(--t-72); letter-spacing: -0.06em; }
+.dot .punto { position: relative; display: inline-block; width: .32em; -webkit-text-fill-color: transparent; }
+.dot .punto::after { content: ""; position: absolute; left: .1em; bottom: .17em; width: .1em; height: .1em; border-radius: 50%; background: currentColor; }
+.dot-l  { font-size: var(--t-48); }
+.dot-m  { font-size: var(--t-30); letter-spacing: -0.03em; }
+.dot-s  { font-size: var(--t-24); letter-spacing: -0.03em; }
+.ceja { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.t-losa { font: 600 var(--t-24)/1.2 var(--f-display); letter-spacing: -0.01em; color: var(--tinta); text-wrap: balance; }
+.apoyo { font-size: var(--t-16); line-height: 1.5; color: var(--tinta-2); max-width: 34em; }
+.etiqueta { font-size: var(--t-14); line-height: 1.3; letter-spacing: .01em; color: var(--tinta-2); }
+.micro { font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-3); }
+.cifra { display: grid; gap: var(--e-8); }
+
+/* ── Botones y pills ───────────────────────────────────────────────────────────────────────────────── */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e-8); min-height: var(--boton-s); padding: 0 var(--e-24);
+  border-radius: var(--r-pill); font: 500 var(--t-14)/1.3 var(--f-texto); letter-spacing: .005em; white-space: nowrap;
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), border-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.boton:active { scale: .97; }
+.boton-blanco { background: var(--blanco); color: var(--tinta-osc); }
+.boton-tinta { background: var(--tinta-osc); color: var(--blanco); }
+.boton-linea { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .24); color: var(--tinta); }
+.boton-linea-osc { box-shadow: inset 0 0 0 1px rgba(14, 14, 18, .24); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) {
+  .boton-blanco:hover { background: var(--niebla); }
+  .boton-tinta:hover { background: #26262E; }
+  .boton-linea:hover { background: rgba(255, 255, 255, .08); }
+  .boton-linea-osc:hover { background: rgba(14, 14, 18, .06); }
+}
+.circulo { display: grid; place-items: center; width: var(--boton); height: var(--boton); border-radius: 50%; flex: none;
+  background: var(--blanco); color: var(--tinta-osc); transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.circulo .ico { transition: rotate var(--d-hover) var(--ease-out); }
+.circulo-osc { background: var(--losa-alta); color: var(--tinta); }
+
+/* ── Cabecera fija ─────────────────────────────────────────────────────────────────────────────────── */
+.barra { position: fixed; z-index: 30; left: 0; right: 0; top: var(--e-24); height: var(--pill-alto); padding: 0 var(--e-24);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); pointer-events: none; }
+.barra > * { pointer-events: auto; }
+.marca { display: inline-flex; align-items: center; gap: var(--e-12); height: var(--pill-alto); padding: 0 var(--e-16) 0 var(--e-4);
+  border-radius: var(--r-pill); background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: var(--filo), var(--sombra-flota); font: 600 var(--t-16)/1 var(--f-display); letter-spacing: -0.01em; }
+.marca-d { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blanco); color: var(--tinta-osc); font: 700 var(--t-16)/1 var(--f-display); }
+.pills { position: absolute; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: var(--e-4); height: var(--pill-alto); padding: 0 var(--e-4); border-radius: var(--r-pill);
+  background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%); box-shadow: var(--filo), var(--sombra-flota); }
+.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-16); border-radius: var(--r-pill); color: var(--tinta-2-vidrio);
+  font: 500 var(--t-14)/1 var(--f-texto); letter-spacing: .005em; transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.pill[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+@media (hover: hover) and (pointer: fine) { .pill:not([aria-current="true"]):hover { color: var(--tinta); background: rgba(255, 255, 255, .06); } }
+.acciones { display: flex; align-items: center; gap: var(--e-8); }
+.idioma { display: flex; height: var(--pill-alto); padding: var(--e-4); border-radius: var(--r-pill); background: var(--vidrio-oscuro);
+  -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: var(--filo), var(--sombra-flota); }
+.idioma a { display: grid; place-items: center; min-width: 40px; height: 32px; padding: 0 var(--e-8); border-radius: var(--r-pill);
+  font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2-vidrio); transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out); }
+.idioma a[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+.hablemos { height: var(--pill-alto); min-height: 0; background: var(--electrico); color: var(--blanco); box-shadow: 0 8px 24px -8px rgba(43, 86, 243, .6); }
+@media (hover: hover) and (pointer: fine) { .hablemos:hover { background: #4569F5; } }
+
+/* ── Rail de acciones (desktop) ────────────────────────────────────────────────────────────────────── */
+.rail { position: fixed; z-index: 30; left: var(--e-24); top: var(--cabecera); width: var(--rail); padding: var(--e-8);
+  display: flex; flex-direction: column; align-items: center; gap: var(--e-8); border-radius: var(--r-pill);
+  background: var(--losa); box-shadow: var(--filo), var(--sombra-flota); }
+.rail-sep { width: 24px; height: 1px; background: var(--losa-borde); margin: var(--e-4) 0; }
+.rail a, .rail button { position: relative; display: grid; place-items: center; width: var(--boton-s); height: var(--boton-s); border-radius: 50%;
+  color: var(--tinta-2); font: 600 var(--t-14)/1 var(--f-texto); letter-spacing: -0.01em;
+  transition: background-color var(--d-hover) var(--ease-out), color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.rail .rail-accion { background: var(--losa-alta); color: var(--tinta); }
+.rail a:active, .rail button:active { scale: .94; }
+@media (hover: hover) and (pointer: fine) { .rail a:not(.rail-accion):hover, .rail button:hover { background: var(--losa-alta); color: var(--tinta); } }
+.rail [data-tip]::after { content: attr(data-tip); position: absolute; left: calc(100% + var(--e-12)); top: 50%; translate: -4px -50%; opacity: 0; pointer-events: none;
+  white-space: nowrap; padding: var(--e-8) var(--e-12); border-radius: var(--r-pill); background: var(--blanco); color: var(--tinta-osc);
+  font: 500 var(--t-14)/1 var(--f-texto); transition: opacity 125ms var(--ease-out), translate 125ms var(--ease-out); }
+.rail [data-tip]:hover::after, .rail [data-tip]:focus-visible::after { opacity: 1; translate: 0 -50%; }
+
+/* ── Escena (actos 1–3) ────────────────────────────────────────────────────────────────────────────── */
+main { position: relative; z-index: 1; }
+.escena { position: relative; min-height: 100svh; touch-action: pan-y pinch-zoom; padding: var(--cabecera) var(--e-24) var(--gap) var(--os-izq); }
+.foto { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.foto-clip { position: absolute; inset: 0; overflow: hidden; }
+.poster-atm { position: absolute; inset: -10%; width: 120%; height: 120%; object-fit: cover; object-position: 50% 42%;
+  filter: blur(40px) brightness(.5) saturate(1.1); }
+.poster { position: absolute; left: 62%; top: -13.34svh; height: 130svh; width: auto; max-width: none; transform: translateX(-50%); }
+.vidrio-css { position: absolute; inset: 0; opacity: .9;
+  background: repeating-linear-gradient(var(--ang-css, 102deg), rgba(255, 255, 255, .14) 0 1px, rgba(255, 255, 255, .03) 2px 8px, transparent 12px 44px, rgba(0, 0, 0, .22) 56px 64px); }
+.foto canvas { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity var(--d-hover) var(--ease-out); }
+.foto canvas.on { opacity: 1; }
+.foto.gl .poster, .foto.gl .poster-atm, .foto.gl .vidrio-css { visibility: hidden; }
+.velo { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(6, 6, 8, .78) 0%, rgba(6, 6, 8, .5) 30%, rgba(6, 6, 8, 0) 52%), linear-gradient(0deg, rgba(6, 6, 8, .5) 0%, rgba(6, 6, 8, 0) 30%); }
+.laser { position: absolute; left: 0; top: 0; width: 100%; height: 1px; z-index: 2; pointer-events: none; transform: translateY(41svh); transform-origin: var(--gx, 60%) 50%;
+  background: var(--laser-nucleo); box-shadow: 0 0 4px 1px var(--laser), 0 0 16px 3px var(--laser-halo);
+  --gx: 60%; --gr: 0px;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--gx) - var(--gr)), transparent calc(var(--gx) - var(--gr) * .55), transparent calc(var(--gx) + var(--gr) * .55), #000 calc(var(--gx) + var(--gr)), #000 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--gx) - var(--gr)), transparent calc(var(--gx) - var(--gr) * .55), transparent calc(var(--gx) + var(--gr) * .55), #000 calc(var(--gx) + var(--gr)), #000 100%); }
+.nombre-xl { position: absolute; z-index: 2; left: var(--e-24); top: max(var(--cabecera), calc(41svh - 1.84em - var(--e-16))); transform-origin: 0 0; pointer-events: none; display: none;
+  font: 600 var(--t-120)/.92 var(--f-display); letter-spacing: -0.045em; color: var(--tinta); }
+.nombre-xl .linea { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+.nombre-xl .linea > span { display: block; }
+@media (max-height: 800px) { .nombre-xl { font-size: var(--t-96); } }
+.indicador { position: absolute; z-index: 4; right: var(--e-24); top: 50%; width: 2px; height: var(--e-128); translate: 0 -50%; display: none;
+  background: rgba(255, 255, 255, .24); }
+.indicador-txt { position: absolute; right: 0; top: calc(100% + var(--e-12)); font-size: var(--t-12); line-height: 1.4; letter-spacing: .02em; color: var(--tinta-2); white-space: nowrap;
+  transition: opacity var(--d-hover) var(--ease-out); }
+.indicador i { position: absolute; inset: 0; transform-origin: 50% 0; transform: scaleY(var(--p, 0)); background: var(--laser); box-shadow: 0 0 8px var(--laser-halo); }
+.cine .nombre-xl, .cine .indicador { display: block; }
+html:not(.cine) .velo, html:not(.cine) .laser { display: none; }
+
+/* ── Rejilla del OS ────────────────────────────────────────────────────────────────────────────────── */
+.os { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(var(--fila), auto); gap: var(--gap);
+  max-width: 1320px; }
+.os-top { grid-template-areas:
+  "k2 k2 k2 k2 k2 k1 k1 k1 k1 k4 k4 k4"
+  "k2 k2 k2 k2 k2 k1 k1 k1 k1 k4 k4 k4"
+  "k2 k2 k2 k2 k2 k1 k1 k1 k1 k4 k4 k4"
+  "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"
+  "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"
+  "k3 k3 k3 k3 k3 k1 k1 k1 k1 k5 k5 k5"; grid-template-rows: repeat(6, minmax(var(--fila), auto)); }
+.os-resto { margin: 0 var(--e-24) 0 var(--os-izq); padding-bottom: var(--e-96); grid-template-areas:
+  "k7 k7 k7 k7 k8 k8 k8 k8 k9 k9 k9 k9"
+  "k7 k7 k7 k7 k8 k8 k8 k8 k9 k9 k9 k9"
+  "k7 k7 k7 k7 k8 k8 k8 k8 k10 k10 k10 k10"
+  "k7 k7 k7 k7 k8 k8 k8 k8 k10 k10 k10 k10"
+  "k11 k11 k11 k11 k11 k11 k11 k11 k12 k12 k12 k12"
+  "k11 k11 k11 k11 k11 k11 k11 k11 k12 k12 k12 k12"
+  "k13 k13 k13 k13 k14 k14 k14 k14 k15 k15 k15 k15"
+  "k13 k13 k13 k13 k14 k14 k14 k14 k15 k15 k15 k15"
+  "k13 k13 k13 k13 k14 k14 k14 k14 k15 k15 k15 k15"
+  "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"
+  "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"
+  "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"; }
+.k1 { grid-area: k1; } .k2 { grid-area: k2; } .k3 { grid-area: k3; } .k4 { grid-area: k4; } .k5 { grid-area: k5; }
+.k7 { grid-area: k7; } .k8 { grid-area: k8; } .k9 { grid-area: k9; } .k10 { grid-area: k10; } .k11 { grid-area: k11; } .k12 { grid-area: k12; }
+.k13 { grid-area: k13; } .k14 { grid-area: k14; } .k15 { grid-area: k15; } .k16 { grid-area: k16; } .k17 { grid-area: k17; }
+@media (min-width: 1464px) { .escena { padding-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } .os-resto { margin-left: max(var(--os-izq), calc((100vw - 1320px) / 2)); } }
+
+/* ── Losas ─────────────────────────────────────────────────────────────────────────────────────────── */
+.tarjeta { position: relative; isolation: isolate; border-radius: var(--r-xl); padding: var(--e-32); overflow: hidden; min-width: 0;
+  transition: translate var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+.tarjeta::before { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; background: var(--vacio); opacity: 0; pointer-events: none;
+  transition: opacity var(--d-ui) var(--ease-out); }
+.losa { background: var(--losa); box-shadow: var(--filo); }
+.losa-clara { background: var(--claro); color: var(--tinta-osc); }
+.losa-clara .ceja, .losa-clara .apoyo, .losa-clara .etiqueta { color: var(--tinta-osc-2); }
+.losa-clara .t-losa { color: var(--tinta-osc); }
+.losa-niebla { background: var(--niebla); color: var(--tinta-osc); }
+.losa-niebla .ceja, .losa-niebla .apoyo, .losa-niebla .etiqueta { color: var(--tinta-osc-2); }
+.losa-niebla .t-losa { color: var(--tinta-osc); }
+.losa-azul { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-azul);
+  background: linear-gradient(to top, #7C7FD0 0%, transparent 22%), radial-gradient(120% 75% at 50% 46%, #0C1266 0%, #1A2FB8 46%, #3F6BD9 78%, #6F98E6 100%); }
+.losa-magenta { color: var(--blanco); box-shadow: var(--filo-jelly), var(--bloom-magenta);
+  background: linear-gradient(to top, #A84D86 0%, transparent 26%), radial-gradient(110% 90% at 48% 45%, #2A0D2C 0%, #5E1640 40%, #8E1F55 70%, #B4407E 100%); }
+.losa-azul .t-losa, .losa-magenta .t-losa { color: var(--blanco); }
+.losa-azul .etiqueta { color: var(--azul-etiqueta); }
+.losa-magenta .apoyo { color: var(--magenta-etiqueta); }
+.losa-magenta .etiqueta { color: var(--magenta-etiqueta-base); }
+.losa-azul .ceja, .losa-magenta .ceja { color: var(--blanco); }
+.enlace-tarjeta::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.enlace-tarjeta:focus-visible { outline: none; }
+.tarjeta:has(.enlace-tarjeta:focus-visible) { outline: 2px solid var(--foco); outline-offset: 3px; }
+.flecha { position: absolute; z-index: 2; top: var(--e-24); right: var(--e-24); pointer-events: none; }
+.media { overflow: hidden; border-radius: calc(var(--r-xl) - var(--e-12)); background: var(--losa-alta); }
+.media img { width: 100%; height: 100%; object-fit: cover; transition: scale var(--d-hover) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta:has(.enlace-tarjeta):hover { translate: 0 -2px; }
+  .tarjeta:hover .media img { scale: 1.03; }
+  .tarjeta:hover .flecha .ico { rotate: 45deg; }
+  .tarjeta:hover { --dw: 900; }
+}
+.tarjeta:has(.enlace-tarjeta:active) { scale: .98; }
+.tarjeta.atenuada::before { opacity: var(--o-60); }
+.enlace-fila { position: relative; z-index: 2; }
+.tarjeta:has(> .flecha) :is(.ceja, .t-losa) { padding-right: calc(var(--boton) + var(--e-8)); }
+
+/* K2 · claim: vidrio oscuro en el acto 1 → losa blanca en el OS (un solo valor --m) */
+.k2 { z-index: 5; --m: 1; display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16);
+  background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), var(--vidrio-plano));
+  -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
+  color: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--tinta));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, calc(.14 - var(--m) * .14)), inset 0 0 0 1px rgba(255, 255, 255, calc(.08 - var(--m) * .08)); }
+.cine .k2 { --m: 0; --mt: 0; transform: translate(calc(var(--e-24) - var(--os-izq)), calc(100svh - var(--e-24) - 3 * var(--fila) - 2 * var(--gap) - var(--cabecera))); }
+.k2-cont { display: flex; flex-direction: column; gap: var(--e-16); }
+.k2-fila { display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); }
+.k2 .nombre { font: 500 var(--t-20)/1.2 var(--f-texto); letter-spacing: 0; }
+@media (min-width: 1024px) { .k2 .nombre { display: none; } .k2-fila { justify-content: flex-start; } }
+.k2 h1 { display: grid; gap: var(--e-8); font-weight: 400; }
+.k2 .claim { font: 600 var(--t-36)/1.08 var(--f-display); letter-spacing: -0.025em; text-wrap: balance; }
+.k2 .nivel, .k2 .sub { font-size: var(--t-14); line-height: 1.45; color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--mt) * 100%), var(--tinta-2)); }
+.k2 .sub { font-size: var(--t-16); }
+.estado { display: inline-flex; align-items: center; gap: var(--e-8); font-size: var(--t-14); line-height: 1.3; white-space: nowrap; }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--laser-nucleo); box-shadow: 0 0 0 1px var(--laser), 0 0 8px 2px var(--laser-halo); }
+.k2-cta { display: flex; gap: var(--e-8); flex-wrap: wrap; }
+.k2 .cta-1 { background: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--blanco)); color: color-mix(in oklab, var(--blanco) calc(var(--mt) * 100%), var(--tinta-osc)); }
+.k2 .cta-2 { color: inherit; box-shadow: inset 0 0 0 1px color-mix(in oklab, rgba(14, 14, 18, .24) calc(var(--mt) * 100%), rgba(255, 255, 255, .28)); }
+@media (hover: hover) and (pointer: fine) { .k2 .cta-2:hover { background: color-mix(in oklab, rgba(14, 14, 18, .06) calc(var(--mt) * 100%), rgba(255, 255, 255, .08)); } }
+
+/* K1 · la losa de la foto (la foto la pinta el canvas de la escena; la losa solo pone filo y panel) */
+.k1 { padding: 0; background: transparent; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .10), inset 0 1px 0 rgba(255, 255, 255, .18); }
+.k1-panel { position: absolute; z-index: 2; left: var(--e-16); right: var(--e-16); bottom: var(--e-16); padding: var(--e-24);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: var(--e-16); border-radius: calc(var(--r-xl) - var(--e-16));
+  background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%); box-shadow: var(--filo), var(--sombra-flota); }
+.k1-nombre { font: 600 var(--t-30)/.92 var(--f-display); letter-spacing: -0.03em; color: var(--tinta); }
+.k1-nombre span { display: block; }
+.k1-nombre .k1-rol { font: 400 var(--t-14)/1.3 var(--f-texto); letter-spacing: .01em; color: var(--tinta-2); margin-top: var(--e-12); }
+.cine .os-top > .tarjeta:not(.k2), .cine .rail { opacity: 0; }
+.cine .rail { transform: translateX(calc(-1 * var(--os-izq))); }
+.escena.oculta .os-top > .tarjeta:not(.k2) { pointer-events: none; }
+
+/* K3 · Naowee */
+.k3 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: var(--e-24); padding-right: var(--e-16); }
+.k3-texto { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); padding-right: 0; }
+.k3-texto .t-losa { margin-top: var(--e-8); }
+.k3-texto .apoyo { margin-top: var(--e-8); }
+.k3 .media { margin: calc(var(--e-16) - var(--e-32)) 0; height: calc(100% + 2 * (var(--e-32) - var(--e-16))); border-radius: calc(var(--r-xl) - var(--e-16)); }
+.k3 .media img { object-position: 0 0; }
+.k3 .flecha { top: var(--e-32); right: var(--e-32); }
+.flecha-tinta { background: var(--tinta-osc); color: var(--blanco); box-shadow: 0 0 0 1px rgba(255, 255, 255, .10); }
+
+/* K4 · Andes */
+.k4 { display: flex; flex-direction: column; justify-content: space-between; }
+.k4-cifras { display: grid; grid-template-columns: 1fr auto; gap: var(--e-24) var(--e-16); }
+.k4-cifras .der { text-align: right; justify-items: end; }
+.k4-cifras > :nth-child(3) { grid-column: 1 / -1; }
+.chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--e-12); border-radius: var(--r-pill); width: max-content;
+  font: 500 var(--t-14)/1 var(--f-texto); background: rgba(12, 18, 102, .72); color: var(--blanco); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+
+/* K5 · contacto (hora local + Escríbeme) */
+.k5 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.k5-info { display: grid; gap: var(--e-8); }
+.k5-info .reloj { margin-bottom: var(--e-8); }
+.k5 .boton { width: 100%; }
+.k5 .enlace-tarjeta::after { border-radius: var(--r-xl); }
+.reloj { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .3em; white-space: nowrap; }
+.k5 .reloj-hora { flex-basis: 100%; font-size: var(--t-72); letter-spacing: -0.06em; margin-top: var(--e-8); }
+.reloj .ampm { font: 500 var(--t-14)/1 var(--f-texto); color: var(--tinta-2); margin-left: var(--e-4); letter-spacing: 0; }
+
+/* K7 · olbo */
+.k7 { display: flex; flex-direction: column; justify-content: space-between; }
+.k7-texto { max-width: 52%; display: grid; gap: var(--e-8); }
+.k7 .cifra { position: relative; z-index: 1; max-width: 50%; }
+.k7 .dot { color: var(--verde-osc); }
+.k7 .telefono { position: absolute; z-index: 0; right: var(--e-32); bottom: calc(-1 * var(--e-64)); width: 54%; aspect-ratio: 3 / 4; height: auto;
+  border-radius: var(--r-s); box-shadow: 0 24px 48px -16px rgba(14, 14, 18, .45); }
+.k7 .telefono img { object-position: 50% 0; }
+.k7 .flecha { z-index: 2; }
+
+/* K8 · Banco de Occidente */
+.k8 { display: flex; flex-direction: column; gap: var(--e-16); }
+.k8 .media { height: 38%; flex: none; margin: calc(var(--e-16) - var(--e-32)) calc(var(--e-16) - var(--e-32)) 0; border-radius: calc(var(--r-xl) - var(--e-16)); }
+.k8 .media img { object-position: 0 0; }
+.k8-pie { display: grid; gap: var(--e-12); margin-top: auto; }
+.cita-corta { font: 500 var(--t-16)/1.45 var(--f-texto); color: var(--tinta); }
+.k8 .k8-fila { display: flex; align-items: end; justify-content: space-between; gap: var(--e-16); }
+
+/* K9 · DC · K10 · MakeaPet */
+.k9 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: var(--e-16); }
+.k9-texto, .k10 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-12); }
+.k9 .media { margin: calc(var(--e-16) - var(--e-32)) calc(var(--e-16) - var(--e-32)) calc(var(--e-16) - var(--e-32)) 0; border-radius: calc(var(--r-xl) - var(--e-16)); }
+.k9 .flecha, .k10 .flecha { top: var(--e-24); right: var(--e-24); }
+.k10 .fila-cifra, .k9 .fila-cifra { display: flex; align-items: end; gap: var(--e-12); }
+.k10 .fila-cifra .etiqueta, .k9 .fila-cifra .etiqueta { padding-bottom: var(--e-4); max-width: 20ch; }
+
+/* K11 · trayectoria */
+.k11 { display: flex; flex-direction: column; justify-content: space-between; }
+.linea-tiempo { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--e-8); }
+.linea-tiempo::before { content: ""; position: absolute; left: 0; right: 0; top: 37px; height: 1px; background: rgba(255, 255, 255, .4); }
+.nodo { display: grid; gap: var(--e-4); align-content: start; }
+.nodo .dot { color: var(--tinta); }
+.nodo i { width: 10px; height: 10px; border-radius: 50%; margin: var(--e-8) 0; box-shadow: inset 0 0 0 1.5px var(--tinta); background: var(--losa); position: relative; }
+.nodo.caso i { background: var(--tinta); }
+.nodo.hoy i { background: var(--laser); box-shadow: 0 0 0 4px rgba(255, 51, 68, .18), 0 0 8px var(--laser-halo); }
+.nodo b { font: 500 var(--t-14)/1.3 var(--f-texto); color: var(--tinta); }
+.nodo span:not(.dot) { font-size: var(--t-12); line-height: 1.4; color: var(--tinta-2); }
+
+/* K12 · cifras */
+.k12 { display: flex; flex-direction: column; justify-content: space-between; }
+.k12-cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-16); }
+.k12 .dot { color: var(--tinta-osc); }
+
+/* K13 · perfil */
+.k13 { padding: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.k13 .retrato { position: absolute; inset: 0; z-index: -1; }
+.k13 .retrato img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: saturate(.85); }
+.k13 .retrato::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(6, 6, 8, .94) 0%, rgba(6, 6, 8, .80) 45%, rgba(6, 6, 8, 0) 72%); }
+.k13 .ceja { color: var(--tinta); }
+.k13-texto { padding: var(--e-32); display: grid; gap: var(--e-8); }
+.k13-texto .apoyo { color: var(--tinta); }
+
+/* K14 · cómo trabajo */
+.k14 { display: flex; flex-direction: column; justify-content: space-between; }
+.pasos { display: grid; gap: var(--e-12); }
+.pasos li { display: grid; grid-template-columns: 48px 1fr; align-items: center; gap: var(--e-12); font-size: var(--t-16); line-height: 1.35; }
+.pasos .dot { color: var(--tinta); }
+
+/* K15 · testimonio */
+.k15 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.k15 blockquote { font: 500 var(--t-20)/1.4 var(--f-display); letter-spacing: -0.005em; color: var(--tinta-osc); }
+.k15 .firma { position: relative; z-index: 2; font-size: var(--t-14); line-height: 1.4; color: var(--tinta-osc-2); }
+.k15 .firma a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-osc); font-weight: 500; text-decoration: underline; text-decoration-color: rgba(14, 14, 18, .3); text-underline-offset: 3px; }
+.k15-ctrl { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); }
+.k15-ctrl .botones { display: flex; gap: var(--e-8); }
+.k15-ctrl .circulo { width: var(--toque); height: var(--toque); background: var(--tinta-osc); color: var(--blanco); }
+.contador { font-size: var(--t-14); color: var(--tinta-osc-2); }
+
+/* K16 · archivo */
+.k16 { display: flex; flex-direction: column; gap: var(--e-16); }
+.k16 .t-losa a { display: inline-flex; align-items: center; min-height: var(--toque); }
+.k16 .t-losa a::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 96px; z-index: 1; }
+.archivo { display: grid; margin-top: var(--e-24); }
+.archivo a { position: relative; z-index: 2; display: grid; grid-template-columns: 72px minmax(0, 160px) 1fr; align-items: center; gap: var(--e-16);
+  min-height: var(--e-48); padding: var(--e-8) var(--e-12); margin: 0 calc(-1 * var(--e-12)); border-radius: var(--r-xs);
+  border-top: 1px solid var(--losa-borde); transition: background-color var(--d-hover) var(--ease-out); }
+.archivo li:first-child a { border-top-color: transparent; }
+.archivo b { font: 500 var(--t-16)/1.3 var(--f-texto); color: var(--tinta); }
+.archivo span:last-child { font-size: var(--t-14); line-height: 1.35; color: var(--tinta-2); }
+@media (hover: hover) and (pointer: fine) { .archivo a:hover { background: var(--losa-alta); } }
+
+/* K17 · contacto */
+.k17 { display: flex; flex-direction: column; justify-content: space-between; gap: var(--e-16); }
+.k17 h2 { font: 600 var(--t-48)/1 var(--f-display); letter-spacing: -0.025em; }
+.k17 .lead { font-size: var(--t-18); line-height: 1.5; color: var(--tinta-osc-2); max-width: 34em; margin-top: var(--e-12); }
+.correo-fila { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
+.correo { display: inline-flex; align-items: center; min-height: var(--toque); font: 500 var(--t-30)/1.1 var(--f-display); letter-spacing: -0.02em; color: var(--tinta-osc); user-select: all; }
+.k17-enlaces { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); flex-wrap: wrap; }
+.k17-enlaces .grupo { display: flex; gap: var(--e-8); flex-wrap: wrap; }
+.k17 .externo { min-height: var(--toque); padding: 0 var(--e-16); }
+
+/* Pie */
+.pie { position: relative; z-index: 1; margin: 0 var(--e-24) 0 var(--os-izq); max-width: 1320px; padding: var(--e-32) 0 var(--e-48);
+  display: flex; justify-content: space-between; gap: var(--e-16); flex-wrap: wrap; border-top: 1px solid var(--losa-borde); color: var(--tinta-3); font-size: var(--t-14); }
+.pie a { display: inline-flex; align-items: center; min-height: var(--toque); color: var(--tinta-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(161, 161, 171, .4); }
+
+/* ── Hoja de caso (dialog) ─────────────────────────────────────────────────────────────────────────── */
+.hoja { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--tinta); overflow: clip; }
+.hoja::backdrop { background: transparent; }
+.hoja-velo { position: absolute; inset: 0; background: rgba(6, 6, 8, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: 0;
+  transition: opacity var(--d-hoja-salida) var(--ease-out); }
+.hoja-panel { position: absolute; left: 50%; bottom: 0; width: min(1120px, calc(100vw - 2 * var(--os-izq))); height: calc(100svh - var(--e-48));
+  translate: -50% calc(100% + var(--e-48)); display: flex; flex-direction: column; border-radius: var(--r-m) var(--r-m) 0 0;
+  background: var(--losa); box-shadow: var(--filo), var(--sombra-hoja); transition: translate var(--d-hoja-salida) var(--ease-drawer); }
+.hoja.abierta .hoja-velo { opacity: 1; transition-duration: var(--d-hoja); }
+.hoja.abierta .hoja-panel { translate: -50% 0; transition-duration: var(--d-hoja); }
+.hoja-cab { position: relative; flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--e-16); padding: var(--e-16) var(--e-24) var(--e-16) var(--e-48);
+  border-bottom: 1px solid var(--losa-borde); touch-action: none; cursor: grab; }
+.hoja-asa { position: absolute; left: 50%; top: var(--e-8); width: 36px; height: 4px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .24); translate: -50% 0; }
+.miga { font-size: var(--t-14); color: var(--tinta-2); }
+.miga b { color: var(--tinta); font-weight: 500; }
+.hoja-progreso { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+  background: var(--laser-nucleo); box-shadow: 0 0 4px 1px var(--laser), 0 0 12px 2px var(--laser-halo); }
+.hoja-cuerpo:focus-visible { outline-offset: -2px; }
+.hoja-cuerpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: var(--e-48) var(--e-48) var(--e-96); }
+.hoja-portada { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--e-48); align-items: end; }
+.hoja h2.h1 { font: 600 var(--t-72)/1 var(--f-display); letter-spacing: -0.035em; margin: var(--e-12) 0 var(--e-16); }
+.gancho { font-size: var(--t-18); line-height: 1.55; color: var(--tinta-2); max-width: 34em; }
+.ficha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-8); }
+.ficha div { padding: var(--e-16); border-radius: var(--r-xs); background: var(--losa-alta); display: grid; gap: var(--e-4); align-content: start; }
+.ficha dt { font-size: var(--t-12); letter-spacing: .02em; color: var(--tinta-3); }
+.ficha dd { margin: 0; font-size: var(--t-16); line-height: 1.4; color: var(--tinta); }
+.hoja-media { margin-top: var(--e-64); border-radius: var(--r-m); overflow: hidden; aspect-ratio: 16 / 9; background: var(--losa-alta); box-shadow: inset 0 0 0 1px var(--losa-borde); }
+.hoja-media img { width: 100%; height: 100%; object-fit: cover; object-position: 0 0; }
+.tablero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--e-48); }
+.kpi { padding: var(--e-24); border-radius: var(--r-m); background: var(--losa-alta); display: grid; gap: var(--e-8); align-content: start; min-height: 192px; box-shadow: var(--filo); }
+.kpi .dot { --dw: 100; transition: --dw 400ms var(--ease-out) calc(var(--i) * 60ms); margin-bottom: var(--e-16); }
+.hoja.encendida .kpi .dot { --dw: 700; }
+.kpi .etiqueta { color: var(--tinta); font-size: var(--t-16); }
+.kpi.blanca { background: var(--claro); color: var(--tinta-osc); }
+.kpi.blanca .etiqueta { color: var(--tinta-osc); }
+.kpi.blanca .micro { color: var(--tinta-osc-2); }
+.problema { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--e-48); margin-top: var(--e-96); }
+.problema .ceja { margin-bottom: var(--e-12); }
+.problema h3 { font: 600 var(--t-36)/1.1 var(--f-display); letter-spacing: -0.025em; }
+.problema p { font-size: var(--t-18); line-height: 1.6; color: var(--tinta-2); max-width: 34em; }
+
+/* ── Dock móvil y carrusel ─────────────────────────────────────────────────────────────────────────── */
+.dock { display: none; }
+.carrusel-ctrl { display: none; }
+
+/* Portátiles chicos y tableta horizontal (1024–1279): layout propio, no el de 1440 apretado */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .os-top { grid-template-areas:
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k2 k2 k2 k2 k2 k2 k2 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k1 k1 k1 k1 k1"
+    "k3 k3 k3 k3 k4 k4 k4 k5 k5 k5 k5 k5"; }
+  .os-resto { grid-template-areas:
+    "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8" "k7 k7 k7 k7 k7 k7 k8 k8 k8 k8 k8 k8"
+    "k9 k9 k9 k9 k9 k9 k10 k10 k10 k10 k10 k10" "k9 k9 k9 k9 k9 k9 k10 k10 k10 k10 k10 k10"
+    "k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11" "k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11 k11"
+    "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13" "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13" "k12 k12 k12 k12 k12 k12 k13 k13 k13 k13 k13 k13"
+    "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15" "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15" "k14 k14 k14 k14 k14 k14 k15 k15 k15 k15 k15 k15"
+    "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17" "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17" "k16 k16 k16 k16 k16 k16 k17 k17 k17 k17 k17 k17"; }
+  .tarjeta { padding: var(--e-24); }
+  .k2 .claim { font-size: var(--t-30); }
+  .k4 .dot-l { font-size: var(--t-36); }
+  .k4-cifras { grid-template-columns: 1fr; gap: var(--e-16); }
+  .k4-cifras .der { text-align: left; justify-items: start; }
+  .k4-cifras > :nth-child(3) { grid-column: auto; }
+  .k3 { grid-template-columns: 1fr; padding-right: var(--e-24); }
+  .k3 .media { display: none; }
+  .k3 .flecha { top: var(--e-24); right: var(--e-24); background: var(--blanco); color: var(--tinta-osc); box-shadow: none; }
+  .k5 { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .k5 .reloj { font-size: var(--t-30); }
+  .k5 .reloj-hora { flex-basis: auto; font-size: inherit; letter-spacing: inherit; margin-top: 0; }
+  .k5 .boton { width: auto; margin-left: auto; }
+  .k17 h2 { font-size: var(--t-36); }
+}
+
+/* ═════════════════════════════════ Móvil y tableta (< 1024): el OS se vuelve app ════════════════════════════ */
+@media (max-width: 1023px) {
+  .barra { top: var(--e-12); padding: 0 var(--e-16); }
+  .barra .pills, .barra .hablemos { display: none; }
+  .rail { display: none; }
+  .escena { padding: 0 0 var(--gap); }
+  .os { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: var(--gap); margin: 0 var(--e-16); }
+  .os-top { grid-template-areas: "hero" "k3" "k4" "k5" ; grid-template-rows: none; margin: 0; }
+  .os-top .k1, .os-top .k2 { grid-area: hero; }
+  .os-top .k1 { height: 100svh; min-height: 640px; border-radius: 0; box-shadow: none; }
+  .os-top .k2 { align-self: end; margin: 0 var(--e-12) var(--e-12); --m: 0; --mt: 0; padding: var(--e-24); gap: var(--e-16);
+    animation: materializar var(--d-entrada) var(--ease-out) 120ms both; }
+  .os-top > .tarjeta:not(.k1):not(.k2) { margin: 0 var(--e-16); }
+  .os-top .k5 { grid-area: auto; }
+  .os-top { grid-template-areas: "hero" "titulo" "k3" "k4" "k5"; }
+  .marca { height: var(--toque); }
+  .idioma { height: var(--toque); padding: 0; }
+  .idioma a { height: var(--toque); min-width: var(--toque); padding: var(--e-4); background-clip: content-box; }
+  .k3 .media, .k8 .media, .k9 .media { border-radius: calc(var(--r-xl) - var(--e-12)); }
+  .dot-xl { font-size: var(--t-48); }
+  .k5 .reloj { font-size: var(--t-30); }
+  .k5 .reloj-hora { flex-basis: auto; font-size: inherit; letter-spacing: inherit; margin-top: 0; }
+  .k1-panel, .k1 .enlace-tarjeta { display: none; }
+  .k2 .claim { font-size: var(--t-30); }
+  .k2 .nombre { font-size: var(--t-18); }
+  .k2 .sub { font-size: var(--t-14); }
+  .k2-fila { flex-wrap: wrap; gap: var(--e-8); }
+  .k2-cta .boton { flex: 1 1 0; padding: 0 var(--e-16); }
+  .tarjeta { padding: var(--e-24); }
+  .seccion-titulo { display: block; grid-area: titulo; margin: var(--e-24) var(--e-16) var(--e-4); font: 600 var(--t-20)/1.2 var(--f-display); }
+  .k3 { grid-template-columns: 1fr; grid-template-rows: 144px auto; gap: var(--e-16); padding-right: var(--e-24); }
+  .k3 .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; height: calc(100% + var(--e-12)); }
+  .k3 .flecha { top: var(--e-24); right: var(--e-24); }
+  .k4 { gap: var(--e-24); }
+  .k4-cifras { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: var(--e-16); }
+  .k4-cifras .der { text-align: left; justify-items: start; }
+  .k4-cifras > :nth-child(3) { grid-column: auto; }
+  .k4 .dot-l { font-size: var(--t-30); }
+  .k5 { margin: 0 var(--e-16); }
+  .k5 .boton { width: auto; }
+  .k5 { flex-direction: row; align-items: center; flex-wrap: nowrap; gap: var(--e-16); }
+  .k5-info { flex: 1; gap: var(--e-4); }
+  .k5-info .reloj { margin-bottom: var(--e-4); }
+  .k5 .boton { flex: none; }
+  .os-resto { margin: var(--gap) 0 0; padding-bottom: var(--e-32); grid-template-areas: none; display: flex; flex-direction: column; gap: var(--gap); }
+  .os-resto > .tarjeta, .os-resto > .seccion-titulo { margin-left: var(--e-16); margin-right: var(--e-16); }
+  .carrusel { display: flex; gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--e-16); padding: 0 var(--e-16) var(--e-4);
+    scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carrusel::-webkit-scrollbar { display: none; }
+  .carrusel > .tarjeta { flex: 0 0 82%; scroll-snap-align: start; min-height: 360px; }
+  .carrusel-ctrl { display: flex; align-items: center; justify-content: space-between; margin: 0 var(--e-16); }
+  .carrusel-ctrl .botones { display: flex; gap: var(--e-8); }
+  .carrusel-ctrl .circulo { width: var(--toque); height: var(--toque); }
+  .k7 .telefono { width: 42%; right: var(--e-24); bottom: calc(-1 * var(--e-96)); }
+  .k7-texto { max-width: none; }
+  .k7 .apoyo { max-width: 60%; }
+  .linea-tiempo { grid-template-columns: repeat(4, auto); justify-content: space-between; gap: var(--e-12); }
+  .nodo span:not(.dot) { display: none; }
+  .nodo b { font-size: var(--t-12); }
+  .k7 { min-height: 360px; }
+  .k8 .media { height: 150px; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; }
+  .k9 { grid-template-columns: 1fr; grid-template-rows: 150px auto; }
+  .k9 .media { order: -1; margin: calc(var(--e-12) - var(--e-24)) calc(var(--e-12) - var(--e-24)) 0; }
+  .k11 { gap: var(--e-24); }
+  .nodo.solo-desk { display: none; }
+  .nodo .dot-s { font-size: var(--t-20); }
+  .k12 { gap: var(--e-24); }
+  .k12 .dot-l { font-size: var(--t-36); }
+  .k13 { min-height: 320px; }
+  .k13-texto { padding: var(--e-24); }
+  .k14 { gap: var(--e-24); }
+  .k15 { gap: var(--e-16); }
+  .k16 .archivo a { grid-template-columns: 56px 1fr; row-gap: 0; }
+  .k16 .archivo a span:last-child { display: none; }
+  .k16 .t-losa a::after { height: 72px; }
+  .k17 { gap: var(--e-24); }
+  .k17 h2 { font-size: var(--t-36); }
+  .k17 .lead { font-size: var(--t-16); }
+  .correo { font-size: var(--t-24); }
+  .k17-enlaces { flex-direction: column; align-items: stretch; }
+  .k17-enlaces .grupo:first-child { flex-wrap: nowrap; }
+  .k17-enlaces .grupo:first-child .boton { flex: 1 1 0; padding: 0 var(--e-12); }
+  .k17-enlaces .boton { flex: 1; }
+  .pie { margin: 0 var(--e-16); padding-bottom: calc(var(--e-64) + var(--e-16) + env(safe-area-inset-bottom)); }
+  .dock { position: fixed; z-index: 30; left: 50%; bottom: calc(var(--e-12) + env(safe-area-inset-bottom)); translate: -50% 0; display: flex; gap: var(--e-4);
+    padding: var(--e-4); border-radius: var(--r-pill); background: var(--vidrio-oscuro); -webkit-backdrop-filter: blur(24px) saturate(140%); backdrop-filter: blur(24px) saturate(140%);
+    box-shadow: var(--filo), var(--sombra-flota); transition: translate var(--d-ui) var(--ease-out), opacity var(--d-ui) var(--ease-out); }
+  .dock.escondido { translate: -50% calc(100% + var(--e-24)); opacity: 0; }
+  .dock a { display: grid; justify-items: center; align-content: center; gap: 2px; min-width: 72px; height: 52px; border-radius: var(--r-pill);
+    font: 500 var(--t-12)/1.2 var(--f-texto); color: var(--tinta-2); transition: background-color var(--d-hover) var(--ease-out), scale var(--d-press) var(--ease-out); }
+  .dock a:active { scale: .95; }
+  .dock a[aria-current="true"] { background: var(--blanco); color: var(--tinta-osc); }
+  .hoja-panel { width: 100%; height: calc(100svh - var(--e-16)); border-radius: var(--r-m) var(--r-m) 0 0; }
+  .hoja-cab { padding: var(--e-24) var(--e-16) var(--e-12) var(--e-24); }
+  .hoja-cuerpo { padding: var(--e-24) var(--e-24) var(--e-96); }
+  .hoja-portada { grid-template-columns: 1fr; gap: var(--e-24); }
+  .hoja h2.h1 { font-size: var(--t-48); }
+  .gancho { font-size: var(--t-16); }
+  .hoja-media { margin-top: var(--e-24); border-radius: var(--r-s); }
+  .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: var(--e-24); gap: var(--e-12); }
+  .kpi { padding: var(--e-16); min-height: 150px; border-radius: var(--r-s); }
+  .kpi .dot-l { font-size: var(--t-30); }
+  .kpi .etiqueta { font-size: var(--t-14); }
+  .problema { grid-template-columns: 1fr; gap: var(--e-16); margin-top: var(--e-48); }
+  .problema h3 { font-size: var(--t-30); }
+  .problema p { font-size: var(--t-16); }
+}
+@media (min-width: 1024px) { .seccion-titulo { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } .carrusel { display: contents; } }
+@media (min-width: 640px) and (max-width: 1023px) {
+  .os-top .k2 { max-width: 560px; }
+  .carrusel > .tarjeta { flex-basis: 48%; }
+}
+@keyframes materializar { from { opacity: 0; scale: .96; filter: blur(12px); } }
+
+/* ── Preferencias ──────────────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+  .tarjeta, .boton, .circulo, .pill, .dock, .dock a { transition-property: opacity, background-color, color !important; transition-duration: 150ms !important; }
+  .tarjeta:hover, .tarjeta:has(.enlace-tarjeta:active) { translate: none !important; scale: none !important; }
+  .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear !important; }
+  .hoja.abierta .hoja-panel { opacity: 1; }
+}
+html.rm .tarjeta:hover { translate: none; }
+html.rm .hoja-panel { translate: -50% 0; opacity: 0; transition: opacity 150ms linear; }
+html.rm .hoja.abierta .hoja-panel { opacity: 1; }
+@media (prefers-reduced-transparency: reduce) {
+  .marca, .pills, .idioma, .dock, .k1-panel, .hoja-velo { background: var(--losa-alta); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+</style>
+</head>
+<body>
+<a class="saltar" href="#os" data-t="nav.saltar">Ir al contenido</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-flecha" viewBox="0 0 20 20"><path d="M6 14 14 6M7.5 6H14v6.5"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></symbol>
+  <symbol id="i-izq" viewBox="0 0 20 20"><path d="M12 5 7 10l5 5"/></symbol>
+  <symbol id="i-der" viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></symbol>
+  <symbol id="i-correo" viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m3.5 6 6.5 5 6.5-5"/></symbol>
+  <symbol id="i-bajar" viewBox="0 0 20 20"><path d="M10 3.5v9M6 9l4 4 4-4M4 16.5h12"/></symbol>
+  <symbol id="i-arriba" viewBox="0 0 20 20"><path d="M10 16V5M5.5 9.5 10 5l4.5 4.5"/></symbol>
+  <symbol id="i-trabajo" viewBox="0 0 20 20"><rect x="3" y="6.5" width="14" height="10" rx="2"/><path d="M7.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 12.5 5v1.5"/></symbol>
+  <symbol id="i-perfil" viewBox="0 0 20 20"><circle cx="10" cy="7" r="3.2"/><path d="M4 16.5c1.2-3 3.4-4.3 6-4.3s4.8 1.3 6 4.3"/></symbol>
+  <symbol id="i-cv" viewBox="0 0 20 20"><path d="M5.5 2.5h6l3.5 3.5v11.5h-9.5z"/><path d="M11.5 2.5V6H15M8 10.5h5M8 13.5h5"/></symbol>
+  <symbol id="i-copiar" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6a1.5 1.5 0 0 0 1.5 1.5H7"/></symbol>
+</svg>
+
+<header class="barra">
+  <a class="marca" href="#" data-ta="nav.inicio" aria-label="douguizard, inicio"><span class="marca-d" aria-hidden="true">d</span><span aria-hidden="true" translate="no">douguizard</span></a>
+  <nav class="pills" data-ta="nav.principal" aria-label="Principal">
+    <a class="pill" href="#trabajo" data-sec="trabajo" data-t="nav.trabajo">Trabajo</a>
+    <a class="pill" href="#perfil" data-sec="perfil" data-t="nav.perfil">Perfil</a>
+    <a class="pill" href="#experiencia" data-sec="experiencia" data-t="nav.experiencia">Experiencia</a>
+    <a class="pill" href="/cv" data-t="nav.cv">CV</a>
+  </nav>
+  <div class="acciones">
+    <div class="idioma" role="group" data-ta="idioma.grupo" aria-label="Idioma">
+      <a href="?lang=es" lang="es" hreflang="es" aria-label="Español" data-lang="es">ES</a>
+      <a href="?lang=en" lang="en" hreflang="en" aria-label="English" data-lang="en">EN</a>
+    </div>
+    <a class="boton hablemos" href="#contacto" data-sec="contacto" data-t="nav.hablemos">Hablemos</a>
+  </div>
+</header>
+
+<nav class="rail" id="rail" data-ta="rail.label" aria-label="Acciones rápidas">
+  <a class="rail-accion" href="mailto:hello@douguizard.com" data-tip="hello@douguizard.com" aria-label="Escríbeme: hello@douguizard.com" data-ta="rail.correo"><svg class="ico"><use href="#i-correo"/></svg></a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="/cv/doug-vargas-cv.pdf" download data-tip="Descargar CV (PDF)" data-ttip="cta.cv" aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico"><use href="#i-bajar"/></svg></a>
+  <a href="https://www.linkedin.com/in/douguizard" target="_blank" rel="noopener" data-tip="LinkedIn ↗" aria-label="LinkedIn (se abre en otra pestaña)" data-ta="ext.linkedin">in</a>
+  <a href="https://www.behance.net/douguizard" target="_blank" rel="noopener" data-tip="Behance ↗" aria-label="Behance (se abre en otra pestaña)" data-ta="ext.behance">Bē</a>
+  <a href="https://github.com/dougnuken" target="_blank" rel="noopener" data-tip="GitHub ↗" aria-label="GitHub (se abre en otra pestaña)" data-ta="ext.github">gh</a>
+  <span class="rail-sep" aria-hidden="true"></span>
+  <a href="#" data-tip="Volver arriba" data-ttip="pie.arriba" aria-label="Volver arriba" data-ta="pie.arriba" class="rail-arriba"><svg class="ico"><use href="#i-arriba"/></svg></a>
+</nav>
+
+<main id="contenido">
+  <div class="resplandor" aria-hidden="true"></div>
+  <section class="escena oculta" id="escena" aria-labelledby="h1">
+    <div class="foto" id="foto" aria-hidden="true">
+      <div class="foto-clip" id="fotoClip">
+        <img class="poster-atm" src="../../retratos-hf/199598aa.jpg" alt="">
+        <img class="poster" id="poster" src="../../retratos-hf/199598aa.jpg" alt="" width="880" height="1168" fetchpriority="high" decoding="async">
+        <div class="vidrio-css" id="vidrioCss"></div>
+      </div>
+      <canvas id="vidrio"></canvas>
+    </div>
+    <div class="velo" id="velo" aria-hidden="true"></div>
+    <div class="laser" id="laser" aria-hidden="true"></div>
+    <div class="nombre-xl" id="nombreXL" aria-hidden="true"><span class="linea"><span>Doug</span></span><span class="linea"><span>Vargas</span></span></div>
+    <div class="indicador" id="indicador" aria-hidden="true"><i></i><span class="indicador-txt" id="indicadorTxt" data-t="ind.desliza">Desliza</span></div>
+
+    <div class="os os-top" id="os">
+      <!-- K2 · claim + rol: en el acto 1 es el panel de vidrio oscuro; en el OS, la losa blanca -->
+      <article class="tarjeta k2" id="k2">
+        <div class="k2-cont">
+          <div class="k2-fila">
+            <span class="nombre" aria-hidden="true">Doug Vargas</span>
+            <span class="estado" title="Consultoría puntual en sistemas de diseño y producto nativo de IA" data-tt="k1.disp.nota" data-t="k1.disp">Disponible para consultoría</span>
+          </div>
+          <h1 id="h1"><span class="sr-only">Doug Vargas.</span><span class="claim" data-t="k2.claim">Dirijo el producto. Después, lo construyo.</span></h1>
+          <p class="nivel">Head of Product · Senior Product Designer (UX/UI) · Design Engineer</p>
+          <p class="sub" data-t="k2.sub">Hoy, Naowee. Antes, Andes: el sistema de diseño de Mercadolibre en 18 países.</p>
+        </div>
+        <div class="k2-cta">
+          <a class="boton cta-1" href="#trabajo" data-ir="trabajo" data-t="cta.casos">Ver casos</a>
+          <a class="boton cta-2" href="/cv/doug-vargas-cv.pdf" download aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico" aria-hidden="true"><use href="#i-bajar"/></svg><span data-t="cta.cv">Descargar CV (PDF)</span></a>
+        </div>
+      </article>
+
+      <!-- K1 · la losa del retrato (la foto la pinta el canvas de la escena) -->
+      <article class="tarjeta k1" id="k1" data-grupo="perfil">
+        <div class="k1-panel">
+          <p class="k1-nombre" id="k1Nombre" aria-hidden="true"><span class="xl-hueco">Doug</span><span class="xl-hueco">Vargas</span><span class="k1-rol" data-t="k1.rol">Head of Product · Barranquilla</span></p>
+          <span class="circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+        </div>
+        <a class="enlace-tarjeta" href="/about"><span class="sr-only" data-t="k1.link">Doug Vargas · ver perfil</span></a>
+        <img class="sr-only" src="../../retratos-hf/199598aa.jpg" alt="Doug Vargas con gorra de Nueva York y chaqueta de cuero negra frente a un muro de concreto, con una línea de luz roja sobre los ojos." data-talt="k1.alt">
+      </article>
+
+      <h2 class="seccion-titulo" data-t="nav.trabajo">Trabajo</h2>
+
+      <!-- K3 · Naowee (abre la hoja) -->
+      <article class="tarjeta losa k3" id="trabajo" data-grupo="trabajo">
+        <div class="k3-texto">
+          <div>
+            <p class="ceja" data-t="k3.ceja">Ahora · Head of Product</p>
+            <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/naowee-suid" data-hoja="naowee"><span translate="no">Naowee</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+            <p class="apoyo" data-t="k3.apoyo">Los 30 trámites del deporte colombiano, fuera de Word.</p>
+          </div>
+          <div class="cifra" role="group" aria-label="130 o más pantallas en 8 módulos" data-ta="k3.cifra.aria">
+            <span class="dot dot-l" aria-hidden="true">130+</span>
+            <span class="etiqueta" aria-hidden="true" data-t="k3.etq">pantallas en 8 módulos</span>
+          </div>
+        </div>
+        <div class="media"><img src="../../../../public/work/naowee/ivc-workspace-tramite.webp" alt="" width="2880" height="1800" decoding="async"></div>
+        <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+
+      <!-- K4 · Andes · Mercadolibre (NDA, la cifra es la imagen) -->
+      <article class="tarjeta losa-azul k4" data-grupo="trabajo">
+        <div>
+          <p class="ceja"><span translate="no">Mercadolibre</span> · 2024–2026</p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/mercadolibre-andes"><span translate="no">Andes Design System</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        </div>
+        <div class="k4-cifras" role="group" aria-label="400 o más diseñadores, 2.000 o más ingenieros, 18 países" data-ta="k4.aria">
+          <div class="cifra" aria-hidden="true"><span class="dot dot-l">400+</span><span class="etiqueta" data-t="k4.dis">diseñadores</span></div>
+          <div class="cifra der" aria-hidden="true"><span class="dot dot-l">18</span><span class="etiqueta" data-t="k4.pai">países</span></div>
+          <div class="cifra" aria-hidden="true"><span class="dot dot-l" data-t="k4.n2">2.000+</span><span class="etiqueta" data-t="k4.ing">ingenieros</span></div>
+        </div>
+        <span class="chip" data-t="k4.chip">NDA · Caso a solicitud</span>
+        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+
+      <!-- K5 · contacto: hora local + datos + Escríbeme (fusiona K5 y K6; la disponibilidad ya está en K2) -->
+      <article class="tarjeta losa k5" data-grupo="contacto">
+        <div class="k5-info">
+          <span class="dot dot-l reloj" id="reloj" role="img" aria-label="Hora local en Barranquilla">BAQ 14:32</span>
+          <p class="etiqueta">Barranquilla, Colombia · UTC-5</p>
+          <p class="etiqueta" data-t="k5.linea">Head of Product en Naowee</p>
+        </div>
+        <a class="boton boton-blanco enlace-tarjeta" href="#contacto" data-ir="contacto"><span data-t="k5.boton">Escríbeme</span></a>
+      </article>
+    </div>
+  </section>
+
+  <div class="os os-resto" id="resto">
+    <div class="carrusel" id="carrusel">
+      <!-- K7 · olbo -->
+      <article class="tarjeta losa-niebla k7" data-grupo="trabajo">
+        <div class="k7-texto">
+          <p class="ceja" data-t="k7.ceja">Producto propio · Design Engineer</p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/olbo"><span translate="no">olbo</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <p class="apoyo" data-t="k7.apoyo">Mide tu ritmo de gasto, no tu saldo.</p>
+        </div>
+        <div class="cifra" role="group" aria-label="647 pruebas en verde" data-ta="k7.aria">
+          <span class="dot dot-xl" aria-hidden="true">647</span>
+          <span class="etiqueta" aria-hidden="true" data-t="k7.etq">pruebas en verde</span>
+        </div>
+        <div class="media telefono"><img src="../../../../public/work/olbo/01-hoy-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
+        <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+
+      <!-- K8 · Banco de Occidente -->
+      <article class="tarjeta losa k8" data-grupo="trabajo">
+        <div class="media"><img src="../../../../public/work/banco-de-occidente/portal-dashboard.webp" alt="" width="2271" height="1715" loading="lazy" decoding="async"></div>
+        <div>
+          <p class="ceja">Aval Digital Labs · 2018–2024</p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/banco-de-occidente"><span>Banco de Occidente</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+        </div>
+        <div class="k8-pie">
+          <div class="k8-fila">
+            <div class="cifra" role="group" aria-label="Más de 12 squads en un solo sistema" data-ta="k8.aria"><span class="dot dot-l" aria-hidden="true">12+</span><span class="etiqueta" aria-hidden="true" data-t="k8.etq">squads en un solo sistema</span></div>
+          </div>
+          <blockquote class="cita-corta" lang="en">“He doesn't just design — he architects how products should feel.”</blockquote>
+          <p class="micro"><span data-t="k8.firma">Francesca Steri · Directora de Diseño, Aval Digital Labs</span><span data-t="k.marcaidioma" class="solo-es"> · Cita original en inglés</span></p>
+        </div>
+        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+
+      <!-- K9 · DC Medical -->
+      <article class="tarjeta losa k9" data-grupo="trabajo">
+        <div class="k9-texto">
+          <div>
+            <p class="ceja" data-t="k9.ceja">Producto propio · Socio y constructor</p>
+            <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/dc-medical"><span>DC Medical</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          </div>
+          <div class="fila-cifra" role="group" aria-label="14 días del primer commit a la versión del 2 de octubre" data-ta="k9.aria"><span class="dot dot-l" aria-hidden="true">14</span><span class="etiqueta" aria-hidden="true" data-t="k9.etq">días del primer commit a la versión del 2 oct</span></div>
+        </div>
+        <div class="media"><img src="../../../../public/work/dc-medical/01-imac-seguimiento-900.webp" alt="" width="900" height="1200" loading="lazy" decoding="async"></div>
+        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+
+      <!-- K10 · MakeaPet -->
+      <article class="tarjeta losa-magenta k10" data-grupo="trabajo">
+        <div>
+          <p class="ceja" data-t="k10.ceja">Producto propio · iOS, Android y web</p>
+          <h3 class="t-losa"><a class="enlace-tarjeta" href="/work/makeapet"><span>MakeaPet</span><span class="sr-only" data-t="k.leer">, leer el caso</span></a></h3>
+          <p class="apoyo" data-t="k10.apoyo">De cinco pantallas en Figma a una app real.</p>
+        </div>
+        <div class="fila-cifra" role="group" aria-label="Más de 680 pruebas automatizadas" data-ta="k10.aria"><span class="dot dot-l" aria-hidden="true">680+</span><span class="etiqueta" aria-hidden="true" data-t="k10.etq">pruebas automatizadas</span></div>
+        <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+      </article>
+    </div>
+    <div class="carrusel-ctrl" aria-hidden="false">
+      <span class="contador" id="carruselCont" aria-live="polite">1 de 4</span>
+      <div class="botones">
+        <button class="circulo circulo-osc" type="button" data-dir="-1" aria-label="Anterior" data-ta="carrusel.ant"><svg class="ico"><use href="#i-izq"/></svg></button>
+        <button class="circulo circulo-osc" type="button" data-dir="1" aria-label="Siguiente" data-ta="carrusel.sig"><svg class="ico"><use href="#i-der"/></svg></button>
+      </div>
+    </div>
+
+    <h2 class="seccion-titulo" data-t="nav.experiencia">Experiencia</h2>
+    <!-- K11 · trayectoria -->
+    <article class="tarjeta losa k11" id="experiencia" data-grupo="experiencia">
+      <div>
+        <p class="ceja" data-t="k11.ceja">Trayectoria</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/experience"><span data-t="k11.titulo">2010 → hoy: de freelance a Head of Product</span><span class="sr-only" data-t="k11.accion">, ver la línea de tiempo completa</span></a></h3>
+      </div>
+      <ol class="linea-tiempo" aria-hidden="true">
+        <li class="nodo"><span class="dot dot-s">2010</span><i></i><b>Freelance</b><span data-t="k11.n1">Gráfico e interfaces</span></li>
+        <li class="nodo solo-desk"><span class="dot dot-s">2014</span><i></i><b>Smartbiz</b><span>Junior UI</span></li>
+        <li class="nodo caso solo-desk"><span class="dot dot-s">2016</span><i></i><b>Ideaware · Qrvey</b><span>Senior UX/UI → Lead UI</span></li>
+        <li class="nodo caso solo-desk"><span class="dot dot-s">2017</span><i></i><b>Globant</b><span>Senior PD</span></li>
+        <li class="nodo caso"><span class="dot dot-s">2018</span><i></i><b>Aval · BdO</b><span>Senior PD · DS Gatekeeper</span></li>
+        <li class="nodo caso"><span class="dot dot-s">2024</span><i></i><b>Mercadolibre</b><span>Tech Lead · DS</span></li>
+        <li class="nodo caso hoy"><span class="dot dot-s">2026</span><i></i><b>Naowee</b><span>Head of Product</span></li>
+      </ol>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </article>
+
+    <!-- K12 · cifras de carrera -->
+    <article class="tarjeta losa-clara k12" data-grupo="experiencia">
+      <p class="ceja"><a class="enlace-tarjeta" href="/experience"><span data-t="k12.ceja">En cifras</span><span class="sr-only" data-t="k12.link">: mi trayectoria en cifras</span></a></p>
+      <div class="k12-cifras" role="group" aria-label="12 años en producto digital, 10 casos publicados, 3 productos propios" data-ta="k12.aria">
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">12</span><span class="etiqueta" data-t="k12.c1">años en producto digital</span></div>
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">10</span><span class="etiqueta" data-t="k12.c2">casos publicados</span></div>
+        <div class="cifra" aria-hidden="true"><span class="dot dot-l">3</span><span class="etiqueta" data-t="k12.c3">productos propios</span></div>
+      </div>
+      <span class="flecha circulo flecha-tinta" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </article>
+
+    <h2 class="seccion-titulo" data-t="nav.perfil">Perfil</h2>
+    <!-- K13 · perfil -->
+    <article class="tarjeta losa k13" id="perfil" data-grupo="perfil">
+      <div class="retrato"><img src="../../retratos-hf/83a47bc7.jpg" alt="" width="880" height="1168" loading="lazy" decoding="async"></div>
+      <div class="k13-texto">
+        <p class="ceja" data-t="k13.ceja">Perfil</p>
+        <h3 class="t-losa"><a class="enlace-tarjeta" href="/about"><span data-t="k13.titulo">Diseñador de producto que construye.</span><span class="sr-only" data-t="k13.accion">: ver el perfil</span></a></h3>
+        <p class="apoyo">Barranquilla, Colombia · ES / EN</p>
+      </div>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </article>
+
+    <!-- K14 · cómo trabajo -->
+    <article class="tarjeta losa k14" data-grupo="perfil">
+      <h3 class="t-losa"><a class="enlace-tarjeta" href="/about#craft"><span data-t="k14.titulo">Cómo trabajo</span><span class="sr-only" data-t="k14.accion">, leer los cuatro pasos</span></a></h3>
+      <ol class="pasos">
+        <li><span class="dot dot-s" aria-hidden="true">01</span><span data-t="k14.p1">Leer el dominio antes de dibujar</span></li>
+        <li><span class="dot dot-s" aria-hidden="true">02</span><span data-t="k14.p2">El lenguaje antes que las pantallas</span></li>
+        <li><span class="dot dot-s" aria-hidden="true">03</span><span data-t="k14.p3">El prototipo es la especificación</span></li>
+        <li><span class="dot dot-s" aria-hidden="true">04</span><span data-t="k14.p4">Lanzar, y después escuchar</span></li>
+      </ol>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </article>
+
+    <!-- K15 · testimonio (rotación manual) -->
+    <section class="tarjeta losa-clara k15" data-grupo="perfil" aria-roledescription="carrusel" aria-label="Testimonios" data-ta="k15.region">
+      <p class="ceja" data-t="k15.ceja">En sus palabras</p>
+      <div aria-live="polite">
+        <blockquote lang="en" id="citaTexto">“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”</blockquote>
+        <p class="firma mt-12"><span id="citaFirma">Arman Eshraghi · Fundador y CEO, Qrvey</span><br><a id="citaLink" href="/work/qrvey">Leer el caso de Qrvey</a><span class="solo-es" data-t="k.marcaidioma2"> · Cita original en inglés</span></p>
+      </div>
+      <div class="k15-ctrl">
+        <span class="contador" id="citaCont">1 de 3</span>
+        <div class="botones">
+          <button class="circulo" type="button" data-cita="-1" aria-label="Testimonio anterior" data-ta="k15.ant"><svg class="ico"><use href="#i-izq"/></svg></button>
+          <button class="circulo" type="button" data-cita="1" aria-label="Testimonio siguiente" data-ta="k15.sig"><svg class="ico"><use href="#i-der"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- K16 · archivo -->
+    <article class="tarjeta losa k16" data-grupo="trabajo">
+      <div>
+        <p class="ceja" data-t="k16.ceja">Archivo</p>
+        <h3 class="t-losa"><a href="/work"><span data-t="k16.titulo">Más trabajo</span><span class="sr-only" data-t="k16.accion">, ver todo el trabajo</span></a></h3>
+      </div>
+      <ul class="archivo">
+        <li><a href="/work/chub"><span class="dot dot-s" aria-hidden="true">2018</span><b>Chub</b><span data-t="k16.r1">Alquiler de carros por minuto, para iOS.</span></a></li>
+        <li><a href="/work/royal-caribbean"><span class="dot dot-s" aria-hidden="true">2017</span><b>Royal Caribbean</b><span data-t="k16.r2">Reservas y vida a bordo, con Globant.</span></a></li>
+        <li><a href="/work/qrvey"><span class="dot dot-s" aria-hidden="true">2016</span><b>Qrvey</b><span data-t="k16.r3">AutomatiQ: encuestas que actúan solas.</span></a></li>
+        <li><a href="/work/ideaware"><span class="dot dot-s" aria-hidden="true">2016</span><b>Ideaware</b><span data-t="k16.r4">Diseño para clientes de EE. UU. y LATAM.</span></a></li>
+      </ul>
+      <span class="flecha circulo" aria-hidden="true"><svg class="ico"><use href="#i-flecha"/></svg></span>
+    </article>
+
+    <h2 class="seccion-titulo" data-t="nav.contacto">Contacto</h2>
+    <!-- K17 · contacto + CV -->
+    <section class="tarjeta losa-clara k17" id="contacto" data-grupo="contacto" aria-labelledby="h-contacto">
+      <div>
+        <h2 id="h-contacto" tabindex="-1" data-t="k17.h2">Hablemos</h2>
+        <p class="lead" data-t="k17.lead">Un rol, una consultoría o el caso de Andes en una llamada: escríbeme.</p>
+      </div>
+      <div class="correo-fila">
+        <a class="correo" href="mailto:hello@douguizard.com">hello@douguizard.com</a>
+        <button class="boton boton-linea-osc boton-toque" type="button" id="copiar"><svg class="ico" aria-hidden="true"><use href="#i-copiar"/></svg><span id="copiarTxt" data-t="k17.copiar">Copiar correo</span></button>
+      </div>
+      <div class="k17-enlaces">
+        <div class="grupo">
+          <a class="boton boton-linea-osc externo" href="https://www.linkedin.com/in/douguizard" target="_blank" rel="noopener" aria-label="LinkedIn (se abre en otra pestaña)" data-ta="ext.linkedin">LinkedIn ↗</a>
+          <a class="boton boton-linea-osc externo" href="https://www.behance.net/douguizard" target="_blank" rel="noopener" aria-label="Behance (se abre en otra pestaña)" data-ta="ext.behance">Behance ↗</a>
+          <a class="boton boton-linea-osc externo" href="https://github.com/dougnuken" target="_blank" rel="noopener" aria-label="GitHub (se abre en otra pestaña)" data-ta="ext.github">GitHub ↗</a>
+        </div>
+        <div class="grupo">
+          <a class="boton boton-tinta" href="/cv/doug-vargas-cv.pdf" download aria-label="Descargar mi hoja de vida en PDF" data-ta="cta.cv.aria"><svg class="ico" aria-hidden="true"><use href="#i-bajar"/></svg><span data-t="cta.cv">Descargar CV (PDF)</span></a>
+          <a class="boton boton-linea-osc" href="/cv/carta" data-t="k17.carta">Carta de presentación</a>
+        </div>
+      </div>
+      <p class="etiqueta" data-t="k17.disp">Lidero producto en Naowee y tomo consultorías puntuales en paralelo.</p>
+    </section>
+  </div>
+
+  <footer class="pie">
+    <span>© 2026 Doug Vargas · Barranquilla · UTC-5</span>
+    <span data-t="pie.colofon">Diseñado por mí; construido con Next.js y agentes de IA que dirijo.</span>
+    <a href="#" class="ir-arriba" data-t="pie.arriba">Volver arriba</a>
+  </footer>
+</main>
+
+<nav class="dock escondido" id="dock" aria-label="Navegación rápida" data-ta="dock.label">
+  <a href="#trabajo" data-sec="trabajo"><svg class="ico" aria-hidden="true"><use href="#i-trabajo"/></svg><span data-t="nav.trabajo">Trabajo</span></a>
+  <a href="#perfil" data-sec="perfil"><svg class="ico" aria-hidden="true"><use href="#i-perfil"/></svg><span data-t="nav.perfil">Perfil</span></a>
+  <a href="/cv"><svg class="ico" aria-hidden="true"><use href="#i-cv"/></svg><span>CV</span></a>
+  <a href="#contacto" data-sec="contacto"><svg class="ico" aria-hidden="true"><use href="#i-correo"/></svg><span data-t="nav.contacto">Contacto</span></a>
+</nav>
+
+<!-- Hoja de caso: Naowee (C1 de 04-COPY §5). URL real (#/work/naowee-suid en la maqueta), Esc, Atrás, arrastre. -->
+<dialog class="hoja" id="hoja" aria-labelledby="hojaTitulo">
+  <div class="hoja-velo" data-cerrar></div>
+  <div class="hoja-panel" id="hojaPanel">
+    <div class="hoja-cab" id="hojaCab">
+      <span class="hoja-asa" aria-hidden="true"></span>
+      <p class="miga"><span data-t="nav.trabajo">Trabajo</span> / <b>Naowee</b></p>
+      <button class="circulo circulo-osc" type="button" data-cerrar aria-label="Cerrar" data-ta="hoja.cerrar" id="hojaCerrar"><svg class="ico"><use href="#i-cerrar"/></svg></button>
+      <span class="hoja-progreso" id="hojaProgreso" aria-hidden="true"></span>
+    </div>
+    <div class="hoja-cuerpo" id="hojaCuerpo">
+      <div class="hoja-portada">
+        <div>
+          <p class="ceja" data-t="k3.ceja">Ahora · Head of Product</p>
+          <h2 class="h1" id="hojaTitulo">Naowee</h2>
+          <p class="gancho" data-t="c1.gancho">El deporte de Colombia salió de Word y correo: 30 trámites en una sola plataforma.</p>
+        </div>
+        <dl class="ficha">
+          <div><dt data-t="c.rol">Rol</dt><dd>Head of Product</dd></div>
+          <div><dt data-t="c.duracion">Duración</dt><dd data-t="c1.duracion">Ene 2026 — Hoy</dd></div>
+          <div><dt data-t="c.equipo">Equipo</dt><dd data-t="c1.equipo">Producto: 2 personas, con un diseñador que lidero; analistas de negocio e ingeniería.</dd></div>
+          <div><dt data-t="c.plataformas">Plataformas</dt><dd>Web</dd></div>
+        </dl>
+      </div>
+      <section aria-labelledby="hImpacto">
+        <h3 class="sr-only" id="hImpacto" data-t="c.impacto">Impacto</h3>
+        <ul class="tablero">
+          <li class="kpi blanca"><span class="dot dot-l" style="--i:0">30</span><span class="etiqueta" data-t="c1.k1">trámites digitalizados</span><span class="micro" data-t="c1.k1n">antes en Word y correo</span></li>
+          <li class="kpi"><span class="dot dot-l" style="--i:1" data-t="c1.k2v">~1.200</span><span class="etiqueta" data-t="c1.k2">organizaciones deportivas en alcance</span></li>
+          <li class="kpi"><span class="dot dot-l" style="--i:2">130+</span><span class="etiqueta" data-t="c1.k3">pantallas entregadas</span><span class="micro" data-t="c1.k3n">en 8 de 13 módulos</span></li>
+          <li class="kpi"><span class="dot dot-l" style="--i:3">38+</span><span class="etiqueta" data-t="c1.k4">componentes compartidos</span><span class="micro" data-t="c1.k4n">un solo sistema de diseño</span></li>
+        </ul>
+      </section>
+      <figure class="hoja-media"><img src="../../../../public/work/naowee/ivc-bandeja.webp" alt="Bandeja de trámites de inspección, vigilancia y control en la plataforma de Naowee." data-talt="c1.alt" width="2880" height="1800" loading="lazy" decoding="async"></figure>
+      <section class="problema" aria-labelledby="hProblema">
+        <div>
+          <p class="ceja" data-t="c.problema">Problema</p>
+          <h3 id="hProblema" data-t="c1.h2p">Un sector que funcionaba con archivos</h3>
+        </div>
+        <p data-t="c1.problema">Los 30 trámites del sistema deportivo colombiano se movían por Word, correo y un gestor documental, GESDOC. Ningún sistema hablaba con otro. Dibujar pantallas era la parte fácil: antes había que entender más de 45 estados, 15 roles y una jerarquía real de comités, federaciones, ligas, clubes y deportistas.</p>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const QS = new URLSearchParams(location.search);
+  const RM = root.classList.contains("rm");
+  const CAPTURA = QS.has("captura");
+  const desk = matchMedia("(min-width: 1024px)");
+
+  /* ═════════════ 1 · Idioma (copy de 04-COPY; el ES se lee del propio HTML) ═════════════ */
+  const EN = {
+    "nav.saltar": "Skip to content", "nav.inicio": "douguizard, home", "nav.principal": "Main", "nav.trabajo": "Work", "nav.perfil": "About",
+    "nav.experiencia": "Experience", "nav.cv": "CV", "nav.hablemos": "Let's talk", "nav.contacto": "Contact", "idioma.grupo": "Language",
+    "idioma.es": "Ver en español", "idioma.en": "Read in English", "rail.label": "Quick actions", "rail.correo": "Get in touch: hello@douguizard.com",
+    "k1.disp": "Open to consulting", "k1.disp.nota": "Selected consulting on design systems and AI-native product", "k1.rol": "Head of Product · Barranquilla",
+    "k1.link": "Doug Vargas · view profile",
+    "k1.alt": "Doug Vargas in a New York cap and a black leather jacket against a concrete wall, a red line of light across his eyes.",
+    "k2.claim": "I direct the product. Then I build it.", "k2.sub": "Now at Naowee. Before that, Andes: Mercadolibre's design system in 18 countries.",
+    "cta.casos": "See case studies", "cta.cv": "Download CV (PDF)", "cta.cv.aria": "Download my CV as a PDF",
+    "k.leer": ", read the case", "k3.ceja": "Now · Head of Product", "k3.apoyo": "Colombia's 30 sports procedures, out of Word and email.",
+    "k3.etq": "screens across 8 modules", "k3.cifra.aria": "130-plus screens across 8 modules",
+    "k4.aria": "400-plus designers, 2,000-plus engineers, 18 countries", "k4.dis": "designers", "k4.pai": "countries", "k4.ing": "engineers", "k4.n2": "2,000+",
+    "k4.chip": "NDA · Case on request",
+    "ind.desliza": "Scroll", "k5.linea": "Head of Product at Naowee", "k5.boton": "Get in touch", "k5.aria": "Get in touch: open to selected consulting",
+    "k6.link": "Barranquilla, local time",
+    "k7.ceja": "Product of my own · Design Engineer", "k7.apoyo": "Reads your spending pace, not your balance.", "k7.etq": "tests passing", "k7.aria": "647 tests passing",
+    "k8.etq": "squads on one system", "k8.aria": "12-plus squads on one system", "k8.firma": "Francesca Steri · Design Director, Aval Digital Labs",
+    "k.marcaidioma": "", "k.marcaidioma2": "",
+    "k9.ceja": "Product of my own · Co-owner and builder", "k9.etq": "days from first commit to the Oct 2 version", "k9.aria": "14 days from first commit to the October 2 version",
+    "k10.ceja": "Product of my own · iOS, Android, web", "k10.apoyo": "From five Figma screens to a real app.", "k10.etq": "automated tests", "k10.aria": "680-plus automated tests",
+    "carrusel.ant": "Previous", "carrusel.sig": "Next",
+    "k11.ceja": "Experience", "k11.titulo": "2010 → now: from freelance to Head of Product", "k11.accion": ", see the full timeline", "k11.n1": "Graphic & UI",
+    "k12.ceja": "By the numbers", "k12.link": ": my career in numbers", "k12.aria": "12 years in digital product, 10 case studies, 3 products of my own",
+    "k12.c1": "years in digital product", "k12.c2": "case studies", "k12.c3": "products of my own",
+    "k13.ceja": "About", "k13.titulo": "A product designer who builds.", "k13.accion": ": view the profile",
+    "k14.titulo": "How I work", "k14.accion": ", read the four steps", "k14.p1": "Read the domain before drawing", "k14.p2": "The language before the screens",
+    "k14.p3": "The prototype is the spec", "k14.p4": "Ship, then listen",
+    "k15.ceja": "In their words", "k15.region": "Testimonials", "k15.ant": "Previous testimonial", "k15.sig": "Next testimonial",
+    "k16.ceja": "Archive", "k16.titulo": "More work", "k16.accion": ", see all work",
+    "k16.r1": "Per-minute car rental, for iOS.", "k16.r2": "Booking and life aboard, with Globant.", "k16.r3": "AutomatiQ: surveys that act on their own.", "k16.r4": "Design for US and LATAM clients.",
+    "k17.h2": "Let's talk", "k17.lead": "A role, a consulting project, or the Andes case on a call: write to me.", "k17.copiar": "Copy email",
+    "k17.carta": "Cover letter", "k17.disp": "I lead product at Naowee and take on selected consulting alongside it.",
+    "ext.linkedin": "LinkedIn (opens in a new tab)", "ext.behance": "Behance (opens in a new tab)", "ext.github": "GitHub (opens in a new tab)",
+    "pie.colofon": "Designed by me; built with Next.js and AI agents I direct.", "pie.arriba": "Back to top", "dock.label": "Quick navigation",
+    "hoja.cerrar": "Close", "c1.gancho": "Colombia's sports system, off Word and email: 30 procedures on one platform.",
+    "c.rol": "Role", "c.equipo": "Team", "c.duracion": "Duration", "c.plataformas": "Platforms", "c1.duracion": "Jan 2026 — Now",
+    "c1.equipo": "Product: a team of 2, including a designer I lead; business analysts and engineering.",
+    "c1.alt": "Inspection, oversight and control inbox in the Naowee platform.",
+    "c.impacto": "Impact", "c1.k1": "procedures digitized", "c1.k1n": "Word and email before", "c1.k2v": "~1,200", "c1.k2v2": "~1,200", "c1.k2": "sports organizations in scope",
+    "c1.k3": "screens shipped", "c1.k3n": "across 8 of 13 modules", "c1.k4": "shared components", "c1.k4n": "one design system",
+    "c.problema": "Problem", "c1.h2p": "A sector that ran on files",
+    "c1.problema": "Colombia's 30 sports procedures moved through Word, email and a document manager, GESDOC. No system talked to another. Drawing screens was the easy part: first came 45+ states, 15 roles and a real hierarchy of committees, federations, leagues, clubs and athletes."
+  };
+  const ES = {};
+  const META = {
+    es: { title: document.title, desc: $('meta[name="description"]').content },
+    en: { title: "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+          desc: "Doug Vargas is Head of Product at Naowee and a product designer who builds in code. Before that, tech lead on Andes, Mercadolibre's design system." }
+  };
+  const ATTRS = [["data-t", null], ["data-ta", "aria-label"], ["data-talt", "alt"], ["data-tt", "title"], ["data-ttip", "data-tip"]];
+  ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => {
+    const k = el.getAttribute(a); if (k in ES) return;
+    ES[k] = target ? el.getAttribute(target) : el.textContent;
+  }));
+  const CITAS = [
+    { q: "“His ability to translate complex data into clear interfaces transformed our entire dashboard experience.”", es: "Arman Eshraghi · Fundador y CEO, Qrvey", en: "Arman Eshraghi · Founder & CEO, Qrvey", href: "/work/qrvey", les: "Leer el caso de Qrvey", len: "Read the Qrvey case" },
+    { q: "“He elevated the entire team's standard of craft.”", es: "Nicolas Polverino · Director Técnico, Globant", en: "Nicolas Polverino · Technical Director, Globant", href: "/work/royal-caribbean", les: "Leer el caso de Royal Caribbean", len: "Read the Royal Caribbean case" },
+    { q: "“We've done 8 projects with him and every single one delivered above expectations.”", es: "Francesca Steri · Directora de Diseño, Aval Digital Labs", en: "Francesca Steri · Design Director, Aval Digital Labs", href: "/work/banco-de-occidente", les: "Leer el caso del Banco de Occidente", len: "Read the Banco de Occidente case" },
+  ];
+  let lang = "es", cita = 0;
+  function setLang(l, push) {
+    lang = l === "en" ? "en" : "es";
+    const D = lang === "en" ? EN : ES;
+    root.lang = lang;
+    ATTRS.forEach(([a, target]) => $$(`[${a}]`).forEach((el) => {
+      const k = el.getAttribute(a), v = D[k] ?? ES[k];
+      if (v == null) return;
+      if (target) el.setAttribute(target, v); else el.textContent = v;
+    }));
+    $$(".idioma a").forEach((a) => { const on = a.dataset.lang === lang; a.setAttribute("aria-current", String(on));
+      if (on) a.removeAttribute("title"); else a.title = lang === "en" ? "Ver en español" : "Read in English"; });
+    document.title = META[lang].title; $('meta[name="description"]').content = META[lang].desc;
+    $(".k15").setAttribute("aria-roledescription", lang === "en" ? "carousel" : "carrusel");
+    pintarCita(); reloj(); contarCarrusel();
+    // el punto de miles de Doto tiene cola y se lee como coma: se dibuja un punto redondo (el «.» real queda en el texto)
+    $$(".dot").forEach((el) => { if (el.children.length || !/\.\d/.test(el.textContent)) return;
+      el.innerHTML = el.textContent.replace(/\.(?=\d)/g, '<span class="punto">.</span>'); });
+    if (push) history.replaceState(history.state, "", lang === "en" ? "?lang=en" + location.hash : location.pathname + location.hash);
+    if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
+  }
+  $$(".idioma a").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); setLang(a.dataset.lang, true); }));
+
+  /* ═════════════ 2 · Reloj de Barranquilla (cambia una vez por minuto) ═════════════ */
+  const elReloj = $("#reloj");
+  function reloj() {
+    const now = new Date(), tz = "America/Bogota";
+    if (lang === "en") {
+      const t = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "numeric", minute: "2-digit", hour12: true }).formatToParts(now);
+      const h = t.find((p) => p.type === "hour").value, m = t.find((p) => p.type === "minute").value, ap = t.find((p) => p.type === "dayPeriod").value;
+      elReloj.innerHTML = `<span>BAQ</span><span class="reloj-hora">${h}:${m}<span class="ampm">${ap}</span></span>`;
+      elReloj.setAttribute("aria-label", `Local time in Barranquilla: ${h}:${m} ${ap}`);
+    } else {
+      const s = new Intl.DateTimeFormat("es-CO", { timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
+      const s12 = new Intl.DateTimeFormat("es-CO", { timeZone: tz, hour: "numeric", minute: "2-digit", hour12: true }).format(now);
+      elReloj.innerHTML = `<span>BAQ</span><span class="reloj-hora">${s}</span>`; elReloj.setAttribute("aria-label", `Hora local en Barranquilla: ${s12}`);
+    }
+  }
+  setInterval(reloj, 60 * 1000);
+
+  /* ═════════════ 3 · Testimonios (manual, sin autoplay) ═════════════ */
+  function pintarCita() {
+    const c = CITAS[cita];
+    $("#citaTexto").textContent = c.q; $("#citaFirma").textContent = c[lang];
+    const a = $("#citaLink"); a.href = c.href; a.textContent = lang === "en" ? c.len : c.les;
+    $("#citaCont").textContent = lang === "en" ? `${cita + 1} of 3` : `${cita + 1} de 3`;
+  }
+  $$("[data-cita]").forEach((b) => b.addEventListener("click", () => { cita = (cita + Number(b.dataset.cita) + 3) % 3; pintarCita(); }));
+
+  /* ═════════════ 4 · Carrusel móvil de casos ═════════════ */
+  const car = $("#carrusel");
+  function contarCarrusel() {
+    const cards = [...car.children], w = cards[0].getBoundingClientRect().width + 12;
+    const i = Math.min(cards.length - 1, Math.round(car.scrollLeft / Math.max(1, w)));
+    $("#carruselCont").textContent = lang === "en" ? `${i + 1} of ${cards.length}` : `${i + 1} de ${cards.length}`;
+  }
+  car.addEventListener("scroll", () => requestAnimationFrame(contarCarrusel), { passive: true });
+  $$("[data-dir]").forEach((b) => b.addEventListener("click", () => {
+    const w = car.children[0].getBoundingClientRect().width + 12;
+    car.scrollBy({ left: Number(b.dataset.dir) * w, behavior: RM ? "auto" : "smooth" });
+  }));
+
+  /* ═════════════ 5 · Copiar correo ═════════════ */
+  $("#copiar").addEventListener("click", async () => {
+    const t = $("#copiarTxt");
+    try { await navigator.clipboard.writeText("hello@douguizard.com"); t.textContent = lang === "en" ? "Copied" : "Copiado"; }
+    catch { t.textContent = lang === "en" ? "Couldn't copy. Select it instead." : "No se pudo copiar. Selecciónalo a mano."; }
+    setTimeout(() => (t.textContent = lang === "en" ? EN["k17.copiar"] : ES["k17.copiar"]), 2400);
+  });
+
+  /* ═════════════ 6 · Escena: retrato + vidrio estriado (WebGL con respaldo CSS) ═════════════ */
+  const esc = $("#escena"), foto = $("#foto"), canvas = $("#vidrio"), poster = $("#poster"), clip = $("#fotoClip"), vCss = $("#vidrioCss");
+  const rail = $("#rail"), indicadorTxt = $("#indicadorTxt");
+  const laser = $("#laser"), nombreXL = $("#nombreXL"), k1 = $("#k1"), k2 = $("#k2"), k1Nombre = $("#k1Nombre"), indicador = $("#indicador");
+  const IMG = { w: 880, h: 1168, eye: 0.418, face: [0.5, 0.41, 0.19, 0.205] };   // la foto final solo cambia esta línea
+  const S = { p: RM ? 1 : 0, tx: 0, ty: 0, mx: 0, my: 0, vx: 0, vy: 0, lens: 0, lensT: 0, drift: 0, t0: performance.now(), drag: false };
+  let G = null, cine = root.classList.contains("cine");
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
+  const eio = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  function offsetTo(el, anc) { let x = 0, y = 0, n = el; while (n && n !== anc) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return { x, y }; }
+
+  function placement(r, mode) {   // dónde va la foto (px CSS de la escena) para un rectángulo de losa dado
+    const ar = IMG.w / IMG.h;
+    if (mode === "cine") { const Dy = r.vh * 1.3; return { Dx: Dy * ar, Dy, Ox: r.w * 0.62 - (Dy * ar) / 2, Oy: 0.41 * r.vh - IMG.eye * Dy }; }
+    if (mode === "movil") { const Dy = Math.max(r.h * 0.95, (r.w / ar) * 1.02); return { Dx: Dy * ar, Dy, Ox: r.x + r.w / 2 - (Dy * ar) / 2, Oy: r.y + 0.25 * r.h - IMG.eye * Dy }; }
+    const Dy = Math.max(r.h * 1.21, (r.w / ar) * 1.05); return { Dx: Dy * ar, Dy, Ox: r.x + r.w / 2 - (Dy * ar) / 2, Oy: r.y + 0.30 * r.h - IMG.eye * Dy };
+  }
+  function layout() {
+    const W = esc.clientWidth, H = esc.clientHeight, vh = window.innerHeight, o = offsetTo(k1, esc);
+    const slot = { x: o.x, y: o.y, w: k1.offsetWidth, h: k1.offsetHeight };
+    const isDesk = desk.matches;
+    G = { W, H, vh, isDesk, slot };
+    if (isDesk) {
+      G.a = { rect: { x: 0, y: 0, w: W, h: vh }, rad: 0, pl: placement({ w: W, vh }, "cine") };
+      G.b = { rect: slot, rad: parseFloat(getComputedStyle(k1).borderTopLeftRadius) || 48, pl: placement(slot, "slot") };
+      // K2: del panel abajo-izquierda (acto 1) a su celda
+      const o2 = offsetTo(k2, esc);
+      G.k2 = { dx: 24 - o2.x, dy: vh - 24 - k2.offsetHeight - o2.y };
+      // Nombre XL: encima de la línea láser, alineado a 24 px; aterriza en el nombre del panel de K1
+      const fs = parseFloat(getComputedStyle(nombreXL).fontSize), nh = nombreXL.offsetHeight;
+      const lineA = G.a.pl.Oy + IMG.eye * G.a.pl.Dy;
+      G.nx = { x0: 24, y0: Math.max(88, lineA - nh - 16) };
+      const on = offsetTo(k1Nombre, esc), fs2 = parseFloat(getComputedStyle(k1Nombre).fontSize);
+      G.nx.x1 = on.x; G.nx.y1 = on.y; G.nx.s1 = fs2 / fs;
+      nombreXL.style.left = G.nx.x0 + "px"; nombreXL.style.top = G.nx.y0 + "px";
+    } else {
+      const r = { x: 0, y: o.y, w: W, h: slot.h }, pl = placement(r, "movil");
+      G.a = { rect: r, rad: 0, pl }; G.b = { rect: { x: 12, y: r.y + 12, w: W - 24, h: r.h - 24 }, rad: 36, pl };
+    }
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    canvas.style.width = W + "px"; canvas.style.height = H + "px"; G.dpr = dpr;
+    kick();
+  }
+
+  function frame(p) {   // estado de la escena en el progreso p (0 cine → 1 losa)
+    const q = G.isDesk ? eio(clamp(p / 0.72)) : eio(clamp(p));
+    const A = G.a, B = G.b, L = (k) => lerp(A.rect[k], B.rect[k], q);
+    const rect = { x: L("x"), y: L("y"), w: L("w"), h: L("h") }, rad = lerp(A.rad, B.rad, q);
+    const pl = { Ox: lerp(A.pl.Ox, B.pl.Ox, q), Oy: lerp(A.pl.Oy, B.pl.Oy, q), Dx: lerp(A.pl.Dx, B.pl.Dx, q), Dy: lerp(A.pl.Dy, B.pl.Dy, q) };
+    const hump = Math.sin(Math.PI * clamp(G.isDesk ? p / 0.72 : p));       // las estrías se cierran a mitad del viaje y se abren al llegar
+    return {
+      rect, rad, pl, q,
+      ang: (G.isDesk ? lerp(12, 0, q) : lerp(12, 4, q)) * Math.PI / 180,
+      w: G.isDesk ? lerp(64, 30, q) : lerp(40, 30, q),
+      str: lerp(0.62, 0.55, q) + 0.30 * hump,
+      phase: p * 140,
+      lensR: G.isDesk ? lerp(240, 150, q) : 150,
+      lineY: pl.Oy + IMG.eye * pl.Dy, lineH: 0.012 * pl.Dy,
+      face: [pl.Ox + IMG.face[0] * pl.Dx, pl.Oy + IMG.face[1] * pl.Dy, IMG.face[2] * pl.Dx, IMG.face[3] * pl.Dy],
+    };
+  }
+
+  /* WebGL2: un solo pase. Rectángulo redondeado (SDF) → franjas oblicuas con perfil de lente cilíndrica →
+     cara protegida (fuerza ×0,32) y línea láser legible (desplazamiento horizontal en su banda) →
+     lente del cursor (las franjas se abren con un muelle) → fuera de la foto: borde estirado + mip borroso. */
+  const VS = `#version 300 es
+  in vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
+  const FS = `#version 300 es
+  precision highp float;
+  uniform sampler2D uTex; uniform vec2 uRes; uniform float uDpr;
+  uniform vec4 uRect; uniform float uRad; uniform vec2 uOff, uSize;
+  uniform float uW, uAng, uStr, uPhase; uniform vec4 uFace; uniform float uLineY, uLineH;
+  uniform vec2 uMouse; uniform float uLens, uLensR;
+  out vec4 o;
+  float hash(float n){ return fract(sin(n * 127.1) * 43758.5453); }
+  float sdb(vec2 p, vec2 b, float r){ vec2 q = abs(p) - b + r; return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r; }
+  void main(){
+    vec2 p = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;
+    float d = sdb(p - (uRect.xy + uRect.zw * 0.5), uRect.zw * 0.5, uRad);
+    float a = 1.0 - smoothstep(-0.75, 0.75, d);
+    if (a <= 0.0) { o = vec4(0.0); return; }
+    vec2 dir = vec2(cos(uAng), sin(uAng));
+    float u = dot(p - uRect.xy, dir) + uPhase;
+    float k = floor(u / uW), t = fract(u / uW), s = 2.0 * t - 1.0;
+    float face = 1.0 - smoothstep(0.78, 1.1, length((p - uFace.xy) / uFace.zw));
+    float md = length(p - uMouse);
+    float lens = (1.0 - smoothstep(uLensR * 0.5, uLensR * 1.2, md)) * uLens;
+    float str = uStr * (1.0 - 0.68 * face) * (1.0 - lens);
+    float disp = str * uW * (s * 0.75 + 0.45 * s * s * s + (hash(k) - 0.5) * 0.4);
+    float band = uLineH > 0.0 ? 1.0 - smoothstep(uLineH, uLineH * 2.4, abs(p.y - uLineY)) : 0.0;
+    vec2 q = p + normalize(mix(dir, vec2(1.0, 0.0), band)) * disp;
+    vec2 uv = (q - uOff) / uSize;
+    float fuera = max(max(-uv.x, uv.x - 1.0), max(-uv.y, uv.y - 1.0));
+    float bias = clamp(fuera * 16.0, 0.0, 4.5) + str * 1.1 * (0.35 + abs(s)) * (1.0 - band);
+    float ca = fuera > 0.0 ? 0.0 : str * uW * 0.03 * (0.3 + abs(s)) / uSize.x * (1.0 - band);
+    vec3 col = vec3(texture(uTex, uv + vec2(ca, 0.0), bias).r, texture(uTex, uv, bias).g, texture(uTex, uv - vec2(ca, 0.0), bias).b);
+    col *= mix(1.0, 0.62, smoothstep(0.0, 0.3, fuera));
+    float sh = 0.3 + str, g = 1.0 - lens;
+    float lip = pow(smoothstep(0.10, 0.0, t), 2.0) * 0.22 * sh;
+    float crease = pow(smoothstep(0.80, 1.0, t), 2.0) * 0.30 * sh;
+    float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    col = mix(col, vec3(luma), 0.08 * str);
+    col = col * (1.0 - 0.2 * str * s * s) + lip * g - col * crease * g;
+    col *= 1.0 + 0.06 * lens;
+    o = vec4(col * a, a);
+  }`;
+  let gl = null, U = {}, glOn = false;
+  function initGL() {
+    try {
+      gl = canvas.getContext("webgl2", { antialias: false, premultipliedAlpha: true, alpha: true, powerPreference: "high-performance" });
+      if (!gl) return false;
+      const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+      const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS));
+      gl.bindAttribLocation(pr, 0, "a"); gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+      gl.useProgram(pr);
+      const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      "uTex uRes uDpr uRect uRad uOff uSize uW uAng uStr uPhase uFace uLineY uLineH uMouse uLens uLensR".split(" ").forEach((n) => (U[n] = gl.getUniformLocation(pr, n)));
+      const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, poster);   // file:// lanza SecurityError → respaldo CSS
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); glOn = false; foto.classList.remove("gl"); canvas.classList.remove("on"); });
+      glOn = true; return true;
+    } catch (err) { console.warn("[vidrio] sin WebGL, queda el póster:", err.message); glOn = false; return false; }
+  }
+  function drawGL(F, now) {
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1i(U.uTex, 0); gl.uniform2f(U.uRes, G.W, G.H); gl.uniform1f(U.uDpr, G.dpr);
+    gl.uniform4f(U.uRect, F.rect.x, F.rect.y, F.rect.w, F.rect.h); gl.uniform1f(U.uRad, F.rad);
+    gl.uniform2f(U.uOff, F.pl.Ox, F.pl.Oy); gl.uniform2f(U.uSize, F.pl.Dx, F.pl.Dy);
+    gl.uniform1f(U.uW, F.w); gl.uniform1f(U.uAng, F.ang); gl.uniform1f(U.uStr, F.str);
+    gl.uniform1f(U.uPhase, F.phase + S.drift + (S.mx - G.W / 2) * 0.04 * S.lens);
+    gl.uniform4f(U.uFace, ...F.face); gl.uniform1f(U.uLineY, F.lineY); gl.uniform1f(U.uLineH, F.lineH);
+    gl.uniform2f(U.uMouse, S.mx, S.my); gl.uniform1f(U.uLens, S.lens); gl.uniform1f(U.uLensR, F.lensR);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (!canvas.classList.contains("on")) { canvas.classList.add("on"); setTimeout(() => foto.classList.add("gl"), 240); }
+  }
+  function drawCss(F) {   // respaldo: foto + franjas CSS, recortadas con clip-path al rectángulo de la losa
+    Object.assign(poster.style, { left: F.pl.Ox + "px", top: F.pl.Oy + "px", width: F.pl.Dx + "px", height: F.pl.Dy + "px", transform: "none" });
+    const r = F.rect;
+    clip.style.clipPath = `inset(${r.y}px ${G.W - r.x - r.w}px ${G.H - r.y - r.h}px ${r.x}px round ${F.rad}px)`;
+    vCss.style.setProperty("--ang-css", (90 + F.ang * 180 / Math.PI) + "deg");
+  }
+  function drawDom(F, p) {   // láser, indicador y nombre (solo desktop cine)
+    if (!G.isDesk) return;
+    laser.style.transform = `translateY(${F.lineY}px)`;
+    laser.style.setProperty("--gx", F.face[0] + "px"); laser.style.setProperty("--gr", F.face[2] * 1.15 + "px");
+    laser.style.opacity = String(lerp(1, 0.72, F.q));
+    indicador.style.setProperty("--p", clamp(p).toFixed(3));
+  }
+
+  let raf = 0, last = performance.now();
+  function busy() { return Math.abs(S.tx - S.mx) > 0.3 || Math.abs(S.ty - S.my) > 0.3 || Math.abs(S.vx) + Math.abs(S.vy) > 1 || Math.abs(S.lensT - S.lens) > 0.002 || driftOn(); }
+  const driftOn = () => !RM && !G?.isDesk && performance.now() - S.t0 < 9000;
+  function tick(now) {
+    raf = 0; if (!G) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.drag) { S.mx = S.tx; S.my = S.ty; S.vx = S.vy = 0; }
+    else {   // muelles X/Y independientes, críticamente amortiguados (respuesta 0,35 s)
+      const w0 = (2 * Math.PI) / 0.35;   // sub-pasos de 1/240 s: el muelle es estable aunque el cuadro tarde
+      for (let r = dt; r > 0; r -= 1 / 240) {
+        const h = Math.min(r, 1 / 240);
+        S.vx += (w0 * w0 * (S.tx - S.mx) - 2 * w0 * S.vx) * h; S.vy += (w0 * w0 * (S.ty - S.my) - 2 * w0 * S.vy) * h;
+        S.mx += S.vx * h; S.my += S.vy * h;
+      }
+    }
+    S.lens += (S.lensT - S.lens) * (1 - Math.exp(-dt * (S.lensT > S.lens ? 7 : 4)));
+    if (driftOn()) { const t = (now - S.t0) / 1000; S.drift += dt * 9 * Math.exp(-t / 3); }   // deriva leve que se asienta sola (< 9 s)
+    const F = frame(S.p);
+    if (glOn) drawGL(F, now); else drawCss(F);
+    drawDom(F, S.p);
+    if (busy()) raf = requestAnimationFrame(tick);
+  }
+  function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+
+  // Cursor: el vidrio se abre bajo el puntero (solo puntero fino, nunca con movimiento reducido)
+  const local = (e) => { const r = esc.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  function dentro(x, y) { const r = frame(S.p).rect; return x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h; }
+  window.addEventListener("pointermove", (e) => {
+    if (RM || !G || e.pointerType === "touch") return;
+    const [x, y] = local(e); S.tx = x; S.ty = y; S.lensT = dentro(x, y) ? 1 : 0;
+    if (S.lens < 0.05) { S.mx = x; S.my = y; S.vx = S.vy = 0; }   // la lente nace bajo el cursor, no viaja desde una esquina
+    kick();
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => { S.lensT = 0; kick(); });
+  // Táctil: arrastrar sobre la foto abre el vidrio 1:1 (sin inercia); el scroll vertical no se bloquea (pan-y)
+  esc.addEventListener("pointerdown", (e) => {
+    if (RM || e.pointerType !== "touch") return;
+    const [x, y] = local(e); if (!dentro(x, y)) return;
+    S.drag = true; S.tx = S.mx = x; S.ty = S.my = y; S.lensT = 1; kick();
+  });
+  esc.addEventListener("pointermove", (e) => { if (!S.drag) return; const [x, y] = local(e); S.tx = x; S.ty = y; kick(); });
+  const soltar = () => { if (!S.drag) return; S.drag = false; S.lensT = 0; kick(); };
+  esc.addEventListener("pointerup", soltar); esc.addEventListener("pointercancel", soltar);
+
+  /* ═════════════ 7 · Coreografía: entrada + scroll anclado (GSAP ScrollTrigger) ═════════════ */
+  const tarjetasTop = $$(".os-top > .tarjeta:not(.k2):not(.k1)");
+  let st = null;
+  const finDelAncla = () => (st ? st.end : 0);
+  function irAlOS(cb) {   // el ancla nunca atrapa: «Ver casos», Tab o el skip link saltan al tablero armado
+    if (!st || S.p > 0.99) { cb && cb(); return; }
+    window.scrollTo({ top: finDelAncla() + 1, behavior: RM ? "auto" : "smooth" });
+    st.getTween && st.getTween() && st.getTween().progress(1);
+    if (cb) { const t0 = performance.now(); const w = () => (S.p > 0.995 || performance.now() - t0 > 1800 ? cb() : requestAnimationFrame(w)); requestAnimationFrame(w); }
+  }
+
+  function montarCine() {
+    if (!window.gsap || !window.ScrollTrigger) {   // sin CDN: el tablero aparece armado, igual que con movimiento reducido
+      root.classList.remove("cine"); cine = false; esc.classList.remove("oculta"); rail.inert = false;
+      if (desk.matches) S.p = 1; layout(); return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+    mm.add({ cine: "(min-width: 1024px) and (prefers-reduced-motion: no-preference)" }, (ctx) => {
+      if (RM) return;
+      root.classList.add("cine"); cine = true; rail.inert = true; layout();
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          id: "ensamblaje", trigger: esc, pin: true, start: "top top", end: () => "+=" + Math.round(window.innerHeight),
+          scrub: CAPTURA ? true : 0.3, invalidateOnRefresh: true, anticipatePin: 1,
+          snap: CAPTURA ? false : { snapTo: [0, 1], directional: false, delay: 0.05, duration: { min: 0.2, max: 0.45 }, ease: "power2.out" },
+          onRefreshInit: layout,
+          onRefresh: (self) => { S.p = self.animation.progress(); esc.classList.toggle("oculta", S.p < 0.98); rail.inert = S.p < 0.5; kick(); },
+        },
+        onUpdate() {
+          S.p = tl.progress(); kick();
+          esc.classList.toggle("oculta", S.p < 0.98);
+          rail.inert = S.p < 0.5;
+          indicadorTxt.style.opacity = S.p > 0.05 ? "0" : "";
+        },
+      });
+      st = tl.scrollTrigger;
+      tl.fromTo(k2, { x: () => G.k2.dx, y: () => G.k2.dy, "--m": 0, "--mt": 0 }, { x: 0, y: 0, ease: "power2.inOut", duration: 0.6 }, 0)
+        .to(k2, { "--m": 1, ease: "power1.inOut", duration: 0.22 }, 0.3)
+        .to(k2, { "--mt": 1, duration: 0.001 }, 0.41)   // la tinta cambia en el punto medio: el contraste nunca cae a 1:1
+        .fromTo(nombreXL, { x: 0, y: 0, scale: 1 }, { x: () => G.nx.x1 - G.nx.x0, y: () => G.nx.y1 - G.nx.y0, scale: () => G.nx.s1, ease: "power2.inOut", duration: 0.72 }, 0)
+        .fromTo("#velo", { opacity: 1 }, { opacity: 0, duration: 0.4 }, 0)
+        .fromTo(indicador, { opacity: 1 }, { opacity: 0, duration: 0.12 }, 0.8)
+        .fromTo(k1, { opacity: 0 }, { opacity: 1, duration: 0.16 }, 0.6)
+        .fromTo(nombreXL, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, 0.66)
+        .fromTo(".k1-nombre .xl-hueco", { opacity: 0 }, { opacity: 1, duration: 0.12 }, 0.68)
+        .fromTo(".rail", { x: () => -112, opacity: 0 }, { x: 0, opacity: 1, ease: "power2.out", duration: 0.3 }, 0.5);
+      const INICIO = { k3: 0.30, k4: 0.36, k5: 0.42 };   // sin blur: un fotograma congelado nunca parece un error de carga
+      tarjetasTop.forEach((el) => {
+        const k = [...el.classList].find((c) => INICIO[c]);
+        tl.fromTo(el, { opacity: 0, scale: 0.96, y: 24, "--dw": 100 },
+          { opacity: 1, scale: 1, y: 0, "--dw": 700, ease: "power2.out", duration: 0.2 }, INICIO[k] ?? 0.42);
+      });
+      tl.to({}, { duration: 0.04 }, 0.96);   // reposo al final: el tablero ya armado antes de soltar el ancla
+
+      if (!CAPTURA && window.scrollY < 4) {   // entrada coreografiada al cargar (una vez; < 600 ms de escalonado)
+        const intro = gsap.timeline({ delay: 0.12, defaults: { ease: "expo.out" } });
+        intro.fromTo(".barra > *", { opacity: 0, y: -8, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.36, stagger: 0.04, clearProps: "filter,transform,opacity" }, 0)
+          .from(".nombre-xl .linea > span", { yPercent: 105, duration: 0.6, stagger: 0.08 }, 0.08)
+          .from(laser, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, 0.24)
+          .fromTo(k2, { opacity: 0, scale: 0.96, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, clearProps: "filter" }, 0.4)
+          .fromTo(indicador, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.6);
+      }
+      return () => { st = null; cine = false; rail.inert = false; root.classList.remove("cine"); S.p = 1; esc.classList.remove("oculta"); gsap.set([nombreXL, ".k1-nombre .xl-hueco"], { clearProps: "opacity" }); layout(); };
+    });
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
+
+  // Móvil / tableta: sin ancla. La foto a sangre se vuelve losa (inset 12, radio 36) al subir con el scroll.
+  function scrollMovil() {
+    if (desk.matches || RM) return;
+    S.p = clamp(window.scrollY / (window.innerHeight * 0.6)); kick();
+  }
+  window.addEventListener("scroll", scrollMovil, { passive: true });
+
+  // Teclado y lectores: el orden del DOM es el del tablero. Si el foco entra a una losa aún sin armar, se salta al OS.
+  esc.addEventListener("focusin", (e) => {
+    if (!cine || S.p > 0.98) return;
+    if (k2.contains(e.target)) return;
+    window.scrollTo({ top: finDelAncla() + 1, behavior: "auto" });
+    requestAnimationFrame(() => { const t = st && st.getTween && st.getTween(); if (t) t.progress(1); });   // el foco nunca cae en una losa a opacidad 0
+  });
+
+  /* ═════════════ 8 · Navegación: pills (dónde estoy) · spotlight de grupo · dock ═════════════ */
+  const anclas = ["trabajo", "experiencia", "perfil", "contacto"].map((id) => [id, document.getElementById(id)]);
+  function scrollspy() {
+    let act = null;
+    if (!(cine && S.p < 0.98)) for (const [id, el] of anclas) if (el.getBoundingClientRect().top < window.innerHeight * 0.55) act = id;
+    $$("[data-sec]").forEach((a) => a.setAttribute("aria-current", String(a.dataset.sec === act)));
+  }
+  window.addEventListener("scroll", () => requestAnimationFrame(scrollspy), { passive: true });
+  let focoT = 0;
+  function spotlight(grupo) {
+    clearTimeout(focoT);
+    $$(".tarjeta[data-grupo]").forEach((c) => c.classList.toggle("atenuada", c.dataset.grupo !== grupo));
+    focoT = setTimeout(() => $$(".tarjeta.atenuada").forEach((c) => c.classList.remove("atenuada")), 1400);
+  }
+  function irA(id) {
+    const el = document.getElementById(id); if (!el) return;
+    const fin = () => { const y = el.getBoundingClientRect().top + window.scrollY - (desk.matches ? 88 : 72);
+      if (!(id === "trabajo" && desk.matches)) window.scrollTo({ top: y, behavior: RM ? "auto" : "smooth" });
+      spotlight(id); if (id === "contacto") $("#h-contacto").focus({ preventScroll: true }); };
+    if (id === "trabajo" && cine && desk.matches) { window.scrollTo({ top: finDelAncla() + 1, behavior: RM ? "auto" : "smooth" }); spotlight(id); }
+    else fin();
+  }
+  $$('a[href^="#"]').forEach((a) => {
+    const id = a.getAttribute("href").slice(1);
+    if (!["trabajo", "experiencia", "perfil", "contacto", "os"].includes(id) && id !== "") return;
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (id === "") { window.scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" }); return; }
+      if (id === "os") { irAlOS(() => $(".k3 .enlace-tarjeta").focus({ preventScroll: true })); if (!cine) $(".k3 .enlace-tarjeta").focus(); return; }
+      irA(id);
+    });
+  });
+  let ultY = window.scrollY; const dock = $("#dock");
+  window.addEventListener("scroll", () => { const y = window.scrollY; const enHeroe = y < window.innerHeight * 0.5;   // en el héroe ya están los CTA: el dock aparece al salir de él
+    dock.classList.toggle("escondido", enHeroe); ultY = y; }, { passive: true });
+
+  /* ═════════════ 9 · Hoja de caso (dialog modal: foco atrapado, Esc, Atrás, arrastre) ═════════════ */
+  const hoja = $("#hoja"), panel = $("#hojaPanel"), cuerpo = $("#hojaCuerpo"), cab = $("#hojaCab");
+  let abridor = null, conHistoria = false;
+  function abrirHoja(origen) {
+    abridor = origen; hoja.showModal(); hoja.scrollTop = 0; $("#hojaCerrar").focus({ preventScroll: true }); cuerpo.scrollTop = 0; $("#hojaProgreso").style.setProperty("--p", 0);
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => requestAnimationFrame(() => { hoja.classList.add("abierta"); setTimeout(() => hoja.classList.add("encendida"), RM ? 0 : 220); }));
+    if (location.hash !== "#/work/naowee-suid") { history.pushState({ hoja: 1 }, "", "#/work/naowee-suid"); conHistoria = true; }
+  }
+  function cerrarHoja(desdeHistoria) {
+    if (!hoja.open) return;
+    hoja.classList.remove("abierta", "encendida"); panel.style.translate = ""; panel.style.transition = "";
+    const fin = () => { hoja.close(); document.body.style.overflow = ""; abridor && abridor.focus({ preventScroll: true }); };
+    if (RM) fin(); else setTimeout(fin, 280);
+    if (!desdeHistoria && conHistoria) { conHistoria = false; history.back(); }
+  }
+  $$("[data-hoja]").forEach((a) => a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;   // cmd/ctrl/clic medio: la página completa en otra pestaña
+    e.preventDefault(); abrirHoja(a);
+  }));
+  hoja.addEventListener("cancel", (e) => { e.preventDefault(); cerrarHoja(); });
+  hoja.addEventListener("click", (e) => { if (e.target.closest("[data-cerrar]")) cerrarHoja(); });
+  window.addEventListener("popstate", () => { if (hoja.open) { conHistoria = false; cerrarHoja(true); } else if (location.hash === "#/work/naowee-suid") abrirHoja($(".k3 .enlace-tarjeta")); });
+  cuerpo.addEventListener("scroll", () => { const m = cuerpo.scrollHeight - cuerpo.clientHeight; $("#hojaProgreso").style.setProperty("--p", m > 0 ? (cuerpo.scrollTop / m).toFixed(3) : 0); }, { passive: true });
+  // Arrastrar la cabecera hacia abajo cierra (por distancia o por velocidad, emil · momentum dismissal)
+  let arr = null;
+  cab.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; cab.setPointerCapture(e.pointerId); arr = { y: e.clientY, t: performance.now() }; panel.style.transition = "none"; });
+  cab.addEventListener("pointermove", (e) => {
+    if (!arr) return; const dy = e.clientY - arr.y;
+    const y = dy > 0 ? dy : -(Math.abs(dy) * 40) / (40 + Math.abs(dy));   // banda elástica hacia arriba
+    panel.style.translate = `-50% ${y}px`;
+  });
+  const finArr = (e) => {
+    if (!arr) return; const dy = e.clientY - arr.y, v = dy / Math.max(1, performance.now() - arr.t); arr = null;
+    panel.style.transition = ""; if (dy > 120 || v > 0.5) cerrarHoja(); else panel.style.translate = "";
+  };
+  cab.addEventListener("pointerup", finArr); cab.addEventListener("pointercancel", finArr);
+
+  /* ═════════════ 10 · Arranque ═════════════ */
+  setLang(root.lang === "en" ? "en" : "es", false);
+  if (RM) { root.classList.remove("cine"); S.p = 1; esc.classList.remove("oculta"); }
+  if (!root.classList.contains("cine")) esc.classList.remove("oculta");
+  const arrancar = () => {
+    layout();
+    if (!RM) montarCine();
+    if (!desk.matches) scrollMovil();
+    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 60));
+    idle(() => { if (initGL()) kick(); });   // el WebGL se monta después del LCP (el póster ya está pintado)
+    scrollspy();
+    if (location.hash === "#/work/naowee-suid") abrirHoja($(".k3 .enlace-tarjeta"));
+  };
+  if (poster.complete && poster.naturalWidth) arrancar(); else poster.addEventListener("load", arrancar, { once: true });
+  let roRaf = 0;
+  new ResizeObserver(() => { cancelAnimationFrame(roRaf); roRaf = requestAnimationFrame(() => { if (!cine) layout(); else if (window.ScrollTrigger) ScrollTrigger.refresh(); }); }).observe(esc);
+  desk.addEventListener("change", () => { layout(); scrollMovil(); });
+  window.__b = { S, get G() { return G; }, get st() { return st; }, setLang, abrirHoja, cerrarHoja, frame };
+})();
+</script>
+</body>
+</html>

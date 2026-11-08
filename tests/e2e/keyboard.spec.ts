@@ -23,132 +23,79 @@ test("6.1 tab order from load", async ({ page }) => {
   expect(order[0], "6.1 first stop is the skip link").toContain("#main");
 });
 
-test("6.2 arrow/Home/End/PageDown navigation @1440", async ({ page }) => {
+// 6.2–6.5 · F3: el shell horizontal (flechas, paneles, `SectionIndex`) ya no
+// existe; el viejo 6.3 (ArrowDown dentro del panel Work) se retira con él. Los
+// reemplazan sus equivalentes en el tablero B (07 F3).
+test("6.2 el orden de Tab es el del DOM: K2, K1, K3, K4, K5…", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await settle(page);
-  const shell = page.locator("[data-hshell]");
-  await shell.focus();
-  const idx = () =>
-    page.evaluate(() => {
-      const s = document.querySelector("[data-hshell]")!;
-      return Math.round(s.scrollLeft / window.innerWidth);
+  await page.locator("#main").focus();
+  const orden: string[] = [];
+  for (let i = 0; i < 40; i++) {
+    await page.keyboard.press("Tab");
+    const k = await page.evaluate(() => {
+      const a = document.activeElement as HTMLElement | null;
+      // La envoltura de las losas de caso lleva el área (`k3`…); las demás cards, la propia `.tarjeta`.
+      const c = a?.closest(".os .losa-caso") ?? a?.closest(".os .tarjeta");
+      if (!c) return null;
+      return (c.className.match(/\bk(\d+)\b/) || [])[0] ?? null;
     });
-  for (let i = 0; i < 4; i++) {
-    await page.keyboard.press("ArrowRight");
-    await page.waitForTimeout(220);
+    if (k && orden.at(-1) !== k) orden.push(k);
   }
-  expect(await idx(), "6.2 four ArrowRight -> panel 04").toBe(4);
-  await page.keyboard.press("Home");
-  await page.waitForTimeout(260);
-  expect(await idx(), "6.2 Home -> 00").toBe(0);
-  await page.keyboard.press("End");
-  await page.waitForTimeout(260);
-  expect(await idx(), "6.2 End -> 04").toBe(4);
-  await page.keyboard.press("Home");
-  await page.waitForTimeout(260);
-  await page.keyboard.press("PageDown");
-  await page.waitForTimeout(260);
-  expect(await idx(), "6.2 PageDown -> 01").toBe(1);
-  await page.keyboard.press("PageUp");
-  await page.waitForTimeout(260);
-  expect(await idx(), "6.2 PageUp -> 00").toBe(0);
+  const esperado = ["k2", "k1", "k3", "k4", "k5", "k7", "k8", "k9", "k10", "k11", "k12", "k13", "k14", "k15", "k16", "k17"];
+  expect(orden.slice(0, esperado.length), JSON.stringify(orden)).toEqual(esperado);
 });
 
-test("6.3 ArrowDown inside Work panel scrolls panel, not shell", async ({ page }) => {
+test("6.3 Enter en una card navega a su destino", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await settle(page);
-  const r = await page.evaluate(async () => {
-    const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
-    const shell = document.querySelector<HTMLElement>("[data-hshell]")!;
-    const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
-    const work = panels.find((p) => /work/i.test(p.getAttribute("data-panel") || "")) || panels[1];
-    shell.scrollLeft = work.offsetLeft;
-    await sleep(300);
-    const beforeLeft = shell.scrollLeft;
-    const scroller =
-      work.scrollHeight > work.clientHeight + 1
-        ? work
-        : work.querySelector<HTMLElement>("*:not(script)") || work;
-    const target =
-      work.scrollHeight > work.clientHeight + 1
-        ? work
-        : (Array.from(work.querySelectorAll<HTMLElement>("*")).find(
-            (e) => e.scrollHeight > e.clientHeight + 1,
-          ) ?? work);
-    const beforeTop = target.scrollTop;
-    target.focus?.();
-    target.scrollTop = beforeTop + 200;
-    await sleep(250);
-    return {
-      beforeLeft,
-      afterLeft: shell.scrollLeft,
-      beforeTop,
-      afterTop: target.scrollTop,
-      scrollable: target.scrollHeight > target.clientHeight + 1,
-      tag: scroller.tagName,
-    };
-  });
-  console.log("6.3", JSON.stringify(r));
-  expect(r.afterLeft, "6.3 shell scrollLeft unchanged while panel scrolls").toBe(r.beforeLeft);
+  await page.locator(".k4 .bento-capa").focus();
+  await page.keyboard.press("Enter");
+  await page.waitForURL("**/work/mercadolibre-andes");
+  expect(new URL(page.url()).pathname).toBe("/work/mercadolibre-andes");
 });
 
-test("6.4 every panel has a tabbable element", async ({ page }) => {
+test("6.4 cada sección del home tiene un tabulable", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await settle(page);
-  const counts = await page.evaluate(() =>
-    // The panel counts itself. Since the F-1 fix each panel wrapper carries
-    // tabindex="0", which is what makes a text-only panel like Craft — no
-    // links, no buttons — reachable and scrollable from the keyboard at all.
-    Array.from(document.querySelectorAll("[data-panel]")).map((p) => ({
-      panel: p.getAttribute("data-panel"),
-      tabbable:
-        (p.matches("[tabindex='0']") ? 1 : 0) +
-        p.querySelectorAll("a,button,[tabindex='0'],input,select,textarea").length,
+  const r = await page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>("[data-seccion]")).map((s) => ({
+      id: s.id,
+      tabulables: Array.from(s.querySelectorAll<HTMLElement>("a[href],button:not([disabled])")).filter(
+        (e) => e.tabIndex >= 0 && getComputedStyle(e).visibility !== "hidden",
+      ).length,
     })),
   );
-  const empty = counts.filter((c) => c.tabbable === 0);
-  expect(empty, JSON.stringify(counts, null, 2)).toEqual([]);
+  expect(r.map((x) => x.id).sort()).toEqual(["about", "contact", "experience", "work"]);
+  for (const x of r) expect(x.tabulables, `6.4 ${x.id}`).toBeGreaterThan(0);
 });
 
-test("6.5 SectionIndex Enter scrolls and moves focus into panel", async ({ page }) => {
+test("6.5 las pills con Enter llevan el foco a su sección", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await settle(page);
-  // Exactly the rail. `aria-label*='Section' i` also matched the header's own
-  // nav, whose label is "Sections", so this test was pressing Enter on a
-  // header link and then asserting the rail's panel index.
-  // By attribute, not by label: the label is translated, the attribute is not.
-  const links = page.locator("nav[data-section-index] a");
-  const n = await links.count();
-  expect(n, "6.5 section index links found").toBeGreaterThan(1);
-  await links.nth(2).focus();
-  const targetHash = await links.nth(2).getAttribute("href");
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(600);
-  const r = await page.evaluate(() => {
-    const a = document.activeElement as HTMLElement | null;
-    const panel = a?.closest("[data-panel]");
-    const shell = document.querySelector("[data-hshell]")!;
-    return {
-      active: a ? a.tagName.toLowerCase() + (a.getAttribute("href") || "") : "none",
-      panel: panel ? panel.getAttribute("data-panel") : null,
-      index: Math.round(shell.scrollLeft / window.innerWidth),
-    };
-  });
-  console.log("6.5", JSON.stringify(r), "target", targetHash);
-  expect(r.index, "6.5 scrolled to panel 2").toBe(2);
-  expect(r.panel, "6.5 focus moved inside the target panel").not.toBeNull();
+  for (const id of ["experience", "about", "work"]) {
+    await page.locator(`header nav a.pill[href="#${id}"]`).focus();
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(300);
+    const r = await page.evaluate(() => ({
+      foco: document.activeElement?.id,
+      hash: location.hash,
+      top: document.activeElement?.getBoundingClientRect().top ?? -1,
+      ih: innerHeight,
+    }));
+    expect(r.foco, `6.5 foco en #${id}`).toBe(id);
+    expect(r.hash).toBe(`#${id}`);
+    expect(r.top, `6.5 #${id} en el viewport`).toBeLessThan(r.ih);
+    await expect(page.locator(`header nav a.pill[href="#${id}"]`)).toHaveAttribute("aria-current", "true");
+  }
 });
 
 test("6.6 mobile menu Escape @375", async ({ page }) => {

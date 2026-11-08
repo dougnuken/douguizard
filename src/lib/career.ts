@@ -103,3 +103,14 @@ export function formatLocation(e: Experience): string | undefined {
   if (parts.length) return parts.join(", ");
   return region ?? undefined;
 }
+
+/**
+ * «Cargo · Ciudad» del rol en curso, para K1 y el pie del sistema B («Head of
+ * Product · Barranquilla»). Vive aquí y no en `site.ts` porque `site.ts` lo
+ * importan componentes cliente (`SiteHeader`) y esto arrastraría `cv.ts` entero
+ * al JS del navegador (+5 KB gz medidos en F1).
+ */
+export function rolCorto(): string {
+  const actual = currentExperience();
+  return `${actual.roleShort ?? actual.role} · ${actual.location.city ?? ""}`.replace(/ · $/, "");
+}

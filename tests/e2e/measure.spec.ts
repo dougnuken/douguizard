@@ -38,50 +38,8 @@ test("M1 phone/browser frame border, radius, shadow on /work/chub @1440", async 
   console.log("M1", JSON.stringify(frames, null, 2));
 });
 
-for (const theme of ["dark", "light"] as const) {
-  test(`M2 hero glow geometry @1440 ${theme}`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.addInitScript(setTheme(theme));
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/", { waitUntil: "networkidle" });
-    await settle(page);
-    const glow = await page.evaluate(() => {
-      const els = Array.from(
-        document.querySelectorAll<HTMLElement>(".glow-corner, [data-glow], [class*='glow']"),
-      );
-      return els.map((el) => {
-        const cs = getComputedStyle(el);
-        const r = el.getBoundingClientRect();
-        let clipped = false;
-        let n: HTMLElement | null = el.parentElement;
-        while (n) {
-          if (getComputedStyle(n).overflow !== "visible") {
-            clipped = true;
-            break;
-          }
-          n = n.parentElement;
-        }
-        return {
-          sel: `${el.tagName.toLowerCase()}.${el.className?.toString().slice(0, 60)}`,
-          rect: {
-            x: +r.x.toFixed(0),
-            y: +r.y.toFixed(0),
-            w: +r.width.toFixed(0),
-            h: +r.height.toFixed(0),
-          },
-          viewport: { w: innerWidth, h: innerHeight },
-          pctOfViewportArea: +(((r.width * r.height) / (innerWidth * innerHeight)) * 100).toFixed(1),
-          pointerEvents: cs.pointerEvents,
-          opacity: cs.opacity,
-          clippedByOverflowHiddenParent: clipped,
-          background: cs.backgroundImage.slice(0, 120),
-        };
-      });
-    });
-    console.log(`M2 ${theme}`, JSON.stringify(glow, null, 2));
-    fs.writeFileSync(`tests/out/glow-${theme}.json`, JSON.stringify(glow, null, 2));
-  });
-}
+// M2 (geometría del resplandor del héroe viejo) se retira en F3: ese héroe ya
+// no existe. M3 (rojos en `/`) se queda como medida informativa.
 
 test("M3 red anywhere on / (both themes)", async ({ page }) => {
   const found: Record<string, unknown>[] = [];

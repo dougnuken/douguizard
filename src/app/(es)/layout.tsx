@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "../globals.css";
-import themeColors from "../theme-colors.json";
 import RootDocument from "@/components/pages/RootDocument";
 import { rootMetadata } from "@/lib/metadata";
 
@@ -13,14 +12,24 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: themeColors.dark },
-    { media: "(prefers-color-scheme: light)", color: themeColors.light },
-  ],
+  colorScheme: "dark",
+  themeColor: "#060608",
 };
 
 export const metadata: Metadata = rootMetadata("es");
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <RootDocument locale="es">{children}</RootDocument>;
+/**
+ * `modal` es el slot de la hoja de casos (F6, 07 §1.2): `(es)` y `@modal` no son
+ * segmentos, así que `@modal/(.)work/[slug]` intercepta `/work/[slug]`.
+ */
+export default function RootLayout({
+  children,
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+  return (
+    <RootDocument locale="es">
+      {children}
+      {modal}
+    </RootDocument>
+  );
 }

@@ -1,10 +1,9 @@
 "use client";
 
-import { BrowserGallery } from "@/components/work/BrowserFrame";
 import MockupGallery from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
 import type { FrameKind, Shot } from "@/lib/caseMedia";
-import { PlainGallery, toBrowserShots, toMockupItems } from "./caseFrames";
+import { GaleriaLosas, PlainGallery, toMockupItems } from "./caseFrames";
 import { Band, EyebrowHeading, type BandProps } from "./primitives";
 
 /**
@@ -34,18 +33,10 @@ export default function CaseGallery({
       <EyebrowHeading>{t.gallery}</EyebrowHeading>
 
       <div className="mt-10 md:mt-12">
-        {kind === "browser" && (
-          <BrowserGallery
-            ariaLabel={ariaLabel}
-            /* Two-up throughout when the count is even, one leader when it is
-               odd. The full-bleed window already opened the page, so a second
-               one here would spend a screen on hierarchy the showcase has
-               settled; and screens that arrive in same-product pairs (Naowee)
-               stay paired, row by row, instead of straddling two systems. */
-            featureCount={shots.length % 2}
-            items={toBrowserShots(shots)}
-          />
-        )}
+        {/* Las capturas de escritorio van en losas B, sin barra de ventana
+            (F7 P1-4): la primera a todo el ancho si son impares, el resto por
+            pares, así las de un mismo módulo comparten fila. */}
+        {kind === "browser" && <GaleriaLosas shots={shots} ariaLabel={ariaLabel} />}
 
         {kind === "plain" && <PlainGallery shots={shots} ariaLabel={ariaLabel} />}
 

@@ -95,3 +95,44 @@ export function cvJsonLd(locale: Locale = "en") {
     ],
   };
 }
+
+/**
+ * `/about`: un `ProfilePage` cuyo `mainEntity` es el mismo Person que `/cv`
+ * (mismo `@id`, E2). Dos `ProfilePage` con el mismo `mainEntity` son válidos:
+ * el perfil y el CV son dos páginas sobre la misma persona.
+ */
+export function aboutJsonLd(locale: Locale, descripcion: string) {
+  const site = getSite(locale);
+  const path = localePath(locale, "/about");
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      personNode(locale),
+      {
+        "@type": "ProfilePage",
+        "@id": `${SITE_URL}${path}#profile`,
+        url: `${SITE_URL}${path}`,
+        name: site.name,
+        description: descripcion,
+        inLanguage: htmlLang[locale],
+        mainEntity: { "@id": `${SITE_URL}/#person` },
+      },
+    ],
+  };
+}
+
+/** `/work`: un `ItemList` con los casos en el orden visible (/01…/10). */
+export function workIndexJsonLd(locale: Locale, slugs: readonly string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${SITE_URL}${localePath(locale, "/work")}#casos`,
+    inLanguage: htmlLang[locale],
+    numberOfItems: slugs.length,
+    itemListElement: slugs.map((slug, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${SITE_URL}${localePath(locale, `/work/${slug}`)}`,
+    })),
+  };
+}

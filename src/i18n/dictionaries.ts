@@ -1,4 +1,5 @@
 import type { Locale } from "./config";
+import { sistemaDict, type DictSistema } from "./sistema";
 
 /**
  * Every string the interface itself says — labels, headings, buttons, the
@@ -43,38 +44,7 @@ const en = {
     nowLight: "Light theme",
     nowDark: "Dark theme",
   },
-  shell: {
-    label: "Sections — use the arrow keys to move between panels",
-  },
-  index: {
-    label: "Section index",
-    row: (label: string, num: string) => `${label} — section ${num}`,
-  },
-  hero: {
-    /** Three lines; `strong` is the one bold word that carries the claim. */
-    title: [
-      { pre: "Designing the" },
-      { strong: "human", post: " side" },
-      { pre: "of an AI era" },
-    ] as { pre?: string; strong?: string; post?: string }[],
-    focus: "Design Build Ship",
-    sub: (p: { role: string; company: string; andesCompany: string; countries: string; scale: string }) =>
-      `${p.role} at ${p.company}. I set direction across the platform and build the prototypes that define it. Before that, Andes at ${p.andesCompany} — the design system behind ${p.countries} countries, ${p.scale}.`,
-    /** "400+ designers, 2,000+ engineers" → "400+ designers and 2,000+ engineers". */
-    joinScale: (team: string) => team.replace(", ", " and "),
-    seeWork: "See work",
-    whereWorked: "Where I've worked",
-  },
   work: {
-    intro: (p: { years: number; own: number; core: number; side: number }) => ({
-      lead: `${p.years} years of systems, products and teams —`,
-      rest: `from LATAM's largest marketplace to national banks, cruise lines and early-stage startups, plus ${numberWord(p.own, "en")} products of my own, designed, built and shipped end to end. ${numberWord(p.core, "en", { capital: true })} that shaped how I work, and ${numberWord(p.side, "en")} I took on for the pleasure of it.`,
-    }),
-    read: "Read",
-    nda: "Case study available on request",
-    earlier: "Earlier work",
-    side: "Freelance side projects",
-    fullCv: "Full CV",
     vignettes: {
       olbo: {
         caption: "Say it out loud; the category is inferred.",
@@ -110,59 +80,28 @@ const en = {
       },
     },
   },
-  craft: {
-    kicker: "Craft",
-    expertise: "Expertise",
-    howIWork: "How I work",
-  },
-  about: {
-    experience: "/ Experience",
-    earlier: "Earlier",
-    seeCase: "See case",
-    education: "/ Education",
-    languages: "/ Languages",
-    fullCv: "Full CV",
-    portraitAlt: (name: string) =>
-      `${name}, photographed in black and white against a dark background.`,
-    facts: {
-      based: "Based",
-      currently: "Currently",
-      focus: "Focus",
-      focusValue: "Design systems · AI-native product",
-      openTo: "Open to",
-      languages: "Languages",
-      native: "native",
-    },
-  },
-  contact: {
-    lead: "The fastest way to reach me is LinkedIn. Email works too.",
-    signal: (company: string) =>
-      `I lead product at ${company} and take on selected consulting alongside it. Most interested in design systems at scale and AI-native product work.`,
-    signalLabel: "/ The signal",
-    direct: "/ Direct",
-    elsewhere: "/ Elsewhere",
-    backToTop: "Back to top",
-  },
   case: {
     breadcrumb: "Breadcrumb",
     allWork: "All work",
-    meta: { role: "Role", duration: "Duration", team: "Team", year: "Year" },
+    meta: { role: "Role", duration: "Duration", platforms: "Platforms", team: "Team", year: "Year" },
     openIt: "Open it",
-    impact: "The impact",
+    impact: "Impact",
     // A side project that never shipped has no results to report, only a
     // premise — calling that band "impact" claims an outcome that never was.
     idea: "The idea",
-    context: "Context",
-    whatIDid: "What I did",
-    howItHappened: "How it happened",
-    decisions: "Key decisions",
+    context: "Problem",
+    whatIDid: "My part",
+    howItHappened: "Process",
+    decisions: "Decisions",
+    sections: "Case study sections",
+    links: "Links",
     inTheirWords: "In their words",
     quoteOriginal: "",
     features: "What it can do",
     featureKind: { ai: "AI", product: "Product" },
-    product: "The product",
+    product: "Product",
     gallery: "In detail",
-    walkthrough: "/ Walkthrough — no sound",
+    walkthrough: "Walkthrough · no sound",
     productScreens: (project: string) => `${project} — product screens`,
     swipe: "Swipe →",
     play: "Play",
@@ -176,11 +115,13 @@ const en = {
     liveLink: "Live link",
     authorship: "Authorship",
     next: "Next case study",
+    nextLine: "Want the details? I'll walk you through it on a call.",
+    readCase: ", read the case",
     notFound: {
       kicker: "404 · Case study not found",
-      title: { pre: "Lost in", em: "space", post: "?" },
-      body: "The case study you're looking for doesn't exist — or hasn't been published yet.",
-      back: "Back to all work",
+      // 04 §4.5: sin el «¿Perdido en el espacio?» (ya no hay máscara ni chiste que repetir).
+      title: "This case study doesn't exist, or isn't published yet.",
+      back: "See all case studies",
     },
   },
   cv: {
@@ -220,18 +161,29 @@ const en = {
   },
   notFound: {
     kicker: "404 · Page not found",
-    title: "This one went nowhere.",
+    // 04 §4.5 con D17: el chiste de la máscara se retira porque ya no hay máscara.
+    title: "Nothing here.",
     body: (domain: string) =>
-      `The address you followed doesn't exist on ${domain} — it may have moved, or it may never have been here. Everything that does exist is one click away.`,
-    home: "Home",
-    work: "Selected work",
+      `The address you followed doesn't exist on ${domain}. It may have moved. Everything that does exist is one click away.`,
+    home: "Go home",
+    work: "See case studies",
     cv: "CV",
+  },
+  /** F8 · error de render (error.tsx): sin detalles técnicos, con salida. */
+  error: {
+    kicker: "Error",
+    title: "Something broke on this page.",
+    body: "It's on my side, not yours. Try again, or go back home.",
+    retry: "Try again",
+    home: "Go home",
   },
 };
 
-export type Dict = typeof en;
+type DictBase = typeof en;
+/** Con el microcopy del sistema B (`sistema.ts`, F3): cabecera, dock, idioma, pie, hoja, carrusel. */
+export type Dict = DictBase & DictSistema;
 
-const es: Dict = {
+const es: DictBase = {
   meta: {
     skip: "Ir al contenido",
     homeLabel: (brand: string) => `${brand} — inicio`,
@@ -254,32 +206,7 @@ const es: Dict = {
     nowLight: "Tema claro",
     nowDark: "Tema oscuro",
   },
-  shell: {
-    label: "Secciones — usa las flechas del teclado para moverte entre paneles",
-  },
-  index: {
-    label: "Índice de secciones",
-    row: (label: string, num: string) => `${label} — sección ${num}`,
-  },
-  hero: {
-    title: [{ pre: "Diseñar lo" }, { strong: "humano", post: " en" }, { pre: "la era de la IA" }],
-    focus: "Diseñar Construir Lanzar",
-    sub: (p) =>
-      `${p.role} en ${p.company}. Marco la dirección de la plataforma y construyo los prototipos que la definen. Antes, Andes en ${p.andesCompany}: el sistema de diseño detrás de ${p.countries} países, ${p.scale}.`,
-    joinScale: (team: string) => team.replace(", ", " y "),
-    seeWork: "Ver trabajo",
-    whereWorked: "Dónde he trabajado",
-  },
   work: {
-    intro: (p) => ({
-      lead: `${p.years} años de sistemas, productos y equipos:`,
-      rest: `del marketplace más grande de Latinoamérica a bancos nacionales, cruceros y startups en etapa temprana, más ${numberWord(p.own, "es")} productos propios, diseñados, construidos y lanzados de punta a punta. ${numberWord(p.core, "es", { capital: true })} que definieron cómo trabajo y ${numberWord(p.side, "es")} que tomé por el gusto de ${p.side === 1 ? "hacerlo" : "hacerlos"}.`,
-    }),
-    read: "Leer",
-    nda: "Caso disponible a solicitud",
-    earlier: "Trabajo anterior",
-    side: "Proyectos freelance paralelos",
-    fullCv: "CV completo",
     vignettes: {
       olbo: {
         caption: "Lo dices en voz alta; la categoría se infiere.",
@@ -315,56 +242,26 @@ const es: Dict = {
       },
     },
   },
-  craft: {
-    kicker: "Oficio",
-    expertise: "Especialidad",
-    howIWork: "Cómo trabajo",
-  },
-  about: {
-    experience: "/ Experiencia",
-    earlier: "Antes",
-    seeCase: "Ver caso",
-    education: "/ Educación",
-    languages: "/ Idiomas",
-    fullCv: "CV completo",
-    portraitAlt: (name: string) => `${name}, en blanco y negro sobre un fondo oscuro.`,
-    facts: {
-      based: "Ubicación",
-      currently: "Actualmente",
-      focus: "Enfoque",
-      focusValue: "Sistemas de diseño · Producto nativo de IA",
-      openTo: "Disponible para",
-      languages: "Idiomas",
-      native: "nativo",
-    },
-  },
-  contact: {
-    lead: "La forma más rápida de contactarme es LinkedIn. El correo también funciona.",
-    signal: (company: string) =>
-      `Lidero producto en ${company} y, en paralelo, tomo consultorías puntuales. Lo que más me interesa: sistemas de diseño a escala y producto nativo de IA.`,
-    signalLabel: "/ En qué estoy",
-    direct: "/ Directo",
-    elsewhere: "/ En otros lugares",
-    backToTop: "Volver arriba",
-  },
   case: {
     breadcrumb: "Ruta de navegación",
     allWork: "Todo el trabajo",
-    meta: { role: "Rol", duration: "Duración", team: "Equipo", year: "Año" },
+    meta: { role: "Rol", duration: "Duración", platforms: "Plataformas", team: "Equipo", year: "Año" },
     openIt: "Ábrelo",
-    impact: "El impacto",
+    impact: "Impacto",
     idea: "La idea",
-    context: "Contexto",
-    whatIDid: "Qué hice",
-    howItHappened: "Cómo se hizo",
-    decisions: "Decisiones clave",
+    context: "Problema",
+    whatIDid: "Mi parte",
+    howItHappened: "Proceso",
+    decisions: "Decisiones",
+    sections: "Secciones del caso",
+    links: "Enlaces",
     inTheirWords: "En sus palabras",
     quoteOriginal: "Cita original en inglés",
     features: "Qué puede hacer",
     featureKind: { ai: "IA", product: "Producto" },
-    product: "El producto",
+    product: "Producto",
     gallery: "En detalle",
-    walkthrough: "/ Recorrido — sin sonido",
+    walkthrough: "Recorrido · sin sonido",
     productScreens: (project: string) => `${project} — pantallas del producto`,
     swipe: "Desliza →",
     play: "Reproducir",
@@ -378,13 +275,21 @@ const es: Dict = {
     liveLink: "En vivo",
     authorship: "Autoría",
     next: "Siguiente caso",
+    nextLine: "¿Quieres verlo en detalle? Te lo cuento en una llamada.",
+    readCase: ", leer el caso",
     notFound: {
       kicker: "404 · Caso no encontrado",
-      title: { pre: "¿Perdido en el", em: "espacio", post: "?" },
-      body: "El caso que buscas no existe, o todavía no se ha publicado.",
-      back: "Volver a todo el trabajo",
+      title: "Este caso no existe, o todavía no está publicado.",
+      back: "Ver todos los casos",
     },
+  },  error: {
+    kicker: "Error",
+    title: "Algo falló en esta página.",
+    body: "Es de mi lado, no del tuyo. Intenta de nuevo o vuelve al inicio.",
+    retry: "Intentar de nuevo",
+    home: "Ir al inicio",
   },
+
   cv: {
     title: (headline: string) => `Hoja de vida — ${headline}`,
     description: (p) =>
@@ -422,16 +327,19 @@ const es: Dict = {
   },
   notFound: {
     kicker: "404 · Página no encontrada",
-    title: "Esta no llevó a ningún lado.",
+    title: "Aquí no hay nada.",
     body: (domain: string) =>
-      `La dirección que seguiste no existe en ${domain}: puede que se haya movido, o que nunca haya estado aquí. Todo lo que sí existe está a un clic.`,
-    home: "Inicio",
-    work: "Trabajo seleccionado",
+      `La dirección que seguiste no existe en ${domain}. Puede que se haya movido. Todo lo que sí existe está a un clic.`,
+    home: "Ir al inicio",
+    work: "Ver casos",
     cv: "CV",
   },
 };
 
-export const dictionaries: Record<Locale, Dict> = { en, es };
+export const dictionaries: Record<Locale, Dict> = {
+  en: { ...en, ...sistemaDict.en },
+  es: { ...es, ...sistemaDict.es },
+};
 
 export function getDict(locale: Locale): Dict {
   return dictionaries[locale];

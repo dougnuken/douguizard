@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import { EN_ROUTES, ROUTES, setTheme } from "./matrix";
-import { settle } from "./settle";
 
 /**
  * Two languages, one site: Spanish at the root, English under /en.
@@ -44,15 +43,22 @@ test("I2 the header switch lands on the same page in the other language", async 
   expect(await page.evaluate(() => document.documentElement.lang)).toBe("es");
 });
 
-test("I3 switching on the home page keeps the panel you are on", async ({ page }) => {
+// I3 · F3: el switch conserva el **ancla** de la sección (las pills de la
+// cabecera, no `SectionIndex`, que se fue con el shell).
+test("I3 switching on the home page keeps the section anchor", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(setTheme("dark"));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await settle(page);
-  await page.locator('nav[data-section-index] a[href="#work"]').click();
-  await page.waitForTimeout(800);
-  await expect(page.locator('header a[hreflang="en"]').first()).toHaveAttribute("href", "/en#work");
+  for (const id of ["experience", "about", "contact"]) {
+    if (id === "contact") await page.locator("header a.hablemos").click();
+    else await page.locator(`header nav a.pill[href="#${id}"]`).click();
+    await page.waitForTimeout(400);
+    await expect(page.locator('header a[hreflang="en"]').first()).toHaveAttribute("href", `/en#${id}`);
+  }
+  await page.locator('header a[hreflang="en"]').first().click();
+  await page.waitForURL("**/en#contact");
+  expect(await page.evaluate(() => document.documentElement.lang)).toBe("en");
 });
 
 test("I4 the switch is reachable at every width", async ({ page }) => {
@@ -77,20 +83,18 @@ test("I4 the switch is reachable at every width", async ({ page }) => {
 
 /** Interface words that must never show up in the other language's pages. */
 const EN_WORDS = [
-  "Selected work",
-  "How it happened",
-  "What I did",
-  "Key decisions",
+  "See case studies",
+  "Case study sections",
+  "My part",
   "Next case study",
   "Skip to content",
   "Download PDF",
   "Full CV",
 ];
 const ES_WORDS = [
-  "Trabajo seleccionado",
-  "Cómo se hizo",
-  "Qué hice",
-  "Decisiones clave",
+  "Ver casos",
+  "Secciones del caso",
+  "Mi parte",
   "Siguiente caso",
   "Ir al contenido",
   "Descargar PDF",

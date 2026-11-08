@@ -36,12 +36,12 @@ export function browserLabel(src: string): string | undefined {
 
 /** Stills for `MockupGallery`, each carrying its number in the case's gallery. */
 export function toMockupItems(shots: Shot[]): MockupItem[] {
-  return shots.map(({ item, num }) => ({
+  // Sin número de captura: en la pieza B la galería no se numera (F7 P1-4).
+  return shots.map(({ item }) => ({
     id: item.src,
     src: item.src,
     alt: item.alt,
     caption: item.caption,
-    eyebrow: shotNumber(num),
   }));
 }
 
@@ -59,11 +59,39 @@ export function toBrowserShots(shots: Shot[]): BrowserShot[] {
 
 function PlainCaption({ shot }: { shot: Shot }) {
   if (!shot.item.caption) return null;
+  return <figcaption className="pie-caso">{shot.item.caption}</figcaption>;
+}
+
+/**
+ * La galería de capturas de escritorio en la pieza B (F7 P1-4): cada captura a
+ * sangre en una losa (`caso-losa-media`, radio en el contenedor), sin barra de
+ * ventana ni número, y el pie en Instrument Sans. Con un número impar de
+ * capturas la primera va a todo el ancho y el resto por pares.
+ */
+export function GaleriaLosas({ shots, ariaLabel }: { shots: Shot[]; ariaLabel: string }) {
+  const lider = shots.length % 2 === 1;
   return (
-    <figcaption className="mt-3 flex gap-3 text-[13.5px] leading-[1.5] text-[var(--ink-muted)]">
-      <span className="kicker shrink-0 pt-[3px]">{shotNumber(shot.num)}</span>
-      <span>{shot.item.caption}</span>
-    </figcaption>
+    <ul aria-label={ariaLabel} className="galeria-caso">
+      {shots.map((shot, i) => (
+        <li key={shot.item.src} data-ancho={lider && i === 0 ? "" : undefined}>
+          <FadeIn delay={Math.min(i * 0.05, 0.25)}>
+            <figure className="m-0">
+              <div className="caso-losa-media caso-losa-media--m">
+                <Image
+                  src={shot.item.src}
+                  alt={shot.item.alt}
+                  width={shot.item.width ?? 2880}
+                  height={shot.item.height ?? 1800}
+                  sizes={lider && i === 0 ? "(max-width: 1023px) 92vw, 1040px" : "(max-width: 767px) 92vw, 520px"}
+                  loading="lazy"
+                />
+              </div>
+              <PlainCaption shot={shot} />
+            </figure>
+          </FadeIn>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -104,7 +132,7 @@ export function PlainGallery({ shots, ariaLabel }: { shots: Shot[]; ariaLabel: s
         >
           <FadeIn delay={Math.min(i * 0.05, 0.25)}>
             <figure className="m-0">
-              <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
+              <div className="caso-losa-media caso-losa-media--m">
                 <Image
                   src={shot.item.src}
                   alt={shot.item.alt}
@@ -139,7 +167,7 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
   return (
     <figure className="m-0">
       <div className="mx-auto" style={{ width: `min(100%, calc(78svh * ${(width / height).toFixed(4)}))` }}>
-        <div className="overflow-hidden rounded-xl border border-[var(--line-strong)] bg-[var(--paper-raised)]">
+        <div className="caso-losa-media">
           <Image
             src={shot.item.src}
             alt={shot.item.alt}
@@ -147,6 +175,7 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
             height={height}
             sizes={sizes}
             priority
+            fetchPriority="high"
             className="block h-auto w-full"
           />
         </div>
@@ -157,6 +186,76 @@ export function PlainLead({ shot, sizes }: { shot: Shot; sizes: string }) {
 }
 
 type Walkthrough = NonNullable<CaseMediaPlan["video"]>;
+
+/**
+ * La cubierta del caso (F7 P1-2, `caso.html`): una captura estática y nítida en
+ * losa a sangre, 16:8 (4:3 en móvil), con el radio en el contenedor y la imagen
+ * recortada por él. Sin barra de ventana, sin velo y sin botón: es el LCP de la
+ * página completa, así que va con `fetchpriority="high"`.
+ */
+export function CoverStill({
+  src,
+  alt,
+  caption,
+  width,
+  height,
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+}) {
+  return (
+    <figure className="caso-cover-fig">
+      <div className="caso-cover">
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          sizes="(max-width: 1023px) 92vw, 1320px"
+          priority
+          fetchPriority="high"
+        />
+      </div>
+      {caption && <figcaption className="pie-caso">{caption}</figcaption>}
+    </figure>
+  );
+}
+
+/**
+ * La película en el bloque Producto (F7 P1-2): el vídeo con su póster y los
+ * controles nativos, en losa, sin velo sobre el póster y sin reproducirse solo;
+ * el pie en Instrument Sans y caja normal.
+ */
+export function WalkthroughFilm({ video }: { video: Walkthrough }) {
+  const t = useDict().case;
+  return (
+    <figure className="caso-pelicula">
+      <div className="caso-losa-media">
+        <video
+          controls
+          muted
+          playsInline
+          preload="none"
+          poster={video.poster}
+          width={video.width}
+          height={video.height}
+          aria-label={video.label}
+          style={{ aspectRatio: `${video.width} / ${video.height}` }}
+        >
+          {video.webm && <source src={video.webm} type="video/webm" />}
+          <source src={video.mp4} type="video/mp4" />
+        </video>
+      </div>
+      <figcaption className="pie-caso">
+        <span className="pie-caso-et">{t.walkthrough}</span>
+        {video.caption && <span>{video.caption}</span>}
+      </figcaption>
+    </figure>
+  );
+}
 
 /**
  * The walkthrough, in the frame its capture was made in.
@@ -212,7 +311,7 @@ export function WalkthroughCaption({ caption }: { caption?: string }) {
   return (
     <FadeIn>
       <div className="mt-8 grid grid-cols-1 gap-3 md:mt-10 lg:grid-cols-4 lg:gap-8">
-        <div className="kicker text-[var(--ink-dim)] lg:pt-1.5">{t.walkthrough}</div>
+        <div className="ceja lg:pt-1.5">{t.walkthrough}</div>
         {caption && (
           <p className="max-w-[62ch] text-[16px] leading-[1.6] text-[var(--ink)] md:text-[18px] lg:col-span-3">
             {caption}

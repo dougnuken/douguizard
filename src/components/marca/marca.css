@@ -1,0 +1,146 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Marca: el lockup del nombre y el wordmark. Como `sistema.css`, viaja solo con
+   las rutas que lo usan. Opción 4 «corte láser»: B-tipo/TIPO.md §4 y 07 F1.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .lockup {
+    display: block;
+    width: max-content;
+    font-family: var(--font-nombre), var(--font-display-b);
+    font-kerning: normal;
+    font-size: var(--lockup-losa);
+    color: var(--tinta);
+    white-space: nowrap;
+  }
+  .lockup[data-escala="xl"] {
+    font-size: var(--lockup-xl);
+  }
+  .lockup[data-escala="movil"] {
+    font-size: var(--lockup-movil);
+  }
+  @media (max-height: 800px) {
+    .lockup[data-escala="xl"] {
+      font-size: calc(var(--lockup-xl) * 0.8);
+    }
+  }
+  .lockup .linea {
+    display: block;
+  }
+  /* Opción 3 «banda» (reversión): una sola línea, paralela al láser. */
+  .lockup[data-construccion="banda"] .linea {
+    display: inline-block;
+  }
+  .lockup[data-construccion="banda"] .l1 {
+    margin-right: 0.2em;
+  }
+
+  /* ── Corte láser ───────────────────────────────────────────────────────────
+     Estado de partida «cerrado»: `.m.sup` entera, `.m.inf` y `.hilo` fuera. */
+  .lockup .l2 {
+    position: relative;
+  }
+  /* Contexto propio: el hilo (z-index −1) queda detrás de las letras y no detrás
+     del fondo de quien contenga el lockup. */
+  .lockup[data-corte] {
+    isolation: isolate;
+  }
+  .lockup .m {
+    display: block;
+  }
+  .lockup .m.inf,
+  .lockup .hilo {
+    display: none;
+  }
+  .lockup[data-corte="abierto"] .m.sup {
+    clip-path: inset(-1em -1em calc(100% - var(--corte, 0.5em) + var(--rendija, 0px)) -1em);
+    translate: var(--desp, 0em) 0;
+  }
+  .lockup[data-corte="abierto"] .m.inf {
+    display: block;
+    position: absolute;
+    inset: 0;
+    clip-path: inset(calc(var(--corte, 0.5em) + var(--rendija, 0px)) -1em -1em -1em);
+    translate: calc(var(--desp, 0em) * -0.6) 0;
+  }
+  /* El hilo: el filo de 1 px detrás de la rendija, **sin halo** (06-CRITICA-F1
+     P1-2: el brillo rojo tapaba la rendija y el corte se leía como borrón). La
+     luz roja la pone la escena, lejos de las letras; aquí solo queda el filo. */
+  .lockup[data-corte="abierto"] .hilo {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: var(--corte, 0.5em);
+    height: 1px;
+    z-index: -1;
+    background: var(--laser-nucleo);
+  }
+  /* Con `laser`, el nombre espera oculto (visibility: no cuenta como salto de
+     maquetación) hasta que la isla lo coloca. Solo con JS y donde hay corte:
+     sin JS, en móvil o con movimiento reducido se ve desde el primer cuadro. */
+  @media (scripting: enabled) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .lockup[data-espera-laser]:not([data-colocado]) {
+      visibility: hidden;
+      /* Salida de emergencia (06-CRITICA-F1 P1-1): si la isla no llega (chunk
+         caído, error de hidratación, `fonts.load` colgado), a los 1,2 s el
+         nombre aparece entero y cerrado donde esté. Al colocarse, la regla
+         deja de aplicar y no queda ninguna animación viva. */
+      animation: lockup-mostrar 0s 1200ms forwards;
+    }
+  }
+  @keyframes lockup-mostrar {
+    to {
+      visibility: visible;
+    }
+  }
+
+  /* Un solo láser en móvil (P1-7) y nada de corte con movimiento reducido:
+     aunque quedara «abierto» tras un resize, aquí el nombre va entero. */
+  @media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+    .lockup[data-corte] .m.sup {
+      clip-path: none;
+      translate: none;
+    }
+    .lockup[data-corte] .m.inf,
+    .lockup[data-corte] .hilo {
+      display: none;
+    }
+  }
+
+  /* ── Wordmark de la cabecera (Geologica 600, 16 px) ───────────────────────── */
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: var(--toque);
+    padding: 0 16px 0 4px;
+    border-radius: var(--r-pill);
+    background-color: var(--vidrio-plano);
+    background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+    box-shadow: var(--filo), var(--sombra-flota);
+    font-family: var(--font-nombre), var(--font-display-b);
+    font-size: var(--t-16);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+  .wordmark-d {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--blanco);
+    color: var(--tinta-osc);
+    font-weight: 700;
+  }
+  .wordmark:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+}

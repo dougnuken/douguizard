@@ -12,91 +12,66 @@ import {
 
 const CODE: Record<Locale, string> = { es: "ES", en: "EN" };
 
+/** El `#hash` actual fuera del home (p. ej. `/about#craft`); vacío en el servidor. */
+function subscribeHash(cb: () => void) {
+  window.addEventListener("hashchange", cb);
+  return () => window.removeEventListener("hashchange", cb);
+}
+const getHash = () => window.location.hash;
+const getServerHash = () => "";
+
 /**
- * Where the same page lives in the other language — plus, on the home page,
- * the panel the reader is on, so switching mid-scroll does not throw them
- * back to the top. Section ids are the same in both languages.
+ * Dónde vive la misma página en el otro idioma, **con su ancla** (04 §4.3,
+ * 02 §7.3): en el home, la sección en la que está el lector (`activeSection`,
+ * la escribe el scroll-spy de la cabecera); fuera, el `#hash` de la URL. Los
+ * ids de sección son los mismos en los dos idiomas (`home.secciones`).
  */
 function useCounterpart(): { to: Locale; href: string } {
   const locale = useLocale();
   const pathname = usePathname();
-  const active = useSyncExternalStore(
-    subscribeActiveSection,
-    getActiveSection,
-    getServerActiveSection,
-  );
+  const active = useSyncExternalStore(subscribeActiveSection, getActiveSection, getServerActiveSection);
+  const urlHash = useSyncExternalStore(subscribeHash, getHash, getServerHash);
   const lost = useIsLost();
   const { path } = splitLocale(pathname || "/");
   const to = otherLocale(locale);
-  // An address that matches nothing has no other-language twin either, so
-  // the switch on the 404 goes to the other language's home instead.
+  // Una dirección que no existe tampoco tiene gemela: el switch del 404 va al inicio.
   if (lost) return { to, href: localePath(to, "/") };
-  const hash = path === "/" && active && active !== "home" ? `#${active}` : "";
+  const hash = path === "/" ? (active && active !== "home" ? `#${active}` : "") : urlHash;
   return { to, href: `${localePath(to, path)}${hash}` };
 }
 
 /**
- * The language switch.
+ * El switch de idioma de la cabecera B: segmento ES · EN siempre visible
+ * (04 §4.3), 44 × 44 por opción con el relleno recortado al contenido.
  *
- * Plain `<a>`, never `<Link>`: each language is its own root layout with its
- * own `<html lang>`, so crossing between them is a full document load by
- * definition — and a real link is what a crawler follows to the other version.
- *
- * Two shapes from one component. `segmented` is the header's "ES | EN" pill,
- * with the current language marked and not clickable. `compact` is the single
- * circle a narrow header has room for: it names only the way out.
+ * `<a>` y nunca `<Link>`: cada idioma es su propio root layout con su `<html
+ * lang>`, así que cruzar es una carga completa por definición, y un enlace real
+ * es lo que sigue un rastreador. El idioma actual va marcado y no es enlace.
  */
-export default function LanguageSwitch({
-  variant = "segmented",
-  className = "",
-}: {
-  variant?: "segmented" | "compact";
-  className?: string;
-}) {
+export default function LanguageSwitch({ className = "" }: { className?: string }) {
   const locale = useLocale();
   const t = useDict();
-  const { to, href } = useCounterpart();
-
-  if (variant === "compact") {
-    return (
-      <a
-        href={href}
-        hrefLang={to}
-        lang={to}
-        aria-label={t.header.switchTo}
-        className={`lang-switch-compact ${className}`}
-      >
-        <span aria-hidden>{CODE[to]}</span>
-      </a>
-    );
-  }
-
+  const { href } = useCounterpart();
   return (
-    <nav aria-label={t.header.language} className={`lang-switch ${className}`}>
+    <div role="group" aria-label={t.sistema.idioma.label} className={`idioma ${className}`}>
       {(["es", "en"] as const).map((l) =>
         l === locale ? (
-          <span key={l} aria-current="true" className="lang-switch__item lang-switch__item--current">
-            <span aria-hidden>{CODE[l]}</span>
+          <span key={l} aria-current="true" className="idioma-op">
+            <span aria-hidden="true">{CODE[l]}</span>
             <span className="sr-only">{localeName[l]}</span>
           </span>
         ) : (
-          <a
-            key={l}
-            href={href}
-            hrefLang={l}
-            lang={l}
-            aria-label={t.header.switchTo}
-            className="lang-switch__item"
-          >
-            <span aria-hidden>{CODE[l]}</span>
+          <a key={l} href={href} hrefLang={l} lang={l} title={t.sistema.idioma.leerEnOtro} className="idioma-op">
+            <span aria-hidden="true">{CODE[l]}</span>
+            <span className="sr-only">{localeName[l]}</span>
           </a>
         ),
       )}
-    </nav>
+    </div>
   );
 }
 
-/** The menu row: the same destination, spelled out, for the narrowest phones. */
+/** La fila del menú: el mismo destino, escrito entero. */
 export function LanguageMenuLink({ className = "", onNavigate }: { className?: string; onNavigate?: () => void }) {
   const t = useDict();
   const { to, href } = useCounterpart();

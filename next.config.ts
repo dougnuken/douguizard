@@ -99,6 +99,11 @@ const nextConfig: NextConfig = {
     // root `not-found.tsx` to render inside. `app/global-not-found.tsx` is the
     // 404 for an address that matches neither tree.
     globalNotFound: true,
+    // F4: el CSS va en línea en el HTML. En Slow 4G (562 ms por viaje) el
+    // `<link rel=stylesheet>` costaba un viaje entero antes del primer pintado:
+    // LCP móvil de / 2,94 → 1,00 s (perf-F4.json). Cuesta caché del CSS entre
+    // páginas (cada HTML lo trae, ≈ +25 KB gz).
+    inlineCss: true,
   },
   // `poweredByHeader` off: `X-Powered-By: Next.js` tells an attacker which
   // stack to bring exploits for and tells a visitor nothing.
@@ -141,6 +146,15 @@ const nextConfig: NextConfig = {
             key: "Cache-Control",
             value: "public, max-age=86400, stale-while-revalidate=604800",
           },
+        ],
+      },
+      {
+        // The hero poster and photo crops (`npm run hero:poster`). Unlike
+        // `/portrait` and `/work`, every file here carries a version in its
+        // name, so a new photo is a new URL and a year of `immutable` is safe.
+        source: "/hero/:rest*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
       {

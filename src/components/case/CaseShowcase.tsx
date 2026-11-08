@@ -6,13 +6,7 @@ import MockupGallery from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
 import type { CaseMediaPlan, Shot } from "@/lib/caseMedia";
 import { shotNumber } from "@/lib/caseMedia";
-import {
-  PlainLead,
-  WalkthroughCaption,
-  WalkthroughVideo,
-  browserLabel,
-  toMockupItems,
-} from "./caseFrames";
+import { CoverStill, PlainLead, WalkthroughCaption, WalkthroughVideo, browserLabel, toMockupItems } from "./caseFrames";
 import { Band } from "./primitives";
 
 /** Full-measure desktop still: the band's 1400px, less its gutters. */
@@ -52,18 +46,40 @@ function Companion({ shot, kind }: { shot: Shot; kind: "browser" | "plain" }) {
  * The section heading is for the outline only. A visible eyebrow above the
  * product would be a label on the thing the reader is already looking at.
  */
-export default function CaseShowcase({ project, plan }: { project: string; plan: CaseMediaPlan }) {
+export default function CaseShowcase({
+  project,
+  plan,
+  heading = true,
+}: {
+  project: string;
+  plan: CaseMediaPlan;
+  /** El `h2` oculto «Producto»; sobra cuando el cuerpo ya tiene su bloque Producto. */
+  heading?: boolean;
+}) {
   const t = useDict().case;
   const { video, videoKind, galleryKind, lead } = plan;
   const ariaLabel = t.productScreens(project);
 
   let body: ReactNode = null;
 
-  if (video && videoKind === "browser") {
-    // Landscape capture (16:10). It cannot live in the column a phone uses — at
-    // that width a desktop UI stops being legible — so it runs the measure.
-    body = <WalkthroughVideo video={video} kind="browser" />;
-  } else if (video && galleryKind === "phone") {
+  // A desktop product opens on a still, never on its clip (F7 P1-2): the
+  // walkthrough plays in the Product block (`WalkthroughFilm`).
+  const still = lead[0] && (galleryKind === "browser" || (video && videoKind === "browser")) ? lead[0] : undefined;
+  if (still || (video && videoKind === "browser")) {
+    return still ? (
+      <CoverStill
+        src={still.item.src}
+        alt={still.item.alt}
+        caption={still.item.caption}
+        width={still.item.width ?? 2880}
+        height={still.item.height ?? 1800}
+      />
+    ) : (
+      <CoverStill src={video!.poster} alt="" width={video!.width} height={video!.height} />
+    );
+  }
+
+  if (video && galleryKind === "phone") {
     // The clip is the first handset in the row: on a desktop, the phones side
     // by side, the first one moving; on a phone, the first stop of the same
     // swipe rail the stills use.
@@ -100,20 +116,10 @@ export default function CaseShowcase({ project, plan }: { project: string; plan:
       <MockupGallery
         ariaLabel={ariaLabel}
         hint={t.swipe}
-        items={toMockupItems(lead).map((item, i) => ({ ...item, priority: i === 0 }))}
-      />
-    );
-  } else if (lead[0] && galleryKind === "browser") {
-    const [shot] = lead;
-    body = (
-      <BrowserFrame
-        src={shot.item.src}
-        alt={shot.item.alt}
-        caption={shot.item.caption}
-        eyebrow={shotNumber(shot.num)}
-        label={browserLabel(shot.item.src)}
-        sizes={SIZES_FULL}
-        priority
+        items={toMockupItems(lead).map((item, i) => ({
+          ...item,
+          priority: i === 0,
+        }))}
       />
     );
   } else if (lead[0]) {
@@ -124,7 +130,7 @@ export default function CaseShowcase({ project, plan }: { project: string; plan:
 
   return (
     <Band tone="raised" rule="t" wide className="py-10 md:py-14">
-      <h2 className="sr-only">{t.product}</h2>
+      {heading && <h2 className="sr-only">{t.product}</h2>}
       {body}
       {video && <WalkthroughCaption caption={video.caption} />}
     </Band>

@@ -1,0 +1,564 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   `/about` (F2): portada (foto + corte, sticky de 210 svh sin pin) y las
+   secciones. Fuente: `propuestas/B-paginas/about.html` + NOTAS §7.
+   Estado de partida en el HTML = **estado final** (foto en losa, corte
+   cerrado, bio visible): así se ve sin JS, sin GSAP, con RM y en móvil. Solo
+   `html.perfil-cine` (script inline antes del primer pintado) pone p = 0.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .portada {
+    position: relative;
+  }
+  .escenario {
+    position: relative;
+    overflow: hidden;
+  }
+  .foto,
+  .foto-clip {
+    position: absolute;
+  }
+  .foto {
+    inset: 0;
+    z-index: 0;
+  }
+  .foto-clip {
+    overflow: hidden;
+    background: var(--losa);
+  }
+  /* La atmósfera: la misma foto, borrosa y oscura, llena lo que el póster no
+     cubre a pantalla completa (p = 0). Solo en la escena: en móvil y en la
+     losa el póster ya cubre todo y no se descarga. */
+  .perfil-cine .foto-clip::before {
+    content: "";
+    position: absolute;
+    inset: -10%;
+    background: var(--foto-atm) 50% 42% / cover no-repeat;
+    filter: blur(28px) brightness(0.72) saturate(1.05);
+  }
+  .poster {
+    position: absolute;
+    max-width: none;
+  }
+  .velo {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  /* El haz: 1 px de luz láser con su halo (nunca relleno ni texto). */
+  .portada .laser {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    height: 1px;
+    pointer-events: none;
+    transform-origin: 0 50%;
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 4px 1px var(--laser),
+      0 0 18px 4px var(--laser-halo);
+  }
+  .heroe-texto {
+    position: absolute;
+    z-index: 3;
+  }
+  .heroe-texto .ceja {
+    margin-bottom: 16px;
+    color: var(--tinta-2-vidrio);
+  }
+  .nivel {
+    margin-top: 32px;
+    font-size: var(--t-16);
+    line-height: 1.45;
+    color: var(--tinta-2-vidrio);
+    max-width: 34em;
+  }
+  .lugar {
+    margin-top: 12px;
+    font-size: var(--t-14);
+  }
+  .bio {
+    margin-top: 48px;
+    font: 500 var(--t-24) / 1.45 var(--font-display-b);
+    letter-spacing: -0.005em;
+    max-width: 30em;
+    text-wrap: pretty;
+  }
+  .indicador {
+    display: none;
+  }
+  /* 06-CRITICA-F1 P2-7: copiar el nombre da «Doug Vargas» una vez. */
+  .portada-nombre .linea,
+  .portada-nombre .m {
+    user-select: none;
+  }
+
+  /* ── Escritorio (≥ 1024): la losa de las columnas 8–12 ─────────────────── */
+  @media (min-width: 1024px) {
+    .portada {
+      height: 100svh;
+    }
+    .escenario {
+      height: 100svh;
+      container-type: size;
+      /* Las mismas cuentas que `losaPerfil()` (lib/escena.ts). */
+      --izq: max(var(--os-izq), (100cqw - 1320px) / 2);
+      --ancho: min(1320px, 100cqw - var(--izq) - 24px);
+      --col: calc((var(--ancho) - 176px) / 12);
+      --slot-x: calc(var(--izq) + 7 * (var(--col) + 16px));
+      --slot-w: calc(5 * var(--col) + 64px);
+      --slot-h: calc(100cqh - 112px);
+    }
+    .foto-clip {
+      left: var(--slot-x);
+      top: 88px;
+      width: var(--slot-w);
+      height: var(--slot-h);
+      border-radius: 48px;
+    }
+    /* placement(losa): ≥ 121 % del alto, centrada, ojo al 30 %. */
+    .poster {
+      height: 121%;
+      width: auto;
+      left: 50%;
+      translate: -50% 0;
+      top: calc(30% - var(--foto-ojo) * 121%);
+    }
+    .velo {
+      opacity: 0.6;
+      background:
+        linear-gradient(90deg, rgba(6, 6, 8, 0.82) 0%, rgba(6, 6, 8, 0.55) 32%, rgba(6, 6, 8, 0) 56%),
+        linear-gradient(0deg, rgba(6, 6, 8, 0.55) 0%, rgba(6, 6, 8, 0) 32%);
+    }
+    .portada .laser {
+      top: calc(88px + 0.3 * var(--slot-h));
+      opacity: 0.6;
+      clip-path: inset(-12px 0 -12px calc(var(--slot-x) - 24px));
+    }
+    .heroe-texto {
+      left: var(--izq);
+      top: clamp(88px, 12cqh, 140px);
+      width: min(640px, 50cqw - var(--os-izq));
+    }
+    .indicador {
+      position: absolute;
+      z-index: 4;
+      right: 24px;
+      top: 50%;
+      width: 2px;
+      height: 128px;
+      translate: 0 -50%;
+      background: rgba(255, 255, 255, 0.24);
+    }
+    .indicador i {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 0;
+      transform: scaleY(var(--p, 0));
+      background: var(--laser);
+    }
+    .indicador-txt {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      font-size: var(--t-12);
+      color: var(--tinta-2);
+      white-space: nowrap;
+    }
+
+    /* p = 0 (solo con JS, ≥ 1024 y sin RM): la foto a pantalla completa. */
+    .perfil-cine .portada {
+      height: 210svh;
+    }
+    .perfil-cine .escenario {
+      position: sticky;
+      top: 0;
+    }
+    .perfil-cine .foto-clip {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+    }
+    /* placement(cine): 130 % del alto, centro al 62 %, ojo al 41 %. */
+    .perfil-cine .poster {
+      --pluma: 18%;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--pluma), #000 calc(100% - var(--pluma)), transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 var(--pluma), #000 calc(100% - var(--pluma)), transparent 100%);
+      height: 130%;
+      left: 62%;
+      top: calc(41% - var(--foto-ojo) * 130%);
+    }
+    .perfil-cine .velo {
+      opacity: 1;
+    }
+    .perfil-cine .portada .laser {
+      top: 41cqh;
+      opacity: 1;
+      clip-path: none;
+    }
+    .perfil-cine .bio {
+      opacity: 0;
+    }
+    .perfil-cine .indicador {
+      display: block;
+    }
+    /* Espera a quedar sobre el láser; salida de emergencia a 1,2 s (como el nombre). */
+    .perfil-cine .heroe-texto:not([data-colocado]) {
+      visibility: hidden;
+      animation: lockup-mostrar 0s 1200ms forwards;
+    }
+  }
+  @media (min-width: 1024px) and (max-height: 800px) {
+    .nivel {
+      margin-top: 24px;
+    }
+    .bio {
+      margin-top: 32px;
+      font-size: var(--t-20);
+    }
+  }
+
+  /* ── Móvil (< 1024): sin sticky ni scrub; un solo láser (P1-7) ─────────── */
+  @media (max-width: 1023px) {
+    .portada .escenario {
+      touch-action: pan-y pinch-zoom;
+    }
+    .foto {
+      height: 100svh;
+      bottom: auto;
+    }
+    .foto-clip {
+      inset: 0;
+    }
+    .poster {
+      --dy: max(95svh, calc(var(--foto-ar-inv) * 102vw));
+      height: var(--dy);
+      width: auto;
+      left: 50%;
+      translate: -50% 0;
+      top: calc(22svh - var(--foto-ojo) * var(--dy));
+    }
+    .velo {
+      height: 100svh;
+      background: linear-gradient(0deg, rgba(6, 6, 8, 1) 0%, rgba(6, 6, 8, 0.7) 30%, rgba(6, 6, 8, 0) 55%);
+    }
+    .portada .laser {
+      top: 22svh;
+    }
+    .heroe-texto {
+      position: relative;
+      padding: calc(100svh - 300px) 16px 0;
+    }
+    .nivel {
+      margin-top: 24px;
+      font-size: var(--t-14);
+    }
+    .bio {
+      font-size: var(--t-20);
+    }
+  }
+
+  /* ── Secciones ─────────────────────────────────────────────────────────── */
+  .contexto {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px;
+  }
+  .contexto p {
+    font-size: var(--t-18);
+    line-height: 1.65;
+    color: var(--tinta-2);
+    max-width: 34em;
+  }
+  /* P1-13: número · 64 px · título · párrafo; los tres títulos a la misma altura. */
+  .hago > li {
+    grid-column: span 4;
+    grid-row: span 3;
+    display: grid;
+    grid-template-rows: auto 64px auto 1fr;
+  }
+  .hago .t-losa {
+    grid-row: 3;
+  }
+  .hago .apoyo {
+    grid-row: 4;
+    margin-top: 16px;
+  }
+  /* «Sistemas» en jelly azul: el párrafo vive en la parte honda del gradiente
+     (el fondo sólido es el peor punto bajo el texto, blanco 9,8:1, `a11y 3.1`). */
+  .hago .hago-azul {
+    background-color: #1a2fb8;
+    background-image: linear-gradient(to top, #7c7fd0 0%, transparent 18%),
+      radial-gradient(130% 95% at 50% 62%, #0c1266 0%, #1a2fb8 56%, #3f6bd9 92%, #6f98e6 112%);
+  }
+  .hago .hago-azul .apoyo {
+    color: var(--blanco);
+  }
+  .losa.craft {
+    padding: 48px;
+  }
+  .pasos {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .pasos::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 0;
+    top: 6px;
+    height: 1px;
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 4px 1px var(--laser),
+      0 0 12px 2px var(--laser-halo);
+  }
+  .pasos li {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding-top: 32px;
+  }
+  .pasos .nodo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--tinta-osc);
+    box-shadow: 0 0 0 3px var(--claro);
+  }
+  .pasos .dot {
+    color: var(--tinta-osc);
+  }
+  .pasos .t-losa {
+    font-size: var(--t-20);
+  }
+  .datos-fila > section {
+    grid-column: span 6;
+  }
+  .lista-datos {
+    margin-top: 24px;
+    display: grid;
+  }
+  .lista-datos div {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--losa-borde);
+  }
+  .lista-datos dt,
+  .grupos dt {
+    font-size: var(--t-14);
+    color: var(--tinta-2);
+  }
+  .lista-datos dd {
+    font-size: var(--t-16);
+    line-height: 1.45;
+  }
+  .lista-datos .estado {
+    font-size: var(--t-16);
+    align-items: baseline;
+    white-space: normal;
+  }
+  .lista-datos .estado::before {
+    translate: 0 -2px;
+  }
+  .grupos {
+    margin-top: 24px;
+    display: grid;
+    gap: 16px;
+  }
+  .grupos div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .empresas {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--losa-borde);
+    border-bottom: 1px solid var(--losa-borde);
+  }
+  /* P1-13: las marcas en filas de 4, ninguna huérfana. */
+  .marcas {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: start;
+    gap: 12px 48px;
+    font: 600 var(--t-18) / 1.2 var(--font-nombre, var(--font-display-b));
+    font-variation-settings: "SHRP" 100;
+    letter-spacing: -0.02em;
+    color: var(--tinta-2);
+  }
+  .citas-cab {
+    display: flex;
+    justify-content: space-between;
+    align-items: last baseline;
+    gap: 24px;
+  }
+  .testimonios > li {
+    grid-column: span 4;
+    grid-row: span 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .testimonios blockquote {
+    font: 500 var(--t-20) / 1.45 var(--font-display-b);
+    letter-spacing: -0.005em;
+  }
+  .firma {
+    display: grid;
+    gap: 4px;
+    font-size: var(--t-14);
+    line-height: 1.4;
+  }
+  .firma b {
+    font-weight: 600;
+    font-size: var(--t-16);
+  }
+  .losa--clara .firma span {
+    color: var(--tinta-osc-2);
+  }
+  .losa--clara .enlace-texto {
+    text-decoration-color: rgba(14, 14, 18, 0.3);
+    color: var(--tinta-osc);
+  }
+  .losa--magenta .firma span {
+    color: var(--magenta-etiqueta-base);
+  }
+  .losa--magenta .enlace-texto {
+    text-decoration-color: rgba(255, 255, 255, 0.45);
+  }
+  .cierre {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding-top: 48px;
+    border-top: 1px solid var(--losa-borde);
+  }
+  .cierre-linea {
+    font: 600 var(--t-72) / 1 var(--font-display-b);
+    letter-spacing: -0.035em;
+    max-width: 12em;
+    text-wrap: balance;
+  }
+  .cierre-cta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .hago > li,
+    .testimonios > li {
+      grid-column: span 6;
+    }
+    .hago > li:last-child,
+    .testimonios > li:last-child {
+      grid-column: span 12;
+      grid-row: span 2;
+    }
+    .datos-fila > section {
+      grid-column: span 12;
+    }
+    .pasos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .pasos::before {
+      display: none;
+    }
+  }
+  @media (max-width: 1023px) {
+    .contexto {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .contexto p {
+      font-size: var(--t-16);
+    }
+    .hago > li {
+      grid-template-rows: auto 32px auto 1fr;
+      padding: 24px;
+    }
+    .losa.craft {
+      padding: 24px;
+    }
+    .pasos {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-left: 32px;
+    }
+    .pasos::before {
+      left: 6px;
+      right: auto;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      height: auto;
+    }
+    .pasos li {
+      padding-top: 0;
+    }
+    .pasos .nodo {
+      left: -32px;
+      top: 4px;
+    }
+    .datos-fila > section,
+    .testimonios > li {
+      padding: 24px;
+    }
+    .lista-datos div,
+    .grupos div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .empresas {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .marcas {
+      grid-template-columns: repeat(2, auto);
+      font-size: var(--t-16);
+      gap: 8px 24px;
+    }
+    .citas-cab {
+      flex-direction: column;
+      align-items: start;
+      gap: 8px;
+    }
+    .testimonios blockquote {
+      font-size: var(--t-18);
+    }
+    .cierre-linea {
+      font-size: var(--t-36);
+    }
+    .cierre-cta .boton {
+      flex: 1 1 auto;
+    }
+  }
+}

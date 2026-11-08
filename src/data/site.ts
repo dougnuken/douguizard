@@ -37,7 +37,13 @@ export interface Site {
     /** One word for the header badge. What `note` offers, in the shortest form. */
     badge: string;
     note?: string;
+    /**
+     * D1 · Qué ofrece el punto de disponible del sistema B. Espeja
+     * `decisiones.disponibilidad` (una prueba los compara).
+     */
+    modo: "consultoria" | "roles" | "ambas" | "no-disponible";
   };
+
   social: SocialLink[];
   /**
    * Per language: each CV page hands out the sheets in its own language. `pdf`
@@ -95,6 +101,7 @@ export const site: Site = {
     // can never claim more than this line says.
     badge: "Available",
     note: "Selected consulting on design systems and AI-native product",
+    modo: "consultoria",
   },
   social,
   // Generated from /cv itself by `npm run cv:pdf`, never hand-made — that is
@@ -124,7 +131,8 @@ export const site: Site = {
       "Barranquilla",
       "Colombia",
     ],
-    ogImage: "/og.png",
+    // Tarjeta OG por idioma (F8): `npm run og` las hornea desde la foto activa de `hero.ts`.
+    ogImage: "/og-en.png",
   },
 };
 
@@ -159,6 +167,7 @@ const siteEs: Site = {
   },
   seo: {
     ...site.seo,
+    ogImage: "/og.png",
     description:
       "Doug Vargas lidera producto en Naowee y lo construye: sistemas de diseño, prototipos que funcionan en código y la IA en el proceso. Antes, Andes en Mercadolibre.",
     keywords: [

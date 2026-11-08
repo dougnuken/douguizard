@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { getCv, type Experience } from "@/data/cv";
 import { formatLocation, formatPeriod } from "@/lib/career";
@@ -77,13 +76,16 @@ function Entry({ e, locale }: { e: Experience; locale: Locale }) {
         )}
 
         {e.caseSlug && (
-          <Link
+          // D22 (F6): `<a>`, no `<Link>`. Una navegación blanda desde `/cv` la
+          // interceptaría el slot `@modal` y abriría la hoja oscura encima del CV;
+          // el caso se abre como página completa. Sin cambio visual.
+          <a
             href={localePath(locale, `/work/${e.caseSlug}`)}
             aria-label={t.seeCaseLabel(e.company.name)}
             className="cv-case mt-1 w-fit font-mono text-[11px] tracking-[0.12em] uppercase text-[var(--ink)] no-underline underline-offset-4 hover:underline"
           >
             {t.seeCase} →
-          </Link>
+          </a>
         )}
       </div>
     </li>

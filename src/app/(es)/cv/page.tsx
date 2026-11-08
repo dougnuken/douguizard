@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import themeColors from "@/app/theme-colors.json";
 import CvPage from "@/components/pages/CvPage";
 import { cvMetadata } from "@/lib/metadata";
 import { cvFingerprint } from "@/lib/cvFingerprint";
@@ -7,6 +8,15 @@ import { cvFingerprint } from "@/lib/cvFingerprint";
 export const metadata: Metadata = {
   ...cvMetadata("es"),
   other: { "cv-fingerprint": cvFingerprint("es") },
+};
+
+/** /cv conserva su tema: esquema y color de barra dependen del sistema. */
+export const viewport: Viewport = {
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: themeColors.dark },
+    { media: "(prefers-color-scheme: light)", color: themeColors.light },
+  ],
 };
 
 export default function Page() {

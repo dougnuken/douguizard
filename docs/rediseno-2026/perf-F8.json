@@ -1,0 +1,494 @@
+{
+  "fase": "F8",
+  "medidoEl": "2026-11-08",
+  "nota": "perf.spec, PERF_RUNS=5, --workers=1, next start local (HTTP/1.1). Perfil móvil: 390×844 DPR 3, Slow 4G (562,5 ms RTT, 1,44 Mbit/s), CPU ×4. Escritorio: 1440×900, 40 ms, 10 Mbit/s. Umbrales 07 F8: LCP ≤ 2000 ms móvil, ≤ 1200 ms escritorio; CLS ≤ 0,02.",
+  "umbrales": {
+    "movil": {
+      "lcpMs": 2000,
+      "cls": 0.02
+    },
+    "escritorio": {
+      "lcpMs": 1200,
+      "cls": 0.02
+    }
+  },
+  "rutas": {
+    "/": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 1040,
+          "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+          "cls": 0,
+          "loadMs": 3266,
+          "js": {
+            "archivos": 11,
+            "transferidoKB": 174.5,
+            "gzipKB": 159.4
+          },
+          "imagenes": {
+            "archivos": 5,
+            "transferidoKB": 146.5
+          }
+        },
+        "corridas": [
+          {
+            "lcpMs": 1056,
+            "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+            "cls": 0,
+            "loadMs": 3267,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 54.7
+            }
+          },
+          {
+            "lcpMs": 1024,
+            "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+            "cls": 0,
+            "loadMs": 3266,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 54.7
+            }
+          },
+          {
+            "lcpMs": 996,
+            "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+            "cls": 0,
+            "loadMs": 3239,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 54.7
+            }
+          },
+          {
+            "lcpMs": 1064,
+            "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+            "cls": 0,
+            "loadMs": 3253,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 54.7
+            }
+          },
+          {
+            "lcpMs": 1040,
+            "lcpElemento": "span.claim «Dirijo el producto. Después, lo construyo.»",
+            "cls": 0,
+            "loadMs": 3733,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 5,
+              "transferidoKB": 146.5
+            }
+          }
+        ]
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 348,
+          "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+          "cls": 0.0005,
+          "loadMs": 461,
+          "js": {
+            "archivos": 11,
+            "transferidoKB": 174.5,
+            "gzipKB": 159.4
+          },
+          "imagenes": {
+            "archivos": 4,
+            "transferidoKB": 87.4
+          }
+        },
+        "corridas": [
+          {
+            "lcpMs": 348,
+            "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+            "cls": 0.0005,
+            "loadMs": 462,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 4,
+              "transferidoKB": 87.4
+            }
+          },
+          {
+            "lcpMs": 348,
+            "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+            "cls": 0.0005,
+            "loadMs": 455,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 4,
+              "transferidoKB": 87.4
+            }
+          },
+          {
+            "lcpMs": 356,
+            "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+            "cls": 0.0005,
+            "loadMs": 451,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 4,
+              "transferidoKB": 87.4
+            }
+          },
+          {
+            "lcpMs": 332,
+            "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+            "cls": 0.0005,
+            "loadMs": 471,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 4,
+              "transferidoKB": 87.4
+            }
+          },
+          {
+            "lcpMs": 328,
+            "lcpElemento": "img.k1-poster /hero/960e1d8c-v3/losa-640.avif",
+            "cls": 0.0005,
+            "loadMs": 461,
+            "js": {
+              "archivos": 11,
+              "transferidoKB": 174.5,
+              "gzipKB": 159.4
+            },
+            "imagenes": {
+              "archivos": 4,
+              "transferidoKB": 87.4
+            }
+          }
+        ]
+      }
+    },
+    "/about": {
+      "movil": {
+        "mediana": {
+          "lcpMs": 1920,
+          "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+          "cls": 0.0002,
+          "loadMs": 3075,
+          "js": {
+            "archivos": 10,
+            "transferidoKB": 165,
+            "gzipKB": 151.4
+          },
+          "imagenes": {
+            "archivos": 1,
+            "transferidoKB": 36.8
+          }
+        },
+        "corridas": [
+          {
+            "lcpMs": 1920,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+            "cls": 0.0002,
+            "loadMs": 3075,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 1,
+              "transferidoKB": 36.8
+            }
+          },
+          {
+            "lcpMs": 1892,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+            "cls": 0.0002,
+            "loadMs": 3096,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 1,
+              "transferidoKB": 36.8
+            }
+          },
+          {
+            "lcpMs": 1924,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+            "cls": 0.0002,
+            "loadMs": 3075,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 1,
+              "transferidoKB": 36.8
+            }
+          },
+          {
+            "lcpMs": 1944,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+            "cls": 0.0002,
+            "loadMs": 3072,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 1,
+              "transferidoKB": 36.8
+            }
+          },
+          {
+            "lcpMs": 1884,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/movil-880.avif",
+            "cls": 0.0002,
+            "loadMs": 3026,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 1,
+              "transferidoKB": 36.8
+            }
+          }
+        ]
+      },
+      "escritorio": {
+        "mediana": {
+          "lcpMs": 516,
+          "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+          "cls": 0,
+          "loadMs": 464,
+          "js": {
+            "archivos": 10,
+            "transferidoKB": 165,
+            "gzipKB": 151.4
+          },
+          "imagenes": {
+            "archivos": 2,
+            "transferidoKB": 101.5
+          }
+        },
+        "corridas": [
+          {
+            "lcpMs": 592,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+            "cls": 0,
+            "loadMs": 513,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 101.5
+            }
+          },
+          {
+            "lcpMs": 508,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+            "cls": 0,
+            "loadMs": 461,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 101.5
+            }
+          },
+          {
+            "lcpMs": 516,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+            "cls": 0,
+            "loadMs": 464,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 101.5
+            }
+          },
+          {
+            "lcpMs": 516,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+            "cls": 0,
+            "loadMs": 464,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 101.5
+            }
+          },
+          {
+            "lcpMs": 560,
+            "lcpElemento": "img.poster /hero/960e1d8c-v3/cine-880.avif",
+            "cls": 0,
+            "loadMs": 488,
+            "js": {
+              "archivos": 10,
+              "transferidoKB": 165,
+              "gzipKB": 151.4
+            },
+            "imagenes": {
+              "archivos": 2,
+              "transferidoKB": 101.5
+            }
+          }
+        ]
+      }
+    }
+  },
+  "perfiles": {
+    "movil": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "dpr": 3,
+      "red": {
+        "latency": 562.5,
+        "downloadThroughput": 188743.68000000002,
+        "uploadThroughput": 86400
+      },
+      "cpu": 4
+    },
+    "escritorio": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1,
+      "red": {
+        "latency": 40,
+        "downloadThroughput": 1310720,
+        "uploadThroughput": 1310720
+      },
+      "cpu": 1
+    }
+  },
+  "antes": {
+    "/ movil CLS (F5–F7)": 0.066,
+    "/about movil LCP (perf-F4)": 2950,
+    "/ JS gzip KB (F7)": 158.2
+  },
+  "nota_js": "+1,2 KB gz en / frente a F7: el límite de error (error.tsx) de cada idioma es un componente cliente.",
+  "lighthouse": {
+    "version": "12 (npx, Chromium 1243 headless, sin GPU: WebGL por SwiftShader)",
+    "movil_simulado": {
+      "/": {
+        "perf": 65,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3689,
+        "cls": 0,
+        "tbtMs": 1252
+      },
+      "/en": {
+        "perf": 68,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3662,
+        "cls": 0,
+        "tbtMs": 1022
+      },
+      "/about": {
+        "perf": 66,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3338,
+        "cls": 0,
+        "tbtMs": 1538
+      },
+      "/work/naowee-suid": {
+        "perf": 86,
+        "a11y": 100,
+        "bp": 100,
+        "seo": 100,
+        "lcpMs": 3980,
+        "cls": 0,
+        "tbtMs": 134
+      }
+    },
+    "movil_devtools": {
+      "/": {
+        "perf": 84,
+        "lcpMs": 1028,
+        "cls": 0,
+        "tbtMs": 649
+      },
+      "/about": {
+        "perf": 85,
+        "lcpMs": 1899,
+        "cls": 0,
+        "tbtMs": 570
+      }
+    },
+    "escritorio": {
+      "/": {
+        "perf": 98,
+        "lcpMs": 807,
+        "tbtMs": 110
+      }
+    },
+    "nota": "La mayor tarea larga (~1,2 s con CPU x4) es el chunk del vidrio WebGL2 (compilar el shader y pintar en SwiftShader, sin GPU); el resto, React. En un teléfono con GPU ese coste es mucho menor: Doug lo confirma con PageSpeed tras el deploy."
+  }
+}

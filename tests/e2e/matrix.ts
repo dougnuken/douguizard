@@ -14,6 +14,11 @@ export const ROUTES = [
   // with a "plain" gallery and no KPI band, so it exercises two paths the
   // other four do not.
   "/work/qrvey",
+  // F2: las puertas del tablero B. Dark-only (D4): el tema claro solo cambia la
+  // cabecera actual, que F3 reemplaza.
+  "/work",
+  "/about",
+  "/experience",
 ];
 
 /**
