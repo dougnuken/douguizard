@@ -1,3 +1,6 @@
+import DockMovil from "@/components/chrome/DockMovil";
+import RailAcciones from "@/components/chrome/RailAcciones";
+import { IconosSprite } from "@/components/sistema/Iconos";
 import CvExperience from "@/components/cv/CvExperience";
 import CvHeader from "@/components/cv/CvHeader";
 import CvLetter from "@/components/cv/CvLetter";
@@ -25,11 +28,14 @@ export default function CvPage({ locale }: { locale: Locale }) {
           line of type. The purple wash that used to sit beside it now rides
           the root background instead: only the root reaches the margin box. */}
       <div aria-hidden className="cv-print-grain hidden" />
+      {/* 8 nov: el CV lleva el mismo cromo B que el resto (rail ≥ 1024, dock < 1024). */}
+      <IconosSprite />
+      <RailAcciones locale={locale} />
 
       <main
         id="main"
         tabIndex={-1}
-        className="mx-auto w-full max-w-[1100px] px-6 pb-28 pt-24 md:px-12 md:pt-28 print:px-0 print:pb-0 print:pt-0"
+        className="mx-auto w-full max-w-[1100px] px-6 pb-28 pt-24 md:px-12 md:pt-28 lg:pl-28 min-[1340px]:pl-12 print:px-0 print:pb-0 print:pt-0"
       >
         <CvHeader locale={locale} />
 
@@ -67,6 +73,7 @@ export default function CvPage({ locale }: { locale: Locale }) {
           </a>
         </footer>
       </main>
+      <DockMovil />
 
       {/* A `ProfilePage` pointing at the Person, both in one graph. The root
           document carries the Person alone; this page is the document about

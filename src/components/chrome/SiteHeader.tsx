@@ -8,6 +8,7 @@ import { getSite } from "@/data/site";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import ThemeToggle from "@/components/ThemeToggle";
+import { decisiones } from "@/data/decisiones";
 import LanguageSwitch, { LanguageMenuLink } from "@/components/LanguageSwitch";
 import {
   getActiveSection,
@@ -87,6 +88,8 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const { path } = splitLocale(pathname || "/");
   const isHome = path === "/";
   const isCv = path === "/cv" || path.startsWith("/cv/");
+  // D4: el conmutador de tema solo existe si el CV conserva el tema claro.
+  const conTema = isCv && decisiones.temaClaroEn !== "ninguna";
   // La navegación en el cliente no vuelve a ejecutar el script de tema: /cv marca el <html>.
   useEffect(() => {
     const r = document.documentElement;
@@ -161,7 +164,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
       </nav>
 
       <div className="cab-acciones">
-        {isCv && <ThemeToggle />}
+        {conTema && <ThemeToggle />}
         <LanguageSwitch />
         <a
           href={isHome ? "#contact" : contacto}
@@ -198,7 +201,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
               {s.hablemos}
             </a>
           </li>
-          {isCv && (
+          {conTema && (
             <li className="cab-menu-tema">
               <ThemeToggle />
             </li>
