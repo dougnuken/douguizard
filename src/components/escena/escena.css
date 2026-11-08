@@ -288,6 +288,10 @@
     background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), rgba(14, 15, 18, 0.55));
     color: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--tinta));
   }
+  /* P2-5: el contenido se funde mientras el fondo cruza de oscuro a blanco. */
+  :root.cine:not([data-escena-fase="os"]) .k2 > :is(.k2-cont, .k2-cta) {
+    opacity: var(--k2c, 1);
+  }
   :root.cine:not([data-escena-fase="os"]) .k2 :is(.nivel, .sub) {
     color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--mt) * 100%), var(--tinta-2-vidrio));
   }

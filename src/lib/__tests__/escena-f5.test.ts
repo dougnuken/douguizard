@@ -40,6 +40,18 @@ describe("escena F5 · tramo y timeline", () => {
     expect(frameEscena(0.52).m).toBeCloseTo(1, 6);
   });
 
+  it("P2-5: el contenido de K2 está oculto mientras el material es gris (m entre ~0,1 y ~0,9) y entero fuera", () => {
+    for (let p = 0; p <= 1.0001; p += 0.01) {
+      const f = frameEscena(p);
+      // Visible del todo solo con el fondo aún oscuro (m ≤ 0,15) o ya casi blanco (m ≥ 0,85).
+      if (f.k2c >= 0.999) expect(f.m <= 0.15 || f.m >= 0.85, `p = ${p.toFixed(2)}`).toBe(true);
+      // El cambio de tinta cae con el contenido invisible.
+      if (Math.abs(p - ESCENA.tinta) < 0.03) expect(f.k2c).toBe(0);
+    }
+    expect(frameEscena(0).k2c).toBe(1);
+    expect(frameEscena(1).k2c).toBe(1);
+  });
+
   it("las losas entran con inicio fijo K3 0,30 · K4 0,36 · K5 0,42 y todo antes de 0,72 (P1-1)", () => {
     expect(frameEscena(0.3).k3).toBe(0);
     expect(frameEscena(0.36).k4).toBe(0);

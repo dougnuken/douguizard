@@ -219,6 +219,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       k2.style.setProperty("--k2t", fr.k2.toFixed(4));
       k2.style.setProperty("--k2-h", `${lerp(geo.k2.h, geo.k2.celda, fr.k2).toFixed(2)}px`);
       k2.style.setProperty("--mt", String(fr.mt));
+      k2.style.setProperty("--k2c", fr.k2c.toFixed(3));
       const n = geo.nombre;
       lockup.style.transform = `translate(${(n.dx * fr.nombre).toFixed(2)}px, ${(n.dy * fr.nombreY).toFixed(2)}px) scale(${lerp(1, n.s, fr.nombre).toFixed(4)})`;
       lockup.style.opacity = fr.nombreOpacidad.toFixed(3);

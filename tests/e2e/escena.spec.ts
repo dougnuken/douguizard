@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import sharp from "sharp";
+import { contrastes } from "./contraste-pixel";
 
 /**
  * F5 · acto 1 «cine» y scroll anclado del home (07 F5). Sin RM a ≥ 1024 el home
@@ -231,6 +232,26 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
       });
       expect(c, `p = ${p}`).toBeGreaterThanOrEqual(4.5);
     }
+  });
+
+  test("P2-5: «Ver casos» y «Descargar CV» ≥ 4,5:1 en píxeles en cada paso de 0,30 a 0,60 en que se ven", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrir(page, { captura: true });
+    let medidos = 0;
+    for (let i = 0; i <= 15; i++) {
+      const p = Math.round((0.3 + i * 0.02) * 100) / 100;
+      await irA(page, p);
+      // Que K2 quede quieta entre la foto con texto y la foto sin él.
+      await page.waitForTimeout(250);
+      const op = await page.locator(".k2 .k2-cta").evaluate((e) => Number(getComputedStyle(e).opacity));
+      // Fuera del fundido el contenido está entero; dentro, oculto (nada que leer a medias).
+      expect(op === 0 || op === 1 || (p > 0.3 && p < 0.36) || (p > 0.46 && p < 0.53), `p = ${p}: opacidad ${op}`).toBe(true);
+      if (op < 1) continue;
+      const m = await contrastes(page, ".k2 .cta-1, .k2 .cta-2 span");
+      for (const x of m) expect(x.ratio, `p = ${p}: ${JSON.stringify(m)}`).toBeGreaterThanOrEqual(4.5);
+      medidos++;
+    }
+    expect(medidos).toBeGreaterThan(4);
   });
 
   test("lockup en el acto 1: en p = 0 el láser cae en la rendija (±2 px); en p ≥ 0,3 cerrado; en K1, entero", async ({ page }) => {

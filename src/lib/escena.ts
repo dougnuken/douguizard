@@ -184,6 +184,13 @@ export const ESCENA = {
   material: [0.3, 0.52] as const,
   /** La tinta de K2 cambia de golpe aquí (P1-2): el contraste nunca cae a 1:1. */
   tinta: 0.41,
+  /**
+   * P2-5 (06-CRITICA-FINAL): el contenido de K2 se funde a 0 antes del tramo en
+   * que su fondo es un gris traslúcido (ni la tinta clara ni la oscura llegan a
+   * 4,5:1 ahí) y vuelve cuando el fondo ya es casi blanco. El cambio de tinta
+   * (0,41) cae con el contenido invisible.
+   */
+  k2Contenido: { sale: [0.3, 0.35] as const, entra: [0.47, 0.52] as const },
   /** Losas: opacidad, y 24 → 0, escala .96 → 1; sin blur (P1-1). */
   losas: { k3: 0.3, k4: 0.36, k5: 0.42, duracion: 0.2 },
   rail: [0.5, 0.8] as const,
@@ -208,6 +215,8 @@ export function frameEscena(p: number) {
     k2: p2io(tramo(p, ...ESCENA.k2Viaje)),
     m: p1io(tramo(p, ...ESCENA.material)),
     mt: p >= ESCENA.tinta ? 1 : 0,
+    /** Opacidad del contenido de K2 (P2-5): 1 → 0 → 1 alrededor del cruce del material. */
+    k2c: 1 - tramo(p, ...ESCENA.k2Contenido.sale) + tramo(p, ...ESCENA.k2Contenido.entra),
     /** Nombre XL: FLIP a K1 (`power2.out`, 0 → 0,45) y fundido. */
     nombre: p2o(tramo(p, ...ESCENA.nombre)),
     /** …y en vertical más tarde (`power2.inOut`): primero se aparta a la derecha, luego baja a K1. */
