@@ -118,7 +118,10 @@
     color: var(--tinta);
     min-height: 1em;
   }
-  /* P1-8: antes del primer valor la cifra no se pinta: un guion largo dibujado. */
+  /* P1-8: antes del primer valor la cifra no se pinta (sin ceros). P2-4
+     (06-CRITICA-FINAL): en lugar del guion, que en el primer cuadro se leía
+     como dato faltante, la losa dice «aún no» en texto. Solo es la escena: el
+     HTML y el lector llevan los totales finales. */
   .acumulados div.cero {
     opacity: 0.6;
   }
@@ -127,11 +130,11 @@
     align-items: center;
   }
   .acumulados dd:empty::before {
-    content: "";
-    width: 0.9em;
-    height: max(2px, 0.08em);
-    border-radius: 1px;
-    background: var(--tinta-3);
+    content: attr(data-vacio);
+    font: 500 var(--t-14) / 1.2 var(--font-texto);
+    letter-spacing: 0;
+    white-space: nowrap;
+    color: var(--tinta);
   }
   .acumulados dd.sube {
     animation: acumulado-encender 360ms var(--curva-salida);
@@ -596,6 +599,9 @@
     }
     .acumulados dd.dot--l {
       font-size: var(--t-24);
+    }
+    .acumulados dd:empty::before {
+      font-size: var(--t-12);
     }
     .acumulados dt {
       font-size: var(--t-12);

@@ -162,6 +162,20 @@ test("odómetro sin ceros: en p = 0 los acumulados van con guion y su losa a opa
   );
   expect(r.every((x) => !/0/.test(x.t ?? ""))).toBe(true);
   for (const x of r) expect(x.o).toBeCloseTo(0.6, 2);
+  // P2-4 (06-CRITICA-FINAL): el estado inicial se lee, no es un guion de dato faltante.
+  const vacios = await page.locator("[data-ac]:empty").evaluateAll((dd) => dd.map((d) => getComputedStyle(d, "::before").content));
+  expect(vacios.length).toBeGreaterThan(0);
+  for (const v of vacios) expect(v).toBe('"aún no"');
+});
+
+test("P2-4: en EN, la losa sin valor dice «not yet»", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/en/experience", { waitUntil: "networkidle" });
+  await escenaLista(page);
+  await aProgreso(page, 0);
+  const vacios = await page.locator("[data-ac]:empty").evaluateAll((dd) => dd.map((d) => getComputedStyle(d, "::before").content));
+  expect(vacios.length).toBeGreaterThan(0);
+  for (const v of vacios) expect(v).toBe('"not yet"');
 });
 
 const totales = async (page: Page) =>
