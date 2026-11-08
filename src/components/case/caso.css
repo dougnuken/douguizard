@@ -363,7 +363,8 @@
     max-width: 34em;
     padding-left: 32px;
     font: 400 var(--t-18) / 1.55 var(--font-texto);
-    color: var(--tinta);
+    /* P2-7 (F7 P2-8): la misma tinta que la prosa de «Problema»; solo el arranque en negrita va en --tinta. */
+    color: var(--tinta-2);
   }
   .lista-parte li::before {
     content: "";
@@ -378,8 +379,10 @@
   /* ── P1-6 · Tablero de impacto ────────────────────────────────────────── */
   .tablero-caso {
     display: grid;
-    /* Cada losa mide lo que lleva (P1-6): sin estirarse a la más alta de su fila. */
-    align-items: start;
+    /* P2-7 (F7 P2-3): las losas de una fila miden lo mismo (sin bordes inferiores
+       dentados cuando una trae `delta`), con el contenido arriba y sin
+       `min-height`: la fila mide lo que lleva su losa más alta. */
+    align-items: stretch;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--gap);
     margin: 0;
@@ -533,11 +536,6 @@
   }
   .colofon-caso .apoyo {
     margin-top: 12px;
-  }
-  .colofon-pie {
-    margin-top: 48px;
-    font: 400 var(--t-12) / 1.4 var(--font-texto);
-    color: var(--tinta-3);
   }
 
   /* ── Siguiente caso ───────────────────────────────────────────────────── */
@@ -857,6 +855,13 @@
     }
     .sig-card {
       min-height: 220px;
+    }
+    /* P2-7 (F7 P2-2): a < 1024 van dos cifras en una línea; la tercera quedaba huérfana. */
+    .sig-cifras {
+      flex-wrap: nowrap;
+    }
+    .sig-cifras > :nth-child(n + 3) {
+      display: none;
     }
   }
 

@@ -574,7 +574,6 @@ export const caseStudies: CaseStudy[] = [
     experienceId: "naowee",
     project: "Naowee — Sports Sector Platform",
     category: "GovTech × Sports × AI-native",
-    duration: "Ongoing",
     team: "Product, design & engineering",
     kind: "client",
     tagline:

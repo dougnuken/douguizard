@@ -90,7 +90,7 @@ test.describe("ficha (P1-5)", () => {
 test.describe("tablero de impacto (P1-6)", () => {
   for (const idioma of ["es", "en"] as const) {
     for (const ancho of [1440, 1280, 1024, 390]) {
-      test(`${idioma} · ${ancho}: una línea, sin desborde, mismo tamaño, losa a su medida`, async ({ page }) => {
+      test(`${idioma} · ${ancho}: una línea, sin desborde, mismo tamaño, filas parejas`, async ({ page }) => {
         test.slow();
         await preparar(page, ancho);
         for (const slug of CON_KPIS) {
@@ -107,6 +107,7 @@ test.describe("tablero de impacto (P1-6)", () => {
                 parseFloat(cs.paddingTop) +
                 parseFloat(cs.paddingBottom);
               return {
+                fila: Math.round(li.getBoundingClientRect().top),
                 clara: li.classList.contains("clara"),
                 fs: parseFloat(getComputedStyle(dot).fontSize),
                 alto: dot.getBoundingClientRect().height,
@@ -127,7 +128,11 @@ test.describe("tablero de impacto (P1-6)", () => {
             expect(k.fs, `${slug} tope`).toBeLessThanOrEqual(ancho < 1024 ? 48 : 72);
             expect(k.alto, `${slug} una línea`).toBeLessThanOrEqual(k.fs * 1.1);
             expect(k.scroll, `${slug} sin desborde`).toBeLessThanOrEqual(k.client);
-            expect(Math.abs(k.losa - k.contenido), `${slug} losa a su medida`).toBeLessThanOrEqual(1.5);
+            // P2-7 (F7 P2-3): alto = el de la fila (sin bordes dentados) y nunca menos que su contenido.
+            expect(k.losa, `${slug} cabe su contenido`).toBeGreaterThanOrEqual(k.contenido - 1.5);
+            const fila = t.filter((o) => o.fila === k.fila);
+            expect(Math.abs(k.losa - Math.max(...fila.map((o) => o.losa))), `${slug} alto de la fila`).toBeLessThanOrEqual(1);
+            expect(Math.abs(k.losa - Math.max(...fila.map((o) => o.contenido))), `${slug} la fila mide su losa más alta`).toBeLessThanOrEqual(1.5);
           }
         }
       });

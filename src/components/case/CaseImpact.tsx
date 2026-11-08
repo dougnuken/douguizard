@@ -16,13 +16,15 @@ import { useDict } from "@/i18n/LocaleProvider";
 function avance(ch: string, punto: boolean): number {
   if (ch === "." && punto) return 0.32;
   if (ch === " ") return 0.3;
+  // La virgulilla va en Urbanist a 0,6 em (DotMatrix): ~0,36 em.
+  if (ch === "~") return 0.36;
   return 0.55;
 }
 
 /**
  * k de P1-6: el ancho en em de la cifra más larga del caso. Las cuatro losas
  * usan el mismo k, así todas las cifras de un caso salen al mismo tamaño:
- * `min(72px, 100cqi / k)` (48 a < 1024). Para «~1.200», k ≈ 3,05.
+ * `min(72px, 100cqi / k)` (48 a < 1024). Para «~1.200», k ≈ 2,88.
  */
 export function anchoCifras(kpis: Pick<Kpi, "value">[]): number {
   const k = Math.max(

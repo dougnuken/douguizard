@@ -12,6 +12,16 @@ export const TAMANOS_DOT: Record<TamanoDot, number> = { s: 24, m: 30, l: 48, xl:
  * redondo con `::after` ocupa su lugar (NOTAS de B-paginas §6).
  */
 function conPuntos(valor: string): React.ReactNode {
+  // P2-7 (F7 P2-1): la virgulilla de Doto se lee como dos puntos altos («˙˙1.200»);
+  // va en la fuente de los titulares, más pequeña y en la línea media.
+  if (valor.startsWith("~")) {
+    return [
+      <span key="v" className="virgulilla">
+        ~
+      </span>,
+      conPuntos(valor.slice(1)),
+    ];
+  }
   if (!/\d\.\d/.test(valor)) return valor;
   return valor.split(/(?<=\d)\.(?=\d)/).flatMap((trozo, i) =>
     i === 0

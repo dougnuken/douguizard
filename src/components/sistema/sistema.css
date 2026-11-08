@@ -51,6 +51,17 @@
     line-height: 1;
     transition: --dw var(--d-hover) var(--curva-salida);
   }
+  /* P2-7 (F7 P2-1): «~» en Urbanist a 0,6 em, en la línea media de las cifras. */
+  .dot .virgulilla {
+    display: inline-block;
+    margin-right: 0.04em;
+    font-family: var(--font-display-b);
+    font-size: 0.6em;
+    font-weight: 500;
+    letter-spacing: 0;
+    vertical-align: 0.3em;
+    line-height: 0;
+  }
   .dot .punto {
     position: relative;
     display: inline-block;
