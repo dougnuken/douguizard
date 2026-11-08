@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { esClicSimple } from "@/lib/clicSimple";
 import { localeName, localePath, otherLocale, splitLocale, type Locale } from "@/i18n/config";
 import { useDict, useIsLost, useLocale } from "@/i18n/LocaleProvider";
 import {
@@ -52,8 +53,30 @@ export default function LanguageSwitch({ className = "" }: { className?: string 
   const locale = useLocale();
   const t = useDict();
   const { href } = useCounterpart();
+  // La burbuja se desliza hacia el otro idioma (160 ms) y se navega a los 140:
+  // el viaje se ve sin retrasar la carga más de lo que dura (09-MOTION-CONTROLES).
+  const [yendo, setYendo] = useState(false);
+  useEffect(() => {
+    // Al volver con «atrás» (bfcache) la página vuelve tal cual: sin el viaje.
+    const volver = (e: PageTransitionEvent) => e.persisted && setYendo(false);
+    window.addEventListener("pageshow", volver);
+    return () => window.removeEventListener("pageshow", volver);
+  }, []);
+  const ir = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!esClicSimple(ev) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    ev.preventDefault();
+    const destino = ev.currentTarget.href;
+    setYendo(true);
+    window.setTimeout(() => window.location.assign(destino), 140);
+  };
   return (
-    <div role="group" aria-label={t.sistema.idioma.label} className={`idioma ${className}`}>
+    <div
+      role="group"
+      aria-label={t.sistema.idioma.label}
+      className={`idioma ${className}`}
+      data-actual={locale}
+      data-yendo={yendo ? "" : undefined}
+    >
       {(["es", "en"] as const).map((l) =>
         l === locale ? (
           <span key={l} aria-current="true" className="idioma-op">
@@ -61,7 +84,7 @@ export default function LanguageSwitch({ className = "" }: { className?: string 
             <span className="sr-only">{localeName[l]}</span>
           </span>
         ) : (
-          <a key={l} href={href} hrefLang={l} lang={l} title={t.sistema.idioma.leerEnOtro} className="idioma-op">
+          <a key={l} href={href} hrefLang={l} lang={l} title={t.sistema.idioma.leerEnOtro} className="idioma-op" onClick={ir}>
             <span aria-hidden="true">{CODE[l]}</span>
             <span className="sr-only">{localeName[l]}</span>
           </a>

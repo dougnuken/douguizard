@@ -31,3 +31,29 @@ export function subscribeActiveSection(callback: Listener): () => void {
     listeners.delete(callback);
   };
 }
+
+/**
+ * Mientras un `irASeccion` baja en suave hasta su destino, el scroll-spy no
+ * escribe: la selección (que se desliza, 09-MOTION-CONTROLES) va directa al
+ * destino en vez de ir y volver por las secciones intermedias. Se suelta con
+ * `scrollend` (o a los 1,5 s si el navegador no lo emite) y el espía mide otra vez.
+ */
+let fijadaHasta = 0;
+let turno = 0;
+export function fijarSeccionDuranteScroll(): void {
+  if (typeof window === "undefined") return;
+  fijadaHasta = performance.now() + 1500;
+  const mio = ++turno;
+  const soltar = () => {
+    window.removeEventListener("scrollend", soltar);
+    if (mio !== turno || !fijadaHasta) return;
+    fijadaHasta = 0;
+    // El espía escucha `scroll`: una medida más, ya con el scroll quieto.
+    window.dispatchEvent(new Event("scroll"));
+  };
+  window.addEventListener("scrollend", soltar);
+  window.setTimeout(soltar, 1500);
+}
+export function seccionFijada(): boolean {
+  return fijadaHasta > 0 && performance.now() < fijadaHasta;
+}

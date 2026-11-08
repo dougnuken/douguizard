@@ -61,7 +61,11 @@
     white-space: nowrap;
     transition:
       background-color var(--d-hover) var(--curva-salida),
-      color var(--d-hover) var(--curva-salida);
+      color var(--d-ui) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
+  }
+  .pill:active {
+    scale: 0.97;
   }
   .pill[aria-current] {
     background: var(--blanco);
@@ -80,6 +84,8 @@
   }
   /* ES · EN: 40 px visibles; cada opción mide 44 × 44 y sobresale 2 px (relleno recortado a 32 px). */
   .idioma {
+    position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
     block-size: var(--pill-alto);
@@ -103,14 +109,55 @@
     font: 500 var(--t-14) / 1 var(--font-texto);
     color: var(--tinta-2-vidrio);
     text-decoration: none;
-    transition: color var(--d-hover) var(--curva-salida);
+    transition:
+      color var(--d-press) var(--curva-salida),
+      scale var(--d-press) var(--curva-salida);
   }
   .idioma-op[aria-current] {
     background-color: var(--blanco);
     color: var(--tinta-osc);
   }
-  a.idioma-op:hover {
-    color: var(--tinta);
+  a.idioma-op:active {
+    scale: 0.96;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    a.idioma-op:hover {
+      color: var(--tinta);
+    }
+  }
+  /* Al pulsar el otro idioma la burbuja se desliza hacia él (160 ms) y luego se
+     navega (`LanguageSwitch`): cada idioma es otro documento, así que el viaje
+     ocurre antes de salir. La burbuja de 32 px queda sobre el content-box de la
+     opción actual (2 px del grupo + 6 px de la opción); la otra está a 44 px. */
+  .idioma::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 8px;
+    top: calc(50% - 16px);
+    inline-size: 32px;
+    block-size: 32px;
+    border-radius: 50%;
+    background: var(--blanco);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .idioma[data-actual="en"]::before {
+    translate: 44px 0;
+  }
+  .idioma[data-yendo]::before {
+    opacity: 1;
+    animation: idioma-va 160ms var(--curva-salida) forwards;
+  }
+  .idioma[data-yendo][data-actual="en"]::before {
+    animation-name: idioma-vuelve;
+  }
+  .idioma[data-yendo] .idioma-op[aria-current] {
+    background-color: transparent;
+    color: var(--tinta-2-vidrio);
+  }
+  .idioma[data-yendo] a.idioma-op {
+    color: var(--tinta-osc);
   }
   .idioma-op:focus-visible,
   .pill:focus-visible,
@@ -153,6 +200,10 @@
     box-shadow: var(--filo), var(--sombra-flota);
     color: var(--tinta);
     cursor: pointer;
+    transition: scale var(--d-press) var(--curva-salida);
+  }
+  .cab-menu:active {
+    scale: 0.96;
   }
   .cab-menu svg {
     fill: none;
@@ -173,6 +224,25 @@
     border-radius: var(--r-s);
     background: var(--losa-alta);
     box-shadow: var(--filo), var(--sombra-flota);
+    /* Nace del botón (arriba a la derecha) y vuelve a él: entra 240 ms y sale
+       160 ms. `hidden` llega cuando termina la salida (`data-saliendo`, SiteHeader). */
+    transform-origin: calc(100% - 6px) -8px;
+    transition:
+      opacity var(--d-ui) var(--curva-salida),
+      scale var(--d-ui) var(--curva-salida),
+      translate var(--d-ui) var(--curva-salida);
+    @starting-style {
+      opacity: 0;
+      scale: 0.96;
+      translate: 0 -6px;
+    }
+  }
+  .cab-menu-panel[data-saliendo] {
+    opacity: 0;
+    scale: 0.96;
+    translate: 0 -6px;
+    transition-duration: 160ms;
+    pointer-events: none;
   }
   .cab-menu-panel ul {
     list-style: none;
@@ -188,6 +258,12 @@
     color: var(--tinta);
     font: 500 var(--t-16) / 1.2 var(--font-texto);
     text-decoration: none;
+  }
+  .cab-menu-fila {
+    transition: background-color var(--d-press) var(--curva-salida);
+  }
+  .cab-menu-fila:active {
+    background-color: rgba(255, 255, 255, 0.06);
   }
   .cab-menu-fila[aria-current] {
     background: var(--blanco);
@@ -275,7 +351,7 @@
     color: var(--tinta);
   }
   .rail-acciones a:active {
-    scale: 0.94;
+    scale: 0.96;
   }
   .rail-acciones a:focus-visible {
     outline: 2px solid var(--foco);
@@ -363,10 +439,11 @@
       text-decoration: none;
       transition:
         background-color var(--d-hover) var(--curva-salida),
+        color var(--d-ui) var(--curva-salida),
         scale var(--d-press) var(--curva-salida);
     }
     .dock :is(a, button):active {
-      scale: 0.95;
+      scale: 0.96;
     }
     .dock :is(a, button)[aria-current] {
       background: var(--blanco);
@@ -403,8 +480,27 @@
   .dock,
   .dock :is(a, button),
   .rail-acciones a,
-  .cab-menu svg {
+  .cab-menu,
+  .cab-menu svg,
+  .cab-menu-panel,
+  .cab-menu-fila,
+  .idioma-op {
     transition-duration: 1ms !important;
+  }
+  .pill:active,
+  .dock :is(a, button):active,
+  .rail-acciones a:active,
+  .cab-menu:active,
+  a.idioma-op:active {
+    scale: none;
+  }
+  .cab-menu-panel,
+  .cab-menu-panel[data-saliendo] {
+    scale: none;
+    translate: none;
+  }
+  .idioma[data-yendo]::before {
+    animation: none;
   }
 }
 
@@ -424,5 +520,22 @@
   .rail-acciones,
   .dock {
     display: none !important;
+  }
+}
+
+@keyframes idioma-va {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 44px 0;
+  }
+}
+@keyframes idioma-vuelve {
+  from {
+    translate: 44px 0;
+  }
+  to {
+    translate: 0 0;
   }
 }

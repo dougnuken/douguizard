@@ -1,4 +1,4 @@
-import { setActiveSection } from "./activeSection";
+import { fijarSeccionDuranteScroll, setActiveSection } from "./activeSection";
 
 /**
  * Ir a una sección del home desde una pill, el dock o un CTA (`6.5`): baja a
@@ -15,7 +15,10 @@ export function irASeccion(ev: { preventDefault(): void } | null, id: string): v
   // Si la escena aún no tiene GSAP (nadie atiende el evento), se baja como siempre.
   const enEscena = document.documentElement.classList.contains("cine") && destino.closest("[data-escena-pista]");
   const atendido = enEscena && !document.dispatchEvent(new Event("escena:fin", { cancelable: true }));
-  if (!atendido) destino.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "start" });
+  if (!atendido) {
+    if (!rm) fijarSeccionDuranteScroll();
+    destino.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "start" });
+  }
   if (!destino.hasAttribute("tabindex")) destino.setAttribute("tabindex", "-1");
   destino.focus({ preventScroll: true });
   history.replaceState(null, "", `#${id}`);

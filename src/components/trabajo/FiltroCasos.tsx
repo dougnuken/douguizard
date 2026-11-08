@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import type { GrupoCaso } from "@/lib/cuentas";
+import { usePildora } from "@/components/sistema/usePildora";
+import Pildora from "@/components/sistema/Pildora";
 
 export type Filtro = "todos" | GrupoCaso;
 
@@ -25,8 +27,13 @@ export default function FiltroCasos({
   const [activo, setActivo] = useState<Filtro>("todos");
   const [mensaje, setMensaje] = useState("");
   const vivo = useRef<HTMLParagraphElement>(null);
+  const grupo = useRef<HTMLDivElement>(null);
+  // La selección se desliza al botón pulsado (09-MOTION-CONTROLES); el grupo
+  // queda fuera del fundido del View Transition (`trabajo.css`).
+  const mover = usePildora(grupo, "filtros", activo);
 
-  const aplicar = (f: Filtro) => {
+  const aplicar = (f: Filtro, boton: HTMLElement) => {
+    mover(boton);
     const raiz = document.getElementById("casos-trabajo");
     if (!raiz) return;
     const cambiar = () => {
@@ -43,14 +50,21 @@ export default function FiltroCasos({
       setMensaje(anuncio[n] ?? String(n));
     };
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
-    if (!rm && typeof doc.startViewTransition === "function") doc.startViewTransition(cambiar);
-    else cambiar();
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
+    if (!rm && typeof doc.startViewTransition === "function") {
+      const html = document.documentElement;
+      html.classList.add("vt-filtro");
+      doc
+        .startViewTransition(cambiar)
+        .finished.catch(() => {})
+        .finally(() => html.classList.remove("vt-filtro"));
+    } else cambiar();
   };
 
   return (
     <div className="filtros-zona">
-      <div className="filtros" role="group" aria-label={label}>
+      <div className="filtros" role="group" aria-label={label} ref={grupo}>
+        <Pildora />
         {(Object.keys(etiquetas) as Filtro[]).map((f) => (
           <button
             key={f}
@@ -58,7 +72,7 @@ export default function FiltroCasos({
             className="filtro"
             aria-pressed={activo === f}
             data-filtro={f}
-            onClick={() => aplicar(f)}
+            onClick={(ev) => aplicar(f, ev.currentTarget)}
           >
             {etiquetas[f]}
           </button>

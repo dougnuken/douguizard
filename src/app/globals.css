@@ -679,6 +679,50 @@
     opacity: 0.88;
   }
 
+  /* ── Píldora de selección que se desliza (09-MOTION-CONTROLES §3) ─────────
+     Dock, pills de la cabecera y filtro de /work. En reposo la selección es el
+     fondo de la opción activa (sin JS es igual); durante el viaje el grupo lleva
+     `data-moviendo`, las opciones sueltan su fondo y la píldora viaja: dos
+     círculos del alto de la opción y un tramo de 1 px con `scaleX` entre sus
+     centros (`usePildora`). Solo `transform`: corre en el compositor. */
+  :is(.dock, .cab-pills, .filtros) {
+    isolation: isolate;
+  }
+  .filtros {
+    position: relative;
+  }
+  .pildora {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pildora > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 0;
+    background: var(--blanco);
+    transform-origin: 0 0;
+  }
+  .pildora > i:not(:nth-child(2)) {
+    border-radius: 50%;
+  }
+  [data-moviendo] > .pildora {
+    opacity: 1;
+  }
+  /* El fondo de la activa entra y sale sin fundido: el relevo con la píldora
+     (al salir y al llegar) cae en el mismo cuadro y en la misma caja. */
+  .pildora ~ :is([aria-current], [aria-pressed="true"]),
+  [data-moviendo] > .pildora ~ * {
+    transition-property: color, scale !important;
+  }
+  [data-moviendo] > .pildora ~ :is(a, button, span) {
+    background-color: transparent !important;
+  }
+
   /* F8: el skip link y los textos `sr-only` heredaban Archivo (fuente del diseño
      anterior) del `body` y la hacían bajar (35 KB) en cada ruta B, compitiendo con
      el póster por la red móvil. Instrument Sans ya está precargada. */
@@ -1437,11 +1481,13 @@ html:has(dialog.hoja[open]) {
     background-color var(--d-hover) var(--curva-salida),
     scale var(--d-press) var(--curva-salida);
 }
-.hoja-circulo:hover {
-  background: #26272c;
+@media (hover: hover) and (pointer: fine) {
+  .hoja-circulo:hover {
+    background: #26272c;
+  }
 }
 .hoja-circulo:active {
-  scale: 0.94;
+  scale: 0.96;
 }
 .hoja-circulo:focus-visible {
   outline: 2px solid var(--electrico-texto);
