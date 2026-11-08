@@ -609,6 +609,10 @@
     font: 400 var(--t-18) / 1.3 var(--font-texto);
     color: var(--tinta);
     border-bottom: 1px solid var(--losa-borde);
+    transition: color var(--d-press) var(--curva-salida);
+  }
+  .lista-secciones a:active {
+    color: var(--tinta-2);
   }
   .lista-secciones a:focus-visible {
     outline: 2px solid var(--foco);
@@ -625,9 +629,36 @@
     background: var(--losa);
     color: var(--tinta);
     box-shadow: var(--sombra-hoja), var(--filo);
+    /* Una hoja pequeña: sube desde abajo como la de casos (420 ms, `--curva-hoja`)
+       y baja por el mismo camino (280 ms). `display`/`overlay` discretos para
+       que la salida se vea antes de cerrarse. */
+    translate: 0 calc(100% + 24px);
+    transition:
+      translate var(--d-hoja-salida) var(--curva-hoja),
+      display var(--d-hoja-salida) allow-discrete,
+      overlay var(--d-hoja-salida) allow-discrete;
+  }
+  dialog.secciones[open] {
+    translate: 0 0;
+    transition-duration: var(--d-hoja);
+    @starting-style {
+      translate: 0 calc(100% + 24px);
+    }
   }
   dialog.secciones::backdrop {
     background: rgba(6, 6, 8, 0.6);
+    opacity: 0;
+    transition:
+      opacity var(--d-hoja-salida) var(--curva-salida),
+      display var(--d-hoja-salida) allow-discrete,
+      overlay var(--d-hoja-salida) allow-discrete;
+  }
+  dialog.secciones[open]::backdrop {
+    opacity: 1;
+    transition-duration: var(--d-hoja);
+    @starting-style {
+      opacity: 0;
+    }
   }
   .secciones-cab {
     display: flex;
@@ -645,6 +676,10 @@
     background: var(--losa-alta);
     color: var(--tinta);
     cursor: pointer;
+    transition: scale var(--d-press) var(--curva-salida);
+  }
+  .secciones-cerrar:active {
+    scale: 0.96;
   }
   .secciones-cerrar svg {
     width: 20px;
@@ -841,8 +876,19 @@
       --dw: 700;
       transition: none;
     }
-    .caso-indice a {
+    .caso-indice a,
+    .lista-secciones a,
+    .secciones-cerrar,
+    dialog.secciones,
+    dialog.secciones::backdrop {
       transition: none;
+    }
+    dialog.secciones,
+    dialog.secciones[open] {
+      translate: none;
+    }
+    .secciones-cerrar:active {
+      scale: none;
     }
   }
 }
