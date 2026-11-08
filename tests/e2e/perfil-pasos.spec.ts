@@ -10,8 +10,11 @@ for (const ancho of [1440, 1280]) {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width: ancho, height: 900 });
     await page.goto("/", { waitUntil: "networkidle" });
-    await page.locator('header a[href="/about"]').first().click();
-    await expect(page).toHaveURL(/\/about$/);
+    // El camino real: la tarjeta K14 «Cómo trabajo» del home lleva a /about#craft.
+    const k14 = page.locator('.k14 a[href^="/about"]').first();
+    await k14.scrollIntoViewIfNeeded();
+    await k14.click();
+    await expect(page).toHaveURL(/\/about(#craft)?$/);
     const pasos = page.locator(".craft .pasos li");
     await expect(pasos).toHaveCount(4);
     const m = await pasos.evaluateAll((lis) =>
