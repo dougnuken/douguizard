@@ -5,7 +5,7 @@ import type { Locale } from "@/i18n/config";
 import { sistemaDict } from "@/i18n/sistema";
 import { pdfCv } from "@/lib/cvPdf";
 
-const SIGLA: Record<string, string> = { LinkedIn: "in", Behance: "Bē", GitHub: "gh" };
+const SIGLA: Record<string, string> = { LinkedIn: "in", Behance: "Be", GitHub: "gh" };
 
 /**
  * Rail de acciones de escritorio (≥ 1024; NOTAS §1): Escríbeme · CV (PDF) ·

@@ -394,35 +394,6 @@
 }
 
 @layer utilities {
-  /* Availability badge. The dot is the status; the ring is a slow pulse that
-     runs on `transform` and `opacity` only, so it costs the compositor nothing
-     while it loops forever in the header. */
-  .status-dot {
-    position: relative;
-    display: inline-block;
-    inline-size: 7px;
-    block-size: 7px;
-    border-radius: 9999px;
-    background: var(--ok);
-    flex: none;
-  }
-
-  .status-dot::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--ok);
-    animation: status-pulse 2.4s var(--ease-out) infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .status-dot::after {
-      animation: none;
-      opacity: 0;
-    }
-  }
-
   .kicker {
     font-family: var(--font-mono);
     font-size: var(--step-meta);
@@ -430,13 +401,6 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink-muted);
-  }
-
-  /* Kicker typography, status colour. Declared after `.kicker` so it takes the
-     colour on source order — `.kicker` sets its own, and an arbitrary-value
-     text utility would only tie with it. */
-  .kicker-ok {
-    color: var(--ok);
   }
 
   .section-num {
@@ -710,37 +674,12 @@
     opacity: 0.88;
   }
 
-  /* The single permitted CTA use of the accent. */
-  .btn-pill--signal {
-    box-shadow: inset 0 -2px 0 0 var(--signal);
-  }
-
-  /* The hero's noise field.
-  
-     The shader mixes its colours into an opaque ground, so what lands on the
-     page is a rectangle — and a rectangle is exactly what a hero like this one
-     must not have. The mask takes it to nothing well before its own edges,
-     which leaves a soft body of light in the right-hand band and no seam. The
-     ground itself is the paper colour, passed in per theme (the old hero field), so
-     what the mask fades into is the page it is already standing on.
-  
-     The radii are 50/50 from dead centre for a reason: an ellipse wider than
-     its half-box never reaches its own transparent stop before the box ends,
-     and the seam it was meant to hide is still there. Move the centre and the
-     radii have to come down with it. */
-  .hero-field {
-    -webkit-mask-image: radial-gradient(
-      50% 50% at 50% 50%,
-      #000 18%,
-      rgba(0, 0, 0, 0.58) 56%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      50% 50% at 50% 50%,
-      #000 18%,
-      rgba(0, 0, 0, 0.58) 56%,
-      transparent 100%
-    );
+  /* F8: el skip link y los textos `sr-only` heredaban Archivo (fuente del diseño
+     anterior) del `body` y la hacían bajar (35 KB) en cada ruta B, compitiendo con
+     el póster por la red móvil. Instrument Sans ya está precargada. */
+  .skip-link,
+  .sr-only {
+    font-family: var(--font-texto);
   }
 
   .skip-link {
@@ -1343,20 +1282,6 @@
   .cv-skills-block {
     margin-block-start: 3mm !important;
     gap: 3mm !important;
-  }
-}
-
-/* Slow outward pulse for `.status-dot`. Kept out of `@layer utilities` so the
-   keyframes are never pruned along with an unused utility. */
-@keyframes status-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  70%,
-  100% {
-    transform: scale(2.6);
-    opacity: 0;
   }
 }
 

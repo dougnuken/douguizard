@@ -8,11 +8,6 @@
    ════════════════════════════════════════════════════════════════════════════ */
 
 @layer components {
-  /* Doto con preload en el home (P2-8): `--font-dot` se vuelve a resolver aquí,
-     donde `dotoHome` define `--font-doto`. */
-  .tablero-home {
-    --font-dot: var(--font-doto), ui-monospace, monospace;
-  }
   /* 06-CRITICA-F1 P2-1: en el tablero, Doto nunca por debajo de 30 px. */
   .tablero-home .dot--s {
     font-size: var(--t-30);
@@ -861,9 +856,13 @@
       display: block;
       font-size: var(--t-18);
     }
+    /* F8 · CLS: con `wrap`, la fila nombre/estado pasaba de dos líneas (respaldo) a
+       una (Instrument Sans) según el ancho, y K2 saltaba 26 px (CLS móvil 0,066).
+       Apilada siempre, mide lo mismo con cualquier fuente y en ES/EN. */
     .k2-fila {
-      flex-wrap: wrap;
-      gap: 8px 12px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
     }
     .k2 .claim {
       font-size: var(--t-30);

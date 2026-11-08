@@ -14,6 +14,9 @@ const archivo = Archivo({
   weight: ["400", "600", "800"],
   variable: "--font-archivo",
   display: "swap",
+  // F8: fuente del diseño anterior (hoy solo `/cv` y restos de rótulos); sin
+  // preload, deja de competir con el póster y la tipografía B por la red móvil.
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
@@ -21,6 +24,7 @@ const geistMono = Geist_Mono({
   weight: ["400", "500"],
   variable: "--font-geist-mono",
   display: "swap",
+  preload: false,
 });
 
 /**

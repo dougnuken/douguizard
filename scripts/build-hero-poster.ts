@@ -2,7 +2,7 @@
  * Hornea el póster del héroe (07 F4): abre en Chromium un arnés con **el mismo
  * shader** que `VidrioGL` y la foto activa de `src/data/hero.ts`, pinta el
  * canvas a tamaño nativo de la foto (lente cerrada) en cada estado (`cine`,
- * `losa`, `movil`) y con `sharp` saca AVIF q 58 y WebP q 78 a los anchos de
+ * `losa`, `movil`) y con `sharp` saca AVIF q 58 (q 46 en `movil`) y WebP q 78 a los anchos de
  * `anchosPoster()` (nunca mayores que el máster). Escribe también la textura
  * limpia del WebGL y `manifest.json` en `public/hero/<id>-v<version>/`.
  * Además, el retrato de K13 (F3).
@@ -107,7 +107,10 @@ async function hornear(foto: FotoHeroe, master: string, raiz: string) {
       const buf = Buffer.from(png.split(",")[1], "base64");
       const r = foto.rutas.poster[estado];
       for (const ancho of anchosPoster(w)) {
-        await sharp(buf).resize({ width: ancho }).avif({ quality: 58, effort: 6 }).toFile(salida(r.avif[ancho]));
+        // F8: el póster `movil` es el LCP de `/about` en móvil (Slow 4G); q 46 le quita
+        // ~25 KB y bajo el vidrio estriado no se distingue de q 58.
+        const q = estado === "movil" ? 46 : 58;
+        await sharp(buf).resize({ width: ancho }).avif({ quality: q, effort: 6 }).toFile(salida(r.avif[ancho]));
         await sharp(buf).resize({ width: ancho }).webp({ quality: 78, effort: 6 }).toFile(salida(r.webp[ancho]));
       }
       (manifest.poster as Record<string, unknown>)[estado] = r;

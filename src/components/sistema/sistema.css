@@ -1,8 +1,7 @@
 /* ════════════════════════════════════════════════════════════════════════════
    Primitivas del sistema B (F1). Se importa desde los componentes de
    `components/sistema/` y `components/marca/`, no desde `globals.css`: así solo
-   viaja a las rutas que las usan (hoy, solo `/lab`) y las páginas actuales no
-   cargan ni un byte más de CSS. Los tokens viven en `globals.css`.
+   viaja a las rutas que las usan. Los tokens viven en `globals.css`.
    Valores: `docs/rediseno-2026/propuestas/B/index.html` y NOTAS §2–§3.
    ════════════════════════════════════════════════════════════════════════════ */
 

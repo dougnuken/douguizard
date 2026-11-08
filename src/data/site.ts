@@ -131,7 +131,8 @@ export const site: Site = {
       "Barranquilla",
       "Colombia",
     ],
-    ogImage: "/og.png",
+    // Tarjeta OG por idioma (F8): `npm run og` las hornea desde la foto activa de `hero.ts`.
+    ogImage: "/og-en.png",
   },
 };
 
@@ -166,6 +167,7 @@ const siteEs: Site = {
   },
   seo: {
     ...site.seo,
+    ogImage: "/og.png",
     description:
       "Doug Vargas lidera producto en Naowee y lo construye: sistemas de diseño, prototipos que funcionan en código y la IA en el proceso. Antes, Andes en Mercadolibre.",
     keywords: [

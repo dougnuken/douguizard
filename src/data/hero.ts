@@ -89,7 +89,7 @@ export function foto(
 
 export const fotos: FotoHeroe[] = [
   // Foto elegida por Doug (7 nov, Higgsfield): ciudad nocturna, láser rojo en los ojos, 896×1200.
-  foto("960e1d8c", 2, {
+  foto("960e1d8c", 3, {
     tamano: { w: 896, h: 1200 },
     foco: [0.5, 0.42],
     cara: [0.5, 0.45, 0.2, 0.2],

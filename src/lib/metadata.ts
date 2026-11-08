@@ -41,8 +41,7 @@ export function rootMetadata(locale: Locale): Metadata {
       username: "douguizard",
       images: [
         {
-          // ⚠️ Build B generates public/og.png (08-assets.md). The reference is
-          // fixed here so the contract cannot drift.
+          // `npm run og` (scripts/og/build-og.ts) hornea og.png (ES) y og-en.png (EN).
           url: site.seo.ogImage,
           width: 1200,
           height: 630,
