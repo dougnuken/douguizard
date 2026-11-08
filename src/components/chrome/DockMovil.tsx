@@ -98,11 +98,14 @@ export default function DockMovil() {
           );
         }
         const actual = d.ruta === "/cv" ? path === "/cv" : path === d.ruta;
+        // P2-2: en la página de un caso, «Trabajo» sigue marcado (es su sección,
+        // no la página: `true`, no `page`).
+        const seccion = enCaso && d.clave === "trabajo";
         return (
           <Link
             key={d.clave}
             href={localePath(locale, d.ruta)}
-            aria-current={actual ? "page" : undefined}
+            aria-current={actual ? "page" : seccion ? "true" : undefined}
             onClick={(ev) => esClicSimple(ev) && mover(ev.currentTarget)}
           >
             {contenido}
