@@ -238,6 +238,9 @@
      (losa casi sólida). Ahora ~0,5 de tinte; los cantos llevan un brillo blanco tenue, como un cristal. */
   --vidrio-oscuro: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 12% 88%, rgba(255, 255, 255, 0.09) 100%);
   --vidrio-plano: rgba(14, 15, 18, 0.5);
+  /* Cromo (cabecera, ES/EN, menú, dock): tinte propio, más denso que el de las losas, para que su texto
+     cumpla AA (≥ 4,5:1) aunque pase sobre una losa o captura blanca (06-CRITICA-FINAL P1-1). */
+  --vidrio-cromo: rgba(14, 15, 18, 0.8);
   --vidrio-filtro: blur(28px) saturate(170%);
   --foco: var(--electrico-texto);
 
@@ -310,6 +313,7 @@
   :root {
     --vidrio-oscuro: linear-gradient(#141518, #141518);
     --vidrio-plano: #141518;
+    --vidrio-cromo: #141518;
     --vidrio-filtro: none;
   }
 }
