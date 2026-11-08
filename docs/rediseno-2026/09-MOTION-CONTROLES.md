@@ -14,7 +14,7 @@ Una sola familia, con los tokens de `globals.css`:
 | Presionar (todo lo que se pulsa) | `--d-press` 120 ms | `--curva-salida` | `scale` 0,97 (botones y pills) · 0,96 (círculos, dock, ES/EN, menú, filtro) |
 | Hover (solo `hover: hover` y puntero fino) | `--d-hover` 200 ms | `--curva-salida` | `background-color`, `color` |
 | Color del texto al cambiar de selección | `--d-ui` 240 ms | `--curva-salida` | `color` |
-| Selección que se desliza | 340 ms | `--curva-salida` (0.23, 1, 0.32, 1) | `clip-path: inset(… round r)` |
+| Selección que se desliza | 340 ms | `--curva-salida` (0.23, 1, 0.32, 1) | `transform` (dos círculos + un tramo con `scaleX`) |
 | Burbuja ES/EN | 160 ms | `--curva-salida` | `translate` |
 | Panel del menú móvil | entra `--d-ui` 240 ms · sale 160 ms | `--curva-salida` | `opacity`, `scale` 0,96, `translate` −6 px, origen en el botón |
 | Hojas (casos, «Secciones») | entra `--d-hoja` 420 ms · sale 280 ms | `--curva-hoja` | `translate` (+ velo `opacity`) |
@@ -27,7 +27,7 @@ sin `scale` al presionar, sin viaje de la píldora ni de la burbuja y sin «Desl
 
 | Control | Problema | Arreglo |
 | --- | --- | --- |
-| **Dock móvil** (`DockMovil.tsx`, `.dock`) | La píldora blanca salta de un destino a otro: es el fondo de la opción con `aria-current` y cada página monta su propio dock, así que ni siquiera había algo que animar. `:active` a 0,95. | Píldora que se desliza (`usePildora`, §3) 340 ms `--curva-salida` sobre `clip-path`. Arranca al pulsar (antes de que llegue la ruta) y la memoria vive en el módulo: el dock nuevo retoma el viaje a medio camino. `:active` 0,96 / 120 ms; texto `color` 240 ms. |
+| **Dock móvil** (`DockMovil.tsx`, `.dock`) | La píldora blanca salta de un destino a otro: es el fondo de la opción con `aria-current` y cada página monta su propio dock, así que ni siquiera había algo que animar. `:active` a 0,95. | Píldora que se desliza (`usePildora`, §3) 340 ms `--curva-salida`, solo `transform`. Arranca al pulsar (antes de que llegue la ruta) y la memoria vive en el módulo: el dock nuevo retoma el viaje a medio camino. `:active` 0,96 / 120 ms; texto `color` 240 ms. |
 | **Pills de la cabecera** (`.cab-pills .pill`) | Mismo salto. Sin respuesta al presionar. En el home, al pulsar una pill el scroll-spy pasaba por las secciones intermedias. | Píldora que se desliza (misma pieza). `:active` 0,97 / 120 ms. `irASeccion` fija la sección mientras baja en suave (`fijarSeccionDuranteScroll`, se suelta con `scrollend` o a 1,5 s): la píldora va directa al destino. |
 | **ES / EN** (`LanguageSwitch.tsx`, `.idioma`) | La burbuja no se movía; el cambio de idioma es otro documento (otro layout raíz). Hover sin compuerta de puntero. Sin `:active`. | Al pulsar, `data-yendo`: la burbuja (`.idioma::before`) se desliza 44 px en 160 ms y se navega a los 140 ms (bajo el tope de ~180). Con «atrás» (bfcache) se limpia en `pageshow`. Con modificadores o RM navega al instante. `:active` 0,96; hover solo con puntero fino. |
 | **Botón de menú** (`.cab-menu`) | Sin respuesta al presionar. | `:active` 0,96 / 120 ms (el ícono ya rotaba 90° en 240 ms). |
@@ -42,13 +42,15 @@ sin `scale` al presionar, sin viaje de la píldora ni de la burbuja y sin «Desl
 
 ## 3. La píldora que se desliza (`usePildora`)
 
-- **Qué se anima:** una capa blanca (`.pildora`, primer hijo del grupo) del tamaño del grupo, recortada con
-  `clip-path: inset(t r b l round r)` a la caja de la opción. Animar el recorte no toca el layout (ni `width` ni
-  `left`) y las esquinas quedan redondas todo el viaje. WAAPI, 340 ms, `--curva-salida`.
+- **Qué se anima:** una capa (`<Pildora />`, primer hijo del grupo) con tres piezas blancas: dos círculos del alto
+  de la opción en los extremos y, entre sus centros, un tramo de 1 px estirado con `scaleX`. Juntas dibujan una
+  cápsula de cualquier ancho sin animar `width` ni `left`. Solo `transform` (WAAPI, 340 ms, `--curva-salida`):
+  corre en el compositor, así que no se congela mientras React pinta la ruta nueva. (Un primer intento con
+  `clip-path` se congelaba justo en ese momento: lo pinta el hilo principal.)
 - **En reposo no hay capa:** la selección sigue siendo el fondo de la opción activa, como antes (sin JS, axe y el
   barrido de contraste ven lo mismo). Solo durante el viaje el grupo lleva `data-moviendo`: las opciones sueltan su
   fondo y la capa viaja. El relevo es en el mismo cuadro y en la misma caja (sin fundido de `background-color`).
-- **Interrumpible:** un cambio a medio camino arranca desde el recorte que se ve (`getComputedStyle`), no desde el
+- **Interrumpible:** un cambio a medio camino arranca desde la caja que se ve (traslación de los círculos, `getComputedStyle`), no desde el
   destino anterior.
 - **Entre rutas:** la memoria (caja actual + viaje en curso) vive en el módulo (`src/lib/pildora.ts`). Al pulsar un
   destino del dock o una pill, la píldora sale de inmediato; si la ruta llega y el dock se vuelve a montar, el nuevo
@@ -75,4 +77,31 @@ scroll y no existe con RM ni fuera del acto 1 de escritorio. Ninguna prueba exis
 6. «Desliza»: una sola animación con iteraciones finitas; se retira con el scroll.
 7. Menú móvil: origen en el botón, `data-saliendo` y luego `hidden`.
 
-Vitest suma 3 (`src/lib/__tests__/pildora.test.ts`): recorte, comparación de cajas y memoria del viaje.
+Vitest suma 4 (`src/lib/__tests__/pildora.test.ts`): piezas de la cápsula, caja vista, comparación de cajas y memoria
+del viaje (252 → 256).
+
+La prueba de las pills comprueba además los keyframes del viaje (de Perfil a Experiencia, 340 ms): al salir de
+`/about` la ruta puede ocupar el hilo principal y el muestreo por rAF no ver cuadros intermedios aunque en pantalla
+los haya (corre en el compositor; el video lo muestra). La del dock sí exige un cuadro intermedio medido.
+
+## 6. Rendimiento
+
+Sin JS nuevo antes del LCP ni librerías: la píldora es WAAPI nativo (+1,7 KB gzip en el JS de la página). Mismo
+banco que F8 (`PERF_ASSERT=1 PERF_RUNS=3`, mediana), antes (`3aecefa`) → después:
+
+| Ruta | Móvil LCP | Móvil CLS | Escritorio LCP | Escritorio CLS | JS gzip |
+| --- | --- | --- | --- | --- | --- |
+| `/` | 1 040 → 1 024 ms | 0 → 0 | 328 → 356 ms | 0,0005 → 0,0005 | 159,7 → 161,4 KB |
+| `/about` | 1 896 → 1 908 ms | 0,0002 → 0,0002 | 532 → 520 ms | 0 → 0 | 151,7 → 153,3 KB |
+
+Las diferencias de LCP están dentro del ruido entre corridas; `/about` sigue bajo la meta de 2,0 s.
+
+## 7. Lo que queda
+
+- Durante el viaje de la píldora, el texto de la opción que se cruza queda claro sobre blanco unos cuadros (el color
+  del texto cambia en 240 ms, la píldora en 340). La técnica de la lista duplicada recortada lo resolvería, a cambio
+  de duplicar las opciones en el DOM; no se hizo.
+- Suite completa: 523 de 525 en verde (518 de base + 7 de `controles.spec`). Las dos rojas son de tiempo y fallan
+  igual en la base (`3aecefa`, medida en la misma máquina): `hoja.spec` «la salida se ve a los 100 ms» (2 de 12 con
+  `--repeat-each` en la base) y `escena.spec` «snap ≤ 1,2 s» (8 corridas: base 1 101–1 513 ms, este cambio
+  1 062–1 397 ms; el umbral es 1 200). No las introduce este cambio.
