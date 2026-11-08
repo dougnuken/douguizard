@@ -501,21 +501,24 @@
     justify-content: space-between;
     gap: 24px;
   }
-  .pasos {
+  /* Con `.k14` delante: «Cómo trabajo» de /about usa también `.pasos` y, al
+     llegar desde el home por navegación cliente, esta hoja sigue cargada y le
+     imponía la columna de 40 px (el texto partido letra a letra). */
+  .k14 .pasos {
     display: grid;
     gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .pasos li {
+  .k14 .pasos li {
     display: grid;
     grid-template-columns: 40px 1fr;
     align-items: baseline;
     gap: 12px;
     font: 400 var(--t-16) / 1.35 var(--font-texto);
   }
-  .pasos-num {
+  .k14 .pasos-num {
     font: 500 var(--t-14) / 1 var(--font-texto);
     font-variant-numeric: tabular-nums;
     color: var(--tinta-2);
