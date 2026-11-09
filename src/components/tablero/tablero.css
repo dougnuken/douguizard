@@ -506,22 +506,40 @@
      imponía la columna de 40 px (el texto partido letra a letra). */
   .k14 .pasos {
     display: grid;
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
   }
+  /* Lista vertical (P-E2 §2): número Doto + título por fila, nunca columnas;
+     el título cabe entero (envuelve si hace falta) y no se monta en el número. */
   .k14 .pasos li {
+    position: static;
     display: grid;
-    grid-template-columns: 40px 1fr;
-    align-items: baseline;
-    gap: 12px;
-    font: 400 var(--t-16) / 1.35 var(--font-texto);
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-height: 44px;
+    padding: 8px 0;
+    border-top: 1px solid var(--losa-borde);
+    font: 400 var(--t-16) / 1.3 var(--font-texto);
+    color: var(--tinta);
+  }
+  .k14 .pasos li:first-child {
+    border-top-color: transparent;
   }
   .k14 .pasos-num {
-    font: 500 var(--t-14) / 1 var(--font-texto);
+    font: 600 var(--t-20) / 1 var(--font-dot);
     font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
     color: var(--tinta-2);
+  }
+  .k14 .pasos li:first-child .pasos-num {
+    color: var(--laser);
+  }
+  .k14 .pasos-titulo {
+    min-width: 0;
   }
 
   /* ── K15 · testimonio ────────────────────────────────────────────────── */
