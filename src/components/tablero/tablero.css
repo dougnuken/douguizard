@@ -958,6 +958,12 @@
       font: 600 var(--t-20) / 1.2 var(--font-display-b);
       color: var(--tinta);
     }
+    /* Pulido F (06-CRITICA-E P2-2): el ancla (#work, #experience, #about, #contact) es la
+       card y el rótulo va encima (su línea, 24 px, + el gap de la columna, 12). Sin
+       sumarlo, el rótulo quedaba 4 px por debajo del canto de la cabecera. */
+    .os [data-seccion] {
+      --rotulo-seccion: calc(1.2 * var(--t-20) + var(--gap));
+    }
     .os .tarjeta {
       padding: 24px;
     }

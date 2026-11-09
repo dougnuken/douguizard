@@ -55,6 +55,47 @@ test("móvil: el home mide ≤ 6 pantallas de 844 (≤ 5.064 px) a 390", async (
   expect(alto).toBeLessThanOrEqual(5064);
 });
 
+/**
+ * Pulido F (06-CRITICA-E P2-2): al llegar a una sección por su ancla (dock, pills, «Escríbeme»,
+ * `/#contact` desde otra página), su rótulo visible queda 24 px bajo el canto de la cabecera.
+ * En móvil el rótulo es el `.seccion-titulo` que va antes del ancla; en escritorio, la card.
+ */
+const rotuloBajoCabecera = (page: Page, id: string) =>
+  page.evaluate((id) => {
+    const t = document.getElementById(id)!;
+    const prev = t.previousElementSibling as HTMLElement | null;
+    const visible = prev?.matches(".seccion-titulo") && getComputedStyle(prev).position !== "absolute";
+    const rotulo = visible ? prev! : t;
+    return Math.round(rotulo.getBoundingClientRect().top - document.querySelector(".site-header")!.getBoundingClientRect().bottom);
+  }, id);
+
+for (const [w, h] of [
+  [390, 844],
+  [1440, 900],
+] as const) {
+  for (const id of ["work", "experience", "about", "contact"]) {
+    test(`ancla #${id} @${w}: el rótulo queda 24 px bajo la cabecera`, async ({ page }) => {
+      await abrir(page, `/#${id}`, w, h);
+      await expect.poll(() => rotuloBajoCabecera(page, id)).toBe(24);
+    });
+  }
+}
+
+test("390: «Contacto» del dock (home y desde /about) deja el rótulo a 24 px de la cabecera", async ({ page }) => {
+  await abrir(page, "/about", 390, 844);
+  await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" as ScrollBehavior }));
+  await page.locator('.dock a[href$="#contact"]').click();
+  await page.waitForURL(/\/#contact$/);
+  await expect.poll(() => rotuloBajoCabecera(page, "contact")).toBe(24);
+  // En el home: del principio a Perfil y luego a Contacto con el dock.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }));
+  await page.evaluate(() => window.scrollTo({ top: 1200, behavior: "instant" as ScrollBehavior }));
+  await page.locator('.dock a[href$="#about"]').click();
+  await expect.poll(() => rotuloBajoCabecera(page, "about")).toBe(24);
+  await page.locator('.dock a[href$="#contact"]').click();
+  await expect.poll(() => rotuloBajoCabecera(page, "contact")).toBe(24);
+});
+
 for (const ruta of ["/", "/en"]) {
   test(`un nombre visible por pantalla y la disponibilidad una vez en el pliegue (escritorio) ${ruta}`, async ({ page }) => {
     await abrir(page, ruta, 1440, 900);
