@@ -551,6 +551,19 @@
   .k14 .pasos-titulo {
     min-width: 0;
   }
+  /* Móvil: misma lista vertical con ritmo más corto. Las filas no son blancos
+     táctiles (el enlace es el título de la losa), así que no necesitan 44 px;
+     así el home vuelve a caber en 6 pantallas de 844 (tablero.spec). */
+  @media (max-width: 1023px) {
+    .k14 {
+      gap: 16px;
+    }
+    .k14 .pasos li {
+      min-height: 0;
+      padding: 6px 0;
+      line-height: 1.25;
+    }
+  }
 
   /* ── K15 · testimonio ────────────────────────────────────────────────── */
   .k15 {
