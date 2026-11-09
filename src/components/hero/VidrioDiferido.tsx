@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import type { EstadoVidrio } from "@/data/hero";
+import { alInteractuar } from "@/lib/primeraInteraccion";
 import type { PropsVidrioGL } from "./VidrioGL";
 
 type Lente = typeof import("./LenteCss").default;
@@ -61,22 +62,17 @@ export default function VidrioDiferido({
     // puntero) en vez del `load`: el contexto, la textura y el primer cuadro dejan
     // de competir con la hidratación (TBT móvil). En escritorio, como siempre.
     const movil = !window.matchMedia(ESCRITORIO).matches;
-    const GESTOS = ["pointerdown", "pointermove", "touchstart", "keydown", "wheel", "scroll"] as const;
-    const soltarGestos = () => GESTOS.forEach((g) => window.removeEventListener(g, gesto, true));
-    function gesto() {
-      soltarGestos();
-      pedir();
-    }
+    let soltarGesto = () => {};
     const ir = () => {
       if (!movil) return pedir();
-      GESTOS.forEach((g) => window.addEventListener(g, gesto, { capture: true, passive: true }));
+      soltarGesto = alInteractuar(pedir);
     };
     if (document.readyState === "complete") ir();
     else window.addEventListener("load", ir, { once: true });
     return () => {
       vivo = false;
       window.removeEventListener("load", ir);
-      soltarGestos();
+      soltarGesto();
       cic(idle);
     };
   }, [espejo]);

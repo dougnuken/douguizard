@@ -1,7 +1,8 @@
 "use client";
 
 import "./chrome.css";
-import Link from "next/link";
+// G1: prefetch tras la primera interacción (ver LinkDiferido).
+import Link from "@/components/sistema/LinkDiferido";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { getSite } from "@/data/site";

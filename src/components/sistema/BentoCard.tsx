@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkDiferido from "./LinkDiferido";
 import "./sistema.css";
 import Flecha from "./Flecha";
 import Losa, { type RadioLosa, type Superficie } from "./Losa";
@@ -54,7 +54,7 @@ export default function BentoCard({
       </div>
       {children}
       {flecha && <Flecha variante={flecha} />}
-      <Link href={href} className="bento-capa" aria-labelledby={tituloId} />
+      <LinkDiferido href={href} className="bento-capa" aria-labelledby={tituloId} />
     </Losa>
   );
 }
