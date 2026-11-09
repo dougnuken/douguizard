@@ -448,11 +448,11 @@
       justify-items: center;
       align-content: center;
       gap: 2px;
-      /* P2-3: 8 px por lado, para que la etiqueta más larga («Experiencia») no
-         toque el canto de la píldora; 62 px de mínimo para que quepa a 360. */
-      min-inline-size: 62px;
+      /* Pulido D: 12 px por lado (antes 8, P2-3) para que la etiqueta respire
+         dentro de la píldora, también «Experiencia» y «Contacto». */
+      min-inline-size: 56px;
       block-size: 52px;
-      padding: 0 8px;
+      padding: 0 12px;
       border-radius: var(--r-pill);
       font: 500 var(--t-12) / 1.2 var(--font-texto);
       color: var(--tinta-2-vidrio);
@@ -473,10 +473,61 @@
       outline: 2px solid var(--foco);
       outline-offset: 2px;
     }
+
+    /* Iconos del dock (pulido D): outline en reposo, fill en la seleccionada.
+       El relleno entra en 220 ms con una curva suave y el icono da un rebote
+       leve (≤ 1,08); con reduced-motion el cambio es inmediato. */
+    .icono-dock {
+      inline-size: 24px;
+      block-size: 24px;
+      flex: none;
+      overflow: visible;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .icono-dock__relleno {
+      fill: currentColor;
+      opacity: 0;
+      scale: 0.8;
+      transform-box: fill-box;
+      transform-origin: center;
+      transition:
+        opacity 220ms var(--curva-salida),
+        scale 220ms var(--curva-salida);
+    }
+    .icono-dock__detalle {
+      transition: stroke 220ms var(--curva-salida);
+    }
+    .dock [aria-current] .icono-dock {
+      animation: dock-icono-entra 240ms var(--curva-salida);
+    }
+    .dock [aria-current] .icono-dock__relleno {
+      opacity: 1;
+      scale: 1;
+    }
+    .dock [aria-current] .icono-dock__detalle {
+      stroke: var(--blanco);
+    }
+  }
+  /* Por debajo de 390 las de reposo vuelven a 8 px por lado; la seleccionada
+     conserva sus 12 (el dock cabe con aire a 360 y a 320). */
+  @media (max-width: 389px) {
+    .dock :is(a, button) {
+      padding: 0 8px;
+    }
+    .dock :is(a, button)[aria-current] {
+      padding: 0 12px;
+    }
   }
   @media (max-width: 359px) {
+    .dock {
+      gap: 0;
+    }
     .dock :is(a, button) {
-      min-inline-size: 52px;
+      min-inline-size: 48px;
       font-size: 11px;
     }
   }
@@ -523,6 +574,16 @@
   .idioma[data-yendo]::before {
     animation: none;
   }
+  .dock [aria-current] .icono-dock {
+    animation: none;
+  }
+  .icono-dock__relleno,
+  .icono-dock__detalle {
+    transition-duration: 1ms !important;
+  }
+  .icono-dock__relleno {
+    scale: none !important;
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -544,6 +605,17 @@
   }
 }
 
+@keyframes dock-icono-entra {
+  from {
+    scale: 0.92;
+  }
+  60% {
+    scale: 1.08;
+  }
+  to {
+    scale: 1;
+  }
+}
 @keyframes idioma-va {
   from {
     translate: 0 0;

@@ -4,7 +4,7 @@ import "./chrome.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Icono, type NombreIcono } from "@/components/sistema/Iconos";
+import { IconoDock, type NombreIconoDock } from "./IconosDock";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { getActiveSection, getServerActiveSection, subscribeActiveSection } from "@/lib/activeSection";
@@ -14,7 +14,7 @@ import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
 import { esClicSimple } from "@/lib/clicSimple";
 
-type Destino = { clave: "trabajo" | "perfil" | "experiencia" | "cv" | "contacto"; icono: NombreIcono; seccion?: string; ruta: string };
+type Destino = { clave: "trabajo" | "perfil" | "experiencia" | "cv" | "contacto"; icono: NombreIconoDock; seccion?: string; ruta: string };
 
 /** 5 destinos (6 nov, NOTAS §1): Trabajo · Perfil · Experiencia · CV · Contacto. */
 const DESTINOS: Destino[] = [
@@ -74,14 +74,14 @@ export default function DockMovil() {
               data-secciones=""
               onClick={() => window.dispatchEvent(new Event(EVENTO_SECCIONES))}
             >
-              <Icono nombre="secciones" />
+              <IconoDock nombre="secciones" />
               <span>{t.secciones}</span>
             </button>
           );
         }
         const contenido = (
           <>
-            <Icono nombre={d.icono} />
+            <IconoDock nombre={d.icono} />
             <span>{t[d.clave]}</span>
           </>
         );
