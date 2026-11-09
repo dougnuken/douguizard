@@ -17,11 +17,12 @@ export interface CaseColophonProps {
  * columnas. Es el `<footer>` del caso en la página completa y un `<div>` en la
  * hoja, donde el documento de debajo ya tiene su pie (§1.2).
  */
-export default function CaseColophon({ technologies, links, credits, enHoja = false }: CaseColophonProps) {
+export default function CaseColophon({ technologies, links, credits }: CaseColophonProps) {
   const t = useDict().case;
-  const Pie = enHoja ? "div" : "footer";
+  // P2-7 (F7 P2-5): el colofón ya no es el pie ni lleva el ©: la página completa
+  // cierra con el pie B del sitio (`SiteFooter`), debajo de «Siguiente caso».
   return (
-    <Pie className="bloque" data-colofon="">
+    <div className="bloque" data-colofon="">
       <FadeIn className="colofon-caso">
         {technologies && technologies.length > 0 && (
           <div>
@@ -57,7 +58,6 @@ export default function CaseColophon({ technologies, links, credits, enHoja = fa
           </div>
         )}
       </FadeIn>
-      <p className="colofon-pie">© {new Date().getFullYear()} Doug Vargas</p>
-    </Pie>
+    </div>
   );
 }

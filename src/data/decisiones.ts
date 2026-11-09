@@ -80,7 +80,8 @@ export const decisiones: Decisiones = {
   disponibilidad: "consultoria",
   ordenCasos: "home.ordenCasos",
   rutasPerfil: "separadas",
-  temaClaroEn: "solo-cv",
+  // 8 nov (Doug): el CV en blanco parecía una página aislada; ahora es oscuro como el resto, sin toggle.
+  temaClaroEn: "ninguna",
   titularEn: "diccionario",
   // Decidido el 6 nov: opción 4 «corte láser». Reversión: { fuente: "big-shoulders",
   // construccion: "banda" } + reexportar su fuente en app/fonts/lockup.ts.

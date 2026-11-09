@@ -3,13 +3,16 @@
 import "./chrome.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Icono, type NombreIcono } from "@/components/sistema/Iconos";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { getActiveSection, getServerActiveSection, subscribeActiveSection } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
 import { EVENTO_SECCIONES } from "@/components/case/eventos";
+import { usePildora } from "@/components/sistema/usePildora";
+import Pildora from "@/components/sistema/Pildora";
+import { esClicSimple } from "@/lib/clicSimple";
 
 type Destino = { clave: "trabajo" | "perfil" | "experiencia" | "cv" | "contacto"; icono: NombreIcono; seccion?: string; ruta: string };
 
@@ -40,6 +43,10 @@ export default function DockMovil() {
   // En la página de un caso, «Contacto» deja su sitio a «Secciones» (07 F7):
   // abre la lista de secciones del caso (`HojaSecciones`).
   const enCaso = /^\/work\/[^/]+$/.test(path);
+  // La selección se desliza entre destinos, también al cambiar de ruta (cada
+  // página monta su dock: la memoria de la píldora vive en el módulo).
+  const navRef = useRef<HTMLElement>(null);
+  const mover = usePildora(navRef, "dock", `${path}|${isHome ? active : ""}`);
 
   useEffect(() => {
     if (!isHome) return;
@@ -55,7 +62,8 @@ export default function DockMovil() {
   }, [isHome]);
 
   return (
-    <nav className="dock" aria-label={t.label} data-escondido={escondido ? "" : undefined} inert={escondido || undefined}>
+    <nav ref={navRef} className="dock" aria-label={t.label} data-escondido={escondido ? "" : undefined} inert={escondido || undefined}>
+      <Pildora />
       {DESTINOS.map((d) => {
         if (enCaso && d.clave === "contacto") {
           return (
@@ -90,8 +98,16 @@ export default function DockMovil() {
           );
         }
         const actual = d.ruta === "/cv" ? path === "/cv" : path === d.ruta;
+        // P2-2: en la página de un caso, «Trabajo» sigue marcado (es su sección,
+        // no la página: `true`, no `page`).
+        const seccion = enCaso && d.clave === "trabajo";
         return (
-          <Link key={d.clave} href={localePath(locale, d.ruta)} aria-current={actual ? "page" : undefined}>
+          <Link
+            key={d.clave}
+            href={localePath(locale, d.ruta)}
+            aria-current={actual ? "page" : seccion ? "true" : undefined}
+            onClick={(ev) => esClicSimple(ev) && mover(ev.currentTarget)}
+          >
             {contenido}
           </Link>
         );

@@ -22,6 +22,7 @@
 - **Propuesta B «Cine → OS»** aprobada. Landing de referencia: `referencias/ref-8-landing-elegido-B-os.jpg`.
 - **Nombre:** lockup **«corte láser»** (opción 4 de `propuestas/B-tipo/`, Geologica; el láser parte «Vargas» y el
   corte se cierra cuando la foto se encoge). Resto: Urbanist + Instrument Sans + Doto (solo cifras/fechas).
+- **`/cv` en el cromo B, siempre oscuro** (Doug, 8 nov; antes conservaba su tema claro).
 - **Sin máscara** ni revelado. Héroe = foto + vidrio estriado oblicuo; el cursor solo abre/aclara el vidrio.
 - **Imagen del héroe (7 nov): `retratos-hf/960e1d8c.jpg`** (Higgsfield, ciudad nocturna, láser rojo en los ojos, 896×1200), activa en `src/data/hero.ts`. Antes en pausa: Provisional `retratos-hf/199598aa.jpg` (láser rojo, gorra NY, sin lentes, 880×1168).
   Lo explorado no convenció (`heroe/`). Gusto: `referencias/ref-6`, `ref-7` (render 3D hiperdetallado, gear gastado)
@@ -46,7 +47,7 @@
 | F5 acto 1 «cine» + scroll anclado | ✓ ejecutor: vitest 247/247, Playwright 436/436 ×2; JS / 157,5 KB gz; LCP sin regresión vs F4 · QA ✓: **2 P0** (bordes duros de la foto en el acto 1; nombre tapado por K2 a p≈0,3), 3 P1 · P0+P1 arreglados ✓ (foto fundida, nombre visible, cara atenuada, 1280 cabe; Playwright 440/440 ×2; LCP móvil 1,04 s) · **F5 ✓** (pendiente pulido: estrías sobre la atmósfera; CLS móvil 0,066) | `F5-INFORME.md`, `F5-capturas/` |
 | F6 casos en hoja con URL real | ✓ ejecutor: vitest 255/255, Playwright 464/464 ×2; JS / 157,9 KB gz (= F5); LCP móvil 1.036 ms, escritorio 376 ms · QA ✓ 8,1/10: 0 P0, 5 P1 (foco/teclado, canal sin velo, salida sin prueba, entrada en dos tiempos, miga larga) · P1 arreglados ✓ (foco en el cuerpo, velo completo, salida probada, entrada en un tiempo, miga corta; Playwright 472/472) · **F6 ✓** | `F6-INFORME.md`, `F6-capturas/` (+ `hoja-1440.webm`) |
 | F7 casos y páginas al sistema B | ✓ ejecutor: vitest 257/257, Playwright 502/502 ×2; JS / 158,2 KB gz; LCP sin regresión · QA ✓ 7,6/10: 0 P0, 4 P1 (título largo, cubierta con marco viejo, h2 como rótulos, bandas de F0) · P1 arreglados ✓ (Playwright 513/513; LCP móvil 1.012 ms) · **F7 ✓** · titulares `heads` en borrador para Doug (F7-INFORME) | `F7-INFORME.md`, `F7-capturas/` |
-| F8 endurecimiento, SEO, rendimiento, entrega | en curso (ejecutor; Doug dio el sí) | `F8-INFORME.md`, `08-ENTREGA.md` | `07` §2 |
+| F8 endurecimiento, SEO, rendimiento, entrega | ✓ ejecutor: Playwright 518/518 ×2; LCP móvil `/` 1.040 ms, `/about` 1.920 ms ✓; Lighthouse A11y/BP/SEO 100, Perf móvil simulado 65–86 (TBT) · pulido pedido por Doug ✓ (vidrio en losas y cromo, ES/EN circular, `/cv` al cromo B, selección que se desliza en dock/pills/ES-EN/filtro, «Desliza» animado; `09-MOTION-CONTROLES.md`; Playwright 524/524 tras estabilizar 2 pruebas de tiempo) · QA final ✓ 8,4/10: 0 P0, 2 P1 (contraste del cromo de vidrio; cuerpo de `/cv` aún de F0), 7 P2 · P1 finales arreglados ✓ (cromo con tinte 0,8 AA; `/cv` al sistema B en pantalla, impresión/PDF intactos; Playwright 531) · **LISTO PARA ENTREGAR** | `F8-INFORME.md`, `08-ENTREGA.md` | `07` §2 |
 
 ## Siguiente (en orden)
 
@@ -54,7 +55,7 @@
 2. ~~Crítica de las páginas internas~~ ✓ (`06-CRITICA-PAGINAS.md`) → P0+P1 aplicados ✓ (`B-paginas/NOTAS.md` §7)
    → **aprobadas por Doug** (6 nov). P2 solo si los pide.
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
-4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). F6 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F6.md`) → arreglos ✓ → **F6 cerrada** (y `vidrio.spec` ya mide estrías, independiente de la foto). F7 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F7.md`) → arreglos ✓ → **F7 cerrada**. **F8 en curso** (sin deploy) → QA final. Pendiente de Doug: aprobar titulares de casos (`F7-INFORME.md` «Borradores para Doug»). Una sesión por fase (ejecutor) + una de QA visual/crítica.
+4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). F6 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F6.md`) → arreglos ✓ → **F6 cerrada** (y `vidrio.spec` ya mide estrías, independiente de la foto). F7 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F7.md`) → arreglos ✓ → **F7 cerrada**. F8 ✓ (ejecutor) → pulido de Doug ✓ → QA final ✓ → arreglos ✓ → **REDISEÑO LISTO PARA ENTREGAR** (8 nov). Pendiente de Doug: aprobar titulares de casos (F7-INFORME), 7 P2 de `06-CRITICA-FINAL.md` ✓ (8 nov; Playwright 556/556; LCP móvil / 1.004 ms) + arreglo de «Cómo trabajo» en /about que reportó Doug (requiere redesplegar), y desplegar: PR #16 (rama → main, abierto el 9 nov) para que Doug lo fusione; luego §4 de `08-ENTREGA.md` → entrega (`08-ENTREGA.md`; deploy lo hace Doug). Pendiente de Doug: aprobar titulares de casos (`F7-INFORME.md` «Borradores para Doug»). Una sesión por fase (ejecutor) + una de QA visual/crítica.
 
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 

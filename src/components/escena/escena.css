@@ -133,6 +133,22 @@
       transform: scaleY(var(--p, 0));
       background: var(--laser);
     }
+    /* «Desliza» animado (09-MOTION-CONTROLES §3): un trazo recorre el riel hacia
+       abajo y se apaga, dos veces tras la entrada, y queda quieto. Finito a
+       propósito: en reposo no queda ninguna animación viva (escena 0 fps). Con el
+       primer scroll (p > 0) se retira: el riel pasa a ser el progreso (`--p`). */
+    .escena-indicador::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 0;
+      transform: scaleY(0);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+      pointer-events: none;
+    }
+    :root.cine .escena:is(:not([data-p]), [data-p="0.000"]) .escena-indicador::after {
+      animation: riel-recorre 1200ms var(--curva-io) 1000ms 2;
+    }
     .escena-indicador span {
       position: absolute;
       right: 0;
@@ -175,8 +191,8 @@
       mask-image: linear-gradient(90deg, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%);
     }
     :root.cine .k2 {
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: var(--vidrio-filtro);
+      backdrop-filter: var(--vidrio-filtro);
     }
 
     /* ── p = 0 sin JS de escena (sin `data-fase`) ─────────────────────── */
@@ -269,8 +285,12 @@
   :root.cine:not([data-escena-fase="os"]) .k2 {
     --m: 1;
     --mt: 1;
-    background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), rgba(20, 20, 24, 0.9));
+    background: color-mix(in oklab, var(--claro) calc(var(--m) * 100%), rgba(14, 15, 18, 0.55));
     color: color-mix(in oklab, var(--tinta-osc) calc(var(--mt) * 100%), var(--tinta));
+  }
+  /* P2-5: el contenido se funde mientras el fondo cruza de oscuro a blanco. */
+  :root.cine:not([data-escena-fase="os"]) .k2 > :is(.k2-cont, .k2-cta) {
+    opacity: var(--k2c, 1);
   }
   :root.cine:not([data-escena-fase="os"]) .k2 :is(.nivel, .sub) {
     color: color-mix(in oklab, var(--tinta-osc-2) calc(var(--mt) * 100%), var(--tinta-2-vidrio));
@@ -306,9 +326,29 @@
       filter: blur(12px);
     }
   }
+  @keyframes riel-recorre {
+    0% {
+      transform: scaleY(0);
+      opacity: 1;
+    }
+    60% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0;
+    }
+  }
   @keyframes escena-aparece {
     from {
       opacity: 0;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escena-indicador::after {
+    animation: none !important;
   }
 }

@@ -3,6 +3,7 @@ import { getCaseStudy } from "@/data/work";
 import type { Locale } from "@/i18n/config";
 import { caseJsonLd } from "@/lib/caseJsonLd";
 import CaseBody from "@/components/case/CaseBody";
+import SiteFooter from "@/components/chrome/SiteFooter";
 import DockMovil from "@/components/chrome/DockMovil";
 import RailAcciones from "@/components/chrome/RailAcciones";
 import { IconosSprite } from "@/components/sistema/Iconos";
@@ -26,6 +27,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
           <IconosSprite />
           <CaseBody study={study} locale={locale} />
         </main>
+        <SiteFooter locale={locale} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(caseJsonLd(study, locale)) }}

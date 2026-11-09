@@ -111,7 +111,7 @@ export default function Trayectoria({ locale }: { locale: Locale }) {
             ).map(([k, et, v]) => (
               <div key={k} data-ac-losa={k}>
                 <dt>{et}</dt>
-                <dd className="dot dot--l" data-ac={k} data-dot="">
+                <dd className="dot dot--l" data-ac={k} data-dot="" data-vacio={t.acumulados.vacio}>
                   {v}
                 </dd>
               </div>

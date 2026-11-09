@@ -1,0 +1,42 @@
+/* Capa de movimiento de las losas (`RevelarLosas.tsx`). */
+@layer components {
+  [data-revelar="espera"] {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  [data-revelar="entra"] {
+    animation: losa-entra 720ms var(--curva-salida) var(--retraso, 0ms) both;
+  }
+}
+
+@keyframes losa-entra {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* P2-6: capturas de página entera (`?estatico`) e impresión ven todo. */
+:root[data-estatico] [data-revelar] {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media print {
+  [data-revelar] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-revelar] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

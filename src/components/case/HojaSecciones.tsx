@@ -4,24 +4,24 @@ import { useEffect, useRef } from "react";
 import type { EntradaIndice } from "./CaseIndice";
 import { useDict } from "@/i18n/LocaleProvider";
 
-import { EVENTO_SECCIONES } from "./eventos";
+import { EVENTO_SECCIONES, EVENTO_SECCIONES_HOJA } from "./eventos";
 
 /**
  * «Secciones» en móvil (07 F7): una hoja corta con los rótulos del índice.
  * En la página completa la abre el dock (que cambia «Contacto» por
  * «Secciones» en las rutas de caso); dentro de la hoja del caso, el dock queda
- * bajo el velo, así que la hoja lleva su propio botón al pie (`.secciones-boton`,
- * solo < 1024). Al elegir una sección se va a ella y el foco pasa a su `h2`.
+ * bajo el velo, así que la abre un botón de la cabecera de la hoja
+ * (`.hoja-secciones`, solo < 1024; P2-7: antes flotaba sobre el texto). Al elegir una sección se va a ella y el foco pasa a su `h2`.
  */
 export default function HojaSecciones({ entradas, enHoja = false }: { entradas: EntradaIndice[]; enHoja?: boolean }) {
   const dict = useDict();
   const dialogo = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    if (enHoja) return;
+    const evento = enHoja ? EVENTO_SECCIONES_HOJA : EVENTO_SECCIONES;
     const abrir = () => dialogo.current?.showModal();
-    window.addEventListener(EVENTO_SECCIONES, abrir);
-    return () => window.removeEventListener(EVENTO_SECCIONES, abrir);
+    window.addEventListener(evento, abrir);
+    return () => window.removeEventListener(evento, abrir);
   }, [enHoja]);
 
   const ir = (id: string) => {
@@ -36,16 +36,6 @@ export default function HojaSecciones({ entradas, enHoja = false }: { entradas: 
 
   return (
     <>
-      {enHoja && (
-        <button
-          type="button"
-          className="boton boton--blanco secciones-boton"
-          aria-haspopup="dialog"
-          onClick={() => dialogo.current?.showModal()}
-        >
-          {dict.dock.secciones}
-        </button>
-      )}
       <dialog
         ref={dialogo}
         className="secciones"

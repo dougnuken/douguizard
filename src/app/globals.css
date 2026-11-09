@@ -233,8 +233,15 @@
   /* Peor punto de cada gradiente (para el color de fondo sólido que leen las pruebas). */
   --jelly-azul-peor: #3f6bd9;
   --jelly-magenta-peor: #8e1f55;
-  --vidrio-oscuro: linear-gradient(90deg, rgba(58, 59, 63, 0.86) 0%, rgba(18, 19, 20, 0.86) 10% 90%, rgba(58, 59, 63, 0.86) 100%);
-  --vidrio-plano: rgba(17, 18, 20, 0.78);
+  /* Vidrio (pulido tras F8, pedido de Doug): tinte oscuro translúcido + desenfoque fuerte, para que la
+     foto se lea difuminada detrás. Antes, plano 0,78 + gradiente 0,86 apilados daban ~0,97 de opacidad
+     (losa casi sólida). Ahora ~0,5 de tinte; los cantos llevan un brillo blanco tenue, como un cristal. */
+  --vidrio-oscuro: linear-gradient(90deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 12% 88%, rgba(255, 255, 255, 0.09) 100%);
+  --vidrio-plano: rgba(14, 15, 18, 0.5);
+  /* Cromo (cabecera, ES/EN, menú, dock): tinte propio, más denso que el de las losas, para que su texto
+     cumpla AA (≥ 4,5:1) aunque pase sobre una losa o captura blanca (06-CRITICA-FINAL P1-1). */
+  --vidrio-cromo: rgba(14, 15, 18, 0.8);
+  --vidrio-filtro: blur(28px) saturate(170%);
   --foco: var(--electrico-texto);
 
   /* espacio estructural (la escala 4…128 es la de Tailwind: p-1…p-32) */
@@ -306,6 +313,8 @@
   :root {
     --vidrio-oscuro: linear-gradient(#141518, #141518);
     --vidrio-plano: #141518;
+    --vidrio-cromo: #141518;
+    --vidrio-filtro: none;
   }
 }
 
@@ -672,6 +681,62 @@
 
   .btn-pill--solid:hover {
     opacity: 0.88;
+  }
+
+  /* ── Píldora de selección que se desliza (09-MOTION-CONTROLES §3) ─────────
+     Dock, pills de la cabecera y filtro de /work. En reposo la selección es el
+     fondo de la opción activa (sin JS es igual); durante el viaje el grupo lleva
+     `data-moviendo`, las opciones sueltan su fondo y la píldora viaja: dos
+     círculos del alto de la opción y un tramo de 1 px con `scaleX` entre sus
+     centros (`usePildora`). Solo `transform`: corre en el compositor. */
+  :is(.dock, .cab-pills, .filtros) {
+    isolation: isolate;
+  }
+  .filtros {
+    position: relative;
+  }
+  .pildora {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pildora > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 0;
+    background: var(--blanco);
+    transform-origin: 0 0;
+  }
+  .pildora > i:not(:nth-child(2)) {
+    border-radius: 50%;
+  }
+  [data-moviendo] > .pildora {
+    opacity: 1;
+  }
+  /* El fondo de la activa entra y sale sin fundido: el relevo con la píldora
+     (al salir y al llegar) cae en el mismo cuadro y en la misma caja. El color
+     tampoco funde (P2-1, 06-CRITICA-FINAL): un fundido de 240 ms contra un
+     viaje de 340 ms dejaba etiquetas claras sobre la píldora blanca. */
+  .pildora ~ * {
+    transition-property: background-color, scale !important;
+  }
+  .pildora ~ :is([aria-current], [aria-pressed="true"]),
+  [data-moviendo] > .pildora ~ * {
+    transition-property: scale !important;
+  }
+  /* Durante el viaje todas las etiquetas llevan la tinta clara en modo
+     `difference`: sobre el vidrio oscuro se ven como siempre y, en el tramo que
+     cubre la píldora blanca, se invierten a oscuro (≈ #3d3d35), cuadro a cuadro
+     y con el borde exacto de la píldora, sin duplicar las opciones en el DOM.
+     El grupo ya aísla la mezcla (`isolation: isolate`). */
+  [data-moviendo] > .pildora ~ :is(a, button, span) {
+    background-color: transparent !important;
+    color: var(--tinta-2-vidrio) !important;
+    mix-blend-mode: difference;
   }
 
   /* F8: el skip link y los textos `sr-only` heredaban Archivo (fuente del diseño
@@ -1417,7 +1482,7 @@ html:has(dialog.hoja[open]) {
   gap: 8px;
   align-items: center;
 }
-.hoja-circulo {
+:is(.hoja-circulo, .hoja-secciones) {
   display: grid;
   place-items: center;
   width: 56px;
@@ -1432,17 +1497,19 @@ html:has(dialog.hoja[open]) {
     background-color var(--d-hover) var(--curva-salida),
     scale var(--d-press) var(--curva-salida);
 }
-.hoja-circulo:hover {
-  background: #26272c;
+@media (hover: hover) and (pointer: fine) {
+  :is(.hoja-circulo, .hoja-secciones):hover {
+    background: #26272c;
+  }
 }
-.hoja-circulo:active {
-  scale: 0.94;
+:is(.hoja-circulo, .hoja-secciones):active {
+  scale: 0.96;
 }
-.hoja-circulo:focus-visible {
+:is(.hoja-circulo, .hoja-secciones):focus-visible {
   outline: 2px solid var(--electrico-texto);
   outline-offset: 2px;
 }
-.hoja-circulo svg {
+:is(.hoja-circulo, .hoja-secciones) svg {
   width: 20px;
   height: 20px;
   fill: none;
@@ -1450,6 +1517,20 @@ html:has(dialog.hoja[open]) {
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+/* P2-7: «Secciones» de la hoja, en la cabecera y solo en móvil; ahí los tres
+   círculos bajan a 48 px para que la miga respire. */
+.hoja-secciones {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .hoja-secciones {
+    display: grid;
+  }
+  .hoja-acciones :is(.hoja-circulo, .hoja-secciones) {
+    width: 48px;
+    height: 48px;
+  }
 }
 /* El hilo láser: progreso de lectura del cuerpo. */
 .hoja-progreso {

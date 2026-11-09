@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import { esEstatico } from "@/lib/estatico";
 
 /**
  * One-way "has this entered the viewport" flag, backed by a self-owned
@@ -21,7 +22,8 @@ export function useInView<T extends HTMLElement>(): [RefObject<T | null>, boolea
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") {
+    // P2-6: `?estatico` (capturas de página entera) lo revela todo de entrada.
+    if (!el || typeof IntersectionObserver === "undefined" || esEstatico()) {
       setInView(true);
       return;
     }

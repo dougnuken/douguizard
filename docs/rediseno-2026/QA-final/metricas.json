@@ -1,0 +1,1975 @@
+{
+ "home-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 3654,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas. Dirijo el producto. Después, lo construyo."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "osTop-1440": 88,
+ "home-os-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 3654,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas. Dirijo el producto. Después, lo construyo."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-work": 200,
+ "work-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 2080,
+  "title": "Trabajo · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Trabajo"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-caso-completa": 200,
+ "caso-completa-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 6072,
+  "title": "Naowee — Plataforma del sector deportivo · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Naowee — Plataforma del sector deportivo"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-about": 200,
+ "about-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 5045,
+  "title": "Perfil · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Doug VargasDougVargasVargas"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-experience": 200,
+ "experience-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 4457,
+  "title": "Experiencia · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "De freelance a Head of Product"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-cv": 200,
+ "cv-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 7566,
+  "title": "Hoja de vida — Head of Product · Product Designer (UX/UI) · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [
+   "Carta de presentación@11px",
+   "Actualizada en noviembre @11px",
+   "Experiencia@11px",
+   "Ene 2026 — Hoy@11px",
+   "Barranquilla, Colombia · @11px",
+   "Ver caso →@11px",
+   "Ene 2024 — Ene 2026@11px",
+   "LATAM · Remoto@11px",
+   "Ver caso →@11px",
+   "Nov 2018 — Ene 2024@11px",
+   "Bogotá, Colombia · Híbrid@11px",
+   "Ver caso →@11px",
+   "Ago 2017 — Nov 2018@11px",
+   "Medellín, Colombia · Pres@11px",
+   "Ver caso →@11px"
+  ],
+  "tiny": [
+   "Ver el caso de Naowe 79x18",
+   "Ver el caso de Merca 79x18",
+   "Ver el caso de Aval  79x18",
+   "Ver el caso de Globa 79x18",
+   "Ver el caso de Qrvey 79x18",
+   "Ver el caso de Ideaw 79x18"
+  ]
+ },
+ "status-404": 404,
+ "404-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 900,
+  "title": "404 · Página no encontrada",
+  "lang": "es",
+  "h1": [
+   "Aquí no hay nada."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-en-work": 200,
+ "en-work-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 2080,
+  "title": "Work · Doug Vargas",
+  "lang": "en",
+  "h1": [
+   "Work"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 320,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-en-home": 200,
+ "en-home-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 3671,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "en",
+  "h1": [
+   "Doug Vargas. I direct the product. Then I build it."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 320,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 48,
+    "hh": 48,
+    "vis": true
+   },
+   {
+    "c": "dock",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "status-404-caso": 404,
+ "404-caso-1440": {
+  "overflowX": false,
+  "sw": 1425,
+  "h": 900,
+  "title": "404 · Caso no encontrado · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Este caso no existe, o todavía no está publicado."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 329,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "hoja-url-1440": "http://localhost:3200/work/naowee-suid",
+ "hoja-focus-1440": "DIV.hoja-cuerpo ",
+ "hoja-esc-1440": "http://localhost:3200/work",
+ "hoja-focus-back-1440": "A /work/naowee-suid",
+ "tab-about-1440": [
+  "Ir al contenido|o:solid 2px rgb(72, 94, 242)|sh:false|y-80",
+  "Douguizard — inici|o:solid 2px rgb(91, 124, 255)|sh:true|y24",
+  "Trabajo|o:solid 2px rgb(91, 124, 255)|sh:false|y28",
+  "Perfil|o:solid 2px rgb(91, 124, 255)|sh:false|y28",
+  "Experiencia|o:solid 2px rgb(91, 124, 255)|sh:false|y28",
+  "CV|o:solid 2px rgb(91, 124, 255)|sh:false|y28",
+  "ENEnglish|o:solid 2px rgb(91, 124, 255)|sh:false|y22",
+  "Hablemos|o:solid 2px rgb(91, 124, 255)|sh:true|y24",
+  "Escríbeme: hello@d|o:solid 2px rgb(91, 124, 255)|sh:false|y96",
+  "Descargar mi hoja |o:solid 2px rgb(91, 124, 255)|sh:false|y169",
+  "LinkedIn (se abre |o:solid 2px rgb(91, 124, 255)|sh:false|y225",
+  "Behance (se abre e|o:solid 2px rgb(91, 124, 255)|sh:false|y281",
+  "GitHub (se abre en|o:solid 2px rgb(91, 124, 255)|sh:false|y337",
+  "Volver arriba|o:solid 2px rgb(91, 124, 255)|sh:false|y410"
+ ],
+ "errs-1440": [
+  "Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ],
+ "home-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 4773,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas. Dirijo el producto. Después, lo construyo."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "osTop-390": 0,
+ "home-os-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 4773,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas. Dirijo el producto. Después, lo construyo."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "work-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 3288,
+  "title": "Trabajo · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Trabajo"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "caso-completa-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 7378,
+  "title": "Naowee — Plataforma del sector deportivo · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Naowee — Plataforma del sector deportivo"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 347,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "about-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 6814,
+  "title": "Perfil · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Doug VargasDougVargasVargas"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "experience-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 4111,
+  "title": "Experiencia · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "De freelance a Head of Product"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "cv-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 8798,
+  "title": "Hoja de vida — Head of Product · Product Designer (UX/UI) · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Doug Vargas"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 346,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [
+   "Carta de presentación@11px",
+   "Actualizada en noviembre @11px",
+   "Experiencia@11px",
+   "Ene 2026 — Hoy@11px",
+   "Barranquilla, Colombia · @11px",
+   "Ver caso →@11px",
+   "Ene 2024 — Ene 2026@11px",
+   "LATAM · Remoto@11px",
+   "Ver caso →@11px",
+   "Nov 2018 — Ene 2024@11px",
+   "Bogotá, Colombia · Híbrid@11px",
+   "Ver caso →@11px",
+   "Ago 2017 — Nov 2018@11px",
+   "Medellín, Colombia · Pres@11px",
+   "Ver caso →@11px"
+  ],
+  "tiny": [
+   "Ver el caso de Naowe 79x18",
+   "Ver el caso de Merca 79x18",
+   "Ver el caso de Aval  79x18",
+   "Ver el caso de Globa 79x18",
+   "Ver el caso de Qrvey 79x18",
+   "Ver el caso de Ideaw 79x18"
+  ]
+ },
+ "404-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 844,
+  "title": "404 · Página no encontrada",
+  "lang": "es",
+  "h1": [
+   "Aquí no hay nada."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "en-work-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 3250,
+  "title": "Work · Doug Vargas",
+  "lang": "en",
+  "h1": [
+   "Work"
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 343,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "en-home-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 4727,
+  "title": "Doug Vargas — Head of Product · Product Designer (UX/UI)",
+  "lang": "en",
+  "h1": [
+   "Doug Vargas. I direct the product. Then I build it."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   },
+   {
+    "c": "rail-accion",
+    "bf": "none",
+    "bg": "rgb(26, 27, 31)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "",
+    "bf": "none",
+    "bg": "rgba(0, 0, 0, 0)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "dock",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 343,
+    "hh": 60,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "404-caso-390": {
+  "overflowX": false,
+  "sw": 390,
+  "h": 844,
+  "title": "404 · Caso no encontrado · Doug Vargas",
+  "lang": "es",
+  "h1": [
+   "Este caso no existe, o todavía no está publicado."
+  ],
+  "bg": "rgb(16, 16, 16)",
+  "cromo": [
+   {
+    "c": "cab-pills",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 0,
+    "hh": 0,
+    "vis": false
+   },
+   {
+    "c": "idioma ",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 92,
+    "hh": 40,
+    "vis": true
+   },
+   {
+    "c": "cab-menu",
+    "bf": "blur(28px) saturate(1.7)",
+    "bg": "rgba(14, 15, 18, 0.5)",
+    "w": 44,
+    "hh": 44,
+    "vis": true
+   }
+  ],
+  "small": [],
+  "tiny": []
+ },
+ "hoja-url-390": "http://localhost:3200/work/naowee-suid",
+ "hoja-focus-390": "DIV.hoja-cuerpo ",
+ "hoja-esc-390": "http://localhost:3200/work",
+ "hoja-focus-back-390": "A /work/naowee-suid",
+ "tab-about-390": [
+  "Ir al contenido|o:solid 2px rgb(72, 94, 242)|sh:false|y-80",
+  "Douguizard — inici|o:solid 2px rgb(91, 124, 255)|sh:true|y12",
+  "ENEnglish|o:solid 2px rgb(91, 124, 255)|sh:false|y12",
+  "Abrir menú|o:solid 2px rgb(91, 124, 255)|sh:true|y12",
+  "Leer el caso del B|o:solid 2px rgb(43, 86, 243)|sh:false|y5495",
+  "Leer el caso de Qr|o:solid 2px rgb(255, 255, 255)|sh:false|y5856",
+  "Leer el caso de Ro|o:solid 2px rgb(43, 86, 243)|sh:false|y6191",
+  "Ver casos|o:solid 2px rgb(91, 124, 255)|sh:false|y6454",
+  "Descargar CV (PDF)|o:solid 2px rgb(91, 124, 255)|sh:true|y6454",
+  "Volver arriba|o:solid 2px rgb(91, 124, 255)|sh:false|y6674",
+  "Trabajo|o:solid 2px rgb(91, 124, 255)|sh:false|y776",
+  "Perfil|o:solid 2px rgb(91, 124, 255)|sh:false|y776",
+  "Experiencia|o:solid 2px rgb(91, 124, 255)|sh:false|y776",
+  "CV|o:solid 2px rgb(91, 124, 255)|sh:false|y776"
+ ],
+ "errs-390": [
+  "Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ],
+ "rmAnims": 0,
+ "rmAnimsOS": []
+}

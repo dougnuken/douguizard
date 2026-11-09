@@ -1,0 +1,163 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   `/cv` en pantalla, al sistema B (06-CRITICA-FINAL P1-2).
+   El marcado y sus clases son los de F0 porque de ellos vive la hoja de
+   impresión (globals.css, `@media print`) y el PDF (`npm run cv:pdf`), que es
+   otro producto y no cambia. Por eso todo lo de aquí va bajo `@media screen`
+   y fuera de capas: le gana a las utilidades de Tailwind (que están en
+   `@layer utilities`) sin `!important` y nunca llega al papel.
+   Reglas B: sin mono ni mayúsculas espaciadas, nada < 13 px, tintas B,
+   retícula de 12 (contenido col 2–8, lateral col 9–12), objetivos ≥ 44 px en
+   táctil.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@media screen {
+  /* Tintas B. La página conserva su tema (data-ruta="cv"); en claro, las tintas
+     oscuras del mismo sistema. Se redefinen las variables F0 que ya usan los
+     componentes, así cada `text-[var(--ink-…)]` toma su tinta B. */
+  :root[data-ruta="cv"] #main {
+    --ink: var(--tinta);
+    --ink-muted: var(--tinta-2);
+    --ink-dim: var(--tinta-3);
+    --line: var(--losa-borde);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    font-family: var(--font-texto);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  :root[data-ruta="cv"][data-theme="light"] #main {
+    --ink: var(--tinta-osc);
+    --ink-muted: var(--tinta-osc-2);
+    --ink-dim: #5c5c66;
+    --line: rgba(14, 14, 18, 0.1);
+    --line-strong: rgba(14, 14, 18, 0.18);
+  }
+
+  /* Sin mono ni mayúsculas espaciadas: todo el cuerpo en Instrument Sans. */
+  :root[data-ruta="cv"] #main :is(.font-mono, .kicker, .cv-h2, .cv-meta, .cv-case) {
+    font-family: var(--font-texto);
+    text-transform: none;
+    letter-spacing: 0.005em;
+  }
+  /* Fechas, lugares, marcas, colofón: 14 px tabulares en la tinta 3. */
+  :root[data-ruta="cv"] #main :is(.font-mono, .cv-meta) {
+    font-size: var(--t-14);
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Habilidades y herramientas: prosa, no código. */
+  :root[data-ruta="cv"] #main .cv-group > p:not(.kicker) {
+    font-size: var(--t-16);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  /* Cejas (`.ceja` del sistema) para los rótulos de sección y de grupo. */
+  :root[data-ruta="cv"] #main :is(.cv-h2, .kicker) {
+    font-size: var(--t-14);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: var(--ink-muted);
+  }
+  :root[data-ruta="cv"] #main .cv-h2 {
+    border-block-end-color: var(--line);
+  }
+
+  /* Display: Urbanist, como las portadas de las páginas B. */
+  :root[data-ruta="cv"] #main :is(.font-display, .cv-name, .cv-company) {
+    font-family: var(--font-display-b);
+    letter-spacing: -0.01em;
+  }
+  :root[data-ruta="cv"] #main .cv-name {
+    font-size: clamp(var(--t-36), 2rem + 2vw, var(--t-60));
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  :root[data-ruta="cv"] #main .cv-headline {
+    font-size: var(--t-18);
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+  :root[data-ruta="cv"] #main .cv-company {
+    font-size: var(--t-24);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  :root[data-ruta="cv"] #main .cv-summary {
+    font-size: var(--t-16);
+    line-height: 1.6;
+  }
+
+  /* «Ver caso»: enlace B con objetivo de 44 px en táctil y 32 px con puntero fino. */
+  :root[data-ruta="cv"] #main .cv-case {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-block-size: 44px;
+    padding-inline: 2px;
+    font-size: var(--t-14);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+  }
+  @media (min-width: 1024px) and (pointer: fine) {
+    :root[data-ruta="cv"] #main .cv-case {
+      min-block-size: 32px;
+    }
+  }
+
+  /* Entre la carta y el registro, una pausa de sección (antes 16 px). */
+  :root[data-ruta="cv"] #main > .cv-grid {
+    margin-block-start: 64px;
+  }
+
+  /* ── Retícula de 12 (≥ 1024): la misma columna que las páginas B ─────────── */
+  @media (min-width: 1024px) {
+    :root[data-ruta="cv"] #main {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap);
+      max-width: none;
+      margin: 0;
+      padding: calc(var(--cabecera) + 32px) 24px 96px var(--os-izq);
+    }
+    :root[data-ruta="cv"] #main > * {
+      grid-column: 2 / -1;
+      min-width: 0;
+    }
+    /* Carta y registro: col 2–8 el texto, col 9–12 la columna lateral. */
+    :root[data-ruta="cv"] #main > :is(.cv-letter, .cv-grid) {
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      column-gap: var(--gap);
+    }
+    :root[data-ruta="cv"] #main > :is(.cv-letter, .cv-grid) > :first-child {
+      grid-column: 2 / 9;
+    }
+    :root[data-ruta="cv"] #main > :is(.cv-letter, .cv-grid) > :last-child {
+      grid-column: 9 / 13;
+      padding-inline-start: 24px;
+    }
+    :root[data-ruta="cv"] #main .cv-entry {
+      grid-template-columns: 168px minmax(0, 1fr);
+    }
+    /* La carta ocupa la fila entera (subgrid): su filo superior saldría desde la
+       col 1; la separación la dan el espacio y el filo de su ceja. */
+    :root[data-ruta="cv"] #main > .cv-letter {
+      border-block-start: 0;
+    }
+    :root[data-ruta="cv"] #main > .cv-grid {
+      margin-block-start: 96px;
+    }
+    /* El encabezado llega ahora a la col 12: el resplandor no sobresale del lienzo. */
+    :root[data-ruta="cv"] #main .cv-glow {
+      inset-inline-end: 0;
+    }
+  }
+  @media (min-width: 1464px) {
+    :root[data-ruta="cv"] #main {
+      padding-inline: max(var(--os-izq), calc((100vw - 1320px) / 2));
+    }
+  }
+}

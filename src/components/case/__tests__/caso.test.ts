@@ -3,8 +3,8 @@ import { caseStudies, getCaseStudy } from "@/data/work";
 import { anchoCifras } from "@/components/case/CaseImpact";
 
 describe("F7 · caso en B", () => {
-  it("k de P1-6: «~1.200» mide ≈ 3,05 em y todas las cifras de un caso comparten k", () => {
-    expect(anchoCifras([{ value: "~1.200" }])).toBeCloseTo(3.05, 1);
+  it("k de P1-6: «~1.200» mide ≈ 2,88 em (la virgulilla va en Urbanist a 0,6 em, F7 P2-1) y todas las cifras de un caso comparten k", () => {
+    expect(anchoCifras([{ value: "~1.200" }])).toBeCloseTo(2.88, 2);
     expect(anchoCifras([{ value: "30" }, { value: "~1.200" }, { value: "130+" }])).toBe(anchoCifras([{ value: "~1.200" }]));
     // La coma del EN ocupa un carácter entero: nunca más estrecha que el ES.
     expect(anchoCifras([{ value: "~1,200" }])).toBeGreaterThanOrEqual(anchoCifras([{ value: "~1.200" }]));

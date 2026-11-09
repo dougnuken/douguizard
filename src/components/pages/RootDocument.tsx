@@ -3,11 +3,13 @@ import { htmlLang, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import SiteHeader from "@/components/chrome/SiteHeader";
+import RevelarLosas from "@/components/motion/RevelarLosas";
 import Wordmark from "@/components/marca/Wordmark";
 import { personJsonLd } from "@/lib/personJsonLd";
 import { urbanist } from "@/app/fonts/urbanist";
 import { instrument } from "@/app/fonts/instrument";
 import { doto } from "@/app/fonts/doto";
+import { decisiones } from "@/data/decisiones";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -29,11 +31,12 @@ const geistMono = Geist_Mono({
 
 /**
  * Resolution order: stored choice → `prefers-color-scheme: light` → dark.
+ * Con D4 en «ninguna» (8 nov), siempre oscuro: el CV va en el sistema B.
  * Runs before the first paint, so a stored light theme never shows a dark frame.
  */
 const THEME_INIT = `(function(){if(/^(\\/en)?\\/cv(\\/|$)/.test(location.pathname))document.documentElement.setAttribute("data-ruta","cv");try{
 var s=localStorage.getItem("dg-theme");
-var t=(s==="light"||s==="dark")?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
+var t=${decisiones.temaClaroEn === "ninguna" ? '"dark"' : '(s==="light"||s==="dark")?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark")'};
 var r=document.documentElement;r.setAttribute("data-theme",t);
 }catch(e){var r=document.documentElement;r.setAttribute("data-theme","dark");}})();`;
 
@@ -80,6 +83,7 @@ export default function RootDocument({
           </a>
           <SiteHeader marca={<Wordmark locale={locale} />} />
           {children}
+          <RevelarLosas />
         </LocaleProvider>
         {!lost && (
           <script

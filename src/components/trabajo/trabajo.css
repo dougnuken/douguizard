@@ -50,6 +50,8 @@
     border-radius: var(--r-pill);
     background-color: var(--vidrio-plano);
     background-image: var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
     box-shadow: var(--filo), var(--sombra-flota);
   }
   .filtro {
@@ -66,7 +68,7 @@
     white-space: nowrap;
     transition:
       background-color var(--d-hover) var(--curva-salida),
-      color var(--d-hover) var(--curva-salida),
+      color var(--d-ui) var(--curva-salida),
       scale var(--d-press) var(--curva-salida);
   }
   .filtro:active {
@@ -533,6 +535,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .filtro:active {
+      scale: none;
+    }
     .filtro,
     .losa-caso .losa-media img {
       transition: none;
@@ -544,4 +549,13 @@
 ::view-transition-group(*) {
   animation-duration: 240ms;
   animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Solo las losas entran en el View Transition del filtro: el resto de la página
+   (el filtro con su píldora deslizándose, de vidrio) sigue vivo, sin copia vieja
+   encima (09-MOTION-CONTROLES). `FiltroCasos` pone la clase mientras dura. */
+:root.vt-filtro {
+  view-transition-name: none;
+}
+:root.vt-filtro #casos-trabajo {
+  view-transition-name: casos-trabajo;
 }

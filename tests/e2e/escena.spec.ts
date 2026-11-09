@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import sharp from "sharp";
+import { contrastes } from "./contraste-pixel";
 
 /**
  * F5 · acto 1 «cine» y scroll anclado del home (07 F5). Sin RM a ≥ 1024 el home
@@ -164,17 +165,29 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await abrir(page);
     await page.waitForTimeout(1600);
     await page.mouse.move(720, 450);
-    // Se registra el máximo de scrollY: la prueba solo vale si la rueda llegó a mover la página (antes de eso scrollY ya es 0).
+    // Reloj desde el fin real del gesto: se anota en la página el instante del último scroll que sube (pico de scrollY)
+    // y el del primer scroll que ya vuelve a ≤ 1. No cuenta la latencia de Playwright ni los sondeos.
     await page.evaluate(() => {
-      const w = window as unknown as { __maxY: number };
-      w.__maxY = 0;
-      addEventListener("scroll", () => (w.__maxY = Math.max(w.__maxY, scrollY)), { passive: true });
+      const w = window as unknown as { __snap: { maxY: number; tPico: number; tFin: number } };
+      w.__snap = { maxY: 0, tPico: 0, tFin: 0 };
+      addEventListener("scroll", () => {
+        const s = w.__snap;
+        if (scrollY > s.maxY) { s.maxY = scrollY; s.tPico = performance.now(); s.tFin = 0; }
+        else if (scrollY <= 1 && s.maxY > 0 && !s.tFin) s.tFin = performance.now();
+      }, { passive: true });
     });
     await page.mouse.wheel(0, 40);
-    await expect.poll(() => page.evaluate(() => (window as unknown as { __maxY: number }).__maxY), { timeout: 5000, intervals: [25] }).toBeGreaterThan(0);
-    const t0 = Date.now();
+    type Snap = { maxY: number; tPico: number; tFin: number };
+    const leer = () => page.evaluate(() => (window as unknown as { __snap: Snap }).__snap);
+    // La prueba solo vale si la rueda movió la página (antes de eso scrollY ya es 0).
+    await expect.poll(async () => (await leer()).tFin, { timeout: 8000, intervals: [50] }).toBeGreaterThan(0);
+    const sn = await leer();
+    expect(sn.maxY, "la rueda movió la página").toBeGreaterThan(0);
+    // Presupuesto real desde el fin del gesto (useScrollScene): detección de fin de scroll de ScrollTrigger ≈ 0,15 s
+    // + delay 0,05 + duración máx. 0,45 del snap + suavizado scrub 0,3 = 0,95 s; medido 1,06–1,11 s en headless.
+    // Umbral 1,3 s = presupuesto + ~0,35 s de cuadros de headless; ya no incluye latencia de Playwright.
+    expect(sn.tFin - sn.tPico, "el scroll vuelve a 0 ≤ 1,3 s desde el fin del gesto").toBeLessThanOrEqual(1300);
     await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3000, intervals: [50] }).toBeLessThanOrEqual(1);
-    expect(Date.now() - t0, "el scroll vuelve a 0 en ≤ 1,2 s").toBeLessThanOrEqual(1200);
     // El progreso (scrub suavizado, por frame) alcanza el reposo tras scrollY: se espera el estado real.
     await expect.poll(() => progreso(page), { timeout: 3000, intervals: [50] }).toBeLessThan(0.01);
     const f = await fin(page);
@@ -219,6 +232,26 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
       });
       expect(c, `p = ${p}`).toBeGreaterThanOrEqual(4.5);
     }
+  });
+
+  test("P2-5: «Ver casos» y «Descargar CV» ≥ 4,5:1 en píxeles en cada paso de 0,30 a 0,60 en que se ven", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrir(page, { captura: true });
+    let medidos = 0;
+    for (let i = 0; i <= 15; i++) {
+      const p = Math.round((0.3 + i * 0.02) * 100) / 100;
+      await irA(page, p);
+      // Que K2 quede quieta entre la foto con texto y la foto sin él.
+      await page.waitForTimeout(250);
+      const op = await page.locator(".k2 .k2-cta").evaluate((e) => Number(getComputedStyle(e).opacity));
+      // Fuera del fundido el contenido está entero; dentro, oculto (nada que leer a medias).
+      expect(op === 0 || op === 1 || (p > 0.3 && p < 0.36) || (p > 0.46 && p < 0.53), `p = ${p}: opacidad ${op}`).toBe(true);
+      if (op < 1) continue;
+      const m = await contrastes(page, ".k2 .cta-1, .k2 .cta-2 span");
+      for (const x of m) expect(x.ratio, `p = ${p}: ${JSON.stringify(m)}`).toBeGreaterThanOrEqual(4.5);
+      medidos++;
+    }
+    expect(medidos).toBeGreaterThan(4);
   });
 
   test("lockup en el acto 1: en p = 0 el láser cae en la rendija (±2 px); en p ≥ 0,3 cerrado; en K1, entero", async ({ page }) => {

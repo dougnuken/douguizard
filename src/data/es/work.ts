@@ -317,7 +317,6 @@ export const workEs: Record<string, CaseCopy> = {
     },
     project: "Naowee — Plataforma del sector deportivo",
     category: "GovTech × Deporte × Nativo de IA",
-    duration: "En curso",
     team: "Producto, diseño e ingeniería",
     tagline:
       "Digitalizar cómo Colombia gestiona su deporte: más de 130 pantallas en 8 módulos, diseñadas y construidas con IA.",

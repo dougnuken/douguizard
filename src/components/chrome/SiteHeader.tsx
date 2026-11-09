@@ -8,14 +8,19 @@ import { getSite } from "@/data/site";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import ThemeToggle from "@/components/ThemeToggle";
+import { decisiones } from "@/data/decisiones";
 import LanguageSwitch, { LanguageMenuLink } from "@/components/LanguageSwitch";
 import {
   getActiveSection,
   getServerActiveSection,
+  seccionFijada,
   setActiveSection,
   subscribeActiveSection,
 } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
+import { esClicSimple } from "@/lib/clicSimple";
+import { usePildora } from "@/components/sistema/usePildora";
+import Pildora from "@/components/sistema/Pildora";
 
 /** Pills de la pastilla (04 §4.1). En el home, anclas con scroll-spy; fuera, rutas. */
 const PILLS = [
@@ -38,6 +43,7 @@ function useEspiaSecciones(activo: boolean) {
     let raf = 0;
     const medir = () => {
       raf = 0;
+      if (seccionFijada()) return;
       const corte = window.innerHeight * 0.35;
       let id = "home";
       for (const s of secciones) if (s.getBoundingClientRect().top <= corte) id = s.dataset.seccion!;
@@ -87,6 +93,8 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const { path } = splitLocale(pathname || "/");
   const isHome = path === "/";
   const isCv = path === "/cv" || path.startsWith("/cv/");
+  // D4: el conmutador de tema solo existe si el CV conserva el tema claro.
+  const conTema = isCv && decisiones.temaClaroEn !== "ninguna";
   // La navegación en el cliente no vuelve a ejecutar el script de tema: /cv marca el <html>.
   useEffect(() => {
     const r = document.documentElement;
@@ -95,9 +103,26 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   }, [isCv]);
   const menuId = useId();
   const [open, setOpen] = useState(false);
+  // La salida del panel se ve (160 ms) antes de `hidden`; inerte mientras sale.
+  // Se deriva en el render (no en un efecto): así `hidden` nunca llega antes que la salida.
+  const [saliendo, setSaliendo] = useState(false);
+  const [abiertoAntes, setAbiertoAntes] = useState(open);
+  if (abiertoAntes !== open) {
+    setAbiertoAntes(open);
+    setSaliendo(!open && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+  useEffect(() => {
+    if (!saliendo) return;
+    const t = window.setTimeout(() => setSaliendo(false), 160);
+    return () => window.clearTimeout(t);
+  }, [saliendo]);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const active = useSyncExternalStore(subscribeActiveSection, getActiveSection, getServerActiveSection);
   useEspiaSecciones(isHome);
+  // La selección de las pills se desliza (09-MOTION-CONTROLES): la cabecera no se
+  // vuelve a montar entre rutas; cambia su `aria-current` y la píldora viaja.
+  const pillsRef = useRef<HTMLElement>(null);
+  const moverPill = usePildora(pillsRef, "pills", `${path}|${isHome ? active : ""}`);
 
   useEffect(() => {
     if (!open) return;
@@ -132,7 +157,12 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
     },
   ];
 
-  const pinta = (e: (typeof enlaces)[number], clase: string, alNavegar?: () => void) =>
+  const pinta = (
+    e: (typeof enlaces)[number],
+    clase: string,
+    alNavegar?: () => void,
+    adelantar?: (el: HTMLElement) => void,
+  ) =>
     e.seccion ? (
       <a
         key={e.clave}
@@ -147,7 +177,17 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         {e.texto}
       </a>
     ) : (
-      <Link key={e.clave} href={e.href} className={clase} aria-current={e.actual} onClick={alNavegar}>
+      <Link
+        key={e.clave}
+        href={e.href}
+        className={clase}
+        aria-current={e.actual}
+        onClick={(ev) => {
+          // Respuesta al pulsar: la píldora sale antes de que llegue la ruta.
+          if (adelantar && esClicSimple(ev)) adelantar(ev.currentTarget);
+          alNavegar?.();
+        }}
+      >
         {e.texto}
       </Link>
     );
@@ -156,12 +196,13 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
     <header className="site-header cab-b">
       <div className="cab-marca">{marca}</div>
 
-      <nav aria-label={s.label} className="cab-pills">
-        {enlaces.map((e) => pinta(e, "pill"))}
+      <nav ref={pillsRef} aria-label={s.label} className="cab-pills">
+        <Pildora />
+        {enlaces.map((e) => pinta(e, "pill", undefined, moverPill))}
       </nav>
 
       <div className="cab-acciones">
-        {isCv && <ThemeToggle />}
+        {conTema && <ThemeToggle />}
         <LanguageSwitch />
         <a
           href={isHome ? "#contact" : contacto}
@@ -185,7 +226,11 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         </button>
       </div>
 
-      <nav id={menuId} data-menu="" aria-label={t.header.menu} hidden={!open} className="cab-menu-panel">
+      <nav id={menuId} data-menu="" aria-label={t.header.menu} hidden={!open && !saliendo}
+        inert={saliendo || undefined}
+        data-saliendo={saliendo ? "" : undefined}
+        className="cab-menu-panel"
+      >
         <ul>
           {enlaces.map((e) => (
             <li key={e.clave}>{pinta(e, "cab-menu-fila", () => setOpen(false))}</li>
@@ -198,7 +243,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
               {s.hablemos}
             </a>
           </li>
-          {isCv && (
+          {conTema && (
             <li className="cab-menu-tema">
               <ThemeToggle />
             </li>

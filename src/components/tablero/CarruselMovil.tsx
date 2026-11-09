@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Icono } from "@/components/sistema/Iconos";
 
 /**
@@ -20,6 +20,14 @@ export default function CarruselMovil({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [i, setI] = useState(0);
+  // El número del contador entra desde el lado hacia el que se va (09-MOTION-CONTROLES).
+  const [dir, setDir] = useState<"sig" | "ant" | null>(null);
+  const previo = useRef(0);
+  const cambiar = useCallback((k: number) => {
+    if (k !== previo.current) setDir(k > previo.current ? "sig" : "ant");
+    previo.current = k;
+    setI(k);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -34,11 +42,11 @@ export default function CarruselMovil({
       });
       // Al final del recorrido, la última (puede no llegar a alinearse).
       if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 2) k = hijos.length - 1;
-      setI(k);
+      cambiar(k);
     };
     el.addEventListener("scroll", medir, { passive: true });
     return () => el.removeEventListener("scroll", medir);
-  }, []);
+  }, [cambiar]);
 
   const ir = (d: number) => {
     const el = ref.current;
@@ -47,7 +55,7 @@ export default function CarruselMovil({
     const k = Math.max(0, Math.min(hijos.length - 1, i + d));
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     el.scrollTo({ left: hijos[k].offsetLeft - hijos[0].offsetLeft, behavior: rm ? "auto" : "smooth" });
-    setI(k);
+    cambiar(k);
   };
 
   return (
@@ -57,7 +65,9 @@ export default function CarruselMovil({
       </div>
       <div className="carrusel-ctrl">
         <span className="contador" aria-live="polite">
-          {textos.contador[i] ?? textos.contador[0]}
+          <span key={i} className="contador-n" data-dir={dir ?? undefined}>
+            {textos.contador[i] ?? textos.contador[0]}
+          </span>
         </span>
         <div className="botones">
           <button type="button" className="circulo" aria-label={textos.anterior} onClick={() => ir(-1)} disabled={i === 0}>
