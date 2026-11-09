@@ -1032,9 +1032,12 @@
       width: auto;
       flex: none;
     }
+    /* Pulido F (06-CRITICA-E P2-6): un solo `--gap` entre K5 y «Más trabajo» (la escena ya
+       deja su `--gap` abajo; con el margen aquí eran 24) y entre Contacto y la losa del pie
+       (antes 32): el pie es una losa más del tablero. −32 px de alto del home en móvil. */
     .os-resto {
-      margin: var(--gap) 0 0;
-      padding-bottom: 32px;
+      margin: 0;
+      padding-bottom: var(--gap);
       display: flex;
       flex-direction: column;
       gap: var(--gap);
