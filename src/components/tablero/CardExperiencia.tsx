@@ -30,7 +30,7 @@ export default function CardExperiencia({ locale }: { locale: Locale }) {
           const ultimo = i === NODOS.length - 1;
           const cargo = n.ids[0] === "freelance" ? t.freelance : (n.cargo ?? h.rol);
           return (
-            <li key={n.ids.join("+")} className={["nodo", n.caso && "caso", ultimo && "hoy", !n.movil && "solo-desk"].filter(Boolean).join(" ")}>
+            <li key={n.ids.join("+")} className={["nodo", n.caso && "caso", ultimo && "hoy", !n.movil && "solo-desk", n.prescindible && "prescindible"].filter(Boolean).join(" ")}>
               <DotMatrix valor={String(Math.floor(h.inicio))} tamano="s" />
               <i />
               <b>{n.empresa ?? h.corto}</b>

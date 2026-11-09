@@ -211,3 +211,30 @@ for (const w of [1440, 1280, 390]) {
     for (const x of m) expect({ lineas: x.lineas, cabe: x.cabe }, JSON.stringify(x)).toEqual({ lineas: 1, cabe: true });
   });
 }
+
+/* QA pulido E: con el eje recortado por `clip-path`, a 375 el último año salía «202». */
+for (const w of [1440, 414, 390, 360]) {
+  test(`K11 «Trayectoria»: ningún año ni rótulo cortado ni montado sobre el vecino @${w}`, async ({ page }) => {
+    await abrir(page, "/", w, 900);
+    const m = await page.locator(".k11 .linea-tiempo").evaluate((ol) => {
+      const o = ol.getBoundingClientRect();
+      const nodos = Array.from(ol.querySelectorAll<HTMLElement>(".nodo")).filter((n) => n.offsetParent);
+      const cajas = nodos.map((n) =>
+        Array.from(n.querySelectorAll<HTMLElement>(".dot, b")).map((e) => {
+          const r = e.getBoundingClientRect();
+          return { izq: r.left, der: r.right };
+        }),
+      );
+      const fuera = cajas.flat().filter((c) => c.izq < o.left - 0.5 || c.der > o.right + 0.5).length;
+      let montados = 0;
+      for (let i = 1; i < cajas.length; i++) {
+        const finAnt = Math.max(...cajas[i - 1].map((c) => c.der));
+        const iniSig = Math.min(...cajas[i].map((c) => c.izq));
+        if (iniSig < finAnt + 4) montados++;
+      }
+      return { n: nodos.length, fuera, montados };
+    });
+    expect(m.n).toBeGreaterThanOrEqual(3);
+    expect({ fuera: m.fuera, montados: m.montados }, JSON.stringify(m)).toEqual({ fuera: 0, montados: 0 });
+  });
+}

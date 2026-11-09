@@ -1075,10 +1075,25 @@
     .os .c-bdo .losa-media {
       height: 150px;
     }
+    /* Cuatro años en Doto de 30 px (mínimo del tablero) + «Mercadolibre» piden
+       302 px; con menos (375 o 360 de ancho) el `clip-path` del eje cortaba el
+       último año («202»). La losa es contenedor y, si no caben, se queda con
+       tres hitos (fuera el `prescindible`) en vez de encoger la cifra. */
+    .k11 {
+      container-type: inline-size;
+    }
     .linea-tiempo {
       grid-template-columns: repeat(4, auto);
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
+    }
+    @container (width < 302px) {
+      .linea-tiempo {
+        grid-template-columns: repeat(3, auto);
+      }
+      .nodo.prescindible {
+        display: none;
+      }
     }
     .nodo.solo-desk {
       display: none;
