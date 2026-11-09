@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFotoActiva, vidrio } from "@/data/hero";
-import { ESCENA, frameEscena, tramo, uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
+import { ESCENA, frameEscena, NOMBRE_SUBE, tramo, uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
 import { aperturaDesdeProgreso } from "@/lib/corte";
 import { CONSULTA_CINE, SCENE_INIT } from "@/components/escena/sceneInit";
 
@@ -62,12 +62,28 @@ describe("escena F5 · tramo y timeline", () => {
     expect(frameEscena(ESCENA.foto).q).toBe(1);
   });
 
-  it("P0-2: el nombre hace su FLIP en 0 → 0,45 (sale rápido) y K2 no sube antes de 0,15", () => {
+  it("pulido D: el nombre XL se funde en su sitio (0,04 → 0,3), con el corte cerrado antes, y K2 no sube antes de 0,15", () => {
     expect(frameEscena(0.15).k2).toBe(0);
     expect(frameEscena(0.6).k2).toBe(1);
-    expect(frameEscena(0.45).nombre).toBe(1);
-    // power2.out: a un tercio del tramo ya ha recorrido más de la mitad.
-    expect(frameEscena(0.15).nombre).toBeGreaterThan(0.5);
+    expect(frameEscena(0.04).nombreOpacidad).toBe(1);
+    expect(frameEscena(0.3).nombreOpacidad).toBe(0);
+    expect(frameEscena(0.3).nombre).toBe(1);
+    // Curva suave (power1.inOut): a mitad del tramo, a mitad de camino; sin escala ni trayectoria.
+    expect(frameEscena(0.17).nombreOpacidad).toBeCloseTo(0.5, 2);
+    expect(NOMBRE_SUBE).toBeGreaterThanOrEqual(16);
+    expect(NOMBRE_SUBE).toBeLessThanOrEqual(24);
+    // El corte se cierra (0,2) cuando el nombre aún se ve.
+    expect(frameEscena(ESCENA.corteFin).corte).toBe(0);
+    expect(frameEscena(ESCENA.corteFin).nombreOpacidad).toBeGreaterThan(0.2);
+    for (const p of [0.25, 0.5, 1]) expect(frameEscena(p).corte).toBe(0);
+  });
+
+  it("pulido D: el nombre de K1 entra cuando la losa ya llegó", () => {
+    expect(frameEscena(ESCENA.foto).q).toBe(1);
+    expect(ESCENA.k1Nombre[0]).toBeGreaterThanOrEqual(ESCENA.foto - 0.02);
+    expect(frameEscena(ESCENA.k1Nombre[0]).k1Nombre).toBe(0);
+    expect(frameEscena(ESCENA.k1Nombre[1]).k1Nombre).toBe(1);
+    expect(frameEscena(1).k1Nombre).toBe(1);
   });
 
   it("P1-1: la atmósfera se va antes de 0,35 y el láser a todo el ancho no se apaga nunca", () => {

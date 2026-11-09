@@ -254,7 +254,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect(medidos).toBeGreaterThan(4);
   });
 
-  test("lockup en el acto 1: en p = 0 el láser cae en la rendija (±2 px); en p ≥ 0,3 cerrado; en K1, entero", async ({ page }) => {
+  test("lockup en el acto 1: en p = 0 el láser cae en la rendija (±2 px); en p ≥ 0,2 cerrado; en K1, entero", async ({ page }) => {
     for (const [w, h] of [[1280, 720], [1440, 900], [1920, 1080]]) {
       await page.setViewportSize({ width: w, height: h });
       await abrir(page, { captura: true });
@@ -277,7 +277,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
         return { k2SobreNombre: k.top < n.bottom - 2 && k.left < n.right, ctaFuera: c.bottom > innerHeight };
       }, XL);
       expect(solape, `${w}×${h}`).toEqual({ k2SobreNombre: false, ctaFuera: false });
-      await irA(page, 0.3);
+      await irA(page, 0.2);
       await expect(page.locator(XL)).toHaveAttribute("data-corte", "cerrado");
       await irA(page, 1);
       await expect(page.locator(XL)).toHaveAttribute("data-corte", "cerrado");
@@ -285,6 +285,60 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
       expect(await page.locator(".k1-nombre").innerText()).toContain("Vargas");
       expect(await page.evaluate((sel) => getComputedStyle(document.querySelector(`${sel} .m.inf`)!).display, XL)).toBe("none");
     }
+  });
+
+  test("pulido D: el nombre XL se funde en su sitio (sin escala ni diagonal, sube 16–24 px), corte cerrado antes; el de K1 entra al llegar la losa", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrir(page, { captura: true });
+    await expect(page.locator(XL)).toHaveAttribute("data-corte", "abierto", { timeout: 5000 });
+    await page.waitForTimeout(700);
+    const medir = () =>
+      page.evaluate((sel) => {
+        const el = document.querySelector<HTMLElement>(sel)!;
+        const r = el.getBoundingClientRect();
+        const k = document.querySelector<HTMLElement>(".k1-nombre")!;
+        const rk = k.getBoundingClientRect();
+        const panel = Number(getComputedStyle(document.querySelector(".k1-panel")!).opacity);
+        return { x: r.x, y: r.y, w: r.width, h: r.height, op: Number(getComputedStyle(el).opacity), corte: el.dataset.corte, k1: Number(getComputedStyle(k).opacity) * panel, k1y: rk.y };
+      }, XL);
+    const p0 = await medir();
+    expect(p0.op).toBe(1);
+    expect(p0.k1).toBe(0);
+    const pasos: Record<number, Awaited<ReturnType<typeof medir>>> = {};
+    for (const p of [0.1, 0.17, 0.2, 0.25]) {
+      await irA(page, p);
+      pasos[p] = await medir();
+      // Sin escala ni desplazamiento horizontal: misma caja, solo sube.
+      expect(Math.abs(pasos[p].x - p0.x), `p ${p}: x`).toBeLessThanOrEqual(0.5);
+      expect(Math.abs(pasos[p].w - p0.w), `p ${p}: ancho`).toBeLessThanOrEqual(0.5);
+      expect(Math.abs(pasos[p].h - p0.h), `p ${p}: alto`).toBeLessThanOrEqual(0.5);
+      expect(pasos[p].y, `p ${p}: nunca baja`).toBeLessThanOrEqual(p0.y + 0.5);
+    }
+    // Curva suave y monótona: la opacidad baja y el nombre sube poco a poco.
+    expect(pasos[0.1].op).toBeGreaterThan(pasos[0.17].op);
+    expect(pasos[0.17].op).toBeGreaterThan(pasos[0.25].op);
+    expect(pasos[0.17].op).toBeGreaterThan(0.35);
+    expect(pasos[0.17].op).toBeLessThan(0.65);
+    // El corte se cierra cuando el nombre aún se ve.
+    expect(pasos[0.2].corte).toBe("cerrado");
+    expect(pasos[0.2].op).toBeGreaterThan(0.2);
+    await irA(page, 0.3);
+    const p3 = await medir();
+    expect(p3.op).toBe(0);
+    expect(p0.y - p3.y, "sube entre 16 y 24 px").toBeGreaterThanOrEqual(16);
+    expect(p0.y - p3.y).toBeLessThanOrEqual(24);
+    // El de K1 no se ve mientras la losa viaja; entra con una leve subida cuando llega.
+    await irA(page, 0.6);
+    expect((await medir()).k1).toBe(0);
+    await irA(page, 0.77);
+    const m = await medir();
+    expect(m.k1).toBeGreaterThan(0);
+    expect(m.k1).toBeLessThan(1);
+    await irA(page, 0.9);
+    const f = await medir();
+    expect(f.k1).toBeCloseTo(1, 2);
+    expect(m.k1y - f.k1y, "sube al entrar").toBeGreaterThan(0);
+    expect(m.k1y - f.k1y).toBeLessThanOrEqual(12);
   });
 
   test("CLS ≤ 0,02 en la carga del acto 1 y 0 fps en reposo (sin animaciones ni rAF vivos)", async ({ page }) => {
