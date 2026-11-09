@@ -407,14 +407,24 @@
     padding: 0;
     list-style: none;
   }
-  .linea-tiempo::before {
+  /* El eje lo dibuja cada punto (P-E2 §3), centrado en él: top = (10 − 1) / 2.
+     Antes era un `::before` del `ol` a 42 px fijos y los puntos caían 3–4,5 px
+     por debajo (la altura del año en Doto cambia con el tamaño). Color opaco:
+     los segmentos se solapan sin sumar alfa; el `clip-path` los recorta a lo
+     ancho del `ol` sin cortar el halo de «hoy» en vertical. */
+  .linea-tiempo {
+    clip-path: inset(-24px 0);
+  }
+  .linea-tiempo .nodo i::before {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 42px;
+    z-index: -1;
+    left: -100vw;
+    right: -100vw;
+    top: 4.5px;
     height: 1px;
-    background: rgba(255, 255, 255, 0.4);
+    background: color-mix(in srgb, var(--tinta) 40%, var(--losa));
+    pointer-events: none;
   }
   .nodo {
     display: grid;
