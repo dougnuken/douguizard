@@ -296,6 +296,13 @@
   --d-hoja: 420ms;
   --d-hoja-salida: 280ms;
   --d-entrada: 600ms;
+  /* G4 · tokens de transitions.dev (crafthings): abrir 250 ms, cerrar 150 ms,
+     una sola curva «smooth-out» para superficies y páginas. */
+  --curva-suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --d-abrir: 250ms;
+  --d-cerrar: 150ms;
+  --dist-pagina: 8px;
+  --blur-pagina: 3px;
 }
 
 @media (max-width: 1023px) {
@@ -1619,5 +1626,119 @@ html:has(dialog.hoja[open]) {
   ::view-transition-old(caso-media),
   ::view-transition-new(caso-media) {
     animation-name: none;
+  }
+}
+
+/* ── Transición entre páginas (G4) ──────────────────────────────────────────
+   Navegación en el cliente entre páginas B (`TransicionPagina`, React
+   `<ViewTransition>`): la página vieja sale y la nueva entra a la vez, 250 ms
+   `--curva-suave`, 8 px + blur 3 px (patrón «page side-by-side» de
+   transitions.dev). El lado sale de `<html data-vt>` (`DireccionTransicion`):
+   hacia delante en el orden del dock, la nueva entra desde la derecha; hacia
+   atrás, desde la izquierda; sin orden, sube. Cabecera, dock y rail tienen
+   nombre propio: no se funden con la página (sin parpadeo) y su píldora sigue
+   viva (se ve la copia nueva, que es en vivo). Mientras el filtro de /work
+   hace su propio View Transition (`vt-filtro`), no se capturan. */
+:root:not(.vt-filtro) .cab-b {
+  view-transition-name: cabecera;
+}
+:root:not(.vt-filtro) .dock {
+  view-transition-name: dock;
+}
+:root:not(.vt-filtro) .rail-acciones {
+  view-transition-name: rail;
+}
+/* Las losas de caso llevan nombre en línea (`caso-<slug>`) para el reflujo del
+   filtro de /work; fuera de él viajan con su página, no vuelan solas. */
+:root:not(.vt-filtro) [data-slug][data-grupo] {
+  view-transition-name: none !important;
+}
+::view-transition-group(cabecera),
+::view-transition-group(dock),
+::view-transition-group(rail) {
+  z-index: 2;
+  animation: none;
+}
+::view-transition-old(cabecera),
+::view-transition-old(dock),
+::view-transition-old(rail) {
+  display: none;
+}
+::view-transition-new(cabecera),
+::view-transition-new(dock),
+::view-transition-new(rail) {
+  animation: none;
+}
+/* Una página sin dock (o con él escondido) a una con dock: entra o sale con fundido. */
+::view-transition-old(dock):only-child,
+::view-transition-old(rail):only-child {
+  display: block;
+  animation: pag-fundido-sale var(--d-cerrar) var(--curva-suave) both;
+}
+::view-transition-new(dock):only-child,
+::view-transition-new(rail):only-child {
+  animation: pag-fundido-entra var(--d-abrir) var(--curva-suave) both;
+}
+
+:root {
+  --vt-sale-x: 0px;
+  --vt-sale-y: calc(var(--dist-pagina) * -1);
+  --vt-entra-x: 0px;
+  --vt-entra-y: var(--dist-pagina);
+}
+:root[data-vt="adelante"] {
+  --vt-sale-x: calc(var(--dist-pagina) * -1);
+  --vt-sale-y: 0px;
+  --vt-entra-x: var(--dist-pagina);
+  --vt-entra-y: 0px;
+}
+:root[data-vt="atras"] {
+  --vt-sale-x: var(--dist-pagina);
+  --vt-sale-y: 0px;
+  --vt-entra-x: calc(var(--dist-pagina) * -1);
+  --vt-entra-y: 0px;
+}
+::view-transition-group(.pag-sale),
+::view-transition-group(.pag-entra) {
+  animation-duration: var(--d-abrir);
+  animation-timing-function: var(--curva-suave);
+}
+::view-transition-old(.pag-sale) {
+  animation: pag-sale var(--d-abrir) var(--curva-suave) both;
+}
+::view-transition-new(.pag-entra) {
+  animation: pag-entra var(--d-abrir) var(--curva-suave) both;
+}
+@keyframes pag-sale {
+  to {
+    opacity: 0;
+    transform: translate(var(--vt-sale-x), var(--vt-sale-y));
+    filter: blur(var(--blur-pagina));
+  }
+}
+@keyframes pag-entra {
+  from {
+    opacity: 0;
+    transform: translate(var(--vt-entra-x), var(--vt-entra-y));
+    filter: blur(var(--blur-pagina));
+  }
+}
+@keyframes pag-fundido-sale {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pag-fundido-entra {
+  from {
+    opacity: 0;
+  }
+}
+/* Movimiento reducido: solo un fundido breve, sin desplazamiento ni blur. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.pag-sale) {
+    animation: pag-fundido-sale var(--d-cerrar) linear both;
+  }
+  ::view-transition-new(.pag-entra) {
+    animation: pag-fundido-entra var(--d-cerrar) linear both;
   }
 }

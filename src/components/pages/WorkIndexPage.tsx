@@ -13,6 +13,7 @@ import type { Locale } from "@/i18n/config";
 import { enPalabras, paginasDict } from "@/i18n/paginas";
 import { aniosEnProducto, casosPublicados, productosPropios } from "@/lib/cuentas";
 import { workIndexJsonLd } from "@/lib/personJsonLd";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /**
  * `/work` · índice de casos (07 F2, `work.html`). Orden del DOM = visual = Tab:
@@ -24,7 +25,7 @@ export default function WorkIndexPage({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].trabajo;
   const total = casosPublicados();
   return (
-    <>
+    <TransicionPagina>
       <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
@@ -68,6 +69,6 @@ export default function WorkIndexPage({ locale }: { locale: Locale }) {
       </main>
       <SiteFooter locale={locale} />
       <DockMovil />
-    </>
+    </TransicionPagina>
   );
 }
