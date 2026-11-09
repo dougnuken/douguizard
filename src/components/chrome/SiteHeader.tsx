@@ -65,6 +65,17 @@ function useEspiaSecciones(activo: boolean) {
     const pedir = () => {
       if (!raf) raf = requestAnimationFrame(medir);
     };
+    // Pulido E: al llegar al home desde otra página con `#ancla` (p. ej. «Contacto»
+    // del dock en /about → `/#contact`), el `scroll-behavior: smooth` de `html`
+    // bajaba desde el scroll heredado recorriendo Trabajo → Experiencia → Perfil
+    // y el espía iba marcando cada una. Se marca el destino de inmediato y se salta
+    // a él sin animación: ni viaje largo ni ida y vuelta de la selección.
+    const ancla = decodeURIComponent(window.location.hash.slice(1));
+    const destino = ancla && secciones.some((s) => s.dataset.seccion === ancla) ? document.getElementById(ancla) : null;
+    if (destino) {
+      setActiveSection(ancla);
+      destino.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" });
+    }
     medir();
     window.addEventListener("scroll", pedir, { passive: true });
     window.addEventListener("resize", pedir);

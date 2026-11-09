@@ -22,7 +22,7 @@ export default function CardOficio({ locale }: { locale: Locale }) {
             <span className="pasos-num" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <span>{p.title.replace(/\.$/, "")}</span>
+            <span className="pasos-titulo">{p.title.replace(/\.$/, "")}</span>
           </li>
         ))}
       </ol>

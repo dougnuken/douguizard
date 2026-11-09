@@ -77,15 +77,15 @@ for (const ancho of [1440, 390]) {
         };
         const grupo = document.querySelector(".idioma")!;
         const activa = grupo.querySelector(".idioma-op[aria-current]")!;
-        // La burbuja es el content-box de la opción activa.
-        const cs = getComputedStyle(activa);
+        // Pulido E: la burbuja es el ::after de la opción activa (círculo propio).
+        const cs = getComputedStyle(activa, "::after");
         const r = activa.getBoundingClientRect();
         const m = medir(grupo, activa);
         const b = new DOMRect(
-          r.left + parseFloat(cs.paddingLeft),
-          r.top + parseFloat(cs.paddingTop),
-          r.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight),
-          r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom),
+          r.left + parseFloat(cs.left),
+          r.top + parseFloat(cs.top),
+          parseFloat(cs.width),
+          parseFloat(cs.height),
         );
         const g = grupo.getBoundingClientRect();
         const idioma = {
@@ -94,7 +94,9 @@ for (const ancho of [1440, 390]) {
           abajo: g.bottom - b.bottom,
           // El canto propio de la burbuja (izq. en ES, der. en EN), y el cruzado contra el alto.
           canto: activa === grupo.firstElementChild ? b.left - g.left : g.right - b.right,
-          rInt: Math.min(parseFloat(cs.borderTopLeftRadius), b.height / 2),
+          rInt: Math.min(parseFloat(cs.borderTopLeftRadius) * (cs.borderTopLeftRadius.endsWith("%") ? b.width / 100 : 1), b.height / 2),
+          radio: cs.borderTopLeftRadius,
+          opacidad: cs.opacity,
           ancho: b.width,
           alto: b.height,
         };
@@ -102,7 +104,9 @@ for (const ancho of [1440, 390]) {
         return { idioma, marca };
       });
       const { idioma, marca } = pares;
-      expect(idioma.ancho, "burbuja redonda").toBeCloseTo(idioma.alto, 0);
+      expect(Math.abs(idioma.ancho - idioma.alto), "burbuja redonda (ancho = alto)").toBeLessThanOrEqual(0.5);
+      expect(idioma.radio, "burbuja con radio 50 %").toBe("50%");
+      expect(idioma.opacidad, "burbuja visible en reposo").toBe("1");
       for (const lado of [idioma.arriba, idioma.abajo, idioma.canto]) {
         expect(Math.abs(lado - 4), `ES/EN inset ${JSON.stringify(idioma)}`).toBeLessThanOrEqual(0.5);
       }

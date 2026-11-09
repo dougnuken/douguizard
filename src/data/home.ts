@@ -66,12 +66,13 @@ export const cifrasCaso: Record<(typeof ordenCasos)[number], number[]> = {
  * (año de inicio desde `cv.ts`), empresa y cargo **cortos** cuando el del CV no
  * cabe en ~119 px. `movil`: los cuatro que caben a 390. `caso`: tiene caso.
  */
-export const nodosK11: { ids: string[]; empresa?: string; cargo?: string; movil?: boolean; caso?: boolean }[] = [
+/** `prescindible`: en móvil se oculta si la losa no da para cuatro años en Doto de 30 px (< 302 px útiles). */
+export const nodosK11: { ids: string[]; empresa?: string; cargo?: string; movil?: boolean; caso?: boolean; prescindible?: boolean }[] = [
   { ids: ["freelance"], movil: true },
   { ids: ["smartbiz"], empresa: "Smartbiz", cargo: "Junior UI" },
   { ids: ["ideaware", "qrvey"], empresa: "Ideaware · Qrvey", cargo: "Senior UX/UI → Lead UI", caso: true },
   { ids: ["globant"], cargo: "Senior PD", caso: true },
-  { ids: ["aval"], empresa: "Aval · BdO", cargo: "Senior PD · DS Gatekeeper", movil: true, caso: true },
+  { ids: ["aval"], empresa: "Aval · BdO", cargo: "Senior PD · DS Gatekeeper", movil: true, caso: true, prescindible: true },
   { ids: ["mercadolibre"], cargo: "Tech Lead · DS", movil: true, caso: true },
   { ids: ["naowee"], movil: true, caso: true },
 ];

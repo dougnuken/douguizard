@@ -136,7 +136,7 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
       recorrido?.style.removeProperty("--p");
       cabezal?.style.removeProperty("left");
       ol?.style.removeProperty("--fill");
-      lis.forEach((li) => li.classList.remove("activo", "paso", "fuera"));
+      lis.forEach((li) => li.classList.remove("activo", "paso", "fuera", "encendido"));
       tramos.forEach((t) => t.classList.remove("activo", "hecho"));
       dd.forEach((el, i) => {
         el.parentElement?.classList.remove("cero");
@@ -206,6 +206,8 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
       };
     };
 
+    /** Centro del círculo del hito desde el borde superior del `li` (CSS: top 24 + 13/2). */
+    const NODO_Y = 30.5;
     const movil = () => {
       raiz.dataset.montado = "";
       let raf = 0;
@@ -224,6 +226,9 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
         if (window.scrollY > document.documentElement.scrollHeight - window.innerHeight - 4) y = hoy;
         lis.forEach((li, i) => {
           li.classList.toggle("paso", i < activo);
+          // Mismo origen y umbral que la punta del hilo (`c`): el círculo se
+          // enciende exactamente cuando la punta alcanza su centro.
+          li.classList.toggle("encendido", li.getBoundingClientRect().top + NODO_Y <= c);
           li.classList.toggle("fuera", li.getBoundingClientRect().top > window.innerHeight * 0.9);
         });
         if (ol) {

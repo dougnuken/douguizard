@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { IconoDock, type NombreIconoDock } from "./IconosDock";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { getActiveSection, getServerActiveSection, subscribeActiveSection } from "@/lib/activeSection";
+import { getActiveSection, getServerActiveSection, setActiveSection, subscribeActiveSection } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
 import { EVENTO_SECCIONES } from "@/components/case/eventos";
 import { usePildora } from "@/components/sistema/usePildora";
@@ -106,7 +106,13 @@ export default function DockMovil() {
             key={d.clave}
             href={localePath(locale, d.ruta)}
             aria-current={actual ? "page" : seccion ? "true" : undefined}
-            onClick={(ev) => esClicSimple(ev) && mover(ev.currentTarget)}
+            onClick={(ev) => {
+              if (!esClicSimple(ev)) return;
+              mover(ev.currentTarget);
+              // Pulido E: «Contacto» desde una página B lleva a `/#contact`; el
+              // dock del home nace ya con el destino marcado (sin fotograma vacío).
+              if (d.ruta.startsWith("/#") && d.seccion) setActiveSection(d.seccion);
+            }}
           >
             {contenido}
           </Link>

@@ -236,3 +236,33 @@ test("sin JS: el <ol> con los 10 hitos visibles", async ({ browser }) => {
   expect(vis).toBe(N);
   await ctx.close();
 });
+
+
+/** Móvil: el círculo de cada hito se enciende exactamente cuando la punta del hilo llega a su centro. */
+test.describe("hilo 390", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("experience 390: círculos sincronizados con la punta del hilo", async ({ page }) => {
+  await page.goto("/experience", { waitUntil: "networkidle" });
+    await page.waitForSelector(".exp[data-montado]");
+  const total = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+  const n = 24;
+  for (let k = 0; k <= n; k++) {
+    await page.evaluate((y) => window.scrollTo(0, y), Math.round((total * k) / n));
+    await page.waitForTimeout(120);
+    const res = await page.evaluate(() => {
+      const ol = document.querySelector<HTMLElement>(".hitos")!;
+      const fill = parseFloat(ol.style.getPropertyValue("--fill"));
+      const tip = ol.getBoundingClientRect().top + fill;
+      return Array.from(ol.querySelectorAll<HTMLElement>(".hito")).map((li) => {
+        const cs = getComputedStyle(li, "::before");
+        const centre = li.getBoundingClientRect().top + parseFloat(cs.top) + parseFloat(cs.height) / 2;
+        return { centre, tip, lit: li.classList.contains("encendido") };
+      });
+    });
+    for (const h of res) {
+      if (h.tip < h.centre - 4) expect(h.lit, `apagado con la punta arriba (y=${k})`).toBe(false);
+      if (h.tip > h.centre + 4) expect(h.lit, `encendido con la punta pasada (y=${k})`).toBe(true);
+    }
+  }
+});
+});
