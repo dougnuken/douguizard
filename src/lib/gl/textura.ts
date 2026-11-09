@@ -13,8 +13,24 @@ export function subirTextura(gl: WebGL2RenderingContext, img: TexImageSource): W
   return tex;
 }
 
-/** Carga y decodifica una imagen del mismo origen. */
-export async function cargarImagen(src: string): Promise<HTMLImageElement> {
+/**
+ * Carga y decodifica una imagen del mismo origen **fuera del hilo principal**
+ * (G1): `fetch` → `Blob` → `createImageBitmap`. Con un `<img>`, `texImage2D`
+ * volvía a decodificar la foto en el hilo principal (Chromium la re-extrae sin
+ * premultiplicar): ~75 ms con CPU ×4. El `ImageBitmap` ya trae los píxeles y la
+ * subida no decodifica nada. Sin `createImageBitmap`, el `<img>` de siempre.
+ * `fetch` es del mismo origen (CSP `connect-src 'self'`) y usa la caché HTTP.
+ */
+export async function cargarImagen(src: string): Promise<ImageBitmap | HTMLImageElement> {
+  if (typeof createImageBitmap === "function") {
+    try {
+      const r = await fetch(src);
+      if (!r.ok) throw new Error(`vidrio: textura ${r.status}`);
+      return await createImageBitmap(await r.blob(), { premultiplyAlpha: "none", colorSpaceConversion: "default" });
+    } catch {
+      // Navegador sin `createImageBitmap(Blob)` o fallo de red: el `<img>`.
+    }
+  }
   const img = new Image();
   img.decoding = "async";
   img.src = src;
