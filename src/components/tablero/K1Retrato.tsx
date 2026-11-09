@@ -1,9 +1,10 @@
 import Link from "next/link";
+import FotoContinua from "@/components/hero/FotoContinua";
 import HeroPoster from "@/components/hero/HeroPoster";
 import VidrioCss from "@/components/hero/VidrioCss";
 import VidrioDiferido from "@/components/hero/VidrioDiferido";
 import Flecha from "@/components/sistema/Flecha";
-import { getFotoActiva, varsFoto } from "@/data/hero";
+import { varsFoto } from "@/data/hero";
 import { getSite } from "@/data/site";
 import { localePath, type Locale } from "@/i18n/config";
 import { tableroDict } from "@/i18n/tablero";
@@ -17,19 +18,15 @@ import { rolCorto } from "@/lib/career";
  * escritorio, P1-4) → `/about`. En móvil es la foto a sangre detrás de K2; el
  * panel y su enlace no se pintan (el perfil va en K13).
  */
-/** El póster `cine` más pequeño: la atmósfera borrosa que llena el acto 1 fuera de la foto (F5). */
-function atmosfera() {
-  const r = getFotoActiva().rutas.poster.cine.webp;
-  return r[Math.min(...Object.keys(r).map(Number))];
-}
-
 export default function K1Retrato({ locale }: { locale: Locale }) {
   const s = getSite(locale);
   const t = tableroDict[locale].k1;
   const [nombre, apellido] = s.name.split(" ");
   return (
     <article className="tarjeta k1" id="k1">
-      <div className="k1-foto" style={{ ...varsFoto(), "--foto-atm": `url(${atmosfera()})` } as React.CSSProperties}>
+      <div className="k1-foto" style={varsFoto() as React.CSSProperties}>
+        {/* Pulido D: fuera de la foto, la misma foto a lo ancho y cada vez más borrosa (solo en el acto 1). */}
+        <FotoContinua foto="img.k1-poster" />
         <HeroPoster
           locale={locale}
           className="k1-poster"

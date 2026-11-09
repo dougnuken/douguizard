@@ -167,19 +167,6 @@
         linear-gradient(90deg, rgba(10, 10, 12, 0.72), rgba(10, 10, 12, 0.32) 38%, transparent 62%),
         linear-gradient(0deg, rgba(10, 10, 12, 0.5), transparent 30%);
     }
-    /* Fuera de la foto (más ancha la pantalla que la foto), su atmósfera borrosa.
-       Solo cuando la escena ya montó (tras el `load`): no compite con el póster (LCP). */
-    :root.cine[data-escena-fase="anim"] .k1-foto::before {
-      content: "";
-      position: absolute;
-      inset: -10%;
-      z-index: -1;
-      opacity: var(--atm, 1);
-      background: var(--foto-atm) 50% 42% / cover no-repeat;
-      /* P0-1 (crítica F5): más oscura y más borrosa, para que el empalme con el
-         fundido de la foto no cambie de tono. */
-      filter: blur(36px) brightness(0.6) saturate(1.05);
-    }
     /* P0-1 (crítica F5, como P1-1 de F2 en `/about`): la foto del acto 1 no
        tiene bordes duros a los lados. Fundido lateral ligado a la foto (`--q`,
        0 → 1 de p 0 a 0,72): existe en p = 0 y desaparece al llegar a la losa;

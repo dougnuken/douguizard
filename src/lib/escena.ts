@@ -179,8 +179,15 @@ export const ESCENA = {
   foto: 0.72,
   /** P0-2 (crítica F5): K2 sube cuando el nombre ya salió hacia K1; sus trayectorias no se cruzan. */
   k2Viaje: [0.15, 0.6] as const,
-  /** El FLIP del nombre XL a K1 (`power2.out`: sale rápido hacia la derecha, sobre la foto). */
-  nombre: [0, 0.45] as const,
+  /**
+   * Pulido D: el nombre XL ya no viaja a K1. Se funde en su sitio con una leve
+   * subida (`NOMBRE_SUBE`, `power1.inOut`) en la primera parte del ancla; el
+   * corte láser se cierra antes (`corteFin`), así se ve la palabra entera irse.
+   */
+  nombre: [0.04, 0.3] as const,
+  corteFin: 0.2,
+  /** El nombre de K1 entra (fundido + leve subida) cuando la losa ya llegó (q = 1 en 0,72). */
+  k1Nombre: [0.7, 0.84] as const,
   material: [0.3, 0.52] as const,
   /** La tinta de K2 cambia de golpe aquí (P1-2): el contraste nunca cae a 1:1. */
   tinta: 0.41,
@@ -195,13 +202,16 @@ export const ESCENA = {
   losas: { k3: 0.3, k4: 0.36, k5: 0.42, duracion: 0.2 },
   rail: [0.5, 0.8] as const,
   velo: [0, 0.4] as const,
-  nombreFuera: [0.66, 0.76] as const,
   panelDentro: [0.68, 0.8] as const,
   laserOs: [0.8, 1] as const,
   /** P1-1 (crítica F5): la atmósfera borrosa se va antes de 0,35 (nunca queda la caja gris sola). */
   atmosfera: [0, 0.35] as const,
   indicador: [0.05, 0.17] as const,
 } as const;
+
+/** Px que sube el nombre XL al irse y desde los que sube el de K1 al llegar. */
+export const NOMBRE_SUBE = 20;
+export const K1_NOMBRE_SUBE = 12;
 
 /** Lo que cada elemento de la escena vale en p (sin DOM). */
 export function frameEscena(p: number) {
@@ -217,11 +227,13 @@ export function frameEscena(p: number) {
     mt: p >= ESCENA.tinta ? 1 : 0,
     /** Opacidad del contenido de K2 (P2-5): 1 → 0 → 1 alrededor del cruce del material. */
     k2c: 1 - tramo(p, ...ESCENA.k2Contenido.sale) + tramo(p, ...ESCENA.k2Contenido.entra),
-    /** Nombre XL: FLIP a K1 (`power2.out`, 0 → 0,45) y fundido. */
-    nombre: p2o(tramo(p, ...ESCENA.nombre)),
-    /** …y en vertical más tarde (`power2.inOut`): primero se aparta a la derecha, luego baja a K1. */
-    nombreY: p2io(tramo(p, ...ESCENA.nombre)),
-    nombreOpacidad: 1 - tramo(p, ...ESCENA.nombreFuera),
+    /** Nombre XL: salida en su sitio (0 → 1, `power1.inOut`): opacidad 1 − t, sube `NOMBRE_SUBE` × t. */
+    nombre: p1io(tramo(p, ...ESCENA.nombre)),
+    nombreOpacidad: 1 - p1io(tramo(p, ...ESCENA.nombre)),
+    /** Corte del nombre XL: abierto en p = 0, cerrado en `corteFin` (antes de que se vaya). */
+    corte: 1 - tramo(p, 0, ESCENA.corteFin),
+    /** Nombre de K1: entrada (0 → 1, `power2.out`): opacidad t, sube desde `K1_NOMBRE_SUBE` px. */
+    k1Nombre: p2o(tramo(p, ...ESCENA.k1Nombre)),
     panel: tramo(p, ...ESCENA.panelDentro),
     k3: losa(ESCENA.losas.k3),
     k4: losa(ESCENA.losas.k4),

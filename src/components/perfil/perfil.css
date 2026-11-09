@@ -26,16 +26,6 @@
     overflow: hidden;
     background: var(--losa);
   }
-  /* La atmósfera: la misma foto, borrosa y oscura, llena lo que el póster no
-     cubre a pantalla completa (p = 0). Solo en la escena: en móvil y en la
-     losa el póster ya cubre todo y no se descarga. */
-  .perfil-cine .foto-clip::before {
-    content: "";
-    position: absolute;
-    inset: -10%;
-    background: var(--foto-atm) 50% 42% / cover no-repeat;
-    filter: blur(28px) brightness(0.72) saturate(1.05);
-  }
   .poster {
     position: absolute;
     max-width: none;

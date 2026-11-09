@@ -2,8 +2,8 @@
 
 import { useEffect, type RefObject } from "react";
 import { getFotoActiva } from "@/data/hero";
-import { aperturaDesdeProgreso, ENTRADA, fijarCorte } from "@/lib/corte";
-import { cubrir, frameEscena, placement, type Colocacion, type Rect } from "@/lib/escena";
+import { ENTRADA, fijarCorte } from "@/lib/corte";
+import { cubrir, frameEscena, K1_NOMBRE_SUBE, NOMBRE_SUBE, placement, type Colocacion, type Rect } from "@/lib/escena";
 import { CONSULTA_CINE } from "./sceneInit";
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -31,7 +31,8 @@ function offset(el: HTMLElement, ancestro: HTMLElement): { x: number; y: number 
  * espacio ya estaba reservado desde el primer pintado: sin CLS).
  * - `scrub: 0.3`, snap no direccional a 0 o 1 (NOTAS §7 P1-3).
  * - `pintar(p)` escribe en línea foto, vidrio (`--vidrio-p`), láser, velo, K2
- *   (viaje, `--m`, `--mt`), nombre XL (FLIP a K1 y corte: `fijarCorte`), losas,
+ *   (viaje, `--m`, `--mt`), nombre XL (se funde en su sitio, corte cerrado antes:
+ *   `fijarCorte`), nombre de K1 (entra al llegar la losa), losas,
  *   rail (`inert` con p < 0,5) y «Desliza»; en p = 1 lo borra todo y el OS es el
  *   de F3 tal cual (`html[data-escena-fase="os"]`).
  * - Robustez: `invalidateOnRefresh`, `onRefresh` resincroniza p,
@@ -64,7 +65,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     const f = getFotoActiva();
     const fotoDatos = { w: f.tamano.w, h: f.tamano.h, ojo: f.ojo };
     const tarjetas = [losas.k3, losas.k4, losas.k5].filter(Boolean) as HTMLElement[];
-    const enLinea: HTMLElement[] = [foto, poster, laser, velo, panel, k2, indicador, ...tarjetas, ...(osLaser ? [osLaser] : [])];
+    const enLinea: HTMLElement[] = [foto, poster, laser, velo, panel, k1Nombre, k2, indicador, ...tarjetas, ...(osLaser ? [osLaser] : [])];
     // Algunos traen estilo del servidor (`varsFoto`): se restaura tal cual, no se borra.
     const originales = new Map(enLinea.map((el) => [el, el.getAttribute("style")] as const));
 
@@ -79,7 +80,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       pb: Colocacion;
       radio: number;
       k2: { dx: number; dy: number; h: number; celda: number };
-      nombre: { x0: number; y0: number; dx: number; dy: number; s: number };
+      nombre: { y0: number };
       /** Ancho del láser del tablero: el del viewport en la escena, el de F3 en el OS. */
       laser: { ancho: number; os: number };
     } | null = null;
@@ -137,10 +138,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       const lineaA = cine.Oy + f.ojo * cine.Dy;
       const y0 = Math.max(88, lineaA - l2.offsetTop - corteActual());
       lockup.style.top = `${y0}px`;
-      const on = offset(k1Nombre, escena);
       const fsXL = parseFloat(getComputedStyle(lockup).fontSize) || 120;
-      const fsK1 = parseFloat(getComputedStyle(k1Nombre).fontSize) || 30;
-      const x0 = lockup.offsetLeft;
       geo = {
         A,
         B,
@@ -155,7 +153,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
           h: hK2,
           celda,
         },
-        nombre: { x0, y0, dx: on.x - x0, dy: on.y - y0, s: fsK1 / fsXL },
+        nombre: { y0 },
         laser: { ancho: W, os: W },
       };
       let laserOs = 0;
@@ -220,10 +218,12 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       k2.style.setProperty("--k2-h", `${lerp(geo.k2.h, geo.k2.celda, fr.k2).toFixed(2)}px`);
       k2.style.setProperty("--mt", String(fr.mt));
       k2.style.setProperty("--k2c", fr.k2c.toFixed(3));
-      const n = geo.nombre;
-      lockup.style.transform = `translate(${(n.dx * fr.nombre).toFixed(2)}px, ${(n.dy * fr.nombreY).toFixed(2)}px) scale(${lerp(1, n.s, fr.nombre).toFixed(4)})`;
+      // Pulido D: el nombre XL se funde en su sitio con una leve subida; el de K1 entra al llegar la losa.
+      lockup.style.transform = `translateY(${(-NOMBRE_SUBE * fr.nombre).toFixed(2)}px)`;
       lockup.style.opacity = fr.nombreOpacidad.toFixed(3);
       panel.style.opacity = fr.panel.toFixed(3);
+      k1Nombre.style.opacity = fr.k1Nombre.toFixed(3);
+      k1Nombre.style.translate = `0 ${(K1_NOMBRE_SUBE * (1 - fr.k1Nombre)).toFixed(2)}px`;
       for (const [k, el] of Object.entries(losas)) {
         if (!el) continue;
         const t = fr[k as "k3" | "k4" | "k5"];
@@ -242,7 +242,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       }
       indicador.style.setProperty("--p", Math.min(1, p / 0.17).toFixed(3));
       indicador.style.opacity = fr.indicador.toFixed(3);
-      if (corteListo) fijarCorte(lockup, aperturaDesdeProgreso(p));
+      if (corteListo) fijarCorte(lockup, fr.corte);
     };
 
     const salir = () => {

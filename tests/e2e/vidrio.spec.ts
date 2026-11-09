@@ -113,7 +113,7 @@ test.describe("(a) Chromium con WebGL2", () => {
         texturaDesde: tex?.startTime ?? -1,
         lcp: w.__v.lcpEl,
         poster: img.currentSrc,
-        transicion: getComputedStyle(document.querySelector(".k1 canvas")!).transitionDuration,
+        transicion: getComputedStyle(document.querySelector(".k1 canvas[data-vidrio='gl']")!).transitionDuration,
       };
     });
     expect(r.lcp).toMatch(/^IMG\.k1-poster/);
@@ -139,7 +139,7 @@ test.describe("(a) Chromium con WebGL2", () => {
 
     const k1 = (await page.locator(".k1").boundingBox())!;
     await page.mouse.move(k1.x + k1.width * 0.3, k1.y + k1.height * 0.7, { steps: 4 });
-    const lente = page.locator(".k1 canvas");
+    const lente = page.locator(".k1 canvas[data-vidrio='gl']");
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
 
     // Lo que se pinta: sobre la pared (arriba a la izquierda de la foto) la lente quita ≥ 50 % de las estrías.
@@ -172,11 +172,11 @@ test.describe("(a) Chromium con WebGL2", () => {
     const caja = async () =>
       page.evaluate(() => {
         const a = document.querySelector("img.poster")!.getBoundingClientRect();
-        const b = document.querySelector(".portada canvas")!.getBoundingClientRect();
+        const b = document.querySelector(".portada canvas[data-vidrio='gl']")!.getBoundingClientRect();
         return [a.x - b.x, a.y - b.y, a.width - b.width, a.height - b.height].map((v) => Math.round(v));
       });
     expect(await caja()).toEqual([0, 0, 0, 0]);
-    const f = () => page.locator(".portada canvas").evaluate((c) => parseFloat((c as HTMLElement).style.getPropertyValue("--vidrio-f")));
+    const f = () => page.locator(".portada canvas[data-vidrio='gl']").evaluate((c) => parseFloat((c as HTMLElement).style.getPropertyValue("--vidrio-f")));
     expect(await f()).toBeCloseTo(0.62, 2);
     await page.evaluate(() => window.scrollTo(0, document.querySelector<HTMLElement>(".portada")!.offsetHeight));
     await expect.poll(f, { timeout: 4000 }).toBeCloseTo(0.08, 2);
@@ -197,7 +197,7 @@ test.describe("(b) sin WebGL (Chromium lanzado con --disable-webgl)", () => {
       await page.goto(ruta, { waitUntil: "load" });
       const capa = page.locator(`${sel} [data-vidrio='css']`);
       await expect(capa).toHaveAttribute("data-activo", "", { timeout: 8000 });
-      expect(await page.locator("canvas").count()).toBe(0);
+      expect(await page.locator("canvas[data-vidrio='gl']").count()).toBe(0);
       const poster = await page.locator(`${sel} img[data-poster='horneado']`).evaluate((i) => (i as HTMLImageElement).naturalWidth);
       expect(poster).toBeGreaterThan(0);
       const b = (await capa.boundingBox())!;
@@ -243,7 +243,7 @@ test.describe("(d) táctil", () => {
     // Horizontal, a la altura del pecho (encima de la foto, fuera de K2).
     await toque("touchStart", 80, 300);
     for (let x = 90; x <= 300; x += 15) await toque("touchMove", x, 302);
-    const lente = page.locator(".k1 canvas");
+    const lente = page.locator(".k1 canvas[data-vidrio='gl']");
     await expect(lente).toHaveAttribute("data-lente", /^(0\.[5-9]\d|1\.00)$/, { timeout: 3000 });
     await toque("touchEnd", 300, 302);
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
@@ -273,11 +273,11 @@ test("(e) webglcontextlost → respaldo CSS, sin errores", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "load" });
   test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
-  await page.locator(".k1 canvas").evaluate((c) => {
+  await page.locator(".k1 canvas[data-vidrio='gl']").evaluate((c) => {
     const gl = (c as HTMLCanvasElement).getContext("webgl2")!;
     gl.getExtension("WEBGL_lose_context")!.loseContext();
   });
-  await expect(page.locator(".k1 canvas")).toHaveCount(0, { timeout: 5000 });
+  await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveCount(0, { timeout: 5000 });
   await expect(page.locator(".k1 [data-vidrio='css']")).toHaveAttribute("data-activo", "", { timeout: 5000 });
   expect(e).toEqual([]);
 });

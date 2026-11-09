@@ -1,6 +1,7 @@
 import VidrioCss from "@/components/hero/VidrioCss";
 import VidrioDiferido from "@/components/hero/VidrioDiferido";
 import HeroPoster from "@/components/hero/HeroPoster";
+import FotoContinua from "@/components/hero/FotoContinua";
 import NameLockup from "@/components/marca/NameLockup";
 import Estado from "@/components/sistema/Estado";
 import { getFotoActiva, varsFoto } from "@/data/hero";
@@ -30,13 +31,13 @@ export default function PortadaPerfil({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const { bio } = getBio(locale);
   const f = getFotoActiva();
-  const atm = f.rutas.poster.cine.webp[Math.min(...Object.keys(f.rutas.poster.cine.webp).map(Number))];
   return (
     <section className="portada" id="portada">
       <script dangerouslySetInnerHTML={{ __html: INICIO }} />
       <div className="escenario">
         <div className="foto">
-          <div className="foto-clip" style={{ "--foto-atm": `url(${atm})`, ...varsFoto(f) } as React.CSSProperties}>
+          <div className="foto-clip" style={varsFoto(f) as React.CSSProperties}>
+            <FotoContinua foto="img.poster" />
             {/* El canvas y la lente CSS llevan la clase `poster` y copian el estilo en línea de la foto. */}
             <VidrioDiferido estados={{ escritorio: "cine", movil: "movil" }} className="poster" laser={false} espejo="img.poster">
               <HeroPoster
