@@ -43,3 +43,54 @@
     }
   }
 }
+
+/* Pulido D · la foto sigue a lo ancho (`FotoContinua`): la misma foto, escalada
+   a cubrir, en tres capas cada vez más borrosas y oscuras hacia los lados. Las
+   máscaras van en px de la caja, ligadas a los bordes de la foto nítida
+   (`--pl`, `--pr`); el centro lo cubre la foto nítida con su fundido lateral.
+   Oculta por defecto: la encienden la escena del home y la portada de `/about`. */
+@layer components {
+  .foto-continua {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: var(--atm, 1);
+  }
+  /* Entra con un fundido de 400 ms al pintarse (la opacidad del contenedor es del scroll). */
+  .foto-continua[data-listo] i {
+    animation: fc-entra 400ms var(--curva-salida, ease-out) both;
+  }
+  @keyframes fc-entra {
+    from {
+      opacity: 0;
+    }
+  }
+  .foto-continua i {
+    position: absolute;
+    inset: 0;
+  }
+  .foto-continua canvas {
+    position: absolute;
+    left: var(--fc-x, 0);
+    top: var(--fc-y, 0);
+    width: var(--fc-w, 100%);
+    height: var(--fc-h, 100%);
+    max-width: none;
+  }
+  .foto-continua .fc-2 {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--pl) * 0.75), transparent calc(var(--pl) + 40px), transparent calc(var(--pr) - 40px), #000 calc(var(--pr) + (100% - var(--pr)) * 0.3));
+    mask-image: linear-gradient(90deg, #000 calc(var(--pl) * 0.75), transparent calc(var(--pl) + 40px), transparent calc(var(--pr) - 40px), #000 calc(var(--pr) + (100% - var(--pr)) * 0.3));
+  }
+  .foto-continua .fc-3 {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--pl) * 0.2), transparent calc(var(--pl) * 0.7), transparent calc(var(--pr) + (100% - var(--pr)) * 0.3), #000 calc(var(--pr) + (100% - var(--pr)) * 0.85));
+    mask-image: linear-gradient(90deg, #000 calc(var(--pl) * 0.2), transparent calc(var(--pl) * 0.7), transparent calc(var(--pr) + (100% - var(--pr)) * 0.3), #000 calc(var(--pr) + (100% - var(--pr)) * 0.85));
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    :root.cine:not([data-escena-fase="os"]) .k1-foto > .foto-continua,
+    .perfil-cine .foto-clip > .foto-continua {
+      display: block;
+    }
+  }
+}

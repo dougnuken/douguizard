@@ -350,7 +350,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     for (const p of [0.35, 0.5, 0.7, 0.85]) {
       await irA(page, p);
       const m = await page.evaluate(() => {
-        const atm = getComputedStyle(document.querySelector(".k1-foto")!, "::before").opacity;
+        const atm = getComputedStyle(document.querySelector(".k1-foto > .foto-continua")!).opacity;
         const k1 = document.querySelector(".k1-laser")!.getBoundingClientRect();
         const os = document.querySelector<HTMLElement>(".os-laser")!;
         const r = os.getBoundingClientRect();
