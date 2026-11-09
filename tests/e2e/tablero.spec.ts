@@ -160,3 +160,54 @@ test("con RM: el respaldo VidrioCss está en la portada de /about y en K1, inact
   expect(await page.locator("canvas").count(), "con RM no se pide WebGL").toBe(0);
   await expect(page.locator("[data-vidrio='css'][data-activo]")).toHaveCount(0);
 });
+
+/* ── Pulido E2: K14, K11 y K16 ─────────────────────────────────────────── */
+for (const w of [1440, 1280, 390]) {
+  test(`K14 «Cómo trabajo»: lista vertical, número sin montarse en el título ni títulos cortados @${w}`, async ({ page }) => {
+    await abrir(page, "/", w, 900);
+    const filas = await page.locator(".k14 .pasos li").evaluateAll((lis) =>
+      lis.map((li) => {
+        const n = li.querySelector(".pasos-num")!.getBoundingClientRect();
+        const t = li.querySelector<HTMLElement>(".pasos-titulo")!;
+        const r = t.getBoundingClientRect();
+        const s = li.getBoundingClientRect();
+        const solapa = n.right > r.left && n.left < r.right && n.bottom > r.top && n.top < r.bottom;
+        return { solapa, cortado: t.scrollWidth > t.clientWidth + 1 || r.right > s.right + 0.5, cols: getComputedStyle(li.parentElement!).gridTemplateColumns.split(" ").length };
+      }),
+    );
+    expect(filas).toHaveLength(4);
+    for (const f of filas) expect(f, JSON.stringify(filas)).toEqual({ solapa: false, cortado: false, cols: 1 });
+  });
+
+  test(`K11 «Trayectoria»: el centro de cada punto cae en el eje de la línea (≤ 0,5 px) @${w}`, async ({ page }) => {
+    await abrir(page, "/", w, 900);
+    const d = await page.locator(".linea-tiempo .nodo i").evaluateAll((is) =>
+      is
+        .filter((i) => (i as HTMLElement).offsetParent)
+        .map((i) => {
+          const r = i.getBoundingClientRect();
+          const eje = parseFloat(getComputedStyle(i, "::before").top) + 0.5;
+          return Math.abs(r.top + r.height / 2 - (r.top + eje));
+        }),
+    );
+    expect(d.length).toBeGreaterThan(2);
+    for (const x of d) expect(x, JSON.stringify(d)).toBeLessThanOrEqual(0.5);
+    // Todos los segmentos a la misma altura: una sola línea.
+    const ys = await page.locator(".linea-tiempo .nodo i").evaluateAll((is) => is.filter((i) => (i as HTMLElement).offsetParent).map((i) => Math.round(i.getBoundingClientRect().top * 2)));
+    expect(new Set(ys).size).toBe(1);
+  });
+
+  test(`K16 «Más trabajo»: cada nombre en una sola línea y sin desbordar la losa @${w}`, async ({ page }) => {
+    await abrir(page, "/", w, 900);
+    const m = await page.locator(".k16 .filas b").evaluateAll((bs) =>
+      bs.map((b) => {
+        const r = b.getBoundingClientRect();
+        const losa = b.closest(".k16")!.getBoundingClientRect();
+        const lh = parseFloat(getComputedStyle(b).lineHeight);
+        return { t: b.textContent, lineas: Math.round(r.height / lh), cabe: b.scrollWidth <= Math.ceil(r.width) + 1 && r.right <= losa.right + 0.5 };
+      }),
+    );
+    expect(m.length).toBeGreaterThan(0);
+    for (const x of m) expect({ lineas: x.lineas, cabe: x.cabe }, JSON.stringify(x)).toEqual({ lineas: 1, cabe: true });
+  });
+}

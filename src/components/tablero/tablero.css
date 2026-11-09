@@ -659,7 +659,9 @@
   }
   /* Fila del tablero: año · proyecto · línea (maqueta B, K16). */
   .os .k16 .filas a {
-    grid-template-columns: 72px minmax(0, 160px) minmax(0, 1fr);
+    /* Nombre en una línea (P-E2 §4): columna de 13,5em (≈ 216 px), donde cabe
+       «Royal Caribbean Cruises»; la línea de apoyo cede el ancho. */
+    grid-template-columns: 64px 13.5em minmax(0, 1fr);
     grid-template-areas: "anio b linea";
     min-height: 48px;
     padding: 8px 12px;
@@ -668,11 +670,14 @@
     text-decoration: none;
   }
   .os .k16 .filas .anio { grid-area: anio; }
-  .os .k16 .filas b { grid-area: b; }
+  .os .k16 .filas b {
+    grid-area: b;
+    white-space: nowrap;
+  }
   .os .k16 .filas .linea { grid-area: linea; }
   @media (max-width: 1023px) {
     .os .k16 .filas a {
-      grid-template-columns: 64px minmax(0, 1fr);
+      grid-template-columns: 72px minmax(max-content, 1fr);
       grid-template-areas: "anio b";
     }
     .os .k16 .filas .linea {
