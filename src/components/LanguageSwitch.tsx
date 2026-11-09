@@ -43,7 +43,8 @@ function useCounterpart(): { to: Locale; href: string } {
 
 /**
  * El switch de idioma de la cabecera B: segmento ES · EN siempre visible
- * (04 §4.3), 44 × 44 por opción con el relleno recortado al contenido.
+ * (04 §4.3): dos círculos de 32 px pegados (pulido G2); cada opción mide 44 × 44
+ * y sobresale hacia fuera para el objetivo táctil.
  *
  * `<a>` y nunca `<Link>`: cada idioma es su propio root layout con su `<html
  * lang>`, así que cruzar es una carga completa por definición, y un enlace real
@@ -53,7 +54,7 @@ export default function LanguageSwitch({ className = "" }: { className?: string 
   const locale = useLocale();
   const t = useDict();
   const { href } = useCounterpart();
-  // La burbuja se desliza hacia el otro idioma (160 ms) y se navega a los 140:
+  // La burbuja viaja como una gota hacia el otro idioma (200 ms) y se navega a los 170:
   // el viaje se ve sin retrasar la carga más de lo que dura (09-MOTION-CONTROLES).
   const [yendo, setYendo] = useState(false);
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function LanguageSwitch({ className = "" }: { className?: string 
     ev.preventDefault();
     const destino = ev.currentTarget.href;
     setYendo(true);
-    window.setTimeout(() => window.location.assign(destino), 140);
+    window.setTimeout(() => window.location.assign(destino), 170);
   };
   return (
     <div
