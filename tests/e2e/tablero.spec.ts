@@ -96,6 +96,23 @@ test("390: «Contacto» del dock (home y desde /about) deja el rótulo a 24 px d
   await expect.poll(() => rotuloBajoCabecera(page, "contact")).toBe(24);
 });
 
+/**
+ * Pulido F: la hoja de /about (`.firma`) y la de /experience (`.contador`) siguen cargadas tras
+ * navegar al home y se filtraban a K15 y a los carruseles (+51 y +157 px a 390). Llegando por
+ * el dock, el home mide lo mismo que en carga directa y cumple el presupuesto.
+ */
+for (const desde of ["/about", "/work", "/experience"]) {
+  test(`390: el home mide lo mismo llegando por el dock desde ${desde}`, async ({ page }) => {
+    await abrir(page, "/", 390, 844);
+    const directo = await page.evaluate(() => document.documentElement.scrollHeight);
+    await page.goto(desde, { waitUntil: "networkidle" });
+    await page.locator('.dock a[href$="#contact"]').click();
+    await page.waitForURL(/\/#contact$/);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBe(directo);
+    expect(directo).toBeLessThanOrEqual(5064);
+  });
+}
+
 for (const ruta of ["/", "/en"]) {
   test(`un nombre visible por pantalla y la disponibilidad una vez en el pliegue (escritorio) ${ruta}`, async ({ page }) => {
     await abrir(page, ruta, 1440, 900);
