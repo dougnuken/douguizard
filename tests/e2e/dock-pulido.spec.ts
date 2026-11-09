@@ -135,3 +135,40 @@ test.describe("dock: pulido D", () => {
     }
   });
 });
+
+// Pulido E · «Contacto» desde una página B: el home bajaba en suave desde el
+// scroll heredado y la selección recorría Trabajo → Experiencia → Perfil.
+test.describe("dock: «Contacto» sin viaje ni ida y vuelta (pulido E)", () => {
+  test.use({ isMobile: true, hasTouch: true, viewport: { width: 390, height: 844 } });
+  for (const ruta of ["/about", "/work", "/en/about"]) {
+    test(`${ruta} → Contacto marca el destino de inmediato @390x844`, async ({ page }) => {
+      await page.goto(ruta, { waitUntil: "networkidle" });
+      await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" as ScrollBehavior }));
+      await page.evaluate(() => {
+        const w = window as unknown as { __log: { y: number; activo: string; hash: string }[] };
+        w.__log = [];
+        const t0 = performance.now();
+        const f = () => {
+          const a = document.querySelector(".dock [aria-current]");
+          w.__log.push({ y: Math.round(window.scrollY), activo: a?.getAttribute("href") ?? "", hash: location.hash });
+          if (performance.now() - t0 < 2500) requestAnimationFrame(f);
+        };
+        requestAnimationFrame(f);
+      });
+      await page.locator('.dock a[href$="#contact"]').tap();
+      await page.waitForURL(/#contact$/);
+      await page.waitForTimeout(2600);
+      const log = await page.evaluate(() => (window as unknown as { __log: { y: number; activo: string; hash: string }[] }).__log);
+      const enHome = log.filter((l) => l.hash === "#contact");
+      // Ninguna opción intermedia queda marcada en el home: solo «Contacto».
+      const marcadas = [...new Set(enHome.map((l) => l.activo).filter(Boolean))];
+      expect(marcadas, JSON.stringify(enHome.slice(0, 12))).toEqual(["#contact"]);
+      // Sin viaje: como mucho dos fotogramas entre el scroll heredado y el destino.
+      const yFinal = enHome[enHome.length - 1].y;
+      const intermedios = enHome.filter((l) => l.y > 650 && Math.abs(l.y - yFinal) > 4);
+      expect(intermedios.length, JSON.stringify(enHome.slice(0, 12))).toBeLessThanOrEqual(2);
+      const caja = await page.locator("#contact").boundingBox();
+      expect(caja!.y).toBeLessThan(844 * 0.35);
+    });
+  }
+});
