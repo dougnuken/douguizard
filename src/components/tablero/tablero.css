@@ -958,6 +958,12 @@
       font: 600 var(--t-20) / 1.2 var(--font-display-b);
       color: var(--tinta);
     }
+    /* Pulido F (06-CRITICA-E P2-2): el ancla (#work, #experience, #about, #contact) es la
+       card y el rótulo va encima (su línea, 24 px, + el gap de la columna, 12). Sin
+       sumarlo, el rótulo quedaba 4 px por debajo del canto de la cabecera. */
+    .os [data-seccion] {
+      --rotulo-seccion: calc(1.2 * var(--t-20) + var(--gap));
+    }
     .os .tarjeta {
       padding: 24px;
     }
@@ -1026,9 +1032,12 @@
       width: auto;
       flex: none;
     }
+    /* Pulido F (06-CRITICA-E P2-6): un solo `--gap` entre K5 y «Más trabajo» (la escena ya
+       deja su `--gap` abajo; con el margen aquí eran 24) y entre Contacto y la losa del pie
+       (antes 32): el pie es una losa más del tablero. −32 px de alto del home en móvil. */
     .os-resto {
-      margin: var(--gap) 0 0;
-      padding-bottom: 32px;
+      margin: 0;
+      padding-bottom: var(--gap);
       display: flex;
       flex-direction: column;
       gap: var(--gap);

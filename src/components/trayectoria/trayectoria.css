@@ -39,7 +39,10 @@
     margin-top: 16px;
     max-width: 30em;
   }
-  .contador {
+  /* Pulido F: `.contador` acotado a `.exp`. Sin acotar, la hoja seguía cargada tras navegar
+     /experience → home y volvía sticky con 72 px de relleno los contadores de los
+     carruseles del home (+157 px de alto a 390). */
+  .exp .contador {
     margin-top: 32px;
     display: flex;
     align-items: flex-end;
@@ -558,7 +561,7 @@
     .exp-h1 {
       font-size: var(--t-36);
     }
-    .contador {
+    .exp .contador {
       position: sticky;
       top: 0;
       z-index: 5;

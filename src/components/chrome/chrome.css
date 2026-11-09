@@ -558,9 +558,11 @@
     }
   }
 
-  /* Secciones del home: el ancla deja sitio a la cabecera fija. */
+  /* Secciones del home: el ancla deja sitio a la cabecera fija y 24 px de aire
+     (64 + 24 = 88 en escritorio, 56 + 24 en móvil). En móvil el rótulo visible de la
+     sección va ANTES del ancla y suma su alto (tablero.css, `--rotulo-seccion`). */
   [data-seccion] {
-    scroll-margin-top: var(--cabecera);
+    scroll-margin-top: calc(var(--header-h) + 24px + var(--rotulo-seccion, 0px));
   }
   [data-seccion]:focus {
     outline: none;

@@ -224,13 +224,13 @@
     gap: 4px 16px;
     padding-top: 20px;
     border-top: 1px solid var(--losa-borde);
+    /* Pulido F (06-CRITICA-E P2-1): un solo cuerpo en la base (© y colofón a 12, como en
+       móvil); antes, a 1440, © iba a 14 y el colofón a 12 en la misma línea. */
+    font-size: var(--t-12);
   }
   .pie-b-base p {
     margin: 0;
     grid-column: 1;
-  }
-  .pie-b-colofon {
-    font-size: var(--t-12);
   }
   /* «Volver arriba»: botón circular de 48 px (≥ 44 de toque) con la flecha del sistema. */
   .pie-b-arriba {
@@ -336,7 +336,6 @@
       grid-template-columns: minmax(0, 1fr);
       gap: 2px;
       padding-top: 12px;
-      font-size: var(--t-12);
     }
     /* Con la losa en rejilla, el grid-column/row de un absoluto fija su bloque
        contenedor (CSS Grid §9.2): en auto, el borde de relleno de la losa. Así

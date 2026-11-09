@@ -266,3 +266,38 @@ test.describe("hilo 390", () => {
   }
 });
 });
+
+/**
+ * Pulido F (06-CRITICA-E P2-5): en móvil la cifra fija es el año de INICIO del hito activo
+ * (cambia con la tarjeta, como el círculo que enciende el hilo), no el año que recorre su
+ * periodo («Ago 2017 — Nov 2018» marcaba 2018). Al final del recorrido llega a hoy.
+ */
+test.describe("año fijo 390", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("experience 390: la cifra fija es el año de inicio del hito activo", async ({ page }) => {
+    await page.goto("/experience", { waitUntil: "networkidle" });
+    await page.waitForSelector(".exp[data-montado]");
+    const total = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+    const leer = () =>
+      page.evaluate(() => {
+        const anio = Array.from(document.querySelectorAll<HTMLElement>(".odometro .tira"))
+          .map((t) => String(Math.round(-parseFloat(t.style.transform.replace(/^translateY\(/, "")) || 0)))
+          .join("");
+        const activo = document.querySelector<HTMLElement>(".hito.activo .periodo")?.textContent ?? "";
+        return { anio, inicio: activo.match(/\d{4}/)?.[0] ?? "", periodo: activo };
+      });
+    const vistos = new Set<string>();
+    const n = 30;
+    for (let k = 0; k < n; k++) {
+      await page.evaluate((y) => window.scrollTo(0, y), Math.round((total * k) / n));
+      await page.waitForTimeout(120);
+      const r = await leer();
+      expect(r.anio, `y=${k}/${n} · ${r.periodo}`).toBe(r.inicio);
+      vistos.add(r.anio);
+    }
+    expect(vistos.size, [...vistos].join(" ")).toBeGreaterThanOrEqual(4);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(200);
+    expect((await leer()).anio).toBe(String(new Date().getFullYear()));
+  });
+});

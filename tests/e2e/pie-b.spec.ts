@@ -44,3 +44,17 @@ for (const [ancho, alto] of [[1440, 900], [390, 844]] as const) {
     });
   }
 }
+
+/** Pulido F (06-CRITICA-E P2-1): la fila base del pie lleva un solo cuerpo (© y colofón a 12 px). */
+for (const [ancho, alto] of [[1440, 900], [390, 844]] as const) {
+  for (const ruta of ["/", "/en/about"]) {
+    test(`pie B: © y colofón con el mismo cuerpo ${ruta} @${ancho}`, async ({ page }) => {
+      await page.setViewportSize({ width: ancho, height: alto });
+      await page.goto(ruta, { waitUntil: "networkidle" });
+      const cuerpos = await page.locator(".pie-b-base p").evaluateAll((ps) => ps.map((p) => getComputedStyle(p).fontSize));
+      expect(cuerpos).toHaveLength(2);
+      expect(new Set(cuerpos).size, cuerpos.join(" · ")).toBe(1);
+      expect(cuerpos[0]).toBe("12px");
+    });
+  }
+}

@@ -81,9 +81,12 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
       }
     };
 
-    /** Estado de la escena en el año y. `activoForzado`: el del móvil (por posición). */
-    const enAnio = (y: number, activoForzado?: number) => {
-      const anio = Math.min(Math.floor(hoy), Math.floor(y + 1e-6));
+    /**
+     * Estado de la escena en el año y. `activoForzado`: el del móvil (por posición).
+     * `anioForzado`: la cifra fija del móvil (año de inicio del hito activo).
+     */
+    const enAnio = (y: number, activoForzado?: number, anioForzado?: number) => {
+      const anio = anioForzado ?? Math.min(Math.floor(hoy), Math.floor(y + 1e-6));
       if (anio !== ultimoAnio) {
         ultimoAnio = anio;
         String(anio)
@@ -223,7 +226,8 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
             y = hitos[i].inicio + clamp((c - r.top) / r.height) * (hitos[i].fin - hitos[i].inicio);
           }
         });
-        if (window.scrollY > document.documentElement.scrollHeight - window.innerHeight - 4) y = hoy;
+        const alFinal = window.scrollY > document.documentElement.scrollHeight - window.innerHeight - 4;
+        if (alFinal) y = hoy;
         lis.forEach((li, i) => {
           li.classList.toggle("paso", i < activo);
           // Mismo origen y umbral que la punta del hilo (`c`): el círculo se
@@ -235,7 +239,11 @@ export default function TrayectoriaCliente({ datos }: { datos: DatosTrayectoria 
           const ro = ol.getBoundingClientRect();
           ol.style.setProperty("--fill", `${clamp(c - ro.top, 0, ro.height)}px`);
         }
-        enAnio(y, activo);
+        // Pulido F (06-CRITICA-E P2-5): la cifra fija es el año de INICIO del hito activo
+        // (el mismo umbral que enciende su círculo y cambia la tarjeta), no el `y` que recorre
+        // el periodo: con «Ago 2017 — Nov 2018» marcaba 2018. Como en escritorio (p = pDe(i)),
+        // el hito i se lee desde su año de inicio; al final del recorrido llega a hoy.
+        enAnio(y, activo, alFinal ? undefined : Math.floor(hitos[activo].inicio + 1e-6));
       };
       const alScroll = () => {
         if (!raf) raf = requestAnimationFrame(f);
