@@ -564,7 +564,7 @@ export const caseStudies: CaseStudy[] = [
     // Titulares del cuerpo (P1-3): de `caso.html`, aprobados.
     heads: {
       context: "A sector that ran on files",
-      contributions: "I set the direction and build the prototype",
+      contributions: "I set the direction and built the prototype",
       decisions: "Three rules the platform stands on",
       product: "Clearing an overdue filing, today",
       process: "From files to a signed prototype",
@@ -581,7 +581,7 @@ export const caseStudies: CaseStudy[] = [
     impact:
       "One platform now stands in for a stack of disconnected tools, prototyped in code with AI.",
     context:
-      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build, in code, the prototypes that define the platform: one design system, AI in the loop.",
+      "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and built, in code, the prototypes that define the platform: one design system, AI in the loop.",
     contributions: [
       "**One design system** — 38+ shared components and one step-by-step form pattern keep every screen consistent.",
       "**The sector's real hierarchy** — committees → federations → leagues → clubs → athletes, modeled with cascading approval.",
@@ -681,7 +681,7 @@ export const caseStudies: CaseStudy[] = [
       { label: "Demos hub", href: "https://naowee-tech.github.io/design-naowee-demos-hub/" },
     ],
     credits:
-      "Head of Product at Naowee: I set direction across the business modules and build the prototypes that define them, alongside business analysts, a designer I lead, and engineering teams.",
+      "Head of Product at Naowee: I set direction across the business modules and built the prototypes that define them, alongside business analysts, a designer I lead, and engineering teams.",
     technologies: [
       "Product Strategy",
       "Design Systems",

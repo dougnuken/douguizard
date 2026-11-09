@@ -310,7 +310,7 @@ export const workEs: Record<string, CaseCopy> = {
   "naowee-suid": {
     heads: {
       context: "Un sector que funcionaba con archivos",
-      contributions: "Dirijo el producto y construyo el prototipo",
+      contributions: "Dirigí el producto y construí el prototipo",
       decisions: "Tres reglas que sostienen la plataforma",
       product: "Así se despeja hoy un trámite vencido",
       process: "Del archivo al prototipo firmado",
@@ -323,7 +323,7 @@ export const workEs: Record<string, CaseCopy> = {
     impact:
       "Una sola plataforma reemplaza hoy una pila de herramientas desconectadas, prototipada en código con IA.",
     context:
-      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo en código los prototipos que definen la plataforma: un solo sistema de diseño, con la IA en el proceso.",
+      "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marqué la dirección y construí en código los prototipos que definen la plataforma: un solo sistema de diseño, con la IA en el proceso.",
     contributions: [
       "**Un solo sistema de diseño**: más de 38 componentes compartidos y un solo patrón de formulario por pasos mantienen coherente cada pantalla.",
       "**La jerarquía real del sector**: comités → federaciones → ligas → clubes → deportistas, modelada con aprobación en cascada.",
@@ -393,7 +393,7 @@ export const workEs: Record<string, CaseCopy> = {
     ],
     links: [{ label: "Sistema de diseño" }, { label: "Hub de demos" }],
     credits:
-      "Head of Product en Naowee: marco la dirección de los módulos de negocio y construyo los prototipos que los definen, junto a analistas de negocio, un diseñador que lidero y los equipos de ingeniería.",
+      "Head of Product en Naowee: marqué la dirección de los módulos de negocio y construí los prototipos que los definen, junto a analistas de negocio, un diseñador que lideré y los equipos de ingeniería.",
     technologies: [
       "Estrategia de producto",
       "Sistemas de diseño",

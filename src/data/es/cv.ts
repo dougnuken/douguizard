@@ -15,12 +15,12 @@ export const experiencesEs: Record<
 > = {
   naowee: {
     summary:
-      "Dirección de producto de SUID, la plataforma construida para el sistema deportivo de Colombia. Marco la dirección de ocho módulos de negocio y construyo los prototipos que los definen.",
+      "Dirección de producto de SUID, la plataforma construida para el sistema deportivo de Colombia. Marqué la dirección de ocho módulos de negocio y construí los prototipos que los definen.",
     impact: [
-      "Dirijo con un equipo de 2 personas el producto de SUID, plataforma del sistema deportivo de Colombia: 8 módulos, entre ellos la inspección, vigilancia y control de ~1.200 organizaciones deportivas y sus 30 trámites regulatorios.",
+      "Dirigí con un equipo de 2 personas el producto de SUID, plataforma del sistema deportivo de Colombia: 8 módulos, entre ellos la inspección, vigilancia y control de ~1.200 organizaciones deportivas y sus 30 trámites regulatorios.",
       "Construí el design system del producto: 38+ componentes, un shell canónico y una receta única de asistente que mantiene 130+ pantallas en un mismo lenguaje.",
       "Modelé la jerarquía real del sector (comités, federaciones, ligas, clubes y deportistas) con aprobación en cascada, en 45+ estados y 15 roles.",
-      "Reemplacé especificaciones por prototipos funcionales en código, construidos con IA, que los analistas validan historia por historia contra el producto en marcha.",
+      "Reemplacé especificaciones por prototipos funcionales en código, construidos con IA, que los analistas validaron historia por historia contra el producto en marcha.",
     ],
   },
   mercadolibre: {
@@ -162,6 +162,6 @@ export const languagesEs: Language[] = [
 
 export const profileEs: CvProfile = {
   summary: (years) =>
-    `Head of Product y líder de sistemas de diseño con ${years} años en diseño de producto digital. Dirijo el producto de Naowee, la plataforma del sistema deportivo de Colombia, y construyo prototipos funcionales en código con IA. Antes fui Tech Lead de Andes, el design system de Mercadolibre en 18 países, y durante 5 años y 2 meses Design System Gatekeeper del Banco de Occidente.`,
+    `Head of Product y líder de sistemas de diseño con ${years} años en diseño de producto digital. Dirigí el producto de Naowee, la plataforma del sistema deportivo de Colombia, y construí prototipos funcionales en código con IA. Antes fui Tech Lead de Andes, el design system de Mercadolibre en 18 países, y durante 5 años y 2 meses Design System Gatekeeper del Banco de Occidente.`,
   highlights: ["18 países", "400+ diseñadores", "2.000+ ingenieros", "12+ squads", "130+ pantallas"],
 };

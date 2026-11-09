@@ -80,7 +80,7 @@ export default function CardCaso({
     : exp && !exp.end
       ? `${t.ahora} · ${exp.role}`
       : exp
-        ? `${exp.company.name} · ${exp.start.year}–${exp.end?.year ?? ""}`
+        ? `${exp.company.name} · ${exp.start.year === exp.end?.year ? exp.start.year : `${exp.start.year}–${exp.end?.year ?? ""}`}`
         : copy.ceja;
   const titulo = c.project.split(" — ")[0];
   const id = `caso-${slug}`;

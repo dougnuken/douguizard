@@ -8,7 +8,7 @@
  * imagen del héroe en `hero.ts`, titular EN en el diccionario) solo se anotan.
  */
 
-/** D1 · Qué ofrece el punto de disponible. Lo de hoy: consultoría puntual. */
+/** D1 · Qué ofrece el punto de disponible. Lo de hoy (nov 2026, terminó Naowee): empezar de inmediato, roles y consultoría. */
 export const DISPONIBILIDADES = ["consultoria", "roles", "ambas", "no-disponible"] as const;
 export type Disponibilidad = (typeof DISPONIBILIDADES)[number];
 
@@ -77,7 +77,7 @@ export interface Decisiones {
 }
 
 export const decisiones: Decisiones = {
-  disponibilidad: "consultoria",
+  disponibilidad: "ambas",
   ordenCasos: "home.ordenCasos",
   rutasPerfil: "separadas",
   // 8 nov (Doug): el CV en blanco parecía una página aislada; ahora es oscuro como el resto, sin toggle.

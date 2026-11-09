@@ -30,7 +30,7 @@ export interface Experience {
   /** Optional shorter form for narrow rows. Same words, fewer of them. */
   roleShort?: string;
   start: YearMonth;
-  /** Omitted = current role. Exactly one experience may omit it. */
+  /** Omitted = open role. At most one experience may omit it (none today: Naowee ended in Nov 2026). */
   end?: YearMonth;
   location: {
     city?: string;
@@ -97,17 +97,19 @@ export const experiences: Experience[] = [
     company: { name: "Naowee" },
     role: "Head of Product",
     start: { year: 2026, month: 1 },
+    // ⚠️ CONFIRMAR DOUG — fin del proyecto: nov 2026 (la fecha exacta no estaba en los datos).
+    end: { year: 2026, month: 11 },
     location: { city: "Barranquilla", country: "Colombia", mode: "remote" },
     summary:
-      "Product direction for SUID, the platform built for Colombia's sports system. I set direction across eight business modules and build the prototypes that define them.",
+      "Product direction for SUID, the platform built for Colombia's sports system. I set direction across eight business modules and built the prototypes that define them.",
     impact: [
-      "Lead SUID, the platform for Colombia's sports system, with a team of 2: 8 business modules, including inspection and oversight of ~1,200 sports organizations and their 30 regulatory procedures.",
+      "Led SUID, the platform for Colombia's sports system, with a team of 2: 8 business modules, including inspection and oversight of ~1,200 sports organizations and their 30 regulatory procedures.",
       "Built the product's design system: 38+ components, a canonical shell and a single wizard recipe that keeps 130+ screens in one language.",
       "Modeled the sector's real hierarchy (committees, federations, leagues, clubs and athletes) with cascading approval across 45+ states and 15 roles.",
-      "Replaced specs with working prototypes in code, built with AI, that analysts sign off story by story against the running product.",
+      "Replaced specs with working prototypes in code, built with AI, that analysts signed off story by story against the running product.",
     ],
     caseSlug: "naowee-suid",
-    era: "current",
+    era: "core",
   },
   {
     id: "mercadolibre",
@@ -354,7 +356,7 @@ export interface CvProfile {
 
 export const profile: CvProfile = {
   summary: (years) =>
-    `Head of Product and design systems lead with ${years} years in digital product design. I lead product at Naowee, the platform for Colombia's sports system, and build working prototypes in code with AI. Before that I was Tech Lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months Design System Gatekeeper at Banco de Occidente.`,
+    `Head of Product and design systems lead with ${years} years in digital product design. I led product at Naowee, the platform for Colombia's sports system, and built working prototypes in code with AI. Before that I was Tech Lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months Design System Gatekeeper at Banco de Occidente.`,
   highlights: ["18 countries", "400+ designers", "2,000+ engineers", "12+ squads", "130+ screens"],
 };
 

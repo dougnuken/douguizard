@@ -11,7 +11,7 @@ import type { Locale } from "./config";
 const es = {
   k2: {
     claim: "Dirijo el producto. Después, lo construyo.",
-    sub: (paises: string) => `Hoy, Naowee. Antes, Andes: el sistema de diseño de Mercadolibre en ${paises} países.`,
+    sub: (paises: string) => `Último rol: Naowee. Antes, Andes: el sistema de diseño de Mercadolibre en ${paises} países.`,
     verCasos: "Ver casos",
     cv: "Descargar CV (PDF)",
     cvAria: "Descargar mi hoja de vida en PDF",
@@ -19,7 +19,8 @@ const es = {
     estado: {
       consultoria: "Disponible para consultoría",
       roles: "Abierto a roles",
-      ambas: "Abierto a roles y consultoría",
+      // Naowee terminó (nov 2026): la disponibilidad que se muestra es inmediata.
+      ambas: "Disponible para empezar de inmediato",
       "no-disponible": "",
     } as Record<Disponibilidad, string>,
   },
@@ -64,7 +65,7 @@ const es = {
     leadSinRoles: "Una consultoría o el caso de Andes en una llamada: escríbeme.",
     copiar: { reposo: "Copiar correo", hecho: "Copiado", error: "No se pudo copiar. Selecciónalo a mano." },
     carta: "Carta de presentación",
-    disponibilidad: (empresa: string) => `Lidero producto en ${empresa} y tomo consultorías puntuales en paralelo.`,
+    disponibilidad: (empresa: string) => `Terminé mi proyecto en ${empresa} y puedo empezar de inmediato.`,
   },
 };
 
@@ -73,14 +74,14 @@ export type DictTablero = typeof es;
 const en: DictTablero = {
   k2: {
     claim: "I direct the product. Then I build it.",
-    sub: (paises: string) => `Now at Naowee. Before that, Andes: Mercadolibre's design system in ${paises} countries.`,
+    sub: (paises: string) => `Last role: Naowee. Before that, Andes: Mercadolibre's design system in ${paises} countries.`,
     verCasos: "See case studies",
     cv: "Download CV (PDF)",
     cvAria: "Download my CV as a PDF",
     estado: {
       consultoria: "Open to consulting",
       roles: "Open to roles",
-      ambas: "Open to roles and consulting",
+      ambas: "Available to start immediately",
       "no-disponible": "",
     },
   },
@@ -124,7 +125,7 @@ const en: DictTablero = {
     leadSinRoles: "A consulting project, or the Andes case on a call: write to me.",
     copiar: { reposo: "Copy email", hecho: "Copied", error: "Couldn't copy. Select it instead." },
     carta: "Cover letter",
-    disponibilidad: (empresa: string) => `I lead product at ${empresa} and take on selected consulting alongside it.`,
+    disponibilidad: (empresa: string) => `I finished my project at ${empresa} and can start immediately.`,
   },
 };
 

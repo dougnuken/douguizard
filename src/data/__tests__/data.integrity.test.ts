@@ -5,12 +5,15 @@ import { experiences, type YearMonth } from "@/data/cv";
 import { caseStudies, getCaseStudy } from "@/data/work";
 import { testimonials } from "@/data/testimonials";
 import { site } from "@/data/site";
+import { getExperience, latestExperience } from "@/lib/career";
 
 const asMonths = (p: YearMonth) => p.year * 12 + ((p.month ?? 1) - 1);
 
 describe("cv + work integrity", () => {
-  it("exactly one experience is current (no end)", () => {
-    expect(experiences.filter((e) => e.end === undefined)).toHaveLength(1);
+  it("at most one experience is open (no end); none today, Naowee ended in Nov 2026", () => {
+    expect(experiences.filter((e) => e.end === undefined).length).toBeLessThanOrEqual(1);
+    expect(getExperience("naowee").end).toEqual({ year: 2026, month: 11 });
+    expect(latestExperience().id).toBe("naowee");
   });
 
   it("every caseSlug on an experience resolves to a case study", () => {

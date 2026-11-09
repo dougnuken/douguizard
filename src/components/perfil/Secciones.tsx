@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { lockup } from "@/app/fonts/lockup";
 import DotMatrix from "@/components/sistema/DotMatrix";
+import Bandera from "@/components/sistema/Bandera";
 import Estado from "@/components/sistema/Estado";
 import Losa from "@/components/sistema/Losa";
 import { getCv } from "@/data/cv";
@@ -10,7 +11,7 @@ import { getTestimonial, testimonials } from "@/data/testimonials";
 import { getCaseMeta } from "@/data/work";
 import { localePath, type Locale } from "@/i18n/config";
 import { paginasDict } from "@/i18n/paginas";
-import { currentExperience } from "@/lib/career";
+import { latestExperience } from "@/lib/career";
 
 /**
  * Las secciones de `/about` bajo la portada (07 F2, `about.html`), en orden:
@@ -77,12 +78,12 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const d = getDatos(locale);
   const s = getSite(locale);
-  const actual = currentExperience();
+  const actual = latestExperience();
   const filas: { dt: string; dd: React.ReactNode }[] = [
     { dt: t.rotulos.base, dd: d.base },
     { dt: t.rotulos.zona, dd: t.zonaValor },
     {
-      dt: t.rotulos.actualmente,
+      dt: t.rotulos.ultimoRol,
       dd: (
         <>
           {actual.roleShort ?? actual.role} · <span translate="no">{actual.company.name}</span>
@@ -90,7 +91,19 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
       ),
     },
     { dt: t.rotulos.disponible, dd: <Estado>{s.availability.note}</Estado> },
-    { dt: t.rotulos.idiomas, dd: d.idiomas.map((l) => `${l.nombre} (${l.nivel})`).join(" · ") },
+    {
+      dt: t.rotulos.idiomas,
+      dd: (
+        <ul className="idiomas">
+          {d.idiomas.map((l, i) => (
+            <li key={l.nombre}>
+              <Bandera pais={i === 0 ? "co" : "us"} />
+              {l.nombre} ({l.nivel})
+            </li>
+          ))}
+        </ul>
+      ),
+    },
   ];
   return (
     <div className="rejilla datos-fila seccion">
@@ -132,19 +145,35 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
   );
 }
 
-/** «Dónde he trabajado»: `getMarcasPerfil()` en la voz Geologica, en 2 filas de 4. */
+/**
+ * «Dónde he trabajado»: carrusel marquee (solo CSS) con `getMarcasPerfil()` en
+ * la voz Geologica. Dos copias de la lista para el bucle sin salto; la segunda
+ * es `aria-hidden`. Con movimiento reducido queda la primera, en rejilla.
+ * Los logos oficiales no se pudieron obtener (ver INFORME-G3): cada marca es un
+ * wordmark tipográfico; cambiar `{m}` por un `<svg fill="currentColor">` basta.
+ */
 export function Marcas({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
+  const marcas = getMarcasPerfil();
   return (
     <section className="empresas" aria-labelledby="perfil-empresas">
       <h2 id="perfil-empresas" className="ceja">
         {t.empresas}
       </h2>
-      <ul className={`marcas ${lockup.fuente.variable}`} translate="no">
-        {getMarcasPerfil().map((m) => (
-          <li key={m}>{m}</li>
-        ))}
-      </ul>
+      <div className={`marquee ${lockup.fuente.variable}`} translate="no" role="group" aria-label={t.empresas} tabIndex={0}>
+        <div className="marquee-pista">
+          <ul className="marquee-lista marcas" role="list">
+            {marcas.map((m) => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+          <ul className="marquee-lista marcas" role="list" aria-hidden="true">
+            {marcas.map((m) => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }

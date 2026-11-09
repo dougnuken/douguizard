@@ -78,15 +78,15 @@ const es = {
     rotulos: {
       base: "Base",
       zona: "Zona horaria",
-      actualmente: "Actualmente",
-      disponible: "Disponible para",
+      ultimoRol: "Último rol",
+      disponible: "Disponibilidad",
       idiomas: "Idiomas",
     },
     zonaValor: "UTC-5, sin horario de verano",
     meta: {
       titulo: "Perfil",
       descripcion: (cargo: string, empresa: string) =>
-        `Diseñador de producto que construye: ${cargo} en ${empresa}, antes Andes en Mercadolibre. Cómo trabajo, qué hago y cómo contactarme.`,
+        `Diseñador de producto que construye. Último rol: ${cargo} en ${empresa}; antes, Andes en Mercadolibre. Disponible de inmediato.`,
     },
   },
   trayectoria: {
@@ -181,15 +181,15 @@ const en: DictPaginas = {
     rotulos: {
       base: "Based in",
       zona: "Time zone",
-      actualmente: "Currently",
-      disponible: "Open to",
+      ultimoRol: "Last role",
+      disponible: "Availability",
       idiomas: "Languages",
     },
     zonaValor: "UTC-5, no daylight saving (same as New York in winter)",
     meta: {
       titulo: "About",
       descripcion: (cargo: string, empresa: string) =>
-        `A product designer who builds: ${cargo} at ${empresa}, previously Andes at Mercadolibre. How I work, what I do and how to reach me.`,
+        `A product designer who builds. Last role: ${cargo} at ${empresa}; before that, Andes at Mercadolibre. Available to start immediately.`,
     },
   },
   trayectoria: {

@@ -73,6 +73,14 @@
     height: 1em;
     text-align: center;
   }
+  /* «Hoy» no es disponibilidad: conserva el punto láser rojo, sin pulso. */
+  .hoy-chip.estado::before {
+    background: var(--laser-nucleo);
+    box-shadow:
+      0 0 0 1px var(--laser),
+      0 0 8px 2px var(--laser-halo);
+    animation: none;
+  }
   .hoy-chip {
     margin-bottom: 16px;
     color: var(--tinta);
