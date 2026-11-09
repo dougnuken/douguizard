@@ -31,6 +31,13 @@
     min-height: 0;
     background-color: var(--vidrio-cromo);
     block-size: var(--pill-alto);
+    padding-inline-start: 4px;
+  }
+  /* Pulido D: el disco «d» concéntrico con su pastilla: 4 px de inset en los
+     cuatro lados (alto de la pastilla − 8) y radio interior = exterior − 4. */
+  .cab-marca .wordmark-d {
+    inline-size: calc(var(--pill-alto) - 8px);
+    block-size: calc(var(--pill-alto) - 8px);
   }
   .cab-pills {
     position: absolute;
@@ -103,8 +110,11 @@
     place-items: center;
     inline-size: 44px;
     block-size: 44px;
-    /* La burbuja es el content-box: 32 × 32, un círculo (antes 40 × 32, ovalada). */
-    padding: 6px;
+    /* La burbuja es el content-box: 32 × 32, un círculo. Pulido D: concéntrica
+       con el grupo (40 px de alto): 4 px de inset en los cuatro lados, así que el
+       relleno es asimétrico (2 px del grupo + 2 px hacia el canto, 10 px hacia
+       la otra opción) y el radio exterior (20) = radio interior (16) + inset (4). */
+    padding: 6px 10px 6px 2px;
     background-clip: content-box;
     border-radius: var(--r-pill);
     font: 500 var(--t-14) / 1 var(--font-texto);
@@ -113,6 +123,9 @@
     transition:
       color var(--d-press) var(--curva-salida),
       scale var(--d-press) var(--curva-salida);
+  }
+  .idioma-op:last-child {
+    padding: 6px 2px 6px 10px;
   }
   .idioma-op[aria-current] {
     background-color: var(--blanco);
@@ -129,12 +142,12 @@
   /* Al pulsar el otro idioma la burbuja se desliza hacia él (160 ms) y luego se
      navega (`LanguageSwitch`): cada idioma es otro documento, así que el viaje
      ocurre antes de salir. La burbuja de 32 px queda sobre el content-box de la
-     opción actual (2 px del grupo + 6 px de la opción); la otra está a 44 px. */
+     opción actual (4 px del canto); la otra está a 52 px. */
   .idioma::before {
     content: "";
     position: absolute;
     z-index: -1;
-    left: 8px;
+    left: 4px;
     top: calc(50% - 16px);
     inline-size: 32px;
     block-size: 32px;
@@ -144,7 +157,7 @@
     pointer-events: none;
   }
   .idioma[data-actual="en"]::before {
-    translate: 44px 0;
+    translate: 52px 0;
   }
   .idioma[data-yendo]::before {
     opacity: 1;
@@ -285,6 +298,10 @@
     .cab-marca .wordmark {
       block-size: 44px;
     }
+    .cab-marca .wordmark-d {
+      inline-size: 36px;
+      block-size: 36px;
+    }
     /* En `/cv`, el tema pasa al menú: la fila no cabe a 375 con él. */
     .cab-acciones .theme-toggle {
       display: none;
@@ -304,7 +321,7 @@
       display: none;
     }
     .cab-marca .wordmark {
-      padding-inline-end: 6px;
+      padding-inline-end: 4px;
     }
   }
 
@@ -532,12 +549,12 @@
     translate: 0 0;
   }
   to {
-    translate: 44px 0;
+    translate: 52px 0;
   }
 }
 @keyframes idioma-vuelve {
   from {
-    translate: 44px 0;
+    translate: 52px 0;
   }
   to {
     translate: 0 0;

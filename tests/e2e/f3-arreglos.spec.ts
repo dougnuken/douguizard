@@ -54,3 +54,64 @@ for (const [w, h] of [[1280, 720], [1366, 768]] as const) {
     expect(r.partidos, "ceja/eyebrow en una sola línea").toEqual([]);
   });
 }
+
+// Pulido D · el círculo interior de ES/EN y del wordmark es concéntrico con su
+// pastilla: mismo inset en los cuatro lados (±0,5 px) y radio exterior = interior + inset.
+for (const ancho of [1440, 390]) {
+  for (const ruta of ["/about", "/en/about"]) {
+    test(`pulido D · inset concéntrico ${ruta} @${ancho}`, async ({ page }) => {
+      await page.setViewportSize({ width: ancho, height: 900 });
+      await page.goto(ruta, { waitUntil: "networkidle" });
+      const pares = await page.evaluate(() => {
+        const medir = (exterior: Element, interior: Element) => {
+          const e = exterior.getBoundingClientRect();
+          const i = interior.getBoundingClientRect();
+          return {
+            arriba: i.top - e.top,
+            abajo: e.bottom - i.bottom,
+            izq: i.left - e.left,
+            der: e.right - i.right,
+            rExt: Math.min(parseFloat(getComputedStyle(exterior).borderTopLeftRadius), e.height / 2),
+            rInt: Math.min(parseFloat(getComputedStyle(interior).borderTopLeftRadius), i.height / 2),
+          };
+        };
+        const grupo = document.querySelector(".idioma")!;
+        const activa = grupo.querySelector(".idioma-op[aria-current]")!;
+        // La burbuja es el content-box de la opción activa.
+        const cs = getComputedStyle(activa);
+        const r = activa.getBoundingClientRect();
+        const m = medir(grupo, activa);
+        const b = new DOMRect(
+          r.left + parseFloat(cs.paddingLeft),
+          r.top + parseFloat(cs.paddingTop),
+          r.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight),
+          r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom),
+        );
+        const g = grupo.getBoundingClientRect();
+        const idioma = {
+          ...m,
+          arriba: b.top - g.top,
+          abajo: g.bottom - b.bottom,
+          // El canto propio de la burbuja (izq. en ES, der. en EN), y el cruzado contra el alto.
+          canto: activa === grupo.firstElementChild ? b.left - g.left : g.right - b.right,
+          rInt: Math.min(parseFloat(cs.borderTopLeftRadius), b.height / 2),
+          ancho: b.width,
+          alto: b.height,
+        };
+        const marca = medir(document.querySelector(".cab-marca .wordmark")!, document.querySelector(".cab-marca .wordmark-d")!);
+        return { idioma, marca };
+      });
+      const { idioma, marca } = pares;
+      expect(idioma.ancho, "burbuja redonda").toBeCloseTo(idioma.alto, 0);
+      for (const lado of [idioma.arriba, idioma.abajo, idioma.canto]) {
+        expect(Math.abs(lado - 4), `ES/EN inset ${JSON.stringify(idioma)}`).toBeLessThanOrEqual(0.5);
+      }
+      expect(Math.abs(idioma.rExt - (idioma.rInt + 4)), "ES/EN radios").toBeLessThanOrEqual(0.5);
+      for (const lado of [marca.arriba, marca.abajo, marca.izq]) {
+        expect(Math.abs(lado - 4), `wordmark inset ${JSON.stringify(marca)}`).toBeLessThanOrEqual(0.5);
+      }
+      expect(Math.abs(marca.rExt - (marca.rInt + 4)), "wordmark radios").toBeLessThanOrEqual(0.5);
+      if (ancho < 360) expect(Math.abs(marca.der - 4)).toBeLessThanOrEqual(0.5);
+    });
+  }
+}
