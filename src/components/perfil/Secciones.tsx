@@ -47,12 +47,12 @@ export function LoQueHago({ locale }: { locale: Locale }) {
   );
 }
 
-/** «Cómo trabajo» (`#craft`): losa clara, 4 nodos cosidos por el hilo. */
+/** «Cómo trabajo» (`#craft`): losa oscura, 4 nodos cosidos por el hilo. */
 export function ComoTrabajo({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const { pasos } = getOficioPerfil(locale);
   return (
-    <Losa as="section" superficie="clara" className="seccion craft" id="craft" aria-labelledby="perfil-como">
+    <Losa as="section" superficie="losa" className="seccion craft" id="craft" aria-labelledby="perfil-como">
       <h2 id="perfil-como" className="t-seccion">
         {t.como}
       </h2>

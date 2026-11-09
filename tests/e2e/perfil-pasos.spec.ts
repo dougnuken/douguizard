@@ -26,3 +26,27 @@ for (const ancho of [1440, 1280]) {
     }
   });
 }
+
+/* Pulido E2 §1: losa oscura y láser por el centro de los nodos. */
+for (const w of [1440, 390]) {
+  test(`«Cómo trabajo» de /about: losa oscura y nodos centrados en el láser @${w}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.setViewportSize({ width: w, height: 900 });
+    await page.goto("/about");
+    const craft = page.locator("section.craft");
+    await expect(craft).toHaveAttribute("data-superficie", "losa");
+    const d = await craft.evaluate((s) => {
+      const ol = s.querySelector(".pasos")!;
+      const o = ol.getBoundingClientRect();
+      const cs = getComputedStyle(ol, "::before");
+      const vertical = cs.width === "1px";
+      const eje = vertical ? o.left + parseFloat(cs.left) + 0.5 : o.top + parseFloat(cs.top) + 0.5;
+      return [...s.querySelectorAll(".nodo")].map((n) => {
+        const r = n.getBoundingClientRect();
+        return Math.abs((vertical ? r.left + r.width / 2 : r.top + r.height / 2) - eje);
+      });
+    });
+    expect(d).toHaveLength(4);
+    for (const x of d) expect(x, JSON.stringify(d)).toBeLessThanOrEqual(0.5);
+  });
+}
