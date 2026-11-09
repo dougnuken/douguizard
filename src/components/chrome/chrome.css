@@ -115,7 +115,8 @@
        relleno es asimétrico (2 px del grupo + 2 px hacia el canto, 10 px hacia
        la otra opción) y el radio exterior (20) = radio interior (16) + inset (4). */
     padding: 6px 10px 6px 2px;
-    background-clip: content-box;
+    position: relative;
+    isolation: isolate;
     border-radius: var(--r-pill);
     font: 500 var(--t-14) / 1 var(--font-texto);
     color: var(--tinta-2-vidrio);
@@ -127,9 +128,26 @@
   .idioma-op:last-child {
     padding: 6px 2px 6px 10px;
   }
+  /* Pulido E: la burbuja es un ::after propio de 32 × 32 con radio 50 %. Antes era
+     el content-box con `background-clip`, que heredaba radios elípticos del relleno
+     asimétrico (20/12 px en horizontal, 16 en vertical) y se veía como un huevo. */
+  .idioma-op::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 6px 10px 6px 2px;
+    border-radius: 50%;
+    background: var(--blanco);
+    opacity: 0;
+  }
+  .idioma-op:last-child::after {
+    inset: 6px 2px 6px 10px;
+  }
   .idioma-op[aria-current] {
-    background-color: var(--blanco);
     color: var(--tinta-osc);
+  }
+  .idioma-op[aria-current]::after {
+    opacity: 1;
   }
   a.idioma-op:active {
     scale: 0.96;
@@ -167,8 +185,10 @@
     animation-name: idioma-vuelve;
   }
   .idioma[data-yendo] .idioma-op[aria-current] {
-    background-color: transparent;
     color: var(--tinta-2-vidrio);
+  }
+  .idioma[data-yendo] .idioma-op[aria-current]::after {
+    opacity: 0;
   }
   .idioma[data-yendo] a.idioma-op {
     color: var(--tinta-osc);
