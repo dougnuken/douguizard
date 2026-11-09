@@ -3,6 +3,7 @@ import { lockup } from "@/app/fonts/lockup";
 import DotMatrix from "@/components/sistema/DotMatrix";
 import Estado from "@/components/sistema/Estado";
 import Losa from "@/components/sistema/Losa";
+import PasosCraft from "@/components/perfil/PasosCraft";
 import { getCv } from "@/data/cv";
 import { getDatos, getMarcasPerfil, getOficioPerfil } from "@/data/perfil";
 import { getSite } from "@/data/site";
@@ -47,7 +48,7 @@ export function LoQueHago({ locale }: { locale: Locale }) {
   );
 }
 
-/** «Cómo trabajo» (`#craft`): losa oscura, 4 nodos cosidos por el hilo. */
+/** «Cómo trabajo» (`#craft`): losa oscura, 4 nodos cosidos por el hilo; en secuencia al entrar en vista (G4, `PasosCraft`). */
 export function ComoTrabajo({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const { pasos } = getOficioPerfil(locale);
@@ -56,7 +57,7 @@ export function ComoTrabajo({ locale }: { locale: Locale }) {
       <h2 id="perfil-como" className="t-seccion">
         {t.como}
       </h2>
-      <ol className="pasos">
+      <PasosCraft>
         {pasos.map((p, i) => (
           <li key={p.title}>
             <span className="nodo" aria-hidden="true" />
@@ -67,7 +68,7 @@ export function ComoTrabajo({ locale }: { locale: Locale }) {
             <p className="apoyo">{p.body}</p>
           </li>
         ))}
-      </ol>
+      </PasosCraft>
     </Losa>
   );
 }
