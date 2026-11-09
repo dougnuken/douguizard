@@ -36,11 +36,39 @@ export function alInteractuar(cb: () => void): () => void {
   };
 }
 
-/** `true` desde la primera interacción; `false` en el servidor y en la hidratación. */
-export function useInteraccion(): boolean {
+let libre = false;
+let iniciado = false;
+const avisosLibre = new Set<() => void>();
+
+function marcarLibre() {
+  libre = true;
+  avisosLibre.forEach((cb) => cb());
+  avisosLibre.clear();
+}
+
+/**
+ * `true` cuando ya se puede hacer trabajo secundario (prefetch): en escritorio
+ * (≥ 1024) desde la hidratación, como antes; por debajo, tras la primera
+ * interacción y un hueco libre (`requestIdleCallback`, ≤ 1,5 s), para no caer
+ * encima de la hidratación ni del primer gesto. `false` en el servidor.
+ */
+export function useTrabajoSecundario(): boolean {
   return useSyncExternalStore(
-    (cb) => (ocurrio ? () => {} : alInteractuar(cb)),
-    () => ocurrio,
+    (cb) => {
+      if (libre) return () => {};
+      avisosLibre.add(cb);
+      if (!iniciado) {
+        iniciado = true;
+        if (window.matchMedia("(min-width: 1024px)").matches) queueMicrotask(marcarLibre);
+        else
+          alInteractuar(() => {
+            const ric = window.requestIdleCallback ?? ((f: () => void) => window.setTimeout(f, 1));
+            ric(marcarLibre, { timeout: 1500 } as IdleRequestOptions);
+          });
+      }
+      return () => avisosLibre.delete(cb);
+    },
+    () => libre,
     () => false,
   );
 }
