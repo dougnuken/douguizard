@@ -22,7 +22,7 @@ Rama `claude/douguizard-portfolio-redesign-9ivnau`. Sin despliegue. No se tocaro
 - **Prueba** (`pie-b.spec.ts`, 8 casos: ES/EN × 1440/390): wordmark, cierre, «Barranquilla · UTC-5», orden exacto de los 8 enlaces, botón circular ≥ 44 px con radio 50 %, ningún `a[href="#main"]`, sin scroll horizontal, losa por encima del dock y el botón deja `scrollY = 0`.
 
 ## Verificación
-lint ✔ · tsc ✔ · vitest 258 ✔ · build ✔ · Playwright completo: 577 ✔ / 1 ✘ (el presupuesto de alto del home a 390 con la primera versión del pie); tras compactar el pie móvil, las 222 pruebas de las suites afectadas (pie, tablero, layout, f7, teclado, a11y, dock, f3, controles) ✔. Total esperado: **578** (base 571 + 3 dock + 8 pie − ya contadas en la base las de f3), sin `skip` ni `retries`.
+lint ✔ · tsc ✔ · vitest 258 ✔ · build ✔ · Playwright completo: 577 ✔ / 1 ✘ (el presupuesto de alto del home a 390 con la primera versión del pie); tras compactar el pie móvil, las 222 pruebas de las suites afectadas (pie, tablero, layout, f7, teclado, a11y, dock, f3, controles) ✔. La corrida completa contó 578 pruebas (incluye las 11 nuevas: 3 del dock y 8 del pie), sin `skip` ni `retries`; no se repitió completa tras el ajuste final por el límite de uso.
 
 ## Capturas (build + `next start`)
 `zoom-idioma-{es,en}.png` (×4), `footer-1440-{es,en}.png`, `footer-390-{es,en}.png`, `dock-contacto-390.webm`.
