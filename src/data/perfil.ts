@@ -179,20 +179,20 @@ export function getOficioPerfil(locale: Locale): { hago: Entrada[]; pasos: Entra
       ],
       pasos: [
         {
-          title: "Leer el dominio antes de dibujar.",
-          body: `Antes de que exista una pantalla, mapeo cómo funciona la cosa de verdad. En la inspección de ${company} fueron más de 45 estados y 15 roles: los estados eran el producto.`,
+          title: "Entender el problema y definir qué se mide.",
+          body: `Investigo con personas y datos, y uso IA para sintetizar. Acuerdo el resultado y la métrica antes de dibujar. En ${company}: más de 45 estados y 15 roles.`,
         },
         {
-          title: "El lenguaje antes que las pantallas.",
-          body: "La falla típica son ocho módulos con ocho dialectos. Construyo primero el sistema y hago que todos lo respeten, yo incluido: si le falta algo, se extiende el sistema.",
+          title: "Explorar rápido, en código real.",
+          body: "Con IA exploro varias direcciones y llevo la mejor a un prototipo funcional con roles y estados reales. El prototipo es la especificación, no un mockup.",
         },
         {
-          title: "El prototipo es la especificación.",
-          body: "Lo que el negocio firma es un prototipo con roles y estados reales, recorrido una historia a la vez. Los desacuerdos salen cuando todavía son baratos.",
+          title: "Validar con usuarios antes de construir.",
+          body: "Pongo el prototipo frente a usuarios y al negocio, una historia a la vez. Los desacuerdos y los malentendidos salen cuando todavía son baratos.",
         },
         {
-          title: "Lanzar, y después escuchar.",
-          body: "El uso diario muestra lo que ninguna especificación mostró. En olbo fue un error de zona horaria que dañaba el color de noche: se volvió una decisión, una prueba y una versión nueva.",
+          title: "Construir con ingeniería, medir e iterar.",
+          body: "Construyo junto a ingeniería y mido contra la métrica. En olbo, un error de zona horaria dañaba el color de noche: se volvió decisión, prueba y versión nueva.",
         },
       ],
     };
@@ -214,20 +214,20 @@ export function getOficioPerfil(locale: Locale): { hago: Entrada[]; pasos: Entra
     ],
     pasos: [
       {
-        title: "Read the domain before drawing.",
-        body: `Before a screen exists, I map how the thing actually works. For ${company}'s inspection flow that was 45+ states and 15 roles: the states were the product.`,
+        title: "Understand the problem, define what we measure.",
+        body: `I research with people and data, and use AI to synthesise. I agree the outcome and the metric before drawing. At ${company}: 45+ states and 15 roles.`,
       },
       {
-        title: "The language before the screens.",
-        body: "The usual failure is eight modules with eight dialects. I build the system first and hold everyone to it, me included: if something's missing, the system gets extended.",
+        title: "Explore fast, in real code.",
+        body: "With AI I explore several directions and take the best to a working prototype with real roles and states. The prototype is the spec, not a mockup.",
       },
       {
-        title: "The prototype is the spec.",
-        body: "What business signs is a working prototype with real roles and states, walked one story at a time. Disagreement surfaces while it's still cheap.",
+        title: "Validate with users before building.",
+        body: "I put the prototype in front of users and the business, one story at a time. Disagreements and misunderstandings surface while they're still cheap.",
       },
       {
-        title: "Ship, then listen.",
-        body: "Daily use shows what no spec did. In olbo it was a timezone bug that broke the colour after dark: it became a decision, a test and a new version.",
+        title: "Build with engineering, measure, iterate.",
+        body: "I build alongside engineering and measure against the metric. In olbo a timezone bug broke the colour after dark: it became a decision, a test and a new version.",
       },
     ],
   };
