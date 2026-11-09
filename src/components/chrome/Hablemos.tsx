@@ -22,12 +22,12 @@ import type { MetalFxProps } from "metal-fx";
  * el propio botón: nada en el hilo principal por cuadro salvo un `rAF` por
  * movimiento del ratón.
  *
- * Mejora progresiva: en escritorio con WebGL2, cuando el navegador queda libre,
- * se carga en diferido `metal-fx` (anillo de metal líquido WebGL2 con el
+ * Mejora progresiva: en escritorio con WebGL2 y sin movimiento reducido, cuando
+ * el cursor se acerca a la esquina de la cabecera, se carga en diferido `metal-fx` (anillo de metal líquido WebGL2 con el
  * `liquidMetal` de Paper Shaders) y envuelve el mismo enlace. Una sola
  * instancia; el shader solo corre mientras el puntero está encima o el botón
  * tiene el foco (en reposo queda congelado: coste cero), y con movimiento
- * reducido nunca se anima. Sin WebGL2, en móvil (el botón no existe < 1024) o
+ * reducido no se carga. Sin WebGL2, en móvil (el botón no existe < 1024) o
  * si la carga falla, queda el botón de CSS.
  */
 type Metal = ComponentType<MetalFxProps>;
@@ -38,35 +38,34 @@ const reducido = () =>
 
 /** El componente de metal-fx, una vez cargado (módulo: sobrevive a los montajes). */
 let metalCargado: Metal | null = null;
+let recuperarFoco = false;
 
 function useMetal(): boolean {
   const [metal, setMetal] = useState(() => metalCargado !== null);
   useEffect(() => {
-    if (metalCargado || !window.matchMedia(ESCRITORIO).matches) return;
+    if (metalCargado || !window.matchMedia(ESCRITORIO).matches || reducido()) return;
     let vivo = true;
     const cargar = () =>
       import("metal-fx")
         .then((m) => {
           if (!m.isMetalFxSupported()) return;
           metalCargado = m.MetalFx;
+          // El enlace se vuelve a montar dentro del metal: si tenía el foco, lo recupera.
+          recuperarFoco = !!document.activeElement?.classList.contains("hablemos");
           if (vivo) setMetal(true);
         })
         .catch(() => {});
-    // Después del LCP y sin competir con la escena: cuando el hilo queda libre.
-    const ric =
-      window.requestIdleCallback ??
-      ((cb: () => void) => window.setTimeout(cb, 1200));
-    const cic = window.cancelIdleCallback ?? window.clearTimeout;
-    let id = 0;
-    const tras = () => {
-      id = ric(cargar, { timeout: 4000 } as IdleRequestOptions) as number;
+    // Sin coste hasta que haga falta: se carga cuando el cursor se acerca a la
+    // esquina de la cabecera, nunca en el arranque.
+    const cerca = (e: PointerEvent) => {
+      if (e.clientY > 140 || e.clientX < window.innerWidth - 640) return;
+      window.removeEventListener("pointermove", cerca);
+      cargar();
     };
-    if (document.readyState === "complete") tras();
-    else window.addEventListener("load", tras, { once: true });
+    window.addEventListener("pointermove", cerca, { passive: true });
     return () => {
       vivo = false;
-      window.removeEventListener("load", tras);
-      cic(id);
+      window.removeEventListener("pointermove", cerca);
     };
   }, []);
   return metal;
@@ -87,6 +86,10 @@ export default function Hablemos({
 
   useEffect(() => {
     const el = ref.current;
+    if (el && recuperarFoco) {
+      recuperarFoco = false;
+      el.focus({ preventScroll: true });
+    }
     if (!el || !window.matchMedia(ESCRITORIO).matches) return;
     let raf = 0;
     let px = 0;

@@ -747,6 +747,13 @@
       linear-gradient(#000 0 0);
     pointer-events: none;
   }
+  /* En la cápsula de ES/EN (72 px) el reflejo inferior caería junto a «EN»: solo
+     el punto de luz de arriba a la izquierda. */
+  .idioma::after {
+    background:
+      radial-gradient(70% 140% at 14% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+      var(--vidrio-canto);
+  }
   .cab-menu {
     position: relative;
   }
