@@ -19,7 +19,7 @@ const es = {
     estado: {
       consultoria: "Disponible para consultoría",
       roles: "Abierto a roles",
-      // Naowee terminó (nov 2026): la disponibilidad que se muestra es inmediata.
+      // Naowee terminó (oct 2026): la disponibilidad que se muestra es inmediata.
       ambas: "Disponible para empezar de inmediato",
       "no-disponible": "",
     } as Record<Disponibilidad, string>,

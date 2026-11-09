@@ -10,9 +10,9 @@ import { getExperience, latestExperience } from "@/lib/career";
 const asMonths = (p: YearMonth) => p.year * 12 + ((p.month ?? 1) - 1);
 
 describe("cv + work integrity", () => {
-  it("at most one experience is open (no end); none today, Naowee ended in Nov 2026", () => {
+  it("at most one experience is open (no end); none today, Naowee ended in Oct 2026", () => {
     expect(experiences.filter((e) => e.end === undefined).length).toBeLessThanOrEqual(1);
-    expect(getExperience("naowee").end).toEqual({ year: 2026, month: 11 });
+    expect(getExperience("naowee").end).toEqual({ year: 2026, month: 10 });
     expect(latestExperience().id).toBe("naowee");
   });
 

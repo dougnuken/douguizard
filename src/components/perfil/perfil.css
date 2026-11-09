@@ -469,10 +469,22 @@
     font: 600 var(--t-24) / 1 var(--font-nombre, var(--font-display-b));
     font-variation-settings: "SHRP" 100;
     letter-spacing: -0.02em;
-    color: var(--tinta-2);
+    color: var(--tinta);
+    --esc: 1;
   }
   .marcas li {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
     white-space: nowrap;
+  }
+  /* Altura óptica por logo (`--alto`, de `logosMarcas.ts`): un solo relleno `currentColor`. */
+  .logo-marca {
+    display: block;
+    width: auto;
+    height: calc(var(--alto) * var(--esc));
+    fill: currentColor;
+    opacity: 0.9;
   }
   @media (prefers-reduced-motion: reduce) {
     .marquee {
@@ -635,6 +647,7 @@
       gap: 40px;
       padding-right: 40px;
       font-size: var(--t-20);
+      --esc: 0.78;
     }
     @media (prefers-reduced-motion: reduce) {
       .marcas {

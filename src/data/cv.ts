@@ -30,7 +30,7 @@ export interface Experience {
   /** Optional shorter form for narrow rows. Same words, fewer of them. */
   roleShort?: string;
   start: YearMonth;
-  /** Omitted = open role. At most one experience may omit it (none today: Naowee ended in Nov 2026). */
+  /** Omitted = open role. At most one experience may omit it (none today: Naowee ended in Oct 2026). */
   end?: YearMonth;
   location: {
     city?: string;
@@ -97,8 +97,7 @@ export const experiences: Experience[] = [
     company: { name: "Naowee" },
     role: "Head of Product",
     start: { year: 2026, month: 1 },
-    // ⚠️ CONFIRMAR DOUG — fin del proyecto: nov 2026 (la fecha exacta no estaba en los datos).
-    end: { year: 2026, month: 11 },
+    end: { year: 2026, month: 10 },
     location: { city: "Barranquilla", country: "Colombia", mode: "remote" },
     summary:
       "Product direction for SUID, the platform built for Colombia's sports system. I set direction across eight business modules and built the prototypes that define them.",

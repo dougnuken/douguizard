@@ -7,9 +7,9 @@ describe("formatPeriod", () => {
     expect(formatPeriod(getExperience("qrvey"))).toBe("Oct 2016 — Aug 2017");
   });
 
-  it("renders an open role as Now (Naowee ended in Nov 2026; synthetic stub)", () => {
+  it("renders an open role as Now (Naowee ended in Oct 2026; synthetic stub)", () => {
     expect(formatPeriod({ ...getExperience("naowee"), end: undefined })).toBe("Jan 2026 — Now");
-    expect(formatPeriod(getExperience("naowee"))).toBe("Jan 2026 — Nov 2026");
+    expect(formatPeriod(getExperience("naowee"))).toBe("Jan 2026 — Oct 2026");
   });
 
   // Synthetic, deliberately. These two used to point at mercadolibre and aval
@@ -37,7 +37,7 @@ describe("formatPeriod", () => {
   it("speaks Spanish: abbreviated months and Hoy for the open end", () => {
     expect(formatPeriod(getExperience("qrvey"), "es")).toBe("Oct 2016 — Ago 2017");
     expect(formatPeriod({ ...getExperience("naowee"), end: undefined }, "es")).toBe("Ene 2026 — Hoy");
-    expect(formatPeriod(getExperience("naowee"), "es")).toBe("Ene 2026 — Nov 2026");
+    expect(formatPeriod(getExperience("naowee"), "es")).toBe("Ene 2026 — Oct 2026");
     for (const e of experiences) {
       expect(formatPeriod(e, "es")).not.toMatch(/Presente|Actualidad|-/);
     }

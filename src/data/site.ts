@@ -96,7 +96,7 @@ export const site: Site = {
   availability: {
     status: "available",
     label: "Available immediately",
-    // Naowee ended (Nov 2026): Doug can start right away, in a role or as
+    // Naowee ended (Oct 2026): Doug can start right away, in a role or as
     // consulting. `note` is the badge's own tooltip and the footer / About line,
     // so the site can never claim more than this sentence says.
     badge: "Available",

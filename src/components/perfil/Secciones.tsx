@@ -7,6 +7,7 @@ import Losa from "@/components/sistema/Losa";
 import { getCv } from "@/data/cv";
 import { getDatos, getMarcasPerfil, getOficioPerfil } from "@/data/perfil";
 import { getSite } from "@/data/site";
+import { logosMarcas } from "./logosMarcas";
 import { getTestimonial, testimonials } from "@/data/testimonials";
 import { getCaseMeta } from "@/data/work";
 import { localePath, type Locale } from "@/i18n/config";
@@ -149,9 +150,24 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
  * «Dónde he trabajado»: carrusel marquee (solo CSS) con `getMarcasPerfil()` en
  * la voz Geologica. Dos copias de la lista para el bucle sin salto; la segunda
  * es `aria-hidden`. Con movimiento reducido queda la primera, en rejilla.
- * Los logos oficiales no se pudieron obtener (ver INFORME-G3): cada marca es un
- * wordmark tipográfico; cambiar `{m}` por un `<svg fill="currentColor">` basta.
+ * Cada marca es su logo SVG a una tinta (`logosMarcas.ts`, fuente de cada uno allí y en
+ * INFORME-G3) con su nombre en `sr-only`; las que no tienen SVG público van como wordmark.
  */
+function Marca({ nombre }: { nombre: string }) {
+  const l = logosMarcas[nombre];
+  if (!l) return <li>{nombre}</li>;
+  return (
+    <li>
+      <svg className="logo-marca" viewBox={l.viewBox} aria-hidden="true" focusable="false" style={{ "--alto": `${l.alto}px` } as React.CSSProperties} fillRule={l.evenodd ? "evenodd" : undefined}>
+        {l.trazos.map((d) => (
+          <path key={d.slice(0, 24)} d={d} />
+        ))}
+      </svg>
+      <span className="sr-only">{nombre}</span>
+    </li>
+  );
+}
+
 export function Marcas({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const marcas = getMarcasPerfil();
@@ -164,12 +180,12 @@ export function Marcas({ locale }: { locale: Locale }) {
         <div className="marquee-pista">
           <ul className="marquee-lista marcas" role="list">
             {marcas.map((m) => (
-              <li key={m}>{m}</li>
+              <Marca key={m} nombre={m} />
             ))}
           </ul>
           <ul className="marquee-lista marcas" role="list" aria-hidden="true">
             {marcas.map((m) => (
-              <li key={m}>{m}</li>
+              <Marca key={m} nombre={m} />
             ))}
           </ul>
         </div>

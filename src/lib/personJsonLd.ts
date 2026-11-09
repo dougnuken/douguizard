@@ -38,7 +38,7 @@ export function personNode(locale: Locale = "en") {
       addressLocality: site.location.city,
       addressCountry: "CO",
     },
-    // No `worksFor`: Naowee ended in Nov 2026 and no other role is open.
+    // No `worksFor`: Naowee ended in Oct 2026 and no other role is open.
     alumniOf: education.map((e) => ({
       "@type": "EducationalOrganization",
       name: e.institution,

@@ -17,7 +17,7 @@ const NOW: Record<Locale, string> = { en: "Now", es: "Hoy" };
 
 /**
  * The most recent role: the one with the latest start. Naowee ended in
- * Nov 2026, so no experience is open any more: this is the "last role", not
+ * Oct 2026, so no experience is open any more: this is the "last role", not
  * the "current role". At most one experience may omit `end`.
  */
 export function latestExperience(): Experience {

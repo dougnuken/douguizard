@@ -8,7 +8,7 @@
  * imagen del héroe en `hero.ts`, titular EN en el diccionario) solo se anotan.
  */
 
-/** D1 · Qué ofrece el punto de disponible. Lo de hoy (nov 2026, terminó Naowee): empezar de inmediato, roles y consultoría. */
+/** D1 · Qué ofrece el punto de disponible. Lo de hoy (terminó Naowee en oct 2026): empezar de inmediato, roles y consultoría. */
 export const DISPONIBILIDADES = ["consultoria", "roles", "ambas", "no-disponible"] as const;
 export type Disponibilidad = (typeof DISPONIBILIDADES)[number];
 
