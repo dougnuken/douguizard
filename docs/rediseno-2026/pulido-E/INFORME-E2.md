@@ -53,4 +53,4 @@ títulos. Ahora todo lo de `/about` va con `.craft` delante y K14 define su prop
 
 ## Verificación
 
-Lint, `tsc`, vitest (258), build y Playwright completo: ver resultado en el commit final de este informe.
+Lint ✓, `tsc` ✓, vitest 258/258 ✓, build ✓, Playwright completo **582 passed** (base 571 + 11 nuevas), `--trace off`.
