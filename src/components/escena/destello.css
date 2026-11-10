@@ -30,8 +30,12 @@
     --f-oy: 0px;
     --u: calc(var(--f-dx) / 100);
     /* El punto medio entre las pupilas: centro de la raya y del bloom. */
-    --mx: calc(var(--f-ox) + (var(--foto-ojo-ix) + var(--foto-ojo-dx)) / 2 * var(--f-dx));
-    --my: calc(var(--f-oy) + (var(--foto-ojo-iy) + var(--foto-ojo-dy)) / 2 * var(--f-dy));
+    --mx: calc(
+      var(--f-ox) + (var(--foto-ojo-ix) + var(--foto-ojo-dx)) / 2 * var(--f-dx)
+    );
+    --my: calc(
+      var(--f-oy) + (var(--foto-ojo-iy) + var(--foto-ojo-dy)) / 2 * var(--f-dy)
+    );
     --r90: color-mix(in srgb, var(--laser) 90%, transparent);
     --r60: color-mix(in srgb, var(--laser) 60%, transparent);
     --r35: color-mix(in srgb, var(--laser) 35%, transparent);
@@ -55,21 +59,41 @@
 
   /* ── Retinas ─────────────────────────────────────────────────────────── */
   .dst-ojo {
-    width: calc(30 * var(--u));
+    width: calc(36 * var(--u));
     height: calc(30 * var(--u));
-    background: radial-gradient(
-      circle closest-side,
-      #fff 0,
-      #fff 5.5%,
-      var(--laser-nucleo) 9%,
-      var(--laser) 15%,
-      var(--r90) 19%,
-      var(--r60) 27%,
-      var(--r35) 39%,
-      var(--r18) 56%,
-      var(--r08) 76%,
-      transparent 100%
-    );
+    background:
+      /* el disco: núcleo, corona y halo (encima de las chispas, que no lo tiñen) */
+      radial-gradient(
+          circle closest-side,
+          #fff 0,
+          #fff 4.6%,
+          var(--laser-nucleo) 8.5%,
+          var(--laser) 15%,
+          var(--r90) 19%,
+          var(--r60) 27%,
+          var(--r35) 39%,
+          var(--r18) 56%,
+          var(--r08) 76%,
+          transparent 100%
+        )
+        center / calc(30 * var(--u)) 100% no-repeat,
+      /* la chispa de cada retina: un trazo horizontal corto y otro vertical, mínimo */
+        radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 14%,
+          var(--r90) 36%,
+          var(--r35) 64%,
+          transparent 100%
+        )
+        center / 100% max(2px, calc(1.3 * var(--u))) no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--laser-nucleo) 0,
+          var(--r60) 30%,
+          transparent 100%
+        )
+        center / max(1.5px, calc(0.5 * var(--u))) calc(10 * var(--u)) no-repeat;
   }
   .dst-ojo-i {
     left: calc(var(--f-ox) + var(--foto-ojo-ix) * var(--f-dx));
@@ -79,26 +103,6 @@
     left: calc(var(--f-ox) + var(--foto-ojo-dx) * var(--f-dx));
     top: calc(var(--f-oy) + var(--foto-ojo-dy) * var(--f-dy));
   }
-  /* La chispa de cada retina: un trazo horizontal corto y otro vertical, mínimo. */
-  .dst-ojo::before,
-  .dst-ojo::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    translate: -50% -50%;
-  }
-  .dst-ojo::before {
-    width: calc(36 * var(--u));
-    height: max(2px, calc(1.3 * var(--u)));
-    background: radial-gradient(ellipse closest-side, #fff 0, var(--laser-nucleo) 14%, var(--r90) 36%, var(--r35) 64%, transparent 100%);
-  }
-  .dst-ojo::after {
-    width: max(1.5px, calc(0.5 * var(--u)));
-    height: calc(10 * var(--u));
-    background: radial-gradient(ellipse closest-side, var(--laser-nucleo) 0, var(--r60) 30%, transparent 100%);
-  }
-
   /* ── Raya anamórfica ─────────────────────────────────────────────────── */
   .dst-raya {
     left: var(--mx);
@@ -107,13 +111,41 @@
     height: calc(12 * var(--u));
     background:
       /* núcleo largo y fino, de punta a punta */
-      radial-gradient(ellipse closest-side, #fff 0, var(--laser-nucleo) 6%, var(--laser) 16%, var(--r90) 36%, var(--r35) 68%, transparent 100%) center / 100%
-        max(1.5px, calc(0.3 * var(--u))) no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 6%,
+          var(--laser) 16%,
+          var(--r90) 36%,
+          var(--r35) 68%,
+          transparent 100%
+        )
+        center / 100% max(1.5px, calc(0.3 * var(--u))) no-repeat,
       /* brillo central: más grueso y caliente entre los ojos y a sus lados */
-      radial-gradient(ellipse closest-side, #fff 0, var(--laser-nucleo) 22%, var(--r90) 48%, var(--r35) 76%, transparent 100%) center / 26%
-        max(2px, calc(0.8 * var(--u))) no-repeat,
-      radial-gradient(ellipse closest-side, var(--r60) 0, var(--r35) 40%, var(--r08) 76%, transparent 100%) center / 40% 40% no-repeat,
-      radial-gradient(ellipse closest-side, var(--r18) 0, var(--r08) 50%, transparent 100%) center / 88% 100% no-repeat;
+        radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 22%,
+          var(--r90) 48%,
+          var(--r35) 76%,
+          transparent 100%
+        )
+        center / 26% max(2px, calc(0.8 * var(--u))) no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--r60) 0,
+          var(--r35) 40%,
+          var(--r08) 76%,
+          transparent 100%
+        )
+        center / 40% 40% no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--r18) 0,
+          var(--r08) 50%,
+          transparent 100%
+        )
+        center / 88% 100% no-repeat;
   }
 
   /* ── Bloom del haz, de lado a lado (más cuerpo cerca de la cara) ─────── */
@@ -123,8 +155,20 @@
     width: 100%;
     height: calc(14 * var(--u));
     background:
-      linear-gradient(180deg, transparent 38%, var(--r18) 47.5%, var(--r35) 50%, var(--r18) 52.5%, transparent 62%),
-      radial-gradient(ellipse 70% 50% at var(--mx) 50%, var(--r18) 0, var(--r08) 45%, transparent 100%);
+      linear-gradient(
+        180deg,
+        transparent 38%,
+        var(--r18) 47.5%,
+        var(--r35) 50%,
+        var(--r18) 52.5%,
+        transparent 62%
+      ),
+      radial-gradient(
+        ellipse 70% 50% at var(--mx) 50%,
+        var(--r18) 0,
+        var(--r08) 45%,
+        transparent 100%
+      );
   }
 
   /* ── Reflejos fantasma ───────────────────────────────────────────────── */
@@ -133,21 +177,38 @@
     top: calc(var(--my) + 2.4 * var(--u));
     width: calc(5 * var(--u));
     height: calc(5 * var(--u));
-    background: radial-gradient(circle closest-side, var(--r08) 0, var(--r08) 52%, var(--r35) 78%, transparent 100%);
+    background: radial-gradient(
+      circle closest-side,
+      var(--r08) 0,
+      var(--r08) 52%,
+      var(--r35) 78%,
+      transparent 100%
+    );
   }
   .dst-f2 {
     left: calc(var(--mx) - 36 * var(--u));
     top: calc(var(--my) - 1.8 * var(--u));
     width: calc(2.6 * var(--u));
     height: calc(2.6 * var(--u));
-    background: radial-gradient(circle closest-side, var(--r35) 0, var(--r18) 55%, transparent 100%);
+    background: radial-gradient(
+      circle closest-side,
+      var(--r35) 0,
+      var(--r18) 55%,
+      transparent 100%
+    );
   }
 
   /* La línea fina bajo el destello (héroe): roja y más tenue en las puntas; el
      núcleo caliente lo pone la raya. En el tablero OS sigue la de F3. */
   @media (max-width: 1023px) {
     .os-top .k1-laser {
-      background: linear-gradient(90deg, var(--r35), var(--laser) 30%, var(--laser) 70%, var(--r35));
+      background: linear-gradient(
+        90deg,
+        var(--r35),
+        var(--laser) 30%,
+        var(--laser) 70%,
+        var(--r35)
+      );
       box-shadow: 0 0 12px 2px var(--r35);
     }
   }
