@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getCaseMeta, type CaseStudy } from "@/data/work";
+import type { CaseMeta, CaseStudy } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import DotMatrix from "@/components/sistema/DotMatrix";
@@ -18,11 +18,20 @@ import { FadeIn } from "./primitives";
  * `@view-transition`); en la hoja, un `<Link replace>` que cambia de caso sin
  * apilar historial (F6).
  */
-export default function CaseNext({ next, enHoja = false }: { next: CaseStudy; enHoja?: boolean; tone?: unknown }) {
+export default function CaseNext({
+  next,
+  meta,
+  enHoja = false,
+}: {
+  next: Pick<CaseStudy, "slug" | "project" | "kpis">;
+  /** `getCaseMeta(next.slug, locale)`, calculado en el servidor (sin datos de casos en el JS de cliente). */
+  meta: Pick<CaseMeta, "client" | "year">;
+  enHoja?: boolean;
+  tone?: unknown;
+}) {
   const dict = useDict();
   const t = dict.case;
   const locale = useLocale();
-  const meta = getCaseMeta(next.slug, locale);
   const cifras = (next.kpis ?? []).slice(0, 3);
   const href = localePath(locale, `/work/${next.slug}`);
   const nombre = (
