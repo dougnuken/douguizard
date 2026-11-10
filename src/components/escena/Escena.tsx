@@ -1,4 +1,5 @@
 import "./escena.css";
+import "./destello.css";
 import NameLockup from "@/components/marca/NameLockup";
 import { TableroArriba } from "@/components/tablero/Tablero";
 import type { Locale } from "@/i18n/config";
