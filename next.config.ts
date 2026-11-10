@@ -11,7 +11,7 @@ import type { NextConfig } from "next";
 const CSP = [
   // Nothing loads from anywhere but this origin. The site has no third-party
   // script, no analytics, no tag manager and no web font host — `next/font`
-  // self-hosts Archivo and Geist Mono at build time — so `'self'` is not a
+  // self-hosts Urbanist, Instrument Sans, Doto and Geologica at build time — so `'self'` is not a
   // compromise here, it is the full list.
   "default-src 'self'",
   "base-uri 'self'",
