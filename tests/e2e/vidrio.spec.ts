@@ -6,7 +6,12 @@ import { getFotoActiva } from "../../src/data/hero";
 /**
  * F4 · vidrio estriado WebGL2 (07 F4, pruebas a–e + cambio de foto). El canvas
  * entra después del `load` sobre el póster horneado; sin WebGL queda la lente
- * CSS; con RM, el póster solo. En el contenedor, Chromium da WebGL2 por
+ * CSS; con RM, el póster solo.
+ * Pulido I (f): la zona nítida barre sola mientras el héroe está a la vista y
+ * sin desplazar; el cursor manda al moverse y el barrido retoma tras ~3 s. Ya
+ * no vale «solo el cursor abre el vidrio»: eso queda para el OS (K1 como losa),
+ * donde sigue habiendo 0 fps en reposo. En móvil, antes del primer gesto, el
+ * barrido lo lleva la capa CSS (sin WebGL). En el contenedor, Chromium da WebGL2 por
  * SwiftShader y `failIfMajorPerformanceCaveat` lo acepta: si algún día no,
  * las pruebas (a), (d) y (e) se saltan con el motivo.
  */
@@ -35,26 +40,17 @@ const conCanvas = async (page: Page, sel: string) => {
 const cuadros = (page: Page, sel: string) =>
   page.locator(`${sel} canvas[data-vidrio='gl']`).evaluate((c) => Number((c as HTMLElement).dataset.cuadros ?? 0));
 
-/**
- * Rugosidad horizontal de un parche de 40×40 centrado en (x, y): media de |ΔL| entre
- * píxeles vecinos en x. Sobre pared lisa casi toda viene de las aristas de las estrías,
- * así que mide lo que se pinta (F4 P1-1), no un atributo.
- */
-const rugosidad = async (page: Page, x: number, y: number) => {
+/** Un parche de 40×40 centrado en (x, y), en gris: lo que se pinta (F4 P1-1), no un atributo. */
+const parche = async (page: Page, x: number, y: number) => {
   const png = await page.screenshot({ clip: { x: x - 20, y: y - 20, width: 40, height: 40 } });
-  const { data, info } = await sharp(png).greyscale().raw().toBuffer({ resolveWithObject: true });
-  let suma = 0;
-  for (let j = 0; j < info.height; j++)
-    for (let i = 0; i + 1 < info.width; i++) suma += Math.abs(data[j * info.width + i + 1] - data[j * info.width + i]);
-  return suma / (info.height * (info.width - 1));
+  return sharp(png).greyscale().raw().toBuffer();
 };
 
 /**
- * Rugosidad de la foto limpia (sin estrías) en el mismo punto: pinta la textura activa en un
- * <img> temporal con la caja y el encuadre del canvas y mide ahí. Así la prueba mide solo las
- * estrías (cerrada − limpia), no la textura propia de la foto.
+ * El mismo parche de la foto limpia (sin vidrio): pinta la textura activa en un <img> temporal
+ * con la caja y el encuadre del canvas y captura ahí.
  */
-const rugosidadLimpia = async (page: Page, canvas: ReturnType<Page["locator"]>, x: number, y: number) => {
+const parcheLimpio = async (page: Page, canvas: ReturnType<Page["locator"]>, x: number, y: number) => {
   const src = getFotoActiva().rutas.textura;
   const b = (await canvas.boundingBox())!;
   const pos = await canvas.evaluate((c) => {
@@ -74,18 +70,29 @@ const rugosidadLimpia = async (page: Page, canvas: ReturnType<Page["locator"]>, 
     { src, b, pos },
   );
   try {
-    return await rugosidad(page, x, y);
+    return await parche(page, x, y);
   } finally {
     await page.evaluate(() => document.getElementById("__limpia")?.remove());
   }
 };
 
-/** La lente debe quitar ≥ 50 % de las estrías: (abierta − limpia) ≤ 0,5·(cerrada − limpia). */
-const quitaEstrias = (cerrada: number, abierta: number, limpia: number) => {
-  expect(cerrada - limpia, `hay estrías que quitar (cerrada ${cerrada.toFixed(2)}, limpia ${limpia.toFixed(2)})`).toBeGreaterThan(1);
-  expect(abierta - limpia, `estrías ${(cerrada - limpia).toFixed(2)} → ${(abierta - limpia).toFixed(2)} (cerrada ${cerrada.toFixed(2)}, abierta ${abierta.toFixed(2)}, limpia ${limpia.toFixed(2)})`).toBeLessThanOrEqual(
-    (cerrada - limpia) * 0.5,
-  );
+/** Distancia media (niveles de gris, 0–255) entre dos parches. */
+const distancia = (a: Buffer, b: Buffer) => {
+  let suma = 0;
+  for (let i = 0; i < a.length; i++) suma += Math.abs(a[i] - b[i]);
+  return suma / a.length;
+};
+
+/**
+ * La zona nítida deja ver la foto: con el vidrio cerrado el parche se aleja de la foto limpia
+ * (refracción, desenfoque, cantos) y abierto se queda a menos de la mitad de esa distancia.
+ * (Pulido I: antes se medía la rugosidad; el vidrio nuevo desenfoca, y la rugosidad ya no lo separa de la foto.)
+ */
+const dejaVerLaFoto = (cerrada: Buffer, abierta: Buffer, limpia: Buffer) => {
+  const dc = distancia(cerrada, limpia);
+  const da = distancia(abierta, limpia);
+  expect(dc, `hay vidrio que abrir (cerrada a ${dc.toFixed(2)} de la foto limpia)`).toBeGreaterThan(3);
+  expect(da, `vidrio ${dc.toFixed(2)} → ${da.toFixed(2)} niveles de la foto limpia`).toBeLessThanOrEqual(dc * 0.5);
 };
 
 const errores = (page: Page) => {
@@ -124,7 +131,7 @@ test.describe("(a) Chromium con WebGL2", () => {
     expect(e).toEqual([]);
   });
 
-  test("0 fps en reposo; el cursor abre el vidrio solo sobre la foto y lo cierra al salir", async ({ page }) => {
+  test("OS (K1 como losa): 0 fps en reposo; el cursor abre el vidrio solo sobre la foto y lo cierra al salir", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "load" });
     test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
@@ -132,6 +139,9 @@ test.describe("(a) Chromium con WebGL2", () => {
     await page.waitForFunction(() => !!document.querySelector<HTMLElement>("[data-escena-pista]")?.dataset.escenaFin);
     await page.evaluate(() => document.dispatchEvent(new Event("escena:fin", { cancelable: true })));
     await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
+    // Pulido I: en el acto 1 la zona nítida barría sola; con el OS armado se cierra y el bucle para.
+    await expect(page.locator(".k1 [data-vidrio][data-barrido]")).toHaveCount(0, { timeout: 4000 });
+    await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveAttribute("data-lente", "0.00", { timeout: 4000 });
     await page.waitForTimeout(500);
     const quieto = await cuadros(page, ".k1");
     await page.waitForTimeout(1200);
@@ -142,7 +152,7 @@ test.describe("(a) Chromium con WebGL2", () => {
     const lente = page.locator(".k1 canvas[data-vidrio='gl']");
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
 
-    // Lo que se pinta: sobre la pared (arriba a la izquierda de la foto) la lente quita ≥ 50 % de las estrías.
+    // Lo que se pinta: sobre la pared (arriba a la izquierda de la foto) la lente deja ver la foto limpia.
     await page.mouse.move(20, 450, { steps: 4 });
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
     const pared = async () => {
@@ -150,14 +160,13 @@ test.describe("(a) Chromium con WebGL2", () => {
       return { x: b.x + b.width * 0.2, y: b.y + b.height * 0.3 };
     };
     const p0 = await pared();
-    const cerrada = await rugosidad(page, p0.x, p0.y);
+    const cerrada = await parche(page, p0.x, p0.y);
     await page.mouse.move(p0.x, p0.y, { steps: 4 });
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
     await page.waitForTimeout(300); // la tarjeta sube 2 px con el hover: se mide donde quedó la foto
     const p1 = await pared();
-    const abierta = await rugosidad(page, p1.x, p1.y);
-    const limpia = await rugosidadLimpia(page, lente, p1.x, p1.y);
-    quitaEstrias(cerrada, abierta, limpia);
+    const abierta = await parche(page, p1.x, p1.y);
+    dejaVerLaFoto(cerrada, abierta, await parcheLimpio(page, lente, p1.x, p1.y));
     await page.mouse.move(20, 450, { steps: 4 });
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
     const tras = await cuadros(page, ".k1");
@@ -202,9 +211,18 @@ test.describe("(b) sin WebGL (Chromium lanzado con --disable-webgl)", () => {
       expect(poster).toBeGreaterThan(0);
       const b = (await capa.boundingBox())!;
       expect(b.width * b.height).toBeGreaterThan(0);
-      expect(await capa.evaluate((c) => getComputedStyle(c).backgroundImage)).toMatch(/textura\.webp/);
-      await page.mouse.move(b.x + b.width * 0.5, b.y + Math.min(b.height, 900 - b.y) * 0.6, { steps: 4 });
+      // La foto limpia va en un canvas dentro del disco (no es candidato a LCP).
+      await expect(capa.locator("i > canvas")).toHaveAttribute("data-foto", /textura\.webp$/);
+      const cursor = { x: b.x + b.width * 0.5, y: b.y + Math.min(b.height, 900 - b.y) * 0.6 };
+      await page.mouse.move(cursor.x, cursor.y, { steps: 4 });
       await expect.poll(() => capa.evaluate((c) => Number(getComputedStyle(c).opacity)), { timeout: 3000 }).toBeGreaterThan(0.9);
+      // El disco nítido queda bajo el cursor (el barrido automático le cede el sitio).
+      const centro = async () => {
+        const d = (await capa.locator("i").boundingBox())!;
+        return Math.hypot(d.x + d.width / 2 - cursor.x, d.y + d.height / 2 - cursor.y);
+      };
+      await expect.poll(centro, { timeout: 3000 }).toBeLessThan(4);
+      await expect(capa).not.toHaveAttribute("data-barrido", "");
       expect(e).toEqual([]);
       await navegador.close();
     });
@@ -237,10 +255,12 @@ test.describe("(d) táctil", () => {
     const cdp = await page.context().newCDPSession(page);
     const toque = (type: "touchStart" | "touchMove" | "touchEnd", x: number, y: number) =>
       cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x, y }] });
-    // G1: en móvil el WebGL espera a la primera interacción; antes, solo el póster.
+    // G1: en móvil el WebGL espera a la primera interacción; antes, el póster y,
+    // encima, el barrido automático en CSS (pulido I), sin canvas.
     await page.waitForTimeout(1500);
     await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveCount(0);
     await expect(page.locator(".k1 img[data-poster='horneado']")).toBeVisible();
+    await expect(page.locator(".k1 [data-vidrio='css'][data-barrido]")).toHaveCount(1, { timeout: 5000 });
     await toque("touchStart", 80, 300);
     await toque("touchEnd", 80, 300);
     test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
@@ -254,14 +274,14 @@ test.describe("(d) táctil", () => {
     await toque("touchEnd", 300, 302);
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
 
-    // Lo que se pinta: con el dedo quieto sobre la pared (izquierda, altura del pecho) las estrías bajan ≥ 50 %.
-    const cerrada = await rugosidad(page, 60, 302);
+    // Lo que se pinta: con el dedo quieto sobre la pared (izquierda, altura del pecho) se ve la foto limpia.
+    const cerrada = await parche(page, 60, 302);
     await toque("touchStart", 280, 302);
     for (let x = 265; x >= 60; x -= 15) await toque("touchMove", x, 302);
     await toque("touchMove", 60, 302);
     await expect(lente).toHaveAttribute("data-lente", "1.00", { timeout: 3000 });
-    const abierta = await rugosidad(page, 60, 302);
-    quitaEstrias(cerrada, abierta, await rugosidadLimpia(page, lente, 60, 302));
+    const abierta = await parche(page, 60, 302);
+    dejaVerLaFoto(cerrada, abierta, await parcheLimpio(page, lente, 60, 302));
     await toque("touchEnd", 60, 302);
     await expect(lente).toHaveAttribute("data-lente", "0.00", { timeout: 3000 });
 
@@ -271,6 +291,119 @@ test.describe("(d) táctil", () => {
     for (let y = 590; y >= 200; y -= 30) await toque("touchMove", 201, y);
     await toque("touchEnd", 201, 200);
     await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 3000 }).toBeGreaterThan(y0 + 100);
+  });
+});
+
+test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
+  /** El vidrio que barre ahora: el canvas, o la capa CSS si el WebGL va lento (por software). */
+  const BARRE = ".k1 [data-vidrio][data-barrido]";
+  const cuadrosDe = (page: Page) =>
+    page.evaluate(() => [...document.querySelectorAll<HTMLElement>(".k1 [data-vidrio]")].map((e) => e.dataset.cuadros ?? "").join("|"));
+
+  test("1440, acto 1: barre solo; el cursor manda al moverse y el barrido retoma tras ~3 s de reposo", async ({ page }) => {
+    const e = errores(page);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "load" });
+    test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
+    const barre = page.locator(BARRE);
+    await expect(barre).toHaveCount(1, { timeout: 8000 });
+    await expect(barre).toHaveAttribute("data-lente", "1.00", { timeout: 6000 });
+    const c0 = await cuadrosDe(page);
+    await page.waitForTimeout(600);
+    expect(await cuadrosDe(page), "el barrido pinta sin que nadie toque nada").not.toBe(c0);
+
+    // El cursor manda: sobre la pared de la foto, el barrido calla y el vidrio se abre ahí.
+    const canvas = page.locator(".k1 canvas[data-vidrio='gl']");
+    const b = (await canvas.boundingBox())!;
+    const x = b.x + b.width * 0.24;
+    const y = 620;
+    await page.mouse.move(x - 30, y, { steps: 3 });
+    await page.mouse.move(x, y, { steps: 3 });
+    await expect(barre).toHaveCount(0);
+    await expect(canvas).toHaveAttribute("data-lente", "1.00", { timeout: 4000 });
+    const abierta = await parche(page, x, y);
+    const da = distancia(abierta, await parcheLimpio(page, canvas, x, y));
+    expect(da, `bajo el cursor se ve la foto limpia (a ${da.toFixed(2)} niveles)`).toBeLessThan(4);
+
+    // Reposo: a los ~3 s del último movimiento el barrido retoma (y antes no).
+    await page.mouse.move(x + 2, y);
+    const t0 = Date.now();
+    await page.waitForTimeout(1500);
+    expect(await barre.count(), "antes de 3 s sigue mandando el cursor").toBe(0);
+    await expect(barre).toHaveCount(1, { timeout: 5000 });
+    expect(Date.now() - t0).toBeGreaterThanOrEqual(2800);
+    expect(e).toEqual([]);
+  });
+
+  test("1440: con el héroe desplazado (OS) el barrido se detiene: 0 fps; al volver arriba, retoma", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "load" });
+    test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
+    await expect(page.locator(BARRE)).toHaveCount(1, { timeout: 8000 });
+    await page.waitForFunction(() => !!document.querySelector<HTMLElement>("[data-escena-pista]")?.dataset.escenaFin);
+    const fin = await page.evaluate(() => Number(document.querySelector<HTMLElement>("[data-escena-pista]")!.dataset.escenaFin));
+    await page.evaluate(() => document.dispatchEvent(new Event("escena:fin", { cancelable: true })));
+    await page.evaluate((y) => window.scrollTo(0, y), fin);
+    await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
+    await expect(page.locator(BARRE)).toHaveCount(0, { timeout: 4000 });
+    await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveAttribute("data-lente", "0.00", { timeout: 4000 });
+    await page.waitForTimeout(600);
+    const quieto = await cuadrosDe(page);
+    await page.waitForTimeout(1200);
+    expect(await cuadrosDe(page), "sin bucle con el héroe desplazado").toBe(quieto);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(page.locator(BARRE)).toHaveCount(1, { timeout: 8000 });
+  });
+
+  test.describe("390", () => {
+    test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+    test("antes de cualquier gesto barre la capa CSS: sin WebGL, sin tocar el LCP, CLS 0; fuera de vista se detiene", async ({ page }) => {
+      const e = errores(page);
+      await page.addInitScript(() => {
+        const w = window as unknown as { __cls: number; __lcp: string[] };
+        w.__cls = 0;
+        // Cada candidato a LCP: «vidrio» si sale de la capa del barrido.
+        w.__lcp = [];
+        new PerformanceObserver((l) => {
+          for (const x of l.getEntries() as unknown as { element: Element | null }[])
+            w.__lcp.push(x.element?.closest("[data-vidrio]") ? "vidrio" : `${x.element?.tagName}.${x.element?.className}`);
+        }).observe({ type: "largest-contentful-paint", buffered: true });
+        new PerformanceObserver((l) => {
+          for (const x of l.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!x.hadRecentInput) w.__cls += x.value;
+        }).observe({ type: "layout-shift", buffered: true });
+      });
+      await page.goto("/", { waitUntil: "load" });
+      const capa = page.locator(".k1 [data-vidrio='css']");
+      await expect(capa).toHaveAttribute("data-barrido", "", { timeout: 8000 });
+      await expect(capa).toHaveAttribute("data-lente", "1.00", { timeout: 6000 });
+      expect(await page.locator("canvas[data-vidrio='gl']").count(), "el WebGL sigue esperando al primer gesto").toBe(0);
+      // La zona nítida se mueve sola y solo con `transform` (compositor).
+      const disco = capa.locator("i");
+      const p0 = (await disco.boundingBox())!;
+      await page.waitForTimeout(2500);
+      const p1 = (await disco.boundingBox())!;
+      expect(Math.hypot(p1.x - p0.x, p1.y - p0.y), "el disco se mueve").toBeGreaterThan(8);
+      expect(await disco.evaluate((i) => getComputedStyle(i).transform)).toMatch(/^matrix/);
+      const r = await page.evaluate(() => {
+        const w = window as unknown as { __lcp: string[]; __cls: number };
+        return { lcp: w.__lcp, cls: w.__cls };
+      });
+      // El LCP sigue siendo el de antes del barrido (en 390, el claim: el póster a sangre no cuenta).
+      expect(r.lcp.length).toBeGreaterThan(0);
+      expect(r.lcp, "la capa del barrido no es candidata a LCP").not.toContain("vidrio");
+      expect(r.cls).toBeLessThanOrEqual(0.001);
+      // Con el héroe fuera de vista no barre nadie y no hay bucle. (El scroll cuenta como primer
+      // gesto: el WebGL entra y la capa CSS se retira, pero fuera de vista tampoco pinta.)
+      await page.evaluate(() => window.scrollTo(0, 2400));
+      await expect(page.locator(BARRE)).toHaveCount(0, { timeout: 4000 });
+      await page.waitForTimeout(2500);
+      const quieto = await cuadrosDe(page);
+      await page.waitForTimeout(1000);
+      expect(await cuadrosDe(page), "0 fps fuera de vista").toBe(quieto);
+      await expect(page.locator(BARRE)).toHaveCount(0);
+      expect(e).toEqual([]);
+    });
   });
 });
 

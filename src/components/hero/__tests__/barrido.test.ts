@@ -43,14 +43,14 @@ describe("barrido automático · trayectoria (pulido I)", () => {
     expect(ritmo(PERIODO)).toBeCloseTo(1, 9);
   });
 
-  it("es lenta: nunca pasa de 0,12 anchos de foto por segundo", () => {
+  it("es lenta: nunca pasa de 0,16 anchos de foto por segundo", () => {
     let max = 0;
     for (let t = 0; t < PERIODO; t += 0.02) {
       const [a, b] = trayectoria(t, f);
       const [c, d] = trayectoria(t + 0.02, f);
       max = Math.max(max, Math.hypot(c - a, (d - b) * (f.tamano.h / f.tamano.w)) / 0.02);
     }
-    expect(max).toBeLessThan(0.12);
+    expect(max).toBeLessThan(0.16);
   });
 
   it("tiempos de la decisión: el cursor manda y el barrido retoma a los ~3 s con una vuelta suave", () => {

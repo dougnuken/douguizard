@@ -33,6 +33,8 @@ export function barridoDe(el: HTMLElement, foto: FotoHeroe, pos: [number, number
       const w = el.clientWidth;
       const h = el.clientHeight;
       if (!visible || !w || !h) return null;
+      // Home de escritorio con el OS ya armado (K1 es una losa más): el héroe ya se desplazó.
+      if (document.documentElement.dataset.escenaFase === "os") return null;
       const a = actividad({ visible: aLaVista, p: escritorio.matches ? num("--vidrio-p") : undefined, fuerza: num("--vidrio-f") });
       if (a <= 0) return null;
       const c = cubrir({ w, h }, foto.tamano.w / foto.tamano.h, pos);

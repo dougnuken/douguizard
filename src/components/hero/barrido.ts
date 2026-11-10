@@ -13,7 +13,7 @@
  */
 
 /** Segundos de una vuelta completa. */
-export const PERIODO = 26;
+export const PERIODO = 30;
 /** Segundos de reposo del cursor antes de que el barrido retome. */
 export const REPOSO = 3;
 /** Segundos que tarda en volver a su trayectoria desde donde quedó el cursor. */
@@ -66,8 +66,10 @@ export function actividad(o: { visible: number; p?: number; fuerza?: number }): 
 }
 
 /**
- * Reloj compartido del barrido (s): si el respaldo CSS ya venía barriendo
- * (móvil, antes de la primera interacción), el WebGL lo continúa en el mismo
- * punto en vez de empezar de cero.
+ * Lo que comparten las lentes de la página (la capa CSS y el WebGL del mismo
+ * héroe): `t` = reloj del barrido (s) y `dueno` = quién barre ahora (si la capa
+ * CSS ya venía barriendo, el WebGL sigue en el mismo punto en vez de empezar de
+ * cero); `gesto` = instante del último gesto del usuario (`performance.now()`),
+ * para que una lente recién montada respete el reposo en curso.
  */
-export const relojBarrido: { t: number; dueno: object | null } = { t: 0, dueno: null };
+export const relojBarrido: { t: number; dueno: object | null; gesto: number } = { t: 0, dueno: null, gesto: -Infinity };
