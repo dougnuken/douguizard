@@ -21,6 +21,8 @@ export default [
       "node_modules/**",
       "coverage/**",
       "next-env.d.ts",
+      // Copias de trabajo de los agentes: no son código del sitio.
+      ".claude/**",
     ],
   },
 
