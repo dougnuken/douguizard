@@ -97,6 +97,29 @@ test("390: «Contacto» del dock (home y desde /about) deja el rótulo a 24 px d
 });
 
 /**
+ * Pulido G: si la navegación en el cliente no puede aplicarse (el RSC trae otro `buildId`: pestaña
+ * abierta antes de un despliegue), Next cae a una navegación dura a la URL de la respuesta, sin el
+ * hash. Se simula ese caso y «Contacto» desde /about tiene que acabar igual en `#contact`, con el
+ * rótulo a 24 px (respaldo de `src/lib/anclaPendiente.ts`).
+ */
+test("390: «Contacto» del dock desde /about acaba en #contact aunque Next caiga a navegación dura", async ({ page }) => {
+  await abrir(page, "/about", 390, 844);
+  await page.evaluate(() => ((window as unknown as { __misma: number }).__misma = 1));
+  // Solo la navegación (no los prefetch): su RSC dice venir de otro build.
+  await page.route(/\/\?_rsc=/, async (route) => {
+    if (route.request().headers()["next-router-prefetch"]) return route.continue();
+    const res = await route.fetch();
+    const cuerpo = (await res.text()).replace(/"b":"[^"]+"/, '"b":"otro-build"');
+    await route.fulfill({ response: res, body: cuerpo });
+  });
+  await page.locator('.dock a[href$="#contact"]').click();
+  await page.waitForURL(/\/#contact$/);
+  // La simulación tiene que haber forzado la navegación dura; si no, la prueba no prueba nada.
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __misma?: number }).__misma)).toBeUndefined();
+  await expect.poll(() => rotuloBajoCabecera(page, "contact")).toBe(24);
+});
+
+/**
  * Pulido F: la hoja de /about (`.firma`) y la de /experience (`.contador`) siguen cargadas tras
  * navegar al home y se filtraban a K15 y a los carruseles (+51 y +157 px a 390). Llegando por
  * el dock, el home mide lo mismo que en carga directa y cumple el presupuesto.

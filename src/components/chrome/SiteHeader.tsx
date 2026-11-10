@@ -20,6 +20,7 @@ import {
 } from "@/lib/activeSection";
 import { irASeccion } from "@/lib/irASeccion";
 import { esClicSimple } from "@/lib/clicSimple";
+import { restaurarAnclaPendiente, vigilarAnclas } from "@/lib/anclaPendiente";
 import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
 import Hablemos from "./Hablemos";
@@ -72,6 +73,8 @@ function useEspiaSecciones(activo: boolean) {
     // bajaba desde el scroll heredado recorriendo Trabajo → Experiencia → Perfil
     // y el espía iba marcando cada una. Se marca el destino de inmediato y se salta
     // a él sin animación: ni viaje largo ni ida y vuelta de la selección.
+    // Pulido G: si Next cayó a una navegación dura (otro `buildId`) y perdió el hash, se repone.
+    restaurarAnclaPendiente();
     const ancla = decodeURIComponent(window.location.hash.slice(1));
     const destino = ancla && secciones.some((s) => s.dataset.seccion === ancla) ? document.getElementById(ancla) : null;
     if (destino) {
@@ -133,6 +136,8 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const active = useSyncExternalStore(subscribeActiveSection, getActiveSection, getServerActiveSection);
   useEspiaSecciones(isHome);
+  // Pulido G: apunta el `#ancla` de los enlaces a otra ruta (respaldo de `restaurarAnclaPendiente`).
+  useEffect(() => vigilarAnclas(), []);
   // La selección de las pills se desliza (09-MOTION-CONTROLES): la cabecera no se
   // vuelve a montar entre rutas; cambia su `aria-current` y la píldora viaja.
   const pillsRef = useRef<HTMLElement>(null);
