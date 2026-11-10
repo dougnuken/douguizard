@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icono } from "@/components/sistema/Iconos";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * K7–K10 en móvil (< 1024): scroll-snap horizontal con contador («1 de 4») y
@@ -53,7 +54,7 @@ export default function CarruselMovil({
     if (!el) return;
     const hijos = Array.from(el.children) as HTMLElement[];
     const k = Math.max(0, Math.min(hijos.length - 1, i + d));
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rm = prefiereQuieto();
     el.scrollTo({ left: hijos[k].offsetLeft - hijos[0].offsetLeft, behavior: rm ? "auto" : "smooth" });
     cambiar(k);
   };

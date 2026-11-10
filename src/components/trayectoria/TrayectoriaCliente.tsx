@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { clamp, lerp } from "@/lib/mates";
 
 const CONSULTA = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export interface DatosTrayectoria {
   hoy: number;

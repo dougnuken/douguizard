@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import "./revelar.css";
 import { esEstatico } from "@/lib/estatico";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * Capa de movimiento de las losas (pulido tras F8, pedido de Doug): cada losa
@@ -28,7 +29,7 @@ export default function RevelarLosas() {
   const ruta = usePathname();
 
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefiereQuieto()) return;
     // P2-6: `?estatico` (capturas de página entera) no esconde nada.
     if (esEstatico()) return;
     if (!("IntersectionObserver" in window)) return;

@@ -13,6 +13,7 @@ import {
   traslacion,
   type Caja,
 } from "@/lib/pildora";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * La selección que se desliza (09-MOTION-CONTROLES §3). El contenedor lleva un
@@ -29,7 +30,6 @@ import {
  */
 
 const ACTIVA = ':scope > [aria-current], :scope > [aria-pressed="true"]';
-const reducido = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const cajaDe = (el: HTMLElement): Caja => ({ x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight });
 
@@ -92,7 +92,7 @@ function moverA(nav: HTMLElement, clave: string, destino: HTMLElement | null) {
   if (!p || !visible(nav)) return;
   const h = leerHuella(clave);
   const nueva = destino ? cajaDe(destino) : null;
-  if (!nueva || !h?.hasta || reducido()) {
+  if (!nueva || !h?.hasta || prefiereQuieto()) {
     // Sin origen (primera vez, o venía de «ninguna»), sin destino o con RM: sin viaje.
     parar(nav, p.t);
     guardarHuella(clave, { hasta: nueva, viaje: null });
@@ -121,7 +121,7 @@ export function usePildora(ref: RefObject<HTMLElement | null>, clave: string, fi
     if (activa && h?.hasta && misma(h.hasta, cajaDe(activa))) {
       // Ya iba hacia aquí (pulsación adelantada, o el contenedor se acaba de montar
       // a medio viaje): si este montaje no lo está animando, se retoma donde iba.
-      if (!vivas(p.t).length && !reducido() && h.viaje) {
+      if (!vivas(p.t).length && !prefiereQuieto() && h.viaje) {
         const queda = restante(h, performance.now());
         if (queda > 0) viajar(nav, p.t, h.viaje.desde, h.viaje.hasta, PILDORA_MS - queda);
       }

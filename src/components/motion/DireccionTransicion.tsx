@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { direccionRuta } from "@/lib/transicionRuta";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * Pieza sin pintura de la transición entre páginas (G4).
@@ -57,7 +58,7 @@ export default function DireccionTransicion() {
     if (previa.current === ruta) return;
     previa.current = ruta;
     if (typeof document.startViewTransition === "function") return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefiereQuieto()) return;
     document.getElementById("main")?.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 150,
       easing: "cubic-bezier(0.22, 1, 0.36, 1)",

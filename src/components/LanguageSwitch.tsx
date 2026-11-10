@@ -10,6 +10,7 @@ import {
   getServerActiveSection,
   subscribeActiveSection,
 } from "@/lib/activeSection";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 const CODE: Record<Locale, string> = { es: "ES", en: "EN" };
 
@@ -64,7 +65,7 @@ export default function LanguageSwitch({ className = "" }: { className?: string 
     return () => window.removeEventListener("pageshow", volver);
   }, []);
   const ir = (ev: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!esClicSimple(ev) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!esClicSimple(ev) || prefiereQuieto()) return;
     ev.preventDefault();
     const destino = ev.currentTarget.href;
     setYendo(true);

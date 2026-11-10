@@ -9,6 +9,7 @@ import { devolverFoco, guardarOrigen, olvidarOrigen } from "./origen";
 import { useArrastreHoja } from "./useArrastreHoja";
 import { Icono } from "@/components/sistema/Iconos";
 import { EVENTO_SECCIONES_HOJA } from "@/components/case/eventos";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 type Estado = "entrando" | "abierta" | "cerrando";
 
@@ -115,7 +116,7 @@ function Dialogo({
     if (cerrando.current) return;
     cerrando.current = true;
     setEstado("cerrando");
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rm = prefiereQuieto();
     window.setTimeout(() => router.back(), rm ? 150 : 280);
   }, [router]);
 
