@@ -496,7 +496,10 @@
     align-items: center;
     gap: 56px;
     padding-right: 56px;
-    font: 600 var(--t-24) / 1 var(--font-nombre, var(--font-display-b));
+    /* QA de G: los wordmarks (Naowee, Aval, Qrvey) a 600/24 px pesaban más que
+       los logos vecinos; a 500/20 y con la misma opacidad su altura de mayúscula
+       (~14 px) cae junto a la de Globant y Mercadolibre. */
+    font: 500 var(--t-20) / 1 var(--font-nombre, var(--font-display-b));
     font-variation-settings: "SHRP" 100;
     letter-spacing: -0.02em;
     color: var(--tinta);
@@ -507,6 +510,7 @@
     align-items: center;
     min-height: 48px;
     white-space: nowrap;
+    opacity: 0.9;
   }
   /* Altura óptica por logo (`--alto`, de `logosMarcas.ts`): un solo relleno `currentColor`. */
   .logo-marca {
@@ -514,7 +518,6 @@
     width: auto;
     height: calc(var(--alto) * var(--esc));
     fill: currentColor;
-    opacity: 0.9;
   }
   @media (prefers-reduced-motion: reduce) {
     .marquee {
@@ -534,7 +537,6 @@
       justify-content: start;
       gap: 12px 48px;
       padding-right: 0;
-      font-size: var(--t-18);
     }
   }
   .citas-cab {
@@ -680,13 +682,12 @@
     .marcas {
       gap: 40px;
       padding-right: 40px;
-      font-size: var(--t-20);
+      font-size: var(--t-16);
       --esc: 0.78;
     }
     @media (prefers-reduced-motion: reduce) {
       .marcas {
         grid-template-columns: repeat(2, auto);
-        font-size: var(--t-16);
         gap: 8px 24px;
       }
     }
