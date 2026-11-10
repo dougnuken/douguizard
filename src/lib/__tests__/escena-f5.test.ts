@@ -121,9 +121,9 @@ describe("escena F5 · vidrio a lo largo del ancla", () => {
     expect(b.fuerza).toBeCloseTo(vidrio.losa.fuerza, 6);
   });
 
-  it("P1-2: en cine la fuerza baja sobre la cara (× 0,6) y una estría queda centrada en la nariz", () => {
-    expect(vidrio.cine.caraFuerza).toBe(0.6);
-    expect(vidrioEnEscena(0, vidrio.cine, vidrio.losa).caraFuerza).toBeCloseTo(0.6, 6);
+  it("P1-2: en cine la fuerza baja sobre la cara (× 0,85; pulido I) y una estría queda centrada en la nariz", () => {
+    expect(vidrio.cine.caraFuerza).toBe(0.85);
+    expect(vidrioEnEscena(0, vidrio.cine, vidrio.losa).caraFuerza).toBeCloseTo(0.85, 6);
     expect(vidrioEnEscena(1, vidrio.cine, vidrio.losa).caraFuerza).toBeCloseTo(1, 6);
     const f = getFotoActiva();
     const fv = { ...f.tamano, cara: f.cara, ojo: f.ojo, laser: f.laser };

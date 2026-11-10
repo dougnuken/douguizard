@@ -1,7 +1,9 @@
 /* Vidrio del héroe (F4). El póster horneado lleva el vidrio; encima:
    - `.vidrio-gl`: el WebGL2, que entra con un fundido de 400 ms tras su primer cuadro;
-   - `.vidrio-css`: el respaldo sin WebGL (la lente en CSS: la foto limpia bajo una
-     máscara circular en el cursor). Ambos inertes al puntero. */
+   - `.vidrio-css`: la zona nítida en CSS (la foto limpia vista por un disco de
+     borde suave que se mueve con `transform`): respaldo sin WebGL y, en móvil,
+     el barrido automático antes de la primera interacción.
+   Ambos inertes al puntero. */
 @layer components {
   .vidrio-gl,
   .vidrio-css {
@@ -24,12 +26,38 @@
   }
   .vidrio-css {
     opacity: 0;
-    background: no-repeat var(--v-pos, 50% 0) / cover;
-    -webkit-mask-image: radial-gradient(circle var(--lr, 150px) at var(--lx, 50%) var(--ly, 50%), #000 45%, transparent 100%);
-    mask-image: radial-gradient(circle var(--lr, 150px) at var(--lx, 50%) var(--ly, 50%), #000 45%, transparent 100%);
+    overflow: hidden;
+  }
+  /* El disco (`--lr` = radio exterior): el mismo perfil que la lente del shader
+     (`1 − smoothstep(0,55 R, 1,2 R)`). `LenteCss` lo mueve con `transform` y
+     mueve la foto limpia al revés, así la foto no se desplaza respecto al póster. */
+  .vidrio-css > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(var(--lr, 150px) * 2);
+    height: calc(var(--lr, 150px) * 2);
+    overflow: hidden;
+    border-radius: 50%;
+    -webkit-mask-image: radial-gradient(closest-side, #000 46%, rgba(0, 0, 0, 0.84) 59.5%, rgba(0, 0, 0, 0.5) 73%, rgba(0, 0, 0, 0.16) 86.5%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 46%, rgba(0, 0, 0, 0.84) 59.5%, rgba(0, 0, 0, 0.5) 73%, rgba(0, 0, 0, 0.16) 86.5%, transparent 100%);
+    will-change: transform;
+  }
+  .vidrio-css > i > b {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--cw, 100%);
+    height: var(--ch, 100%);
+    background: var(--v-img, none) no-repeat var(--v-pos, 50% 0) / cover;
+    will-change: transform;
   }
   .vidrio-css[data-activo] {
     opacity: var(--lente, 0);
+  }
+  /* Al ceder el sitio al WebGL (que entra con su propio fundido). */
+  .vidrio-css[data-sale] {
+    transition: opacity 400ms var(--curva-salida, ease-out);
   }
   /* En `/about` el lienzo y la lente siguen a la foto (clase `poster` + estilo copiado). */
   .vidrio-gl.poster,

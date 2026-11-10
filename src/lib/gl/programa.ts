@@ -135,13 +135,45 @@ export async function prepintar(gl: WebGL2RenderingContext, w: number, h: number
   return { fb, tex, w, h };
 }
 
-/** Copia el cuadro prepintado al canvas (mismo tamaño) y lo libera. */
-export function volcar(gl: WebGL2RenderingContext, p: Prepintado) {
+/** Copia un cuadro guardado al canvas (mismo tamaño), sin liberarlo. */
+export function copiar(gl: WebGL2RenderingContext, p: Prepintado) {
   gl.bindFramebuffer(gl.READ_FRAMEBUFFER, p.fb);
   gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
   gl.blitFramebuffer(0, 0, p.w, p.h, 0, 0, p.w, p.h, gl.COLOR_BUFFER_BIT, gl.NEAREST);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+}
+
+/** Copia el cuadro prepintado al canvas (mismo tamaño) y lo libera. */
+export function volcar(gl: WebGL2RenderingContext, p: Prepintado) {
+  copiar(gl, p);
   soltar(gl, p);
+}
+
+/**
+ * Pulido I: pinta un cuadro en un framebuffer propio y lo devuelve (síncrono).
+ * `VidrioGL` guarda así el vidrio con la zona nítida cerrada mientras el barrido
+ * corre: cada cuadro es una copia + el sombreado de la zona nítida, no la
+ * pantalla entera. `null` si no se pudo.
+ */
+export function guardar(gl: WebGL2RenderingContext, w: number, h: number, pintar: () => void): Prepintado | null {
+  const tex = gl.createTexture();
+  const fb = gl.createFramebuffer();
+  if (!tex || !fb) return null;
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+  if (ok) pintar();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  if (!ok) {
+    gl.deleteFramebuffer(fb);
+    gl.deleteTexture(tex);
+    return null;
+  }
+  return { fb, tex, w, h };
 }
 
 export function soltar(gl: WebGL2RenderingContext, p: Prepintado) {
