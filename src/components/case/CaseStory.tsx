@@ -3,7 +3,8 @@
 import RevealText from "@/components/text/RevealText";
 import type { StoryChapter, StoryFigure, StoryFilm, StorySection } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
-import { Band, FadeIn, renderBold, type BandProps } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { Band, FadeIn, type BandProps } from "./primitives";
 import { StoryFilmPlayer, StoryPicture } from "./StoryMedia";
 
 /**

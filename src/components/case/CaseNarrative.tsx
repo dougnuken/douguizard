@@ -1,6 +1,7 @@
 "use client";
 
-import { Band, CabBloque, FadeIn, renderBold } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { Band, CabBloque, FadeIn } from "./primitives";
 import type { CaseHeads } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
 
