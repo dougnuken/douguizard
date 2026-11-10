@@ -332,7 +332,9 @@
   --d-abrir: 250ms;
   --d-cerrar: 150ms;
   --dist-pagina: 8px;
-  --blur-pagina: 3px;
+  /* Pulido H (P2-5): el desenfoque de las dos capturas de página completa solo
+     en escritorio; por debajo de 1024 px, `none` (queda 8 px + fundido). */
+  --filtro-pagina: blur(3px);
 }
 
 @media (max-width: 1023px) {
@@ -342,6 +344,7 @@
     --r-s: 20px;
     --gap: 12px;
     --boton: 48px;
+    --filtro-pagina: none;
   }
 }
 
@@ -1801,14 +1804,14 @@ html:has(dialog.hoja[open]) {
   to {
     opacity: 0;
     transform: translate(var(--vt-sale-x), var(--vt-sale-y));
-    filter: blur(var(--blur-pagina));
+    filter: var(--filtro-pagina);
   }
 }
 @keyframes pag-entra {
   from {
     opacity: 0;
     transform: translate(var(--vt-entra-x), var(--vt-entra-y));
-    filter: blur(var(--blur-pagina));
+    filter: var(--filtro-pagina);
   }
 }
 @keyframes pag-fundido-sale {

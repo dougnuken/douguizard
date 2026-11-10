@@ -72,18 +72,26 @@ test("«Cómo trabajo» con movimiento reducido: todo visible al instante, sin a
 /** Registra en `window.__vt` cada View Transition y las animaciones de sus pseudo-elementos. */
 async function espiarVT(page: Page) {
   await page.evaluate(() => {
-    const w = window as unknown as { __vt: { anims: string[]; fin: boolean }[] };
+    const w = window as unknown as { __vt: { anims: string[]; fin: boolean; nombre?: string; filtros?: string[] }[] };
     w.__vt = [];
     const orig = document.startViewTransition.bind(document);
     document.startViewTransition = ((arg: Parameters<typeof orig>[0]) => {
       const t = orig(arg);
-      const r = { anims: [] as string[], fin: false };
+      const r = { anims: [] as string[], fin: false, nombre: "", filtros: [] as string[] };
       w.__vt.push(r);
       t.ready
         .then(() => {
           r.anims = document
             .getAnimations()
             .map((a) => `${(a.effect as KeyframeEffect).pseudoElement ?? ""}|${(a as CSSAnimation).animationName ?? ""}|${a.effect?.getTiming().duration}`);
+          // Pulido H: el nombre de la cabecera existe durante la transición (P2-2) y
+          // el filtro de las capturas de página (P2-5).
+          r.nombre = getComputedStyle(document.querySelector(".cab-b")!).viewTransitionName;
+          r.filtros = document
+            .getAnimations()
+            .filter((a) => /^pag-(sale|entra)$/.test((a as CSSAnimation).animationName ?? ""))
+            .flatMap((a) => (a.effect as KeyframeEffect).getKeyframes().map((k) => String(k.filter ?? "")))
+            .filter(Boolean);
         })
         .catch(() => {});
       t.finished.then(() => (r.fin = true)).catch(() => {});
@@ -91,7 +99,8 @@ async function espiarVT(page: Page) {
     }) as typeof document.startViewTransition;
   });
 }
-const vt = (page: Page) => page.evaluate(() => (window as unknown as { __vt: { anims: string[]; fin: boolean }[] }).__vt);
+const vt = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __vt: { anims: string[]; fin: boolean; nombre: string; filtros: string[] }[] }).__vt);
 
 test("de /experience a /cv: la página sale y la nueva entra; la cabecera no se funde", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -107,6 +116,10 @@ test("de /experience a /cv: la página sale y la nueva entra; la cabecera no se 
   expect(t.anims.some((a) => /::view-transition-new\(.+\)\|pag-entra\|250/.test(a))).toBe(true);
   // Cabecera con nombre propio y sin animación: ni sale ni entra.
   expect(t.anims.some((a) => a.includes("(cabecera)"))).toBe(false);
+  // Pulido H: nombre solo durante la transición (P2-2); en escritorio, blur de 3 px (P2-5).
+  expect(t.nombre).toBe("cabecera");
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector(".cab-b")!).viewTransitionName)).toBe("none");
+  expect(t.filtros.some((f) => f === "blur(3px)"), t.filtros.join()).toBe(true);
   expect(await page.evaluate(() => document.documentElement.dataset.vt)).toBe("adelante");
   expect(await page.evaluate(() => document.querySelectorAll(".cab-b").length)).toBe(1);
   expect(await page.evaluate(() => document.documentElement.getAttribute("data-ruta"))).toBe("cv");
@@ -166,4 +179,18 @@ test("K14 del home lleva a /about#craft y la secuencia se ve entera", async ({ p
   await expect(page).toHaveURL(/\/about#craft$/);
   await expect(page.locator(".craft .pasos")).toHaveAttribute("data-pasos", "listo", { timeout: 6_000 });
   for (const p of await pasos(page)) expect(p).toMatchObject({ titulo: 1, texto: 1, luz: 1 });
+});
+
+test("pulido H (P2-5): a 390 el cambio de página es fundido + desplazamiento, sin blur", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/experience");
+  await espiarVT(page);
+  await page.locator('nav.dock a[href="/cv"]').click();
+  await expect(page).toHaveURL(/\/cv$/);
+  await expect.poll(async () => (await vt(page))[0]?.fin, { timeout: 3_000 }).toBe(true);
+  const [t] = await vt(page);
+  expect(t.anims.some((a) => /pag-sale\|250/.test(a)), t.anims.join("\n")).toBe(true);
+  expect(t.filtros.length, "keyframes con filter").toBeGreaterThan(0);
+  expect(t.filtros.every((f) => f === "none"), t.filtros.join()).toBe(true);
+  expect(t.nombre).toBe("cabecera");
 });
