@@ -9,6 +9,8 @@ const NAVEGADORES = process.env.PW_NAVEGADORES === "1";
 
 export default defineConfig({
   testDir: "tests/e2e",
+  // Falla de entrada si `reuseExistingServer` encuentra un servidor de otro build.
+  globalSetup: "./tests/servidorAlDia.ts",
   // 60s was fine when the suite was smaller. The content walks now visit six
   // routes each with a full reveal settle, and screenshot tests contend for the
   // same two workers; a run should fail on defects, not on contention.
