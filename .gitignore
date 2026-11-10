@@ -47,3 +47,6 @@ next-env.d.ts
 /tests/results.json
 /test-results/
 /playwright-report/
+
+# worktrees de agentes (locales)
+.claude/worktrees/
