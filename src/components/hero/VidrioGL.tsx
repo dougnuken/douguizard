@@ -3,9 +3,10 @@
 import { useEffect, useRef } from "react";
 import { getFotoActiva, vidrio, type EstadoVidrio } from "@/data/hero";
 import { uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
-import { crearPrograma, dibujar, liberar, prepintar, soltar, volcar, type Prepintado } from "@/lib/gl/programa";
+import { copiar as copiarCuadro, crearPrograma, dibujar, guardar, liberar, prepintar, soltar, volcar, type Prepintado } from "@/lib/gl/programa";
 import type { EstadoLente } from "./useLente";
 import { cargarImagen, subirTextura } from "@/lib/gl/textura";
+import { barridoDe } from "./barridoDom";
 import { montarLente } from "./useLente";
 
 export interface PropsVidrioGL {
@@ -21,22 +22,32 @@ export interface PropsVidrioGL {
   espejo?: HTMLElement | null;
   /** Sin WebGL2, `failIfMajorPerformanceCaveat`, shader roto o contexto perdido. */
   onFallo: (motivo: string) => void;
+  /** El primer cuadro ya está en pantalla (el respaldo CSS que venía barriendo se retira). */
+  onListo?: () => void;
+  /** El barrido va lento en este equipo (WebGL por software): lo sigue la capa CSS; el canvas se queda con el vidrio y el cursor. */
+  onLento?: () => void;
 }
 
 /**
  * El vidrio estriado en WebGL2 (07 F4), encima del póster horneado. Lo monta
  * `VidrioDiferido` tras el `load` y en `requestIdleCallback` (nunca antes del
- * LCP; nunca con RM). Entra con un fundido de 400 ms tras el primer cuadro; en
- * reposo no hay bucle (0 fps). DPR ≤ `dprMax`; deja de pintar fuera de vista y
- * con la pestaña oculta. La fuerza se puede sobrescribir con `--vidrio-f` en el
+ * LCP; nunca con RM). Entra con un fundido de 400 ms tras el primer cuadro.
+ * Pulido I: mientras el héroe está a la vista y sin desplazar, la zona nítida
+ * barre sola (`barrido.ts`; el cursor manda al moverse); fuera de eso no hay
+ * bucle (0 fps). DPR ≤ `dprMax`; deja de pintar fuera de vista y con la pestaña
+ * oculta. La fuerza se puede sobrescribir con `--vidrio-f` en el
  * estilo en línea del canvas (o de su `espejo`).
  */
-export default function VidrioGL({ estados, className, style, pos = [0.5, 0], laser, espejo, onFallo }: PropsVidrioGL) {
+export default function VidrioGL({ estados, className, style, pos = [0.5, 0], laser, espejo, onFallo, onListo, onLento }: PropsVidrioGL) {
   const ref = useRef<HTMLCanvasElement>(null);
   const falloRef = useRef(onFallo);
+  const listoRef = useRef(onListo);
+  const lentoRef = useRef(onLento);
   useEffect(() => {
     falloRef.current = onFallo;
-  }, [onFallo]);
+    listoRef.current = onListo;
+    lentoRef.current = onLento;
+  }, [onFallo, onListo, onLento]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -65,7 +76,6 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
     }
     const foto = getFotoActiva();
     const escritorio = window.matchMedia("(min-width: 1024px)");
-    let visible = true;
 
     (async () => {
       let prog: Awaited<ReturnType<typeof crearPrograma>>;
@@ -87,7 +97,7 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       }
       let primero = true;
       /** Parámetros del cuadro para el estado actual; ajusta el búfer del canvas. */
-      const cuadro = (s: Pick<EstadoLente, "mx" | "my" | "abierta">) => {
+      const cuadro = (s: Pick<EstadoLente, "mx" | "my" | "abierta">, paralaje = 1) => {
         // F5: con `--vidrio-p` (el progreso del ancla del home, copiado de la foto)
         // los parámetros van de `cine` a `losa`; sin él, los del estado.
         const pe = parseFloat(canvas.style.getPropertyValue("--vidrio-p"));
@@ -114,12 +124,17 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           laser,
           fuerza: Number.isFinite(f) ? f : undefined,
           mx: s.mx,
-          lente: s.abierta,
+          lente: s.abierta * paralaje,
           fase: mezcla?.fase,
         });
-        const firma = JSON.stringify([bw, bh, w, h, dpr, v, s.mx, s.my, s.abierta]);
-        const dib = () => dibujar(gl, prog, v, { w, h, dpr }, { x: s.mx, y: s.my, abierta: s.abierta });
-        return { bw, bh, firma, dib };
+        // Todo lo que no es la zona nítida: si no cambia entre cuadros, el fondo se guarda.
+        const firmaFondo = JSON.stringify([bw, bh, w, h, dpr, v]);
+        const firma = firmaFondo + JSON.stringify([s.mx, s.my, s.abierta]);
+        const dib = (abierta = s.abierta) => dibujar(gl, prog, v, { w, h, dpr }, { x: s.mx, y: s.my, abierta });
+        // La zona nítida en px del búfer (origen abajo), con 2 px de margen.
+        const r = (v.lensR * 1.2 + 2) * dpr;
+        const zona = [Math.floor(s.mx * dpr - r), Math.floor(bh - s.my * dpr - r), Math.ceil(2 * r), Math.ceil(2 * r)] as const;
+        return { bw, bh, firma, firmaFondo, dib, zona };
       };
 
       // G1: el primer cuadro (lente cerrada, el estado inicial de `montarLente`)
@@ -143,13 +158,36 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       // tres pedidos (lente, ResizeObserver, IntersectionObserver) con el mismo
       // estado: si nada cambió, no se repinta.
       let ultimo = "";
+      // Pulido I: con la zona nítida moviéndose sobre un vidrio que no cambia (el
+      // barrido), el vidrio cerrado se guarda una vez y cada cuadro es una copia más
+      // el sombreado de la zona (recorte): ~10× menos píxeles que la pantalla entera.
+      let fondo: { firma: string; p: Prepintado } | null = null;
+      let fondoPrevio = "";
+      const soltarFondo = () => {
+        if (fondo && !gl.isContextLost()) soltar(gl, fondo.p);
+        fondo = null;
+      };
       const pintar = () => {
-        if (!visible || gl.isContextLost()) return;
-        const c = cuadro(lente.estado());
+        if (!auto.visible() || gl.isContextLost()) return;
+        const s = lente.estado();
+        const c = cuadro(s, lente.paralaje());
         if (!c || c.firma === ultimo) return;
         ultimo = c.firma;
+        const estable = c.firmaFondo === fondoPrevio;
+        fondoPrevio = c.firmaFondo;
+        if (fondo && fondo.firma !== c.firmaFondo) soltarFondo();
+        if (estable && s.abierta > 0 && !fondo) {
+          const p = guardar(gl, c.bw, c.bh, () => c.dib(0));
+          if (p) fondo = { firma: c.firmaFondo, p };
+        }
         if (pre && pre.firma === c.firma) volcar(gl, pre.p);
-        else c.dib();
+        else if (fondo && s.abierta > 0) {
+          copiarCuadro(gl, fondo.p);
+          gl.enable(gl.SCISSOR_TEST);
+          gl.scissor(...c.zona);
+          c.dib();
+          gl.disable(gl.SCISSOR_TEST);
+        } else c.dib();
         if (pre) {
           if (pre.firma !== c.firma) soltar(gl, pre.p);
           pre = null;
@@ -158,16 +196,21 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           primero = false;
           canvas.classList.add("on");
           canvas.parentElement?.setAttribute("data-gl", "on");
+          listoRef.current?.();
         }
       };
-      const lente = montarLente(canvas, pintar);
+      // Pulido I: el barrido automático (a la vista y con el héroe sin desplazar).
+      const auto = barridoDe(canvas, foto, pos, () => lente.pedir());
+      const lente = montarLente(canvas, pintar, {
+        barrido: auto.barrido,
+        alIrLento: () => {
+          if (!lentoRef.current) return;
+          lente.ceder();
+          lentoRef.current();
+        },
+      });
       const ro = new ResizeObserver(() => lente.pedir());
       ro.observe(canvas);
-      const io = new IntersectionObserver(([e]) => {
-        visible = e.isIntersecting;
-        if (visible) lente.pedir();
-      });
-      io.observe(canvas);
       const mq = () => lente.pedir();
       escritorio.addEventListener("change", mq);
       const copiar = () => {
@@ -186,12 +229,13 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       limpiar = () => {
         lente.destruir();
         ro.disconnect();
-        io.disconnect();
+        auto.soltar();
         escritorio.removeEventListener("change", mq);
         mo?.disconnect();
         canvas.removeEventListener("webglcontextlost", perdido);
         canvas.parentElement?.removeAttribute("data-gl");
         if (pre && !gl.isContextLost()) soltar(gl, pre.p);
+        soltarFondo();
         if (!gl.isContextLost()) liberar(gl, prog, tex);
       };
       lente.pedir();
