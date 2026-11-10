@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icono } from "@/components/sistema/Iconos";
 
 /**
@@ -16,6 +16,10 @@ export default function CopiarCorreo({
   textos: { reposo: string; hecho: string; error: string };
 }) {
   const [estado, setEstado] = useState<"reposo" | "hecho" | "error">("reposo");
+  // Un solo temporizador de vuelta al reposo: un segundo clic reinicia la cuenta
+  // en vez de dejar que el primero devuelva el botón antes de tiempo.
+  const temporizador = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(temporizador.current), []);
   const copiar = async () => {
     try {
       await navigator.clipboard.writeText(correo);
@@ -23,7 +27,8 @@ export default function CopiarCorreo({
     } catch {
       setEstado("error");
     }
-    window.setTimeout(() => setEstado("reposo"), 2400);
+    window.clearTimeout(temporizador.current);
+    temporizador.current = window.setTimeout(() => setEstado("reposo"), 2400);
   };
   return (
     <button type="button" className="boton boton--linea-osc copiar" onClick={copiar}>
