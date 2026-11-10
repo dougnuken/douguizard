@@ -376,9 +376,12 @@
       0 0 0 1px var(--disp),
       0 0 8px 2px var(--disp-halo);
   }
+  /* Dos latidos al aparecer y quieto: el sistema no deja animaciones vivas en
+     reposo (0 fps, `escena.spec`); el pulso infinito pintaba `box-shadow` en
+     cada cuadro mientras el punto estuviera en pantalla. */
   @media (prefers-reduced-motion: no-preference) {
     .estado::before {
-      animation: estado-pulso 2.4s ease-in-out infinite;
+      animation: estado-pulso 1.6s ease-in-out 2;
     }
   }
 
