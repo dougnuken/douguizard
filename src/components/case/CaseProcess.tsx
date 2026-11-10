@@ -15,7 +15,7 @@ export interface ProcessPhase {
  * Proceso (02 §5.3, punto 9): un riel de fases cosido por el hilo láser, con el
  * número de cada fase en Doto sobre el hilo. En móvil el riel es vertical.
  */
-export default function CaseProcess({ process, id, titular }: { process: ProcessPhase[]; id?: string; titular?: string; tone?: unknown }) {
+export default function CaseProcess({ process, id, titular }: { process: ProcessPhase[]; id?: string; titular?: string }) {
   const t = useDict().case;
   const h = id && `${id}-h`;
   return (

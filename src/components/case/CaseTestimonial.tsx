@@ -3,7 +3,7 @@
 import RevealText from "@/components/text/RevealText";
 import { getTestimonial } from "@/data/testimonials";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
-import { Band, EyebrowHeading, type BandProps } from "./primitives";
+import { Band, EyebrowHeading } from "./primitives";
 
 /**
  * One endorsement, placed straight after "what I did" — so it lands on the
@@ -19,7 +19,7 @@ import { Band, EyebrowHeading, type BandProps } from "./primitives";
  * the whole treatment — which is also why it still reads as a quote when the
  * theme flips.
  */
-export default function CaseTestimonial({ id, tone }: { id: string; tone?: BandProps["tone"] }) {
+export default function CaseTestimonial({ id }: { id: string }) {
   const locale = useLocale();
   const t = useDict().case;
   const testimonial = getTestimonial(id, locale);
@@ -31,7 +31,7 @@ export default function CaseTestimonial({ id, tone }: { id: string; tone?: BandP
   const foreign = quoteLang !== locale;
 
   return (
-    <Band tone={tone} rule="t">
+    <Band>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-[200px_1fr]">
         <EyebrowHeading sticky>{t.inTheirWords}</EyebrowHeading>
         <figure className="m-0">

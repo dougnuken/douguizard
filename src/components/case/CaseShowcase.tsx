@@ -129,7 +129,7 @@ export default function CaseShowcase({
   if (!body) return null;
 
   return (
-    <Band tone="raised" rule="t" wide className="py-10 md:py-14">
+    <Band>
       {heading && <h2 className="sr-only">{t.product}</h2>}
       {body}
       {video && <WalkthroughCaption caption={video.caption} />}

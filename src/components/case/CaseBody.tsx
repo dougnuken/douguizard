@@ -100,7 +100,7 @@ export default function CaseBody({
         <div className="caso-cubierta" data-cubierta="">
           {showcase && <CaseShowcase project={study.project} plan={media} heading={!hayProducto} />}
           {!showcase && study.cover && <CaseCover cover={study.cover} heading={!hayProducto} />}
-          {proofFirst && <CaseTestimonial tone="raised" id={proofFirst} />}
+          {proofFirst && <CaseTestimonial id={proofFirst} />}
           {nda && (
             <CaseNda
               body={t.ndaBody}
@@ -135,15 +135,15 @@ export default function CaseBody({
               >
                 <CabBloque id={id("producto-h")} rotulo={t.product} titular={study.heads?.product} />
                 {pelicula && <WalkthroughFilm video={pelicula} />}
-                {study.film && <CaseFilm tone="paper" film={study.film} />}
+                {study.film && <CaseFilm film={study.film} />}
                 {study.story?.map((chapter, i) => (
-                  <CaseChapter key={chapter.id} tone="paper" chapter={chapter} index={i} />
+                  <CaseChapter key={chapter.id} chapter={chapter} index={i} />
                 ))}
                 {media.rest.length > 0 && (
-                  <CaseGallery tone="paper" project={study.project} shots={media.rest} kind={media.galleryKind} />
+                  <CaseGallery project={study.project} shots={media.rest} kind={media.galleryKind} />
                 )}
                 {study.features?.length ? (
-                  <CaseFeatures tone="paper" intro={study.featuresIntro} features={study.features} />
+                  <CaseFeatures intro={study.featuresIntro} features={study.features} />
                 ) : null}
               </div>
             )}
@@ -151,7 +151,7 @@ export default function CaseBody({
             {study.process?.length ? (
               <CaseProcess id={id("proceso")} process={study.process} titular={study.heads?.process} />
             ) : null}
-            {study.testimonialId && !proofFirst && <CaseTestimonial tone="paper" id={study.testimonialId} />}
+            {study.testimonialId && !proofFirst && <CaseTestimonial id={study.testimonialId} />}
             {(study.technologies?.length || enlaces || study.credits) && (
               <CaseColophon technologies={study.technologies} links={enlaces} credits={study.credits} enHoja={enHoja} />
             )}
