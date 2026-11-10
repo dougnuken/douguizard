@@ -1,6 +1,6 @@
 import "@/components/pages/paginas-b.css";
 import "./caso.css";
-import { getCaseMeta, getNextCaseStudy, type CaseStudy } from "@/data/work";
+import { getCaseMeta, getNextCaseStudy, getShortName, type CaseStudy } from "@/data/work";
 import type { Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
 import { hasShowcase, planCaseMedia } from "@/lib/caseMedia";
@@ -88,7 +88,12 @@ export default function CaseBody({
   const contenido = (
     <div className="caso-pieza">
       <div className="caso-ancho">
-        <CaseHeader study={study} meta={meta} enHoja={enHoja} />
+        <CaseHeader
+          study={{ project: study.project, slug: study.slug, tagline: study.tagline, platforms: study.platforms }}
+          corto={getShortName(study)}
+          meta={meta}
+          enHoja={enHoja}
+        />
         {/* «Leído» en `/work`: una comodidad por visitante (04 §6.3). */}
         <RegistrarLeido slug={study.slug} />
 
@@ -150,7 +155,11 @@ export default function CaseBody({
             {(study.technologies?.length || enlaces || study.credits) && (
               <CaseColophon technologies={study.technologies} links={enlaces} credits={study.credits} enHoja={enHoja} />
             )}
-            <CaseNext next={next} enHoja={enHoja} />
+            <CaseNext
+              next={{ slug: next.slug, project: next.project, kpis: next.kpis?.slice(0, 3) }}
+              meta={getCaseMeta(next.slug, locale)}
+              enHoja={enHoja}
+            />
           </div>
         </div>
         <HojaSecciones entradas={entradas} enHoja={enHoja} />
