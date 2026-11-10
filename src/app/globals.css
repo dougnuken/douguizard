@@ -290,11 +290,36 @@
   --filo: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   --filo-jelly: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 0 48px rgba(255, 255, 255, 0.16);
+  /* Pulido G2 · vidrio con canto (pedido de Doug: «vidrio más pro»). Tres capas, todo CSS estático:
+     1. `--filo-vidrio` (en el `box-shadow` de la pieza): el grosor. Cara superior que recoge la luz,
+        sombra interior abajo, banda de refracción de 10 px en el borde de arriba (la luz que el
+        canto dobla hacia dentro) y otra más tenue abajo (la que rebota), más un contorno exterior
+        de medio píxel que separa el vidrio de fondos claros.
+     2. `--vidrio-canto` (el `::after` con máscara de borde, regla compartida abajo): el bisel de
+        1 px, brillante arriba, casi apagado en los costados y con un rebote abajo.
+     3. `--vidrio-especular`: el punto de luz arriba a la izquierda y su reflejo abajo a la derecha,
+        sobre ese mismo canto (un cristal grueso ilumina el borde opuesto a la luz). */
+  --filo-vidrio: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 1px rgba(0, 0, 0, 0.4),
+    inset 0 10px 12px -10px rgba(255, 255, 255, 0.2), inset 0 -8px 10px -9px rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035), 0 0 0 0.5px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(0, 0, 0, 0.35);
+  --vidrio-canto: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.12) 24%,
+    rgba(255, 255, 255, 0.04) 52%,
+    rgba(255, 255, 255, 0.07) 80%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  --vidrio-especular: radial-gradient(70% 140% at 14% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+    radial-gradient(50% 120% at 88% 100%, rgba(255, 255, 255, 0.28), transparent 60%);
 
   /* motion. `--ease-out` NO se redefine (casos y CV); B usa `--curva-*`. */
   --curva-salida: cubic-bezier(0.23, 1, 0.32, 1);
   --curva-io: cubic-bezier(0.77, 0, 0.175, 1);
   --curva-hoja: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Muelle (ζ 0,5) compilado a `linear()` (pulido G2): rebote ≈ 16 % y asentado. Solo para
+     magnitudes pequeñas (3 px de imán, 5 % de escala). Sin soporte, la declaración previa vale. */
+  --muelle: cubic-bezier(0.23, 1, 0.32, 1);
   --d-press: 120ms;
   --d-hover: 200ms;
   --d-ui: 240ms;
@@ -310,6 +335,12 @@
     --r-s: 20px;
     --gap: 12px;
     --boton: 48px;
+  }
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --muelle: linear(0, 0.104, 0.34, 0.61, 0.849, 1.023, 1.124, 1.161, 1.152, 1.117, 1.074, 1.032, 1.001, 0.981, 0.973, 0.973, 0.977, 0.984, 0.991, 0.996, 1, 1.002, 1.002, 1.001, 1);
   }
 }
 
@@ -696,6 +727,40 @@
      centros (`usePildora`). Solo `transform`: corre en el compositor. */
   :is(.dock, .cab-pills, .filtros) {
     isolation: isolate;
+  }
+
+  /* ── Canto de vidrio (pulido G2) ─────────────────────────────────────────
+     Un `::after` de 1 px de grosor con máscara de borde (`mask-composite:
+     exclude`, con prefijo para Safari): el bisel (`--vidrio-canto`) y el
+     especular (`--vidrio-especular`). Estático, sin JS ni filtros: cuesta una
+     capa pintada una vez. Las piezas que no tienen el `::after` libre o hacen
+     scroll horizontal (el filtro de /work) llevan solo `--filo-vidrio`. */
+  :is(.cab-pills, .idioma, .cab-menu, .dock, .wordmark, .losa--vidrio, .k1-panel, .os-top .k2)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--vidrio-especular), var(--vidrio-canto);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+  /* En la cápsula de ES/EN (72 px) el reflejo inferior caería junto a «EN»: solo
+     el punto de luz de arriba a la izquierda. */
+  .idioma::after {
+    background:
+      radial-gradient(70% 140% at 14% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+      var(--vidrio-canto);
+  }
+  .cab-menu {
+    position: relative;
   }
   .filtros {
     position: relative;

@@ -174,7 +174,7 @@
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
   }
   .losa--vidrio :is(.ceja, .apoyo, .etiqueta) {
     color: var(--tinta-2-vidrio);

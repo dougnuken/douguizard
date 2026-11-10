@@ -119,3 +119,30 @@ for (const ancho of [1440, 390]) {
     });
   }
 }
+
+// Pulido G2 · ES/EN son dos círculos de 32 px pegados (sin hueco entre ellos) y
+// cada opción conserva un objetivo táctil de 44 × 44.
+for (const ancho of [1440, 390]) {
+  test(`pulido G2 · ES/EN dos círculos contiguos @${ancho}`, async ({ page }) => {
+    await page.setViewportSize({ width: ancho, height: 900 });
+    await page.goto("/about", { waitUntil: "networkidle" });
+    const m = await page.evaluate(() => {
+      const ops = Array.from(document.querySelectorAll<HTMLElement>(".idioma .idioma-op"));
+      const circulos = ops.map((op) => {
+        const r = op.getBoundingClientRect();
+        const cs = getComputedStyle(op, "::after");
+        return { x: r.left + parseFloat(cs.left), w: parseFloat(cs.width), h: parseFloat(cs.height), caja: { w: r.width, h: r.height } };
+      });
+      return { circulos, grupo: document.querySelector(".idioma")!.getBoundingClientRect().width };
+    });
+    const [es, en] = m.circulos;
+    for (const c of m.circulos) {
+      expect(c.w).toBe(32);
+      expect(c.h).toBe(32);
+      expect(c.caja.w, "objetivo táctil").toBeGreaterThanOrEqual(44);
+      expect(c.caja.h, "objetivo táctil").toBeGreaterThanOrEqual(44);
+    }
+    expect(Math.abs(en.x - (es.x + es.w)), "sin hueco entre ES y EN").toBeLessThanOrEqual(0.5);
+    expect(m.grupo, "cápsula de 4 + 32 + 32 + 4").toBe(72);
+  });
+}

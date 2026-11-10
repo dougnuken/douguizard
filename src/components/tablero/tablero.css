@@ -278,7 +278,7 @@
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
   }
   .k1-nombre {
     margin: 0;
@@ -909,7 +909,7 @@
       background-image: var(--vidrio-oscuro);
       -webkit-backdrop-filter: var(--vidrio-filtro);
       backdrop-filter: var(--vidrio-filtro);
-      box-shadow: var(--filo), var(--sombra-flota);
+      box-shadow: var(--filo-vidrio), var(--sombra-flota);
     }
     .k2-nombre {
       display: block;

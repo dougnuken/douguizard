@@ -21,6 +21,7 @@ import { irASeccion } from "@/lib/irASeccion";
 import { esClicSimple } from "@/lib/clicSimple";
 import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
+import Hablemos from "./Hablemos";
 
 /** Pills de la pastilla (04 §4.1). En el home, anclas con scroll-spy; fuera, rutas. */
 const PILLS = [
@@ -215,13 +216,9 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
       <div className="cab-acciones">
         {conTema && <ThemeToggle />}
         <LanguageSwitch />
-        <a
-          href={isHome ? "#contact" : contacto}
-          className="boton hablemos"
-          onClick={(ev) => isHome && irASeccion(ev, "contact")}
-        >
+        <Hablemos href={isHome ? "#contact" : contacto} onClick={(ev) => isHome && irASeccion(ev, "contact")}>
           {s.hablemos}
-        </a>
+        </Hablemos>
         <button
           ref={buttonRef}
           type="button"

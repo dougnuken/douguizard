@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, type RefObject } from "react";
 import {
-  PILDORA_CURVA,
   PILDORA_MS,
+  cajasLiquidas,
   cajaVista,
   guardarHuella,
   leerHuella,
@@ -63,7 +63,8 @@ function vista(t: HTMLElement[]): Caja | null {
 
 function viajar(nav: HTMLElement, t: HTMLElement[], desde: Caja, hasta: Caja, yaPasado = 0) {
   for (const a of vivas(t)) a.cancel();
-  const de = piezas(desde);
+  // Pulido G2: viaje líquido (cada borde con su muelle; `cajasLiquidas`).
+  const fotos = cajasLiquidas(desde, hasta).map(piezas);
   const a = piezas(hasta);
   nav.dataset.moviendo = "";
   let ultima: Animation | null = null;
@@ -72,7 +73,10 @@ function viajar(nav: HTMLElement, t: HTMLElement[], desde: Caja, hasta: Caja, ya
     if (i !== 1) el.style.width = `${hasta.h}px`;
     // El valor base es el destino: el cuadro en que termina la animación ya es el bueno.
     el.style.transform = a[i];
-    ultima = el.animate([{ transform: de[i] }, { transform: a[i] }], { duration: PILDORA_MS, easing: PILDORA_CURVA });
+    ultima = el.animate(
+      fotos.map((f) => ({ transform: f[i] })),
+      { duration: PILDORA_MS, easing: "linear" },
+    );
     if (yaPasado > 0) ultima.currentTime = yaPasado;
   });
   (ultima as Animation | null)?.finished
