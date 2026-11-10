@@ -146,7 +146,7 @@ export default function CardCaso({
         ceja={ceja}
         superficie={SUPERFICIE[d.variante]}
         className="tarjeta"
-        flecha={d.variante === "oscura-captura" || d.variante === "niebla-telefono" ? "tinta" : "blanca"}
+        flecha={d.variante === "niebla-telefono" ? "tinta" : "blanca"}
       >
         <p className="apoyo">{copy.apoyo}</p>
         <MarcaLeido slug={slug} texto={t.leido} />
