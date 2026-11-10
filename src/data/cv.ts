@@ -77,6 +77,8 @@ export interface ToolGroup {
 }
 
 export interface Language {
+  /** ISO 639-1. Fija la bandera de /about (pulido H, P2-1): no depende del orden de la lista. */
+  code: "es" | "en";
   name: string;
   cefr: "A1" | "A2" | "B1" | "B2" | "C1" | "C2" | "Native";
   /** Rendered verbatim. Do not compute a percentage bar from it. */
@@ -337,8 +339,8 @@ export const tools: ToolGroup[] = [
 ];
 
 export const languages: Language[] = [
-  { name: "Spanish", cefr: "Native", level: "Native" },
-  { name: "English", cefr: "B1", level: "B1 · Working proficiency" },
+  { code: "es", name: "Spanish", cefr: "Native", level: "Native" },
+  { code: "en", name: "English", cefr: "B1", level: "B1 · Working proficiency" },
 ];
 
 /**

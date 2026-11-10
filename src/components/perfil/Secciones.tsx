@@ -97,9 +97,9 @@ export function DatosPerfil({ locale }: { locale: Locale }) {
       dt: t.rotulos.idiomas,
       dd: (
         <ul className="idiomas">
-          {d.idiomas.map((l, i) => (
-            <li key={l.nombre}>
-              <Bandera pais={i === 0 ? "co" : "us"} />
+          {d.idiomas.map((l) => (
+            <li key={l.codigo}>
+              <Bandera pais={l.pais} />
               {l.nombre} ({l.nivel})
             </li>
           ))}
