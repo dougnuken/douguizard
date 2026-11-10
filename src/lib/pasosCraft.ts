@@ -11,7 +11,8 @@
  *
  * Tramos `cubic-bezier(0.65, 0, 0.35, 1)` (acelera al salir de un nodo y frena
  * al llegar al siguiente); encendido y texto con `--curva-suave` de
- * transitions.dev. Total ≈ 2,7 s con 4 pasos.
+ * transitions.dev. Total ≈ 1,95 s con 4 pasos y láser, ≈ 1,7 s sin él
+ * (pulido H, P2-4: era ≈ 2,7 s y quien bajaba rápido veía columnas vacías).
  */
 
 export type Eje = "x" | "y" | "ninguno";
@@ -39,12 +40,12 @@ export const CURVA_SUAVE = "cubic-bezier(0.22, 1, 0.36, 1)";
 export const CURVA_TRAMO = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 const INICIO = 120;
-const TRAMO = 640;
-const TRAMO_SIN_LASER = 460;
-const COLA = 420;
+const TRAMO = 400;
+const TRAMO_SIN_LASER = 320;
+const COLA = 380;
 const NODO = 300;
 const PULSO = 560;
-const TEXTO = 560;
+const TEXTO = 480;
 const ESCALON = [0, 70, 150];
 
 export function coreografiaPasos({ eje, paradas, pasos }: { eje: Eje; paradas: number[]; pasos: number }): Coreografia {

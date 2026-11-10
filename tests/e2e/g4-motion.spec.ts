@@ -44,8 +44,9 @@ for (const ancho of [1440, 390]) {
 
     await expect(ol).toHaveAttribute("data-pasos", "listo", { timeout: 5_000 });
     const dura = Date.now() - t0;
-    expect(dura).toBeGreaterThan(1_800);
-    expect(dura).toBeLessThan(4_200);
+    // Pulido H (P2-4): ≈ 1,7–1,95 s de secuencia; margen para el reloj de headless.
+    expect(dura).toBeGreaterThan(1_400);
+    expect(dura).toBeLessThan(3_000);
     const fin = await pasos(page);
     for (const p of fin) expect(p).toMatchObject({ titulo: 1, texto: 1, luz: 1 });
     // Sin CLS: cada paso ocupa la misma caja antes y después.
