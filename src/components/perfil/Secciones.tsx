@@ -5,6 +5,7 @@ import Bandera from "@/components/sistema/Bandera";
 import Estado from "@/components/sistema/Estado";
 import Losa from "@/components/sistema/Losa";
 import PasosCraft from "@/components/perfil/PasosCraft";
+import MarqueeVivo from "@/components/perfil/MarqueeVivo";
 import { getCv } from "@/data/cv";
 import { getDatos, getMarcasPerfil, getOficioPerfil } from "@/data/perfil";
 import { getSite } from "@/data/site";
@@ -177,7 +178,7 @@ export function Marcas({ locale }: { locale: Locale }) {
       <h2 id="perfil-empresas" className="ceja">
         {t.empresas}
       </h2>
-      <div className={`marquee ${lockup.fuente.variable}`} translate="no" role="group" aria-label={t.empresas} tabIndex={0}>
+      <MarqueeVivo className={`marquee ${lockup.fuente.variable}`} translate="no" role="group" aria-label={t.empresas} tabIndex={0}>
         <div className="marquee-pista">
           <ul className="marquee-lista marcas" role="list">
             {marcas.map((m) => (
@@ -190,7 +191,7 @@ export function Marcas({ locale }: { locale: Locale }) {
             ))}
           </ul>
         </div>
-      </div>
+      </MarqueeVivo>
     </section>
   );
 }
