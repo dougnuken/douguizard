@@ -1,0 +1,300 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Pulido I · destello «Cíclope» del láser de K1 (`K1Retrato.tsx`).
+   Capas pintadas una sola vez (degradados fijos) y sumadas a la foto (`screen`):
+   - `.dst-ojo`   un destello circular en cada retina: núcleo casi blanco, corona
+                  roja, halo amplio, con su chispa horizontal y vertical;
+   - `.dst-raya`  la raya anamórfica que cruza los ojos, más viva en el centro;
+   - `.dst-haz`   el bloom del haz (dos capas) sobre la línea del láser;
+   - `.dst-fantasma` dos reflejos de lente discretos sobre el eje.
+   Geometría: todo cuelga de la caja pintada de la foto dentro de `.k1-foto`
+   (`--f-ox/oy/dx/dy`). En reposo (losa y móvil) es el `cover` anclado arriba; en
+   p = 0 del acto 1, la cuenta de `escena.css`; durante el viaje la escribe
+   `useScrollScene` en px. `--u` = 1 % del ancho de la foto: el destello escala con ella.
+   Movimiento: solo `opacity`, `scale` y `transform` (compositor). Nada anima
+   `filter`, sombras ni degradados. Con `prefers-reduced-motion`, fijo y sin pulso.
+   Scroll: en el acto 1 lo apaga `useScrollScene` (`atenuacionDestello`); por
+   debajo de 1024, una animación ligada a la salida de K1 (`view-timeline`).
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .k1-destello {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    container-type: size;
+    mix-blend-mode: screen;
+    --f-dx: max(100cqw, 100cqh * var(--foto-ar));
+    --f-dy: calc(var(--f-dx) * var(--foto-ar-inv));
+    --f-ox: calc(50cqw - var(--f-dx) / 2);
+    --f-oy: 0px;
+    --u: calc(var(--f-dx) / 100);
+    /* El punto medio entre las pupilas: centro de la raya y del bloom. */
+    --mx: calc(
+      var(--f-ox) + (var(--foto-ojo-ix) + var(--foto-ojo-dx)) / 2 * var(--f-dx)
+    );
+    --my: calc(
+      var(--f-oy) + (var(--foto-ojo-iy) + var(--foto-ojo-dy)) / 2 * var(--f-dy)
+    );
+    --r90: color-mix(in srgb, var(--laser) 90%, transparent);
+    --r60: color-mix(in srgb, var(--laser) 60%, transparent);
+    --r35: color-mix(in srgb, var(--laser) 35%, transparent);
+    --r18: color-mix(in srgb, var(--laser) 18%, transparent);
+    --r08: color-mix(in srgb, var(--laser) 8%, transparent);
+  }
+  .k1-laser {
+    --r35: color-mix(in srgb, var(--laser) 35%, transparent);
+  }
+  .dst-capa,
+  .dst-capa > i {
+    position: absolute;
+    display: block;
+  }
+  .dst-capa {
+    inset: 0;
+  }
+  .dst-capa > i {
+    translate: -50% -50%;
+  }
+
+  /* ── Retinas ─────────────────────────────────────────────────────────── */
+  .dst-ojo {
+    width: calc(36 * var(--u));
+    height: calc(30 * var(--u));
+    background:
+      /* el disco: núcleo, corona y halo (encima de las chispas, que no lo tiñen) */
+      radial-gradient(
+          circle closest-side,
+          #fff 0,
+          #fff 4.6%,
+          var(--laser-nucleo) 8.5%,
+          var(--laser) 15%,
+          var(--r90) 19%,
+          var(--r60) 27%,
+          var(--r35) 39%,
+          var(--r18) 56%,
+          var(--r08) 76%,
+          transparent 100%
+        )
+        center / calc(30 * var(--u)) 100% no-repeat,
+      /* la chispa de cada retina: un trazo horizontal corto y otro vertical, mínimo */
+        radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 14%,
+          var(--r90) 36%,
+          var(--r35) 64%,
+          transparent 100%
+        )
+        center / 100% max(2px, calc(1.3 * var(--u))) no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--laser-nucleo) 0,
+          var(--r60) 30%,
+          transparent 100%
+        )
+        center / max(1.5px, calc(0.5 * var(--u))) calc(10 * var(--u)) no-repeat;
+  }
+  .dst-ojo-i {
+    left: calc(var(--f-ox) + var(--foto-ojo-ix) * var(--f-dx));
+    top: calc(var(--f-oy) + var(--foto-ojo-iy) * var(--f-dy));
+  }
+  .dst-ojo-d {
+    left: calc(var(--f-ox) + var(--foto-ojo-dx) * var(--f-dx));
+    top: calc(var(--f-oy) + var(--foto-ojo-dy) * var(--f-dy));
+  }
+  /* ── Raya anamórfica ─────────────────────────────────────────────────── */
+  .dst-raya {
+    left: var(--mx);
+    top: var(--my);
+    width: calc(340 * var(--u));
+    height: calc(12 * var(--u));
+    background:
+      /* núcleo largo y fino, de punta a punta */
+      radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 6%,
+          var(--laser) 16%,
+          var(--r90) 36%,
+          var(--r35) 68%,
+          transparent 100%
+        )
+        center / 100% max(1.5px, calc(0.3 * var(--u))) no-repeat,
+      /* brillo central: más grueso y caliente entre los ojos y a sus lados */
+        radial-gradient(
+          ellipse closest-side,
+          #fff 0,
+          var(--laser-nucleo) 22%,
+          var(--r90) 48%,
+          var(--r35) 76%,
+          transparent 100%
+        )
+        center / 26% max(2px, calc(0.8 * var(--u))) no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--r60) 0,
+          var(--r35) 40%,
+          var(--r08) 76%,
+          transparent 100%
+        )
+        center / 40% 40% no-repeat,
+      radial-gradient(
+          ellipse closest-side,
+          var(--r18) 0,
+          var(--r08) 50%,
+          transparent 100%
+        )
+        center / 88% 100% no-repeat;
+  }
+
+  /* ── Bloom del haz, de lado a lado (más cuerpo cerca de la cara) ─────── */
+  .dst-haz {
+    left: 50%;
+    top: var(--my);
+    width: 100%;
+    height: calc(14 * var(--u));
+    background:
+      linear-gradient(
+        180deg,
+        transparent 38%,
+        var(--r18) 47.5%,
+        var(--r35) 50%,
+        var(--r18) 52.5%,
+        transparent 62%
+      ),
+      radial-gradient(
+        ellipse 70% 50% at var(--mx) 50%,
+        var(--r18) 0,
+        var(--r08) 45%,
+        transparent 100%
+      );
+  }
+
+  /* ── Reflejos fantasma ───────────────────────────────────────────────── */
+  .dst-f1 {
+    left: calc(var(--mx) + 27 * var(--u));
+    top: calc(var(--my) + 2.4 * var(--u));
+    width: calc(5 * var(--u));
+    height: calc(5 * var(--u));
+    background: radial-gradient(
+      circle closest-side,
+      var(--r08) 0,
+      var(--r08) 52%,
+      var(--r35) 78%,
+      transparent 100%
+    );
+  }
+  .dst-f2 {
+    left: calc(var(--mx) - 36 * var(--u));
+    top: calc(var(--my) - 1.8 * var(--u));
+    width: calc(2.6 * var(--u));
+    height: calc(2.6 * var(--u));
+    background: radial-gradient(
+      circle closest-side,
+      var(--r35) 0,
+      var(--r18) 55%,
+      transparent 100%
+    );
+  }
+
+  /* La línea fina bajo el destello (héroe): roja y más tenue en las puntas; el
+     núcleo caliente lo pone la raya. En el tablero OS sigue la de F3. */
+  @media (max-width: 1023px) {
+    .os-top .k1-laser {
+      background: linear-gradient(
+        90deg,
+        var(--r35),
+        var(--laser) 30%,
+        var(--laser) 70%,
+        var(--r35)
+      );
+      box-shadow: 0 0 12px 2px var(--r35);
+    }
+  }
+
+  /* ── Estados ─────────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    /* En el tablero OS (fin del acto 1, RM, sin JS) solo queda la línea fina de F3. */
+    .k1-destello {
+      display: none;
+    }
+    :root.cine:not([data-escena-fase="os"]) .k1-destello {
+      display: block;
+    }
+    /* p = 0 sin JS de escena: la misma caja que pinta `escena.css` para el póster. */
+    :root.cine:not([data-escena-fase]) .k1-destello {
+      --f-dy: 130cqh;
+      --f-dx: calc(130cqh * var(--foto-ar));
+      --f-ox: calc(62cqw - 65cqh * var(--foto-ar));
+      --f-oy: calc(41cqh - var(--foto-ojo) * 130cqh);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrada: el destello prende cuando el láser ya cruzó (una vez, sin dejar nada vivo). */
+    .dst-capa {
+      animation: dst-entra 700ms cubic-bezier(0.16, 1, 0.3, 1) 760ms backwards;
+    }
+    /* Pulso lento y desfasado por capa: respira, no parpadea. */
+    .dst-ojo {
+      animation: dst-late 5600ms ease-in-out 1500ms infinite;
+    }
+    .dst-ojo-d {
+      animation-delay: 1900ms;
+    }
+    .dst-raya {
+      animation: dst-raya 8200ms ease-in-out 1500ms infinite;
+    }
+    .dst-haz {
+      animation: dst-haz 6800ms ease-in-out 1500ms infinite;
+    }
+    .k1-destello[data-fuera] i {
+      animation-play-state: paused;
+    }
+
+    /* Por debajo de 1024 no hay acto 1: el destello se apaga mientras K1 sale por arriba. */
+    @supports (animation-timeline: view()) {
+      @media (max-width: 1023px) {
+        .os-top .k1 {
+          view-timeline: --k1-sale block;
+        }
+        .k1-destello {
+          animation: dst-sale linear both;
+          animation-timeline: --k1-sale;
+          animation-range: exit 0% exit 70%;
+        }
+      }
+    }
+  }
+
+  @keyframes dst-entra {
+    from {
+      opacity: 0;
+    }
+  }
+  /* Parten y vuelven al estado de reposo (1): el retraso de arranque no da salto. */
+  @keyframes dst-late {
+    50% {
+      opacity: 0.78;
+      scale: 0.93;
+    }
+  }
+  @keyframes dst-raya {
+    50% {
+      opacity: 0.68;
+      scale: 0.92 1;
+    }
+  }
+  @keyframes dst-haz {
+    50% {
+      opacity: 0.55;
+      scale: 1 0.78;
+    }
+  }
+  @keyframes dst-sale {
+    to {
+      opacity: 0;
+    }
+  }
+}

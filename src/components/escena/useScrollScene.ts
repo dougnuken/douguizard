@@ -4,6 +4,7 @@ import { useEffect, type RefObject } from "react";
 import { getFotoActiva } from "@/data/hero";
 import { ENTRADA, fijarCorte } from "@/lib/corte";
 import { cubrir, frameEscena, K1_NOMBRE_SUBE, NOMBRE_SUBE, placement, type Colocacion, type Rect } from "@/lib/escena";
+import { atenuacionDestello } from "./destello";
 import { CONSULTA_CINE } from "./sceneInit";
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -48,6 +49,7 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     const foto = q(".k1-foto");
     const poster = q<HTMLImageElement>("img.k1-poster");
     const laser = q(".k1-laser");
+    const destello = q(".k1-destello");
     const velo = q(".k1-velo");
     const panel = q(".k1-panel");
     const k1Nombre = q(".k1-nombre");
@@ -61,11 +63,17 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
     if (!pista || !escena || !k1 || !foto || !poster || !laser || !velo || !panel || !k1Nombre || !k2 || !lockup || !l2 || !indicador) return;
     const html = document.documentElement;
     const rail = document.querySelector<HTMLElement>(".rail-acciones");
+    // Pulido I: con la foto fuera de pantalla (o apagado en el OS) el pulso del destello se pausa.
+    const vigia =
+      destello && "IntersectionObserver" in window
+        ? new IntersectionObserver(([e]) => destello.toggleAttribute("data-fuera", !e.isIntersecting))
+        : null;
+    if (destello) vigia?.observe(destello);
     const mq = window.matchMedia(CONSULTA_CINE);
     const f = getFotoActiva();
     const fotoDatos = { w: f.tamano.w, h: f.tamano.h, ojo: f.ojo };
     const tarjetas = [losas.k3, losas.k4, losas.k5].filter(Boolean) as HTMLElement[];
-    const enLinea: HTMLElement[] = [foto, poster, laser, velo, panel, k1Nombre, k2, indicador, ...tarjetas, ...(osLaser ? [osLaser] : [])];
+    const enLinea: HTMLElement[] = [foto, poster, laser, velo, panel, k1Nombre, k2, indicador, ...tarjetas, ...(osLaser ? [osLaser] : []), ...(destello ? [destello] : [])];
     // Algunos traen estilo del servidor (`varsFoto`): se restaura tal cual, no se borra.
     const originales = new Map(enLinea.map((el) => [el, el.getAttribute("style")] as const));
 
@@ -211,6 +219,14 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       // P1-2: la cara en px de la caja del láser (= la de la foto), para bajar el halo sobre los ojos.
       laser.style.setProperty("--cara-x", `${(pl.Ox - r.x + f.cara[0] * pl.Dx).toFixed(1)}px`);
       laser.style.setProperty("--cara-rx", `${(f.cara[2] * pl.Dx).toFixed(1)}px`);
+      if (destello) {
+        // Pulido I: la caja pintada de la foto (en px de `.k1-foto`) ancla las retinas; el destello se apaga con el viaje.
+        destello.style.setProperty("--f-ox", `${(pl.Ox - r.x).toFixed(2)}px`);
+        destello.style.setProperty("--f-oy", `${(pl.Oy - r.y).toFixed(2)}px`);
+        destello.style.setProperty("--f-dx", `${pl.Dx.toFixed(2)}px`);
+        destello.style.setProperty("--f-dy", `${pl.Dy.toFixed(2)}px`);
+        destello.style.opacity = atenuacionDestello(p).toFixed(3);
+      }
       velo.style.opacity = fr.velo.toFixed(3);
       k2.style.translate = `${lerp(geo.k2.dx, 0, fr.k2).toFixed(2)}px ${lerp(geo.k2.dy, 0, fr.k2).toFixed(2)}px`;
       k2.style.setProperty("--m", fr.m.toFixed(3));
@@ -403,6 +419,8 @@ export function useScrollScene(ancla: RefObject<HTMLElement | null>): void {
       mq.removeEventListener("change", alCambiar);
       document.removeEventListener("focusin", alFoco);
       document.removeEventListener(EVENTO_FIN, alFin);
+      vigia?.disconnect();
+      destello?.removeAttribute("data-fuera");
       salir();
     };
   }, [ancla]);
