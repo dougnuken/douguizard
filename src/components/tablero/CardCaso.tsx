@@ -13,19 +13,41 @@ import { grupoCaso } from "@/lib/cuentas";
 export type VarianteCaso = "oscura-captura" | "jelly-azul-cifras" | "niebla-telefono" | "oscura" | "magenta";
 type Slug = (typeof ordenCasos)[number];
 
+/**
+ * `sizes` medido de 320 a 1920 (G1): `indice` en `/work`, `tablero` en el home.
+ * Sin él, «(min-width: 1024px) 480px, 100vw». En el home el teléfono de Olbo
+ * ocupa ~30 % del ancho y el panel de BdO ~68 % (42 % desde 640); en `/work`,
+ * Olbo ~38 %. Con «100vw» el móvil bajaba la de 640 para 120 px de teléfono.
+ */
+type Medio = { src: string; w: number; h: number; sizes?: { tablero?: string; indice?: string } };
+
 /** Superficie, medio y cifra de cada losa protagonista (`work.html`, NOTAS §7). */
-const DISENO: Record<Slug, { variante: VarianteCaso; clase: string; medio?: { src: string; w: number; h: number } }> = {
+const DISENO: Record<Slug, { variante: VarianteCaso; clase: string; medio?: Medio }> = {
   "naowee-suid": {
     variante: "oscura-captura",
     clase: "c-naowee",
     medio: { src: "/work/naowee/ivc-workspace-tramite.webp", w: 2880, h: 1800 },
   },
   "mercadolibre-andes": { variante: "jelly-azul-cifras", clase: "c-andes" },
-  olbo: { variante: "niebla-telefono", clase: "c-olbo", medio: { src: "/work/olbo/01-hoy-900.webp", w: 900, h: 1200 } },
+  olbo: {
+    variante: "niebla-telefono",
+    clase: "c-olbo",
+    medio: {
+      src: "/work/olbo/01-hoy-900.webp",
+      w: 900,
+      h: 1200,
+      sizes: { tablero: "(min-width: 1024px) 240px, (min-width: 640px) 20vw, 32vw", indice: "(min-width: 1024px) 240px, 40vw" },
+    },
+  },
   "banco-de-occidente": {
     variante: "oscura",
     clase: "c-bdo",
-    medio: { src: "/work/banco-de-occidente/portal-dashboard.webp", w: 2271, h: 1715 },
+    medio: {
+      src: "/work/banco-de-occidente/portal-dashboard.webp",
+      w: 2271,
+      h: 1715,
+      sizes: { tablero: "(min-width: 1024px) 420px, (min-width: 640px) 44vw, 68vw" },
+    },
   },
   "dc-medical": { variante: "oscura", clase: "c-dc" },
   makeapet: { variante: "magenta", clase: "c-mp" },
@@ -54,6 +76,7 @@ export default function CardCaso({
   seccion,
   chipNda,
   prioridad = true,
+  tablero = false,
 }: {
   slug: Slug;
   /** Número visible `/NN` (lo calcula la página, P1-1). El tablero no lo lleva. */
@@ -69,6 +92,8 @@ export default function CardCaso({
   chipNda?: string;
   /** `false` en el tablero: el LCP del home es el póster de K1, no la captura de Naowee. */
   prioridad?: boolean;
+  /** En el tablero del home (los `sizes` de la losa cambian; G1). */
+  tablero?: boolean;
 }) {
   const c = getCaseStudy(slug, locale)!;
   const t = paginasDict[locale].trabajo;
@@ -80,7 +105,7 @@ export default function CardCaso({
     : exp && !exp.end
       ? `${t.ahora} · ${exp.role}`
       : exp
-        ? `${exp.company.name} · ${exp.start.year}–${exp.end?.year ?? ""}`
+        ? `${exp.company.name} · ${exp.start.year === exp.end?.year ? exp.start.year : `${exp.start.year}–${exp.end?.year ?? ""}`}`
         : copy.ceja;
   const titulo = c.project.split(" — ")[0];
   const id = `caso-${slug}`;
@@ -147,7 +172,7 @@ export default function CardCaso({
               alt=""
               width={d.medio.w}
               height={d.medio.h}
-              sizes="(min-width: 1024px) 480px, 100vw"
+              sizes={d.medio.sizes?.[tablero ? "tablero" : "indice"] ?? "(min-width: 1024px) 480px, 100vw"}
               priority={prioridad && d.variante === "oscura-captura"}
             />
           </div>

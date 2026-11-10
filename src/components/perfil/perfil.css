@@ -350,11 +350,41 @@
       inset 0 0 0 1.5px var(--tinta),
       0 0 0 4px var(--losa);
   }
-  .craft .pasos li:first-child .nodo {
+  /* G4: los cuatro nodos encendidos (el láser ya pasó por todos). La luz es una
+     capa (`::after`) y el halo otra (`::before`): `PasosCraft` las anima con
+     `opacity`/`transform`, sin repintar el anillo. */
+  .craft .pasos .nodo::after,
+  .craft .pasos .nodo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+  }
+  .craft .pasos .nodo::after {
     background: var(--laser);
-    box-shadow:
-      0 0 0 4px var(--losa),
-      0 0 10px var(--laser-halo);
+    box-shadow: 0 0 10px var(--laser-halo);
+  }
+  .craft .pasos .nodo::before {
+    box-shadow: 0 0 0 1.5px var(--laser);
+    opacity: 0;
+  }
+  /* El láser crece desde su origen (izquierda; arriba en móvil). */
+  .craft .pasos {
+    --laser-apagado: scaleX(0);
+  }
+  .craft .pasos::before {
+    transform-origin: left center;
+  }
+  /* Antes de entrar en vista (solo con JS y movimiento): láser vacío, nodos
+     apagados, pasos invisibles en su sitio (sin CLS). */
+  .craft .pasos[data-pasos="espera"]::before {
+    transform: var(--laser-apagado);
+  }
+  .craft .pasos[data-pasos="espera"] .nodo::after {
+    opacity: 0;
+  }
+  .craft .pasos[data-pasos="espera"] > li > :not(.nodo) {
+    opacity: 0;
   }
   .craft .pasos .dot {
     color: var(--tinta);
@@ -422,16 +452,92 @@
     border-top: 1px solid var(--losa-borde);
     border-bottom: 1px solid var(--losa-borde);
   }
-  /* P1-13: las marcas en filas de 4, ninguna huérfana. */
-  .marcas {
+  .idiomas {
     display: grid;
-    grid-template-columns: repeat(4, auto);
-    justify-content: start;
-    gap: 12px 48px;
-    font: 600 var(--t-18) / 1.2 var(--font-nombre, var(--font-display-b));
+    gap: 6px;
+  }
+  .idiomas li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .idiomas .bandera {
+    vertical-align: 0;
+  }
+  /* G3: «Dónde he trabajado» es un marquee solo CSS. Dos copias de la lista, la pista
+     se desplaza -50 % (= una lista, con su relleno final) y vuelve sin salto. Pausa en
+     hover y foco; fundido en los bordes. Con movimiento reducido: solo la primera
+     copia, en filas de 4 (2 en móvil), ninguna huérfana (P1-13). */
+  .marquee {
+    min-width: 0;
+    overflow: hidden;
+    contain: paint;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    border-radius: 4px;
+  }
+  .marquee:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 4px;
+  }
+  .marquee-pista {
+    display: flex;
+    width: max-content;
+    animation: marquee-marcas 36s linear infinite;
+  }
+  .marquee:hover .marquee-pista,
+  .marquee:focus-within .marquee-pista,
+  .marquee:focus .marquee-pista {
+    animation-play-state: paused;
+  }
+  .marcas {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 56px;
+    padding-right: 56px;
+    /* QA de G: los wordmarks (Naowee, Aval, Qrvey) a 600/24 px pesaban más que
+       los logos vecinos; a 500/20 y con la misma opacidad su altura de mayúscula
+       (~14 px) cae junto a la de Globant y Mercadolibre. */
+    font: 500 var(--t-20) / 1 var(--font-nombre, var(--font-display-b));
     font-variation-settings: "SHRP" 100;
     letter-spacing: -0.02em;
-    color: var(--tinta-2);
+    color: var(--tinta);
+    --esc: 1;
+  }
+  .marcas li {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    white-space: nowrap;
+    opacity: 0.9;
+  }
+  /* Altura óptica por logo (`--alto`, de `logosMarcas.ts`): un solo relleno `currentColor`. */
+  .logo-marca {
+    display: block;
+    width: auto;
+    height: calc(var(--alto) * var(--esc));
+    fill: currentColor;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee-pista {
+      animation: none;
+      width: auto;
+    }
+    .marquee-lista[aria-hidden="true"] {
+      display: none;
+    }
+    .marcas {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: start;
+      gap: 12px 48px;
+      padding-right: 0;
+    }
   }
   .citas-cab {
     display: flex;
@@ -540,7 +646,11 @@
       padding-left: 32px;
     }
     /* Vertical: el eje x del láser pasa por el centro de los nodos. */
+    .craft .pasos {
+      --laser-apagado: scaleY(0);
+    }
     .craft .pasos::before {
+      transform-origin: center top;
       display: block;
       left: calc(var(--nodo) / 2 - 0.5px);
       right: auto;
@@ -570,9 +680,16 @@
       gap: 12px;
     }
     .marcas {
-      grid-template-columns: repeat(2, auto);
+      gap: 40px;
+      padding-right: 40px;
       font-size: var(--t-16);
-      gap: 8px 24px;
+      --esc: 0.78;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marcas {
+        grid-template-columns: repeat(2, auto);
+        gap: 8px 24px;
+      }
     }
     .citas-cab {
       flex-direction: column;
@@ -591,6 +708,11 @@
   }
 }
 
+@keyframes marquee-marcas {
+  to {
+    transform: translateX(-50%);
+  }
+}
 @keyframes riel-perfil {
   0% {
     transform: scaleY(0);
@@ -608,5 +730,17 @@
 @media (prefers-reduced-motion: reduce) {
   .indicador::after {
     animation: none !important;
+  }
+}
+
+/* G4: «Cómo trabajo» siempre visible al imprimir y con movimiento reducido,
+   aunque el script la haya dejado en espera. */
+@media print, (prefers-reduced-motion: reduce) {
+  .craft .pasos[data-pasos="espera"]::before {
+    transform: none;
+  }
+  .craft .pasos[data-pasos="espera"] .nodo::after,
+  .craft .pasos[data-pasos="espera"] > li > :not(.nodo) {
+    opacity: 1;
   }
 }

@@ -35,7 +35,7 @@ describe("F7 · caso en B", () => {
     }
     expect(getCaseStudy("naowee-suid", "es")?.heads).toEqual({
       context: "Un sector que funcionaba con archivos",
-      contributions: "Dirijo el producto y construyo el prototipo",
+      contributions: "Dirigí el producto y construí el prototipo",
       decisions: "Tres reglas que sostienen la plataforma",
       product: "Así se despeja hoy un trámite vencido",
       process: "Del archivo al prototipo firmado",

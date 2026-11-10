@@ -4,14 +4,14 @@ import Flecha from "@/components/sistema/Flecha";
 import { nodosK11 as NODOS } from "@/data/home";
 import { localePath, type Locale } from "@/i18n/config";
 import { tableroDict } from "@/i18n/tablero";
-import { currentExperience } from "@/lib/career";
+import { latestExperience } from "@/lib/career";
 import { hitosTrayectoria } from "@/lib/trayectoria";
 
 /** K11 · trayectoria (8 × 2) → `/experience`. La línea es decorativa (`aria-hidden`). */
 export default function CardExperiencia({ locale }: { locale: Locale }) {
   const t = tableroDict[locale].k11;
   const hitos = hitosTrayectoria(locale).filter((h) => h.id !== "uac" && !h.paralelo);
-  const actual = currentExperience();
+  const actual = latestExperience();
   const desde = Math.floor(hitos[0].inicio);
   return (
     <article className="losa losa--losa tarjeta k11" id="experience" data-seccion="experience">

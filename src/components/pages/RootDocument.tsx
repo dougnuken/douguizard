@@ -4,6 +4,7 @@ import { getDict } from "@/i18n/dictionaries";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import SiteHeader from "@/components/chrome/SiteHeader";
 import RevelarLosas from "@/components/motion/RevelarLosas";
+import DireccionTransicion from "@/components/motion/DireccionTransicion";
 import Wordmark from "@/components/marca/Wordmark";
 import { personJsonLd } from "@/lib/personJsonLd";
 import { urbanist } from "@/app/fonts/urbanist";
@@ -84,6 +85,7 @@ export default function RootDocument({
           <SiteHeader marca={<Wordmark locale={locale} />} />
           {children}
           <RevelarLosas />
+          <DireccionTransicion />
         </LocaleProvider>
         {!lost && (
           <script

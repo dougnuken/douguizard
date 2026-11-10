@@ -4,7 +4,7 @@ import { getSite } from "@/data/site";
 import type { Locale } from "@/i18n/config";
 import { sistemaDict } from "@/i18n/sistema";
 import { tableroDict } from "@/i18n/tablero";
-import { currentExperience } from "@/lib/career";
+import { latestExperience } from "@/lib/career";
 import { pdfCv } from "@/lib/cvPdf";
 import CopiarCorreo from "./CopiarCorreo";
 
@@ -45,7 +45,7 @@ export default function Contacto({ locale }: { locale: Locale }) {
           )}
         </div>
       </div>
-      <p className="etiqueta">{t.disponibilidad(currentExperience().company.name)}</p>
+      <p className="etiqueta">{t.disponibilidad(latestExperience().company.name)}</p>
     </section>
   );
 }

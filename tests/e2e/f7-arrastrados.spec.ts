@@ -73,13 +73,13 @@ test.describe("F7 P2-1, P2-5, P2-7, P2-8 · página completa de Naowee", () => {
     expect(orden).toBe(true);
   });
 
-  test("P2-7: la duración de Naowee es su periodo («Ene 2026 — Hoy» / «Jan 2026 — Now»), no «En curso»", async ({ page }) => {
+  test("P2-7: la duración de Naowee es su periodo («Ene 2026 — Oct 2026» / «Jan 2026 — Oct 2026», G3: rol terminado), no «En curso»", async ({ page }) => {
     await page.goto("/work/naowee-suid", { waitUntil: "networkidle" });
     await expect(page.locator("main")).not.toContainText("En curso");
-    await expect(page.locator("main")).toContainText("Ene 2026 — Hoy");
+    await expect(page.locator("main")).toContainText("Ene 2026 — Oct 2026");
     await page.goto("/en/work/naowee-suid", { waitUntil: "networkidle" });
     await expect(page.locator("main")).not.toContainText("Ongoing");
-    await expect(page.locator("main")).toContainText("Jan 2026 — Now");
+    await expect(page.locator("main")).toContainText("Jan 2026 — Oct 2026");
   });
 
   test("P2-8: «Mi parte» y «Problema» en la misma tinta; solo el arranque en negrita en --tinta", async ({ page }) => {

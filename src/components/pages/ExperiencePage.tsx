@@ -9,12 +9,13 @@ import Trayectoria from "@/components/trayectoria/Trayectoria";
 import type { Locale } from "@/i18n/config";
 import { paginasDict } from "@/i18n/paginas";
 import { pdfCv } from "@/lib/cvPdf";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /** `/experience` · trayectoria anclada por hito (07 F2, `experience.html`). */
 export default function ExperiencePage({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].trayectoria;
   return (
-    <>
+    <TransicionPagina>
       <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
@@ -30,6 +31,6 @@ export default function ExperiencePage({ locale }: { locale: Locale }) {
       </main>
       <SiteFooter locale={locale} />
       <DockMovil />
-    </>
+    </TransicionPagina>
   );
 }

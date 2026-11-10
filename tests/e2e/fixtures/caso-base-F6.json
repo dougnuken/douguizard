@@ -85,7 +85,7 @@
    "Digitalizar cómo Colombia gestiona su deporte: más de 130 pantallas en 8 módulos, diseñadas y construidas con IA.",
    "Una coordinadora despeja un trámite vencido. El selector marca quién está sobrecargado; los contadores se recalculan en su sitio, de 6 pendientes a 5.",
    "Una sola plataforma reemplaza hoy una pila de herramientas desconectadas, prototipada en código con IA.",
-   "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marco la dirección y construyo en código los prototipos que definen la plataforma: un solo sistema de diseño, con la IA en el proceso.",
+   "El sector deportivo colombiano funcionaba con papel, hojas de cálculo y sistemas aislados. Como Head of Product marqué la dirección y construí en código los prototipos que definen la plataforma: un solo sistema de diseño, con la IA en el proceso.",
    "Un solo sistema de diseño: más de 38 componentes compartidos y un solo patrón de formulario por pasos mantienen coherente cada pantalla.",
    "La jerarquía real del sector: comités → federaciones → ligas → clubes → deportistas, modelada con aprobación en cascada.",
    "Prototipos, no especificaciones: construidos con Claude Code, Cursor y Gemini; los analistas aprueban el producto ya en marcha.",
@@ -108,7 +108,7 @@
    "Cada quien lee distinto una especificación. Un prototipo que funciona saca los desacuerdos cuando son baratos y le entrega a ingeniería un objetivo resuelto. Funciona porque lo construyo yo.",
    "La jerarquía es el producto, no una tabla de consulta",
    "Una tabla plana de deportistas habría salido meses antes. Pero las aprobaciones bajan en cascada del Ministerio al club, y las medallas por liga solo significan algo si los vínculos son reales.",
-   "Head of Product en Naowee: marco la dirección de los módulos de negocio y construyo los prototipos que los definen, junto a analistas de negocio, un diseñador que lidero y los equipos de ingeniería.",
+   "Head of Product en Naowee: marqué la dirección de los módulos de negocio y construí los prototipos que los definen, junto a analistas de negocio, un diseñador que lideré y los equipos de ingeniería.",
    "Líder técnico del sistema de diseño detrás de Mercadolibre: 18 países, tres plataformas, una sola librería."
   ]
  },
@@ -450,7 +450,7 @@
    "Digitizing how Colombia runs its sport: 130+ screens across 8 modules, designed and built with AI.",
    "A coordinator clears an overdue filing. The picker flags who's overloaded; the counters recompute in place, 6 pending to 5.",
    "One platform now stands in for a stack of disconnected tools, prototyped in code with AI.",
-   "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and build, in code, the prototypes that define the platform: one design system, AI in the loop.",
+   "Colombia's sports sector ran on paper, spreadsheets and siloed systems. As Head of Product I set the direction and built, in code, the prototypes that define the platform: one design system, AI in the loop.",
    "One design system — 38+ shared components and one step-by-step form pattern keep every screen consistent.",
    "The sector's real hierarchy — committees → federations → leagues → clubs → athletes, modeled with cascading approval.",
    "Prototypes, not specs — built with Claude Code, Cursor and Gemini; analysts sign off on the running product.",
@@ -473,7 +473,7 @@
    "Specs get read differently by everyone. A running prototype surfaces disagreement while it's cheap and hands engineering a resolved target. It works because I build it myself.",
    "Hierarchy is the product, not a lookup table",
    "A flat athlete table would have shipped months earlier. But approvals cascade from the Ministry down to the club, and medals by league only mean something if the links are real.",
-   "Head of Product at Naowee: I set direction across the business modules and build the prototypes that define them, alongside business analysts, a designer I lead, and engineering teams.",
+   "Head of Product at Naowee: I set direction across the business modules and built the prototypes that define them, alongside business analysts, a designer I lead, and engineering teams.",
    "Technical lead on the design system behind Mercadolibre: 18 countries, three platforms, one library."
   ]
  },

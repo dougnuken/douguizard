@@ -55,7 +55,7 @@ describe("decisiones de Doug", () => {
     );
   });
 
-  it("rolCorto se deriva del cargo actual del CV", () => {
+  it("rolCorto se deriva del último cargo del CV", () => {
     expect(rolCorto()).toMatch(/^Head of Product · Barranquilla$/);
   });
 });

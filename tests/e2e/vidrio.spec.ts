@@ -234,11 +234,17 @@ test.describe("(d) táctil", () => {
 
   test("arrastre horizontal mueve la lente; el vertical hace scroll (pan-y)", async ({ page }) => {
     await page.goto("/", { waitUntil: "load" });
-    test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
-    expect(await page.locator(".k1").evaluate((k) => getComputedStyle(k).touchAction)).toBe("pan-y pinch-zoom");
     const cdp = await page.context().newCDPSession(page);
     const toque = (type: "touchStart" | "touchMove" | "touchEnd", x: number, y: number) =>
       cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x, y }] });
+    // G1: en móvil el WebGL espera a la primera interacción; antes, solo el póster.
+    await page.waitForTimeout(1500);
+    await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveCount(0);
+    await expect(page.locator(".k1 img[data-poster='horneado']")).toBeVisible();
+    await toque("touchStart", 80, 300);
+    await toque("touchEnd", 80, 300);
+    test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
+    expect(await page.locator(".k1").evaluate((k) => getComputedStyle(k).touchAction)).toBe("pan-y pinch-zoom");
 
     // Horizontal, a la altura del pecho (encima de la foto, fuera de K2).
     await toque("touchStart", 80, 300);

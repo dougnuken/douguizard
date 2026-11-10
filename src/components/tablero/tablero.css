@@ -194,6 +194,15 @@
     font-size: var(--t-16);
     max-width: 34em;
   }
+  /* La disponibilidad de G3 («Disponible para empezar de inmediato») no cabe en una
+     línea a 320: se parte, con el punto alineado a la primera línea. */
+  .k2 .k2-estado {
+    white-space: normal;
+    align-items: baseline;
+  }
+  .k2 .k2-estado::before {
+    translate: 0 -1px;
+  }
   .k2-cta {
     display: flex;
     gap: 8px;
@@ -278,7 +287,7 @@
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
   }
   .k1-nombre {
     margin: 0;
@@ -909,7 +918,7 @@
       background-image: var(--vidrio-oscuro);
       -webkit-backdrop-filter: var(--vidrio-filtro);
       backdrop-filter: var(--vidrio-filtro);
-      box-shadow: var(--filo), var(--sombra-flota);
+      box-shadow: var(--filo-vidrio), var(--sombra-flota);
     }
     .k2-nombre {
       display: block;

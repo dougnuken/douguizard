@@ -31,6 +31,64 @@ export function piezas(c: Caja): [string, string, string] {
   ];
 }
 
+/**
+ * Pulido G2 · viaje líquido (la técnica «move» de liquid-gooey, sin el paquete):
+ * cada borde de la cápsula lleva su propio muelle. El borde que va delante sale
+ * con un muelle rápido y algo subamortiguado (llega antes y rebota ≤ 4 px); el de
+ * atrás, con uno críticamente amortiguado y más lento. La cápsula se estira en la
+ * dirección del viaje como una gota y se recoge al llegar. Los muelles se
+ * muestrean a fotogramas clave con interpolación lineal (como el `linear()` de
+ * CSS): sigue siendo solo `transform`, en el compositor, y dura `PILDORA_MS`.
+ */
+const MUESTRAS = 18;
+const REBOTE_MAX = 4;
+
+/** Respuesta de un muelle de 0 a 1 en t ∈ [0, 1] (ω en rad por duración), forzada a acabar en 1. */
+function muelle(t: number, w: number, z: number): number {
+  const x = (u: number) => {
+    if (z >= 1) return 1 - Math.exp(-w * u) * (1 + w * u);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * u) * (Math.cos(wd * u) + ((z * w) / wd) * Math.sin(wd * u));
+  };
+  // El último fotograma es exactamente el destino: se reparte el resto sin salto.
+  return x(t) + (1 - x(1)) * t;
+}
+
+/** Las cajas del viaje, de `desde` a `hasta`, en `MUESTRAS + 1` instantes equiespaciados. */
+export function cajasLiquidas(desde: Caja, hasta: Caja): Caja[] {
+  const derecha = hasta.x + hasta.w / 2 >= desde.x + desde.w / 2;
+  const izq0 = desde.x, izq1 = hasta.x;
+  const der0 = desde.x + desde.w, der1 = hasta.x + hasta.w;
+  const delante = (t: number) => muelle(t, 11, 0.62);
+  const detras = (t: number) => muelle(t, 7.5, 1);
+  const tope = (v: number, a: number, b: number) => {
+    // El rebote del borde delantero pasa del destino como mucho REBOTE_MAX px.
+    const lo = Math.min(a, b) - REBOTE_MAX, hi = Math.max(a, b) + REBOTE_MAX;
+    return Math.min(hi, Math.max(lo, v));
+  };
+  const out: Caja[] = [];
+  for (let i = 0; i <= MUESTRAS; i++) {
+    const t = i / MUESTRAS;
+    const ei = derecha ? detras(t) : delante(t);
+    const ed = derecha ? delante(t) : detras(t);
+    let izq = tope(izq0 + (izq1 - izq0) * ei, izq0, izq1);
+    let der = tope(der0 + (der1 - der0) * ed, der0, der1);
+    const h = desde.h + (hasta.h - desde.h) * t;
+    // Nunca más estrecha que un círculo.
+    if (der - izq < h) {
+      const c = (izq + der) / 2;
+      izq = c - h / 2;
+      der = c + h / 2;
+    }
+    if (i === MUESTRAS) {
+      izq = hasta.x;
+      der = hasta.x + hasta.w;
+    }
+    out.push({ x: izq, y: desde.y + (hasta.y - desde.y) * t, w: der - izq, h });
+  }
+  return out;
+}
+
 /** La caja que se ve a partir de la traslación de los dos círculos (para interrumpir a medio camino). */
 export function cajaVista(izq: { x: number; y: number }, der: { x: number }, h: number): Caja {
   return { x: izq.x, y: izq.y, w: der.x - izq.x + h, h };

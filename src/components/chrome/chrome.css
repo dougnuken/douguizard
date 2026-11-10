@@ -54,7 +54,7 @@
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
   }
   .pill {
     display: inline-flex;
@@ -90,77 +90,102 @@
     align-items: center;
     gap: 8px;
   }
-  /* ES · EN: 40 px visibles; cada opción mide 44 × 44 y sobresale 2 px (relleno recortado a 32 px). */
+  /* ES · EN (pulido G2, Doug: «en teoría son dos círculos pegados»): una cápsula
+     de 72 × 40 que son dos círculos de 32 px contiguos, sin hueco entre ellos,
+     con 4 px de inset en los cuatro lados (radio exterior 20 = interior 16 + 4).
+     Cada opción mide 44 × 44 (objetivo táctil): la de ES sobresale 8 px hacia
+     fuera por la izquierda y la de EN por la derecha (márgenes negativos), y 2 px
+     arriba y abajo. La costura entre las dos queda en el centro exacto. */
   .idioma {
     position: relative;
     isolation: isolate;
     display: flex;
     align-items: center;
+    inline-size: 72px;
     block-size: var(--pill-alto);
-    padding: 0 2px;
     border-radius: var(--r-pill);
     background: var(--vidrio-cromo);
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
   }
   .idioma-op {
     display: grid;
     place-items: center;
+    flex: none;
     inline-size: 44px;
     block-size: 44px;
-    /* La burbuja es el content-box: 32 × 32, un círculo. Pulido D: concéntrica
-       con el grupo (40 px de alto): 4 px de inset en los cuatro lados, así que el
-       relleno es asimétrico (2 px del grupo + 2 px hacia el canto, 10 px hacia
-       la otra opción) y el radio exterior (20) = radio interior (16) + inset (4). */
-    padding: 6px 10px 6px 2px;
+    /* El content-box es el círculo de 32 × 32 (4 px del canto propio). */
+    padding: 6px 0 6px 12px;
+    margin-inline-start: -8px;
     position: relative;
     isolation: isolate;
     border-radius: var(--r-pill);
     font: 500 var(--t-14) / 1 var(--font-texto);
     color: var(--tinta-2-vidrio);
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
     transition:
       color var(--d-press) var(--curva-salida),
       scale var(--d-press) var(--curva-salida);
   }
   .idioma-op:last-child {
-    padding: 6px 2px 6px 10px;
+    padding: 6px 12px 6px 0;
+    margin-inline: 0 -8px;
   }
-  /* Pulido E: la burbuja es un ::after propio de 32 × 32 con radio 50 %. Antes era
-     el content-box con `background-clip`, que heredaba radios elípticos del relleno
-     asimétrico (20/12 px en horizontal, 16 en vertical) y se veía como un huevo. */
+  /* Cada círculo es un ::after propio de 32 × 32 con radio 50 % (pulido E). El
+     inactivo se insinúa como un hueco de vidrio (filo de 1 px): se leen los dos
+     círculos pegados; el activo es la burbuja blanca. */
   .idioma-op::after {
     content: "";
     position: absolute;
     z-index: -1;
-    inset: 6px 10px 6px 2px;
+    inset: 6px 0 6px 12px;
     border-radius: 50%;
-    background: var(--blanco);
-    opacity: 0;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+      inset 0 -6px 8px -6px rgba(255, 255, 255, 0.06);
+    transition:
+      background-color var(--d-hover) var(--curva-salida),
+      box-shadow var(--d-hover) var(--curva-salida);
   }
   .idioma-op:last-child::after {
-    inset: 6px 2px 6px 10px;
+    inset: 6px 12px 6px 0;
   }
   .idioma-op[aria-current] {
     color: var(--tinta-osc);
   }
   .idioma-op[aria-current]::after {
+    background: var(--blanco);
+    box-shadow:
+      inset 0 -2px 3px rgba(14, 15, 18, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      0 1px 2px rgba(0, 0, 0, 0.4);
     opacity: 1;
   }
   a.idioma-op:active {
-    scale: 0.96;
+    scale: 0.94;
   }
   @media (hover: hover) and (pointer: fine) {
     a.idioma-op:hover {
       color: var(--tinta);
     }
+    a.idioma-op:hover::after {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+        inset 0 -6px 8px -6px rgba(255, 255, 255, 0.1);
+    }
   }
-  /* Al pulsar el otro idioma la burbuja se desliza hacia él (160 ms) y luego se
-     navega (`LanguageSwitch`): cada idioma es otro documento, así que el viaje
-     ocurre antes de salir. La burbuja de 32 px queda sobre el content-box de la
-     opción actual (4 px del canto); la otra está a 52 px. */
+  /* Al pulsar el otro idioma la burbuja viaja como una gota (la técnica «move» de
+     liquid-gooey en CSS, sin el paquete): el borde delantero se estira hasta el
+     otro círculo con un muelle, la cápsula de 64 px cubre los dos un instante y el
+     borde trasero la recoge con un rebote leve. 200 ms; se navega a los 170
+     (`LanguageSwitch`). Anima `translate` y el ancho de un pseudo de 32 px
+     (radio fijo de 16: se estira como cápsula, no como óvalo); es una pieza
+     diminuta y de una sola vez, sin coste en reposo. */
   .idioma::before {
     content: "";
     position: absolute;
@@ -169,17 +194,17 @@
     top: calc(50% - 16px);
     inline-size: 32px;
     block-size: 32px;
-    border-radius: 50%;
+    border-radius: 16px;
     background: var(--blanco);
     opacity: 0;
     pointer-events: none;
   }
   .idioma[data-actual="en"]::before {
-    translate: 52px 0;
+    translate: 32px 0;
   }
   .idioma[data-yendo]::before {
     opacity: 1;
-    animation: idioma-va 160ms var(--curva-salida) forwards;
+    animation: idioma-va 200ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
   }
   .idioma[data-yendo][data-actual="en"]::before {
     animation-name: idioma-vuelve;
@@ -193,7 +218,14 @@
   .idioma[data-yendo] a.idioma-op {
     color: var(--tinta-osc);
   }
-  .idioma-op:focus-visible,
+  /* El foco rodea el círculo, no la caja táctil de 44 px (asimétrica). */
+  .idioma-op:focus-visible {
+    outline: none;
+  }
+  .idioma-op:focus-visible::after {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
   .pill:focus-visible,
   .cab-menu:focus-visible,
   .hablemos:focus-visible {
@@ -207,18 +239,134 @@
     position: absolute;
     inset: -2px 0;
   }
+  /* «Hablemos» (pulido G2; material corregido en la QA de G): el mismo vidrio
+     oscuro del cromo (`--vidrio-cromo` + `--filo-vidrio`) para que la cabecera sea
+     una sola familia, y lo que lo distingue como acción principal es luz, no
+     relleno: el texto en blanco pleno (las pills van en `--tinta-2-vidrio`), un
+     reflejo en el tercio superior que sigue al puntero en x (`--brillo-x`,
+     `Hablemos.tsx`) y el canto inferior encendido en láser (1 px, la regla del
+     láser: solo línea). El LED de la izquierda es el punto de disponible, verde
+     como `.estado`. Blanco sobre el vidrio: ≥ 10:1 aun con una losa blanca detrás
+     (0,8 de #0e0f12 sobre #fff = #3e3f41). */
   .cab-b .hablemos {
+    --brillo-x: 32%;
     position: relative;
+    isolation: isolate;
+    gap: 10px;
     block-size: var(--pill-alto);
     min-height: 0;
-    background: var(--electrico);
+    padding: 0 20px 0 16px;
     color: var(--blanco);
-    box-shadow: 0 8px 24px -8px rgba(43, 86, 243, 0.6);
+    background-color: var(--vidrio-cromo);
+    background-image:
+      radial-gradient(60% 55% at var(--brillo-x) -10%, rgba(255, 255, 255, 0.12), transparent 70%),
+      var(--vidrio-oscuro);
+    -webkit-backdrop-filter: var(--vidrio-filtro);
+    backdrop-filter: var(--vidrio-filtro);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      translate 520ms var(--muelle),
+      scale 520ms var(--muelle),
+      background-color var(--d-hover) var(--curva-salida),
+      box-shadow var(--d-hover) var(--curva-salida);
+  }
+  /* El canto: el bisel y el especular del vidrio (como el `::after` compartido de
+     `globals.css`) más el láser, centrado en el borde inferior y fundido hacia los
+     lados. Estático: una capa pintada una vez. */
+  .cab-b .hablemos::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px;
+    border-radius: inherit;
+    background:
+      radial-gradient(46% 100% at 50% 100%, var(--laser), transparent 100%),
+      var(--vidrio-especular),
+      var(--vidrio-canto);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+  /* Con el imán activo el botón sigue al cursor casi sin retardo. */
+  .cab-b .hablemos[data-iman] {
+    transition:
+      translate 90ms linear,
+      scale 520ms var(--muelle),
+      background-color var(--d-hover) var(--curva-salida),
+      box-shadow var(--d-hover) var(--curva-salida);
+  }
+  .cab-b .hablemos:active {
+    scale: 0.95;
+    transition-duration: 90ms, var(--d-press), var(--d-hover), var(--d-hover);
+    transition-timing-function: linear, var(--curva-salida), var(--curva-salida), var(--curva-salida);
+  }
+  .hablemos-luz {
+    position: relative;
+    flex: none;
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 50%;
+    background: var(--disp-nucleo);
+    box-shadow:
+      0 0 0 1.5px var(--disp),
+      0 0 6px 1px var(--disp-halo);
+  }
+  /* El halo crece al acercarse: luz, no relleno (solo opacidad y escala). */
+  .hablemos-luz::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--disp-halo), transparent);
+    opacity: 0;
+    scale: 0.6;
+    transition:
+      opacity var(--d-hover) var(--curva-salida),
+      scale 520ms var(--muelle);
   }
   @media (hover: hover) and (pointer: fine) {
-    .hablemos:hover {
-      background: #4569f5;
+    /* Hover: el vidrio se aclara un punto y el láser del canto echa su luz abajo. */
+    .cab-b .hablemos:hover {
+      background-color: rgba(30, 31, 36, 0.82);
+      box-shadow:
+        var(--filo-vidrio),
+        0 8px 18px -10px var(--laser-halo),
+        var(--sombra-flota);
     }
+    .cab-b .hablemos:hover .hablemos-luz::after {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  /* Foco: anillo de 2 px separado 3 px, del color del foco; el LED se enciende. */
+  .cab-b .hablemos:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 3px;
+  }
+  .cab-b .hablemos:focus-visible .hablemos-luz::after {
+    opacity: 1;
+    scale: 1;
+  }
+  /* Con el anillo de metal (metal-fx) el bisel propio sobra: lo pinta el metal.
+     Queda el láser del canto inferior. */
+  .cab-b .hablemos[data-metal]::after {
+    background: radial-gradient(46% 100% at 50% 100%, var(--laser), transparent 100%);
+  }
+  /* metal-fx oculta su envoltura (y con ella el botón) hasta pintar su primer
+     cuadro: el botón ya está completo, así que nunca se esconde; el anillo
+     simplemente aparece encima cuando está listo. */
+  .hablemos-metal {
+    flex: none;
+    border-radius: var(--r-pill);
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   .cab-menu {
     display: none;
@@ -231,7 +379,7 @@
     background-image: var(--vidrio-oscuro);
     -webkit-backdrop-filter: var(--vidrio-filtro);
     backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo), var(--sombra-flota);
+    box-shadow: var(--filo-vidrio), var(--sombra-flota);
     color: var(--tinta);
     cursor: pointer;
     transition: scale var(--d-press) var(--curva-salida);
@@ -449,7 +597,7 @@
       background-image: var(--vidrio-oscuro);
       -webkit-backdrop-filter: var(--vidrio-filtro);
       backdrop-filter: var(--vidrio-filtro);
-      box-shadow: var(--filo), var(--sombra-flota);
+      box-shadow: var(--filo-vidrio), var(--sombra-flota);
       font-family: var(--font-texto);
       transition:
         translate var(--d-ui) var(--curva-salida),
@@ -581,6 +729,14 @@
   .idioma-op {
     transition-duration: 1ms !important;
   }
+  .cab-b .hablemos,
+  .cab-b .hablemos[data-iman],
+  .hablemos-luz::after {
+    transition-duration: 1ms !important;
+  }
+  .cab-b .hablemos:active {
+    scale: none;
+  }
   .pill:active,
   .dock :is(a, button):active,
   .rail-acciones a:active,
@@ -638,19 +794,42 @@
     scale: 1;
   }
 }
+/* La gota de ES/EN: una cápsula de 32 px que se estira (`width` de 32 → 64 → 32,
+   aquí en un pseudo de 32 × 32: barato y de una sola vez). El borde delantero
+   llega en el 45 % con un muelle; el trasero lo sigue y rebota 2 px al final. */
 @keyframes idioma-va {
-  from {
+  0% {
     translate: 0 0;
+    inline-size: 32px;
   }
-  to {
-    translate: 52px 0;
+  45% {
+    translate: 0 0;
+    inline-size: 64px;
+  }
+  80% {
+    translate: 33px 0;
+    inline-size: 31px;
+  }
+  100% {
+    translate: 32px 0;
+    inline-size: 32px;
   }
 }
 @keyframes idioma-vuelve {
-  from {
-    translate: 52px 0;
+  0% {
+    translate: 32px 0;
+    inline-size: 32px;
   }
-  to {
+  45% {
     translate: 0 0;
+    inline-size: 64px;
+  }
+  80% {
+    translate: -1px 0;
+    inline-size: 31px;
+  }
+  100% {
+    translate: 0 0;
+    inline-size: 32px;
   }
 }

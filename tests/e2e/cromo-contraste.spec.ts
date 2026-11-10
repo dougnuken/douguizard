@@ -31,7 +31,13 @@ async function medir(page: Page, selector: string): Promise<Medida[]> {
       })
       .map((e, i) => {
         e.setAttribute("data-medir", String(i));
-        const r = e.getBoundingClientRect();
+        let r = e.getBoundingClientRect();
+        // Pulido G2: la opción de ES/EN mide 44 × 44 y sobresale de la cápsula (objetivo
+        // táctil); su etiqueta va sobre su círculo de 32 px (el ::after): se mide ese.
+        if (e.matches(".idioma-op")) {
+          const cs = getComputedStyle(e, "::after");
+          r = new DOMRect(r.x + parseFloat(cs.left), r.y + parseFloat(cs.top), parseFloat(cs.width), parseFloat(cs.height));
+        }
         return { i, color: getComputedStyle(e).color, etiqueta: (e.textContent ?? "").trim().slice(0, 20) || e.getAttribute("aria-label") || "?", r: { x: r.x, y: r.y, w: r.width, h: r.height } };
       }),
   );

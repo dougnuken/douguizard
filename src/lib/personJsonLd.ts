@@ -1,6 +1,5 @@
 import { getSite, site } from "@/data/site";
 import { getCv } from "@/data/cv";
-import { currentExperience } from "@/lib/career";
 import { htmlLang, localePath, type Locale } from "@/i18n/config";
 
 const SITE_URL = `https://${site.domain}`;
@@ -16,7 +15,6 @@ const SITE_URL = `https://${site.domain}`;
  * NDA-shaped or client-owned, and that is Doug's call to make, not a gap.
  */
 export function personNode(locale: Locale = "en") {
-  const current = currentExperience();
   const site = getSite(locale);
   const { certifications, education, skills } = getCv(locale);
 
@@ -40,7 +38,7 @@ export function personNode(locale: Locale = "en") {
       addressLocality: site.location.city,
       addressCountry: "CO",
     },
-    worksFor: { "@type": "Organization", name: current.company.name },
+    // No `worksFor`: Naowee ended in Oct 2026 and no other role is open.
     alumniOf: education.map((e) => ({
       "@type": "EducationalOrganization",
       name: e.institution,

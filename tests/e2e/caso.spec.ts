@@ -524,7 +524,7 @@ test.describe("P1-3 · titulares del cuerpo", () => {
       ["Problema", "Mi parte", "Decisiones", "Producto", "Proceso"],
       [
         "Un sector que funcionaba con archivos",
-        "Dirijo el producto y construyo el prototipo",
+        "Dirigí el producto y construí el prototipo",
         "Tres reglas que sostienen la plataforma",
         "Así se despeja hoy un trámite vencido",
         "Del archivo al prototipo firmado",
