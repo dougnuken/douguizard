@@ -12,7 +12,7 @@ type Props = {
   ceja?: React.ReactNode;
   superficie?: Superficie;
   radio?: RadioLosa;
-  flecha?: "blanca" | "tinta" | "osc" | false;
+  flecha?: "blanca" | "tinta" | false;
   /** Solo el lab: fuerza el aspecto de hover o foco para verlo en reposo. */
   forzar?: "hover" | "foco";
   className?: string;

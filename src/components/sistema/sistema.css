@@ -7,13 +7,6 @@
 
 @layer components {
   /* ── Tipos ──────────────────────────────────────────────────────────────── */
-  .b-texto {
-    font-family: var(--font-texto);
-    font-size: var(--t-16);
-    line-height: 1.5;
-    color: var(--tinta);
-    -webkit-font-smoothing: antialiased;
-  }
   .ceja {
     font: 400 var(--t-14) / 1.3 var(--font-texto);
     letter-spacing: 0.01em;
@@ -109,14 +102,6 @@
     border-radius: var(--r-m);
     padding: 24px;
   }
-  .losa--r-s {
-    border-radius: var(--r-s);
-    padding: 16px;
-  }
-  .losa--vacio {
-    background-color: var(--vacio);
-    box-shadow: inset 0 0 0 1px var(--losa-borde);
-  }
   .losa--losa {
     background-color: var(--losa);
     box-shadow: var(--filo);
@@ -169,16 +154,6 @@
   }
   .losa--magenta .etiqueta {
     color: var(--magenta-etiqueta-base);
-  }
-  .losa--vidrio {
-    background-color: var(--vidrio-plano);
-    background-image: var(--vidrio-oscuro);
-    -webkit-backdrop-filter: var(--vidrio-filtro);
-    backdrop-filter: var(--vidrio-filtro);
-    box-shadow: var(--filo-vidrio), var(--sombra-flota);
-  }
-  .losa--vidrio :is(.ceja, .apoyo, .etiqueta) {
-    color: var(--tinta-2-vidrio);
   }
   /* Lo que va dentro de una losa con inset es concéntrico: radio − inset. */
   .losa-media {
@@ -265,10 +240,6 @@
     color: var(--blanco);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
-  .flecha--osc {
-    background: var(--losa-alta);
-    color: var(--tinta);
-  }
 
   /* ── Iconos (sprite) ────────────────────────────────────────────────────── */
   .icono {
@@ -327,11 +298,6 @@
     background: var(--tinta-osc);
     color: var(--blanco);
   }
-  .boton--electrico {
-    background: var(--electrico);
-    color: var(--blanco);
-    box-shadow: 0 8px 24px -8px rgba(43, 86, 243, 0.6);
-  }
   .boton--linea {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
     color: var(--tinta);
@@ -346,9 +312,6 @@
     }
     .boton--tinta:hover {
       background: #26262e;
-    }
-    .boton--electrico:hover {
-      background: #4569f5;
     }
     .boton--linea:hover {
       background: rgba(255, 255, 255, 0.08);
@@ -422,15 +385,6 @@
     font: 400 var(--t-14) / 1.3 var(--font-texto);
     letter-spacing: 0.01em;
     color: var(--tinta-2);
-  }
-  .etiqueta--azul {
-    color: var(--azul-etiqueta);
-  }
-  .etiqueta--magenta {
-    color: var(--magenta-etiqueta-base);
-  }
-  .etiqueta--osc {
-    color: var(--tinta-osc-2);
   }
   .chip {
     display: inline-flex;
