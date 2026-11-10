@@ -7,6 +7,7 @@ import SiteFooter from "@/components/chrome/SiteFooter";
 import DockMovil from "@/components/chrome/DockMovil";
 import RailAcciones from "@/components/chrome/RailAcciones";
 import { IconosSprite } from "@/components/sistema/Iconos";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /**
  * La página completa de un caso: `CaseBody` dentro de la única `<main>` del
@@ -20,7 +21,7 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
   if (!study) notFound();
 
   return (
-    <>
+    <TransicionPagina>
       <RailAcciones locale={locale} />
       <div className="min-h-svh bg-[var(--vacio)]">
         <main id="main" tabIndex={-1}>
@@ -34,6 +35,6 @@ export default function CasePage({ slug, locale }: { slug: string; locale: Local
         />
       </div>
       <DockMovil />
-    </>
+    </TransicionPagina>
   );
 }

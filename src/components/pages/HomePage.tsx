@@ -6,6 +6,7 @@ import Escena from "@/components/escena/Escena";
 import { IconosSprite } from "@/components/sistema/Iconos";
 import { TableroResto } from "@/components/tablero/Tablero";
 import type { Locale } from "@/i18n/config";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /**
  * El home B (07 F3): el OS en su estado final, con la cabecera pastilla (en
@@ -14,7 +15,7 @@ import type { Locale } from "@/i18n/config";
  */
 export default function HomePage({ locale }: { locale: Locale }) {
   return (
-    <>
+    <TransicionPagina>
       <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b tablero-home">
         <IconosSprite />
@@ -24,6 +25,6 @@ export default function HomePage({ locale }: { locale: Locale }) {
       </main>
       <SiteFooter locale={locale} />
       <DockMovil />
-    </>
+    </TransicionPagina>
   );
 }

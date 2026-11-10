@@ -10,6 +10,7 @@ import CvSkills from "@/components/cv/CvSkills";
 import { getSite } from "@/data/site";
 import type { Locale } from "@/i18n/config";
 import { cvJsonLd } from "@/lib/personJsonLd";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /**
  * The CV, rendered from `cv.ts` + `site.ts` in one language. A server component
@@ -23,7 +24,7 @@ import { cvJsonLd } from "@/lib/personJsonLd";
 export default function CvPage({ locale }: { locale: Locale }) {
   const site = getSite(locale);
   return (
-    <>
+    <TransicionPagina>
       {/* Print only — see the `@media print` block. Fixed, so Chrome repeats
           it on every sheet, and outside `#main` so nothing it does can move a
           line of type. The purple wash that used to sit beside it now rides
@@ -83,6 +84,6 @@ export default function CvPage({ locale }: { locale: Locale }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(cvJsonLd(locale)) }}
       />
-    </>
+    </TransicionPagina>
   );
 }

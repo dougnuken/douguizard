@@ -350,11 +350,41 @@
       inset 0 0 0 1.5px var(--tinta),
       0 0 0 4px var(--losa);
   }
-  .craft .pasos li:first-child .nodo {
+  /* G4: los cuatro nodos encendidos (el láser ya pasó por todos). La luz es una
+     capa (`::after`) y el halo otra (`::before`): `PasosCraft` las anima con
+     `opacity`/`transform`, sin repintar el anillo. */
+  .craft .pasos .nodo::after,
+  .craft .pasos .nodo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+  }
+  .craft .pasos .nodo::after {
     background: var(--laser);
-    box-shadow:
-      0 0 0 4px var(--losa),
-      0 0 10px var(--laser-halo);
+    box-shadow: 0 0 10px var(--laser-halo);
+  }
+  .craft .pasos .nodo::before {
+    box-shadow: 0 0 0 1.5px var(--laser);
+    opacity: 0;
+  }
+  /* El láser crece desde su origen (izquierda; arriba en móvil). */
+  .craft .pasos {
+    --laser-apagado: scaleX(0);
+  }
+  .craft .pasos::before {
+    transform-origin: left center;
+  }
+  /* Antes de entrar en vista (solo con JS y movimiento): láser vacío, nodos
+     apagados, pasos invisibles en su sitio (sin CLS). */
+  .craft .pasos[data-pasos="espera"]::before {
+    transform: var(--laser-apagado);
+  }
+  .craft .pasos[data-pasos="espera"] .nodo::after {
+    opacity: 0;
+  }
+  .craft .pasos[data-pasos="espera"] > li > :not(.nodo) {
+    opacity: 0;
   }
   .craft .pasos .dot {
     color: var(--tinta);
@@ -614,7 +644,11 @@
       padding-left: 32px;
     }
     /* Vertical: el eje x del láser pasa por el centro de los nodos. */
+    .craft .pasos {
+      --laser-apagado: scaleY(0);
+    }
     .craft .pasos::before {
+      transform-origin: center top;
       display: block;
       left: calc(var(--nodo) / 2 - 0.5px);
       right: auto;
@@ -695,5 +729,17 @@
 @media (prefers-reduced-motion: reduce) {
   .indicador::after {
     animation: none !important;
+  }
+}
+
+/* G4: «Cómo trabajo» siempre visible al imprimir y con movimiento reducido,
+   aunque el script la haya dejado en espera. */
+@media print, (prefers-reduced-motion: reduce) {
+  .craft .pasos[data-pasos="espera"]::before {
+    transform: none;
+  }
+  .craft .pasos[data-pasos="espera"] .nodo::after,
+  .craft .pasos[data-pasos="espera"] > li > :not(.nodo) {
+    opacity: 1;
   }
 }

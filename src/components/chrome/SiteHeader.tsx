@@ -3,7 +3,7 @@
 import "./chrome.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { getSite } from "@/data/site";
 import { localePath, splitLocale } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
@@ -108,7 +108,8 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   // D4: el conmutador de tema solo existe si el CV conserva el tema claro.
   const conTema = isCv && decisiones.temaClaroEn !== "ninguna";
   // La navegación en el cliente no vuelve a ejecutar el script de tema: /cv marca el <html>.
-  useEffect(() => {
+  // En la fase de layout (G4): antes de que la transición de página capture la nueva.
+  useLayoutEffect(() => {
     const r = document.documentElement;
     if (isCv) r.setAttribute("data-ruta", "cv");
     else r.removeAttribute("data-ruta");

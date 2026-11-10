@@ -13,6 +13,7 @@ import { paginasDict } from "@/i18n/paginas";
 import { pdfCv } from "@/lib/cvPdf";
 import { aboutDescripcion } from "@/lib/metadata";
 import { aboutJsonLd } from "@/lib/personJsonLd";
+import TransicionPagina from "@/components/motion/TransicionPagina";
 
 /**
  * `/about` · perfil (07 F2, `about.html`): portada (foto + corte, sticky sin
@@ -23,7 +24,7 @@ export default function AboutPage({ locale }: { locale: Locale }) {
   const t = paginasDict[locale].perfil;
   const { contexto } = getBio(locale);
   return (
-    <>
+    <TransicionPagina>
       <RailAcciones locale={locale} />
       <main id="main" tabIndex={-1} className="pagina-b">
         <IconosSprite />
@@ -63,6 +64,6 @@ export default function AboutPage({ locale }: { locale: Locale }) {
       </main>
       <SiteFooter locale={locale} />
       <DockMovil />
-    </>
+    </TransicionPagina>
   );
 }
