@@ -60,4 +60,11 @@ el rótulo a 24 px (de9e98d).
 
 ## Arreglos y verificación
 
-_Pendiente de la corrida final._
+| Corrida | lint | tsc | vitest | build | Playwright (Chromium, `--workers=2 --trace off`) |
+|---|---|---|---|---|---|
+| Completa, antes de los arreglos (de9e98d + ignore de `.claude/**`) | 0 errores | 0 | 264/264 | OK | **618/622**: 4 fallos reales → P1-4 (`hero320` ×2), P1-5 (`escena` reposo) y `f7` P2-7 obsoleto (esperaba «Ene 2026 — Hoy»; Naowee cerró en oct 2026, G3: prueba actualizada) |
+| Specs fallidos tras a164433 / a2d314d | — | — | — | OK | 12/12 |
+| **Completa final** (86744c0: todo lo anterior + P1-1…P1-3) | 0 errores | 0 | **264/264** | OK | **620/622**. Repetidos los 2: `g4-motion` K14 → `/about#craft` pasa 2/2; `hoja` «la salida se ve» (X / velo) es inestable **previa**: con el `src` de 2aac5e1 falla igual (X 3/3 con `--repeat-each=3`). Headless pinta ~4 cuadros en 400 ms (40 · 139 · 395 ms) y a veces ninguno cae a medio camino; no depende de estos cambios |
+
+`npm run lint` tenía 1.687 errores, todos en `.claude/worktrees/` (copias de agentes): `eslint.config.mjs` ignora ahora
+`.claude/**` (029e168). Capturas de la QA: `pulido-G/qa/` (8).
