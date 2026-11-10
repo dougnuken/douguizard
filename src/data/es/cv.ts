@@ -156,8 +156,8 @@ export const toolLabelsEs: Record<ToolGroup["id"], string> = {
 };
 
 export const languagesEs: Language[] = [
-  { name: "Español", cefr: "Native", level: "Nativo" },
-  { name: "Inglés", cefr: "B1", level: "B1 · Competencia profesional" },
+  { code: "es", name: "Español", cefr: "Native", level: "Nativo" },
+  { code: "en", name: "Inglés", cefr: "B1", level: "B1 · Competencia profesional" },
 ];
 
 export const profileEs: CvProfile = {

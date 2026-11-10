@@ -23,11 +23,17 @@ describe("transicionRuta (G4)", () => {
 
 describe("coreografiaPasos (G4)", () => {
   const c = coreografiaPasos({ eje: "x", paradas: [0, 0.25, 0.5, 0.75], pasos: 4 });
-  it("enciende los nodos en orden y dura entre 2,5 y 3,5 s", () => {
+  it("enciende los nodos en orden y dura entre 1,8 y 2 s (pulido H, P2-4)", () => {
     expect(c.encendidos).toEqual([...c.encendidos].sort((a, b) => a - b));
     expect(c.encendidos[0]).toBe(0);
-    expect(c.total).toBeGreaterThanOrEqual(2500);
-    expect(c.total).toBeLessThanOrEqual(3500);
+    expect(c.total).toBeGreaterThanOrEqual(1800);
+    expect(c.total).toBeLessThanOrEqual(2000);
+  });
+  it("sin láser es más corta y nunca pasa de 2 s; el pulso cabe dentro del texto", () => {
+    const s = coreografiaPasos({ eje: "ninguno", paradas: [], pasos: 4 });
+    expect(s.total).toBeLessThanOrEqual(2000);
+    expect(s.total).toBeLessThan(c.total);
+    expect(c.pulso).toBeLessThanOrEqual(c.escalon[c.escalon.length - 1] + c.texto);
   });
   it("el láser llega a cada nodo justo cuando se enciende y termina lleno", () => {
     const k = c.laser!.keyframes;

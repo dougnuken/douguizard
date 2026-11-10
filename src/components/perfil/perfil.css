@@ -423,7 +423,8 @@
     align-items: baseline;
     white-space: normal;
   }
-  .lista-datos .estado::before {
+  .lista-datos .estado::before,
+  .lista-datos .estado::after {
     translate: 0 -2px;
   }
   .grupos {
@@ -485,6 +486,8 @@
     width: max-content;
     animation: marquee-marcas 36s linear infinite;
   }
+  /* Pulido H (P2-6): fuera de la vista (`MarqueeVivo`) también se pausa. */
+  .marquee[data-fuera] .marquee-pista,
   .marquee:hover .marquee-pista,
   .marquee:focus-within .marquee-pista,
   .marquee:focus .marquee-pista {
@@ -508,7 +511,9 @@
   .marcas li {
     display: flex;
     align-items: center;
-    min-height: 48px;
+    /* Pulido H (P2-3): todas a la altura del logo más alto (Banco de Occidente, 60 px
+       × `--esc`), para que la rejilla de movimiento reducido no desalinee su fila. */
+    min-height: max(48px, calc(60px * var(--esc)));
     white-space: nowrap;
     opacity: 0.9;
   }

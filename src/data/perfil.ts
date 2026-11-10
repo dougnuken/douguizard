@@ -1,7 +1,7 @@
 import type { Locale } from "@/i18n/config";
 import { latestExperience, getWordmarks } from "@/lib/career";
 import { getSite } from "./site";
-import { getCv, type ExperienceId } from "./cv";
+import { getCv, type ExperienceId, type Language } from "./cv";
 import { getCaseStudy } from "./work";
 
 /**
@@ -17,6 +17,13 @@ export interface Entrada {
   body: string;
 }
 
+/**
+ * Bandera de cada idioma en /about (pulido H, P2-1). Sale del código del idioma,
+ * no de su posición: reordenar `languages` no cambia la bandera. Español → Colombia
+ * (de donde es Doug), inglés → EE. UU. (convención pedida por Doug).
+ */
+export const banderaDeIdioma = { es: "co", en: "us" } as const satisfies Record<Language["code"], "co" | "us">;
+
 /** Datos de base de `/about` (04 §6.1). Todo derivado de `site.ts` y `cv.ts`. */
 export function getDatos(locale: Locale) {
   const s = getSite(locale);
@@ -26,6 +33,8 @@ export function getDatos(locale: Locale) {
     // F2 P2-6: «Español (nativo)», en minúscula tras el paréntesis en ES. El CV
     // conserva su «Nativo» (no se toca `cv.ts`: lo leen /cv y los PDF).
     idiomas: getCv(locale).languages.map((l) => ({
+      codigo: l.code,
+      pais: banderaDeIdioma[l.code],
       nombre: l.name,
       nivel: locale === "es" && /^[A-ZÁÉÍÓÚ][a-záéíóúñ]/.test(l.level) ? l.level[0].toLowerCase() + l.level.slice(1) : l.level,
     })),

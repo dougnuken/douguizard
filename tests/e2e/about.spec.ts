@@ -144,6 +144,68 @@ test.describe("/about", () => {
     }
   });
 
+  test("pulido H (P2-3): el nombre de Banco de Occidente a la altura de mayúscula de los wordmarks", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const w of [1440, 390]) {
+      await page.setViewportSize({ width: w, height: 900 });
+      await page.goto("/about", { waitUntil: "networkidle" });
+      const r = await page.evaluate(() => {
+        const svg = [...document.querySelectorAll<SVGSVGElement>(".marquee-lista:not([aria-hidden]) .logo-marca")].find((s) => s.getAttribute("viewBox") === "0 0 195 71")!;
+        // La «B» del nombre va de y 53,5 a 69,84 en un viewBox de 71.
+        const b = (svg.getBoundingClientRect().height * (69.84 - 53.515)) / 71;
+        const fs = parseFloat(getComputedStyle(document.querySelector(".marcas")!).fontSize);
+        return { b, fs };
+      });
+      // Mayúscula de los wordmarks ≈ 0,7 × su cuerpo.
+      expect(r.b, `${w}: ${JSON.stringify(r)}`).toBeGreaterThanOrEqual(0.62 * r.fs);
+    }
+  });
+
+  test("pulido H (P2-6): el marquee se pausa fuera de la vista y corre dentro", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/about", { waitUntil: "networkidle" });
+    const estado = () =>
+      page.evaluate(() => ({
+        fuera: document.querySelector(".marquee")!.hasAttribute("data-fuera"),
+        play: getComputedStyle(document.querySelector(".marquee-pista")!).animationPlayState,
+      }));
+    await expect.poll(estado).toEqual({ fuera: true, play: "paused" });
+    await page.locator(".marquee").evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+    await expect.poll(estado).toEqual({ fuera: false, play: "running" });
+    await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+    await expect.poll(estado).toEqual({ fuera: true, play: "paused" });
+  });
+
+  test("pulido H (P2-7): el latido del punto verde solo anima opacity y transform, y se apaga", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/about");
+    const r = await page.evaluate(() => {
+      const anims = document.getAnimations().filter((a) => (a as CSSAnimation).animationName === "estado-pulso");
+      return {
+        n: anims.length,
+        pseudos: [...new Set(anims.map((a) => (a.effect as KeyframeEffect).pseudoElement))],
+        props: [
+          ...new Set(
+            anims.flatMap((a) =>
+              (a.effect as KeyframeEffect).getKeyframes().flatMap((k) => Object.keys(k).filter((x) => !["offset", "computedOffset", "easing", "composite"].includes(x))),
+            ),
+          ),
+        ].sort(),
+      };
+    });
+    expect(r.n).toBeGreaterThan(0);
+    expect(r.pseudos).toEqual(["::after"]);
+    expect(r.props).toEqual(["opacity", "transform"]);
+    // El halo coincide con el punto (misma caja) y no empuja el texto.
+    const caja = await page.evaluate(() => {
+      const e = document.querySelector(".lista-datos .estado")!;
+      const a = getComputedStyle(e, "::after"), b = getComputedStyle(e, "::before");
+      return { w: a.width, h: a.height, mb: a.marginInlineEnd, gap: getComputedStyle(e).columnGap, tb: b.translate, ta: a.translate };
+    });
+    expect(caja).toEqual({ w: "8px", h: "8px", mb: "-16px", gap: "8px", tb: caja.ta, ta: caja.tb });
+    await expect.poll(() => page.evaluate(() => document.getAnimations().filter((a) => (a as CSSAnimation).animationName === "estado-pulso").length), { timeout: 6_000 }).toBe(0);
+  });
+
   test("citas verbatim con lang de origen, en ES y EN", async ({ page }) => {
     for (const ruta of ["/about", "/en/about"]) {
       await page.goto(ruta, { waitUntil: "networkidle" });

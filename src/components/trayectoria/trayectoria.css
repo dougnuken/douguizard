@@ -81,6 +81,9 @@
       0 0 8px 2px var(--laser-halo);
     animation: none;
   }
+  .hoy-chip.estado::after {
+    display: none;
+  }
   .hoy-chip {
     margin-bottom: 16px;
     color: var(--tinta);

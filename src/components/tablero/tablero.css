@@ -200,7 +200,8 @@
     white-space: normal;
     align-items: baseline;
   }
-  .k2 .k2-estado::before {
+  .k2 .k2-estado::before,
+  .k2 .k2-estado::after {
     translate: 0 -1px;
   }
   .k2-cta {

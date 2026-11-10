@@ -376,11 +376,29 @@
       0 0 0 1px var(--disp),
       0 0 8px 2px var(--disp-halo);
   }
+  /* Pulido H (P2-7): el latido es un halo aparte (`::after`) que solo cambia
+     `opacity` y `transform` (compositor), en vez de pintar `box-shadow` en cada
+     cuadro. Va antes del punto (`order: -1`) y se le monta encima con margen
+     negativo (su ancho + el `gap`): misma caja y misma alineación que el punto,
+     y se pinta debajo de él. */
+  .estado::after {
+    content: "";
+    order: -1;
+    width: 8px;
+    height: 8px;
+    margin-inline-end: -16px;
+    border-radius: 50%;
+    flex: none;
+    box-shadow:
+      0 0 0 1px var(--disp),
+      0 0 12px 4px var(--disp-halo);
+    opacity: 0;
+    pointer-events: none;
+  }
   /* Dos latidos al aparecer y quieto: el sistema no deja animaciones vivas en
-     reposo (0 fps, `escena.spec`); el pulso infinito pintaba `box-shadow` en
-     cada cuadro mientras el punto estuviera en pantalla. */
+     reposo (0 fps, `escena.spec`). */
   @media (prefers-reduced-motion: no-preference) {
-    .estado::before {
+    .estado::after {
       animation: estado-pulso 1.6s ease-in-out 2;
     }
   }
@@ -429,10 +447,14 @@
 }
 
 @keyframes estado-pulso {
+  from,
+  to {
+    opacity: 0;
+    transform: scale(0.75);
+  }
   50% {
-    box-shadow:
-      0 0 0 1px var(--disp),
-      0 0 12px 4px var(--disp-halo);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
