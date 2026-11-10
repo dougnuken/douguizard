@@ -5,7 +5,7 @@ import type { ComponentProps } from "react";
 import { useTrabajoSecundario } from "@/lib/primeraInteraccion";
 
 /**
- * `next/link` cuyo prefetch, en móvil, espera a la primera interacción y a un
+ * `next/link` cuyo prefetch, en móvil, espera al primer scroll/tecla y a un
  * hueco libre (G1; `useTrabajoSecundario`). Al cargar, el prefetch de los
  * enlaces visibles traía y evaluaba la hoja del caso (~85 KB de JS) y el RSC de
  * `/` y `/cv` dentro de la ventana del TBT móvil. Desde ahí es un `Link` normal
