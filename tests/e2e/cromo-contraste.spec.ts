@@ -18,7 +18,7 @@ const lum = (r: number, g: number, b: number) => {
 };
 const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 
-type Medida = { etiqueta: string; texto: string; fondo: string; ratio: number };
+type Medida = { etiqueta: string; texto: string; fondo: string; ratio: number; veta: number };
 
 async function medir(page: Page, selector: string): Promise<Medida[]> {
   // Colores de texto antes de ocultarlo (sin la opción activa: va sobre la burbuja blanca).
@@ -70,8 +70,11 @@ async function medir(page: Page, selector: string): Promise<Medida[]> {
     }, png.toString("base64"));
     const conL = lums.map(([r, g, b]) => ({ l: lum(r, g, b), rgb: `${r},${g},${b}` })).sort((a, b) => a.l - b.l);
     const p90 = conL[Math.floor(conL.length * 0.9)];
+    // Pulido H (P2-2): «veta» = contraste entre lo más claro y lo más oscuro del fondo
+    // del vidrio (p90/p10). Si el desenfoque funciona, lo de debajo es una mancha (≈ 1).
+    const p10 = conL[Math.floor(conL.length * 0.1)];
     const [r, g, b] = (it.color.match(/[\d.]+/g) ?? []).map(Number);
-    out.push({ etiqueta: it.etiqueta, texto: it.color, fondo: p90.rgb, ratio: Math.round(ratio(lum(r, g, b), p90.l) * 100) / 100 });
+    out.push({ etiqueta: it.etiqueta, texto: it.color, fondo: p90.rgb, ratio: Math.round(ratio(lum(r, g, b), p90.l) * 100) / 100, veta: Math.round(ratio(p90.l, p10.l) * 100) / 100 });
   }
   return out;
 }
@@ -157,4 +160,29 @@ test.describe("P1-1 · contraste del cromo sobre superficies claras", () => {
     expect(todas.length, "etiquetas medidas sobre losa clara").toBeGreaterThanOrEqual(2);
     for (const x of todas) expect(x.ratio, `${x.etiqueta} (${x.texto} sobre ${x.fondo})`).toBeGreaterThanOrEqual(4.5);
   });
+});
+
+test("pulido H (P2-2) · 390 · el texto blanco de /about no se lee a través del vidrio de la cabecera", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/about", { waitUntil: "networkidle" });
+  // El párrafo de entrada (blanco, grande) justo bajo las pastillas de la cabecera.
+  const cab = await page.locator(".idioma").first().boundingBox();
+  for (let k = 0; k < 3; k++) {
+    await page.evaluate((y) => {
+      let mejor: HTMLElement | null = null, tam = 0;
+      for (const p of document.querySelectorAll<HTMLElement>("main p")) {
+        const f = parseFloat(getComputedStyle(p).fontSize);
+        if (f > tam && p.getBoundingClientRect().height > 100) { mejor = p; tam = f; }
+      }
+      scrollTo(0, mejor!.getBoundingClientRect().top + scrollY - y);
+    }, cab!.y);
+    await page.waitForTimeout(400);
+  }
+  const m = await medir(page, ".cab-marca .wordmark > span:last-child, .idioma-op, .cab-menu");
+  console.log(JSON.stringify(m));
+  expect(m.length).toBeGreaterThanOrEqual(3);
+  for (const x of m) {
+    expect(x.ratio, `${x.etiqueta} (${x.texto} sobre ${x.fondo})`).toBeGreaterThanOrEqual(4.5);
+    expect(x.veta, `${x.etiqueta}: el texto de debajo se transparenta`).toBeLessThanOrEqual(1.6);
+  }
 });

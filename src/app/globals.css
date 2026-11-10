@@ -1709,14 +1709,32 @@ html:has(dialog.hoja[open]) {
    nombre propio: no se funden con la página (sin parpadeo) y su píldora sigue
    viva (se ve la copia nueva, que es en vivo). Mientras el filtro de /work
    hace su propio View Transition (`vt-filtro`), no se capturan. */
-:root:not(.vt-filtro) .cab-b {
+/* Pulido H (P2-2): el nombre solo existe *durante* una transición. Un
+   `view-transition-name` permanente hace de su elemento una «backdrop root»:
+   el `backdrop-filter` de las pastillas, el ES/EN, el menú y el dock dejaba de
+   ver la página y el texto de debajo se leía nítido a través del vidrio (a 390,
+   los párrafos blancos de /about). `:active-view-transition` se activa al
+   llamar a `startViewTransition`, antes de capturar el estado viejo. */
+:root:not(.vt-filtro):active-view-transition .cab-b {
   view-transition-name: cabecera;
 }
-:root:not(.vt-filtro) .dock {
+:root:not(.vt-filtro):active-view-transition .dock {
   view-transition-name: dock;
 }
-:root:not(.vt-filtro) .rail-acciones {
+:root:not(.vt-filtro):active-view-transition .rail-acciones {
   view-transition-name: rail;
+}
+/* Navegadores con View Transitions pero sin la pseudoclase: nombre fijo (G4). */
+@supports not selector(:active-view-transition) {
+  :root:not(.vt-filtro) .cab-b {
+    view-transition-name: cabecera;
+  }
+  :root:not(.vt-filtro) .dock {
+    view-transition-name: dock;
+  }
+  :root:not(.vt-filtro) .rail-acciones {
+    view-transition-name: rail;
+  }
 }
 /* Las losas de caso llevan nombre en línea (`caso-<slug>`) para el reflujo del
    filtro de /work; fuera de él viajan con su página, no vuelan solas. */
