@@ -94,14 +94,13 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
   let raf = 0;
   let ultimo = 0;
   let cuadros = 0;
-  // Barrido: su reloj solo avanza mientras barre; `gesto` = último gesto del usuario.
+  // Barrido: su reloj solo avanza mientras barre.
   const yo = {};
-  let tb = 0;
+  let tb = relojBarrido.t;
   let barriendo = false;
   let entrada = 0;
   let dx = 0;
   let dy = 0;
-  let gesto = -Infinity;
   let espera = 0;
   let par = 1;
   let cedido = false;
@@ -109,13 +108,13 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
   let lentoMs = 0;
   let lentoN = 0;
   let avisado = false;
-  const destino = (now: number) => (opciones.barrido && !cedido && !s.arrastre && now - gesto >= REPOSO * 1000 ? opciones.barrido(tb) : null);
+  const destino = (now: number) => (opciones.barrido && !cedido && !s.arrastre && now - relojBarrido.gesto >= REPOSO * 1000 ? opciones.barrido(tb) : null);
   const barrer = (now: number, dt: number) => {
     if (cedido) return;
     let d = destino(now);
     if (!d) {
       // El barrido se apaga solo (scroll, fuera de vista): la lente se cierra donde está.
-      if (barriendo && now - gesto >= REPOSO * 1000) s.objetivo = 0;
+      if (barriendo && now - relojBarrido.gesto >= REPOSO * 1000) s.objetivo = 0;
       barriendo = false;
       if (relojBarrido.dueno === yo) relojBarrido.dueno = null;
       return;
@@ -149,7 +148,8 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
   const tick = (now: number) => {
     raf = 0;
     const real = now - ultimo;
-    const dt = Math.max(0, Math.min(0.05, real / 1000));
+    // Tope de 0,1 s: a 10 cuadros/s (WebGL por software) abrir y cerrar tardan lo mismo que a 60.
+    const dt = Math.max(0, Math.min(0.1, real / 1000));
     ultimo = now;
     const barria = barriendo;
     barrer(now, dt);
@@ -185,14 +185,20 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
   /** Un gesto del usuario: el barrido calla y se rearma para dentro de `REPOSO` s. */
   const mando = () => {
     if (!opciones.barrido) return;
-    gesto = performance.now();
+    relojBarrido.gesto = performance.now();
     barriendo = false;
+    rearmar(REPOSO * 1000);
+  };
+  /** Dentro de `ms`, si hay algo que barrer, se pide un cuadro (en reposo, 0 cuadros). */
+  const rearmar = (ms: number) => {
     window.clearTimeout(espera);
     espera = window.setTimeout(() => {
-      // Solo se pide un cuadro si hay algo que barrer (en reposo, 0 cuadros).
-      if (opciones.barrido?.(tb)) pedir();
-    }, REPOSO * 1000 + 30);
+      if (!cedido && opciones.barrido?.(tb)) pedir();
+    }, ms + 30);
   };
+  // Montada en pleno reposo tras un gesto (el WebGL entra con el primer toque en móvil): espera lo que falte.
+  const falta = REPOSO * 1000 - (performance.now() - relojBarrido.gesto);
+  if (opciones.barrido && falta > 0) rearmar(falta);
   const local = (e: PointerEvent) => {
     const r = el.getBoundingClientRect();
     const x = e.clientX - r.left;
@@ -283,7 +289,7 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
       // Se cierra cuando el otro ya está encima (si entretanto no la tomó el cursor).
       const t = performance.now();
       espera = window.setTimeout(() => {
-        if (gesto > t) return;
+        if (relojBarrido.gesto > t) return;
         // De golpe: la capa que sigue el barrido ya tapa la zona (y aquí cada cuadro cuesta).
         s.objetivo = s.abierta = 0;
         pedir();
@@ -293,6 +299,7 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
     destruir: () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(espera);
+      delete el.dataset.barrido;
       if (relojBarrido.dueno === yo) relojBarrido.dueno = null;
       window.removeEventListener("pointermove", mover);
       window.removeEventListener("pointerdown", bajar);

@@ -43,13 +43,13 @@
     mask-image: radial-gradient(closest-side, #000 46%, rgba(0, 0, 0, 0.84) 59.5%, rgba(0, 0, 0, 0.5) 73%, rgba(0, 0, 0, 0.16) 86.5%, transparent 100%);
     will-change: transform;
   }
-  .vidrio-css > i > b {
+  /* La foto limpia, en un canvas (no compite por el LCP): `LenteCss` le da la
+     caja de la foto pintada (`cover`) y la mueve al revés que el disco. */
+  .vidrio-css > i > canvas {
     position: absolute;
     left: 0;
     top: 0;
-    width: var(--cw, 100%);
-    height: var(--ch, 100%);
-    background: var(--v-img, none) no-repeat var(--v-pos, 50% 0) / cover;
+    max-width: none;
     will-change: transform;
   }
   .vidrio-css[data-activo] {
