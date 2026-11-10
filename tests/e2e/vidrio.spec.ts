@@ -76,6 +76,31 @@ const parcheLimpio = async (page: Page, canvas: ReturnType<Page["locator"]>, x: 
   }
 };
 
+/**
+ * Como `parcheLimpio`, pero con la foto limpia puesta **en el sitio del vidrio** (hermana del
+ * canvas, con el estilo de la foto): en el acto 1 el velo y el láser quedan encima igual que
+ * sobre el vidrio, así la comparación solo ve el vidrio.
+ */
+const parcheLimpioEnSitio = async (page: Page, x: number, y: number) => {
+  const src = getFotoActiva().rutas.textura;
+  await page.evaluate(async (src) => {
+    const poster = document.querySelector<HTMLImageElement>("img.k1-poster")!;
+    const capa = document.querySelector<HTMLElement>(".k1 [data-vidrio='css']")!;
+    const im = document.createElement("img");
+    im.id = "__limpia";
+    im.className = poster.className;
+    im.style.cssText = `${poster.style.cssText};z-index:1;`;
+    im.src = src;
+    capa.after(im);
+    await im.decode();
+  }, src);
+  try {
+    return await parche(page, x, y);
+  } finally {
+    await page.evaluate(() => document.getElementById("__limpia")?.remove());
+  }
+};
+
 /** Distancia media (niveles de gris, 0–255) entre dos parches. */
 const distancia = (a: Buffer, b: Buffer) => {
   let suma = 0;
@@ -222,7 +247,7 @@ test.describe("(b) sin WebGL (Chromium lanzado con --disable-webgl)", () => {
         return Math.hypot(d.x + d.width / 2 - cursor.x, d.y + d.height / 2 - cursor.y);
       };
       await expect.poll(centro, { timeout: 3000 }).toBeLessThan(4);
-      await expect(capa).not.toHaveAttribute("data-barrido", "");
+      await expect(page.locator(`${sel} [data-vidrio='css'][data-barrido]`)).toHaveCount(0);
       expect(e).toEqual([]);
       await navegador.close();
     });
@@ -308,22 +333,24 @@ test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
     const barre = page.locator(BARRE);
     await expect(barre).toHaveCount(1, { timeout: 8000 });
     await expect(barre).toHaveAttribute("data-lente", "1.00", { timeout: 6000 });
+    await expect(barre).toHaveAttribute("data-barrido", /^\d+,\d+$/);
     const c0 = await cuadrosDe(page);
     await page.waitForTimeout(600);
     expect(await cuadrosDe(page), "el barrido pinta sin que nadie toque nada").not.toBe(c0);
 
-    // El cursor manda: sobre la pared de la foto, el barrido calla y el vidrio se abre ahí.
+    // El cursor manda: sobre la pared de la foto (a la derecha del hombro), el barrido calla y el vidrio se abre ahí.
     const canvas = page.locator(".k1 canvas[data-vidrio='gl']");
     const b = (await canvas.boundingBox())!;
-    const x = b.x + b.width * 0.24;
-    const y = 620;
+    const x = b.x + b.width * 0.8;
+    const y = 560;
+    const cerrada = distancia(await parche(page, x, y), await parcheLimpioEnSitio(page, x, y));
+    expect(cerrada, `antes del cursor ahí hay vidrio (a ${cerrada.toFixed(2)} niveles de la foto limpia)`).toBeGreaterThan(3);
     await page.mouse.move(x - 30, y, { steps: 3 });
     await page.mouse.move(x, y, { steps: 3 });
     await expect(barre).toHaveCount(0);
     await expect(canvas).toHaveAttribute("data-lente", "1.00", { timeout: 4000 });
-    const abierta = await parche(page, x, y);
-    const da = distancia(abierta, await parcheLimpio(page, canvas, x, y));
-    expect(da, `bajo el cursor se ve la foto limpia (a ${da.toFixed(2)} niveles)`).toBeLessThan(4);
+    const da = distancia(await parche(page, x, y), await parcheLimpioEnSitio(page, x, y));
+    expect(da, `bajo el cursor se ve la foto limpia (vidrio ${cerrada.toFixed(2)} → ${da.toFixed(2)} niveles)`).toBeLessThanOrEqual(cerrada * 0.5);
 
     // Reposo: a los ~3 s del último movimiento el barrido retoma (y antes no).
     await page.mouse.move(x + 2, y);
@@ -332,6 +359,33 @@ test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
     expect(await barre.count(), "antes de 3 s sigue mandando el cursor").toBe(0);
     await expect(barre).toHaveCount(1, { timeout: 5000 });
     expect(Date.now() - t0).toBeGreaterThanOrEqual(2800);
+    expect(e).toEqual([]);
+  });
+
+  test("1440, barrido en WebGL (forzado: aquí es por software y lo llevaría la capa CSS): abre la foto en su zona y deja el vidrio fuera", async ({ page }) => {
+    test.setTimeout(120_000);
+    const e = errores(page);
+    await page.addInitScript(() => {
+      (window as unknown as { __vidrioSinRelevo: boolean }).__vidrioSinRelevo = true;
+    });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "load" });
+    test.skip(!(await conCanvas(page, ".k1")), "sin WebGL2 en este navegador");
+    const canvas = page.locator(".k1 canvas[data-vidrio='gl']");
+    await expect(canvas).toHaveAttribute("data-barrido", /^\d+,\d+$/, { timeout: 10_000 });
+    // El barrido nace entre los ojos y ahí se demora: ese parche ya es la foto limpia…
+    await expect(canvas).toHaveAttribute("data-lente", "1.00", { timeout: 30_000 });
+    await expect(page.locator(".k1 [data-vidrio='css'][data-barrido]"), "no hay relevo a la capa CSS").toHaveCount(0);
+    const b = (await canvas.boundingBox())!;
+    // El centro de la zona lo da `data-barrido` (px del canvas); se mide un poco por debajo (fuera del láser).
+    const [zx, zy] = ((await canvas.getAttribute("data-barrido")) ?? "").split(",").map(Number);
+    const zona = { x: b.x + zx, y: b.y + zy + 60 };
+    const pared = { x: b.x + b.width * 0.8, y: zona.y > 450 ? 200 : 640 };
+    const dZona = distancia(await parche(page, zona.x, zona.y), await parcheLimpioEnSitio(page, zona.x, zona.y));
+    // … y lejos de la zona el vidrio sigue ahí (el fondo guardado se copia entero en cada cuadro).
+    const dPared = distancia(await parche(page, pared.x, pared.y), await parcheLimpioEnSitio(page, pared.x, pared.y));
+    expect(dPared, `fuera de la zona hay vidrio (a ${dPared.toFixed(2)} niveles de la foto limpia)`).toBeGreaterThan(3);
+    expect(dZona, `zona nítida a ${dZona.toFixed(2)} niveles de la foto limpia (fuera, ${dPared.toFixed(2)})`).toBeLessThanOrEqual(dPared * 0.5);
     expect(e).toEqual([]);
   });
 
@@ -346,8 +400,11 @@ test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
     await page.evaluate((y) => window.scrollTo(0, y), fin);
     await expect(page.locator("html")).toHaveAttribute("data-escena-fase", "os");
     await expect(page.locator(BARRE)).toHaveCount(0, { timeout: 4000 });
-    await expect(page.locator(".k1 canvas[data-vidrio='gl']")).toHaveAttribute("data-lente", "0.00", { timeout: 4000 });
-    await page.waitForTimeout(600);
+    // La zona nítida se cierra (≈ 1,5 s) y ahí acaba el bucle, la lleve el canvas o la capa CSS.
+    await expect
+      .poll(() => page.evaluate(() => [...document.querySelectorAll<HTMLElement>(".k1 [data-vidrio][data-lente]")].every((e) => e.dataset.lente === "0.00")), { timeout: 6000 })
+      .toBe(true);
+    await page.waitForTimeout(300);
     const quieto = await cuadrosDe(page);
     await page.waitForTimeout(1200);
     expect(await cuadrosDe(page), "sin bucle con el héroe desplazado").toBe(quieto);
@@ -375,7 +432,7 @@ test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
       });
       await page.goto("/", { waitUntil: "load" });
       const capa = page.locator(".k1 [data-vidrio='css']");
-      await expect(capa).toHaveAttribute("data-barrido", "", { timeout: 8000 });
+      await expect(capa).toHaveAttribute("data-barrido", /^\d+,\d+$/, { timeout: 8000 });
       await expect(capa).toHaveAttribute("data-lente", "1.00", { timeout: 6000 });
       expect(await page.locator("canvas[data-vidrio='gl']").count(), "el WebGL sigue esperando al primer gesto").toBe(0);
       // La zona nítida se mueve sola y solo con `transform` (compositor).

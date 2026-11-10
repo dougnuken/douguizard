@@ -10,6 +10,7 @@ import { REENTRADA, REPOSO, relojBarrido, suave } from "./barrido";
  * lleva `touch-action: pan-y pinch-zoom`: el arrastre vertical hace scroll y el
  * navegador cancela el puntero). El bucle rAF solo corre mientras algo se mueve:
  * en reposo, 0 cuadros. Cuenta cuadros en `data-cuadros` del elemento.
+ * (`data-lente` = apertura; `data-barrido` = "x,y" del centro mientras barre sola.)
  *
  * Pulido I · barrido automático (`barrido.ts`): si se pasa `opciones.barrido`,
  * la lente se mueve sola mientras nadie la lleva. El cursor (o el dedo) manda
@@ -173,7 +174,8 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
     pintar(s);
     el.dataset.cuadros = String(++cuadros);
     el.dataset.lente = s.abierta.toFixed(2);
-    if (barriendo) el.dataset.barrido = "";
+    // Mientras barre: marca y centro de la zona nítida (px de `el`), para CSS y pruebas.
+    if (barriendo) el.dataset.barrido = `${Math.round(s.mx)},${Math.round(s.my)}`;
     else delete el.dataset.barrido;
     if ((barriendo || par !== parA || enMovimiento(s)) && !document.hidden) raf = requestAnimationFrame(tick);
   };

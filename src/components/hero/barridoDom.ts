@@ -25,13 +25,21 @@ export function barridoDe(el: HTMLElement, foto: FotoHeroe, pos: [number, number
     { threshold: Array.from({ length: 21 }, (_, i) => i / 20) },
   );
   io.observe(el);
+  // La caja se guarda (no se lee `clientWidth` en cada cuadro: con la escena escribiendo
+  // estilos, esa lectura forzaría un layout por cuadro).
+  let w = el.clientWidth;
+  let h = el.clientHeight;
+  const ro = new ResizeObserver(() => {
+    w = el.clientWidth;
+    h = el.clientHeight;
+    alCambiar();
+  });
+  ro.observe(el);
   const num = (v: string) => parseFloat(el.style.getPropertyValue(v));
   return {
     visible: () => visible,
     /** Destino en el segundo `t`, en px de `el`; `null` = ahora no toca. */
     barrido: (t: number) => {
-      const w = el.clientWidth;
-      const h = el.clientHeight;
       if (!visible || !w || !h) return null;
       // Home de escritorio con el OS ya armado (K1 es una losa más): el héroe ya se desplazó.
       if (document.documentElement.dataset.escenaFase === "os") return null;
@@ -41,6 +49,9 @@ export function barridoDe(el: HTMLElement, foto: FotoHeroe, pos: [number, number
       const [x, y] = trayectoria(t, foto);
       return { x: c.Ox + x * c.Dx, y: c.Oy + y * c.Dy, a };
     },
-    soltar: () => io.disconnect(),
+    soltar: () => {
+      io.disconnect();
+      ro.disconnect();
+    },
   };
 }

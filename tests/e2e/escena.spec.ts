@@ -341,7 +341,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect(m.k1y - f.k1y).toBeLessThanOrEqual(12);
   });
 
-  test("CLS ≤ 0,02 en la carga del acto 1 y 0 fps en reposo (sin animaciones ni rAF vivos)", async ({ page }) => {
+  test("CLS ≤ 0,02 en la carga del acto 1 y, en reposo, solo viven el barrido del vidrio y el pulso del destello", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.addInitScript(() => {
       const w = window as unknown as { __cls: number; __raf: number };
@@ -359,16 +359,21 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await abrir(page);
     await page.waitForTimeout(3000);
     expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBeLessThanOrEqual(0.02);
-    // Reposo: ni animaciones CSS/WAAPI, ni cuadros del vidrio, ni bucles de rAF que
-    // pinten. Se descuenta el bucle vacío que ScrollTrigger deja vivo mientras está
+    // Reposo: ni bucles de rAF ajenos al vidrio. Pulido I (decisión nueva): en el acto 1
+    // la zona nítida del vidrio barre sola, así que su bucle sí corre (un rAF por cuadro,
+    // contados en `data-cuadros`); con el héroe desplazado vuelve a 0 fps (`vidrio.spec`, f).
+    // Se descuenta también el bucle vacío que ScrollTrigger deja vivo mientras está
     // registrado (`_rafBugFix`: `function e(){return x&&requestAnimationFrame(e)}`, no toca el DOM).
-    const antes = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
-    const cuadros = () => page.evaluate(() => document.querySelector(".k1 canvas")?.getAttribute("data-cuadros") ?? "sin-canvas");
-    const c0 = await cuadros();
+    const medir = () =>
+      page.evaluate(() => ({
+        raf: (window as unknown as { __raf: number }).__raf,
+        vidrio: [...document.querySelectorAll<HTMLElement>(".k1 [data-vidrio]")].reduce((n, e) => n + Number(e.dataset.cuadros ?? 0), 0),
+      }));
+    const antes = await medir();
     await page.waitForTimeout(1000);
-    const despues = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
-    expect(despues - antes, "rAF en 1 s de reposo (sin el bucle vacío de ScrollTrigger)").toBeLessThanOrEqual(6);
-    expect(await cuadros(), "el vidrio no pinta en reposo").toBe(c0);
+    const despues = await medir();
+    expect(despues.raf - antes.raf - (despues.vidrio - antes.vidrio), "rAF en 1 s de reposo, sin los del barrido del vidrio ni el bucle vacío de ScrollTrigger").toBeLessThanOrEqual(6);
+    expect(despues.vidrio, "el barrido del vidrio corre en el acto 1").toBeGreaterThan(antes.vidrio);
     // Pulido I: lo único vivo en reposo es el pulso del destello del láser (`dst-*`,
     // tres capas, solo `opacity` y `scale`: compositor, sin pintado ni rAF).
     const vivas = await page.evaluate(() =>
