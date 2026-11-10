@@ -1,6 +1,7 @@
 "use client";
 
-import { FadeIn, renderBold } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { FadeIn } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface CaseColophonProps {

@@ -1,7 +1,8 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { Band, EyebrowHeading, type BandProps } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Feature {

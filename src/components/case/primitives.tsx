@@ -25,20 +25,6 @@ export function FadeIn({
   );
 }
 
-/** `**bold**` → `<strong>`. The only markup the case copy carries. */
-export function renderBold(text: string): ReactNode {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return (
-        <strong key={i}>
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    return <span key={i}>{part}</span>;
-  });
-}
-
 /**
  * El `h2` de cada bloque del caso (Urbanist 30), sin revelado propio: el bloque
  * entero entra con su `FadeIn` cuando lo pide, y en la hoja nada se revela en la
