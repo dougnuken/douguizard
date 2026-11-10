@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import type { BrowserShot } from "@/components/work/BrowserFrame";
 import { BrowserVideo } from "@/components/work/BrowserFrame";
 import DeviceVideo from "@/components/work/DeviceVideo";
 import type { MockupItem } from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
-import { balanceColumns, shotNumber, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
+import { balanceColumns, type CaseMediaPlan, type Shot } from "@/lib/caseMedia";
 import { FadeIn } from "./primitives";
 
 /**
@@ -42,18 +41,6 @@ export function toMockupItems(shots: Shot[]): MockupItem[] {
     src: item.src,
     alt: item.alt,
     caption: item.caption,
-  }));
-}
-
-/** Stills for `BrowserGallery` / `BrowserFrame`, with their address-bar label. */
-export function toBrowserShots(shots: Shot[]): BrowserShot[] {
-  return shots.map(({ item, num }) => ({
-    id: item.src,
-    src: item.src,
-    alt: item.alt,
-    caption: item.caption,
-    eyebrow: shotNumber(num),
-    label: browserLabel(item.src),
   }));
 }
 
