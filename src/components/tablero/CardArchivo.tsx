@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkDiferido from "@/components/sistema/LinkDiferido";
 import DotMatrix from "@/components/sistema/DotMatrix";
 import { Icono } from "@/components/sistema/Iconos";
 import Losa from "@/components/sistema/Losa";
@@ -39,7 +39,7 @@ export default function CardArchivo({
           const anio = meta.year.match(/\d{4}/)?.[0] ?? meta.year;
           return (
             <li key={slug} data-grupo={grupoCaso(slug)} data-slug={slug} style={{ viewTransitionName: `caso-${slug}` }}>
-              <Link href={localePath(locale, `/work/${slug}`)}>
+              <LinkDiferido href={localePath(locale, `/work/${slug}`)}>
                 {numeroDesde !== undefined && (
                   <span className="num" data-num="">
                     /{String(numeroDesde + i).padStart(2, "0")}
@@ -55,7 +55,7 @@ export default function CardArchivo({
                   <span>{t.archivo.leer}</span>
                   <Icono nombre="flecha" />
                 </span>
-              </Link>
+              </LinkDiferido>
             </li>
           );
         })}
