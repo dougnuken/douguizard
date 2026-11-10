@@ -26,10 +26,6 @@ export const ogLocale: Record<Locale, string> = { es: "es_CO", en: "en_US" };
 /** The language's own name for itself — what the switch announces. */
 export const localeName: Record<Locale, string> = { es: "Español", en: "English" };
 
-export function isLocale(value: string): value is Locale {
-  return (locales as readonly string[]).includes(value);
-}
-
 /** The other one. Two languages, so the switch is a toggle, not a menu. */
 export function otherLocale(locale: Locale): Locale {
   return locale === "es" ? "en" : "es";

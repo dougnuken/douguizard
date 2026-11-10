@@ -17,7 +17,6 @@ export type Caja = { x: number; y: number; w: number; h: number };
 
 /** 340 ms con `--curva-salida`: arranca rápido (responde al toque) y aterriza suave. */
 export const PILDORA_MS = 340;
-export const PILDORA_CURVA = "cubic-bezier(0.23, 1, 0.32, 1)";
 
 const r = (n: number) => Math.round(n * 100) / 100;
 
