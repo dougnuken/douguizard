@@ -369,7 +369,74 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     const despues = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
     expect(despues - antes, "rAF en 1 s de reposo (sin el bucle vacío de ScrollTrigger)").toBeLessThanOrEqual(6);
     expect(await cuadros(), "el vidrio no pinta en reposo").toBe(c0);
-    expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length)).toBe(0);
+    // Pulido I: lo único vivo en reposo es el pulso del destello del láser (`dst-*`,
+    // tres capas, solo `opacity` y `scale`: compositor, sin pintado ni rAF).
+    const vivas = await page.evaluate(() =>
+      document.getAnimations().filter((a) => a.playState === "running").map((a) => (a as CSSAnimation).animationName ?? "?"),
+    );
+    expect(vivas.filter((n) => !/^dst-(late|raya|haz)$/.test(n)), "animaciones vivas fuera del pulso del destello").toEqual([]);
+    expect(vivas.length, "pulso del destello: 2 retinas + raya + haz").toBeLessThanOrEqual(4);
+    const props = await page.evaluate(() =>
+      document.getAnimations().flatMap((a) => ((a.effect as KeyframeEffect).getKeyframes?.() ?? []).flatMap((k) => Object.keys(k))),
+    );
+    expect(props.filter((k) => !["offset", "easing", "composite", "computedOffset", "opacity", "scale", "transform"].includes(k))).toEqual([]);
+  });
+
+  test("pulido I: el destello cae sobre las pupilas en todo el viaje, se apaga con el scroll y vuelve", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await abrir(page, { captura: true });
+    const medir = () =>
+      page.evaluate(() => {
+        const cs = getComputedStyle(document.querySelector(".k1-foto")!);
+        const v = (k: string) => Number(cs.getPropertyValue(k));
+        const r = document.querySelector("img.k1-poster")!.getBoundingClientRect();
+        const dx = Math.max(r.width, r.height * v("--foto-ar"));
+        const dy = dx / v("--foto-ar");
+        const ox = r.left + (r.width - dx) / 2;
+        const d = document.querySelector<HTMLElement>(".k1-destello")!;
+        const error = [["i", ".dst-ojo-i"], ["d", ".dst-ojo-d"]].map(([k, sel]) => {
+          const b = d.querySelector(sel)!.getBoundingClientRect();
+          return Math.hypot(b.left + b.width / 2 - (ox + v(`--foto-ojo-${k}x`) * dx), b.top + b.height / 2 - (r.top + v(`--foto-ojo-${k}y`) * dy));
+        });
+        return { error, alfa: Number(getComputedStyle(d).opacity), visible: getComputedStyle(d).display !== "none" };
+      });
+    const alfas: number[] = [];
+    for (const p of [0, 0.15, 0.3, 0.45]) {
+      await irA(page, p);
+      const m = await medir();
+      for (const e of m.error) expect(e, `p ${p}: destello sobre la pupila`).toBeLessThanOrEqual(1);
+      alfas.push(m.alfa);
+    }
+    expect(alfas[0]).toBe(1);
+    for (let i = 1; i < alfas.length; i++) expect(alfas[i], "se atenúa de forma progresiva").toBeLessThan(alfas[i - 1]);
+    await irA(page, 1);
+    expect((await medir()).visible, "en el OS solo queda la línea fina").toBe(false);
+    await expect(page.locator(".k1-laser")).toBeVisible();
+    await irA(page, 0);
+    expect((await medir()).alfa, "vuelve al regresar").toBe(1);
+  });
+
+  test("pulido I: en móvil el destello cae sobre las pupilas; con reduced-motion queda fijo y sin pulso", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "load" });
+    const m = await page.evaluate(() => {
+      const cs = getComputedStyle(document.querySelector(".k1-foto")!);
+      const v = (k: string) => Number(cs.getPropertyValue(k));
+      const r = document.querySelector("img.k1-poster")!.getBoundingClientRect();
+      const dx = Math.max(r.width, r.height * v("--foto-ar"));
+      const dy = dx / v("--foto-ar");
+      const ox = r.left + (r.width - dx) / 2;
+      return [["i", ".dst-ojo-i"], ["d", ".dst-ojo-d"]].map(([k, sel]) => {
+        const b = document.querySelector(sel)!.getBoundingClientRect();
+        return Math.hypot(b.left + b.width / 2 - (ox + v(`--foto-ojo-${k}x`) * dx), b.top + b.height / 2 - (r.top + v(`--foto-ojo-${k}y`) * dy));
+      });
+    });
+    for (const e of m) expect(e).toBeLessThanOrEqual(1);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload({ waitUntil: "load" });
+    await expect(page.locator(".k1-destello")).toBeVisible();
+    expect(await page.evaluate(() => document.querySelector(".k1")!.getAnimations({ subtree: true }).length)).toBe(0);
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".k1-destello")!).opacity)).toBe("1");
   });
 
   test("P0-2: durante el viaje (p 0,1 … 0,7) K2 nunca tapa el nombre XL", async ({ page }) => {
