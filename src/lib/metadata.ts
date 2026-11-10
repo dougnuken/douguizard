@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getSite, site as baseSite } from "@/data/site";
 import { getCv } from "@/data/cv";
 import { getCaseMeta, getCaseStudy } from "@/data/work";
-import { currentExperience, yearsOfExperience } from "@/lib/career";
+import { latestExperience, yearsOfExperience } from "@/lib/career";
 import { casosPublicados, productosPropios } from "@/lib/cuentas";
 import { enPalabras, paginasDict } from "@/i18n/paginas";
 import { alternatesFor, localePath, ogLocale, otherLocale, type Locale } from "@/i18n/config";
@@ -172,9 +172,9 @@ export function workMetadata(locale: Locale): Metadata {
   );
 }
 
-/** `/about` (04 §4.6): cargo y empresa actuales de `cv.ts`. */
+/** `/about` (04 §4.6): cargo y empresa del último rol de `cv.ts`. */
 export function aboutDescripcion(locale: Locale): string {
-  const actual = currentExperience();
+  const actual = latestExperience();
   return paginasDict[locale].perfil.meta.descripcion(actual.role, actual.company.name);
 }
 export function aboutMetadata(locale: Locale): Metadata {
@@ -183,14 +183,14 @@ export function aboutMetadata(locale: Locale): Metadata {
 
 /**
  * `/experience` (04 §4.6): las empresas, de la más reciente hacia atrás, sin la
- * actual (va en «a Head of Product»), sin las primeras (`earlier`) y sin repetir
+ * del último rol (va en «a Head of Product»), sin las primeras (`earlier`) y sin repetir
  * el empleador de registro (Qrvey va dentro de Ideaware).
  */
 export function experienceMetadata(locale: Locale): Metadata {
-  const actual = currentExperience();
+  const actual = latestExperience();
   const vistas = new Set<string>();
   const nombres = getCv(locale)
-    .experiences.filter((e) => e.era === "core")
+    .experiences.filter((e) => e.era === "core" && e.id !== actual.id)
     .map((e) => e.company.name)
     .filter((n) => (vistas.has(n) ? false : (vistas.add(n), true)));
   const y = locale === "es" ? " e " : " and ";

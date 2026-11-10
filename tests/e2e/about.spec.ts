@@ -132,7 +132,7 @@ test.describe("/about", () => {
         expect(tops).toHaveLength(3);
         expect(Math.max(...tops) - Math.min(...tops)).toBeLessThanOrEqual(1);
       }
-      const filas = await page.locator(".marcas li").evaluateAll((l) => {
+      const filas = await page.locator(".marquee-lista:not([aria-hidden]) li").evaluateAll((l) => {
         const m = new Map<number, number>();
         for (const li of l) {
           const t = Math.round(li.getBoundingClientRect().top);

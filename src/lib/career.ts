@@ -15,15 +15,18 @@ const MONTHS: Record<Locale, readonly string[]> = {
 /** The open end of a current role. "Hoy" is the Spanish CV's word for it. */
 const NOW: Record<Locale, string> = { en: "Now", es: "Hoy" };
 
-/** The one experience with no `end`. Throws if the data has zero or two. */
-export function currentExperience(): Experience {
+/**
+ * The most recent role: the one with the latest start. Naowee ended in
+ * Oct 2026, so no experience is open any more: this is the "last role", not
+ * the "current role". At most one experience may omit `end`.
+ */
+export function latestExperience(): Experience {
   const open = experiences.filter((e) => e.end === undefined);
-  if (open.length !== 1) {
-    throw new Error(
-      `cv.experiences must declare exactly one current role (no \`end\`); found ${open.length}.`,
-    );
+  if (open.length > 1) {
+    throw new Error(`cv.experiences may declare at most one open role (no \`end\`); found ${open.length}.`);
   }
-  return open[0];
+  const t = (e: Experience) => e.start.year * 12 + (e.start.month ?? 1);
+  return [...experiences].sort((a, b) => t(b) - t(a))[0];
 }
 
 /** Experience by id. Throws on an unknown id — a typo must fail the build. */
@@ -111,6 +114,6 @@ export function formatLocation(e: Experience): string | undefined {
  * al JS del navegador (+5 KB gz medidos en F1).
  */
 export function rolCorto(): string {
-  const actual = currentExperience();
+  const actual = latestExperience();
   return `${actual.roleShort ?? actual.role} · ${actual.location.city ?? ""}`.replace(/ · $/, "");
 }

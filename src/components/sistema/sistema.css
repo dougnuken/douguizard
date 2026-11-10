@@ -357,7 +357,7 @@
     outline-offset: 3px;
   }
 
-  /* ── Estado: el punto de disponible es luz láser (P1-6), no verde ───────── */
+  /* ── Estado: el punto de disponible es verde (G3; antes láser, P1-6) ────── */
   .estado {
     display: inline-flex;
     align-items: center;
@@ -370,10 +370,25 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--laser-nucleo);
+    flex: none;
+    background: var(--disp-nucleo);
     box-shadow:
-      0 0 0 1px var(--laser),
-      0 0 8px 2px var(--laser-halo);
+      0 0 0 1px var(--disp),
+      0 0 8px 2px var(--disp-halo);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .estado::before {
+      animation: estado-pulso 2.4s ease-in-out infinite;
+    }
+  }
+
+  /* ── Bandera (ficha Datos): 16 × 12, esquinas de 2 px ───────────────────── */
+  .bandera {
+    display: inline-block;
+    flex: none;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+    vertical-align: -1px;
   }
 
   /* ── Etiquetas tintadas y chip ──────────────────────────────────────────── */
@@ -407,6 +422,14 @@
     background: var(--losa-alta);
     color: var(--tinta);
     box-shadow: var(--filo);
+  }
+}
+
+@keyframes estado-pulso {
+  50% {
+    box-shadow:
+      0 0 0 1px var(--disp),
+      0 0 12px 4px var(--disp-halo);
   }
 }
 

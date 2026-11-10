@@ -222,6 +222,11 @@
   --laser: #ff3344;
   --laser-nucleo: #ffe4e6;
   --laser-halo: rgba(255, 51, 68, 0.45);
+  /* Solo el punto de disponibilidad (`.estado`): verde. Anillo 16a34a = 5,2:1 sobre la losa
+     oscura y 3,3:1 sobre la blanca (K2 en escritorio); el resto del láser sigue rojo. */
+  --disp-nucleo: #4ade80;
+  --disp: #16a34a;
+  --disp-halo: rgba(22, 163, 74, 0.5);
   --verde-osc: #0e6b3d; /* solo el «647» de olbo, sobre niebla (5,1:1) */
   --azul-etiqueta: #e3eaff;
   --magenta-etiqueta: #f0b8d6;

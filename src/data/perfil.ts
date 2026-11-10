@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import { currentExperience, getWordmarks } from "@/lib/career";
+import { latestExperience, getWordmarks } from "@/lib/career";
 import { getSite } from "./site";
 import { getCv, type ExperienceId } from "./cv";
 import { getCaseStudy } from "./work";
@@ -57,10 +57,10 @@ export const eras: Era[] = [
  * empresa actuales salen de `cv.ts`; el resto es copy de 04.
  */
 export function getBio(locale: Locale): { bio: string; contexto: [string, string] } {
-  const actual = currentExperience();
+  const actual = latestExperience();
   if (locale === "es") {
     return {
-      bio: `Soy diseñador de producto y construyo lo que diseño. Hoy dirijo el producto de ${actual.company.name}, la plataforma del sistema deportivo de Colombia, y hago en código los prototipos que lo definen. Antes fui líder técnico de Andes, el sistema de diseño de Mercadolibre en 18 países, y durante 5 años y 2 meses guardián del sistema de diseño del Banco de Occidente.`,
+      bio: `Soy diseñador de producto y construyo lo que diseño. Mi último rol fue dirigir el producto de ${actual.company.name}, la plataforma del sistema deportivo de Colombia, donde hice en código los prototipos que lo definen. Antes fui líder técnico de Andes, el sistema de diseño de Mercadolibre en 18 países, y durante 5 años y 2 meses guardián del sistema de diseño del Banco de Occidente.`,
       contexto: [
         "Lo que me ha mantenido aquí no es una pantalla en particular: son los sistemas de abajo. Los tokens, el gobierno y el lenguaje compartido que permite que cientos de diseñadores y miles de ingenieros entreguen un solo producto.",
         "Hace rato dejé de separar diseñar de construir. Prototipo en código, entrego interfaces reales y dejo que el sistema y los modelos carguen el trabajo repetitivo. olbo y DC Medical son la prueba: una app de finanzas y el panel de una clínica que diseñé, construí y lancé, los dos en uso diario.",
@@ -68,7 +68,7 @@ export function getBio(locale: Locale): { bio: string; contexto: [string, string
     };
   }
   return {
-    bio: `I'm a product designer who builds what he designs. Today I lead product at ${actual.company.name}, the platform for Colombia's sports system, and build the prototypes in code that define it. Before that I was tech lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months the gatekeeper of Banco de Occidente's design system.`,
+    bio: `I'm a product designer who builds what he designs. My most recent role was leading product at ${actual.company.name}, the platform for Colombia's sports system, where I built the prototypes in code that define it. Before that I was tech lead on Andes, Mercadolibre's design system across 18 countries, and for 5 years and 2 months the gatekeeper of Banco de Occidente's design system.`,
     contexto: [
       "What has kept me here isn't any single screen. It's the systems underneath: the tokens, the governance and the shared language that let hundreds of designers and thousands of engineers ship one product.",
       "I stopped separating designing from building a while ago. I prototype in code, ship real interfaces and let the system and the models carry the repetitive work. olbo and DC Medical are the proof: a finance app and a clinic's operating panel I designed, built and shipped, both in daily use.",
@@ -125,8 +125,8 @@ export const logros: Record<Hito, { es: string; en: string }> = {
     en: "Per-minute car rental, for iOS.",
   },
   naowee: {
-    es: "Dirijo SUID: 8 módulos de negocio, ~1.200 organizaciones y 130+ pantallas en un solo sistema.",
-    en: "I lead SUID: 8 business modules, ~1,200 organizations and 130+ screens on one system.",
+    es: "Dirigí SUID: 8 módulos de negocio, ~1.200 organizaciones y 130+ pantallas en un solo sistema.",
+    en: "I led SUID: 8 business modules, ~1,200 organizations and 130+ screens on one system.",
   },
 };
 
@@ -135,7 +135,7 @@ export const logros: Record<Hito, { es: string; en: string }> = {
  * (`lib/cuentas.ts`, F2): aquí no se cuenta nada.
  */
 export function getTrayectoriaPortada(locale: Locale, cuentas: { anos: number; empresas: number }) {
-  const cargo = currentExperience().role;
+  const cargo = latestExperience().role;
   const palabras = { es: ["cero", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"], en: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"] }[locale];
   const empresas = palabras[cuentas.empresas] ?? String(cuentas.empresas);
   return locale === "es"
@@ -157,7 +157,7 @@ export function getTrayectoriaPortada(locale: Locale, cuentas: { anos: number; e
  * se leen de `cv.ts` y del caso de Andes, nunca se reescriben.
  */
 export function getOficioPerfil(locale: Locale): { hago: Entrada[]; pasos: Entrada[] } {
-  const company = currentExperience().company.name;
+  const company = latestExperience().company.name;
   const andes = getCaseStudy("mercadolibre-andes", locale);
   const k = (i: number) => andes?.kpis?.[i]?.value ?? "";
   const [disenadores, ingenieros, paises] = [k(0), k(1), k(2)];

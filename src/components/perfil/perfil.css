@@ -422,16 +422,90 @@
     border-top: 1px solid var(--losa-borde);
     border-bottom: 1px solid var(--losa-borde);
   }
-  /* P1-13: las marcas en filas de 4, ninguna huérfana. */
-  .marcas {
+  .idiomas {
     display: grid;
-    grid-template-columns: repeat(4, auto);
-    justify-content: start;
-    gap: 12px 48px;
-    font: 600 var(--t-18) / 1.2 var(--font-nombre, var(--font-display-b));
+    gap: 6px;
+  }
+  .idiomas li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .idiomas .bandera {
+    vertical-align: 0;
+  }
+  /* G3: «Dónde he trabajado» es un marquee solo CSS. Dos copias de la lista, la pista
+     se desplaza -50 % (= una lista, con su relleno final) y vuelve sin salto. Pausa en
+     hover y foco; fundido en los bordes. Con movimiento reducido: solo la primera
+     copia, en filas de 4 (2 en móvil), ninguna huérfana (P1-13). */
+  .marquee {
+    min-width: 0;
+    overflow: hidden;
+    contain: paint;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    border-radius: 4px;
+  }
+  .marquee:focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 4px;
+  }
+  .marquee-pista {
+    display: flex;
+    width: max-content;
+    animation: marquee-marcas 36s linear infinite;
+  }
+  .marquee:hover .marquee-pista,
+  .marquee:focus-within .marquee-pista,
+  .marquee:focus .marquee-pista {
+    animation-play-state: paused;
+  }
+  .marcas {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 56px;
+    padding-right: 56px;
+    font: 600 var(--t-24) / 1 var(--font-nombre, var(--font-display-b));
     font-variation-settings: "SHRP" 100;
     letter-spacing: -0.02em;
-    color: var(--tinta-2);
+    color: var(--tinta);
+    --esc: 1;
+  }
+  .marcas li {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    white-space: nowrap;
+  }
+  /* Altura óptica por logo (`--alto`, de `logosMarcas.ts`): un solo relleno `currentColor`. */
+  .logo-marca {
+    display: block;
+    width: auto;
+    height: calc(var(--alto) * var(--esc));
+    fill: currentColor;
+    opacity: 0.9;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee-pista {
+      animation: none;
+      width: auto;
+    }
+    .marquee-lista[aria-hidden="true"] {
+      display: none;
+    }
+    .marcas {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: start;
+      gap: 12px 48px;
+      padding-right: 0;
+      font-size: var(--t-18);
+    }
   }
   .citas-cab {
     display: flex;
@@ -570,9 +644,17 @@
       gap: 12px;
     }
     .marcas {
-      grid-template-columns: repeat(2, auto);
-      font-size: var(--t-16);
-      gap: 8px 24px;
+      gap: 40px;
+      padding-right: 40px;
+      font-size: var(--t-20);
+      --esc: 0.78;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marcas {
+        grid-template-columns: repeat(2, auto);
+        font-size: var(--t-16);
+        gap: 8px 24px;
+      }
     }
     .citas-cab {
       flex-direction: column;
@@ -591,6 +673,11 @@
   }
 }
 
+@keyframes marquee-marcas {
+  to {
+    transform: translateX(-50%);
+  }
+}
 @keyframes riel-perfil {
   0% {
     transform: scaleY(0);

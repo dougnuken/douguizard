@@ -35,9 +35,10 @@ describe("trayectoria · hitos", () => {
     expect(hs.filter((h) => h.paralelo).map((h) => h.id)).toEqual(["chub"]);
   });
 
-  it("hoy = nov 2026 = 2026 + 10/12; el rol en curso termina hoy", () => {
+  it("hoy = nov 2026 = 2026 + 10/12; el último rol (Naowee) terminó en oct 2026, antes de hoy", () => {
     expect(HOY).toBeCloseTo(2026 + 10 / 12, 6);
-    expect(hs.at(-1)?.fin).toBeCloseTo(HOY, 6);
+    expect(hs.at(-1)?.fin).toBeCloseTo(2026 + 9 / 12, 6);
+    expect(hs.at(-1)?.fin).toBeLessThanOrEqual(HOY);
   });
 
   it("cada hito tiene logro, rol, periodo y título en ES y EN", () => {
