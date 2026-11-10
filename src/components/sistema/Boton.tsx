@@ -3,7 +3,7 @@ import Link from "@/components/sistema/LinkDiferido";
 import "./sistema.css";
 import { Icono, type NombreIcono } from "./Iconos";
 
-export type VarianteBoton = "blanco" | "tinta" | "electrico" | "linea" | "linea-osc";
+export type VarianteBoton = "blanco" | "tinta" | "linea" | "linea-osc";
 
 type Comun = {
   variante?: VarianteBoton;

@@ -745,7 +745,7 @@
      especular (`--vidrio-especular`). Estático, sin JS ni filtros: cuesta una
      capa pintada una vez. Las piezas que no tienen el `::after` libre o hacen
      scroll horizontal (el filtro de /work) llevan solo `--filo-vidrio`. */
-  :is(.cab-pills, .idioma, .cab-menu, .dock, .wordmark, .losa--vidrio, .k1-panel, .os-top .k2)::after {
+  :is(.cab-pills, .idioma, .cab-menu, .dock, .wordmark, .k1-panel, .os-top .k2)::after {
     content: "";
     position: absolute;
     inset: 0;
