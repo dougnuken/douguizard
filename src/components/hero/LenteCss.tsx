@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getFotoActiva, vidrio, type EstadoVidrio } from "@/data/hero";
 import { cubrir, vidrioEnEscena } from "@/lib/escena";
 import { barridoDe } from "./barridoDom";
@@ -39,6 +39,11 @@ export default function LenteCss({
   /** El WebGL lleva el cursor y esta capa solo el barrido (cuando el WebGL va lento). */
   soloBarrido?: boolean;
 }) {
+  // Se lee en cada gesto: cambiarlo no reinicia la lente (el barrido sigue donde iba).
+  const solo = useRef(soloBarrido);
+  useEffect(() => {
+    solo.current = soloBarrido;
+  }, [soloBarrido]);
   useEffect(() => {
     if (sale) return;
     const foto = getFotoActiva();
@@ -87,7 +92,10 @@ export default function LenteCss({
         copiar();
         medir();
         capa.setAttribute("data-activo", "");
-        const auto = barridoDe(capa, foto, pos, () => l.pedir());
+        const auto = barridoDe(capa, foto, pos, () => {
+          medir();
+          l.pedir();
+        });
         const l = montarLente(
           capa,
           (s) => {
@@ -102,7 +110,12 @@ export default function LenteCss({
             ojo.style.transform = `translate3d(${(s.mx - r).toFixed(2)}px,${(s.my - r).toFixed(2)}px,0)`;
             limpia.style.transform = `translate3d(${(r - s.mx + ox).toFixed(2)}px,${(r - s.my + oy).toFixed(2)}px,0)`;
           },
-          { barrido: auto.barrido, soloBarrido },
+          {
+            barrido: auto.barrido,
+            get soloBarrido() {
+              return solo.current;
+            },
+          },
         );
         const mo = espejo
           ? new MutationObserver(() => {
@@ -111,17 +124,11 @@ export default function LenteCss({
             })
           : null;
         if (espejo) mo?.observe(espejo, { attributes: true, attributeFilter: ["style"] });
-        const ro = new ResizeObserver(() => {
-          medir();
-          l.pedir();
-        });
-        ro.observe(capa);
         l.pedir();
         soltar = () => {
           l.destruir();
           auto.soltar();
           mo?.disconnect();
-          ro.disconnect();
         };
       });
     return () => {
@@ -132,6 +139,6 @@ export default function LenteCss({
       capa.removeAttribute("data-activo");
       window.setTimeout(() => limpia.remove(), 450);
     };
-  }, [capa, espejo, estados, pos, sale, soloBarrido]);
+  }, [capa, espejo, estados, pos, sale]);
   return null;
 }

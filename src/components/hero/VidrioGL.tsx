@@ -76,6 +76,14 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
     }
     const foto = getFotoActiva();
     const escritorio = window.matchMedia("(min-width: 1024px)");
+    // Pulido I: con WebGL por software (SwiftShader, llvmpipe: sin GPU, como en Lighthouse y en
+    // las pruebas) cada cuadro cuesta decenas de ms en el hilo principal. Ahí el canvas se queda
+    // con el vidrio y el cursor, y el barrido continuo lo lleva la capa CSS (solo compositor).
+    // `__vidrioSinRelevo` (solo pruebas) fuerza el barrido en WebGL.
+    const sinRelevo = (window as unknown as { __vidrioSinRelevo?: boolean }).__vidrioSinRelevo === true;
+    const info = gl.getExtension("WEBGL_debug_renderer_info");
+    const motor = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) ?? "");
+    const porSoftware = !sinRelevo && !!lentoRef.current && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(motor);
 
     (async () => {
       let prog: Awaited<ReturnType<typeof crearPrograma>>;
@@ -197,20 +205,26 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           canvas.classList.add("on");
           canvas.parentElement?.setAttribute("data-gl", "on");
           listoRef.current?.();
+          if (porSoftware) lentoRef.current?.();
         }
       };
       // Pulido I: el barrido automático (a la vista y con el héroe sin desplazar).
       const auto = barridoDe(canvas, foto, pos, () => lente.pedir());
-      const lente = montarLente(canvas, pintar, {
-        barrido: auto.barrido,
-        alIrLento: () => {
-          if (!lentoRef.current) return;
-          lente.ceder();
-          lentoRef.current();
-        },
-      });
-      const ro = new ResizeObserver(() => lente.pedir());
-      ro.observe(canvas);
+      const lente = montarLente(
+        canvas,
+        pintar,
+        porSoftware
+          ? {}
+          : {
+              barrido: auto.barrido,
+              // GPU real pero muy justa: si el barrido no llega a ~18 cuadros/s, también pasa a la capa CSS.
+              alIrLento: () => {
+                if (sinRelevo || !lentoRef.current) return;
+                lente.ceder();
+                lentoRef.current();
+              },
+            },
+      );
       const mq = () => lente.pedir();
       escritorio.addEventListener("change", mq);
       const copiar = () => {
@@ -228,7 +242,6 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       canvas.addEventListener("webglcontextlost", perdido);
       limpiar = () => {
         lente.destruir();
-        ro.disconnect();
         auto.soltar();
         escritorio.removeEventListener("change", mq);
         mo?.disconnect();
