@@ -4,6 +4,7 @@ import { getCaseMeta, getCaseStudy } from "@/data/work";
 import type { Locale } from "@/i18n/config";
 import { formatPeriod, getExperience } from "@/lib/career";
 import { empleadores, productosPropios } from "@/lib/cuentas";
+import { clamp, lerp } from "@/lib/mates";
 
 /**
  * La trayectoria de `/experience` (07 §1.5, F2): hitos en orden, eras, el año
@@ -122,9 +123,6 @@ export function hitosTrayectoria(locale: Locale, now: Date = new Date()): HitoTr
 
 /** Primer año del eje (inicio del primer hito). */
 export const inicioEje = (hs: HitoTrayectoria[]) => hs[0].inicio;
-
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /**
  * P1-9 · scroll por hito: cada hito recibe 1/n del recorrido y el año

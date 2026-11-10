@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import type { GrupoCaso } from "@/lib/cuentas";
 import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 export type Filtro = "todos" | GrupoCaso;
 
@@ -49,7 +50,7 @@ export default function FiltroCasos({
       setActivo(f);
       setMensaje(anuncio[n] ?? String(n));
     };
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rm = prefiereQuieto();
     const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
     if (!rm && typeof doc.startViewTransition === "function") {
       const html = document.documentElement;

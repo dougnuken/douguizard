@@ -1,6 +1,7 @@
 "use client";
 
 import { Icono } from "@/components/sistema/Iconos";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * «Volver arriba» del pie (pulido E): un botón circular, no un enlace más. Sube
@@ -8,7 +9,7 @@ import { Icono } from "@/components/sistema/Iconos";
  */
 export default function BotonArriba({ label }: { label: string }) {
   const subir = () => {
-    const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rm = prefiereQuieto();
     window.scrollTo({ top: 0, behavior: rm ? "auto" : "smooth" });
     const main = document.getElementById("main");
     if (main) {

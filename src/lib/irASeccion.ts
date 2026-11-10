@@ -1,4 +1,5 @@
 import { fijarSeccionDuranteScroll, setActiveSection } from "./activeSection";
+import { prefiereQuieto } from "./movimiento";
 
 /**
  * Ir a una sección del home desde una pill, el dock o un CTA (`6.5`): baja a
@@ -10,7 +11,7 @@ export function irASeccion(ev: { preventDefault(): void } | null, id: string): v
   const destino = document.getElementById(id);
   if (!destino) return;
   ev?.preventDefault();
-  const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const rm = prefiereQuieto();
   // F5: en el acto 1 del home (`html.cine`), primero al final del ancla (OS armado).
   // Si la escena aún no tiene GSAP (nadie atiende el evento), se baja como siempre.
   const enEscena = document.documentElement.classList.contains("cine") && destino.closest("[data-escena-pista]");

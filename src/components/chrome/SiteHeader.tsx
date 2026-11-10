@@ -24,6 +24,7 @@ import { restaurarAnclaPendiente, vigilarAnclas } from "@/lib/anclaPendiente";
 import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
 import Hablemos from "./Hablemos";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /** Pills de la pastilla (04 §4.1). En el home, anclas con scroll-spy; fuera, rutas. */
 const PILLS = [
@@ -126,7 +127,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const [abiertoAntes, setAbiertoAntes] = useState(open);
   if (abiertoAntes !== open) {
     setAbiertoAntes(open);
-    setSaliendo(!open && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setSaliendo(!open && !prefiereQuieto());
   }
   useEffect(() => {
     if (!saliendo) return;

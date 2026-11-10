@@ -4,10 +4,9 @@ import { useEffect, useRef } from "react";
 import { getFotoActiva } from "@/data/hero";
 import { aperturaDesdeProgreso, ENTRADA, fijarCorte } from "@/lib/corte";
 import { eio, losaPerfil, placement, type Colocacion, type Rect } from "@/lib/escena";
+import { clamp, lerp } from "@/lib/mates";
 
 const CONSULTA = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /**
  * Isla de la portada de `/about` (07 F2). Solo a ≥ 1024 px sin movimiento
