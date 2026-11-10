@@ -10,7 +10,6 @@ export interface CaseColophonProps {
   links?: { label: string; href: string }[];
   credits?: string;
   enHoja?: boolean;
-  tone?: unknown;
 }
 
 /**

@@ -15,7 +15,7 @@ export interface Decision {
  * tensión / elección / por qué con copy propio que el caso no tiene, así que
  * no se inventa: el cuerpo va entero.
  */
-export default function CaseDecisions({ decisions, id, titular }: { decisions: Decision[]; id?: string; titular?: string; tone?: unknown }) {
+export default function CaseDecisions({ decisions, id, titular }: { decisions: Decision[]; id?: string; titular?: string }) {
   const t = useDict().case;
   const h = id && `${id}-h`;
   return (

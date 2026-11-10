@@ -56,7 +56,6 @@ export default function CaseImpact({
   kpis?: Kpi[];
   kind?: CaseStudy["kind"];
   id?: string;
-  tone?: unknown;
 }) {
   const t = useDict().case;
   const figures = kpis && kpis.length > 0 ? kpis : undefined;

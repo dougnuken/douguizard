@@ -27,7 +27,6 @@ export default function CaseNext({
   /** `getCaseMeta(next.slug, locale)`, calculado en el servidor (sin datos de casos en el JS de cliente). */
   meta: Pick<CaseMeta, "client" | "year">;
   enHoja?: boolean;
-  tone?: unknown;
 }) {
   const dict = useDict();
   const t = dict.case;

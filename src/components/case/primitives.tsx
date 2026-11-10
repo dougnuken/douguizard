@@ -49,10 +49,6 @@ export function EyebrowHeading({
 
 export interface BandProps {
   children: ReactNode;
-  /** Se conserva por compatibilidad: en B los bloques van sobre el vacío, sin bandas. */
-  tone?: "paper" | "raised";
-  rule?: "t" | "b" | "y" | "none";
-  wide?: boolean;
   className?: string;
   /** Ancla del índice lateral y de «Secciones». */
   id?: string;
@@ -71,7 +67,7 @@ export function Band({ children, className, id, labelledBy, label }: BandProps) 
       id={id}
       aria-labelledby={labelledBy}
       aria-label={label}
-      className={twMerge("bloque", className?.split(" ").filter((c) => !/^(md:)?py-/.test(c)).join(" "))}
+      className={twMerge("bloque", className)}
     >
       {children}
     </section>

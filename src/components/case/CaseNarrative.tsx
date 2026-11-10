@@ -22,7 +22,6 @@ export default function CaseNarrative({
   idProblema?: string;
   idParte?: string;
   heads?: CaseHeads;
-  tone?: unknown;
 }) {
   const t = useDict().case;
   return (
