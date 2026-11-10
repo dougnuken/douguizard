@@ -23,14 +23,21 @@ export default function CardTestimonio({
   textos: { ceja: string; region: string; anterior: string; siguiente: string; marcaIdioma: string; contador: string[]; rol: string };
 }) {
   const [i, setI] = useState(0);
+  // V-2 · 4: la entrada de la cita solo corre tras pulsar ‹ ›, nunca en la primera pintura.
+  const [movido, setMovido] = useState(false);
   const c = citas[i];
-  const ir = (d: number) => setI((i + d + citas.length) % citas.length);
+  const ir = (d: number) => {
+    setMovido(true);
+    setI((i + d + citas.length) % citas.length);
+  };
   return (
     <section className="losa losa--clara tarjeta k15" aria-roledescription={textos.rol} aria-label={textos.region}>
       <p className="ceja">{textos.ceja}</p>
-      <div aria-live="polite" className="k15-cita">
-        <blockquote lang="en">{c.oracion}</blockquote>
-        <p className="firma">
+      <div aria-live="polite" className="k15-cita" data-movido={movido || undefined}>
+        <blockquote key={`q${i}`} lang="en">
+          {c.oracion}
+        </blockquote>
+        <p key={`f${i}`} className="firma">
           <span>{c.firma}</span>
           <br />
           <Link href={c.enlace.href}>{c.enlace.texto}</Link>

@@ -587,6 +587,24 @@
     font: 500 var(--t-20) / 1.4 var(--font-display-b);
     letter-spacing: -0.005em;
     color: var(--tinta-osc);
+    /* V-2 · 3: comillas tipográficas (la cita es `lang="en"`) y colgadas. */
+    quotes: "\201C" "\201D";
+    hanging-punctuation: first last;
+  }
+  .k15 blockquote::before {
+    content: open-quote;
+  }
+  .k15 blockquote::after {
+    content: close-quote;
+  }
+  @supports not (hanging-punctuation: first) {
+    .k15 blockquote {
+      text-indent: -0.42em;
+    }
+  }
+  /* V-2 · 4: «fade through» de entrada al cambiar de cita (solo opacity/translate). */
+  .k15-cita[data-movido] > * {
+    animation: cita-entra 240ms cubic-bezier(0.2, 0, 0, 1) backwards;
   }
   .k15 .firma {
     margin-top: 12px;
@@ -1192,6 +1210,12 @@
     translate: 0 4px;
   }
 }
+@keyframes cita-entra {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
 @keyframes contador-sig {
   from {
     opacity: 0;
@@ -1213,7 +1237,8 @@
   .contador-n[data-dir] {
     animation: none;
   }
-  .copiar-txt[data-anim] {
+  .copiar-txt[data-anim],
+  .k15-cita[data-movido] > * {
     animation: none;
   }
   .copiar-ico > .icono {

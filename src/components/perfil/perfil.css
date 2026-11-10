@@ -561,6 +561,13 @@
   .testimonios blockquote {
     font: 500 var(--t-20) / 1.45 var(--font-display-b);
     letter-spacing: -0.005em;
+    /* V-2 · 3: la comilla de apertura (ya en el texto) cuelga fuera del borde. */
+    hanging-punctuation: first last;
+  }
+  @supports not (hanging-punctuation: first) {
+    .testimonios blockquote {
+      text-indent: -0.42em;
+    }
   }
   /* Pulido F: `.firma` acotada a /about. Sin acotar, la hoja seguía cargada tras navegar
      /about → home y volvía rejilla la firma de K15 (+51 px de alto a 390). */
