@@ -52,6 +52,11 @@ export interface FotoHeroe {
   ojo: number;
   /** Banda láser de la foto, si la trae: el vidrio la deja legible de lado a lado. */
   laser?: { y: number; h: number };
+  /**
+   * Centro de cada pupila [x, y], la izquierda de la imagen primero: ahí se anclan los
+   * destellos del láser (pulido I). Si falta, se estima con `cara` y `ojo` (`ojosDe`).
+   */
+  ojos?: [[number, number], [number, number]];
   alt: { es: string; en: string };
 }
 
@@ -95,6 +100,7 @@ export const fotos: FotoHeroe[] = [
     cara: [0.5, 0.45, 0.2, 0.2],
     ojo: 0.408,
     laser: { y: 0.4215, h: 0.015 },
+    ojos: [[0.4185, 0.4083], [0.5938, 0.4083]],
     alt: {
       es: "Doug Vargas, con gorra y chaqueta de cuero, de frente ante una ciudad nocturna; una línea de luz láser roja cruza la cara a la altura de los ojos.",
       en: "Doug Vargas in a cap and leather jacket, facing the camera against a city at night; a thin red laser line crosses the face at eye level.",
@@ -107,6 +113,7 @@ export const fotos: FotoHeroe[] = [
     cara: [0.5, 0.41, 0.19, 0.205],
     ojo: 0.418,
     laser: { y: 0.418, h: 0.012 },
+    ojos: [[0.44, 0.408], [0.57, 0.408]],
     alt: {
       es: "Doug Vargas, con gorra, de frente en la penumbra; una línea de luz láser roja cruza la cara a la altura de los ojos.",
       en: "Doug Vargas in a cap, facing the camera in low light; a thin red laser line crosses the face at eye level.",
@@ -137,9 +144,19 @@ export const vidrio: Record<EstadoVidrio, ParametrosVidrio> = {
   movil: { angulo: 12, estria: 0.026, fuerza: 0.55, lente: 130, proteccionCara: 0.4, dprMax: 1.5 },
 };
 
+/** Las pupilas de la foto; sin `ojos`, a ± 0,45 del radio de la cara sobre la línea del ojo. */
+export function ojosDe(f: Pick<FotoHeroe, "ojos" | "cara" | "ojo">): [[number, number], [number, number]] {
+  return f.ojos ?? [[f.cara[0] - 0.45 * f.cara[2], f.ojo], [f.cara[0] + 0.45 * f.cara[2], f.ojo]];
+}
+
 /** Variables CSS de la foto activa (para que ningún número de la foto viva en el CSS). */
 export function varsFoto(f: FotoHeroe = getFotoActiva()): Record<string, string> {
+  const [i, d] = ojosDe(f);
   return {
+    "--foto-ojo-ix": String(i[0]),
+    "--foto-ojo-iy": String(i[1]),
+    "--foto-ojo-dx": String(d[0]),
+    "--foto-ojo-dy": String(d[1]),
     "--foto-ojo": String(f.ojo),
     "--foto-ar": String(f.tamano.w / f.tamano.h),
     "--foto-ar-inv": String(f.tamano.h / f.tamano.w),
