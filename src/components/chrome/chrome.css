@@ -390,13 +390,32 @@
   .cab-menu svg {
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.5;
+    stroke-width: var(--trazo);
     stroke-linecap: round;
-    transition: rotate var(--d-ui) var(--curva-salida);
   }
-  .cab-menu svg[data-abierto] {
-    rotate: 90deg;
+  /* V-2 · 2: «=» ↔ «✕». Cada raya gira sobre su propio centro (viewBox 20×20) y
+     baja/sube 3 px hasta cruzarse en y = 10. Solo `translate`/`rotate`. */
+  .cab-menu svg path {
+    transform-box: view-box;
+    transition:
+      translate 250ms var(--curva-suave),
+      rotate 250ms var(--curva-suave);
   }
+  .cab-menu svg path:first-child {
+    transform-origin: 10px 7px;
+  }
+  .cab-menu svg path:last-child {
+    transform-origin: 10px 13px;
+  }
+  .cab-menu svg[data-abierto] path:first-child {
+    translate: 0 3px;
+    rotate: 45deg;
+  }
+  .cab-menu svg[data-abierto] path:last-child {
+    translate: 0 -3px;
+    rotate: -45deg;
+  }
+
   .cab-menu-panel {
     position: absolute;
     top: calc(100% + 8px);
@@ -548,6 +567,20 @@
       background: var(--losa-alta);
       color: var(--tinta);
     }
+    /* V-2 · 8: «bajar» baja 2 px y «arriba» sube 2 px; salida con rebote suave. */
+    .rail-acciones :is(a[download], a[href="#main"]) .icono {
+      transition: translate 250ms cubic-bezier(0.34, 1.36, 0.64, 1);
+    }
+    .rail-acciones a[download]:hover .icono {
+      translate: 0 2px;
+      transition-duration: 200ms;
+      transition-timing-function: var(--curva-salida);
+    }
+    .rail-acciones a[href="#main"]:hover .icono {
+      translate: 0 -2px;
+      transition-duration: 200ms;
+      transition-timing-function: var(--curva-salida);
+    }
   }
   .rail-acciones [data-tip]::after {
     content: attr(data-tip);
@@ -652,7 +685,7 @@
       overflow: visible;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.75;
+      stroke-width: var(--trazo-dock);
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -723,7 +756,7 @@
   .dock :is(a, button),
   .rail-acciones a,
   .cab-menu,
-  .cab-menu svg,
+  .cab-menu svg path,
   .cab-menu-panel,
   .cab-menu-fila,
   .idioma-op {
@@ -761,6 +794,10 @@
   }
   .icono-dock__relleno {
     scale: none !important;
+  }
+  .rail-acciones .icono {
+    translate: none !important;
+    transition: none !important;
   }
 }
 

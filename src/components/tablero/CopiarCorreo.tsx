@@ -27,8 +27,15 @@ export default function CopiarCorreo({
   };
   return (
     <button type="button" className="boton boton--linea-osc copiar" onClick={copiar}>
-      <Icono nombre="copiar" />
-      <span aria-live="polite">{textos[estado]}</span>
+      <span className="copiar-ico" data-hecho={estado === "hecho" ? "" : undefined} aria-hidden="true">
+        <Icono nombre="copiar" />
+        <Icono nombre="hecho" />
+      </span>
+      <span aria-live="polite">
+        <span key={estado} className="copiar-txt" data-anim={estado === "reposo" ? undefined : ""}>
+          {textos[estado]}
+        </span>
+      </span>
     </button>
   );
 }

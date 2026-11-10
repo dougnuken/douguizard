@@ -236,7 +236,8 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
           className="cab-menu"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" data-abierto={open || undefined}>
-            <path d="M4 7h12M4 13h12" />
+            <path d="M4 7h12" />
+            <path d="M4 13h12" />
           </svg>
         </button>
       </div>
