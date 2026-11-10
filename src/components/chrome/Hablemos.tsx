@@ -13,9 +13,9 @@ import type { MetalFxProps } from "metal-fx";
 /**
  * «Hablemos» de la cabecera (pulido G2: «muy crudo visualmente»).
  *
- * Material: vidrio eléctrico (relleno azul con su canto, reflejo superior y
- * sombra de color) y un LED de luz láser que dice «disponible», como el punto de
- * `.estado`. Micro-interacción con física, solo con puntero fino y sin
+ * Material: el vidrio oscuro del cromo con su canto, un reflejo superior y el
+ * canto inferior encendido en láser (QA de G: antes, relleno azul, fuera del
+ * sistema B), y un LED verde que dice «disponible», como el punto de `.estado`. Micro-interacción con física, solo con puntero fino y sin
  * `prefers-reduced-motion`: el botón se deja atraer ≤ 3 px por el cursor (imán)
  * y el brillo del canto sigue al puntero; al soltar o salir vuelve con un muelle
  * (`--muelle`, `linear()` de CSS). Todo `translate`/`scale` y variables CSS en
