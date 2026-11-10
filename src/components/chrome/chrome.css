@@ -392,11 +392,30 @@
     stroke: currentColor;
     stroke-width: 1.5;
     stroke-linecap: round;
-    transition: rotate var(--d-ui) var(--curva-salida);
   }
-  .cab-menu svg[data-abierto] {
-    rotate: 90deg;
+  /* V-2 · 2: «=» ↔ «✕». Cada raya gira sobre su propio centro (viewBox 20×20) y
+     baja/sube 3 px hasta cruzarse en y = 10. Solo `translate`/`rotate`. */
+  .cab-menu svg path {
+    transform-box: view-box;
+    transition:
+      translate 250ms var(--curva-suave),
+      rotate 250ms var(--curva-suave);
   }
+  .cab-menu svg path:first-child {
+    transform-origin: 10px 7px;
+  }
+  .cab-menu svg path:last-child {
+    transform-origin: 10px 13px;
+  }
+  .cab-menu svg[data-abierto] path:first-child {
+    translate: 0 3px;
+    rotate: 45deg;
+  }
+  .cab-menu svg[data-abierto] path:last-child {
+    translate: 0 -3px;
+    rotate: -45deg;
+  }
+
   .cab-menu-panel {
     position: absolute;
     top: calc(100% + 8px);
@@ -723,7 +742,7 @@
   .dock :is(a, button),
   .rail-acciones a,
   .cab-menu,
-  .cab-menu svg,
+  .cab-menu svg path,
   .cab-menu-panel,
   .cab-menu-fila,
   .idioma-op {
