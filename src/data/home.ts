@@ -23,7 +23,6 @@ export const archivo = ["royal-caribbean", "qrvey", "ideaware", "chub"] as const
  * `/#contact` de hoy siguen llegando, y el cambio de idioma conserva el ancla.
  */
 export const secciones = ["work", "about", "experience", "contact"] as const;
-export type Seccion = (typeof secciones)[number];
 
 export type Superficie = "vacio" | "losa" | "clara" | "niebla" | "azul" | "magenta" | "vidrio";
 

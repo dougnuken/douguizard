@@ -40,14 +40,6 @@ export function renderBold(text: string): ReactNode {
 }
 
 /**
- * Rótulo de sección del sistema B: ceja (Instrument Sans 14, `--tinta-2`).
- * Ya no es fijo al hacer scroll: el índice lateral (≥ 1280) es quien orienta.
- */
-export function Eyebrow({ children }: { children: ReactNode; sticky?: boolean }) {
-  return <p className="ceja">{children}</p>;
-}
-
-/**
  * El `h2` de cada bloque del caso (Urbanist 30), sin revelado propio: el bloque
  * entero entra con su `FadeIn` cuando lo pide, y en la hoja nada se revela en la
  * primera pantalla (06-CRITICA-F6 P1-4).
@@ -97,13 +89,6 @@ export function Band({ children, className, id, labelledBy, label }: BandProps) 
     >
       {children}
     </section>
-  );
-}
-
-/** The `/ Label` mono caption used by the meta strip, the links row and the colophon. */
-export function SlashLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div className={twMerge("ceja", className)}>{children}</div>
   );
 }
 

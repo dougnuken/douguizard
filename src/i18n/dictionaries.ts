@@ -10,16 +10,6 @@ import { sistemaDict, type DictSistema } from "./sistema";
  * enforces, so a label added in one language cannot ship missing from the other.
  */
 
-const SMALL_EN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
-const SMALL_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce"];
-
-/** "Seven", "dos" — numbers a sentence would spell out. Digits past twelve. */
-export function numberWord(n: number, locale: Locale, { capital = false } = {}): string {
-  const list = locale === "es" ? SMALL_ES : SMALL_EN;
-  const word = list[n] ?? String(n);
-  return capital ? word.charAt(0).toUpperCase() + word.slice(1) : word;
-}
-
 const en = {
   meta: {
     skip: "Skip to content",
