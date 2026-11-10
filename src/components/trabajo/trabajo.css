@@ -173,11 +173,34 @@
   .c-andes .t-losa {
     font-size: var(--t-30);
   }
+  /* Jelly naranja: mismo lenguaje que `.losa--azul` (centro hondo, borde que sube,
+     filo de luz y bloom), con el naranja de marca de Naowee (≈ #b8491f en su UI).
+     Acento solo de esta losa, no un token global. Texto largo sobre #9a3309 (el fondo sólido que lee la prueba): blanco 7,4:1; el borde sube a #c2410c (5,2:1, solo cifras y gráfico). */
+  .c-naowee .bento {
+    background-color: #9a3309;
+    background-image: linear-gradient(to top, #d9622b 0%, transparent 20%),
+      radial-gradient(125% 85% at 38% 22%, #5c1a04 0%, #9a3309 46%, #c2410c 82%, #cf5415 108%);
+    box-shadow: var(--filo-jelly), 0 24px 64px -12px rgba(194, 65, 12, 0.4);
+    color: var(--blanco);
+  }
+  .c-naowee .bento :is(.ceja, .t-losa, .apoyo, .etiqueta) {
+    color: var(--blanco);
+  }
+  .c-naowee .leido {
+    color: var(--blanco);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  }
+  /* La captura es una pieza dentro del naranja: marco redondeado, inclinada, con sombra. */
   .c-naowee .losa-media {
     grid-column: 2;
     grid-row: 1 / -1;
-    margin: -16px 0;
+    margin: 40px -72px 40px 0;
     min-height: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    rotate: -4deg;
+    transform-origin: 30% 50%;
+    box-shadow: 0 30px 60px -16px rgba(40, 8, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.35);
   }
   .c-naowee .losa-media img {
     object-position: 0 0;
