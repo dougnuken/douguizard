@@ -112,7 +112,6 @@
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
   --dur-fast: 160ms;
   --dur: 300ms;
-  --dur-slow: 520ms;
 
   --header-h: 56px;
 
@@ -218,7 +217,6 @@
      1 px, nunca relleno ni texto): láser. Sin `--verde`: el estado es luz láser. */
   --electrico: #2b56f3;
   --electrico-texto: #5b7cff;
-  --resplandor-b: #361976;
   --laser: #ff3344;
   --laser-nucleo: #ffe4e6;
   --laser-halo: rgba(255, 51, 68, 0.45);
@@ -328,7 +326,6 @@
   --d-ui: 240ms;
   --d-hoja: 420ms;
   --d-hoja-salida: 280ms;
-  --d-entrada: 600ms;
   /* G4 · tokens de transitions.dev (crafthings): abrir 250 ms, cerrar 150 ms,
      una sola curva «smooth-out» para superficies y páginas. */
   --curva-suave: cubic-bezier(0.22, 1, 0.36, 1);
@@ -1088,7 +1085,6 @@
     --s3: 4.8mm;
     --s4: 6.4mm;
     --s5: 9.6mm;
-    --s6: 13mm;
   }
 
   /* The surface goes on `html` and `body` stays transparent, which is not a
