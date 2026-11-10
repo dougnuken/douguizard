@@ -276,7 +276,7 @@
     flex: none;
     stroke: currentColor;
     fill: none;
-    stroke-width: 1.5;
+    stroke-width: var(--trazo);
     stroke-linecap: round;
     stroke-linejoin: round;
   }

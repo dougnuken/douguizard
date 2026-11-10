@@ -257,6 +257,9 @@
   --fila: clamp(96px, calc((100svh - var(--cabecera) - var(--gap) - 5 * var(--gap)) / 6), 128px);
   --toque: 44px;
   --boton-s: 48px;
+  /* V-2 · 5: un solo trazo de iconos a 20 px (px renderizados): junto a texto 400 y junto a 500–600 (dock). */
+  --trazo: 1.5;
+  --trazo-dock: 1.75;
   --boton: 56px;
   --pill-alto: 40px;
 
@@ -1594,7 +1597,7 @@ html:has(dialog.hoja[open]) {
   height: 20px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.6;
+  stroke-width: var(--trazo);
   stroke-linecap: round;
   stroke-linejoin: round;
 }

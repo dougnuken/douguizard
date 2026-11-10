@@ -390,7 +390,7 @@
   .cab-menu svg {
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.5;
+    stroke-width: var(--trazo);
     stroke-linecap: round;
   }
   /* V-2 · 2: «=» ↔ «✕». Cada raya gira sobre su propio centro (viewBox 20×20) y
@@ -671,7 +671,7 @@
       overflow: visible;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.75;
+      stroke-width: var(--trazo-dock);
       stroke-linecap: round;
       stroke-linejoin: round;
     }
