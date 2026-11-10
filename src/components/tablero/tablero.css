@@ -766,6 +766,32 @@
     background: transparent;
     border: 0;
   }
+  /* V-2 · 1: «copiar» → «hecho», los dos iconos en la misma celda (20 px fijos, sin CLS). */
+  .copiar-ico {
+    display: grid;
+    flex: none;
+  }
+  .copiar-ico > .icono {
+    grid-area: 1 / 1;
+    transition:
+      opacity 250ms cubic-bezier(0.2, 0, 0, 1),
+      scale 250ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .copiar-ico > .icono:last-child,
+  .copiar-ico[data-hecho] > .icono:first-child {
+    opacity: 0;
+    scale: 0.25;
+  }
+  .copiar-ico[data-hecho] > .icono:last-child {
+    opacity: 1;
+    scale: 1;
+  }
+  .copiar-txt {
+    display: inline-block;
+  }
+  .copiar-txt[data-anim] {
+    animation: copiar-txt 150ms var(--curva-suave) backwards;
+  }
   @media (scripting: none) {
     .copiar {
       display: none;
@@ -1160,6 +1186,12 @@
   }
 }
 
+@keyframes copiar-txt {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
 @keyframes contador-sig {
   from {
     opacity: 0;
@@ -1180,6 +1212,13 @@
   }
   .contador-n[data-dir] {
     animation: none;
+  }
+  .copiar-txt[data-anim] {
+    animation: none;
+  }
+  .copiar-ico > .icono {
+    transition: none;
+    scale: none !important;
   }
   .circulo:not(:disabled):active {
     scale: none;

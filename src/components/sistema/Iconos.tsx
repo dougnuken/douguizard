@@ -38,6 +38,8 @@ const TRAZOS = {
       <path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6a1.5 1.5 0 0 0 1.5 1.5H7" />
     </>
   ),
+  /** Check de «Copiado» (V-2): cruza con `copiar` en el mismo botón. */
+  hecho: <path d="M5 10.5 8.5 14 15 6" />,
   // F3 · dock: Experiencia (tramos de una línea de tiempo) y Contacto (globo).
   experiencia: (
     <>
