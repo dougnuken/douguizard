@@ -567,6 +567,20 @@
       background: var(--losa-alta);
       color: var(--tinta);
     }
+    /* V-2 · 8: «bajar» baja 2 px y «arriba» sube 2 px; salida con rebote suave. */
+    .rail-acciones :is(a[download], a[href="#main"]) .icono {
+      transition: translate 250ms cubic-bezier(0.34, 1.36, 0.64, 1);
+    }
+    .rail-acciones a[download]:hover .icono {
+      translate: 0 2px;
+      transition-duration: 200ms;
+      transition-timing-function: var(--curva-salida);
+    }
+    .rail-acciones a[href="#main"]:hover .icono {
+      translate: 0 -2px;
+      transition-duration: 200ms;
+      transition-timing-function: var(--curva-salida);
+    }
   }
   .rail-acciones [data-tip]::after {
     content: attr(data-tip);
@@ -780,6 +794,10 @@
   }
   .icono-dock__relleno {
     scale: none !important;
+  }
+  .rail-acciones .icono {
+    translate: none !important;
+    transition: none !important;
   }
 }
 

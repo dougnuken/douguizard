@@ -34,6 +34,7 @@
     font: 400 var(--t-16) / 1.5 var(--font-texto);
     color: var(--tinta-2);
     max-width: 34em;
+    text-wrap: pretty;
   }
   .micro {
     font: 400 var(--t-12) / 1.4 var(--font-texto);
@@ -305,6 +306,10 @@
       background-color var(--d-hover) var(--curva-salida),
       color var(--d-hover) var(--curva-salida),
       scale var(--d-press) var(--curva-salida);
+  }
+  /* V-2 · 9: con icono delante el lado del icono pesa más y pide menos aire (24 → 20 px). */
+  .boton:has(> :is(.icono, .copiar-ico):first-child) {
+    padding-inline-start: 20px;
   }
   .boton:active {
     scale: 0.97;

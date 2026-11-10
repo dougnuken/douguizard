@@ -566,7 +566,7 @@
   }
   @supports not (hanging-punctuation: first) {
     .testimonios blockquote {
-      text-indent: -0.42em;
+      text-indent: -0.34em;
     }
   }
   /* Pulido F: `.firma` acotada a /about. Sin acotar, la hoja seguía cargada tras navegar
