@@ -21,6 +21,6 @@
 | vitest | 267/267 (27 archivos) |
 | `npm run build` | OK |
 | Suites afectadas (about, tablero, g4-motion, cromo-contraste, a11y, perf) | **152/152** |
-| Suite completa | RESULTADO_COMPLETA |
+| Suite completa (`--workers=2`) | **627/627** en 28,3 min (622 de G + 5 nuevas). La primera corrida se cortó por el límite de tiempo de la tarea con 307 hechas: 2 fallos de tiempo ya conocidos (`dock-pulido` «/work → Contacto» @390 y `hoja` «la salida se ve», inestable en headless desde antes de G); en la corrida completa pasaron los dos |
 
 Capturas de comprobación (no versionadas): punto verde alineado en la ficha Datos y en K2 a 390; marquee con «Banco de Occidente» a la altura de «Aval Digital Labs».
