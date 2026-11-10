@@ -94,6 +94,7 @@
     line-height: 1.55;
     color: var(--tinta-2);
     max-width: 34em;
+    text-wrap: pretty;
   }
   .cifra {
     display: grid;
