@@ -14,7 +14,7 @@ import { rolCorto } from "@/lib/career";
  * K1 · la losa del retrato (04 §2.3), en su estado OS: la foto activa de
  * `hero.ts` horneada con el vidrio (es el LCP), el vidrio vivo en WebGL2 tras el
  * `load` (respaldo: la lente en CSS), la línea láser
- * sobre los ojos y el panel de vidrio con el nombre (el único visible en
+ * sobre los ojos con su destello en cada retina (pulido I) y el panel de vidrio con el nombre (el único visible en
  * escritorio, P1-4) → `/about`. En móvil es la foto a sangre detrás de K2; el
  * panel y su enlace no se pintan (el perfil va en K13).
  */
@@ -42,6 +42,17 @@ export default function K1Retrato({ locale }: { locale: Locale }) {
         </VidrioDiferido>
         <div className="k1-velo" aria-hidden="true" />
         <div className="k1-laser" aria-hidden="true" />
+        {/* Pulido I · destello «Cíclope»: retinas, raya anamórfica, bloom y reflejos (`escena/destello.css`). */}
+        <div className="k1-destello" aria-hidden="true">
+          <div className="dst-capa">
+            <i className="dst-haz" />
+            <i className="dst-raya" />
+            <i className="dst-fantasma dst-f1" />
+            <i className="dst-fantasma dst-f2" />
+            <i className="dst-ojo dst-ojo-i" />
+            <i className="dst-ojo dst-ojo-d" />
+          </div>
+        </div>
       </div>
       <div className="k1-panel">
         <p className="k1-nombre" aria-hidden="true">
