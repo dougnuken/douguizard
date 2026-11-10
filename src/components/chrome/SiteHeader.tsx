@@ -182,8 +182,9 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
     clase: string,
     alNavegar?: () => void,
     adelantar?: (el: HTMLElement) => void,
-  ) =>
-    e.seccion ? (
+  ) => {
+    const { seccion } = e;
+    return seccion ? (
       <a
         key={e.clave}
         href={e.href}
@@ -191,7 +192,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         aria-current={e.actual}
         onClick={(ev) => {
           alNavegar?.();
-          irASeccion(ev, e.seccion!);
+          irASeccion(ev, seccion);
         }}
       >
         {e.texto}
@@ -211,6 +212,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         {e.texto}
       </Link>
     );
+  };
 
   return (
     <header className="site-header cab-b">

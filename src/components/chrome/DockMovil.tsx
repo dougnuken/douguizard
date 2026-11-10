@@ -86,13 +86,14 @@ export default function DockMovil() {
             <span>{t[d.clave]}</span>
           </>
         );
-        if (isHome && d.seccion) {
+        const { seccion: destino } = d;
+        if (isHome && destino) {
           return (
             <a
               key={d.clave}
               href={`#${d.seccion}`}
               aria-current={active === d.seccion ? "true" : undefined}
-              onClick={(ev) => irASeccion(ev, d.seccion!)}
+              onClick={(ev) => irASeccion(ev, destino)}
             >
               {contenido}
             </a>
