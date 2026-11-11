@@ -164,6 +164,8 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await abrir(page);
     await page.waitForTimeout(1600);
+    // Pulido I: la entrada (ojos que prenden y se apagan, luego la línea) dura ~2,1 s; se mide el snap con ella terminada.
+    await expect.poll(() => page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length), { timeout: 4000, intervals: [100] }).toBe(0);
     await page.mouse.move(720, 450);
     // Reloj desde el fin real del gesto: se anota en la página el instante del último scroll que sube (pico de scrollY)
     // y el del primer scroll que ya vuelve a ≤ 1. No cuenta la latencia de Playwright ni los sondeos.
@@ -341,7 +343,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect(m.k1y - f.k1y).toBeLessThanOrEqual(12);
   });
 
-  test("CLS ≤ 0,02 en la carga del acto 1 y, en reposo, solo viven el barrido del vidrio y el pulso del destello", async ({ page }) => {
+  test("CLS ≤ 0,02 en la carga del acto 1 y, en reposo, solo vive el barrido del vidrio", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.addInitScript(() => {
       const w = window as unknown as { __cls: number; __raf: number };
@@ -374,13 +376,13 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     const despues = await medir();
     expect(despues.raf - antes.raf - (despues.vidrio - antes.vidrio), "rAF en 1 s de reposo, sin los del barrido del vidrio ni el bucle vacío de ScrollTrigger").toBeLessThanOrEqual(6);
     expect(despues.vidrio, "el barrido del vidrio corre en el acto 1").toBeGreaterThan(antes.vidrio);
-    // Pulido I: lo único vivo en reposo es el pulso del destello del láser (`dst-*`,
-    // tres capas, solo `opacity` y `scale`: compositor, sin pintado ni rAF).
+    // Pulido I (Doug): el destello del láser ya no late; prende y se apaga una vez al
+    // cargar y después sale la línea. En reposo no queda ninguna animación CSS viva.
     const vivas = await page.evaluate(() =>
       document.getAnimations().filter((a) => a.playState === "running").map((a) => (a as CSSAnimation).animationName ?? "?"),
     );
-    expect(vivas.filter((n) => !/^dst-(late|raya|haz)$/.test(n)), "animaciones vivas fuera del pulso del destello").toEqual([]);
-    expect(vivas.length, "pulso del destello: 2 retinas + raya + haz").toBeLessThanOrEqual(4);
+    expect(vivas, "animaciones vivas en reposo").toEqual([]);
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".dst-capa")!).opacity), "tras la entrada, los ojos quedan apagados").toBe("0");
     const props = await page.evaluate(() =>
       document.getAnimations().flatMap((a) => ((a.effect as KeyframeEffect).getKeyframes?.() ?? []).flatMap((k) => Object.keys(k))),
     );
@@ -421,7 +423,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     expect((await medir()).alfa, "vuelve al regresar").toBe(1);
   });
 
-  test("pulido I: en móvil el destello cae sobre las pupilas; con reduced-motion queda fijo y sin pulso", async ({ page }) => {
+  test("pulido I: en móvil el destello cae sobre las pupilas; con reduced-motion no hay destello (el reposo: ojos apagados)", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/", { waitUntil: "load" });
     const m = await page.evaluate(() => {
@@ -441,7 +443,7 @@ test.describe("escena del home · acto 1 «cine» (≥ 1024 sin RM)", () => {
     await page.reload({ waitUntil: "load" });
     await expect(page.locator(".k1-destello")).toBeVisible();
     expect(await page.evaluate(() => document.querySelector(".k1")!.getAnimations({ subtree: true }).length)).toBe(0);
-    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".k1-destello")!).opacity)).toBe("1");
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".dst-capa")!).opacity)).toBe("0");
   });
 
   test("P0-2: durante el viaje (p 0,1 … 0,7) K2 nunca tapa el nombre XL", async ({ page }) => {

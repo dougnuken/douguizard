@@ -15,7 +15,7 @@ describe("barrido automático · trayectoria (pulido I)", () => {
     expect(y1).toBeCloseTo(y0, 6);
   });
 
-  it("no sale de la foto y recorre la cara: de la visera a la barbilla y de oreja a oreja", () => {
+  it("no sale de la foto y la recorre entera (Doug): más allá de la cara en los dos ejes", () => {
     let [minX, maxX, minY, maxY] = [1, 0, 1, 0];
     for (let t = 0; t < PERIODO; t += 0.05) {
       const [x, y] = trayectoria(t, f);
@@ -29,6 +29,9 @@ describe("barrido automático · trayectoria (pulido I)", () => {
     expect(minY).toBeGreaterThan(0.1);
     expect(maxY).toBeLessThan(0.9);
     expect(maxX - minX).toBeGreaterThan(1.8 * rx);
+    // Toda la foto, no solo la cara: al menos 0,55 de ancho y 0,45 de alto.
+    expect(maxX - minX).toBeGreaterThan(0.55);
+    expect(maxY - minY).toBeGreaterThan(0.45);
     expect(minY).toBeLessThan(cy - 0.5 * ry);
     expect(maxY).toBeGreaterThan(cy + 0.5 * ry);
   });
@@ -43,14 +46,15 @@ describe("barrido automático · trayectoria (pulido I)", () => {
     expect(ritmo(PERIODO)).toBeCloseTo(1, 9);
   });
 
-  it("es lenta: nunca pasa de 0,16 anchos de foto por segundo", () => {
+  // Pulido I (Doug): el recorrido pasó de la cara a toda la foto en la misma vuelta de 30 s; el tope sube de 0,16 a 0,22.
+  it("es lenta: nunca pasa de 0,22 anchos de foto por segundo", () => {
     let max = 0;
     for (let t = 0; t < PERIODO; t += 0.02) {
       const [a, b] = trayectoria(t, f);
       const [c, d] = trayectoria(t + 0.02, f);
       max = Math.max(max, Math.hypot(c - a, (d - b) * (f.tamano.h / f.tamano.w)) / 0.02);
     }
-    expect(max).toBeLessThan(0.16);
+    expect(max).toBeLessThan(0.22);
   });
 
   it("tiempos de la decisión: el cursor manda y el barrido retoma a los ~3 s con una vuelta suave", () => {
