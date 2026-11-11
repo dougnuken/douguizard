@@ -78,7 +78,8 @@ Sesiones que faltan, en orden (cada una lee solo `ESTADO.md`, `pulido-I/PLAN.md`
 1. **Cerrar H-A** ✓ (11 nov; sin cambios de código, pendientes en `INFORME-HA.md`) · Fable 5.2, esfuerzo medio. Revisar el `wip` del vidrio (`src/components/hero/`, `src/lib/gl/`,
    `tests/e2e/vidrio.spec.ts`), pruebas del héroe en verde, 1 Lighthouse móvil de `/` (≥ 90, TBT < 200 ms), 2 capturas
    y `INFORME-HA.md`. No ampliar alcance.
-2. **Cierre** ✓ (11 nov; Playwright 625/626, el fallo es `hoja.spec.ts:376` «X», de tiempo en headless; Lighthouse local `/` 97, `/en` 97, `/about` 87; QA 0 P0/P1, 3 P2 en `pulido-I/06-CRITICA-I.md`; PR #22 a `main`, merge normal, lo aprueba Doug) · Sonnet, esfuerzo medio. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
+2. **Cierre** ✓ (11 nov; Playwright 625/626, el fallo es `hoja.spec.ts:376` «X», de tiempo en headless; Lighthouse local `/` 97, `/en` 97, `/about` 87; QA 0 P0/P1, 3 P2 en `pulido-I/06-CRITICA-I.md`; PR #22 a `main`, merge normal, lo aprueba Doug) · Sonnet, esfuerzo medio.
+3. **Ajustes de Doug sobre el PR #22** ✓ (11 nov): sombra de «Hablemos» (canvas de metal-fx), ojos que prenden/se apagan y luego la línea, barrido por toda la foto sin pausa por movimientos fuera de ella. Detalle en `pulido-I/06-CRITICA-I.md`. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
    repetir solo lo fallido), Lighthouse móvil `/` `/about` `/en`, QA visual corta con nota → `06-CRITICA-I.md`,
    arreglos P0/P1, `INFORME-O.md` completo, este archivo al día y PR a `main` (merge normal, no squash).
 

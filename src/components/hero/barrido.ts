@@ -5,9 +5,10 @@
  * (el bucle), `VidrioGL` y `LenteCss` (la geometría).
  *
  * La trayectoria es cerrada y periódica (`PERIODO`), en coordenadas
- * normalizadas de la foto y relativa a la cara: nace entre los ojos, baja por
- * una mejilla, sube por la sien, cruza a la boca y repite por el otro lado (un
- * ocho con el segundo cruce más bajo). El avance no es uniforme: `ritmo` lo
+ * normalizadas de la foto: nace entre los ojos y recorre **toda la foto** (Doug:
+ * «que se anime solo por toda la foto», por si nadie pasa el cursor), de 0,2 a
+ * 0,8 en los dos ejes: baja por un lado, sube al otro y cruza, un ocho con el
+ * segundo cruce más bajo. El avance no es uniforme: `ritmo` lo
  * frena hasta casi parar en los ojos y lo suelta en los tramos largos, para que
  * parezca una mano y no un metrónomo.
  */
@@ -35,12 +36,16 @@ export interface CaraFoto {
 }
 
 /** Punto del barrido en el segundo t, normalizado a la foto. */
+/** Amplitud del barrido, en fracción de la foto (x, y): casi toda la foto, sin tocar los bordes. */
+export const AMPLITUD: [number, number] = [0.3, 0.3];
+
 export function trayectoria(t: number, f: CaraFoto): [number, number] {
   const th = TAU * ritmo(t);
-  const [cx, , rx, ry] = f.cara;
-  const x = cx + rx * (1.15 * Math.sin(th) + 0.15 * Math.sin(3 * th));
-  const y = f.ojo + ry * (0.68 * Math.sin(2 * th) + 0.2 * (1 - Math.cos(th)) + 0.08 * Math.sin(3 * th));
-  return [x, y];
+  const [cx] = f.cara;
+  const [ax, ay] = AMPLITUD;
+  const x = cx + ax * (1.15 * Math.sin(th) + 0.15 * Math.sin(3 * th));
+  const y = f.ojo + ay * (0.68 * Math.sin(2 * th) + 0.2 * (1 - Math.cos(th)) + 0.08 * Math.sin(3 * th));
+  return [Math.min(0.88, Math.max(0.12, x)), Math.min(0.88, Math.max(0.12, y))];
 }
 
 /** Suavizado 0 → 1 (derivada nula en los extremos). */

@@ -89,8 +89,10 @@
     :root.cine .escena-nombre .l2 {
       animation-delay: 160ms;
     }
+    /* Pulido I: la línea sale cuando los ojos ya se apagaron (`destello.css`) y corta el nombre de izquierda a derecha. */
     :root.cine .k1-laser {
-      animation: escena-laser 700ms cubic-bezier(0.65, 0, 0.35, 1) 240ms backwards;
+      transform-origin: 0 50%;
+      animation: escena-laser 700ms cubic-bezier(0.65, 0, 0.35, 1) var(--ciclope-linea, 1400ms) backwards;
     }
     :root.cine .k2 {
       animation: escena-k2 600ms cubic-bezier(0.16, 1, 0.3, 1) 400ms backwards;

@@ -11,9 +11,9 @@
    p = 0 del acto 1, la cuenta de `escena.css`; durante el viaje la escribe
    `useScrollScene` en px. `--u` = 1 % del ancho de la foto: el destello escala con ella.
    Movimiento: solo `opacity`, `scale` y `transform` (compositor). Nada anima
-   `filter`, sombras ni degradados. Con `prefers-reduced-motion`, fijo y sin pulso.
-   Scroll: en el acto 1 lo apaga `useScrollScene` (`atenuacionDestello`); por
-   debajo de 1024, una animación ligada a la salida de K1 (`view-timeline`).
+   `filter`, sombras ni degradados. Una sola vez al cargar (prende y se apaga);
+   con `prefers-reduced-motion`, directamente apagado. En el acto 1,
+   `useScrollScene` además lo atenúa con el scroll (`atenuacionDestello`).
    ════════════════════════════════════════════════════════════════════════════ */
 
 @layer components {
@@ -231,70 +231,73 @@
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    /* Entrada: el destello prende cuando el láser ya cruzó (una vez, sin dejar nada vivo). */
+  /* Pulido I (Doug: «los ojos están muy intensos y no pierden su intensidad»):
+     el destello ya no se queda encendido. Al cargar, las retinas prenden, se
+     apagan y entonces sale la línea que corta el nombre (`dst-linea`, aquí en
+     móvil; en el acto 1 de escritorio, `escena-laser` con el mismo retraso). El
+     estado de reposo es el final: ojos apagados y la línea fina. Con
+     `prefers-reduced-motion` se muestra ese reposo, sin destello. */
+  @media (prefers-reduced-motion: reduce) {
     .dst-capa {
-      animation: dst-entra 700ms cubic-bezier(0.16, 1, 0.3, 1) 760ms backwards;
+      opacity: 0;
     }
-    /* Pulso lento y desfasado por capa: respira, no parpadea. */
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Una sola vez y sin dejar nada vivo: termina en opacidad 0 (`both`). */
+    .dst-capa {
+      animation: dst-ciclope var(--ciclope-dur) cubic-bezier(0.4, 0, 0.2, 1) var(--ciclope-inicio) both;
+    }
+    /* Las retinas prenden con un golpe de escala (sobre su propia caja: `translate` va aparte). */
     .dst-ojo {
-      animation: dst-late 5600ms ease-in-out 1500ms infinite;
-    }
-    .dst-ojo-d {
-      animation-delay: 1900ms;
-    }
-    .dst-raya {
-      animation: dst-raya 8200ms ease-in-out 1500ms infinite;
-    }
-    .dst-haz {
-      animation: dst-haz 6800ms ease-in-out 1500ms infinite;
-    }
-    .k1-destello[data-fuera] i {
-      animation-play-state: paused;
+      animation: dst-prende var(--ciclope-dur) cubic-bezier(0.16, 1, 0.3, 1) var(--ciclope-inicio) both;
     }
 
-    /* Por debajo de 1024 no hay acto 1: el destello se apaga mientras K1 sale por arriba. */
-    @supports (animation-timeline: view()) {
-      @media (max-width: 1023px) {
-        .os-top .k1 {
-          view-timeline: --k1-sale block;
-        }
-        .k1-destello {
-          animation: dst-sale linear both;
-          animation-timeline: --k1-sale;
-          animation-range: exit 0% exit 70%;
-        }
+    /* Por debajo de 1024 no hay acto 1: la línea entra cuando los ojos se apagan. */
+    @media (max-width: 1023px) {
+      .os-top .k1-laser {
+        transform-origin: 0 50%;
+        animation: dst-linea 700ms cubic-bezier(0.65, 0, 0.35, 1) var(--ciclope-linea) backwards;
       }
     }
   }
+  /* Tiempos de la secuencia (compartidos con `escena.css`). */
+  :root {
+    --ciclope-inicio: 150ms;
+    --ciclope-dur: 1500ms;
+    --ciclope-linea: 1400ms;
+  }
 
-  @keyframes dst-entra {
+  @keyframes dst-ciclope {
+    0% {
+      opacity: 0;
+    }
+    22% {
+      opacity: 1;
+    }
+    48% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes dst-prende {
+    0% {
+      scale: 0.55;
+    }
+    22% {
+      scale: 1.08;
+    }
+    48% {
+      scale: 1;
+    }
+    100% {
+      scale: 0.9;
+    }
+  }
+  @keyframes dst-linea {
     from {
-      opacity: 0;
-    }
-  }
-  /* Parten y vuelven al estado de reposo (1): el retraso de arranque no da salto. */
-  @keyframes dst-late {
-    50% {
-      opacity: 0.78;
-      scale: 0.93;
-    }
-  }
-  @keyframes dst-raya {
-    50% {
-      opacity: 0.68;
-      scale: 0.92 1;
-    }
-  }
-  @keyframes dst-haz {
-    50% {
-      opacity: 0.55;
-      scale: 1 0.78;
-    }
-  }
-  @keyframes dst-sale {
-    to {
-      opacity: 0;
+      transform: scaleX(0);
     }
   }
 }

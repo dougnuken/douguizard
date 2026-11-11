@@ -368,6 +368,13 @@
     opacity: 1 !important;
     visibility: visible !important;
   }
+  /* Pulido I (bug de Doug): el reset de Tailwind (`canvas { max-width: 100% }`)
+     encogía los lienzos del halo y del canto de metal-fx, que son más anchos que
+     el botón y se colocan con `left` negativo: el halo quedaba aplastado y corrido
+     a la izquierda y se salía de la píldora como un rectángulo. */
+  .hablemos-metal canvas {
+    max-width: none;
+  }
   .cab-menu {
     display: none;
     place-items: center;

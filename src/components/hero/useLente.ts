@@ -13,8 +13,8 @@ import { REENTRADA, REPOSO, relojBarrido, suave } from "./barrido";
  * (`data-lente` = apertura; `data-barrido` = "x,y" del centro mientras barre sola.)
  *
  * Pulido I · barrido automático (`barrido.ts`): si se pasa `opciones.barrido`,
- * la lente se mueve sola mientras nadie la lleva. El cursor (o el dedo) manda
- * en cuanto se mueve; tras `REPOSO` s sin gestos el barrido retoma **desde
+ * la lente se mueve sola mientras nadie la lleva. El cursor (sobre la foto) o el
+ * dedo manda en cuanto se mueve; tras `REPOSO` s sin gestos el barrido retoma **desde
  * donde quedó la lente** y vuelve a su trayectoria en `REENTRADA` s. Mientras
  * barre hay bucle; cuando `barrido()` devuelve `null` (fuera de vista, héroe
  * desplazado) la lente se cierra y el bucle se detiene: 0 cuadros.
@@ -216,7 +216,8 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
   };
   const mover = (e: PointerEvent) => {
     if (opciones.soloBarrido) {
-      if (e.pointerType !== "touch") callar();
+      // Solo un cursor sobre la foto la calla: moverlo por el resto de la página no para el barrido.
+      if (e.pointerType !== "touch" && local(e).dentro) callar();
       return;
     }
     if (e.pointerType === "touch") {
@@ -229,19 +230,21 @@ export function montarLente(el: HTMLElement, pintar: (s: EstadoLente) => void, o
       return;
     }
     const p = local(e);
-    const objetivo = p.dentro ? 1 : 0;
-    const barria = barriendo;
-    mando();
-    if (!p.dentro && s.objetivo === 0) return;
-    if (!p.dentro && barria) {
-      // El cursor se mueve fuera de la foto: el barrido se cierra donde está.
+    if (!p.dentro) {
+      // Pulido I (Doug: «no vi que se anime solo»): fuera de la foto el cursor no
+      // manda; antes cualquier movimiento por la página paraba el barrido 3 s y en
+      // escritorio casi nunca llegaba a verse. Solo si el cursor venía llevando la
+      // lente, esta se cierra donde está y el barrido vuelve tras el reposo.
+      if (barriendo || s.objetivo === 0) return;
+      mando();
       Object.assign(s, { tx: s.mx, ty: s.my, objetivo: 0 });
       pedir();
       return;
     }
+    mando();
     s.tx = p.x;
     s.ty = p.y;
-    s.objetivo = objetivo;
+    s.objetivo = 1;
     // La lente nace bajo el cursor; no viaja desde una esquina.
     if (s.abierta < 0.05) Object.assign(s, { mx: p.x, my: p.y, vx: 0, vy: 0 });
     pedir();
