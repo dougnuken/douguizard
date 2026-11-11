@@ -11,15 +11,9 @@
    p = 0 del acto 1, la cuenta de `escena.css`; durante el viaje la escribe
    `useScrollScene` en px. `--u` = 1 % del ancho de la foto: el destello escala con ella.
    Movimiento: solo `opacity`, `scale` y `transform` (compositor). Nada anima
-<<<<<<< HEAD
    `filter`, sombras ni degradados. Una sola vez al cargar (prende y se apaga);
    con `prefers-reduced-motion`, directamente apagado. En el acto 1,
    `useScrollScene` además lo atenúa con el scroll (`atenuacionDestello`).
-=======
-   `filter`, sombras ni degradados. Con `prefers-reduced-motion`, fijo y sin pulso.
-   Scroll: en el acto 1 lo apaga `useScrollScene` (`atenuacionDestello`); por
-   debajo de 1024, una animación ligada a la salida de K1 (`view-timeline`).
->>>>>>> origin/main
    ════════════════════════════════════════════════════════════════════════════ */
 
 @layer components {
@@ -237,7 +231,6 @@
     }
   }
 
-<<<<<<< HEAD
   /* Pulido I (Doug: «los ojos están muy intensos y no pierden su intensidad»):
      el destello ya no se queda encendido. Al cargar, las retinas prenden, se
      apagan y entonces sale la línea que corta el nombre (`dst-linea`, aquí en
@@ -305,72 +298,6 @@
   @keyframes dst-linea {
     from {
       transform: scaleX(0);
-=======
-  @media (prefers-reduced-motion: no-preference) {
-    /* Entrada: el destello prende cuando el láser ya cruzó (una vez, sin dejar nada vivo). */
-    .dst-capa {
-      animation: dst-entra 700ms cubic-bezier(0.16, 1, 0.3, 1) 760ms backwards;
-    }
-    /* Pulso lento y desfasado por capa: respira, no parpadea. */
-    .dst-ojo {
-      animation: dst-late 5600ms ease-in-out 1500ms infinite;
-    }
-    .dst-ojo-d {
-      animation-delay: 1900ms;
-    }
-    .dst-raya {
-      animation: dst-raya 8200ms ease-in-out 1500ms infinite;
-    }
-    .dst-haz {
-      animation: dst-haz 6800ms ease-in-out 1500ms infinite;
-    }
-    .k1-destello[data-fuera] i {
-      animation-play-state: paused;
-    }
-
-    /* Por debajo de 1024 no hay acto 1: el destello se apaga mientras K1 sale por arriba. */
-    @supports (animation-timeline: view()) {
-      @media (max-width: 1023px) {
-        .os-top .k1 {
-          view-timeline: --k1-sale block;
-        }
-        .k1-destello {
-          animation: dst-sale linear both;
-          animation-timeline: --k1-sale;
-          animation-range: exit 0% exit 70%;
-        }
-      }
-    }
-  }
-
-  @keyframes dst-entra {
-    from {
-      opacity: 0;
-    }
-  }
-  /* Parten y vuelven al estado de reposo (1): el retraso de arranque no da salto. */
-  @keyframes dst-late {
-    50% {
-      opacity: 0.78;
-      scale: 0.93;
-    }
-  }
-  @keyframes dst-raya {
-    50% {
-      opacity: 0.68;
-      scale: 0.92 1;
-    }
-  }
-  @keyframes dst-haz {
-    50% {
-      opacity: 0.55;
-      scale: 1 0.78;
-    }
-  }
-  @keyframes dst-sale {
-    to {
-      opacity: 0;
->>>>>>> origin/main
     }
   }
 }

@@ -68,11 +68,7 @@ todo. Plan y especificaciones: `pulido-I/PLAN.md`. Integrado en la rama (merge n
 | N losa de Naowee naranja (Doug: «está bien») | ✓ | `pulido-I/INFORME-N.md` |
 | V-1 propuesta + V-2 mejoras 1–9 de tipografía e iconos | ✓ | `PROPUESTA-VISUAL.md`, `INFORME-V2.md` |
 | A auditoría (22 hallazgos) | ✓ | `AUDITORIA.md` |
-<<<<<<< HEAD
 | O optimización (16 de 22; JS `/work/[slug]` −48,7 KB gz) | ✓ verificada (11 nov) | `pulido-I/INFORME-O.md` |
-=======
-| O optimización (16 de 22; JS `/work/[slug]` −48,7 KB gz) | **sin verificación final** | `INFORME-O.md` (parcial) |
->>>>>>> origin/main
 | H-A vidrio: refracción por estría + barrido automático + póster v4 | ✓ (héroe 89/90, el fallo es de tiempo y pasa solo; Lighthouse `/` Perf 96, TBT ~230 ms = base) | `pulido-I/INFORME-HA.md` |
 
 Decisión que cambia: «el cursor solo abre el vidrio» → **barrido automático + cursor** (el cursor manda; el barrido
@@ -82,12 +78,8 @@ Sesiones que faltan, en orden (cada una lee solo `ESTADO.md`, `pulido-I/PLAN.md`
 1. **Cerrar H-A** ✓ (11 nov; sin cambios de código, pendientes en `INFORME-HA.md`) · Fable 5.2, esfuerzo medio. Revisar el `wip` del vidrio (`src/components/hero/`, `src/lib/gl/`,
    `tests/e2e/vidrio.spec.ts`), pruebas del héroe en verde, 1 Lighthouse móvil de `/` (≥ 90, TBT < 200 ms), 2 capturas
    y `INFORME-HA.md`. No ampliar alcance.
-<<<<<<< HEAD
 2. **Cierre** ✓ (11 nov; Playwright 625/626, el fallo es `hoja.spec.ts:376` «X», de tiempo en headless; Lighthouse local `/` 97, `/en` 97, `/about` 87; QA 0 P0/P1, 3 P2 en `pulido-I/06-CRITICA-I.md`; PR #22 a `main`, merge normal, lo aprueba Doug) · Sonnet, esfuerzo medio.
 3. **Ajustes de Doug sobre el PR #22** ✓ (11 nov): sombra de «Hablemos» (canvas de metal-fx), ojos que prenden/se apagan y luego la línea, barrido por toda la foto sin pausa por movimientos fuera de ella. Detalle en `pulido-I/06-CRITICA-I.md`. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
-=======
-2. **Cierre** · Sonnet, esfuerzo medio. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
->>>>>>> origin/main
    repetir solo lo fallido), Lighthouse móvil `/` `/about` `/en`, QA visual corta con nota → `06-CRITICA-I.md`,
    arreglos P0/P1, `INFORME-O.md` completo, este archivo al día y PR a `main` (merge normal, no squash).
 
