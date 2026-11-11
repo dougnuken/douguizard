@@ -57,6 +57,31 @@
 3. Actualizar `07` con las páginas internas aprobadas (F2/F7) y el lockup «corte láser» (F1 `NameLockup`). ✓ (6 nov)
 4. F1–F5 cerradas (ejecutor → QA → arreglos P0/P1, cada una con su `06-CRITICA-Fn.md`). F6 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F6.md`) → arreglos ✓ → **F6 cerrada** (y `vidrio.spec` ya mide estrías, independiente de la foto). F7 ✓ (ejecutor) → QA ✓ (`06-CRITICA-F7.md`) → arreglos ✓ → **F7 cerrada**. F8 ✓ (ejecutor) → pulido de Doug ✓ → QA final ✓ → arreglos ✓ → **REDISEÑO LISTO PARA ENTREGAR** (8 nov). Pendiente de Doug: aprobar titulares de casos (F7-INFORME), 7 P2 de `06-CRITICA-FINAL.md` ✓ (8 nov; Playwright 556/556; LCP móvil / 1.004 ms) + arreglo de «Cómo trabajo» en /about que reportó Doug (requiere redesplegar), PR #16 fusionado a `main` (9 nov, publicado). **Pulido D ✓ publicado** (PR #17 fusionado el 9 nov; Playwright 571/571): héroe continuo a lo ancho con desenfoque, nombre con fundido (sin diagonal ni escala), ES/EN y «d» concéntricos, dock móvil con iconos coherentes outline→fill, «Cómo trabajo» con workflow IA (`pulido-D/`). **Pulido E ✓** (9 nov; QA 8,3/10, P0 alto del home y P1 año cortado en Trayectoria arreglados; Playwright 594/594; 6 P2 en `pulido-E/06-CRITICA-E.md`): E1 cromo (ES/EN círculo, bug del dock en Contacto, footer nuevo), E2 tablero (Cómo trabajo en /about y K14, eje de Trayectoria, Más trabajo en una línea), E3 timeline de /experience en móvil (`pulido-E/`) → **publicado** (PR #18 fusionado el 9 nov). `main` exige 1 review de Doug: el orquestador abre el PR con Vercel en verde y Doug aprueba/fusiona. **Pulido F ✓** (9 nov; 4 P2 de la crítica E: pie base 12 px, `scroll-margin-top` en anclas, año de /experience = inicio del hito, home 390 → 5.017 px y fuga de CSS `.firma`/`.contador` al volver al home; Playwright 611/611; `pulido-F/INFORME-F.md`) + Lighthouse en producción (`pulido-F/LIGHTHOUSE.md`: Perf móvil / 86, /about 80, /en 73 por TBT del héroe; A11y/BP/SEO 100). **Pulido G ✓** (10 nov; QA 8,5/10, 0 P0; Playwright 620/622: 1 intermitente de tiempo en g4-motion y la salida de la hoja, que ya fallaba en headless antes de G): G1 TBT móvil < 200 ms (/ y /about Perf 90, /en 87), G2 vidrio con canto + ES/EN de círculos pegados + píldora en gota + «Hablemos» en vidrio oscuro con láser (metal-fx diferido, solo escritorio), G3 Naowee terminó oct 2026 + disponibilidad inmediata (roles y consultoría) con punto verde + banderas + marquee de logos (5 SVG, 3 wordmarks: Naowee, Qrvey, Aval sin SVG oficial), G4 View Transitions entre páginas + timeline «Cómo trabajo» en secuencia; #ancla sobrevive a la navegación dura de Next; skills de crafthings en `.claude/skills/` y `crafthings/CATALOGO.md`. 7 P2 en `pulido-G/06-CRITICA-G.md`. **Pulido H ✓ publicado (PR #21, 10 nov; 7 P2 de la crítica G; Playwright 627/627). Fusionar con merge normal, no squash: un squash deja la rama divergente de `main`. Pendiente de Doug: SVG de Naowee, Qrvey y Aval Digital Labs; titulares de casos (`F7-INFORME.md`). **Pulido I en curso** (10 nov, sesión nueva con Fable 5.2 de orquestador): héroe con barrido automático + refracción + láser «Cíclope», losa de Naowee naranja, auditoría y optimización de código, mejoras visuales con crafthings → `pulido-I/BRIEF.md`** (10 nov; los 7 P2 de G: bandera por código de idioma, vidrio de la cabecera que vuelve a desenfocar (el `view-transition-name` fijo lo anulaba; ahora solo durante la transición), Banco de Occidente a 60 px, timeline en 1,95 s, sin blur de página < 1024, marquee pausado fuera de vista, latido del punto verde con `opacity`/`transform`; Playwright 627/627; `pulido-H/INFORME-H.md`). **publicado** (PR #20, squash, 10 nov) → entrega (`08-ENTREGA.md`; deploy lo hace Doug). Pendiente de Doug: aprobar titulares de casos (`F7-INFORME.md` «Borradores para Doug»). Una sesión por fase (ejecutor) + una de QA visual/crítica.
 
+## Pulido I · traspaso (11 nov) — una sesión por etapa
+
+Doug: **sesiones separadas por etapa, cortas**, modelo y esfuerzo mínimos; nada de una sesión larga que orqueste
+todo. Plan y especificaciones: `pulido-I/PLAN.md`. Integrado en la rama (merge normal):
+
+| Etapa | Estado | Informe |
+|---|---|---|
+| H-B láser «Cíclope» (retinas, flare, se atenúa con scroll) | ✓ | `pulido-I/INFORME-HB.md` |
+| N losa de Naowee naranja (Doug: «está bien») | ✓ | `pulido-I/INFORME-N.md` |
+| V-1 propuesta + V-2 mejoras 1–9 de tipografía e iconos | ✓ | `PROPUESTA-VISUAL.md`, `INFORME-V2.md` |
+| A auditoría (22 hallazgos) | ✓ | `AUDITORIA.md` |
+| O optimización (16 de 22; JS `/work/[slug]` −48,7 KB gz) | **sin verificación final** | `INFORME-O.md` (parcial) |
+| H-A vidrio: refracción por estría + barrido automático + póster v4 | **sin cerrar** (último commit `wip`) | falta `INFORME-HA.md` |
+
+Decisión que cambia: «el cursor solo abre el vidrio» → **barrido automático + cursor** (el cursor manda; el barrido
+vuelve tras ~3 s en reposo; sin barrido con reduced motion).
+
+Sesiones que faltan, en orden (cada una lee solo `ESTADO.md`, `pulido-I/PLAN.md` §0 y lo que nombra su prompt):
+1. **Cerrar H-A** · Fable 5.2, esfuerzo medio. Revisar el `wip` del vidrio (`src/components/hero/`, `src/lib/gl/`,
+   `tests/e2e/vidrio.spec.ts`), pruebas del héroe en verde, 1 Lighthouse móvil de `/` (≥ 90, TBT < 200 ms), 2 capturas
+   y `INFORME-HA.md`. No ampliar alcance.
+2. **Cierre** · Sonnet, esfuerzo medio. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
+   repetir solo lo fallido), Lighthouse móvil `/` `/about` `/en`, QA visual corta con nota → `06-CRITICA-I.md`,
+   arreglos P0/P1, `INFORME-O.md` completo, este archivo al día y PR a `main` (merge normal, no squash).
+
 ## Preguntas abiertas de Doug (no bloquean; el plan usa valores por defecto)
 
 Disponibilidad (consultoría vs roles) · orden de casos · titular EN «direct/lead» · retirar toggle claro/oscuro ·
