@@ -24,6 +24,7 @@ import { restaurarAnclaPendiente, vigilarAnclas } from "@/lib/anclaPendiente";
 import { usePildora } from "@/components/sistema/usePildora";
 import Pildora from "@/components/sistema/Pildora";
 import Hablemos from "./Hablemos";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /** Pills de la pastilla (04 §4.1). En el home, anclas con scroll-spy; fuera, rutas. */
 const PILLS = [
@@ -126,7 +127,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
   const [abiertoAntes, setAbiertoAntes] = useState(open);
   if (abiertoAntes !== open) {
     setAbiertoAntes(open);
-    setSaliendo(!open && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setSaliendo(!open && !prefiereQuieto());
   }
   useEffect(() => {
     if (!saliendo) return;
@@ -181,8 +182,9 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
     clase: string,
     alNavegar?: () => void,
     adelantar?: (el: HTMLElement) => void,
-  ) =>
-    e.seccion ? (
+  ) => {
+    const { seccion } = e;
+    return seccion ? (
       <a
         key={e.clave}
         href={e.href}
@@ -190,7 +192,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         aria-current={e.actual}
         onClick={(ev) => {
           alNavegar?.();
-          irASeccion(ev, e.seccion!);
+          irASeccion(ev, seccion);
         }}
       >
         {e.texto}
@@ -210,6 +212,7 @@ export default function SiteHeader({ marca }: { marca: React.ReactNode }) {
         {e.texto}
       </Link>
     );
+  };
 
   return (
     <header className="site-header cab-b">

@@ -39,8 +39,9 @@ export default function PrintButton() {
   const d = t.downloadDialog;
   const chosen = getSite(lang).cv;
   // The letter has no photo variant, so choosing it hides that question.
-  const letter = doc === "letter" && !!chosen.letterPdf;
-  const href = letter ? chosen.letterPdf! : ((photo ? chosen.pdf : chosen.pdfNoPhoto) ?? chosen.pdf!);
+  const letterPdf = doc === "letter" ? chosen.letterPdf : undefined;
+  const letter = !!letterPdf;
+  const href = letterPdf ?? (photo ? chosen.pdf : chosen.pdfNoPhoto) ?? chosen.pdf;
   const fileName = letter
     ? getDict(lang).cv.letterDownloadName(site.name)
     : getDict(lang).cv.downloadName(site.name, photo);

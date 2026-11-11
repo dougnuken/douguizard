@@ -25,28 +25,6 @@ export function FadeIn({
   );
 }
 
-/** `**bold**` → `<strong>`. The only markup the case copy carries. */
-export function renderBold(text: string): ReactNode {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return (
-        <strong key={i}>
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    return <span key={i}>{part}</span>;
-  });
-}
-
-/**
- * Rótulo de sección del sistema B: ceja (Instrument Sans 14, `--tinta-2`).
- * Ya no es fijo al hacer scroll: el índice lateral (≥ 1280) es quien orienta.
- */
-export function Eyebrow({ children }: { children: ReactNode; sticky?: boolean }) {
-  return <p className="ceja">{children}</p>;
-}
-
 /**
  * El `h2` de cada bloque del caso (Urbanist 30), sin revelado propio: el bloque
  * entero entra con su `FadeIn` cuando lo pide, y en la hoja nada se revela en la
@@ -71,10 +49,6 @@ export function EyebrowHeading({
 
 export interface BandProps {
   children: ReactNode;
-  /** Se conserva por compatibilidad: en B los bloques van sobre el vacío, sin bandas. */
-  tone?: "paper" | "raised";
-  rule?: "t" | "b" | "y" | "none";
-  wide?: boolean;
   className?: string;
   /** Ancla del índice lateral y de «Secciones». */
   id?: string;
@@ -93,17 +67,10 @@ export function Band({ children, className, id, labelledBy, label }: BandProps) 
       id={id}
       aria-labelledby={labelledBy}
       aria-label={label}
-      className={twMerge("bloque", className?.split(" ").filter((c) => !/^(md:)?py-/.test(c)).join(" "))}
+      className={twMerge("bloque", className)}
     >
       {children}
     </section>
-  );
-}
-
-/** The `/ Label` mono caption used by the meta strip, the links row and the colophon. */
-export function SlashLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div className={twMerge("ceja", className)}>{children}</div>
   );
 }
 

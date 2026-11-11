@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { MetalFxProps } from "metal-fx";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * «Hablemos» de la cabecera (pulido G2: «muy crudo visualmente»).
@@ -33,8 +34,6 @@ import type { MetalFxProps } from "metal-fx";
 type Metal = ComponentType<MetalFxProps>;
 
 const ESCRITORIO = "(min-width: 1024px) and (hover: hover) and (pointer: fine)";
-const reducido = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** El componente de metal-fx, una vez cargado (módulo: sobrevive a los montajes). */
 let metalCargado: Metal | null = null;
@@ -43,7 +42,7 @@ let recuperarFoco = false;
 function useMetal(): boolean {
   const [metal, setMetal] = useState(() => metalCargado !== null);
   useEffect(() => {
-    if (metalCargado || !window.matchMedia(ESCRITORIO).matches || reducido()) return;
+    if (metalCargado || !window.matchMedia(ESCRITORIO).matches || prefiereQuieto()) return;
     let vivo = true;
     const cargar = () =>
       import("metal-fx")
@@ -100,7 +99,7 @@ export default function Hablemos({
       const nx = (px - r.left) / r.width; // 0…1
       const ny = (py - r.top) / r.height;
       el.style.setProperty("--brillo-x", `${Math.round(nx * 100)}%`);
-      if (reducido()) return;
+      if (prefiereQuieto()) return;
       const dx = Math.max(-1, Math.min(1, nx * 2 - 1));
       const dy = Math.max(-1, Math.min(1, ny * 2 - 1));
       el.style.translate = `${(dx * 3).toFixed(2)}px ${(dy * 2).toFixed(2)}px`;
@@ -160,7 +159,7 @@ export default function Hablemos({
       glowGain: 0.6,
       innerShadow: true,
       normalizeHostStyles: false,
-      paused: !vivo || reducido(),
+      paused: !vivo || prefiereQuieto(),
     } as MetalFxProps,
     enlace,
   );

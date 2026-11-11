@@ -7,6 +7,9 @@ import { defineConfig, devices } from "@playwright/test";
  */
 const NAVEGADORES = process.env.PW_NAVEGADORES === "1";
 
+/** Puerto de `next start` y de `baseURL`; `PW_PORT` lo cambia (varios agentes o corridas a la vez). */
+const PUERTO = Number(process.env.PW_PORT ?? 3131);
+
 export default defineConfig({
   testDir: "tests/e2e",
   // Falla de entrada si `reuseExistingServer` encuentra un servidor de otro build.
@@ -18,7 +21,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   fullyParallel: false,
   workers: 2,
-  use: { baseURL: "http://localhost:3131", trace: "retain-on-failure" },
+  use: { baseURL: `http://localhost:${PUERTO}`, trace: "retain-on-failure" },
   reporter: [["list"], ["json", { outputFile: "tests/results.json" }]],
   projects: [
     { name: "chromium", use: { browserName: "chromium" } },
@@ -30,8 +33,8 @@ export default defineConfig({
       : []),
   ],
   webServer: {
-    command: "npx next start -p 3131",
-    port: 3131,
+    command: `npx next start -p ${PUERTO}`,
+    port: PUERTO,
     reuseExistingServer: true,
     timeout: 120_000,
   },

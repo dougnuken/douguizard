@@ -3,7 +3,8 @@
 import RevealText from "@/components/text/RevealText";
 import type { StoryChapter, StoryFigure, StoryFilm, StorySection } from "@/data/work";
 import { useDict } from "@/i18n/LocaleProvider";
-import { Band, FadeIn, renderBold, type BandProps } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { Band, FadeIn } from "./primitives";
 import { StoryFilmPlayer, StoryPicture } from "./StoryMedia";
 
 /**
@@ -33,10 +34,10 @@ export function CaseCover({ cover, heading = true }: { cover: StoryFigure; headi
 }
 
 /** The walkthrough, after the case at a glance: label in a quarter, clip across the rest. */
-export function CaseFilm({ film, tone }: { film: StoryFilm; tone?: BandProps["tone"] }) {
+export function CaseFilm({ film }: { film: StoryFilm }) {
   const t = useDict().case;
   return (
-    <Band tone={tone} rule="t" wide>
+    <Band>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 lg:gap-8">
         <FadeIn className="ceja lg:pt-1.5">{t.walkthrough}</FadeIn>
         <div className="mx-auto w-full max-w-[520px] md:max-w-none lg:col-span-3">
@@ -152,11 +153,9 @@ function Section({ section, flip }: { section: StorySection; flip: boolean }) {
 export function CaseChapter({
   chapter,
   index,
-  tone,
 }: {
   chapter: StoryChapter;
   index: number;
-  tone?: BandProps["tone"];
 }) {
   // Consecutive text-only sections share a row of two columns, so a short
   // list never leaves half the measure empty beside it. Single-media sections
@@ -170,7 +169,7 @@ export function CaseChapter({
   }
   let singles = 0;
   return (
-    <Band tone={tone} rule="t" wide>
+    <Band>
       <div id={chapter.id} className="scroll-mt-[calc(var(--header-h)+1rem)]">
         <header className="grid grid-cols-1 gap-4 md:grid-cols-[200px_1fr] md:gap-12">
           <RevealText as="div" variant="mask" className="section-num text-[clamp(28px,3vw,44px)] leading-none">

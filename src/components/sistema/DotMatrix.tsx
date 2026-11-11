@@ -2,9 +2,6 @@ import "./sistema.css";
 
 export type TamanoDot = "s" | "m" | "l" | "xl";
 
-/** px de cada tamaño. El mínimo es 24: Doto nunca baja de 20 px (D20). */
-export const TAMANOS_DOT: Record<TamanoDot, number> = { s: 24, m: 30, l: 48, xl: 72 };
-
 /**
  * El punto de miles de las cifras en ES («2.000») en Doto es un cuadro de
  * puntos que se lee como «2·000». Se envuelve en `span.punto`: el glifo queda

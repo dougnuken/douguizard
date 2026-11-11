@@ -1,7 +1,8 @@
 "use client";
 
 import RevealText from "@/components/text/RevealText";
-import { Band, EyebrowHeading, renderBold, type BandProps } from "./primitives";
+import { renderBold } from "@/lib/renderBold";
+import { Band, EyebrowHeading } from "./primitives";
 import { useDict } from "@/i18n/LocaleProvider";
 
 export interface Feature {
@@ -61,15 +62,13 @@ function columnsFor(count: number): string {
 export default function CaseFeatures({
   intro,
   features,
-  tone,
 }: {
   intro?: string;
   features: Feature[];
-  tone?: BandProps["tone"];
 }) {
   const t = useDict().case;
   return (
-    <Band tone={tone} rule="t">
+    <Band>
       <EyebrowHeading>{t.features}</EyebrowHeading>
 
       {intro && (

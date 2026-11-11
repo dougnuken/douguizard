@@ -65,8 +65,8 @@ export default function CaseShowcase({
   // A desktop product opens on a still, never on its clip (F7 P1-2): the
   // walkthrough plays in the Product block (`WalkthroughFilm`).
   const still = lead[0] && (galleryKind === "browser" || (video && videoKind === "browser")) ? lead[0] : undefined;
-  if (still || (video && videoKind === "browser")) {
-    return still ? (
+  if (still) {
+    return (
       <CoverStill
         src={still.item.src}
         alt={still.item.alt}
@@ -74,9 +74,10 @@ export default function CaseShowcase({
         width={still.item.width ?? 2880}
         height={still.item.height ?? 1800}
       />
-    ) : (
-      <CoverStill src={video!.poster} alt="" width={video!.width} height={video!.height} />
     );
+  }
+  if (video && videoKind === "browser") {
+    return <CoverStill src={video.poster} alt="" width={video.width} height={video.height} />;
   }
 
   if (video && galleryKind === "phone") {
@@ -129,7 +130,7 @@ export default function CaseShowcase({
   if (!body) return null;
 
   return (
-    <Band tone="raised" rule="t" wide className="py-10 md:py-14">
+    <Band>
       {heading && <h2 className="sr-only">{t.product}</h2>}
       {body}
       {video && <WalkthroughCaption caption={video.caption} />}

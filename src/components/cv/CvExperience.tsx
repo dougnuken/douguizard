@@ -1,25 +1,8 @@
-import type { ReactNode } from "react";
 import { getCv, type Experience } from "@/data/cv";
 import { formatLocation, formatPeriod } from "@/lib/career";
 import { localePath, type Locale } from "@/i18n/config";
 import { getDict } from "@/i18n/dictionaries";
-
-/**
- * `**bold**` → `<strong>`. A server-side twin of the case template's helper:
- * that one lives in a `"use client"` module and importing it here would drag
- * the whole CV across the client boundary for a string split.
- */
-function renderBold(text: string): ReactNode {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-    part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i} className="font-semibold text-[var(--ink)]">
-        {part.slice(2, -2)}
-      </strong>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  );
-}
+import { renderBold } from "@/lib/renderBold";
 
 function metaLine(e: Experience, locale: Locale): string {
   const mode = getDict(locale).cv.mode;
@@ -69,7 +52,7 @@ function Entry({ e, locale }: { e: Experience; locale: Locale }) {
                   aria-hidden="true"
                   className="mt-[0.62em] h-px w-2 shrink-0 bg-[var(--line-strong)]"
                 />
-                <span className="min-w-0 text-pretty">{renderBold(line)}</span>
+                <span className="min-w-0 text-pretty">{renderBold(line, "font-semibold text-[var(--ink)]")}</span>
               </li>
             ))}
           </ul>

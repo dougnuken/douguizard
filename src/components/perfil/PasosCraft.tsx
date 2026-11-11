@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
 import { esEstatico } from "@/lib/estatico";
 import { coreografiaPasos, type Coreografia } from "@/lib/pasosCraft";
+import { prefiereQuieto } from "@/lib/movimiento";
 
 /**
  * «Cómo trabajo» en secuencia (G4, pedido de Doug). El láser es una carga que
@@ -35,7 +36,7 @@ export default function PasosCraft({ children }: { children: React.ReactNode }) 
   useLayoutEffect(() => {
     const ol = ref.current;
     if (!ol) return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches || esEstatico()) return;
+    if (prefiereQuieto() || esEstatico()) return;
     if (!("IntersectionObserver" in window) || typeof ol.animate !== "function") return;
     const r = ol.getBoundingClientRect();
     if (alMontar.current && r.top < window.innerHeight && r.bottom > 0) return;

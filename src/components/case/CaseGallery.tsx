@@ -4,7 +4,7 @@ import MockupGallery from "@/components/work/MockupGallery";
 import { useDict } from "@/i18n/LocaleProvider";
 import type { FrameKind, Shot } from "@/lib/caseMedia";
 import { GaleriaLosas, PlainGallery, toMockupItems } from "./caseFrames";
-import { Band, EyebrowHeading, type BandProps } from "./primitives";
+import { Band, EyebrowHeading } from "./primitives";
 
 /**
  * The stills the showcase did not take, after the argument they illustrate.
@@ -17,19 +17,17 @@ export default function CaseGallery({
   project,
   shots,
   kind,
-  tone,
 }: {
   project: string;
   shots: Shot[];
   kind: FrameKind;
-  tone?: BandProps["tone"];
 }) {
   const t = useDict().case;
   if (shots.length === 0) return null;
   const ariaLabel = t.productScreens(project);
 
   return (
-    <Band tone={tone} rule="t" wide>
+    <Band>
       <EyebrowHeading>{t.gallery}</EyebrowHeading>
 
       <div className="mt-10 md:mt-12">

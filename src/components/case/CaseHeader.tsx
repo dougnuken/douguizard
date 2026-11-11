@@ -3,7 +3,6 @@
 import Link from "next/link";
 import RevealText from "@/components/text/RevealText";
 import type { CaseMeta, CaseStudy } from "@/data/work";
-import { getShortName } from "@/data/work";
 import { localePath } from "@/i18n/config";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
 import { tituloHojaId } from "@/components/hoja/ids";
@@ -25,10 +24,13 @@ const fold = (s: string) => s.trim().toLowerCase();
  */
 export default function CaseHeader({
   study,
+  corto,
   meta,
   enHoja = false,
 }: {
-  study: CaseStudy;
+  study: Pick<CaseStudy, "project" | "slug" | "tagline" | "platforms">;
+  /** `getShortName(study)`, calculado en el servidor para no meter los datos de casos en el JS de cliente. */
+  corto: string;
   meta: CaseMeta;
   enHoja?: boolean;
 }) {
@@ -40,7 +42,6 @@ export default function CaseHeader({
   // como en la maqueta; el descriptor del `project` («— Plataforma del sector
   // deportivo») lo dice ya el gancho, así que en pantalla se omite y queda solo
   // para lectores de pantalla y buscadores (`<title>` y OG siguen con `project`).
-  const corto = getShortName(study);
   const resto = study.project.startsWith(corto) ? study.project.slice(corto.length) : "";
   const showClient = fold(meta.client) !== fold(corto) && fold(meta.client) !== fold(study.project);
   const ceja = [showClient ? meta.client : null, meta.role.replace(/ · /g, " · ")].filter(Boolean).join(" · ");
