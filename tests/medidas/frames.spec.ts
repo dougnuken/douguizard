@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import fs from "node:fs";
-import { setTheme } from "./matrix";
-import { settle } from "./settle";
+import { setTheme } from "../e2e/matrix";
+import { settle } from "../e2e/settle";
 
 test("F1 device frame geometry on /work/chub", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
