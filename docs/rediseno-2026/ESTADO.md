@@ -69,13 +69,13 @@ todo. Plan y especificaciones: `pulido-I/PLAN.md`. Integrado en la rama (merge n
 | V-1 propuesta + V-2 mejoras 1–9 de tipografía e iconos | ✓ | `PROPUESTA-VISUAL.md`, `INFORME-V2.md` |
 | A auditoría (22 hallazgos) | ✓ | `AUDITORIA.md` |
 | O optimización (16 de 22; JS `/work/[slug]` −48,7 KB gz) | **sin verificación final** | `INFORME-O.md` (parcial) |
-| H-A vidrio: refracción por estría + barrido automático + póster v4 | **sin cerrar** (último commit `wip`) | falta `INFORME-HA.md` |
+| H-A vidrio: refracción por estría + barrido automático + póster v4 | ✓ (héroe 89/90, el fallo es de tiempo y pasa solo; Lighthouse `/` Perf 96, TBT ~230 ms = base) | `pulido-I/INFORME-HA.md` |
 
 Decisión que cambia: «el cursor solo abre el vidrio» → **barrido automático + cursor** (el cursor manda; el barrido
 vuelve tras ~3 s en reposo; sin barrido con reduced motion).
 
 Sesiones que faltan, en orden (cada una lee solo `ESTADO.md`, `pulido-I/PLAN.md` §0 y lo que nombra su prompt):
-1. **Cerrar H-A** · Fable 5.2, esfuerzo medio. Revisar el `wip` del vidrio (`src/components/hero/`, `src/lib/gl/`,
+1. **Cerrar H-A** ✓ (11 nov; sin cambios de código, pendientes en `INFORME-HA.md`) · Fable 5.2, esfuerzo medio. Revisar el `wip` del vidrio (`src/components/hero/`, `src/lib/gl/`,
    `tests/e2e/vidrio.spec.ts`), pruebas del héroe en verde, 1 Lighthouse móvil de `/` (≥ 90, TBT < 200 ms), 2 capturas
    y `INFORME-HA.md`. No ampliar alcance.
 2. **Cierre** · Sonnet, esfuerzo medio. Suite completa (vitest, tsc, lint, Playwright `--workers=2 --trace off`,
