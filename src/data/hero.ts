@@ -94,7 +94,7 @@ export function foto(
 
 export const fotos: FotoHeroe[] = [
   // Foto elegida por Doug (7 nov, Higgsfield): ciudad nocturna, láser rojo en los ojos, 896×1200.
-  foto("960e1d8c", 3, {
+  foto("960e1d8c", 4, {
     tamano: { w: 896, h: 1200 },
     foco: [0.5, 0.42],
     cara: [0.5, 0.45, 0.2, 0.2],
@@ -134,11 +134,14 @@ export function getFotoActiva(): FotoHeroe {
  * `cine` = la foto grande de `/about` (oblicuo 12°), `losa` = K1 en el tablero
  * de escritorio, `movil` = la foto a sangre (< 1024). Los tres oblicuos a 12°:
  * decisión de Doug (vidrio estriado oblicuo; F3 P2-3, F4 P0-1).
+ * Pulido I: estrías más finas (≈ 16 a lo ancho de la cara, como la referencia) y
+ * menos protección de la cara: el vidrio también la refracta y la zona nítida
+ * (el barrido automático o el cursor) es la que la deja ver limpia.
  */
 export const vidrio: Record<EstadoVidrio, ParametrosVidrio> = {
-  cine: { angulo: 12, estria: 0.05, fuerza: 0.62, lente: 240, proteccionCara: 0.68, caraFuerza: 0.6, dprMax: 1.5 },
-  losa: { angulo: 12, estria: 0.042, fuerza: 0.55, lente: 150, proteccionCara: 0.68, dprMax: 1.5 },
-  movil: { angulo: 12, estria: 0.04, fuerza: 0.55, lente: 130, proteccionCara: 0.75, dprMax: 1.5 },
+  cine: { angulo: 12, estria: 0.028, fuerza: 0.62, lente: 240, proteccionCara: 0.35, caraFuerza: 0.85, dprMax: 1.5 },
+  losa: { angulo: 12, estria: 0.026, fuerza: 0.55, lente: 150, proteccionCara: 0.35, dprMax: 1.5 },
+  movil: { angulo: 12, estria: 0.026, fuerza: 0.55, lente: 130, proteccionCara: 0.4, dprMax: 1.5 },
 };
 
 /** Las pupilas de la foto; sin `ojos`, a ± 0,45 del radio de la cara sobre la línea del ojo. */

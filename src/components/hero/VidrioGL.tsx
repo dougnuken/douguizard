@@ -6,6 +6,7 @@ import { uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
 import { crearPrograma, dibujar, liberar, prepintar, soltar, volcar, type Prepintado } from "@/lib/gl/programa";
 import type { EstadoLente } from "./useLente";
 import { cargarImagen, subirTextura } from "@/lib/gl/textura";
+import { barridoDe } from "./barridoDom";
 import { montarLente } from "./useLente";
 
 export interface PropsVidrioGL {
@@ -21,22 +22,32 @@ export interface PropsVidrioGL {
   espejo?: HTMLElement | null;
   /** Sin WebGL2, `failIfMajorPerformanceCaveat`, shader roto o contexto perdido. */
   onFallo: (motivo: string) => void;
+  /** El primer cuadro ya está en pantalla (el respaldo CSS que venía barriendo se retira). */
+  onListo?: () => void;
+  /** El barrido va lento en este equipo (WebGL por software): lo sigue la capa CSS; el canvas se queda con el vidrio y el cursor. */
+  onLento?: () => void;
 }
 
 /**
  * El vidrio estriado en WebGL2 (07 F4), encima del póster horneado. Lo monta
  * `VidrioDiferido` tras el `load` y en `requestIdleCallback` (nunca antes del
- * LCP; nunca con RM). Entra con un fundido de 400 ms tras el primer cuadro; en
- * reposo no hay bucle (0 fps). DPR ≤ `dprMax`; deja de pintar fuera de vista y
- * con la pestaña oculta. La fuerza se puede sobrescribir con `--vidrio-f` en el
+ * LCP; nunca con RM). Entra con un fundido de 400 ms tras el primer cuadro.
+ * Pulido I: mientras el héroe está a la vista y sin desplazar, la zona nítida
+ * barre sola (`barrido.ts`; el cursor manda al moverse); fuera de eso no hay
+ * bucle (0 fps). DPR ≤ `dprMax`; deja de pintar fuera de vista y con la pestaña
+ * oculta. La fuerza se puede sobrescribir con `--vidrio-f` en el
  * estilo en línea del canvas (o de su `espejo`).
  */
-export default function VidrioGL({ estados, className, style, pos = [0.5, 0], laser, espejo, onFallo }: PropsVidrioGL) {
+export default function VidrioGL({ estados, className, style, pos = [0.5, 0], laser, espejo, onFallo, onListo, onLento }: PropsVidrioGL) {
   const ref = useRef<HTMLCanvasElement>(null);
   const falloRef = useRef(onFallo);
+  const listoRef = useRef(onListo);
+  const lentoRef = useRef(onLento);
   useEffect(() => {
     falloRef.current = onFallo;
-  }, [onFallo]);
+    listoRef.current = onListo;
+    lentoRef.current = onLento;
+  }, [onFallo, onListo, onLento]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -65,7 +76,14 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
     }
     const foto = getFotoActiva();
     const escritorio = window.matchMedia("(min-width: 1024px)");
-    let visible = true;
+    // Pulido I: con WebGL por software (SwiftShader, llvmpipe: sin GPU, como en Lighthouse y en
+    // las pruebas) cada cuadro cuesta decenas de ms en el hilo principal. Ahí el canvas se queda
+    // con el vidrio y el cursor, y el barrido continuo lo lleva la capa CSS (solo compositor).
+    // `__vidrioSinRelevo` (solo pruebas) fuerza el barrido en WebGL.
+    const sinRelevo = (window as unknown as { __vidrioSinRelevo?: boolean }).__vidrioSinRelevo === true;
+    const info = gl.getExtension("WEBGL_debug_renderer_info");
+    const motor = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) ?? "");
+    const porSoftware = !sinRelevo && !!lentoRef.current && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(motor);
 
     (async () => {
       let prog: Awaited<ReturnType<typeof crearPrograma>>;
@@ -87,7 +105,7 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       }
       let primero = true;
       /** Parámetros del cuadro para el estado actual; ajusta el búfer del canvas. */
-      const cuadro = (s: Pick<EstadoLente, "mx" | "my" | "abierta">) => {
+      const cuadro = (s: Pick<EstadoLente, "mx" | "my" | "abierta">, paralaje = 1) => {
         // F5: con `--vidrio-p` (el progreso del ancla del home, copiado de la foto)
         // los parámetros van de `cine` a `losa`; sin él, los del estado.
         const pe = parseFloat(canvas.style.getPropertyValue("--vidrio-p"));
@@ -114,7 +132,7 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           laser,
           fuerza: Number.isFinite(f) ? f : undefined,
           mx: s.mx,
-          lente: s.abierta,
+          lente: s.abierta * paralaje,
           fase: mezcla?.fase,
         });
         const firma = JSON.stringify([bw, bh, w, h, dpr, v, s.mx, s.my, s.abierta]);
@@ -144,8 +162,9 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       // estado: si nada cambió, no se repinta.
       let ultimo = "";
       const pintar = () => {
-        if (!visible || gl.isContextLost()) return;
-        const c = cuadro(lente.estado());
+        if (!auto.visible() || gl.isContextLost()) return;
+        // Mientras barre sola, el cursor no desplaza la fase: el vidrio queda quieto y solo se mueve la zona nítida.
+        const c = cuadro(lente.estado(), lente.paralaje());
         if (!c || c.firma === ultimo) return;
         ultimo = c.firma;
         if (pre && pre.firma === c.firma) volcar(gl, pre.p);
@@ -158,16 +177,27 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           primero = false;
           canvas.classList.add("on");
           canvas.parentElement?.setAttribute("data-gl", "on");
+          listoRef.current?.();
+          if (porSoftware) lentoRef.current?.();
         }
       };
-      const lente = montarLente(canvas, pintar);
-      const ro = new ResizeObserver(() => lente.pedir());
-      ro.observe(canvas);
-      const io = new IntersectionObserver(([e]) => {
-        visible = e.isIntersecting;
-        if (visible) lente.pedir();
-      });
-      io.observe(canvas);
+      // Pulido I: el barrido automático (a la vista y con el héroe sin desplazar).
+      const auto = barridoDe(canvas, foto, pos, () => lente.pedir());
+      const lente = montarLente(
+        canvas,
+        pintar,
+        porSoftware
+          ? {}
+          : {
+              barrido: auto.barrido,
+              // GPU real pero muy justa: si el barrido no llega a ~18 cuadros/s, también pasa a la capa CSS.
+              alIrLento: () => {
+                if (sinRelevo || !lentoRef.current) return;
+                lente.ceder();
+                lentoRef.current();
+              },
+            },
+      );
       const mq = () => lente.pedir();
       escritorio.addEventListener("change", mq);
       const copiar = () => {
@@ -185,8 +215,7 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       canvas.addEventListener("webglcontextlost", perdido);
       limpiar = () => {
         lente.destruir();
-        ro.disconnect();
-        io.disconnect();
+        auto.soltar();
         escritorio.removeEventListener("change", mq);
         mo?.disconnect();
         canvas.removeEventListener("webglcontextlost", perdido);
