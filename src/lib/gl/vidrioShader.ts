@@ -63,8 +63,8 @@ vec3 franja(vec2 p, vec2 dir, float k, float t, float str, float band, float g, 
   float lomo = 1.0 + sh * (0.12 * (1.0 - smoothstep(0.0, 0.45, t)) - 0.26 * pow(smoothstep(0.42, 1.0, t), 1.6));
   float e = (t - 0.21) / 0.075;
   float brillo = exp(-e * e) * 0.2 * sh;
-  float canto = (1.0 - smoothstep(0.0, max(0.06, 2.0 * aa), t)) * 0.6 * sh;
-  float sombra = smoothstep(1.0 - max(0.09, 2.5 * aa), 1.0, t) * 0.3 * sh;
+  float canto = (1.0 - smoothstep(0.0, max(0.085, 2.6 * aa), t)) * 0.56 * sh;
+  float sombra = smoothstep(1.0 - max(0.14, 3.5 * aa), 1.0, t) * 0.27 * sh;
   col *= lomo * (1.0 - sombra);
   return col + (brillo + canto) * (0.22 + 0.78 * luma) * vec3(1.0, 0.985, 0.97);
 }
