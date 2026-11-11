@@ -382,7 +382,7 @@ test.describe("(f) barrido automático de la zona nítida (pulido I)", () => {
     const zona = { x: b.x + zx, y: b.y + zy + 60 };
     const pared = { x: b.x + b.width * 0.8, y: zona.y > 450 ? 200 : 640 };
     const dZona = distancia(await parche(page, zona.x, zona.y), await parcheLimpioEnSitio(page, zona.x, zona.y));
-    // … y lejos de la zona el vidrio sigue ahí (el fondo guardado se copia entero en cada cuadro).
+    // … y lejos de la zona el vidrio sigue ahí.
     const dPared = distancia(await parche(page, pared.x, pared.y), await parcheLimpioEnSitio(page, pared.x, pared.y));
     expect(dPared, `fuera de la zona hay vidrio (a ${dPared.toFixed(2)} niveles de la foto limpia)`).toBeGreaterThan(3);
     expect(dZona, `zona nítida a ${dZona.toFixed(2)} niveles de la foto limpia (fuera, ${dPared.toFixed(2)})`).toBeLessThanOrEqual(dPared * 0.5);
