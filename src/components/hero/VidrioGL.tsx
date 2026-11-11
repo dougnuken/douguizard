@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { getFotoActiva, vidrio, type EstadoVidrio } from "@/data/hero";
 import { uniformesVidrio, vidrioEnEscena } from "@/lib/escena";
-import { copiar as copiarCuadro, crearPrograma, dibujar, guardar, liberar, prepintar, soltar, volcar, type Prepintado } from "@/lib/gl/programa";
+import { crearPrograma, dibujar, liberar, prepintar, soltar, volcar, type Prepintado } from "@/lib/gl/programa";
 import type { EstadoLente } from "./useLente";
 import { cargarImagen, subirTextura } from "@/lib/gl/textura";
 import { barridoDe } from "./barridoDom";
@@ -135,14 +135,9 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
           lente: s.abierta * paralaje,
           fase: mezcla?.fase,
         });
-        // Todo lo que no es la zona nítida: si no cambia entre cuadros, el fondo se guarda.
-        const firmaFondo = JSON.stringify([bw, bh, w, h, dpr, v]);
-        const firma = firmaFondo + JSON.stringify([s.mx, s.my, s.abierta]);
-        const dib = (abierta = s.abierta) => dibujar(gl, prog, v, { w, h, dpr }, { x: s.mx, y: s.my, abierta });
-        // La zona nítida en px del búfer (origen abajo), con 2 px de margen.
-        const r = (v.lensR * 1.2 + 2) * dpr;
-        const zona = [Math.floor(s.mx * dpr - r), Math.floor(bh - s.my * dpr - r), Math.ceil(2 * r), Math.ceil(2 * r)] as const;
-        return { bw, bh, firma, firmaFondo, dib, zona };
+        const firma = JSON.stringify([bw, bh, w, h, dpr, v, s.mx, s.my, s.abierta]);
+        const dib = () => dibujar(gl, prog, v, { w, h, dpr }, { x: s.mx, y: s.my, abierta: s.abierta });
+        return { bw, bh, firma, dib };
       };
 
       // G1: el primer cuadro (lente cerrada, el estado inicial de `montarLente`)
@@ -166,36 +161,14 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
       // tres pedidos (lente, ResizeObserver, IntersectionObserver) con el mismo
       // estado: si nada cambió, no se repinta.
       let ultimo = "";
-      // Pulido I: con la zona nítida moviéndose sobre un vidrio que no cambia (el
-      // barrido), el vidrio cerrado se guarda una vez y cada cuadro es una copia más
-      // el sombreado de la zona (recorte): ~10× menos píxeles que la pantalla entera.
-      let fondo: { firma: string; p: Prepintado } | null = null;
-      let fondoPrevio = "";
-      const soltarFondo = () => {
-        if (fondo && !gl.isContextLost()) soltar(gl, fondo.p);
-        fondo = null;
-      };
       const pintar = () => {
         if (!auto.visible() || gl.isContextLost()) return;
-        const s = lente.estado();
-        const c = cuadro(s, lente.paralaje());
+        // Mientras barre sola, el cursor no desplaza la fase: el vidrio queda quieto y solo se mueve la zona nítida.
+        const c = cuadro(lente.estado(), lente.paralaje());
         if (!c || c.firma === ultimo) return;
         ultimo = c.firma;
-        const estable = c.firmaFondo === fondoPrevio;
-        fondoPrevio = c.firmaFondo;
-        if (fondo && fondo.firma !== c.firmaFondo) soltarFondo();
-        if (estable && s.abierta > 0 && !fondo) {
-          const p = guardar(gl, c.bw, c.bh, () => c.dib(0));
-          if (p) fondo = { firma: c.firmaFondo, p };
-        }
         if (pre && pre.firma === c.firma) volcar(gl, pre.p);
-        else if (fondo && s.abierta > 0) {
-          copiarCuadro(gl, fondo.p);
-          gl.enable(gl.SCISSOR_TEST);
-          gl.scissor(...c.zona);
-          c.dib();
-          gl.disable(gl.SCISSOR_TEST);
-        } else c.dib();
+        else c.dib();
         if (pre) {
           if (pre.firma !== c.firma) soltar(gl, pre.p);
           pre = null;
@@ -248,7 +221,6 @@ export default function VidrioGL({ estados, className, style, pos = [0.5, 0], la
         canvas.removeEventListener("webglcontextlost", perdido);
         canvas.parentElement?.removeAttribute("data-gl");
         if (pre && !gl.isContextLost()) soltar(gl, pre.p);
-        soltarFondo();
         if (!gl.isContextLost()) liberar(gl, prog, tex);
       };
       lente.pedir();

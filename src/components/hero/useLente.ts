@@ -62,8 +62,8 @@ export interface Lente {
   estado: () => EstadoLente;
   /**
    * Cuánto desplaza el cursor la fase de las estrías, 0–1: 1 cuando manda el
-   * cursor, 0 mientras barre solo (así el vidrio de fondo no cambia entre
-   * cuadros y `VidrioGL` solo repinta la zona nítida). Cambia con suavidad.
+   * cursor, 0 mientras barre sola (el vidrio queda quieto y solo se mueve la
+   * zona nítida, igual que en la capa CSS). Cambia con suavidad.
    */
   paralaje: () => number;
   /** Deja de barrer para siempre (otro vidrio sigue el barrido en el mismo punto) y cierra la zona nítida. */
