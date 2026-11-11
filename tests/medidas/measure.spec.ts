@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import fs from "node:fs";
-import { setTheme } from "./matrix";
-import { settle } from "./settle";
+import { setTheme } from "../e2e/matrix";
+import { settle } from "../e2e/settle";
 
 test("M1 phone/browser frame border, radius, shadow on /work/chub @1440", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

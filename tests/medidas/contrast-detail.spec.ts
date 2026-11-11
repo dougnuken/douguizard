@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import fs from "node:fs";
-import { THEMES, ROUTES, setTheme } from "./matrix";
-import { settle } from "./settle";
+import { THEMES, ROUTES, setTheme } from "../e2e/matrix";
+import { settle } from "../e2e/settle";
 
 function lum(rgb: number[]) {
   const a = rgb.map((v) => {
