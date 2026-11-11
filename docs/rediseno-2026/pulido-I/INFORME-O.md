@@ -39,12 +39,16 @@ Render: el `<body>` prerenderizado (sin scripts, rutas `_next` normalizadas) es 
 
 ## Pruebas
 
+<<<<<<< HEAD
 Verificación final del cierre (11 nov, rama completa con H-A, H-B, N, V y O integrados):
 
 - vitest 279/279; `tsc --noEmit` y `eslint` sin salida; `next build` limpio.
 - Playwright `--workers=2 --trace off`: **625/626** (27,5 min). El único fallo es `hoja.spec.ts:376`, variante «X» (medición de cuadros en headless; falla 3/3 al repetirla sola, Esc y velo pasan; ya fallaba antes de G). Sin cambios de código.
 - Lighthouse móvil local (3 corridas, mediana, build de producción): `/` Perf 97 (TBT 190 ms, LCP 1,16 s), `/en` 97 (TBT 206 ms), `/about` 87 (TBT 200 ms, LCP simulado 3,6 s). A11y, BP y SEO 100 y CLS 0 en las tres.
 - QA visual: `06-CRITICA-I.md` (0 P0/P1). Con esto se cubre el «no verificado» de CSS (#9, #17) en `/` y `/about`; el resto lo cubre Playwright.
+=======
+PRUEBAS_PENDIENTES
+>>>>>>> origin/main
 
 ## Desvíos y no verificado
 
